@@ -22,11 +22,11 @@ void InputController::update() {
         // First get the axis position of the joystick
         float joystickX = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
         float joystickY = -sf::Joystick::getAxisPosition(0, sf::Joystick::Y);
-        if (joystickX < 30 && joystickX > -30) {
+        if (joystickX < 30 && joystickX > -20) {
             joystickX = 0;
         }
         
-        if (joystickY < 30 && joystickY > -30) {
+        if (joystickY < 30 && joystickY > -20) {
             joystickY = 0;
         }
         
@@ -42,8 +42,12 @@ void InputController::update() {
             c = true;
         }
         
-        if (sf::Joystick::isButtonPressed(0, 8)) {
+        if (sf::Joystick::isButtonPressed(0, 15)) {
             x = true;
+        }
+        
+        if (sf::Joystick::isButtonPressed(0, 14)) {
+            z = true;
         }
         
         if (joystickX != 0 || joystickY != 0) {

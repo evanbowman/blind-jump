@@ -27,7 +27,7 @@ userInterface::userInterface() {
     xPos = 0;
     yPos = 0;
     rectAlpha = 2;
-    overlayRect.setFillColor(sf::Color(100,110,140,rectAlpha)); // 100 , 110 , 140
+    overlayRect.setFillColor(sf::Color(80,90,120,rectAlpha)); // 100 , 110 , 140
     selCircle1.setRadius(2);
     selCircle2.setRadius(2);
     selCircle3.setRadius(2);

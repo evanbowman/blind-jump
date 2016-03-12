@@ -129,7 +129,7 @@ int gun::getTimeout() {
 }
 
 //This updates the effects vector that holds all of the shots and hit animations
-void gun::updateShotVector(char playerSpriteIndex, effectsController& ef, float xOffset, float yOffset, userInterface& UI) {
+void gun::updateShotVector(char playerSpriteIndex, effectsController& ef, float xOffset, float yOffset, userInterface& UI, InputController* pInput, SoundController& sounds) {
     sprIndex = playerSpriteIndex;
     // Get the index of the item that the user selected from the UI controller class
     selectedGun = UI.getCurrentItem();
@@ -137,16 +137,19 @@ void gun::updateShotVector(char playerSpriteIndex, effectsController& ef, float 
     switch (selectedGun) {
         // If the selected gun is the starting one
         case 1:
-            if (bulletTimer == 0 && sf::Keyboard::isKeyPressed(sf::Keyboard::X) &&  timeout < 95) {
+            if (bulletTimer == 0 && pInput->xPressed() &&  timeout < 95) {
                 if (sprIndex == 0 || sprIndex == 4) {  //If the gun sprite is up or down, construct a bullet with a corresponding sprite
                     ef.addBullet(0, playerSpriteIndex, xPos - xOffset, yPos - yOffset - 10);
+                    sounds.playEffect(1);
                 }
                 else if (sprIndex == 1 || sprIndex == 5) {
                     ef.addBullet(0, playerSpriteIndex, xPos - xOffset - 3, yPos - yOffset - 18);
+                    sounds.playEffect(1);
                 }
                 
                 else if (sprIndex == 2 || sprIndex == 6 || sprIndex == 3 || sprIndex == 7) {
                     ef.addBullet(1, playerSpriteIndex, xPos - xOffset, yPos - yOffset - 10);
+                    sounds.playEffect(1);
                 }
                 
                 bulletTimer += 1;

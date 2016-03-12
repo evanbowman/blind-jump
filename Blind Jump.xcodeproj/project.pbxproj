@@ -74,6 +74,11 @@
 		6823AF3D1C91B24500D13C99 /* heavyBot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6823AF3B1C91B24500D13C99 /* heavyBot.cpp */; };
 		6823AF3F1C91C4B800D13C99 /* bulkbot.png in Resources */ = {isa = PBXBuildFile; fileRef = 6823AF3E1C91C4B800D13C99 /* bulkbot.png */; };
 		6823AF421C92315700D13C99 /* inputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6823AF401C92315700D13C99 /* inputController.cpp */; };
+		6823AF471C932AB900D13C99 /* space_noise.ogg in Resources */ = {isa = PBXBuildFile; fileRef = 6823AF461C932AB900D13C99 /* space_noise.ogg */; };
+		6823AF491C93323000D13C99 /* poor_me_blues.ogg in Resources */ = {isa = PBXBuildFile; fileRef = 6823AF481C93323000D13C99 /* poor_me_blues.ogg */; };
+		6823AF4B1C935A0200D13C99 /* deep_blue_sea_blues.ogg in Resources */ = {isa = PBXBuildFile; fileRef = 6823AF4A1C935A0200D13C99 /* deep_blue_sea_blues.ogg */; };
+		6823AF4D1C93644200D13C99 /* laser.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6823AF4C1C93644200D13C99 /* laser.wav */; };
+		6823AF4F1C93723C00D13C99 /* mister_moon_man.ogg in Resources */ = {isa = PBXBuildFile; fileRef = 6823AF4E1C93723C00D13C99 /* mister_moon_man.ogg */; };
 		682EADEC1C8527CF001B3E31 /* grassWave.frag in Resources */ = {isa = PBXBuildFile; fileRef = 682EADEB1C8527CF001B3E31 /* grassWave.frag */; };
 		682F41661BC93C3B0091BC2E /* bkg_orbit.png in Resources */ = {isa = PBXBuildFile; fileRef = 682F41611BC93C3B0091BC2E /* bkg_orbit.png */; };
 		682F41671BC93C3B0091BC2E /* walk_down5.png in Resources */ = {isa = PBXBuildFile; fileRef = 682F41621BC93C3B0091BC2E /* walk_down5.png */; };
@@ -138,6 +143,7 @@
 		6858BEC41C7104A70057E574 /* grassSetEdge.png in Resources */ = {isa = PBXBuildFile; fileRef = 6858BEC31C7104A70057E574 /* grassSetEdge.png */; };
 		6858BEC61C71704D0057E574 /* scoreNums.png in Resources */ = {isa = PBXBuildFile; fileRef = 6858BEC51C71704D0057E574 /* scoreNums.png */; };
 		6858BEF11C727C320057E574 /* energyText.png in Resources */ = {isa = PBXBuildFile; fileRef = 6858BEF01C727C320057E574 /* energyText.png */; };
+		685C4A0D1C93E12D002DAA92 /* bkg_stars_distant.png in Resources */ = {isa = PBXBuildFile; fileRef = 685C4A0C1C93E12D002DAA92 /* bkg_stars_distant.png */; };
 		685CD4161BD99E52004907E0 /* userInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 685CD4141BD99E52004907E0 /* userInterface.cpp */; };
 		686BCE801BC8B6270096128A /* ResourcePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = 686BCE7F1BC8B6270096128A /* ResourcePath.mm */; };
 		686BCE831BC8B6270096128A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 686BCE821BC8B6270096128A /* main.cpp */; };
@@ -328,6 +334,11 @@
 		6823AF3E1C91C4B800D13C99 /* bulkbot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bulkbot.png; sourceTree = "<group>"; };
 		6823AF401C92315700D13C99 /* inputController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = inputController.cpp; sourceTree = "<group>"; };
 		6823AF411C92315700D13C99 /* inputController.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = inputController.hpp; sourceTree = "<group>"; };
+		6823AF461C932AB900D13C99 /* space_noise.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = space_noise.ogg; sourceTree = "<group>"; };
+		6823AF481C93323000D13C99 /* poor_me_blues.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = poor_me_blues.ogg; sourceTree = "<group>"; };
+		6823AF4A1C935A0200D13C99 /* deep_blue_sea_blues.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = deep_blue_sea_blues.ogg; sourceTree = "<group>"; };
+		6823AF4C1C93644200D13C99 /* laser.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = laser.wav; sourceTree = "<group>"; };
+		6823AF4E1C93723C00D13C99 /* mister_moon_man.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = mister_moon_man.ogg; sourceTree = "<group>"; };
 		682EADEB1C8527CF001B3E31 /* grassWave.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = grassWave.frag; sourceTree = "<group>"; };
 		682F41611BC93C3B0091BC2E /* bkg_orbit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bkg_orbit.png; sourceTree = "<group>"; };
 		682F41621BC93C3B0091BC2E /* walk_down5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = walk_down5.png; sourceTree = "<group>"; };
@@ -408,6 +419,7 @@
 		6858BEC51C71704D0057E574 /* scoreNums.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scoreNums.png; sourceTree = "<group>"; };
 		6858BEC71C722B620057E574 /* turret.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = turret.hpp; sourceTree = "<group>"; };
 		6858BEF01C727C320057E574 /* energyText.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = energyText.png; sourceTree = "<group>"; };
+		685C4A0C1C93E12D002DAA92 /* bkg_stars_distant.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bkg_stars_distant.png; sourceTree = "<group>"; };
 		685CD4141BD99E52004907E0 /* userInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = userInterface.cpp; sourceTree = "<group>"; };
 		685CD4151BD99E52004907E0 /* userInterface.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = userInterface.hpp; sourceTree = "<group>"; };
 		686BCE7A1BC8B6270096128A /* Blind Jump.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blind Jump.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -580,6 +592,18 @@
 			name = "User Interface";
 			sourceTree = "<group>";
 		};
+		6823AF431C932A2100D13C99 /* Music */ = {
+			isa = PBXGroup;
+			children = (
+				6823AF4E1C93723C00D13C99 /* mister_moon_man.ogg */,
+				6823AF4C1C93644200D13C99 /* laser.wav */,
+				6823AF4A1C935A0200D13C99 /* deep_blue_sea_blues.ogg */,
+				6823AF481C93323000D13C99 /* poor_me_blues.ogg */,
+				6823AF461C932AB900D13C99 /* space_noise.ogg */,
+			);
+			name = Music;
+			sourceTree = "<group>";
+		};
 		682F41601BC8B9FB0091BC2E /* Enemies */ = {
 			isa = PBXGroup;
 			children = (
@@ -678,6 +702,8 @@
 		686BCE841BC8B6270096128A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				685C4A0C1C93E12D002DAA92 /* bkg_stars_distant.png */,
+				6823AF431C932A2100D13C99 /* Music */,
 				6823AF3E1C91C4B800D13C99 /* bulkbot.png */,
 				6823AF391C91AE2200D13C99 /* beamStart.png */,
 				68D224EA1C8BBB2F0047CA27 /* boulderSheet.png */,
@@ -1040,6 +1066,7 @@
 				6837F6981BCF1F1500AD20A8 /* poof3.png in Resources */,
 				68ABE09A1BD66D37005E7757 /* turretFlash1.png in Resources */,
 				682F41681BC93C3B0091BC2E /* walk_down4.png in Resources */,
+				6823AF4F1C93723C00D13C99 /* mister_moon_man.ogg in Resources */,
 				6801000C1BEEC97E002AA2C2 /* terminal.png in Resources */,
 				68EC08061C63153500E2D425 /* deathText.png in Resources */,
 				682F41671BC93C3B0091BC2E /* walk_down5.png in Resources */,
@@ -1112,8 +1139,10 @@
 				6808FF601C4FEDC500579FE9 /* orbit_edge_tile4.png in Resources */,
 				688633D61BE2FE56005D12C6 /* skeleton1.png in Resources */,
 				68E3F7891BCC566800349125 /* icon.png in Resources */,
+				685C4A0D1C93E12D002DAA92 /* bkg_stars_distant.png in Resources */,
 				6808FF711C51790800579FE9 /* enemyOrbShot1.png in Resources */,
 				682F41991BC9F29B0091BC2E /* player_still_right.png in Resources */,
+				6823AF491C93323000D13C99 /* poor_me_blues.ogg in Resources */,
 				6837F6971BCF1F1500AD20A8 /* poof4.png in Resources */,
 				680100041BEE8B86002AA2C2 /* exp32_2.png in Resources */,
 				682F416A1BC93C3B0091BC2E /* walk_down1.png in Resources */,
@@ -1170,12 +1199,14 @@
 				682226F01C73D50F003AAFC9 /* lamp.png in Resources */,
 				6816496C1C36DED6007BF457 /* teleporterShadow.png in Resources */,
 				68ABE1051BD82A4F005E7757 /* num3.png in Resources */,
+				6823AF4D1C93644200D13C99 /* laser.wav in Resources */,
 				6878A2151C605C94005D24F5 /* itemSelectorVignette.png in Resources */,
 				68E8E5A21BCD87690089ED4F /* gunRight.png in Resources */,
 				6822273A1C7A159C003AAFC9 /* blue.frag in Resources */,
 				681649731C375FBB007BF457 /* teleporterSmoke6.png in Resources */,
 				682226F71C766E94003AAFC9 /* newItemText.png in Resources */,
 				682F41821BC966E60091BC2E /* walk_left2.png in Resources */,
+				6823AF471C932AB900D13C99 /* space_noise.ogg in Resources */,
 				681649771C375FBB007BF457 /* teleporterSmoke2.png in Resources */,
 				688A55651C5E5B8C002FF16C /* alphabetSheetInverse.png in Resources */,
 				680100021BEE8B86002AA2C2 /* exp32_4.png in Resources */,
@@ -1202,6 +1233,7 @@
 				683A27C31C331F220006427D /* drone2.png in Resources */,
 				68E1C8A01BD588EE0000A28B /* turretShadow2.png in Resources */,
 				68353B311C63F6D500043ACB /* deathShadow.png in Resources */,
+				6823AF4B1C935A0200D13C99 /* deep_blue_sea_blues.ogg in Resources */,
 				6807252D1C5A59E70038389C /* cylinder_five.ogg in Resources */,
 				6858BEB01C6DA6240057E574 /* dasherShot.png in Resources */,
 				68E8E5A31BCD87690089ED4F /* gunLeft.png in Resources */,

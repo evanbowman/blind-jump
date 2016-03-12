@@ -28,7 +28,7 @@ class HeavyBot : public EnemyParent {
 private:
     sf::Sprite sprites[17];
     float currentDir;
-    char frameIndex, frameRate, state;
+    char frameIndex, frameRate, state, health;
     bool runShootAnim;
     std::vector<aStrCoordinate> path;
     int recalc;
@@ -40,6 +40,7 @@ public:
     void update(float, float, effectsController&, FontController&, tileController*);
     sf::Sprite* getSprite();
     sf::Sprite* getShadow();
+    void checkBulletCollision(effectsController&, FontController&);
 };
 
 #endif /* heavyBot_hpp */

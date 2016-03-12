@@ -56,8 +56,8 @@ FontController::FontController() {
     energyTxtr.loadFromFile(resourcePath() + "energyText.png");
     energySprite.setTexture(energyTxtr);
     
-    health = 3;
-    maxHealth = 3;
+    health = 4;
+    maxHealth = 4;
     doRecolor = false;
     colorState = 'w';
     sf::Sprite tempSprite;

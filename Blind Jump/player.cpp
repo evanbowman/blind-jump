@@ -28,7 +28,7 @@
 #include <tuple>
 
 Player::Player() {
-    health = 3;
+    health = 4;
     imageIndex = 0;
     spriteIndex = 0;
     posX = 0;
@@ -145,7 +145,7 @@ inline void compareSpriteIndex(char& spriteIndex) {
             break;
         case 7: spriteIndex = 3;
             break;
-        default: spriteIndex = 0;
+        default: //spriteIndex = 0;
             break;
     }
 }
@@ -476,7 +476,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
         gameShadows.push_back(tShadow);
     }
     // Allow the player's weapon to push created instances to the effects controller
-    weapon.updateShotVector(spriteIndex, ef, worldOffsetX, worldOffsetY, UI);
+    weapon.updateShotVector(spriteIndex, ef, worldOffsetX, worldOffsetY, UI, pInput, sounds);
     scrShakeState = false;
     
     // First check for collisions with enemy shot objects, as long as the death sequence isn't running

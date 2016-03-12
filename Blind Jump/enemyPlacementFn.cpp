@@ -38,7 +38,7 @@ int initEnemies(GameMap* gm) {
             pVec->push_back(dasher);
             break;
             
-        case 5:
+        case 6:
             turret.first = 3;
             turret.second = abs(currentLevel - idealLevels[3]);
             pVec->push_back(turret);
@@ -67,7 +67,7 @@ int initEnemies(GameMap* gm) {
     
     // Now it's time to actually place the enemies on the map based on weighted values
     // Slowly work up to the max number of enemies on the map
-    int iters = (currentLevel < 7) ? currentLevel + 8 : 15;
+    int iters = (currentLevel < 7) ? currentLevel + 6 : 15;
     for (int i = 0; i < iters; i++) {
         // Generate a random number on the range of 0 to the sum of all enemy weights
         int select = rand() % collector;

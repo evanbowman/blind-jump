@@ -96,12 +96,17 @@ private:
     // Locations to place lights
     std::vector<Coordinate> lightPositions;
     
+    sf::Texture creditsTexture;
+    sf::Sprite creditsSprite;
+    bool dispCredits;
+    int creditsCounter;
+    
     // Locations to place pillars
     std::vector<Coordinate> pillarPositions;
     
     // Create a vector of pairs with enemy index and placement probability for enemy creation
     std::vector<std::pair<int, int>> enemySelectVec;
-    int idealLvs[4] = {2/*Scoot*/, 4/*Critter Swarms*/, 6/*Dasher*/, 18/*Heavybots*/};
+    int idealLvs[4] = {6/*Scoot*/, 2/*Critter Swarms*/, 14/*Dasher*/, 24/*Heavybots*/};
     
     // Stack of sprites with y-position and height, for z-ordering
     std::vector<std::tuple<sf::Sprite, float, int>> gameObjects;

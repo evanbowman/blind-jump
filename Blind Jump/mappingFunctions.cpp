@@ -3,7 +3,7 @@
 
 void floodFillspread(short screen[61][61], short x, short y, short prevC, short newC) {
     // Base cases
-    if (x <= 8 || x >= 52 || y <= 8 || y >= 52)
+    if (x <= 2 || x >= 59 || y <= 2 || y >= 59)
         return;
     if (screen[x][y] != prevC)
         return;
@@ -87,8 +87,8 @@ inline void addCenterTiles (short map[61][61]) {
 void condense (short map[61][61], short maptemp[61][61], char rep) {
     int count = 0;
     
-    for (int i = 9; i < 52; i++) {
-        for (int j = 9; j < 52; j++) {
+    for (int i = 2; i < 59; i++) {
+        for (int j = 2; j < 59; j++) {
             count = 0;
             //This random map generation algorithm is based on the work of British mathematician John Conway,
             // where new elements arise from proximity to other elements.
@@ -136,8 +136,8 @@ void condense (short map[61][61], short maptemp[61][61], char rep) {
         }
     }
     
-    for (int i = 9; i < 52; i++) {
-        for (int j = 9; j < 52; j++) {
+    for (int i = 2; i < 59; i++) {
+        for (int j = 2; j < 59; j++) {
             map[i][j] = maptemp[i][j];
         }
     }
@@ -157,8 +157,8 @@ int initMapOverlay(short map[61][61]) {
         }
     }
     //Loop through again, and create a series of other numbers greater than 2
-    for (int i = 9; i < 52; i++) {
-        for (int j = 9; j < 52; j++) {
+    for (int i = 2; i < 59; i++) {
+        for (int j = 2; j < 59; j++) {
             map[i][j] = (rand() % 2);
         }
     }
@@ -172,8 +172,8 @@ int initMapOverlay(short map[61][61]) {
     while (map[xindex][yindex] != 1);
     floodFill(map, xindex, yindex, 5);
     int count = 0;
-    for (int i = 0; i < 52; i++) {
-        for (int j = 0; j < 52; j++) {
+    for (int i = 0; i < 59; i++) {
+        for (int j = 0; j < 59; j++) {
             if (map[i][j] == 5) {
                 count += 1;
             }
@@ -226,8 +226,8 @@ int mappingFunction(short map[61][61]) {
         }
     }
     //Loop through again, and create a series of other numbers greater than 2
-    for (int i = 9; i < 52; i++) {
-        for (int j = 9; j < 52; j++) {
+    for (int i = 2; i < 59; i++) {
+        for (int j = 2; j < 59; j++) {
             map[i][j] = (rand() % 2);
         }
     }
@@ -241,8 +241,8 @@ int mappingFunction(short map[61][61]) {
     }
     while (map[xindex][yindex] != 7);
     floodFill(map, xindex, yindex, 5);
-    for (int i = 9; i < 52; i++) {
-        for (int j = 9; j < 52; j++) {
+    for (int i = 2; i < 59; i++) {
+        for (int j = 2; j < 59; j++) {
             if (map[i][j] == 7) {
                 map[i][j] = 1;
             }
@@ -252,8 +252,8 @@ int mappingFunction(short map[61][61]) {
     cleanUp(map); //Gets rid of extra walls so there's no need to construct objects for them
     addCenterTiles(map);
     int count = 0;
-    for (int i = 0; i < 52; i++) {
-        for (int j = 0; j < 52; j++) {
+    for (int i = 0; i < 59; i++) {
+        for (int j = 0; j < 59; j++) {
             if (map[i][j] == 3 || map[i][j] == 4) {
                 count += 1;
             }
@@ -266,7 +266,7 @@ int mappingFunction(short map[61][61]) {
     int count2;
     do {
         count2 = initMapOverlay(mapOverlay);
-    } while (count2 < 200);
+    } while (count2 < 500);
     
     combine(map, mapOverlay);
     cleanEdgesPostCombine(map);

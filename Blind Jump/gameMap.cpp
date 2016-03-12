@@ -52,6 +52,13 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     // Initialize the player's starting item
     UI.addItem(0, effects, -20, -20, fonts, player);
     
+    // Load the credits image
+    creditsTexture.loadFromFile(resourcePath() + "presentingText.png");
+    creditsSprite.setTexture(creditsTexture);
+    creditsSprite.setPosition(30, windowHeight / 2 + 35);
+    dispCredits = false;
+    creditsCounter = 90;
+    
     // Set up the shaders
     redShader.loadFromFile(resourcePath() + "color.frag", sf::Shader::Fragment);
     redShader.setParameter("texture", sf::Shader::CurrentTexture);
@@ -75,7 +82,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     
     vignetteSprite.setTexture(*inptxtr);
     vignetteSprite.setScale(windowWidth/450, windowHeight/450);
-    vignetteSprite.setColor(sf::Color(255, 255, 255, 235));
+    vignetteSprite.setColor(sf::Color(255, 255, 255, 255));
     
     //Put the player in the center of the view
     player.setPosition(windowWidth / 2 - 16, windowHeight / 2);
@@ -91,6 +98,8 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     fonts.setWaypointText(level, windowW, windowH);
     //Add some enemies, more of them as the player progresses through the game
     initEnemies(this);
+    
+    ///addHeavyBot(tiles.mapArray, tiles.descriptionArray, en, tiles.posX, tiles.posY, windowWidth, windowHeight, tiles.emptyMapLocations);
     
     details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH);
     details.addDamagedRobots(tiles, tiles.posX, tiles.posY);
@@ -111,7 +120,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     animationBegin = false;
     dispEntryBeam = false;
     
-    //sndCtrl.playMusic(0);
+    sndCtrl.playMusic(0);
     fonts.zeroScore();
     beamGlowTxr.loadFromFile(resourcePath() + "teleporterBeamGlow.png");
     beamGlowSpr.setTexture(beamGlowTxr);
@@ -154,8 +163,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
 }
 
 void GameMap::update(sf::RenderWindow& window) {
-    // Update the input controller to get up-to-date keyboard and joystick information
-    pInput->update();
+    sndCtrl.updateSoundtrack(player.getPosX(), player.getPosY(), details.getTeleporter().getxPos(), details.getTeleporter().getyPos());
     // Start by getting the displacement that the player has moved, in order to update the position of all of the tiles and game objects
     xOffset = player.getWorldOffsetX();
     yOffset = player.getWorldOffsetY();
@@ -245,11 +253,27 @@ void GameMap::update(sf::RenderWindow& window) {
     
     // Draw a nice vignette effect over the entire window, but behind the UI overlay
     window.draw(vignetteSprite);
+    
+    // Display the credits textures
+    if (dispCredits) {
+        if (--creditsCounter == 0) {
+            dispCredits = false;
+        }
+        window.draw(creditsSprite);
+    }
+    
+    else if (!dispCredits && creditsCounter > 0) {
+        if (--creditsCounter == 0) {
+            dispCredits = true;
+            creditsCounter = 200;
+        }
+    }
+    
     //Activating the user interface menu de-activates everything, so we need to give it references to all the objects (alternatively one
     // could check for a keypress in every single object individually, but this way is (possibly) faster because it requires less condition checking)
     if (!player.isdead()) {
         UI.dispDeathSeq();
-        if (UI.isComplete() && sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+        if (UI.isComplete() && pInput->zPressed()) {
             // Reset the UI controller
             UI.reset();
             // Reset the player

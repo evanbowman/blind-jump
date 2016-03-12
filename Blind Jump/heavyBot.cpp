@@ -18,6 +18,7 @@ HeavyBot::HeavyBot(sf::Sprite* inpSprs, short map[61][61]) : EnemyParent(inpSprs
     frameIndex = 0;
     frameRate = 4;
     this->map = map;
+    health = 18;
     state = DORMANT;
 }
 
@@ -65,8 +66,52 @@ sf::Sprite* HeavyBot::getShadow() {
     return &sprites[7];
 }
 
+void HeavyBot::checkBulletCollision(effectsController& ef, FontController& font) {
+    //Check collisions with player's shots, but only if the shot vectors aren't empty
+    if (!ef.getBulletLayer1().empty()) {
+        for (auto & element : ef.getBulletLayer1()) {
+            if (std::abs(element.getPosX() - (xPos)) < 12 && std::abs(element.getPosY() - (yPos - 8)) < 12 && !isColored) {
+                element.setKillFlag();           // Kill the bullet if there's a collision between the bullet and the enemy
+                // Tons of effects in one place is distracting, so don't draw another one if the enemy is about to explode
+                if (health == 1) {
+                    element.disablePuff();
+                }
+                health -= 1;
+                isColored = true;
+                colorCount = 7;
+            }
+        }
+    }
+    if (!ef.getBulletLayer2().empty()) {
+        for (auto & element : ef.getBulletLayer2()) {
+            if (std::abs(element.getPosX() - (xPos - 4)) < 8 && std::abs(element.getPosY() - (yPos - 8)) < 8 && !isColored) {
+                element.setKillFlag();
+                if (health == 1) {
+                    element.disablePuff();
+                }
+                health -= 1;
+                isColored = true;
+                colorCount = 7;
+            }
+        }
+    }
+    
+    if (isColored) {
+        if (--colorCount == 0) {
+            isColored = false;
+        }
+    }
+    
+    if (health == 0) {
+        killFlag = 1;
+        ef.addLvP10(playerPosX - xOffset - 6, playerPosY - yOffset, font);
+        ef.addExplosion(xInit - 16, yInit - 16);
+    }
+}
+
 void HeavyBot::update(float xOffset, float yOffset, effectsController& ef, FontController& fonts, tileController* pTiles) {
     setPosition(xOffset, yOffset);
+    checkBulletCollision(ef, fonts);
     switch (state) {
         case DORMANT:
             if (fabsf(xPos - playerPosX) < 150 && fabsf(yPos - playerPosY) < 150) {
@@ -146,24 +191,27 @@ void HeavyBot::update(float xOffset, float yOffset, effectsController& ef, FontC
             else {
                 if (frameRate == 50) {
                     if (sprites[frameIndex].getScale().x == 1) {
-                        ef.addEnergyBeam(xInit + 2, yInit + 2.5, atan2f(playerPosY - yPos, playerPosX - xPos) * 180 / 3.141592);
+                        ef.addEnergyBeam(xInit + 2, yInit + 2.5, atan2f(playerPosY + 8 - yPos, playerPosX - 3 - xPos) * 180 / 3.141592);
                     }
                     
                     else {
-                        ef.addEnergyBeam(xInit + 5, yInit + 3, atan2f(playerPosY - yPos, playerPosX - xPos) * 180 / 3.141592);
+                        ef.addEnergyBeam(xInit + 5, yInit + 3, atan2f(playerPosY + 8 - yPos, playerPosX - 3 - xPos) * 180 / 3.141592);
                     }
                 }
                 
                 if (--frameRate == 0) {
                     state = OVERHEAT;
-                    frameRate = 4;
+                    frameRate = 40;
                 }
             }
             break;
             
         case OVERHEAT:
-            state = RUN;
-            frameIndex = 1;
+            if (--frameRate == 0) {
+                state = RUN;
+                frameRate = 4;
+                frameIndex = 1;
+            }
             break;
             
         default:
