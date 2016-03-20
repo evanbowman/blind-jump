@@ -129,7 +129,7 @@ int gun::getTimeout() {
 }
 
 //This updates the effects vector that holds all of the shots and hit animations
-void gun::updateShotVector(char playerSpriteIndex, effectsController& ef, float xOffset, float yOffset, userInterface& UI) {
+void gun::updateShotVector(char playerSpriteIndex, effectsController& ef, float xOffset, float yOffset, userInterface& UI, InputController* pInput, SoundController& sounds, char playerState) {
     sprIndex = playerSpriteIndex;
     // Get the index of the item that the user selected from the UI controller class
     selectedGun = UI.getCurrentItem();
@@ -137,27 +137,34 @@ void gun::updateShotVector(char playerSpriteIndex, effectsController& ef, float 
     switch (selectedGun) {
         // If the selected gun is the starting one
         case 1:
-            if (bulletTimer == 0 && sf::Keyboard::isKeyPressed(sf::Keyboard::X) &&  timeout < 95) {
+            if (bulletTimer == 0 && pInput->xPressed() && timeout < 95 && playerState != 'D') {
                 if (sprIndex == 0 || sprIndex == 4) {  //If the gun sprite is up or down, construct a bullet with a corresponding sprite
                     ef.addBullet(0, playerSpriteIndex, xPos - xOffset, yPos - yOffset - 10);
+                    sounds.playEffect(1);
                 }
                 else if (sprIndex == 1 || sprIndex == 5) {
                     ef.addBullet(0, playerSpriteIndex, xPos - xOffset - 3, yPos - yOffset - 18);
+                    sounds.playEffect(1);
                 }
                 
                 else if (sprIndex == 2 || sprIndex == 6 || sprIndex == 3 || sprIndex == 7) {
                     ef.addBullet(1, playerSpriteIndex, xPos - xOffset, yPos - yOffset - 10);
+                    sounds.playEffect(1);
                 }
                 
                 bulletTimer += 1;
             }
             
-            if (bulletTimer != 0) {
+            if (bulletTimer != 0 && playerState == 'N') {
                 if (++bulletTimer == 20) {  //If enough time has passed since the last shot, set the counter back down to shoot again
                     bulletTimer = 0;
                 }
             }
             
+            if (playerState != 'N') {
+                timeout = 6;
+                bulletTimer = 10;
+            }
             break;
             
         default:
@@ -175,9 +182,9 @@ void gun::setTimeout(int time) {
 void gun::setPosition(float x, float y) {
     //if (selectedGun == 1) {
         gunSprite[2].setPosition(x + 2, y + 13);
-        gunSprite[5].setPosition(x + 5, y + 13);
+        gunSprite[5].setPosition(x + 4, y + 13);
         gunSprite[1].setPosition(x + 19, y + 13);
-        gunSprite[4].setPosition(x + 16, y + 13);
+        gunSprite[4].setPosition(x + 17, y + 13);
         gunSprite[0].setPosition(x + 12, y + 15);
         gunSprite[3].setPosition(x + 12, y + 15);
     //}

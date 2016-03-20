@@ -134,25 +134,32 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, in
     
     if (!heavyBots.empty()) {
         for (auto it = heavyBots.begin(); it != heavyBots.end();) {
-            if (enabled) {
-                it->update(x, y, ef, fonts, pTiles);
-            }
-            // Get the enemy's shadow
-            std::tuple<sf::Sprite, float, int> shadow;
-            std::get<0>(shadow) = *it->getShadow();
-            gameShadows.push_back(shadow);
-            
-            std::tuple<sf::Sprite, float, int> tSpr;
-            std::get<0>(tSpr) = *it->getSprite();
-            std::get<1>(tSpr) = it->getYpos() - 16;
-            // If the enemy should be colored, let the rendering code know to pass it through a fragment shader
-            if (it->colored()) {
-                std::get<2>(tSpr) = 2;
+            if (it->getKillFlag()) {
+                scrn->rumble();
+                it = heavyBots.erase(it);
             }
             
-            gameObjects.push_back(tSpr);
-            
-            ++it;
+            else {
+                if (enabled) {
+                    it->update(x, y, ef, fonts, pTiles);
+                }
+                // Get the enemy's shadow
+                std::tuple<sf::Sprite, float, int> shadow;
+                std::get<0>(shadow) = *it->getShadow();
+                gameShadows.push_back(shadow);
+                
+                std::tuple<sf::Sprite, float, int> tSpr;
+                std::get<0>(tSpr) = *it->getSprite();
+                std::get<1>(tSpr) = it->getYpos() - 16;
+                // If the enemy should be colored, let the rendering code know to pass it through a fragment shader
+                if (it->colored()) {
+                    std::get<2>(tSpr) = 2;
+                }
+                
+                gameObjects.push_back(tSpr);
+                
+                ++it;
+            }
         }
     }
     

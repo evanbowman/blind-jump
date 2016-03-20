@@ -21,9 +21,11 @@
 #include "userInterface.hpp"
 #include "damagedRobot.hpp"
 #include "rock.hpp"
+#include "Pillar.hpp"
 
 class detailController {
 private:
+    sf::Texture pillarTextures[1];
     sf::Texture rockTextures[2];
     sf::Texture textures[2];
     sf::Texture damagedRobotTexture[2];
@@ -43,6 +45,7 @@ private:
     std::vector<TreasureChest> chests;
     std::vector<LampLight> lamps;
     std::vector<Rock> rocks;
+    std::vector<Pillar> pillars;
     std::vector<DamagedRobot> damagedRobots;
     // A vector of objects with no polymorphism, for background details that don't need any added functionality
     std::vector<GeneralDetail> misc32x26;
@@ -52,6 +55,7 @@ private:
 public:
     detailController();
     void addCrystals(float, float, float, float);
+    void addPillar(tileController&);
     void addDamagedRobots(tileController&, float, float);
     void addLamplight(tileController&, float, float, int, int, float, float);
     void addChest(tileController&, float, float, float, float, char);
@@ -60,13 +64,14 @@ public:
     void addTeleporter(tileController&, float, float, float, float);
     void addRock(tileController&, float, float, int, int);
     void addTerminal(tileController&, float, float, float, float);
-    void update(float, float, effectsController& ef, char, std::vector<wall>&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, userInterface&, FontController&, Player&);
+    void update(float, float, effectsController& ef, char, std::vector<wall>&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, userInterface&, FontController&, Player&, InputController*);
     void addDasherScrap(tileController&, float, float, int);
     void draw(std::vector<std::tuple<sf::Sprite, float, int>>&, std::vector<std::tuple<sf::Sprite, float, int>>&, sf::RenderWindow&);
     void clear();
     std::vector<TreasureChest> getChests();
-    Teleporter getTeleporter();
+    Teleporter* getTeleporter();
     std::vector<LampLight>* getLamps();
+    std::vector<Rock>* getRocks();
     void addWarpImpact(float, float);
     std::vector<Terminal> getTerms();
     unsigned char* getUIStates();

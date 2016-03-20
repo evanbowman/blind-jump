@@ -26,15 +26,14 @@ public:
     sf::Texture lamplight;
     sf::Sprite lmplght;
     
+    sf::Texture spotlightTxtr;
+    sf::Sprite spotlightSpr;
+    
     sf::Image tileImg[2];
     sf::Image grassSet;
     sf::Image grassSetEdge;
     sf::Image redSet;
     sf::Image redSetFlowers;
-    
-    sf::Image minimapImg;
-    sf::Texture minimapTxr;
-    sf::Sprite minimapSpr;
     
     sf::Sprite tileSprite;
     tileController();
@@ -52,6 +51,8 @@ public:
     void setPosition(float, float);
     void setOffset(float, float);
     sf::RectangleShape shadow;
+    
+    int zoomCounter;
     
     sf::Texture mapTexture[2];
     sf::Sprite mapSprite[2];
@@ -74,8 +75,7 @@ public:
     //Declare a wall object to push to the wall vector
     wall w;
     //Declare vectors to hold posible positions for object placement
-    std::vector<Coordinate
-    > emptyMapLocations;
+    std::vector<Coordinate> emptyMapLocations;
     std::vector<Coordinate> edgeLocations;
     std::vector<Coordinate> largeEmptyLocations;    // For large footprint object placement
     std::vector<Coordinate> primeChestLocations;    // Find tiles with small number of neighbors, good place to hide items
@@ -92,12 +92,13 @@ public:
     // Draw a different overworld based on choice of current working set of tiles
     unsigned char workingSet;
     // A function to rebuild map vectors
-    void rebuild();
+    void rebuild(char itemArray[48][3], int);
     // Initial build is a flat plane
     void init();
     // Return the working set of tiles background controller access
     unsigned char getWorkingSet();
     void setWindowSize(float, float);
+
 };
 
 #endif /* tileController_hpp */

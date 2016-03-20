@@ -13,6 +13,7 @@
 typedef struct _COORDINATE {
     int x;
     int y;
+    int priority;
 } Coordinate;
 
 #endif /* coordinate_h */

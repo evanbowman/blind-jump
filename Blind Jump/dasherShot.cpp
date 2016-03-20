@@ -27,7 +27,7 @@ DasherShot::DasherShot(sf::Sprite* sprite, sf::Sprite glow, float x, float y, fl
     direction = (dir - 270 + diff) * (3.14 / 180);     // I added 270 previously to get the sprite to face in the right direction, so subract it
     //back out and convert back to radians
     killFlag = false;
-    scale = 4.2 + (0.8 * (rand() % 3));
+    scale = 5.8 + (0.8 * (rand() % 3));
     trackPlayer = false;
     frameIndex = false;
     frameLength = 4;

@@ -17,6 +17,14 @@
 #include "soundController.hpp"
 #include "inputController.hpp"
 
+#define DEACTIVATED 'D'
+#define NOMINAL 'N'
+#define DASHING 'd'
+#define COOLDOWN 'C'
+#define DYING 'x'
+#define DEAD 'X'
+#define PREP_DASH 'p' 
+
 class Player {
 private:
     //Current number of lives for the player object
@@ -46,10 +54,14 @@ private:
     sf::Sprite spriteRight[7];
     sf::Texture textureLeft[7];
     sf::Sprite spriteLeft[7];
+    sf::Texture dashTexture[8];
+    sf::Sprite dashSprites[8];
     // For player death sequence:
     sf::Texture deathTextures[11];
     sf::Sprite deathSprites[11];
     bool deathSeq;
+    
+    float stamina;
     
     //Declare a counter to step down the speed of the animations from the max framerate
     int animationCounter;
@@ -64,6 +76,7 @@ private:
     bool rightPrevious;
     bool upPrevious;
     bool downPrevious;
+    bool zprevious;
     
     char slowSpeed;
     
@@ -73,6 +86,12 @@ private:
     
     //Declare a gun object for the player
     gun weapon;
+    
+    // Dodge direction and mode variables
+    bool dodging;
+    char state;
+    int dodgeTimer;
+    char dodgeDir;
     
     //Include a function for setting the animation frame index
     void setImageIndex(char);
@@ -85,6 +104,7 @@ private:
     float previousCheckOffsetY;
 
 public:
+    int getStamina() const;
     float getWorldOffsetX() const;
     float getWorldOffsetY() const;
     void setWorldOffsetX(float);
@@ -92,7 +112,7 @@ public:
     //Functions for getting the current position of the player object
     float getPosX() const;
     float getPosY() const;
-    void drawController(InputController*);
+    void drawController(InputController*, effectsController& ef);
     void draw(std::vector<std::tuple<sf::Sprite, float, int>>&, std::vector<std::tuple<sf::Sprite, float, int>>&, tileController&, effectsController&, detailController&, SoundController&, userInterface&, InputController*);
     //Construct a default player object
     Player();

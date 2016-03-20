@@ -10,6 +10,8 @@
 #include <cmath>
 #include "angleFunction.hpp"
 
+#define PI 3.14159265
+
 //// EASY LOW LEVEL ENEMY
 
 Scoot::Scoot(sf::Sprite* inpSpr) : EnemyParent(inpSpr) {
@@ -73,8 +75,12 @@ void Scoot::checkBulletCollision(effectsController& ef, FontController& font) {
     }
     if (health == 0) {
         killFlag = 1;
+        //ef.addScootShot(xInit - 8, yInit - 12, angleFunction(xPos -8, yPos - 8, playerPosX, playerPosY), playerPosX, playerPosY);
+        //ef.addScootShot(xInit - 8, yInit - 12, angleFunction(xPos -8, yPos - 8, playerPosX, playerPosY) + 28, playerPosX, playerPosY);
+        //ef.addScootShot(xInit - 8, yInit - 12, angleFunction(xPos -8, yPos - 8, playerPosX, playerPosY) - 28, playerPosX, playerPosY);
         ef.addLvP1(playerPosX - xOffset - 6, playerPosY - yOffset, font);
-        ef.addExplosion(xInit - 16, yInit - 16);
+        //ef.addSmallExplosion(xInit, yInit);
+        ef.addFireExplosion(xInit, yInit - 2);
     }
 }
 
@@ -136,6 +142,8 @@ void Scoot::update(float xOffset, float yOffset, std::vector<wall> w, effectsCon
         // Push back away from the player and shoot some lasers
         ef.addTurretFlash(xInit - 8, yInit - 12);
         ef.addScootShot(xInit - 8, yInit - 12, angleFunction(xPos -8, yPos - 8, playerPosX, playerPosY), playerPosX, playerPosY);
+        ef.addScootShot(xInit - 8, yInit - 12, angleFunction(xPos -8, yPos - 8, playerPosX, playerPosY) + 28, playerPosX, playerPosY);
+        ef.addScootShot(xInit - 8, yInit - 12, angleFunction(xPos -8, yPos - 8, playerPosX, playerPosY) - 28, playerPosX, playerPosY);
         float dir = atan((yPos - playerPosY) / (xPos - playerPosX));
         hSpeed = -cos(dir) * 3.0;
         vSpeed = -sin(dir) * 3.0;

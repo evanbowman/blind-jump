@@ -39,7 +39,7 @@ int main(int, char const**) {
     }
     
     // Boolean that stores whether the game is on the title screen
-    bool title = 1;
+    bool title = false;
     // Variable that enables drawing the cutscene
     // For transitions, simply use a rectangle primitive shape
     sf::RectangleShape overlayRect;
@@ -111,15 +111,9 @@ int main(int, char const**) {
     // Load opening credits text and create a background
     sf::Texture creditsTextTxtr;
     sf::Sprite creditsTextSpr;
-    creditsTextTxtr.loadFromFile(resourcePath() + "PresentingText.png");
-    creditsTextSpr.setTexture(creditsTextTxtr);
-    creditsTextSpr.setPosition((windowWidth / 2) - 117, (windowHeight / 2) - 7);
     sf::RectangleShape creditsBkg;
     creditsBkg.setSize(sf::Vector2f(windowWidth, windowHeight));
     creditsBkg.setFillColor(sf::Color(47, 51, 98, 255));
-    // Variables to control displaying credits
-    bool creditsRolling = true;
-    unsigned short creditsDispTimer = CREDITS_DISP_LENGTH;
     
     // Start the game loop
     while (window.isOpen()) {
@@ -140,6 +134,8 @@ int main(int, char const**) {
         // Clear screen
         window.clear();
         
+        input.update();
+        
         //Update and draw all of the game objects by calling the update function within mapInit and passing in a reference to the window
         if (!title) {   // If not on the title screen
                 Map.update(window);
@@ -150,37 +146,17 @@ int main(int, char const**) {
         }
         
         else {
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && title && !creditsRolling) {
+            if (input.zPressed() && title) {
                 title = false;
             }
-            window.draw(titlebkgSpr);
+            //window.draw(titlebkgSpr);
             //window.draw(titleSpr[3]);
             
             //window.draw(titleSpr[3]);
-            window.draw(titleSpr[3]);
-            window.draw(titleSpr[2]);
-            window.draw(titleSpr[0]);
-            window.draw(titleSpr[1]);
-        }
-        
-        if (creditsRolling) {
-            if (--creditsDispTimer == 0) {
-                creditsDispTimer = CREDITS_DISP_LENGTH;
-                creditsRolling = false;
-            }
-            
-            window.draw(creditsBkg);
-            if (creditsDispTimer < CREDITS_DISP_LENGTH - 50 && creditsDispTimer > 100) {
-                window.draw(creditsTextSpr);
-            }
-            
-            if (creditsDispTimer < 60) {
-                sf::Color c = creditsBkg.getFillColor();
-                if (c.a > 6) {
-                    c.a -= 4.5;
-                }
-                creditsBkg.setFillColor(c);
-            }
+            //window.draw(titleSpr[3]);
+            //window.draw(titleSpr[2]);
+            //window.draw(titleSpr[0]);
+            //window.draw(titleSpr[1]);
         }
         
         // Update the window

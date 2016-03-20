@@ -18,7 +18,7 @@ void addTurret(short mapArray[61][61], short descriptionArray[61][61], enemyCont
     turret t(en.getTurretSprites());
     
     // Randomly pick an available empty location
-    int locationSelect = rand() % emptyLocations.size();
+    int locationSelect = rand() % (emptyLocations.size() / 3);
     Coordinate c = emptyLocations[locationSelect];
     // Don't want to place two objects in the same position, so remove coordinate from the vector if used
     emptyLocations[locationSelect] = std::move(emptyLocations.back());
@@ -35,7 +35,7 @@ void addScoot(short mapArray[61][61], short descriptionArray[61][61], enemyContr
     
     Scoot s(en.getScootSprites());
     
-    int locationSelect = rand() % emptyLocations.size();
+    int locationSelect = rand() % (emptyLocations.size() / 3);
     Coordinate c = emptyLocations[locationSelect];
     emptyLocations[locationSelect] = std::move(emptyLocations.back());
     emptyLocations.pop_back();
@@ -48,7 +48,7 @@ void addDasher(short mapArray[61][61], short descriptionArray[61][61], enemyCont
     
     Dasher d(en.getDasherSprites());
     
-    int locationSelect = rand() % emptyLocations.size();
+    int locationSelect = rand() % (emptyLocations.size() / 5);
     Coordinate c = emptyLocations[locationSelect];
     emptyLocations[locationSelect] = std::move(emptyLocations.back());
     emptyLocations.pop_back();
@@ -61,7 +61,7 @@ void addHeavyBot(short mapArray[61][61], short descriptionArray[61][61], enemyCo
     
     HeavyBot h(en.getHeavyBotSprites(), mapArray);
     
-    int locationSelect = rand() % emptyLocations.size();
+    int locationSelect = rand() % (emptyLocations.size() / 2);
     Coordinate c = emptyLocations[locationSelect];
     emptyLocations[locationSelect] = std::move(emptyLocations.back());
     emptyLocations.pop_back();
@@ -74,7 +74,7 @@ void addCritter(short mapArray[61][61], short descriptionArray[61][61], enemyCon
     // Fill a vector with a bunch of chasers
     std::vector<Critter> critters(rep, Critter(en.getChaserSprites(), mapArray));
     
-    int locationSelect = rand() % emptyLocations.size();
+    int locationSelect = rand() % (emptyLocations.size() / 2);
     Coordinate c = emptyLocations[locationSelect];
     emptyLocations[locationSelect] = std::move(emptyLocations.back());
     emptyLocations.pop_back();

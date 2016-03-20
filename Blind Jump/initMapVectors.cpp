@@ -38,23 +38,15 @@ bool checkCritical(std::vector<aStrCoordinate>& path, int x, int y) {
     return false;
 }
 
-void initMapVectors(short mapArray[61][61], wall w, std::vector<wall>& walls, float& posX, float& posY, std::vector<Coordinate>& emptyLocations, std::vector<Coordinate>& largeEmptyLocations, std::vector<Coordinate>& edgeLocations, std::vector<Coordinate>& chestLocations, Coordinate& transporterLocation) {
+void initMapVectors(short mapArray[61][61], wall w, std::vector<wall>& walls, float& posX, float& posY, std::vector<Coordinate>& emptyLocations, std::vector<Coordinate>& largeEmptyLocations, std::vector<Coordinate>& edgeLocations, std::vector<Coordinate>& chestLocations, Coordinate& transporterLocation, char itemArray[48][3], int level) {
     
     // First pick points for the hero character and level exit, to make sure not to place any objects on the critical path
     int playerX, playerY, transporterX, transporterY;
     
     do {
-        playerX = rand() % 55;
-        playerY = rand() % 55;
-    } while (mapArray[playerX][playerY] != 4);
-    
-    posX = -(32 * playerX);
-    posY = -(26 * playerY) - 4;
-    
-    do {
         transporterX = rand() % 55;
         transporterY = rand() % 55;
-    } while ((mapArray[transporterX][transporterY] != 4 || (((std::abs(posY / 26 * transporterY) < 400)) && (std::abs(posX / 32 * transporterX) < 400))));
+    } while ((mapArray[transporterX][transporterY] != 4));
     
     transporterLocation.x = transporterX;
     transporterLocation.y = transporterY;
@@ -70,7 +62,8 @@ void initMapVectors(short mapArray[61][61], wall w, std::vector<wall>& walls, fl
                 c1.y = j;
                 count = countNeighbors(mapArray, i, j, 3, 4);
                 count += countNeighbors(mapArray, i, j, 8, 8);
-                
+                // Assign coordinate priority based on distance from the transporter (and possibly items, tbd)
+                c1.priority = sqrtf((i - transporterX) * (i - transporterX) + (j - transporterY) * (j - transporterY));
                 emptyLocations.push_back(c1);
             
                 if ((mapArray[i - 1][j - 1] == 3 || mapArray[i - 1][j - 1] == 4) &&
@@ -122,5 +115,23 @@ void initMapVectors(short mapArray[61][61], wall w, std::vector<wall>& walls, fl
             
         }
     }
-    //std::cout << "";
+    // Sort the empty location vector based on coordinate priorities
+    std::sort(emptyLocations.begin(), emptyLocations.end(), [](const Coordinate c1, const Coordinate c2) {return c1.priority < c2.priority;});
+    
+    // Put the player as far away from the transporter as possible
+    if (level != 10) {
+        playerX = emptyLocations.back().x;
+        playerY = emptyLocations.back().y;
+    }
+    
+    else {
+        playerX = 36;
+        playerY = 31;
+    }
+    
+    posX = -(32 * playerX);
+    posY = -(26 * playerY) - 4;
+    
+    // Remove that location from the vector
+    emptyLocations.pop_back();
 }

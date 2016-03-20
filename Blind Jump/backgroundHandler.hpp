@@ -12,19 +12,25 @@
 #include <stdio.h>
 #include <SFML/Graphics.hpp>
 
+#define STARMAP_SIZE 7
+
 class backgroundHandler {
 private:
     sf::Texture bkgLayer[3];
     sf::Texture bkgStars;
+    sf::Texture bkgStarsFar;
     sf::Sprite bkgSprite[3];
-    sf::Sprite stars[81];
-    float xOffset;
-    float yOffset;
+    sf::Sprite stars[STARMAP_SIZE][STARMAP_SIZE];
+    sf::Sprite starsFar[STARMAP_SIZE][STARMAP_SIZE];
+    sf::CircleShape planet[2];
+    float xOffset, xOffPrev;
+    float yOffset, yOffPrev;
     float posX;
     float posY;
     float windowW;
     float windowH;
     unsigned char workingSet;
+    sf::RenderTexture rt;
     
 public:
     backgroundHandler();
@@ -33,6 +39,7 @@ public:
     void setPosition(float, float);
     void giveWindowSize(float, float);
     void setBkg(unsigned char);
+    void reset();
 };
 
 #endif /* backgroundHandler_hpp */

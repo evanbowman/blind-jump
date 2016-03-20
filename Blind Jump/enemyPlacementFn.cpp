@@ -10,6 +10,7 @@
 #include "enemyPlacementFn.hpp"
 #include "gameMap.hpp"
 #include "enemyCreationFunctions.hpp"
+#include <cmath>
 
 int initEnemies(GameMap* gm) {
     // Store local references to expected frequently accessed values
@@ -38,7 +39,7 @@ int initEnemies(GameMap* gm) {
             pVec->push_back(dasher);
             break;
             
-        case 5:
+        case 6:
             turret.first = 3;
             turret.second = abs(currentLevel - idealLevels[3]);
             pVec->push_back(turret);
@@ -67,7 +68,12 @@ int initEnemies(GameMap* gm) {
     
     // Now it's time to actually place the enemies on the map based on weighted values
     // Slowly work up to the max number of enemies on the map
-    int iters = (currentLevel < 7) ? currentLevel + 8 : 15;
+    // Normalized level is for the difficulty curve, so that fewer enemies are placed following a boss battle
+    int normalizedLevel = (currentLevel < 11) ? currentLevel : currentLevel - 10 * (currentLevel % 10);
+    int iters = 1 + pow(normalizedLevel, 1.25);
+    if (iters > 15) {
+        iters = 15;
+    }
     for (int i = 0; i < iters; i++) {
         // Generate a random number on the range of 0 to the sum of all enemy weights
         int select = rand() % collector;
@@ -96,15 +102,15 @@ int initEnemies(GameMap* gm) {
                 break;
                 
             case 1:
-                if (currentLevel < 6)
+                if (currentLevel < 12)
                     addCritter(gm->tiles.mapArray, gm->tiles.descriptionArray, gm->en, gm->tiles.posX, gm->tiles.posY, gm->windowW, gm->windowH, gm->tiles.emptyMapLocations, 1);
                 
                 // If the current level is high, create swarms rather than single enemies
-                else if (currentLevel < 12)
+                else if (currentLevel < 20)
                     addCritter(gm->tiles.mapArray, gm->tiles.descriptionArray, gm->en, gm->tiles.posX, gm->tiles.posY, gm->windowW, gm->windowH, gm->tiles.emptyMapLocations, 3 + (rand() % 2));
                 
                 else
-                    addCritter(gm->tiles.mapArray, gm->tiles.descriptionArray, gm->en, gm->tiles.posX, gm->tiles.posY, gm->windowW, gm->windowH, gm->tiles.emptyMapLocations, 7 + (rand() % 2));
+                    addCritter(gm->tiles.mapArray, gm->tiles.descriptionArray, gm->en, gm->tiles.posX, gm->tiles.posY, gm->windowW, gm->windowH, gm->tiles.emptyMapLocations, 4 + (rand() % 2));
                 
                 break;
                 

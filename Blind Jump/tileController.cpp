@@ -12,6 +12,7 @@
 #include "turret.hpp"
 #include "initMapVectors.hpp"
 #include <random>
+#include "drawPixels.hpp"
 
 // Define expressions to represent the number values for the tilesets (makes the code easier to follow)
 #define SAND_TILESET 0
@@ -32,16 +33,6 @@ void initMapStack(std::vector<unsigned char> &mps) {
     // Randomly shuffle the stack of maps with an stl function
     std::mt19937 gen(static_cast<uint32_t>(time(0)));
     shuffle(mps.begin(), mps.end(), gen);
-}
-
-void drawPixels(sf::Image& tileMap, sf::Image& tileImage, int xIndex, int yIndex, int xoffset, int yoffset) {
-    for (int i = 0; i < 32; i++) {
-        for (int j = 0; j < 26; j++) {
-            // If the pixel color is not transparent
-            if (tileImage.getPixel(i + xoffset, j).a != 0)
-                tileMap.setPixel(xIndex * 32 + i, yIndex * 26 + j, tileImage.getPixel(i + xoffset, j + yoffset));
-        }
-    }
 }
 
 void createMapImage(sf::Image* tileImage, short mapArray[61][61], sf::Texture tx[2], sf::Image* grassSet, sf::Image* grassSetEdge) {
@@ -75,7 +66,7 @@ void createMapImage(sf::Image* tileImage, short mapArray[61][61], sf::Texture tx
     // Now if the map array contains a grass tile, set the temporary map value to 1
     for (int i = 0; i < 61; i++) {
         for (int j = 0; j < 61; j++) {
-            if (mapArray[i][j] == 8 || mapArray[i][j] == 11 || mapArray[i][j] == 10 || mapArray[i][j] == 9) {
+            if (mapArray[i][j] == 8 || mapArray[i][j] == 11 || mapArray[i][j] == 10 || mapArray[i][j] == 9 || mapArray[i][j] == 7) {
                 mapTemp[i][j] = 1;
             }
         }
@@ -202,17 +193,18 @@ tileController::tileController() {
     windowW = 0;
     tempX = 0;
     tempY = 0;
+    zoomCounter = 0;
     
     //First load the all the textures for the overworld sprites
     const std::string fileExts3[5] = {"moon_edge_tile.png", "field_tile.png", "field_tile_shrub.png", "orbit_edge_tile3.png", "orbit_edge_top.png"};
     const std::string fileExts4[5] = {"regolith_border_tile.png", "regolith_tile.png", "regolith_tile_alt.png", "orbit_edge_tile4.png", "orbit_edge_top.png"};
     
     tileImg[0].loadFromFile(resourcePath() + "soilTileset.png");
-    tileImg[1].loadFromFile(resourcePath() + "sandTileset.png");
     grassSet.loadFromFile(resourcePath() + "grassSet.png");
     grassSetEdge.loadFromFile(resourcePath() + "grassSetEdge.png");
-    redSet.loadFromFile(resourcePath() + "damageSet.png");
-    redSetFlowers.loadFromFile(resourcePath() + "redSetFlowers.png");
+    
+    lamplight.loadFromFile(resourcePath() + "lampLight.png");
+    lmplght.setTexture(lamplight);
     
     for (int i = 0; i < 5; i++) {
         tileTexture3[i].loadFromFile(resourcePath() + fileExts3[i]);
@@ -221,14 +213,19 @@ tileController::tileController() {
     //std::cout << tileTexture[0].getMaximumSize();
     
     //Call the mapping function to transform the array into something useful
-    int count = mappingFunction(mapArray);
+    int count = mappingFunction(mapArray, 0);
     // Yikes a while loop! I try to avoid them, but... This loop repeats until it yields a large enough map
-    while (count < 300) {
-        count = mappingFunction(mapArray);
+    while (count < 200) {
+        count = mappingFunction(mapArray, 0);
     }
-    
+    char itemArray[48][3];
+    for (int i = 0; i < 48; i++) {
+        for (int j = 0; j < 3; j++) {
+            itemArray[i][j] = 0;
+        }
+    }
     //Now call another function to read the map and store empty locations for enemy placement
-    initMapVectors(mapArray, w, walls, posX, posY, emptyMapLocations, largeEmptyLocations, edgeLocations, primeChestLocations, teleporterLocation);
+    initMapVectors(mapArray, w, walls, posX, posY, emptyMapLocations, largeEmptyLocations, edgeLocations, primeChestLocations, teleporterLocation, itemArray, 0);
     // Initialize the tileset to use for the first waypoint (currently set to a constant value)
     workingSet = SAND_TILESET;
     // Fill the container of maps with values
@@ -240,7 +237,7 @@ tileController::tileController() {
     
     txt.loadFromFile(resourcePath() + "whiteFloorGlow.png");
     spr.setTexture(txt);
-    shadow.setFillColor(sf::Color(183, 183, 190, 255));
+    shadow.setFillColor(sf::Color(188, 188, 198, 255));
 }
 
 void tileController::drawTiles(sf::RenderWindow& window, std::vector<sf::Sprite*>* glowSprites, std::vector<sf::Sprite*>* glowSprites2) {
@@ -253,7 +250,7 @@ void tileController::drawTiles(sf::RenderWindow& window, std::vector<sf::Sprite*
     spr.setPosition(windowW / 2 + 20, windowH / 2);
     mapSprite[0].setPosition(posX + xOffset, posY + yOffset);
     mapSprite[1].setPosition(posX + xOffset, posY + yOffset);
-    
+
     // Clear out the RenderTexture
     rt.clear(sf::Color::Transparent);
     // Draw the map sprite to the texture
@@ -282,11 +279,6 @@ void tileController::drawTiles(sf::RenderWindow& window, std::vector<sf::Sprite*
     // Draw the whole thing to the window
     window.draw(sprite);
     window.draw(sprite2);
-    /*if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        int playerx = (posX - windowW + xOffset) / -32;
-        int playery = (posY - windowH + yOffset) / -26;
-        std::cout << playerx << "  " << playery << std::endl;
-    }*/
 }
 
 void tileController::drawTiles(sf::RenderWindow& window) {
@@ -310,6 +302,7 @@ void tileController::setPosition(float X, float Y) {
     windowH = Y;
 }
 
+
 // Empty all of the containers to prepare for pushing back a new map set
 void tileController::clear() {
     walls.clear();
@@ -320,7 +313,7 @@ void tileController::clear() {
 }
 
 // A function to build a new world with a random tileset
-void tileController::rebuild() {
+void tileController::rebuild(char itemArray[48][3], int level) {
     // If the vector of map data contains values
     if (maps.size() > 0) {
         workingSet = maps[maps.size() - 1];
@@ -350,7 +343,7 @@ void tileController::rebuild() {
         default:
             break;
     }
-    initMapVectors(mapArray, w, walls, posX, posY, emptyMapLocations, largeEmptyLocations, edgeLocations, primeChestLocations, teleporterLocation);
+    initMapVectors(mapArray, w, walls, posX, posY, emptyMapLocations, largeEmptyLocations, edgeLocations, primeChestLocations, teleporterLocation, itemArray, level);
 }
 
 void tileController::init() {
@@ -370,6 +363,7 @@ unsigned char tileController::getWorkingSet() {
 void tileController::setWindowSize(float w, float h) {
     rt.create(w, h);
     re.create(w, h);
+    
     sf::Vector2f v;
     v.x = w;
     v.y = h;

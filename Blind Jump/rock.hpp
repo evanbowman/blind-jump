@@ -17,7 +17,6 @@ class Rock : public detailParent {
 private:
     sf::Sprite sprite;
     
-    
 public:
     void update(float, float);
     Rock(float, float, sf::Sprite*, int, float, float);

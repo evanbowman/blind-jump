@@ -23,7 +23,7 @@ EnergyBeam::EnergyBeam(float xInit, float yInit, sf::Sprite* inpSprs, float dir)
     beamShape.setOutlineColor(sf::Color(104, 255, 229));
     beamShape.setOutlineThickness(0);
     frameIndex = 0;
-    frameRate = 5;
+    frameRate = 4;
     state = ENTERING;
 }
 
@@ -34,7 +34,7 @@ void EnergyBeam::update(float xOffset, float yOffset) {
     switch (state) {
         case ENTERING:
             if (--frameRate == 0) {
-                frameRate = 3;
+                frameRate = 2;
                 frameIndex++;
                 if (frameIndex > 2) {
                     state = RUNNING;

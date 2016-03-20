@@ -27,14 +27,14 @@ sf::Sprite* TreasureChest::getShadow() {
     return &chestSprites[6];
 }
 
-void TreasureChest::update(float xOffset, float yOffset, char playerSpriteIndex) {
+void TreasureChest::update(float xOffset, float yOffset, char playerSpriteIndex, InputController* input) {
     xPos = xOffset + xInit;
     yPos = yOffset + yInit;
     
     chestSprites[6].setPosition(xPos, yPos + 15);
     
     if (!isOpen) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && fabsf(xPos + 8 - windowCenterX / 2) < 12 && fabsf(yPos - windowCenterY / 2) < 10 && playerSpriteIndex == 1) {
+        if (input->zPressed() && fabsf(xPos + 8 - windowCenterX / 2) < 12 && fabsf(yPos - windowCenterY / 2) < 10 && playerSpriteIndex == 1) {
             animationIsRunning = true;
         }
     }

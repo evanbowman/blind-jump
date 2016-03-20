@@ -8,6 +8,8 @@
 
 #include "bulletType1.hpp"
 
+#define TIME 14
+
 bulletType1::bulletType1(sf::Sprite s, sf::Sprite s2, char dir, float x, float y) {
     //Initialize the starting x position to the player's x position
     xPos = x;
@@ -17,7 +19,7 @@ bulletType1::bulletType1(sf::Sprite s, sf::Sprite s2, char dir, float x, float y
     direction = dir;
     bulletSprite[0] = s;
     bulletSprite[1] = s2;
-    duration = 22;
+    duration = TIME;
     killFlag = 0;
     canPoof = true;
 }
@@ -37,34 +39,34 @@ void bulletType1::update(float xOffset, float yOffset) {
             // so each case needs to set a specific origin for the shot object.
         case 0:
             xPos = xInit + xOffset + 6;
-            yPos = yInit + 11 + yOffset + 18 + 7 * (22 - duration); //'20 - duration' term grows with time, thus moving the bullet across the screen
+            yPos = yInit + 11 + yOffset + 18 + 9 * (TIME - duration); //'20 - duration' term grows with time, thus moving the bullet across the screen
             break;
         case 1:
             xPos = xInit + xOffset + 6;
-            yPos = yInit + 11 + yOffset - 7 * (22 - duration);
+            yPos = yInit + 11 + yOffset - 9 * (TIME - duration);
             break;
         case 2:
-            xPos = xInit + xOffset - 13 - 7 * (22 - duration);
+            xPos = xInit + xOffset - 13 - 9 * (TIME - duration);
             yPos = yInit + 11 + yOffset + 8;
             break;
         case 3:
-            xPos = xInit + xOffset + 29 + 7 * (22 - duration);
+            xPos = xInit + xOffset + 29 + 9 * (TIME - duration);
             yPos = yInit + 11 + yOffset + 8;
             break;
         case 4:
             xPos = xInit + xOffset + 6;
-            yPos = yInit + 11 + yOffset + 18 + 7 * (22 - duration);
+            yPos = yInit + 11 + yOffset + 18 + 9 * (TIME - duration);
             break;
         case 5:
             xPos = xInit + xOffset + 6;
-            yPos = yInit + 11 + yOffset - 7 * (22 - duration);
+            yPos = yInit + 11 + yOffset - 9 * (TIME - duration);
             break;
         case 6:
-            xPos = xInit + xOffset - 13 - 7 * (22 - duration);
+            xPos = xInit + xOffset - 13 - 9 * (TIME - duration);
             yPos = yInit + 11 + yOffset + 8;
             break;
         case 7:
-            xPos = xInit + xOffset + 29 + 7 * (22 - duration);
+            xPos = xInit + xOffset + 29 + 9 * (TIME - duration);
             yPos = yInit + 11 + yOffset + 8;
             break;
     }

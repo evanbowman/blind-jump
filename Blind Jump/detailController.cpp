@@ -33,6 +33,8 @@ detailController::detailController() {
     enemyScraps[0].loadFromFile(resourcePath() + "enemyScraps.png");
     dasherScraps.loadFromFile(resourcePath() + "dasherDead.png");
     teleporterGlow.loadFromFile(resourcePath() + "teleporterGlow.png");
+    pillarTextures[0].loadFromFile(resourcePath() + "pillarSheet.png");
+    
     for (int i = 0; i < 2; i++) {
         damagedRobotTexture[i].loadFromFile(resourcePath() + "damagedRobotSheet.png", sf::IntRect(i * 40, 0, 40, 43));
     }
@@ -171,11 +173,11 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
         placeOffsetX = (rand() % 6) - 3;
         if (rand() % 2) {
             tempSprite.setScale(-1, 1);
-            placeOffsetX += 12;
+            placeOffsetX += 32;
         }
         DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
         damagedRobots.push_back(dr);
-        if (rand() % 5 > 2) {
+        if (rand() % 2) {
             try {
                 c = pickLocationGrass(t.emptyMapLocations, t.mapArray);
             }
@@ -184,7 +186,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
                 std::cout << e << std::endl;
             }
             
-            placeOffsetX = (rand() % 6) - 3;
+            //placeOffsetX = (rand() % 6) - 3;
             tempSprite.setTexture(damagedRobotTexture[!choice]);
             DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
             damagedRobots.push_back(dr);
@@ -204,20 +206,34 @@ void detailController::addDasherScrap(tileController& t, float posX, float posY,
     misc32x26.push_back(dScrap);
 }
 
+void detailController::addPillar(tileController &tiles) {
+    short (*localMap)[61] = tiles.mapArray;
+    // Pick a location from the local map array
+    int x, y;
+    do {
+        x = rand() % 61;
+        y = rand() % 61;
+    } while (localMap[x - 1][y] != 5 && localMap[x - 1][y + 1] != 2 && localMap[x][y] != 0 && localMap[x][y - 1] != 0);
+    sf::Sprite tempSprite(pillarTextures[0]);
+    tempSprite.setOrigin(0, 156);
+    Pillar p(x * 32 + tiles.posX + 32, y * 26 + tiles.posY, &tempSprite, 0, 0, 0);
+    pillars.push_back(p);
+}
+
 void detailController::addTeleporter(tileController& t, float posX, float posY, float width, float height) {
     Coordinate c = t.getTeleporterLoc();
     sf::Sprite tempSprites[2];
     tempSprites[0].setTexture(teleporterTexture[0]);
     tempSprites[1].setTexture(teleporterTexture[1]);
     // Want the overworld to look organic, so randomly offset the teleporter location
-    float placeOffsetX = 0;
+    //float placeOffsetX = 0;
     
-    placeOffsetX = (rand() % 6) - 3;
+    //placeOffsetX = (rand() % 6) - 3;
     
     sf::Sprite glow;
     glow.setTexture(teleporterGlow);
     
-    Teleporter T((c.x * 32) + posX + 2 + placeOffsetX, (c.y * 26) + posY - 4, tempSprites, glow, 2, width, height);
+    Teleporter T((c.x * 32) + posX + 2/* + placeOffsetX*/, (c.y * 26) + posY - 4, tempSprites, glow, 2, width, height);
     // Initialize the teleporter countdown to 5
     T.initCountdown();
     teleporters.push_back(T);
@@ -233,7 +249,7 @@ void detailController::addTerminal(tileController & t, float posX, float posY, f
     terminals.push_back(term);
 }
 
-void detailController::update(float xOffset, float yOffset, effectsController& ef, char PlayerSprIndex, std::vector<wall>& walls, std::vector<sf::Sprite*>* glow1, std::vector<sf::Sprite*>* glow2, userInterface& ui, FontController& fonts, Player& player) {
+void detailController::update(float xOffset, float yOffset, effectsController& ef, char PlayerSprIndex, std::vector<wall>& walls, std::vector<sf::Sprite*>* glow1, std::vector<sf::Sprite*>* glow2, userInterface& ui, FontController& fonts, Player& player, InputController* pInput) {
     UIStates[0] = 0;
     if (!teleporters.empty()) {
         for (auto & element : teleporters) {
@@ -262,7 +278,7 @@ void detailController::update(float xOffset, float yOffset, effectsController& e
     
     if (!chests.empty()) {
         for (int i = 0; i < chests.size(); i++) {
-            chests[i].update(xOffset, yOffset, PlayerSprIndex);
+            chests[i].update(xOffset, yOffset, PlayerSprIndex, pInput);
             // If the user opened a chest, put it's item into the UI menu
             if (chests[i].getFrameIndex() == 3) {
                 ui.addItem(chests[i].getItem(), ef, chests[i].getxPos() - xOffset, chests[i].getyPos() - yOffset, fonts, player);
@@ -272,6 +288,12 @@ void detailController::update(float xOffset, float yOffset, effectsController& e
     
     if (!rocks.empty()) {
         for (auto & element : rocks) {
+            element.update(xOffset, yOffset);
+        }
+    }
+    
+    if (!pillars.empty()) {
+        for (auto & element : pillars) {
             element.update(xOffset, yOffset);
         }
     }
@@ -318,8 +340,8 @@ void detailController::killTeleporter() {
 }
 
 void detailController::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, int>>& gameShadows, sf::RenderWindow& window) {
+    std::tuple<sf::Sprite, float, int> tObject, tShadow;
     if (!misc32x26.empty()) {
-        std::tuple<sf::Sprite, float, int> tObject;
         for (auto & element : misc32x26) {
             std::get<0>(tObject) = *element.getSprite();
             std::get<1>(tObject) = element.getyPos() - 26;
@@ -335,8 +357,15 @@ void detailController::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gam
         }
     }
     
+    if (!pillars.empty()) {
+        for (auto & element : pillars) {
+            std::get<0>(tObject) = *element.getSprite();
+            std::get<1>(tObject) = element.getyPos() + 32;
+            gameObjects.push_back(tObject);
+        }
+    }
+    
     if (!rocks.empty()) {
-        std::tuple<sf::Sprite, float, int> tObject;
         for (auto element : rocks) {
             std::get<0>(tObject) = *element.getSprite();
             std::get<1>(tObject) = element.getyPos() + 22;
@@ -345,7 +374,6 @@ void detailController::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gam
     }
     
     if (!damagedRobots.empty()) {
-        std::tuple<sf::Sprite, float, int> tObject;
         for (auto element : damagedRobots) {
             std::get<0>(tObject) = *element.getSprite();
             std::get<1>(tObject) = element.getyPos();
@@ -354,7 +382,6 @@ void detailController::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gam
     }
     
     if (!chests.empty()) {
-        std::tuple<sf::Sprite, float, int> tObject, tShadow;
         for (auto & element : chests) {
             // Push back the object
             std::get<0>(tObject) = *element.getSprite();
@@ -383,14 +410,15 @@ void detailController::clear() {
     lamps.clear();
     damagedRobots.clear();
     rocks.clear();
+    pillars.clear();
 }
 
 std::vector<TreasureChest> detailController::getChests() {
     return chests;
 }
 
-Teleporter detailController::getTeleporter() {
-    return teleporters[0];
+Teleporter* detailController::getTeleporter() {
+    return &teleporters[0];
 }
 
 std::vector<Terminal> detailController::getTerms() {
@@ -405,3 +433,6 @@ std::vector<LampLight>* detailController::getLamps() {
     return &lamps;
 }
 
+std::vector<Rock>* detailController::getRocks() {
+    return &rocks;
+}

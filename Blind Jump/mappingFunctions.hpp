@@ -10,9 +10,13 @@
 #define mappingFunctions_hpp
 
 #include <stdio.h>
+#include "building.hpp"
+#include "tileController.hpp"
 
-int mappingFunction(short map[61][61]);
-bool placeBuilding(int, int, short map[61][61]);
+#define BOSS_LEVEL_1 10
+
+int mappingFunction(short map[61][61], int level);
+Building addHouse(short map[61][61], tileController&);
 
 
 #endif /* mappingFunctions_hpp */

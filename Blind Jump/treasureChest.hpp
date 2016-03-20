@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "detailParent.hpp"
+#include "inputController.hpp"
 
 class TreasureChest : public detailParent {
 public:
@@ -18,7 +19,7 @@ public:
     using detailParent::detailParent;
     sf::Sprite* getShadow();
     sf::Sprite* getSprite();
-    void update(float, float, char);
+    void update(float, float, char, InputController*);
     sf::Sprite chestSprites[7];
     float getZY();
     char getFrameIndex();

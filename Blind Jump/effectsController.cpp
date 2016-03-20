@@ -27,6 +27,11 @@ effectsController::effectsController() {
         bulletSprites[i].setTexture(bulletTexture[i]);
     }
     
+    for (int i = 0; i < 8; i++) {
+        dashSmokeTextures[i].loadFromFile(resourcePath() + "dashSmokeSheet.png", sf::IntRect(i * 64, 0, 64, 32));
+        dashSmokeSprites[i].setTexture(dashSmokeTextures[i]);
+    }
+    
     bulletGlow[0].loadFromFile(resourcePath() + "whiteFloorGlow.png");
     bulletSprites[2].setTexture(bulletGlow[0]);
     redGlowTexture.loadFromFile(resourcePath() + "redFloorGlow.png");
@@ -45,10 +50,20 @@ effectsController::effectsController() {
     newItemText.loadFromFile(resourcePath() + "newItemText.png");
     newItemSpr.setTexture(newItemText);
     
+    for (int i = 0; i < 9; i++) {
+        fireExplosionTxtr[i].loadFromFile(resourcePath() + "fireExplosionSheet.png", sf::IntRect(i * 58, 0, 58, 51));
+        fireExplosionSpr[i].setTexture(fireExplosionTxtr[i]);
+    }
+    
+    fireExplosionGlowTxtr.loadFromFile(resourcePath() + "fireExplosionGlow.png");
+    fireExplosionGlowSpr.setTexture(fireExplosionGlowTxtr);
+    
     const std::string fileExt4[6] = {"exp32_1.png", "exp32_2.png", "exp32_3.png", "exp32_4.png", "exp32_5.png", "exp32_6.png"};
     const std::string fileExt5[6] = {"teleporterSmoke1.png", "teleporterSmoke2.png", "teleporterSmoke3.png", "teleporterSmoke4.png", "teleporterSmoke5.png", "teleporterSmoke6.png"};
     const std::string fileExt6[6] = {"Smoke1.png", "Smoke2.png", "Smoke3.png", "Smoke4.png", "Smoke5.png", "Smoke6.png"};
     for (int i = 0; i < 6; i++) {
+        smallExplosionTxtr[i].loadFromFile(resourcePath() + "smallExplosion.png", sf::IntRect(i * 36, 0, 36, 36));
+        smallExplosionSpr[i].setTexture(smallExplosionTxtr[i]);
         smokeTextures[i].loadFromFile(resourcePath() + fileExt6[i]);
         smokeSprites[i].setTexture(smokeTextures[i]);
         warpEffectTextures[i].loadFromFile(resourcePath() + fileExt5[i]);
@@ -139,8 +154,10 @@ void effectsController::update(float xOffset, float yOffset) {
             }
         }
     }
-    
+    updateVectorGlow(smallExplosions, xOffset, yOffset, glowSprs);
+    updateVectorGlow(fireExplosions, xOffset, yOffset, glowSprs);
     updateVector(healthEffects, xOffset, yOffset);
+    updateVector(dodgeEffects, xOffset, yOffset);
     updateVectorGlow(turretShots, xOffset, yOffset, glowSprs);
     updateVectorGlow(dasherShots, xOffset, yOffset, glowSprs);
     updateVectorGlow(enemyShots, xOffset, yOffset, glowSprs);
@@ -242,6 +259,11 @@ void effectsController::addDasherShot(float x, float y, short dir) {
     dasherShots.push_back(d);
 }
 
+void effectsController::addDodgeEffect(float x, float y, int dir, int scale) {
+    DashSmoke d(dashSmokeSprites, x, y, dir, scale);
+    dodgeEffects.push_back(d);
+}
+
 // A function for adding puffs
 void effectsController::addPuff(float x, float y) {
     shotPuff p(puffSprites, x, y, 0, 0);
@@ -257,6 +279,16 @@ void effectsController::addLvP1(float x, float y, FontController& font) {
     HealthEffect h(healthEffectSprites[1], x, y + 8);
     font.updateScore(font.getScore() + 1);
     healthEffects.push_back(h);
+}
+
+void effectsController::addFireExplosion(float x, float y) {
+    FireExplosion f(fireExplosionSpr, fireExplosionGlowSpr, x, y);
+    fireExplosions.push_back(f);
+}
+
+void effectsController::addSmallExplosion(float x, float y) {
+    SmallExplosion s(smallExplosionSpr, fireExplosionGlowSpr, x, y);
+    smallExplosions.push_back(s);
 }
 
 void effectsController::addLvP3(float x, float y, FontController& font) {
@@ -289,7 +321,7 @@ void effectsController::addHpRestored(float x, float y) {
 
 void effectsController::addScootShot(float x, float y, short dir, float playerPosX, float playerPosY) {
     turretShot t(turretShotSpr, redGlowSprite, x, y, dir);
-    t.speedFactor(4.0);
+    t.speedFactor(3.2);
     t.enableTracking(playerPosX, playerPosY);
     turretShots.push_back(t);
 }
@@ -344,16 +376,24 @@ void drawEffect(T& inpVec, sf::RenderWindow& window) {
 }
 
 //Draw the sprites for all of the effect objects
-void effectsController::draw(sf::RenderWindow& window) {
+void effectsController::draw(sf::RenderWindow& window, std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects) {
     drawEffect(turretFlashes, window);
     drawEffect(bullets, window);
     drawEffect(puffs, window);
     drawEffect(turretShots, window);
     drawEffect(dasherShots, window);
+    drawEffect(fireExplosions, window);
+    drawEffect(smallExplosions, window);
     
     if (!energyBeams.empty()) {
         for (auto element : energyBeams) {
             element.draw(window);
+        }
+    }
+    
+    if (!dodgeEffects.empty()) {
+        for (auto & element : dodgeEffects) {
+            gameObjects.push_back(std::make_tuple(element.getSprite(), element.getYpos(), (int) 0));
         }
     }
     
@@ -400,7 +440,10 @@ void effectsController::clear() {
     healthEffects.clear();
     turretShots.clear();
     dasherShots.clear();
+    dodgeEffects.clear();
     energyBeams.clear();
+    smallExplosions.clear();
+    fireExplosions.clear();
 }
 
 std::vector<bulletType1>& effectsController::getBulletLayer1() {

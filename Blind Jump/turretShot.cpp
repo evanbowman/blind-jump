@@ -34,8 +34,8 @@ turretShot::turretShot(sf::Sprite* sprs, sf::Sprite glow, float x, float y, floa
 }
 
 void turretShot::update(float xOffset, float yOffset) {
-    xPos = xInit + xOffset + scale * (duration - timeout) * (cos(direction));         // Note: timeout starts at 60, so 60 - timout grows linearly with time
-    yPos = yInit + 11 + yOffset + scale * (duration - timeout) * (sin(direction));
+    xPos = xInit + xOffset + scale * 1.5 * (duration - timeout) * (cos(direction));         // Note: timeout starts at 60, so 60 - timout grows linearly with time
+    yPos = yInit + 11 + yOffset + scale * 1.5 * (duration - timeout) * (sin(direction));
     sprs[0].setPosition(xPos, yPos);
     sprs[1].setPosition(xPos, yPos);
     glowSprite.setPosition(xPos, yPos + 18);

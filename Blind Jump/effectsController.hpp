@@ -22,9 +22,20 @@
 #include "healthEffect.hpp"
 #include "fontController.hpp"
 #include "energyBeam.hpp"
+#include "dashSmoke.hpp"
+#include "FireExplosion.hpp"
+#include "smallExplosion.hpp"
 
 class effectsController {
 private:
+    sf::Sprite smallExplosionSpr[6];
+    sf::Texture smallExplosionTxtr[6];
+    sf::Texture fireExplosionGlowTxtr;
+    sf::Sprite fireExplosionGlowSpr;
+    sf::Sprite fireExplosionSpr[9];
+    sf::Texture fireExplosionTxtr[9];
+    sf::Sprite dashSmokeSprites[8];
+    sf::Texture dashSmokeTextures[8];
     sf::Sprite energyBeamSprites[6];
     sf::Texture energyBeamTextures[6];
     sf::Sprite turretFlashSprites[5];
@@ -54,7 +65,9 @@ private:
     sf::Sprite newItemSpr;
     sf::Texture healthRestoredTex;
     sf::Sprite healthRestoredSpr;
+    std::vector<SmallExplosion> smallExplosions;
     std::vector<EnergyBeam> energyBeams;
+    std::vector<FireExplosion> fireExplosions;
     std::vector<Enemyshot> enemyShots;
     std::vector<turretFlashEffect> turretFlashes;
     std::vector<bulletType1> bullets;
@@ -62,6 +75,7 @@ private:
     std::vector<bulletType1> bulletLowerLayer;
     std::vector<turretShot> turretShots;
     std::vector<TeleporterSmoke> warpEffects;
+    std::vector<DashSmoke> dodgeEffects;
     sf::Texture turretShotText[2];
     sf::Sprite turretShotSpr[2];
     std::vector<Explosion32effect> bigExplosions;
@@ -72,18 +86,21 @@ private:
     
 public:
     effectsController();
-    void draw(sf::RenderWindow&);
+    void draw(sf::RenderWindow&,std::vector<std::tuple<sf::Sprite, float, int>>&);
     void update(float, float);
     void addTurretFlash(float, float);
     void addBullet(bool, char, float, float);
     void drawLower(sf::RenderWindow&);
     void clear();
+    void addDodgeEffect(float, float, int, int);
     void addTurretShot(float, float, short);
     void addDasherShot(float, float, short);
     void addScootShot(float, float, short, float, float);
     void addWarpEffect(float, float);
+    void addFireExplosion(float, float);
     void addExplosion(float, float);
     void addHealthEffect(float, float);
+    void addSmallExplosion(float, float);
     void addPlayerHealthEffect(float, float, float, float);
     void addLvP1(float, float, FontController& font);
     void addLvP3(float, float, FontController& font);

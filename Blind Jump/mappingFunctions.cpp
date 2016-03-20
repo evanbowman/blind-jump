@@ -1,9 +1,12 @@
 #include <iostream>
-
+#include "building.hpp"
+#include "tileController.hpp"
+#include "mappingFunctions.hpp"
+#include "bossLevels.h"
 
 void floodFillspread(short screen[61][61], short x, short y, short prevC, short newC) {
     // Base cases
-    if (x <= 8 || x >= 52 || y <= 8 || y >= 52)
+    if (x <= 2 || x >= 59 || y <= 2 || y >= 59)
         return;
     if (screen[x][y] != prevC)
         return;
@@ -87,8 +90,8 @@ inline void addCenterTiles (short map[61][61]) {
 void condense (short map[61][61], short maptemp[61][61], char rep) {
     int count = 0;
     
-    for (int i = 9; i < 52; i++) {
-        for (int j = 9; j < 52; j++) {
+    for (int i = 2; i < 59; i++) {
+        for (int j = 2; j < 59; j++) {
             count = 0;
             //This random map generation algorithm is based on the work of British mathematician John Conway,
             // where new elements arise from proximity to other elements.
@@ -136,8 +139,8 @@ void condense (short map[61][61], short maptemp[61][61], char rep) {
         }
     }
     
-    for (int i = 9; i < 52; i++) {
-        for (int j = 9; j < 52; j++) {
+    for (int i = 2; i < 59; i++) {
+        for (int j = 2; j < 59; j++) {
             map[i][j] = maptemp[i][j];
         }
     }
@@ -157,8 +160,8 @@ int initMapOverlay(short map[61][61]) {
         }
     }
     //Loop through again, and create a series of other numbers greater than 2
-    for (int i = 9; i < 52; i++) {
-        for (int j = 9; j < 52; j++) {
+    for (int i = 5; i < 54; i++) {
+        for (int j = 5; j < 54; j++) {
             map[i][j] = (rand() % 2);
         }
     }
@@ -172,8 +175,8 @@ int initMapOverlay(short map[61][61]) {
     while (map[xindex][yindex] != 1);
     floodFill(map, xindex, yindex, 5);
     int count = 0;
-    for (int i = 0; i < 52; i++) {
-        for (int j = 0; j < 52; j++) {
+    for (int i = 0; i < 59; i++) {
+        for (int j = 0; j < 59; j++) {
             if (map[i][j] == 5) {
                 count += 1;
             }
@@ -216,59 +219,110 @@ void cleanEdgesPostCombine(short map[61][61]) {
     }
 }
 
-int mappingFunction(short map[61][61]) {
-    short maptemp[61][61];
-    //First initialize the whole map as walls (1)
-    for (int i = 0; i < 61; i++) {
-        for (int j = 0; j < 61; j++) {
-            map[i][j] = 0;
-            maptemp[i][j] = 0;
+bool checkFootprint(short map[61][61], int x, int y, int w, int h) {
+    for (int i = x; i < x + w; i++) {
+        for (int j = y; j < y + h; j++) {
+            if (map[i][j] != 3 && map[i][j] != 4 && map[i][j] != 11) {
+                return false;
+            }
         }
     }
-    //Loop through again, and create a series of other numbers greater than 2
-    for (int i = 9; i < 52; i++) {
-        for (int j = 9; j < 52; j++) {
-            map[i][j] = (rand() % 2);
-        }
-    }
-    condense(map, maptemp, 4);
-    renumber(map);
-    short xindex;
-    short yindex;
+    return true;
+}
+
+Building addHouse(short map[61][61], tileController& tiles) {
+    int counter = 1000;
+    bool exitCond = false;
+    int xind, yind, houseW, houseH;
     do {
-        xindex = rand() % 61;
-        yindex = rand() % 61;
-    }
-    while (map[xindex][yindex] != 7);
-    floodFill(map, xindex, yindex, 5);
-    for (int i = 9; i < 52; i++) {
-        for (int j = 9; j < 52; j++) {
-            if (map[i][j] == 7) {
-                map[i][j] = 1;
-            }
+        if (--counter == 0) {
+            exitCond = true;
         }
-    }
-    addEdges(map);	//Adds the top and bottom edges for the platforms
-    cleanUp(map); //Gets rid of extra walls so there's no need to construct objects for them
-    addCenterTiles(map);
-    int count = 0;
-    for (int i = 0; i < 52; i++) {
-        for (int j = 0; j < 52; j++) {
-            if (map[i][j] == 3 || map[i][j] == 4) {
-                count += 1;
-            }
-            if (map[i + 1][j] == 5 && map[i - 1][j] == 5 && map[i][j + 1] == 5 && map[i][j - 1] == 5) {
-                map[i][j] = 5;
-            }
-        }
-    }
-    short mapOverlay[61][61];
-    int count2;
-    do {
-        count2 = initMapOverlay(mapOverlay);
-    } while (count2 < 200);
+        
+        do {
+            xind = rand() % 50;
+            yind = rand() % 50;
+            houseW = rand() % 2 + 4;
+            houseH = rand() % 2 + 4;
+        } while (map[xind][yind] != 3 && map[xind][yind] != 4 && map[xind][yind] != 11);
+    } while (!checkFootprint(map, xind, yind, houseW, houseH) && !exitCond);
     
-    combine(map, mapOverlay);
-    cleanEdgesPostCombine(map);
-    return count;
+    for (int i = xind; i < xind + houseW; i++) {
+        for (int j = yind; j < yind + houseH; j++) {
+            map[i][j] = 7;
+        }
+    }
+    
+    Building newBuilding(xind - houseW, yind - houseH, houseW, houseH);
+    
+    return newBuilding;
+}
+
+int mappingFunction(short map[61][61], int level) {
+    if (level != BOSS_LEVEL_1) {
+        short maptemp[61][61];
+        //First initialize the whole map as walls (1)
+        for (int i = 0; i < 61; i++) {
+            for (int j = 0; j < 61; j++) {
+                map[i][j] = 0;
+                maptemp[i][j] = 0;
+            }
+        }
+        //Loop through again, and create a series of other numbers greater than 2
+        for (int i = 12; i < 48; i++) {
+            for (int j = 12; j < 48; j++) {
+                map[i][j] = (rand() % 2);
+            }
+        }
+        condense(map, maptemp, 1);
+        renumber(map);
+        short xindex;
+        short yindex;
+        do {
+            xindex = rand() % 61;
+            yindex = rand() % 61;
+        }
+        while (map[xindex][yindex] != 7);
+        floodFill(map, xindex, yindex, 5);
+        for (int i = 2; i < 59; i++) {
+            for (int j = 2; j < 59; j++) {
+                if (map[i][j] == 7) {
+                    map[i][j] = 1;
+                }
+            }
+        }
+        // If it's a boss level, add a platform to the center of the map
+        
+        addEdges(map);	//Adds the top and bottom edges for the platforms
+        cleanUp(map); //Gets rid of extra walls so there's no need to construct objects for them
+        addCenterTiles(map);
+        int count = 0;
+        for (int i = 0; i < 59; i++) {
+            for (int j = 0; j < 59; j++) {
+                if (map[i][j] == 3 || map[i][j] == 4) {
+                    count += 1;
+                }
+                if (map[i + 1][j] == 5 && map[i - 1][j] == 5 && map[i][j + 1] == 5 && map[i][j - 1] == 5) {
+                    map[i][j] = 5;
+                }
+            }
+        }
+        short mapOverlay[61][61];
+        int count2;
+        do {
+            count2 = initMapOverlay(mapOverlay);
+        } while (count2 < 500);
+        
+        combine(map, mapOverlay);
+        cleanEdgesPostCombine(map);
+        return count;
+    }
+    else {
+        for (int i = 0; i < 61; i++) {
+            for (int j = 0; j < 61; j++) {
+                map[i][j] = bossLevel1[i][j];
+            }
+        }
+        return 0;
+    }
 }

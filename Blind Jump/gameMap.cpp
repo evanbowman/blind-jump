@@ -32,6 +32,12 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     // Store a pointer to the input controller in main
     pInput = input;
     
+    worldView.setSize(windowWidth, windowHeight);
+    worldView.setCenter(windowWidth / 2, windowHeight / 2);
+    hudView.setSize(windowWidth, windowHeight);
+    hudView.setCenter(windowWidth / 2, windowHeight / 2);
+    //worldView.zoom(0.90);
+    
     //Store the inputs for later
     windowW = windowWidth;
     windowH = windowHeight;
@@ -51,6 +57,13 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     
     // Initialize the player's starting item
     UI.addItem(0, effects, -20, -20, fonts, player);
+    
+    // Load the credits image
+    creditsTexture.loadFromFile(resourcePath() + "presentingText.png");
+    creditsSprite.setTexture(creditsTexture);
+    creditsSprite.setPosition(30, windowHeight / 2 + 35);
+    dispCredits = false;
+    creditsCounter = 90;
     
     // Set up the shaders
     redShader.loadFromFile(resourcePath() + "color.frag", sf::Shader::Fragment);
@@ -75,7 +88,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     
     vignetteSprite.setTexture(*inptxtr);
     vignetteSprite.setScale(windowWidth/450, windowHeight/450);
-    vignetteSprite.setColor(sf::Color(255, 255, 255, 235));
+    vignetteSprite.setColor(sf::Color(255, 255, 255, 255));
     
     //Put the player in the center of the view
     player.setPosition(windowWidth / 2 - 16, windowHeight / 2);
@@ -92,6 +105,9 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     //Add some enemies, more of them as the player progresses through the game
     initEnemies(this);
     
+    ///addHeavyBot(tiles.mapArray, tiles.descriptionArray, en, tiles.posX, tiles.posY, windowWidth, windowHeight, tiles.emptyMapLocations);
+    ///addDasher(tiles.mapArray, tiles.descriptionArray, en, tiles.posX, tiles.posY, windowWidth/2, windowHeight/2, tiles.emptyMapLocations);
+
     details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH);
     details.addDamagedRobots(tiles, tiles.posX, tiles.posY);
         
@@ -111,7 +127,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     animationBegin = false;
     dispEntryBeam = false;
     
-    //sndCtrl.playMusic(0);
+    sndCtrl.playMusic(0);
     fonts.zeroScore();
     beamGlowTxr.loadFromFile(resourcePath() + "teleporterBeamGlow.png");
     beamGlowSpr.setTexture(beamGlowTxr);
@@ -129,12 +145,12 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     }
     
     // Put rock/pillar detail things on map
-    getPillarPositions(tiles.mapArray, pillarPositions);
-    size_t len = pillarPositions.size();
-    for (auto element : pillarPositions) {
+    getRockPositions(tiles.mapArray, rockPositions);
+    size_t len = rockPositions.size();
+    for (auto element : rockPositions) {
         details.addRock(tiles, tiles.posX, tiles.posY - 35, element.x, element.y);
     }
-    pillarPositions.clear();
+    rockPositions.clear();
     
     // Put light sources on the map
     getLightingPositions(tiles.mapArray, lightPositions);
@@ -144,21 +160,34 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     }
     lightPositions.clear();
     
+    Teleporter* pTeleporter = details.getTeleporter();
     std::vector<LampLight>* pLamps = details.getLamps();
     for (auto i = 0; i < details.getLamps()->size(); i++) {
-        if (fabsf((*pLamps)[i].getxPos() - details.getTeleporter().xPos) < 128 && fabsf((*pLamps)[i].getyPos() - details.getTeleporter().yPos) < 128) {
+        if (fabsf((*pLamps)[i].getxPos() - pTeleporter->xPos) < 128 && fabsf((*pLamps)[i].getyPos() - pTeleporter->yPos) < 128) {
             (*pLamps)[i] = (*pLamps).back();
             (*pLamps).pop_back();
+        }
+    }
+    
+    // Delete rocks close to the teleporter
+    std::vector<Rock>* pRocks = details.getRocks();
+    for (auto it = pRocks->begin(); it != pRocks->end();) {
+        if (fabsf(it->getxPos() - pTeleporter->getxPos()) < 80 && fabsf(it->getyPos() - pTeleporter->getyPos()) < 80) {
+            it = pRocks->erase(it);
+        }
+        
+        else {
+            ++it;
         }
     }
 }
 
 void GameMap::update(sf::RenderWindow& window) {
-    // Update the input controller to get up-to-date keyboard and joystick information
-    pInput->update();
+    sndCtrl.updateSoundtrack(player.getPosX(), player.getPosY(), details.getTeleporter()->getxPos(), details.getTeleporter()->getyPos());
     // Start by getting the displacement that the player has moved, in order to update the position of all of the tiles and game objects
     xOffset = player.getWorldOffsetX();
     yOffset = player.getWorldOffsetY();
+    window.setView(worldView);
     // Draw the images
     bkg.setOffset(xOffset, yOffset);
     bkg.drawBackground(window);
@@ -166,7 +195,7 @@ void GameMap::update(sf::RenderWindow& window) {
     tiles.drawTiles(window, effects.getGlowSprs(), effects.getGlowSprs2());
     effects.getGlowSprs2()->clear();
     // Update the overworld objects based on the displacement of the player
-    details.update(xOffset, yOffset, effects, player.getSprIndex(), tiles.walls, effects.getGlowSprs(), effects.getGlowSprs2(), UI, fonts, player);
+    details.update(xOffset, yOffset, effects, player.getSprIndex(), tiles.walls, effects.getGlowSprs(), effects.getGlowSprs2(), UI, fonts, player, pInput);
     // Draw the details / add them to the game objects vector
     details.draw(gameObjects, gameShadows, window);
     // Update the enemy objects in the game based on the player's displacement
@@ -213,7 +242,7 @@ void GameMap::update(sf::RenderWindow& window) {
     // Draw the shadow overlay to everything in the lighting map
     lightingMap.draw(shadowShape, sf::BlendMultiply);
     // Draw lights to the objects
-    sf::Color blendAmount(170, 170, 170, 255);
+    sf::Color blendAmount(185, 185, 185, 255);
     sf::Sprite tempSprite;
     for (auto element : *effects.getGlowSprs2()) {
         tempSprite = *element;
@@ -238,18 +267,37 @@ void GameMap::update(sf::RenderWindow& window) {
             window.draw(std::get<0>(element), &blueShader);
         }
     }
+    
     // Now clear out the vectors for the next round of drawing
     gameObjects.clear();
     
-    effects.draw(window);
+    effects.draw(window, gameObjects);
+    
+    window.setView(hudView);
     
     // Draw a nice vignette effect over the entire window, but behind the UI overlay
-    window.draw(vignetteSprite);
+    window.draw(vignetteSprite, sf::BlendMultiply);
+    
+    // Display the credits textures
+    if (dispCredits) {
+        if (--creditsCounter == 0) {
+            dispCredits = false;
+        }
+        window.draw(creditsSprite);
+    }
+    
+    else if (!dispCredits && creditsCounter > 0) {
+        if (--creditsCounter == 0) {
+            dispCredits = true;
+            creditsCounter = 200;
+        }
+    }
+    
     //Activating the user interface menu de-activates everything, so we need to give it references to all the objects (alternatively one
     // could check for a keypress in every single object individually, but this way is (possibly) faster because it requires less condition checking)
     if (!player.isdead()) {
         UI.dispDeathSeq();
-        if (UI.isComplete() && sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+        if (UI.isComplete() && pInput->zPressed()) {
             // Reset the UI controller
             UI.reset();
             // Reset the player
@@ -261,7 +309,7 @@ void GameMap::update(sf::RenderWindow& window) {
             Reset();
             fonts.zeroScore();
             // Set the max health back to 3
-            fonts.updateMaxHealth(3);
+            fonts.updateMaxHealth(4);
             fonts.clear();
             fonts.setWaypointText(level, windowW, windowH);
             dispEntryBeam = false;
@@ -272,6 +320,7 @@ void GameMap::update(sf::RenderWindow& window) {
         UI.drawMenu(window, &player, details.getUIStates(), fonts, effects, xOffset, yOffset, pInput);
         // Pass the player's health to the font controller
         fonts.updateHealth(player.getHealth());
+        fonts.updateStamina(player.getStamina());
         // Draw all of the game text to the window
         fonts.print(window);
     }
@@ -296,6 +345,7 @@ void GameMap::update(sf::RenderWindow& window) {
             c.g += 5;
             beamGlowSpr.setColor(c);
         }
+        
         
         else if (v2.y > 518) {
             player.visible = true;
@@ -345,11 +395,11 @@ void GameMap::update(sf::RenderWindow& window) {
     }
     
     // Check if the player is close to a teleporter. If so, go to the next level ***(in the future animate this!)***
-    if (std::abs(player.getPosX() - details.getTeleporter().getxPos()) < 10 && std::abs(player.getPosY() - details.getTeleporter().getyPos() + 12) < 8 /*&& player.isActive()*/) {
+    if (std::abs(player.getPosX() - details.getTeleporter()->getxPos()) < 10 && std::abs(player.getPosY() - details.getTeleporter()->getyPos() + 12) < 8 /*&& player.isActive()*/) {
         // Center the player over the teleporter for the duration of the teleport animation (ie center the world under the player)
         if (!animationBegin) {
-            player.setWorldOffsetX(xOffset + (player.getPosX() - details.getTeleporter().getxPos()) + 2);
-            player.setWorldOffsetY(yOffset + (player.getPosY() - details.getTeleporter().getyPos()) + 16);
+            player.setWorldOffsetX(xOffset + (player.getPosX() - details.getTeleporter()->getxPos()) + 2);
+            player.setWorldOffsetY(yOffset + (player.getPosY() - details.getTeleporter()->getyPos()) + 16);
             beamExpanding = true;
             animationBegin = true;
         }
@@ -421,44 +471,107 @@ void GameMap::Reset() {
     player.setWorldOffsetY(0);
     en.clear();
     teleporterCond = 0;
-    //Now call the mapping function again to generate a new map, and make sure it's large enough
-    int count = mappingFunction(tiles.mapArray);
-    while (count < 300) {
-        count = mappingFunction(tiles.mapArray);
+    int count;
+    
+    // If not on a boss level...
+    if (level != BOSS_LEVEL_1) {
+        //Now call the mapping function again to generate a new map, and make sure it's large enough
+        count = mappingFunction(tiles.mapArray, level);
+        while (count < 300) {
+            count = mappingFunction(tiles.mapArray, level);
+        }
     }
+    
+    else {
+        mappingFunction(tiles.mapArray, level);
+    }
+    
     //Now lets rebuild the map from the new array, using the same function from the tileController class constructor
-    tiles.rebuild();
+    tiles.rebuild(itemArray, level);
     // Now let the background handler know what tileset the tilecontroller is using
     bkg.setBkg(tiles.getWorkingSet());
     /*Of course, the tile controller needs to know how big the window is so that it can find the center when drawing the tiles (tiles outside the window don't draw, and the player object is in the center of the window--we don't want to draw it inside a wall!)
     */
     tiles.setPosition((windowW / 2) - 16, (windowH / 2));
     bkg.setPosition((tiles.posX / 2) + 206, tiles.posY / 2);
+    bkg.reset();
     
-    details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH);
+    // Perhaps there's a better way to not check the same condition multiple times, without tons of copy-pasting
+    if (level != BOSS_LEVEL_1) {
+        details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH);
+        
+        // Now initialize enemies for the map based on level, and store sum of their exp values in a variable
+        count = initEnemies(this);
+        
+        // Add broken down robots to the map (if correct tileset for it
+        if (level < 10) {
+            details.addDamagedRobots(tiles, tiles.posX, tiles.posY);
+        }
+        // Tell the UI controller what that variable is
+        UI.setEnemyValueCount(count);
+        
+        // Place a weapon chest is needed
+        if (itemArray[level][0] != 0) {
+            details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][0]);
+        }
+        // place life capsule chests
+        if (itemArray[level][1] == 90) {
+            details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][1]);
+        }
+        
+        effects.getGlowSprs()->clear();
+        effects.getGlowSprs2()->clear();
+        
+        size_t len;
+        // Put rock/pillar detail things on map
+        getRockPositions(tiles.mapArray, rockPositions);
+        len = rockPositions.size();
+        for (auto element : rockPositions) {
+            details.addRock(tiles, tiles.posX, tiles.posY - 35, element.x, element.y);
+        }
+        rockPositions.clear();
+        
+        
+        // Put light sources on the map
+        getLightingPositions(tiles.mapArray, lightPositions);
+        len = lightPositions.size();
+        for (auto i = 0; i < len; i++) {
+            details.addLamplight(tiles, tiles.posX - 2, tiles.posY - 16, lightPositions[i].x, lightPositions[i].y, windowW, windowH);
+        }
+        lightPositions.clear();
+        
+        // Delete lamps near the teleporter (light blending is additive, it would be too bright if they were close together)
+        std::vector<LampLight>* pLamps = details.getLamps();
+        Teleporter* pTeleporter = details.getTeleporter();
+        for (auto i = 0; i < details.getLamps()->size(); i++) {
+            if (fabsf((*pLamps)[i].getxPos() - pTeleporter->xPos) < 128 && fabsf((*pLamps)[i].getyPos() - pTeleporter->yPos) < 128) {
+                (*pLamps)[i] = (*pLamps).back();
+                (*pLamps).pop_back();
+            }
+        }
     
-    // Now initialize enemies for the map based on level, and store sum of their exp values in a variable
-    count = initEnemies(this);
-    
-    // Add broken down robots to the map (if correct tileset for it
-    if (level < 13) {
-        details.addDamagedRobots(tiles, tiles.posX, tiles.posY);
+        // Delete rocks close to the teleporter
+        std::vector<Rock>* pRocks = details.getRocks();
+        for (auto it = pRocks->begin(); it != pRocks->end();) {
+            if (fabsf(it->getxPos() - pTeleporter->getxPos()) < 80 && fabsf(it->getyPos() - pTeleporter->getyPos()) < 80) {
+                it = pRocks->erase(it);
+            }
+            
+            else {
+                ++it;
+            }
+        }
     }
     
-    // Tell the UI controller what that variable is
-    UI.setEnemyValueCount(count);
-    
-    // Place a weapon chest is needed
-    if (itemArray[level][0] != 0) {
-        details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][0]);
+    else if (level == BOSS_LEVEL_1) {
+        tiles.teleporterLocation.x = 34;
+        tiles.teleporterLocation.y = 17;
+        details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH);
+        tiles.teleporterLocation.x = 38;
+        details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH);
+        details.addLamplight(tiles, tiles.posX - 2, tiles.posY - 16, 39, 31, windowW, windowH);
+        details.addLamplight(tiles, tiles.posX - 2, tiles.posY - 16, 33, 26, windowW, windowH);
     }
-    // place life capsule chests
-    if (itemArray[level][1] == 90) {
-        details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][1]);
-    }
-    
-    effects.getGlowSprs()->clear();
-    effects.getGlowSprs2()->clear();
     
     // Reset the teleporter beam coordinates, alpha, & size
     sf::Vector2f v1(2, 1);
@@ -468,30 +581,6 @@ void GameMap::Reset() {
     // Allow the teleporter animation to play again
     animationBegin = false;
     dispEntryBeam = true;
-    
-    // Put rock/pillar detail things on map
-    getPillarPositions(tiles.mapArray, pillarPositions);
-    size_t len = pillarPositions.size();
-    for (auto element : pillarPositions) {
-        details.addRock(tiles, tiles.posX, tiles.posY - 35, element.x, element.y);
-    }
-    pillarPositions.clear();
-    
-    // Put light sources on the map
-    getLightingPositions(tiles.mapArray, lightPositions);
-    len = lightPositions.size();
-    for (auto i = 0; i < len; i++) {
-        details.addLamplight(tiles, tiles.posX - 2, tiles.posY - 16, lightPositions[i].x, lightPositions[i].y, windowW, windowH);
-    }
-    lightPositions.clear();
-    
-    std::vector<LampLight>* pLamps = details.getLamps();
-    for (auto i = 0; i < details.getLamps()->size(); i++) {
-        if (fabsf((*pLamps)[i].getxPos() - details.getTeleporter().xPos) < 128 && fabsf((*pLamps)[i].getyPos() - details.getTeleporter().yPos) < 128) {
-            (*pLamps)[i] = (*pLamps).back();
-            (*pLamps).pop_back();
-        }
-    }
 }
 
 Player GameMap::getPlayer() {
