@@ -23,7 +23,7 @@ EnergyBeam::EnergyBeam(float xInit, float yInit, sf::Sprite* inpSprs, float dir)
     beamShape.setOutlineColor(sf::Color(104, 255, 229));
     beamShape.setOutlineThickness(0);
     frameIndex = 0;
-    frameRate = 4;
+    frameRate = 2;
     state = ENTERING;
 }
 

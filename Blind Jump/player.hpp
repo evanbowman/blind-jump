@@ -54,8 +54,8 @@ private:
     sf::Sprite spriteRight[7];
     sf::Texture textureLeft[7];
     sf::Sprite spriteLeft[7];
-    sf::Texture dashTexture[8];
-    sf::Sprite dashSprites[8];
+    sf::Texture dashTexture[12];
+    sf::Sprite dashSprites[12];
     // For player death sequence:
     sf::Texture deathTextures[11];
     sf::Sprite deathSprites[11];

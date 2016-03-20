@@ -8,3 +8,6 @@ Thumbs.db
 
 # Compiled C++ code
 *.out
+
+# Ignore pikopixel save files
+# *.piko
