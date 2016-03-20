@@ -169,22 +169,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Blind Jump/player.cpp"
-            timestampString = "480033922.045826"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "538"
-            endingLineNumber = "538"
-            landmarkName = "Player::drawController(InputController* pInput, effectsController&amp; ef)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Blind Jump/initMapVectors.cpp"
             timestampString = "479418440.509233"
             startingColumnNumber = "9223372036854775807"
@@ -496,22 +480,6 @@
             startingLineNumber = "220"
             endingLineNumber = "220"
             landmarkName = "detailController::addPillar(tileController &amp;tiles)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Blind Jump/player.cpp"
-            timestampString = "480046052.170948"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "682"
-            endingLineNumber = "682"
-            landmarkName = "Player::draw(std::vector&lt;std::tuple&lt;sf::Sprite, float, int&gt;&gt;&amp; gameObjects, std::vector&lt;std::tuple&lt;sf::Sprite, float, int&gt;&gt;&amp; gameShadows, tileController&amp; tiles, effectsController&amp; ef, detailController&amp; details, SoundController&amp; sounds, userInterface&amp; UI, InputController* pInput)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
