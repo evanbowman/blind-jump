@@ -105,7 +105,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     //Add some enemies, more of them as the player progresses through the game
     initEnemies(this);
     
-    ///addHeavyBot(tiles.mapArray, tiles.descriptionArray, en, tiles.posX, tiles.posY, windowWidth, windowHeight, tiles.emptyMapLocations);
+    addHeavyBot(tiles.mapArray, tiles.descriptionArray, en, tiles.posX, tiles.posY, windowWidth, windowHeight, tiles.emptyMapLocations);
     ///addDasher(tiles.mapArray, tiles.descriptionArray, en, tiles.posX, tiles.posY, windowWidth/2, windowHeight/2, tiles.emptyMapLocations);
 
     details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH);

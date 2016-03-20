@@ -70,7 +70,7 @@ Player::Player() {
     const std::string fileExt3[7] = {"player_face_left.png", "walk_left1.png", "walk_left2.png", "walk_left3.png", "walk_left4.png", "walk_left5.png", "player_still_left.png"};
     const std::string fileExt4[7] = {"player_face_right.png", "walk_right1.png", "walk_right2.png", "walk_right3.png", "walk_right4.png", "walk_right5.png", "player_still_right.png"};
 
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 12; i++) {
         dashTexture[i].loadFromFile(resourcePath() + "playerDashSheet.png", sf::IntRect(i * 32, 0, 32, 33));
         dashSprites[i].setTexture(dashTexture[i]);
         dashSprites[i].setOrigin(0, 1);
@@ -132,7 +132,7 @@ void Player::setPosition(float X, float Y) {
     spriteRight[6].setPosition(posX, posY);
     shadowSprite.setPosition(posX + 7, posY + 24);
     weapon.setPosition(posX, posY);
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 12; i++) {
         dashSprites[i].setPosition(posX, posY);
     }
 }
@@ -377,8 +377,12 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
                         //else
                             //
                     }
-                    else if (down)
-                        ef.addDodgeEffect(posX - worldOffsetX - 4, posY - worldOffsetY + 16, -45, 1);
+                    
+                    else if (down) {
+                        if (left)
+                            ef.addDodgeEffect(posX - worldOffsetX - 4, posY - worldOffsetY + 16, -45, 1);
+                    }
+                    
                     else
                         ef.addDodgeEffect(posX - worldOffsetX + 9, posY - worldOffsetY + 5, 0, 1);
                 }
@@ -389,11 +393,16 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
                         //else
                             //
                     }
-                    else if (down)
-                        ef.addDodgeEffect(posX - worldOffsetX  + 32, posY - worldOffsetY + 16, 45, -1);
+                    
+                    else if (down) {
+                        if (right)
+                            ef.addDodgeEffect(posX - worldOffsetX  + 32, posY - worldOffsetY + 16, 45, -1);
+                    }
+                    
                     else
                         ef.addDodgeEffect(posX - worldOffsetX + 23, posY - worldOffsetY + 5, 0, -1);
                 }
+                
                 else if (spriteIndex == 4) {
                     if (left) {
                         if (up)
@@ -401,6 +410,7 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
                         else
                             ef.addDodgeEffect(posX - worldOffsetX + 9, posY - worldOffsetY + 5, 0, 1);
                     }
+                    
                     else if (right) {
                         if (up)
                             ef.addDodgeEffect(posX - worldOffsetX + 2, posY - worldOffsetY + 6, -45, -1);
@@ -409,12 +419,22 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
                             ef.addDodgeEffect(posX - worldOffsetX + 23, posY - worldOffsetY + 5, 0, -1);
                     }
                 }
+                
                 else if (spriteIndex == 5) {
                     if (left) {
-                        ef.addDodgeEffect(posX - worldOffsetX + 9, posY - worldOffsetY + 5, 0, 1);
+                        if (down)
+                            ef.addDodgeEffect(posX - worldOffsetX - 4, posY - worldOffsetY + 16, -45, 1);
+                        
+                        else
+                            ef.addDodgeEffect(posX - worldOffsetX + 9, posY - worldOffsetY + 5, 0, 1);
                     }
+                    
                     else if (right) {
-                        ef.addDodgeEffect(posX - worldOffsetX + 23, posY - worldOffsetY + 5, 0, -1);
+                        if (down)
+                            ef.addDodgeEffect(posX - worldOffsetX  + 32, posY - worldOffsetY + 16, 45, -1);
+                        
+                        else
+                            ef.addDodgeEffect(posX - worldOffsetX + 23, posY - worldOffsetY + 5, 0, -1);
                     }
                 }
             }
@@ -782,7 +802,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
         }
     }
     else if (state == PREP_DASH) {
-        if ((rightPrevious && spriteIndex == 6) || (upPrevious && spriteIndex == 6)) {
+        if ((rightPrevious || upPrevious || downPrevious) && spriteIndex == 6) {
             if (weapon.getTimeout() != 0 && rightPrevious) {
                 std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
                 std::get<1>(tGun) = weapon.getYpos() - 1;
@@ -791,7 +811,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
             std::get<0>(tPlayer) = dashSprites[0];
             gameObjects.push_back(tPlayer);
         }
-        else if ((leftPrevious && spriteIndex == 7) || (upPrevious && spriteIndex == 7)) {
+        else if ((leftPrevious || upPrevious || downPrevious) && spriteIndex == 7) {
             if (weapon.getTimeout() != 0 && rightPrevious) {
                 std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
                 std::get<1>(tGun) = weapon.getYpos() - 1;
@@ -811,7 +831,12 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
             std::get<0>(tPlayer) = dashSprites[6];
             gameObjects.push_back(tPlayer);
         }
+        else if (spriteIndex == 5) {
+            std::get<0>(tPlayer) = dashSprites[8];
+            gameObjects.push_back(tPlayer);
+        }
     }
+    
     else if (state == DASHING || state == COOLDOWN) {
         if (rightPrevious && spriteIndex == 6) {
             if (weapon.getTimeout() != 0) {
@@ -838,6 +863,16 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
                 gameObjects.push_back(tGun);
             }
             std::get<0>(tPlayer) = dashSprites[4];
+            gameObjects.push_back(tPlayer);
+        }
+        
+        else if (downPrevious && spriteIndex == 6) {
+            std::get<0>(tPlayer) = dashSprites[11];
+            gameObjects.push_back(tPlayer);
+        }
+        
+        else if (downPrevious && spriteIndex == 7) {
+            std::get<0>(tPlayer) = dashSprites[10];
             gameObjects.push_back(tPlayer);
         }
         
@@ -885,6 +920,23 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
                     gameObjects.push_back(tGun);
                 }
                 std::get<0>(tPlayer) = dashSprites[4];
+                gameObjects.push_back(tPlayer);
+            }
+        }
+        
+        else if (spriteIndex == 5) {
+            if (downPrevious) {
+                std::get<0>(tPlayer) = dashSprites[9];
+                gameObjects.push_back(tPlayer);
+            }
+            
+            else if (leftPrevious) {
+                std::get<0>(tPlayer) = dashSprites[10];
+                gameObjects.push_back(tPlayer);
+            }
+            
+            else if (rightPrevious) {
+                std::get<0>(tPlayer) = dashSprites[11];
                 gameObjects.push_back(tPlayer);
             }
         }
