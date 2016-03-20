@@ -13,4 +13,4 @@ Thumbs.db
 # *.piko
 
 # Ignore the xcode user state
-xcuserdata/
+*.xcuserstate
