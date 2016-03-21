@@ -34,6 +34,8 @@ private:
     int recalc;
     short (*map)[61];
     aStrCoordinate previous;
+    float shotDir;
+    float shotLen;
     
 public:
     HeavyBot(sf::Sprite*, short map[61][61]);

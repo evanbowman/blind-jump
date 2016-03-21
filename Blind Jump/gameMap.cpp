@@ -205,7 +205,7 @@ void GameMap::update(sf::RenderWindow& window) {
     
     if (player.visible) {
         // Draw the player to the window, as long as the object is visible
-        player.draw(gameObjects, gameShadows, tiles, effects, details, sndCtrl, UI, pInput);
+        player.draw(gameObjects, gameShadows, tiles, effects, details, sndCtrl, UI, pInput, window);
     }
     
     // If player was hit rumble the screen.
@@ -214,7 +214,7 @@ void GameMap::update(sf::RenderWindow& window) {
     }
     effects.getGlowSprs()->clear();
     // Update the positions of all the effect objects
-    effects.update(xOffset, yOffset);
+    effects.update(xOffset, yOffset, &ssc);
     
     // Draw shadows to the window
     if (!gameShadows.empty()) {

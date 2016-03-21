@@ -26,12 +26,18 @@
 #include "FireExplosion.hpp"
 #include "smallExplosion.hpp"
 
+class ScreenShakeController;
+
 class effectsController {
 private:
+    sf::Texture blueExplosionTxtr[9];
+    sf::Sprite blueExplosionSpr[9];
     sf::Sprite smallExplosionSpr[6];
     sf::Texture smallExplosionTxtr[6];
     sf::Texture fireExplosionGlowTxtr;
     sf::Sprite fireExplosionGlowSpr;
+    sf::Texture blueFireGlowTxtr;
+    sf::Sprite blueFireGlowSpr;
     sf::Sprite fireExplosionSpr[9];
     sf::Texture fireExplosionTxtr[9];
     sf::Sprite dashSmokeSprites[8];
@@ -86,8 +92,8 @@ private:
     
 public:
     effectsController();
-    void draw(sf::RenderWindow&,std::vector<std::tuple<sf::Sprite, float, int>>&);
-    void update(float, float);
+    void draw(sf::RenderWindow&, std::vector<std::tuple<sf::Sprite, float, int>>&);
+    void update(float, float, ScreenShakeController*);
     void addTurretFlash(float, float);
     void addBullet(bool, char, float, float);
     void drawLower(sf::RenderWindow&);
@@ -98,6 +104,7 @@ public:
     void addScootShot(float, float, short, float, float);
     void addWarpEffect(float, float);
     void addFireExplosion(float, float);
+    void addBlueExplosion(float, float);
     void addExplosion(float, float);
     void addHealthEffect(float, float);
     void addSmallExplosion(float, float);
@@ -109,7 +116,7 @@ public:
     void addHpRestored(float, float);
     void addNewItem(float, float, FontController& font);
     void addPuff(float, float);
-    void addEnergyBeam(float, float, float);
+    void addEnergyBeam(float, float, float, float);
     void addMissile(float, float);
     void addOrbshotTrail(float, float);
     void addEnemyShot(float, float, short);
@@ -123,6 +130,7 @@ public:
     std::vector<DasherShot>* getDasherShots();
     std::vector<sf::Sprite*>* getGlowSprs();
     std::vector<sf::Sprite*>* getGlowSprs2();
+    std::vector<FireExplosion>* getExplosions();
     void condClearGlowSpr(sf::Sprite*);
 };
 

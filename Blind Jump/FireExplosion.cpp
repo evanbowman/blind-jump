@@ -19,14 +19,16 @@ FireExplosion::FireExplosion(sf::Sprite* sprs, sf::Sprite glow, float x, float y
     yInit = y;
     killFlag = false;
     frameIndex = 0;
-    frameRate = 4;
+    speed = 4;
+    frameRate = speed;
+    valid = true;
 }
 
 void FireExplosion::update(float xOffset, float yOffset) {
     xPos = xInit + xOffset;
     yPos = yInit + yOffset;
     if (--frameRate == 0) {
-        frameRate = 4;
+        frameRate = speed;
         frameIndex++;
         if (frameIndex > 8) {
             frameIndex = 8;
@@ -44,6 +46,12 @@ void FireExplosion::update(float xOffset, float yOffset) {
     glow.setPosition(xPos - 225, yPos - 225);
 }
 
+void FireExplosion::setOrigin(int x, int y) {
+    for (int i = 0; i < 9; i++) {
+        sprites[i].setOrigin(x, y);
+    }
+}
+
 sf::Sprite* FireExplosion::getGlow() {
     return &glow;
 }
@@ -58,4 +66,16 @@ bool FireExplosion::getKillFlag() {
 
 float FireExplosion::getYpos() {
     return yPos;
+}
+
+float FireExplosion::getXpos() {
+    return xPos;
+}
+
+bool FireExplosion::isValid() {
+    return valid;
+}
+
+void FireExplosion::invalidate() {
+    valid = false;
 }

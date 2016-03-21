@@ -7,8 +7,9 @@
 //
 
 #include "energyBeam.hpp"
+#include <cmath>
 
-EnergyBeam::EnergyBeam(float xInit, float yInit, sf::Sprite* inpSprs, float dir) {
+EnergyBeam::EnergyBeam(float xInit, float yInit, sf::Sprite* inpSprs, float dir, float length) {
     this->xInit = xInit;
     this->yInit = yInit;
     for (int i = 0; i < 6; i++) {
@@ -17,14 +18,21 @@ EnergyBeam::EnergyBeam(float xInit, float yInit, sf::Sprite* inpSprs, float dir)
         sprites[i].setOrigin(0, 16);
     }
     beamShape.setRotation(dir);
-    beamShape.setSize(sf::Vector2f(800, 2));
-    beamShape.setOrigin(0, 2);
+    beamShape.setSize(sf::Vector2f(length, 2));
+    beamShape.setOrigin(0, 1);
     beamShape.setFillColor(sf::Color(104, 255, 229));
     beamShape.setOutlineColor(sf::Color(104, 255, 229));
     beamShape.setOutlineThickness(0);
     frameIndex = 0;
     frameRate = 2;
+    valid = false;
     state = ENTERING;
+    if (rand() % 2) {
+        rotationDir = -1;
+    }
+    else {
+        rotationDir = 1;
+    }
 }
 
 void EnergyBeam::update(float xOffset, float yOffset) {
@@ -38,7 +46,8 @@ void EnergyBeam::update(float xOffset, float yOffset) {
                 frameIndex++;
                 if (frameIndex > 2) {
                     state = RUNNING;
-                    frameRate = 30;
+                    frameRate = 6;
+                    valid = true;
                 }
             }
             break;
@@ -52,6 +61,7 @@ void EnergyBeam::update(float xOffset, float yOffset) {
             else {
                 beamShape.setOutlineThickness(0);
             }
+            
             
             if (--frameRate == 0) {
                 frameRate = 4;
@@ -99,4 +109,34 @@ void EnergyBeam::draw(sf::RenderWindow& window) {
 
 bool EnergyBeam::getKillFlag() {
     return killFlag;
+}
+
+float EnergyBeam::getX1() {
+    return xPos;
+}
+
+float EnergyBeam::getY1() {
+    return yPos;
+}
+
+float EnergyBeam::getX2() {
+    float x2 = xPos + beamShape.getSize().x * cosf(beamShape.getRotation() * 3.14159 / 180);
+    return x2;
+}
+
+float EnergyBeam::getY2() {
+    float y2 = yPos + beamShape.getSize().x * sinf(beamShape.getRotation() * 3.14159 / 180);
+    return y2;
+}
+
+bool EnergyBeam::isValid() {
+    return valid;
+}
+
+void EnergyBeam::invalidate() {
+    valid = false;
+}
+
+float EnergyBeam::getDir() {
+    return beamShape.getRotation();
 }

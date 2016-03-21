@@ -157,7 +157,7 @@ void HeavyBot::update(float xOffset, float yOffset, effectsController& ef, FontC
                 // If the enemy is sufficiently close to the target point, pop it and work on the next one
                 if (fabs(xInit - (((path.back().x * 32) + 4 + pTiles->posX))) < 8 && fabs(yInit - (((path.back().y * 26) + 4 + pTiles->posY))) < 8) {
                     // If the enemy is close to the player, do a beam attack
-                    if (fabsf(xPos - playerPosX) < 65 && fabsf(yPos - playerPosY) < 65) {
+                    if (fabsf(xPos - playerPosX) < 120 && fabsf(yPos - playerPosY) < 120) {
                         state = SHOOT;
                         runShootAnim = true;
                         frameIndex = 8;
@@ -180,6 +180,7 @@ void HeavyBot::update(float xOffset, float yOffset, effectsController& ef, FontC
                 if (--frameRate == 0) {
                     frameRate = 4;
                     frameIndex++;
+                    
                     if (frameIndex > 16) {
                         frameIndex = 16;
                         runShootAnim = false;
@@ -190,12 +191,14 @@ void HeavyBot::update(float xOffset, float yOffset, effectsController& ef, FontC
             
             else {
                 if (frameRate == 50) {
+                    shotDir = atan2f(playerPosY + 26 - (yPos + 3), playerPosX - 3 - (xPos + 6.5)) * 180 / 3.141592;
+                    shotLen = sqrtf(powf(playerPosY + 16 - yPos, 2) + powf(playerPosX - xPos, 2));
                     if (sprites[frameIndex].getScale().x == 1) {
-                        ef.addEnergyBeam(xInit + 0.5, yInit + 2.5, atan2f(playerPosY + 8 - yPos, playerPosX - 3 - xPos) * 180 / 3.141592);
+                        ef.addEnergyBeam(xInit + 0.5, yInit + 2.5, shotDir, shotLen);
                     }
                     
                     else {
-                        ef.addEnergyBeam(xInit + 6.5, yInit + 3, atan2f(playerPosY + 8 - yPos, playerPosX - 3 - xPos) * 180 / 3.141592);
+                        ef.addEnergyBeam(xInit + 6.5, yInit + 3, shotDir, shotLen);
                     }
                 }
                 

@@ -113,7 +113,7 @@ public:
     float getPosX() const;
     float getPosY() const;
     void drawController(InputController*, effectsController& ef);
-    void draw(std::vector<std::tuple<sf::Sprite, float, int>>&, std::vector<std::tuple<sf::Sprite, float, int>>&, tileController&, effectsController&, detailController&, SoundController&, userInterface&, InputController*);
+    void draw(std::vector<std::tuple<sf::Sprite, float, int>>&, std::vector<std::tuple<sf::Sprite, float, int>>&, tileController&, effectsController&, detailController&, SoundController&, userInterface&, InputController*, sf::RenderWindow&);
     //Construct a default player object
     Player();
     //More functions for setting the current position

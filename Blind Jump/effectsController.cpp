@@ -8,6 +8,8 @@
 
 #include "effectsController.hpp"
 #include "ResourcePath.hpp"
+#include "screenShakeController.hpp"
+
 
 effectsController::effectsController() {
     //Begin by loading all of the effects images (and there are plenty!)
@@ -53,11 +55,14 @@ effectsController::effectsController() {
     for (int i = 0; i < 9; i++) {
         fireExplosionTxtr[i].loadFromFile(resourcePath() + "fireExplosionSheet.png", sf::IntRect(i * 58, 0, 58, 51));
         fireExplosionSpr[i].setTexture(fireExplosionTxtr[i]);
+        blueExplosionTxtr[i].loadFromFile(resourcePath() + "blueExplosion.png", sf::IntRect(i * 51, 0, 51, 80));
+        blueExplosionSpr[i].setTexture(blueExplosionTxtr[i]);
     }
     
     fireExplosionGlowTxtr.loadFromFile(resourcePath() + "fireExplosionGlow.png");
     fireExplosionGlowSpr.setTexture(fireExplosionGlowTxtr);
-    
+    blueFireGlowTxtr.loadFromFile(resourcePath() + "blueFireGlow.png");
+    blueFireGlowSpr.setTexture(blueFireGlowTxtr);
     const std::string fileExt4[6] = {"exp32_1.png", "exp32_2.png", "exp32_3.png", "exp32_4.png", "exp32_5.png", "exp32_6.png"};
     const std::string fileExt5[6] = {"teleporterSmoke1.png", "teleporterSmoke2.png", "teleporterSmoke3.png", "teleporterSmoke4.png", "teleporterSmoke5.png", "teleporterSmoke6.png"};
     const std::string fileExt6[6] = {"Smoke1.png", "Smoke2.png", "Smoke3.png", "Smoke4.png", "Smoke5.png", "Smoke6.png"};
@@ -132,7 +137,7 @@ void updateVectorGlow(std::vector<T>& vec, float xOffset, float yOffset, std::ve
 }
 
 //This function updates the positions of all of the effect objects whenever called
-void effectsController::update(float xOffset, float yOffset) {
+void effectsController::update(float xOffset, float yOffset, ScreenShakeController* scrn) {
     // Begin by clearing out the outdated glow sprites for the effects
     //glowSprs.clear();
     //Only attempt to loop through the vector and update or delete elements if the vector is not empty
@@ -155,7 +160,6 @@ void effectsController::update(float xOffset, float yOffset) {
         }
     }
     updateVectorGlow(smallExplosions, xOffset, yOffset, glowSprs);
-    updateVectorGlow(fireExplosions, xOffset, yOffset, glowSprs);
     updateVector(healthEffects, xOffset, yOffset);
     updateVector(dodgeEffects, xOffset, yOffset);
     updateVectorGlow(turretShots, xOffset, yOffset, glowSprs);
@@ -213,10 +217,17 @@ void effectsController::update(float xOffset, float yOffset) {
             
             else {
                 it->update(xOffset, yOffset);
+                if (it->isValid()) {
+                    addBlueExplosion(it->getX2() - xOffset, it->getY2() - yOffset);
+                    it->invalidate();
+                    scrn->shake();
+                }
                 ++it;
             }
         }
     }
+    
+    updateVectorGlow(fireExplosions, xOffset, yOffset, glowSprs);
     
     if (!bigExplosions.empty()) {
         for (std::vector<Explosion32effect>::iterator it = bigExplosions.begin(); it != bigExplosions.end();) {
@@ -252,6 +263,12 @@ void effectsController::addTurretShot(float x, float y, short dir) {
 void effectsController::addEnemyShot(float x, float y, short dir) {
     Enemyshot e(bubbleShotSpr, redGlowSprite, x, y, dir);
     enemyShots.push_back(e);
+}
+
+void effectsController::addBlueExplosion(float x, float y) {
+    FireExplosion f(blueExplosionSpr, blueFireGlowSpr, x, y);
+    f.setOrigin(25, 80);
+    fireExplosions.push_back(f);
 }
 
 void effectsController::addDasherShot(float x, float y, short dir) {
@@ -309,8 +326,8 @@ void effectsController::addLvP10(float x, float y, FontController &font) {
     healthEffects.push_back(h);
 }
 
-void effectsController::addEnergyBeam(float x, float y, float dir) {
-    EnergyBeam en(x, y, energyBeamSprites, dir);
+void effectsController::addEnergyBeam(float x, float y, float dir, float length) {
+    EnergyBeam en(x, y, energyBeamSprites, dir, length);
     energyBeams.push_back(en);
 }
 
@@ -469,6 +486,10 @@ std::vector<DasherShot>* effectsController::getDasherShots() {
 void effectsController::condClearGlowSpr(sf::Sprite * inpSpr) {
     glowSprs.clear();
     glowSprs.push_back(inpSpr);
+}
+
+std::vector<FireExplosion>* effectsController::getExplosions() {
+    return &fireExplosions;
 }
 
 std::vector<sf::Sprite*>* effectsController::getGlowSprs2() {

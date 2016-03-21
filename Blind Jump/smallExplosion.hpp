@@ -20,6 +20,7 @@ private:
     bool killFlag;
     char frameIndex, frameRate;
     
+    
 public:
     SmallExplosion(sf::Sprite*, sf::Sprite, float, float);
     void update(float, float);

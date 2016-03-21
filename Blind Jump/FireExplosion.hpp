@@ -18,6 +18,8 @@ private:
     float xInit, yInit, xPos, yPos;
     bool killFlag;
     char frameIndex, frameRate;
+    char speed;
+    bool valid;
     
 public:
     FireExplosion(sf::Sprite*, sf::Sprite, float, float);
@@ -25,7 +27,11 @@ public:
     sf::Sprite getSprite();
     bool getKillFlag();
     float getYpos();
+    float getXpos();
     sf::Sprite* getGlow();
+    void setOrigin(int, int);
+    bool isValid();
+    void invalidate();
 };
 
 #endif /* FireExplosion_hpp */
