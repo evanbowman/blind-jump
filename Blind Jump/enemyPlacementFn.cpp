@@ -39,7 +39,7 @@ int initEnemies(GameMap* gm) {
             pVec->push_back(dasher);
             break;
             
-        case 6:
+        case 8:
             turret.first = 3;
             turret.second = abs(currentLevel - idealLevels[3]);
             pVec->push_back(turret);

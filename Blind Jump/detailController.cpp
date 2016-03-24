@@ -158,38 +158,60 @@ void detailController::addEnemyScrap(tileController& t, float posX, float posY, 
 void detailController::addDamagedRobots(tileController& t, float posX, float posY) {
     if (rand() % 2) {
         Coordinate c;
+        bool choice = rand() % 2;
+        float placeOffsetX = 0;
+        sf::Sprite tempSprite;
         try {
             c = pickLocationGrass(t.emptyMapLocations, t.mapArray);
+            tempSprite.setTexture(damagedRobotTexture[choice]);
+            placeOffsetX = (rand() % 6) - 3;
+            if (rand() % 2) {
+                tempSprite.setScale(-1, 1);
+                placeOffsetX += 32;
+            }
+            DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
+            damagedRobots.push_back(dr);
         }
         
         catch(const char* e) {
             std::cout << e << std::endl;
         }
         
-        bool choice = rand() % 2;
-        sf::Sprite tempSprite;
-        tempSprite.setTexture(damagedRobotTexture[choice]);
-        float placeOffsetX = 0;
-        placeOffsetX = (rand() % 6) - 3;
-        if (rand() % 2) {
-            tempSprite.setScale(-1, 1);
-            placeOffsetX += 32;
-        }
-        DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
-        damagedRobots.push_back(dr);
+
         if (rand() % 2) {
             try {
                 c = pickLocationGrass(t.emptyMapLocations, t.mapArray);
+                tempSprite.setTexture(damagedRobotTexture[!choice]);
+                DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
+                damagedRobots.push_back(dr);
             }
             
             catch(const char* e) {
                 std::cout << e << std::endl;
             }
+        }
+        
+        if (rand() % 2) {
+            try {
+                c = pickLocationGrass(t.emptyMapLocations, t.mapArray);
+                tempSprite.setTexture(damagedRobotTexture[choice]);
+                if (tempSprite.getScale().x == -1) {
+                    tempSprite.setScale(1, 1);
+                    placeOffsetX -= 32;
+                }
+                
+                else {
+                    tempSprite.setScale(-1, 1);
+                    placeOffsetX += 32;
+                }
+                
+                DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
+                damagedRobots.push_back(dr);
+            }
             
-            //placeOffsetX = (rand() % 6) - 3;
-            tempSprite.setTexture(damagedRobotTexture[!choice]);
-            DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
-            damagedRobots.push_back(dr);
+            catch(const char* e) {
+                std::cout << e << std::endl;
+            }
         }
     }
 }

@@ -41,8 +41,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     //Store the inputs for later
     windowW = windowWidth;
     windowH = windowHeight;
-    
-    
+        
     // Now call a function to procedurally distribute items across the array
     initLoot(itemArray);
     
@@ -88,7 +87,6 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     
     vignetteSprite.setTexture(*inptxtr);
     vignetteSprite.setScale(windowWidth/450, windowHeight/450);
-    vignetteSprite.setColor(sf::Color(255, 255, 255, 255));
     
     //Put the player in the center of the view
     player.setPosition(windowWidth / 2 - 16, windowHeight / 2);
@@ -105,7 +103,8 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     //Add some enemies, more of them as the player progresses through the game
     initEnemies(this);
     
-    addHeavyBot(tiles.mapArray, tiles.descriptionArray, en, tiles.posX, tiles.posY, windowWidth, windowHeight, tiles.emptyMapLocations);
+    ///addHeavyBot(tiles.mapArray, tiles.descriptionArray, en, tiles.posX, tiles.posY, windowWidth, windowHeight, tiles.emptyMapLocations);
+
     ///addDasher(tiles.mapArray, tiles.descriptionArray, en, tiles.posX, tiles.posY, windowWidth/2, windowHeight/2, tiles.emptyMapLocations);
 
     details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH);

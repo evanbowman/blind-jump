@@ -83,13 +83,13 @@ private:
     bool animationBegin;
     bool beamExpanding;
     bool dispEntryBeam;
-    
+        
     sf::Shader redShader, whiteShader, blueShader;
     
     sf::View worldView, hudView;
     
     // RenderTexture and shapes for lighting effects
-    sf::RenderTexture lightingMap;
+    sf::RenderTexture lightingMap, particleMap;
     sf::RectangleShape shadowShape;
     
     // Create a font controller
@@ -108,7 +108,7 @@ private:
     
     // Create a vector of pairs with enemy index and placement probability for enemy creation
     std::vector<std::pair<int, int>> enemySelectVec;
-    int idealLvs[4] = {4/*Scoot*/, 5/*Critter Swarms*/, 22/*Dasher*/, 30/*Heavybots*/};
+    int idealLvs[4] = {4/*Scoot*/, 5/*Critter Swarms*/, 22/*Dasher*/, 38/*Heavybots*/};
     
     // Stack of sprites with y-position and height, for z-ordering
     std::vector<std::tuple<sf::Sprite, float, int>> gameObjects;

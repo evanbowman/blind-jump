@@ -409,22 +409,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Blind Jump/gameMap.cpp"
-            timestampString = "480089047.651872"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "205"
-            endingLineNumber = "205"
-            landmarkName = "GameMap::update(sf::RenderWindow&amp; window)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Blind Jump/mappingFunctions.cpp"
             timestampString = "479951665.960153"
             startingColumnNumber = "9223372036854775807"
@@ -458,11 +442,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Blind Jump/detailController.cpp"
-            timestampString = "479741923.596977"
+            timestampString = "480450195.99064"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "297"
-            endingLineNumber = "297"
+            startingLineNumber = "319"
+            endingLineNumber = "319"
             landmarkName = "detailController::update(float xOffset, float yOffset, effectsController&amp; ef, char PlayerSprIndex, std::vector&lt;wall&gt;&amp; walls, std::vector&lt;sf::Sprite*&gt;* glow1, std::vector&lt;sf::Sprite*&gt;* glow2, userInterface&amp; ui, FontController&amp; fonts, Player&amp; player, InputController* pInput)"
             landmarkType = "5">
          </BreakpointContent>
@@ -474,11 +458,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Blind Jump/detailController.cpp"
-            timestampString = "479741923.596977"
+            timestampString = "480450195.99064"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "220"
-            endingLineNumber = "220"
+            startingLineNumber = "242"
+            endingLineNumber = "242"
             landmarkName = "detailController::addPillar(tileController &amp;tiles)"
             landmarkType = "5">
          </BreakpointContent>
@@ -617,22 +601,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Blind Jump/player.cpp"
-            timestampString = "480213416.041138"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "692"
-            endingLineNumber = "692"
-            landmarkName = "Player::draw(std::vector&lt;std::tuple&lt;sf::Sprite, float, int&gt;&gt;&amp; gameObjects, std::vector&lt;std::tuple&lt;sf::Sprite, float, int&gt;&gt;&amp; gameShadows, tileController&amp; tiles, effectsController&amp; ef, detailController&amp; details, SoundController&amp; sounds, userInterface&amp; UI, InputController* pInput, sf::RenderWindow&amp; window)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Blind Jump/FireExplosion.cpp"
             timestampString = "480202073.052821"
             startingColumnNumber = "9223372036854775807"
@@ -657,6 +625,22 @@
             endingLineNumber = "34"
             landmarkName = "FireExplosion::update(float xOffset, float yOffset)"
             landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Blind Jump/main.cpp"
+            timestampString = "480472243.972491"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "main(int, char const**)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

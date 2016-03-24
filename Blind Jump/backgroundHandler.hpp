@@ -22,7 +22,6 @@ private:
     sf::Sprite bkgSprite[3];
     sf::Sprite stars[STARMAP_SIZE][STARMAP_SIZE];
     sf::Sprite starsFar[STARMAP_SIZE][STARMAP_SIZE];
-    sf::CircleShape planet[2];
     float xOffset, xOffPrev;
     float yOffset, yOffPrev;
     float posX;
