@@ -16,12 +16,16 @@
 
 class backgroundHandler {
 private:
+    sf::Texture foregroundTreesTxtr;
+    sf::Sprite foregroundTreesSpr;
     sf::Texture bkgLayer[3];
     sf::Texture bkgStars;
     sf::Texture bkgStarsFar;
     sf::Sprite bkgSprite[3];
     sf::Sprite stars[STARMAP_SIZE][STARMAP_SIZE];
     sf::Sprite starsFar[STARMAP_SIZE][STARMAP_SIZE];
+    sf::CircleShape planet[2];
+    sf::RectangleShape solidBkg;
     float xOffset, xOffPrev;
     float yOffset, yOffPrev;
     float posX;
@@ -34,6 +38,7 @@ private:
 public:
     backgroundHandler();
     void drawBackground(sf::RenderWindow&);
+    void drawForeground(sf::RenderWindow&);
     void setOffset(float, float);
     void setPosition(float, float);
     void giveWindowSize(float, float);

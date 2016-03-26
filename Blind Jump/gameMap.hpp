@@ -83,13 +83,13 @@ private:
     bool animationBegin;
     bool beamExpanding;
     bool dispEntryBeam;
-        
+    
     sf::Shader redShader, whiteShader, blueShader;
     
     sf::View worldView, hudView;
     
     // RenderTexture and shapes for lighting effects
-    sf::RenderTexture lightingMap, particleMap;
+    sf::RenderTexture lightingMap;
     sf::RectangleShape shadowShape;
     
     // Create a font controller
@@ -102,6 +102,7 @@ private:
     sf::Sprite creditsSprite;
     bool dispCredits;
     int creditsCounter;
+
     
     // Locations to place pillars
     std::vector<Coordinate> rockPositions;

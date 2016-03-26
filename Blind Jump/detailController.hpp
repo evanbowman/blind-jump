@@ -47,7 +47,7 @@ private:
     std::vector<Rock> rocks;
     std::vector<Pillar> pillars;
     std::vector<DamagedRobot> damagedRobots;
-    // A vector of objects with no polymorphism, for background details that don't need any added functionality
+    // A vector of general details, for background details that don't need any added functionality
     std::vector<GeneralDetail> misc32x26;
     // Variables to keep track of which ui elements to draw
     unsigned char UIStates[1];

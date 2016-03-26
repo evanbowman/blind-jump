@@ -41,7 +41,8 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     //Store the inputs for later
     windowW = windowWidth;
     windowH = windowHeight;
-        
+    
+    
     // Now call a function to procedurally distribute items across the array
     initLoot(itemArray);
     
@@ -72,7 +73,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     blueShader.loadFromFile(resourcePath() + "blue.frag", sf::Shader::Fragment);
     blueShader.setParameter("texture", sf::Shader::CurrentTexture);
     //Initialize the starting level to 1
-    level = 1;
+    level = 0;
     
     // Setup the lighting map
     lightingMap.create(windowWidth, windowHeight);
@@ -84,6 +85,10 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     
     //Initialize the world type
     worldType = rand() % 2;
+    
+    details.addLamplight(tiles, 0, 0, 5, 2, windowWidth, windowHeight);
+    details.addLamplight(tiles, 0, 0, 11, 8, windowWidth, windowHeight);
+
     
     vignetteSprite.setTexture(*inptxtr);
     vignetteSprite.setScale(windowWidth/450, windowHeight/450);
@@ -100,16 +105,9 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     
     //Initialize the fonts
     fonts.setWaypointText(level, windowW, windowH);
-    //Add some enemies, more of them as the player progresses through the game
-    initEnemies(this);
     
-    ///addHeavyBot(tiles.mapArray, tiles.descriptionArray, en, tiles.posX, tiles.posY, windowWidth, windowHeight, tiles.emptyMapLocations);
-
-    ///addDasher(tiles.mapArray, tiles.descriptionArray, en, tiles.posX, tiles.posY, windowWidth/2, windowHeight/2, tiles.emptyMapLocations);
-
     details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH);
-    details.addDamagedRobots(tiles, tiles.posX, tiles.posY);
-        
+    
     // initialize the rectangle shape for the teleporter beam effect
     sf::Vector2f v1(2, 1);
     teleporterBeam.setPosition(windowWidth/2 - 1.5, windowHeight/2 + 36);
@@ -122,10 +120,12 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     entryBeam.setSize(v2);
     entryBeam.setFillColor(sf::Color(104, 255, 229, 180));
     
+    bkg.setBkg(0);
+    
     beamExpanding = false;
     animationBegin = false;
     dispEntryBeam = false;
-    
+        
     sndCtrl.playMusic(0);
     fonts.zeroScore();
     beamGlowTxr.loadFromFile(resourcePath() + "teleporterBeamGlow.png");
@@ -134,6 +134,8 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     beamGlowSpr.setColor(sf::Color(0, 0, 0, 255));
     //player.visible = false;
     
+    vignetteSprite.setColor(sf::Color(255, 255, 255, 96));
+    
     // Place a weapon chest is needed
     if (itemArray[level][0] != 0) {
         details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][0]);
@@ -141,43 +143,6 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     // place life capsule chests
     if (itemArray[level][1] == 90) {
         details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][1]);
-    }
-    
-    // Put rock/pillar detail things on map
-    getRockPositions(tiles.mapArray, rockPositions);
-    size_t len = rockPositions.size();
-    for (auto element : rockPositions) {
-        details.addRock(tiles, tiles.posX, tiles.posY - 35, element.x, element.y);
-    }
-    rockPositions.clear();
-    
-    // Put light sources on the map
-    getLightingPositions(tiles.mapArray, lightPositions);
-    len = lightPositions.size();
-    for (auto i = 0; i < len; i++) {
-        details.addLamplight(tiles, tiles.posX - 2, tiles.posY - 16, lightPositions[i].x, lightPositions[i].y, windowW, windowH);
-    }
-    lightPositions.clear();
-    
-    Teleporter* pTeleporter = details.getTeleporter();
-    std::vector<LampLight>* pLamps = details.getLamps();
-    for (auto i = 0; i < details.getLamps()->size(); i++) {
-        if (fabsf((*pLamps)[i].getxPos() - pTeleporter->xPos) < 128 && fabsf((*pLamps)[i].getyPos() - pTeleporter->yPos) < 128) {
-            (*pLamps)[i] = (*pLamps).back();
-            (*pLamps).pop_back();
-        }
-    }
-    
-    // Delete rocks close to the teleporter
-    std::vector<Rock>* pRocks = details.getRocks();
-    for (auto it = pRocks->begin(); it != pRocks->end();) {
-        if (fabsf(it->getxPos() - pTeleporter->getxPos()) < 80 && fabsf(it->getyPos() - pTeleporter->getyPos()) < 80) {
-            it = pRocks->erase(it);
-        }
-        
-        else {
-            ++it;
-        }
     }
 }
 
@@ -191,7 +156,7 @@ void GameMap::update(sf::RenderWindow& window) {
     bkg.setOffset(xOffset, yOffset);
     bkg.drawBackground(window);
     tiles.setOffset(xOffset, yOffset);
-    tiles.drawTiles(window, effects.getGlowSprs(), effects.getGlowSprs2());
+    tiles.drawTiles(window, effects.getGlowSprs(), effects.getGlowSprs2(), level);
     effects.getGlowSprs2()->clear();
     // Update the overworld objects based on the displacement of the player
     details.update(xOffset, yOffset, effects, player.getSprIndex(), tiles.walls, effects.getGlowSprs(), effects.getGlowSprs2(), UI, fonts, player, pInput);
@@ -272,6 +237,8 @@ void GameMap::update(sf::RenderWindow& window) {
     
     effects.draw(window, gameObjects);
     
+    bkg.drawForeground(window);
+    
     window.setView(hudView);
     
     // Draw a nice vignette effect over the entire window, but behind the UI overlay
@@ -316,12 +283,14 @@ void GameMap::update(sf::RenderWindow& window) {
         UI.drawMenu(window, &player, details.getUIStates(), fonts, effects, xOffset, yOffset, pInput);
     }
     else {
-        UI.drawMenu(window, &player, details.getUIStates(), fonts, effects, xOffset, yOffset, pInput);
-        // Pass the player's health to the font controller
-        fonts.updateHealth(player.getHealth());
-        fonts.updateStamina(player.getStamina());
-        // Draw all of the game text to the window
-        fonts.print(window);
+        if (level != 0) {
+            UI.drawMenu(window, &player, details.getUIStates(), fonts, effects, xOffset, yOffset, pInput);
+            // Pass the player's health to the font controller
+            fonts.updateHealth(player.getHealth());
+            fonts.updateStamina(player.getStamina());
+            // Draw all of the game text to the window
+            fonts.print(window);
+        }
     }
     // Update the screen shake controller
     ssc.update(player);
@@ -472,6 +441,8 @@ void GameMap::Reset() {
     teleporterCond = 0;
     int count;
     
+    vignetteSprite.setColor(sf::Color(255, 255, 255, 255));
+
     // If not on a boss level...
     if (level != BOSS_LEVEL_1) {
         //Now call the mapping function again to generate a new map, and make sure it's large enough
@@ -543,7 +514,7 @@ void GameMap::Reset() {
         std::vector<LampLight>* pLamps = details.getLamps();
         Teleporter* pTeleporter = details.getTeleporter();
         for (auto i = 0; i < details.getLamps()->size(); i++) {
-            if (fabsf((*pLamps)[i].getxPos() - pTeleporter->xPos) < 128 && fabsf((*pLamps)[i].getyPos() - pTeleporter->yPos) < 128) {
+            if (fabsf((*pLamps)[i].getxPos() - pTeleporter->xPos) < 70 && fabsf((*pLamps)[i].getyPos() - pTeleporter->yPos) < 70) {
                 (*pLamps)[i] = (*pLamps).back();
                 (*pLamps).pop_back();
             }

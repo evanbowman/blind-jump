@@ -26,6 +26,8 @@ public:
     sf::Texture lamplight;
     sf::Sprite lmplght;
     
+    sf::Texture transitionLevels[0];
+    
     sf::Texture spotlightTxtr;
     sf::Sprite spotlightSpr;
     
@@ -37,7 +39,7 @@ public:
     
     sf::Sprite tileSprite;
     tileController();
-    void drawTiles(sf::RenderWindow&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*);
+    void drawTiles(sf::RenderWindow&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, int level);
     void drawTiles(sf::RenderWindow&);
     void drawMiniMap(sf::RenderWindow&);
     //The number of tiles to draw
@@ -59,9 +61,6 @@ public:
     
     // Rendertexture top, rendertexture edge
     sf::RenderTexture rt, re;
-    
-    sf::Texture txt;
-    sf::Sprite spr;
     
     // Include a vector of maps to designate the order of future tilesets
     std::vector<unsigned char> maps;

@@ -19,7 +19,7 @@
 #include "coordinate.h"
 #include <cmath>
 
-#define CIRC_RADIUS 210
+#define CIRC_RADIUS 200
 
 typedef struct __circle {
     int x;

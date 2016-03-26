@@ -187,8 +187,9 @@ tileController::tileController() {
     //Offsets move the background, givig the illusion that the stationary player is walking
     xOffset = 0;
     yOffset = 0;
-    posX = 0;
-    posY = 0;
+    // Set specifically for player position in the first room
+    posX = -96;
+    posY = -156;
     windowH = 0;
     windowW = 0;
     tempX = 0;
@@ -198,6 +199,8 @@ tileController::tileController() {
     //First load the all the textures for the overworld sprites
     const std::string fileExts3[5] = {"moon_edge_tile.png", "field_tile.png", "field_tile_shrub.png", "orbit_edge_tile3.png", "orbit_edge_top.png"};
     const std::string fileExts4[5] = {"regolith_border_tile.png", "regolith_tile.png", "regolith_tile_alt.png", "orbit_edge_tile4.png", "orbit_edge_top.png"};
+    
+    transitionLevels[0].loadFromFile(resourcePath() + "introLevel.png");
     
     tileImg[0].loadFromFile(resourcePath() + "soilTileset.png");
     grassSet.loadFromFile(resourcePath() + "grassSet.png");
@@ -224,30 +227,21 @@ tileController::tileController() {
             itemArray[i][j] = 0;
         }
     }
-    //Now call another function to read the map and store empty locations for enemy placement
-    initMapVectors(mapArray, w, walls, posX, posY, emptyMapLocations, largeEmptyLocations, edgeLocations, primeChestLocations, teleporterLocation, itemArray, 0);
-    // Initialize the tileset to use for the first waypoint (currently set to a constant value)
-    workingSet = SAND_TILESET;
     // Fill the container of maps with values
     initMapStack(maps);
     
-    createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet, &grassSetEdge);
-    mapSprite[0].setTexture(mapTexture[0]);
-    mapSprite[1].setTexture(mapTexture[1]);
+    mapSprite[0].setTexture(transitionLevels[0]);
     
-    txt.loadFromFile(resourcePath() + "whiteFloorGlow.png");
-    spr.setTexture(txt);
     shadow.setFillColor(sf::Color(188, 188, 198, 255));
 }
 
-void tileController::drawTiles(sf::RenderWindow& window, std::vector<sf::Sprite*>* glowSprites, std::vector<sf::Sprite*>* glowSprites2) {
+void tileController::drawTiles(sf::RenderWindow& window, std::vector<sf::Sprite*>* glowSprites, std::vector<sf::Sprite*>* glowSprites2, int level) {
     if (!walls.empty()) {
         for (int i = 0; i < walls.size(); i++) {
             //Also move the walls with the same offset
             walls[i].setPosition(walls[i].getXinit() + xOffset + posX, walls[i].getYinit() + yOffset + posY);
         }
     }
-    spr.setPosition(windowW / 2 + 20, windowH / 2);
     mapSprite[0].setPosition(posX + xOffset, posY + yOffset);
     mapSprite[1].setPosition(posX + xOffset, posY + yOffset);
 
@@ -329,20 +323,6 @@ void tileController::rebuild(char itemArray[48][3], int level) {
     createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet, &grassSetEdge);
     mapSprite[0].setTexture(mapTexture[0]);
     mapSprite[1].setTexture(mapTexture[1]);
-    
-    // Draw tiles based on the current working tileset delivered by the map playlist vector
-    switch (workingSet) {
-        case 0:
-            createMapImage(&tileImg[1], mapArray, mapTexture, &redSetFlowers, &redSet);
-            break;
-            
-        case 1:
-            createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet, &grassSetEdge);
-            break;
-            
-        default:
-            break;
-    }
     initMapVectors(mapArray, w, walls, posX, posY, emptyMapLocations, largeEmptyLocations, edgeLocations, primeChestLocations, teleporterLocation, itemArray, level);
 }
 

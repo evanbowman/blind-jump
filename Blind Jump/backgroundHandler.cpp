@@ -42,6 +42,12 @@ backgroundHandler::backgroundHandler() {
         }
     }
     
+    foregroundTreesTxtr.loadFromFile(resourcePath() + "introLevelMask.png");
+    foregroundTreesSpr.setTexture(foregroundTreesTxtr);
+    
+    
+    solidBkg.setFillColor(sf::Color(17, 45, 50));
+    
     // The starting working tile set is initialized to 0
     workingSet = 1;
 }
@@ -50,10 +56,22 @@ void backgroundHandler::reset() {
     
 }
 
+void backgroundHandler::drawForeground(sf::RenderWindow & window) {
+    switch (workingSet) {
+        case 0:
+            window.draw(foregroundTreesSpr);
+            break;
+            
+        default:
+            break;
+    }
+}
+
 void backgroundHandler::drawBackground(sf::RenderWindow& window) {
     switch (workingSet) {
         case 0:
-            window.draw(bkgSprite[0]);
+            foregroundTreesSpr.setPosition(foregroundTreesSpr.getPosition().x - (xOffPrev - xOffset), foregroundTreesSpr.getPosition().y - (yOffPrev - yOffset));
+            window.draw(solidBkg);
             break;
             
         case 1:
@@ -69,45 +87,46 @@ void backgroundHandler::drawBackground(sf::RenderWindow& window) {
             break;
     }
     
-    for (int i = 0; i < STARMAP_SIZE; i++) {
-        for (int j = 0; j < STARMAP_SIZE; j++) {
-            if (stars[i][j].getPosition().x < -128) {
-                stars[i][j].setPosition(stars[i][j].getPosition().x + 128 * STARMAP_SIZE, stars[i][j].getPosition().y);
+    if (workingSet != 0) {
+        for (int i = 0; i < STARMAP_SIZE; i++) {
+            for (int j = 0; j < STARMAP_SIZE; j++) {
+                if (stars[i][j].getPosition().x < -128) {
+                    stars[i][j].setPosition(stars[i][j].getPosition().x + 128 * STARMAP_SIZE, stars[i][j].getPosition().y);
+                }
+                
+                if (stars[i][j].getPosition().x > windowW + 128) {
+                    stars[i][j].setPosition(stars[i][j].getPosition().x - 128 * STARMAP_SIZE, stars[i][j].getPosition().y);
+                }
+                
+                if (stars[i][j].getPosition().y > windowH + 128) {
+                    stars[i][j].setPosition(stars[i][j].getPosition().x, stars[i][j].getPosition().y - 128 * STARMAP_SIZE);
+                }
+                
+                if (stars[i][j].getPosition().y < -128) {
+                    stars[i][j].setPosition(stars[i][j].getPosition().x, stars[i][j].getPosition().y + 128 * STARMAP_SIZE);
+                }
+                
+                if (starsFar[i][j].getPosition().x < -128) {
+                    starsFar[i][j].setPosition(starsFar[i][j].getPosition().x + 128 * STARMAP_SIZE, starsFar[i][j].getPosition().y);
+                }
+                
+                if (starsFar[i][j].getPosition().x > windowW + 128) {
+                    starsFar[i][j].setPosition(starsFar[i][j].getPosition().x - 128 * STARMAP_SIZE, starsFar[i][j].getPosition().y);
+                }
+                
+                if (starsFar[i][j].getPosition().y > windowH + 128) {
+                    starsFar[i][j].setPosition(starsFar[i][j].getPosition().x, starsFar[i][j].getPosition().y - 128 * STARMAP_SIZE);
+                }
+                
+                if (starsFar[i][j].getPosition().y < -128) {
+                    starsFar[i][j].setPosition(starsFar[i][j].getPosition().x, starsFar[i][j].getPosition().y + 128 * STARMAP_SIZE);
+                }
+                
+                starsFar[i][j].setPosition(starsFar[i][j].getPosition().x - (xOffPrev - xOffset)/3.5, starsFar[i][j].getPosition().y - (yOffPrev - yOffset)/3.5);
+                stars[i][j].setPosition(stars[i][j].getPosition().x - (xOffPrev - xOffset)/3, stars[i][j].getPosition().y - (yOffPrev - yOffset)/3);
+                window.draw(starsFar[i][j]);
+                window.draw(stars[i][j]);
             }
-            
-            if (stars[i][j].getPosition().x > windowW + 128) {
-                stars[i][j].setPosition(stars[i][j].getPosition().x - 128 * STARMAP_SIZE, stars[i][j].getPosition().y);
-            }
-            
-            if (stars[i][j].getPosition().y > windowH + 128) {
-                stars[i][j].setPosition(stars[i][j].getPosition().x, stars[i][j].getPosition().y - 128 * STARMAP_SIZE);
-            }
-            
-            if (stars[i][j].getPosition().y < -128) {
-                stars[i][j].setPosition(stars[i][j].getPosition().x, stars[i][j].getPosition().y + 128 * STARMAP_SIZE);
-            }
-            ///
-            
-            if (starsFar[i][j].getPosition().x < -128) {
-                starsFar[i][j].setPosition(starsFar[i][j].getPosition().x + 128 * STARMAP_SIZE, starsFar[i][j].getPosition().y);
-            }
-            
-            if (starsFar[i][j].getPosition().x > windowW + 128) {
-                starsFar[i][j].setPosition(starsFar[i][j].getPosition().x - 128 * STARMAP_SIZE, starsFar[i][j].getPosition().y);
-            }
-            
-            if (starsFar[i][j].getPosition().y > windowH + 128) {
-                starsFar[i][j].setPosition(starsFar[i][j].getPosition().x, starsFar[i][j].getPosition().y - 128 * STARMAP_SIZE);
-            }
-            
-            if (starsFar[i][j].getPosition().y < -128) {
-                starsFar[i][j].setPosition(starsFar[i][j].getPosition().x, starsFar[i][j].getPosition().y + 128 * STARMAP_SIZE);
-            }
-            
-            starsFar[i][j].setPosition(starsFar[i][j].getPosition().x - (xOffPrev - xOffset)/3.5, starsFar[i][j].getPosition().y - (yOffPrev - yOffset)/3.5);
-            stars[i][j].setPosition(stars[i][j].getPosition().x - (xOffPrev - xOffset)/3, stars[i][j].getPosition().y - (yOffPrev - yOffset)/3);
-            window.draw(starsFar[i][j]);
-            window.draw(stars[i][j]);
         }
     }
     
@@ -130,8 +149,12 @@ void backgroundHandler::giveWindowSize(float x, float y) {
     windowH = y;
     for (auto i = 0; i < 3; i++) {
         // Scale the background sprites based on the window size, that way they always fill the game window
-        bkgSprite[i].setScale(x/450, y/450);
+        bkgSprite[i].setScale(x / 450, y / 450);
     }
+    
+    solidBkg.setSize(sf::Vector2f(x, y));
+    // Based on initial position for first room (the only place this sprite shows up in the game
+    foregroundTreesSpr.setPosition(x / 2 - x / 16 - 96, y / 2 - y / 18 - 156);
 }
 
 void backgroundHandler::setBkg(unsigned char workingSet) {

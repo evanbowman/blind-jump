@@ -48,6 +48,7 @@ detailController::detailController() {
     for (int i = 0; i < 3; i++) {
         lampTextures[i].loadFromFile(resourcePath() + "lamp.png", sf::IntRect(i * 32, 0, 32, 32));
     }
+    
 }
 
 Coordinate pickLocation(std::vector<Coordinate>& emptyLocations) {
