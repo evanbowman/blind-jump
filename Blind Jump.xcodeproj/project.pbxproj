@@ -159,6 +159,7 @@
 		687AAE101C6A7B9B002612E4 /* healthEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 687AAE0E1C6A7B9B002612E4 /* healthEffect.cpp */; };
 		687AAE121C6A7F13002612E4 /* healthEffect.png in Resources */ = {isa = PBXBuildFile; fileRef = 687AAE111C6A7F13002612E4 /* healthEffect.png */; };
 		687D34F11C9A6E47007579DF /* grassStep.ogg in Resources */ = {isa = PBXBuildFile; fileRef = 687D34F01C9A6E47007579DF /* grassStep.ogg */; };
+		688140281CA8216B00C90D5F /* introWall.png in Resources */ = {isa = PBXBuildFile; fileRef = 688140271CA8216B00C90D5F /* introWall.png */; };
 		688633D61BE2FE56005D12C6 /* skeleton1.png in Resources */ = {isa = PBXBuildFile; fileRef = 688633D51BE2FE56005D12C6 /* skeleton1.png */; };
 		688633E01BE306D0005D12C6 /* detailParent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 688633DE1BE306D0005D12C6 /* detailParent.cpp */; };
 		688633E61BE308BA005D12C6 /* detailController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 688633E41BE308BA005D12C6 /* detailController.cpp */; };
@@ -166,7 +167,7 @@
 		688A55651C5E5B8C002FF16C /* alphabetSheetInverse.png in Resources */ = {isa = PBXBuildFile; fileRef = 688A55641C5E5B8C002FF16C /* alphabetSheetInverse.png */; };
 		688B99B31C840E4F003ABBE8 /* wallinpath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 688B99B11C840E4F003ABBE8 /* wallinpath.cpp */; };
 		6893B6BA1C96E6E5006B24F3 /* drawPixels.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6893B6B91C96E6E5006B24F3 /* drawPixels.cpp */; };
-		6893B6C11C984130006B24F3 /* Pillar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6893B6BF1C984130006B24F3 /* Pillar.cpp */; };
+		6893B6C11C984130006B24F3 /* IntroDoor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6893B6BF1C984130006B24F3 /* IntroDoor.cpp */; };
 		6893B6C31C984480006B24F3 /* pillarSheet.png in Resources */ = {isa = PBXBuildFile; fileRef = 6893B6C21C984480006B24F3 /* pillarSheet.png */; };
 		689F82B01C5DAC5C00C2F8C0 /* alphabetSheet.png in Resources */ = {isa = PBXBuildFile; fileRef = 689F82AF1C5DAC5C00C2F8C0 /* alphabetSheet.png */; };
 		68ABE08D1BD5CFCA005E7757 /* enemyCreationFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68ABE08B1BD5CFCA005E7757 /* enemyCreationFunctions.cpp */; };
@@ -459,6 +460,7 @@
 		687AAE111C6A7F13002612E4 /* healthEffect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = healthEffect.png; sourceTree = "<group>"; };
 		687D34EB1C9A2FFB007579DF /* bossLevels.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bossLevels.h; sourceTree = "<group>"; };
 		687D34F01C9A6E47007579DF /* grassStep.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = grassStep.ogg; sourceTree = "<group>"; };
+		688140271CA8216B00C90D5F /* introWall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = introWall.png; sourceTree = "<group>"; };
 		688633D51BE2FE56005D12C6 /* skeleton1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = skeleton1.png; sourceTree = "<group>"; };
 		688633DE1BE306D0005D12C6 /* detailParent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = detailParent.cpp; sourceTree = "<group>"; };
 		688633DF1BE306D0005D12C6 /* detailParent.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = detailParent.hpp; sourceTree = "<group>"; };
@@ -471,8 +473,8 @@
 		6893B6B51C964273006B24F3 /* tilemap.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tilemap.hpp; sourceTree = "<group>"; };
 		6893B6B81C96E491006B24F3 /* drawPixels.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = drawPixels.hpp; sourceTree = "<group>"; };
 		6893B6B91C96E6E5006B24F3 /* drawPixels.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = drawPixels.cpp; sourceTree = "<group>"; };
-		6893B6BF1C984130006B24F3 /* Pillar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pillar.cpp; sourceTree = "<group>"; };
-		6893B6C01C984130006B24F3 /* Pillar.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Pillar.hpp; sourceTree = "<group>"; };
+		6893B6BF1C984130006B24F3 /* IntroDoor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IntroDoor.cpp; sourceTree = "<group>"; };
+		6893B6C01C984130006B24F3 /* IntroDoor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IntroDoor.hpp; sourceTree = "<group>"; };
 		6893B6C21C984480006B24F3 /* pillarSheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pillarSheet.png; sourceTree = "<group>"; };
 		689F82AF1C5DAC5C00C2F8C0 /* alphabetSheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = alphabetSheet.png; sourceTree = "<group>"; };
 		689F82B11C5DDBE500C2F8C0 /* Strings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Strings.h; sourceTree = "<group>"; };
@@ -735,6 +737,7 @@
 		686BCE841BC8B6270096128A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				688140271CA8216B00C90D5F /* introWall.png */,
 				6846F73D1CA630A80015ABAA /* introLevelMask.png */,
 				6846F73B1CA616630015ABAA /* introLevel.png */,
 				68B3CEA21C9F4C30008DA0AD /* blueFireGlow.png */,
@@ -955,8 +958,8 @@
 				68D224E31C8B56550047CA27 /* damagedRobot.hpp */,
 				68D224E71C8BB8BC0047CA27 /* rock.cpp */,
 				68D224E81C8BB8BC0047CA27 /* rock.hpp */,
-				6893B6BF1C984130006B24F3 /* Pillar.cpp */,
-				6893B6C01C984130006B24F3 /* Pillar.hpp */,
+				6893B6BF1C984130006B24F3 /* IntroDoor.cpp */,
+				6893B6C01C984130006B24F3 /* IntroDoor.hpp */,
 			);
 			name = "Overworld Details";
 			sourceTree = "<group>";
@@ -1122,6 +1125,7 @@
 				682F41681BC93C3B0091BC2E /* walk_down4.png in Resources */,
 				6823AF4F1C93723C00D13C99 /* mister_moon_man.ogg in Resources */,
 				6801000C1BEEC97E002AA2C2 /* terminal.png in Resources */,
+				688140281CA8216B00C90D5F /* introWall.png in Resources */,
 				68EC08061C63153500E2D425 /* deathText.png in Resources */,
 				68B3CE981C9CD94F008DA0AD /* fireExplosionSheet.png in Resources */,
 				682F41671BC93C3B0091BC2E /* walk_down5.png in Resources */,
@@ -1372,7 +1376,7 @@
 				686CF2FB1BCECA790098BB7F /* bulletType1.cpp in Sources */,
 				6807255F1C5B04750038389C /* terminal.cpp in Sources */,
 				68ABE0A71BD80C7C005E7757 /* fontController.cpp in Sources */,
-				6893B6C11C984130006B24F3 /* Pillar.cpp in Sources */,
+				6893B6C11C984130006B24F3 /* IntroDoor.cpp in Sources */,
 				68B3CE8F1C9C588D008DA0AD /* dashSmoke.cpp in Sources */,
 				68D7712F1BF6F95800E40CEA /* treasureChest.cpp in Sources */,
 				68ABE0901BD66CE7005E7757 /* effectsController.cpp in Sources */,

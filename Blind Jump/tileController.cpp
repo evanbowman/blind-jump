@@ -189,7 +189,7 @@ tileController::tileController() {
     yOffset = 0;
     // Set specifically for player position in the first room
     posX = -96;
-    posY = -156;
+    posY = -457;
     windowH = 0;
     windowW = 0;
     tempX = 0;
@@ -227,10 +227,14 @@ tileController::tileController() {
             itemArray[i][j] = 0;
         }
     }
+    createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet, &grassSetEdge);
+
     // Fill the container of maps with values
     initMapStack(maps);
-    
-    mapSprite[0].setTexture(transitionLevels[0]);
+    createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet, &grassSetEdge);
+    mapSprite1.setTexture(mapTexture[0]);
+    mapSprite2.setTexture(mapTexture[1]);
+    transitionLvSpr.setTexture(transitionLevels[0]);
     
     shadow.setFillColor(sf::Color(188, 188, 198, 255));
 }
@@ -242,13 +246,17 @@ void tileController::drawTiles(sf::RenderWindow& window, std::vector<sf::Sprite*
             walls[i].setPosition(walls[i].getXinit() + xOffset + posX, walls[i].getYinit() + yOffset + posY);
         }
     }
-    mapSprite[0].setPosition(posX + xOffset, posY + yOffset);
-    mapSprite[1].setPosition(posX + xOffset, posY + yOffset);
+    transitionLvSpr.setPosition(posX + xOffset, posY + yOffset);
+    mapSprite1.setPosition(posX + xOffset, posY + yOffset);
+    mapSprite2.setPosition(posX + xOffset, posY + yOffset);
 
     // Clear out the RenderTexture
     rt.clear(sf::Color::Transparent);
     // Draw the map sprite to the texture
-    rt.draw(mapSprite[0]);
+    if (level != 0)
+    rt.draw(mapSprite1);
+    else
+        rt.draw(transitionLvSpr);
     // Draw a shadow over everything
     rt.draw(shadow, sf::BlendMultiply);
     // Draw glow sprites
@@ -262,7 +270,8 @@ void tileController::drawTiles(sf::RenderWindow& window, std::vector<sf::Sprite*
     rt.display();
     
     re.clear(sf::Color::Transparent);
-    re.draw(mapSprite[1]);
+    if (level != 0)
+        re.draw(mapSprite2);
     re.draw(shadow, sf::BlendMultiply);
     
     re.display();
@@ -276,10 +285,10 @@ void tileController::drawTiles(sf::RenderWindow& window, std::vector<sf::Sprite*
 }
 
 void tileController::drawTiles(sf::RenderWindow& window) {
-    mapSprite[0].setPosition(posX + xOffset, posY + yOffset);
-    mapSprite[1].setPosition(posX + xOffset, posY + yOffset);
-    window.draw(mapSprite[0]);
-    window.draw(mapSprite[1]);
+    mapSprite1.setPosition(posX + xOffset, posY + yOffset);
+    mapSprite2.setPosition(posX + xOffset, posY + yOffset);
+    window.draw(mapSprite1);
+    window.draw(mapSprite2);
 }
 
 //A function for setting the offset for the overworld
@@ -306,7 +315,6 @@ void tileController::clear() {
     largeEmptyLocations.clear();
 }
 
-// A function to build a new world with a random tileset
 void tileController::rebuild(char itemArray[48][3], int level) {
     // If the vector of map data contains values
     if (maps.size() > 0) {
@@ -321,19 +329,10 @@ void tileController::rebuild(char itemArray[48][3], int level) {
     }
     
     createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet, &grassSetEdge);
-    mapSprite[0].setTexture(mapTexture[0]);
-    mapSprite[1].setTexture(mapTexture[1]);
+    mapSprite1.setTexture(mapTexture[0]);
+    mapSprite2.setTexture(mapTexture[1]);
+    
     initMapVectors(mapArray, w, walls, posX, posY, emptyMapLocations, largeEmptyLocations, edgeLocations, primeChestLocations, teleporterLocation, itemArray, level);
-}
-
-void tileController::init() {
-    short initMap[61][61];
-    for (int i = 0; i < 61; i++) {
-        for (int j = 0; j < 61; j++) {
-            initMap[i][j] = 3;
-        }
-    }
-    createMapImage(&tileImg[1], initMap, mapTexture, &redSet, &redSet);
 }
 
 unsigned char tileController::getWorkingSet() {

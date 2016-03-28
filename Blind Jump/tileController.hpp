@@ -26,7 +26,8 @@ public:
     sf::Texture lamplight;
     sf::Sprite lmplght;
     
-    sf::Texture transitionLevels[0];
+    sf::Texture transitionLevels[1];
+    sf::Sprite transitionLvSpr;
     
     sf::Texture spotlightTxtr;
     sf::Sprite spotlightSpr;
@@ -57,7 +58,7 @@ public:
     int zoomCounter;
     
     sf::Texture mapTexture[2];
-    sf::Sprite mapSprite[2];
+    sf::Sprite mapSprite1, mapSprite2;
     
     // Rendertexture top, rendertexture edge
     sf::RenderTexture rt, re;

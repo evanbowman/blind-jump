@@ -86,9 +86,15 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     //Initialize the world type
     worldType = rand() % 2;
     
+    /*  Non-general code only used by the intro level */
     details.addLamplight(tiles, 0, 0, 5, 2, windowWidth, windowHeight);
+    details.addLamplight(tiles, 0, 0, 5, -4, windowWidth, windowHeight);
     details.addLamplight(tiles, 0, 0, 11, 8, windowWidth, windowHeight);
-
+    details.addLamplight(tiles, 0, 0, 11, -10, windowWidth, windowHeight);
+    details.addDoor(-16, 7, 6, 0, windowW, windowH);
+    tiles.teleporterLocation.x = 8;
+    tiles.teleporterLocation.y = -7;
+    /* End */
     
     vignetteSprite.setTexture(*inptxtr);
     vignetteSprite.setScale(windowWidth/450, windowHeight/450);
@@ -106,7 +112,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     //Initialize the fonts
     fonts.setWaypointText(level, windowW, windowH);
     
-    details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH);
+    details.addTeleporter(tiles, -5, -8, windowW, windowH);
     
     // initialize the rectangle shape for the teleporter beam effect
     sf::Vector2f v1(2, 1);
@@ -159,7 +165,7 @@ void GameMap::update(sf::RenderWindow& window) {
     tiles.drawTiles(window, effects.getGlowSprs(), effects.getGlowSprs2(), level);
     effects.getGlowSprs2()->clear();
     // Update the overworld objects based on the displacement of the player
-    details.update(xOffset, yOffset, effects, player.getSprIndex(), tiles.walls, effects.getGlowSprs(), effects.getGlowSprs2(), UI, fonts, player, pInput);
+    details.update(xOffset, yOffset, effects, player.getSprIndex(), tiles.walls, effects.getGlowSprs(), effects.getGlowSprs2(), UI, fonts, player, pInput, &ssc);
     // Draw the details / add them to the game objects vector
     details.draw(gameObjects, gameShadows, window);
     // Update the enemy objects in the game based on the player's displacement
@@ -269,7 +275,7 @@ void GameMap::update(sf::RenderWindow& window) {
             // Reset the player
             player.reset();
             // Reset the map
-            level = 0;
+            level = -1;
             initLoot(itemArray);
             enemySelectVec.clear();
             Reset();
@@ -363,7 +369,7 @@ void GameMap::update(sf::RenderWindow& window) {
     }
     
     // Check if the player is close to a teleporter. If so, go to the next level ***(in the future animate this!)***
-    if (std::abs(player.getPosX() - details.getTeleporter()->getxPos()) < 10 && std::abs(player.getPosY() - details.getTeleporter()->getyPos() + 12) < 8 /*&& player.isActive()*/) {
+    if ((std::abs(player.getPosX() - details.getTeleporter()->getxPos()) < 10 && std::abs(player.getPosY() - details.getTeleporter()->getyPos() + 12) < 8) /*&& player.isActive()*/) {
         // Center the player over the teleporter for the duration of the teleport animation (ie center the world under the player)
         if (!animationBegin) {
             player.setWorldOffsetX(xOffset + (player.getPosX() - details.getTeleporter()->getxPos()) + 2);

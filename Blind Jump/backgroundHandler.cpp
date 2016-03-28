@@ -154,7 +154,7 @@ void backgroundHandler::giveWindowSize(float x, float y) {
     
     solidBkg.setSize(sf::Vector2f(x, y));
     // Based on initial position for first room (the only place this sprite shows up in the game
-    foregroundTreesSpr.setPosition(x / 2 - x / 16 - 96, y / 2 - y / 18 - 156);
+    foregroundTreesSpr.setPosition(x / 2 - x / 16 - 96, y / 2 - y / 18 - 457);
 }
 
 void backgroundHandler::setBkg(unsigned char workingSet) {

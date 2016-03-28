@@ -297,38 +297,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Blind Jump/tileController.cpp"
-            timestampString = "480658647.686273"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "222"
-            endingLineNumber = "222"
-            landmarkName = "tileController::tileController()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Blind Jump/tileController.cpp"
-            timestampString = "480658647.686273"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "219"
-            endingLineNumber = "219"
-            landmarkName = "tileController::tileController()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Blind Jump/soundController.cpp"
             timestampString = "479425110.770611"
             startingColumnNumber = "9223372036854775807"
@@ -442,12 +410,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Blind Jump/detailController.cpp"
-            timestampString = "480646862.743757"
+            timestampString = "480781381.377598"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "320"
-            endingLineNumber = "320"
-            landmarkName = "detailController::update(float xOffset, float yOffset, effectsController&amp; ef, char PlayerSprIndex, std::vector&lt;wall&gt;&amp; walls, std::vector&lt;sf::Sprite*&gt;* glow1, std::vector&lt;sf::Sprite*&gt;* glow2, userInterface&amp; ui, FontController&amp; fonts, Player&amp; player, InputController* pInput)"
+            startingLineNumber = "318"
+            endingLineNumber = "318"
+            landmarkName = "detailController::update(float xOffset, float yOffset, effectsController&amp; ef, char PlayerSprIndex, std::vector&lt;wall&gt;&amp; walls, std::vector&lt;sf::Sprite*&gt;* glow1, std::vector&lt;sf::Sprite*&gt;* glow2, userInterface&amp; ui, FontController&amp; fonts, Player&amp; player, InputController* pInput, ScreenShakeController * pscr)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -458,12 +426,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Blind Jump/detailController.cpp"
-            timestampString = "480646862.743757"
+            timestampString = "480781381.377598"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "243"
-            endingLineNumber = "243"
-            landmarkName = "detailController::addPillar(tileController &amp;tiles)"
+            startingLineNumber = "241"
+            endingLineNumber = "241"
+            landmarkName = "detailController::addDoor(float xpos, float ypos, int x, int y, float w, float h)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -714,11 +682,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Blind Jump/tileController.cpp"
-            timestampString = "480658647.686273"
+            timestampString = "480733104.71281"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "256"
-            endingLineNumber = "256"
+            startingLineNumber = "264"
+            endingLineNumber = "264"
             landmarkName = "tileController::drawTiles(sf::RenderWindow&amp; window, std::vector&lt;sf::Sprite*&gt;* glowSprites, std::vector&lt;sf::Sprite*&gt;* glowSprites2, int level)"
             landmarkType = "5">
          </BreakpointContent>
@@ -730,12 +698,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Blind Jump/gameMap.cpp"
-            timestampString = "480655698.023719"
+            timestampString = "480807853.475366"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "92"
-            endingLineNumber = "92"
-            landmarkName = "GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, InputController* input)"
+            startingLineNumber = "216"
+            endingLineNumber = "216"
+            landmarkName = "GameMap::update(sf::RenderWindow&amp; window)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -745,13 +713,77 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Blind Jump/gameMap.cpp"
-            timestampString = "480665232.97282"
+            filePath = "Blind Jump/tileController.cpp"
+            timestampString = "480732969.755642"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "210"
-            endingLineNumber = "210"
-            landmarkName = "GameMap::update(sf::RenderWindow&amp; window)"
+            startingLineNumber = "242"
+            endingLineNumber = "242"
+            landmarkName = "tileController::drawTiles(sf::RenderWindow&amp; window, std::vector&lt;sf::Sprite*&gt;* glowSprites, std::vector&lt;sf::Sprite*&gt;* glowSprites2, int level)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Blind Jump/tileController.cpp"
+            timestampString = "480733104.71281"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "250"
+            endingLineNumber = "250"
+            landmarkName = "tileController::drawTiles(sf::RenderWindow&amp; window, std::vector&lt;sf::Sprite*&gt;* glowSprites, std::vector&lt;sf::Sprite*&gt;* glowSprites2, int level)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Blind Jump/IntroDoor.cpp"
+            timestampString = "480783598.529362"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "28"
+            endingLineNumber = "28"
+            landmarkName = "IntroDoor::update(float xOffset, float yOffset, InputController * pInput, ScreenShakeController * pscr)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Blind Jump/IntroDoor.cpp"
+            timestampString = "480783598.529362"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "33"
+            endingLineNumber = "33"
+            landmarkName = "IntroDoor::update(float xOffset, float yOffset, InputController * pInput, ScreenShakeController * pscr)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Blind Jump/IntroDoor.cpp"
+            timestampString = "480783598.529362"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "IntroDoor::update(float xOffset, float yOffset, InputController * pInput, ScreenShakeController * pscr)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

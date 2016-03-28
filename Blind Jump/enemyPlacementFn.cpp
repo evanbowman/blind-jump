@@ -76,7 +76,7 @@ int initEnemies(GameMap* gm) {
     }
     for (int i = 0; i < iters; i++) {
         // Generate a random number on the range of 0 to the sum of all enemy weights
-        int select = rand() % collector;
+        int select = rand() % std::max(collector, 1);
         // Find the interval that the selected value falls into in intervals[]
         int selectedIndex = 0;
         for (int i = 0; i < enemyVecLen; i++) {
