@@ -86,6 +86,13 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     //Initialize the world type
     worldType = rand() % 2;
     
+    transitioning = false;
+    transitionDelay = 320;
+    
+    titleTxtr.loadFromFile(resourcePath() + "title.png");
+    titleSpr.setTexture(titleTxtr);
+    titleSpr.setPosition(windowW / 2 - 109, windowH / 5 - 15);
+    
     /*  Non-general code only used by the intro level */
     details.addLamplight(tiles, 0, 0, 5, 2, windowWidth, windowHeight);
     details.addLamplight(tiles, 0, 0, 5, -4, windowWidth, windowHeight);
@@ -139,6 +146,9 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     beamGlowSpr.setPosition(windowWidth / 2 - 200, windowHeight / 2 - 200 + 30);
     beamGlowSpr.setColor(sf::Color(0, 0, 0, 255));
     //player.visible = false;
+    
+    transitionShape.setSize(sf::Vector2f(windowW, windowH));
+    transitionShape.setFillColor(sf::Color(255, 255, 255, 255));
     
     vignetteSprite.setColor(sf::Color(255, 255, 255, 96));
     
@@ -368,7 +378,7 @@ void GameMap::update(sf::RenderWindow& window) {
         }
     }
     
-    // Check if the player is close to a teleporter. If so, go to the next level ***(in the future animate this!)***
+    // Check if the player is close to a teleporter. If so, go to the next level
     if ((std::abs(player.getPosX() - details.getTeleporter()->getxPos()) < 10 && std::abs(player.getPosY() - details.getTeleporter()->getyPos() + 12) < 8) /*&& player.isActive()*/) {
         // Center the player over the teleporter for the duration of the teleport animation (ie center the world under the player)
         if (!animationBegin) {
@@ -379,10 +389,11 @@ void GameMap::update(sf::RenderWindow& window) {
         }
         player.deActivate();
         // Cast the beam's glow to the overworld
-        effects.getGlowSprs()->push_back(&beamGlowSpr);
-        effects.getGlowSprs2()->push_back(&beamGlowSpr);
-
-        window.draw(teleporterBeam);
+        if (!transitioning) {
+            window.draw(teleporterBeam);
+            effects.getGlowSprs()->push_back(&beamGlowSpr);
+            effects.getGlowSprs2()->push_back(&beamGlowSpr);
+        }
         sf::Color beamColor = teleporterBeam.getFillColor();
         sf::Vector2f v1 = teleporterBeam.getSize();
         if (beamExpanding) {
@@ -416,16 +427,58 @@ void GameMap::update(sf::RenderWindow& window) {
             v1.x *= 0.92;
             beamColor.a -= 1.4;
             sf::Color c = beamGlowSpr.getColor();
-            c.r -= 6;
-            c.b -= 6;
-            c.g -= 6;
+            if (c.r > 6) {
+                c.r -= 6;
+                c.b -= 6;
+                c.g -= 6;
+            }
             beamGlowSpr.setColor(c);
             teleporterBeam.setFillColor(beamColor);
             teleporterBeam.setPosition(teleporterBeam.getPosition().x - (v1.x - temp) * 0.5, teleporterBeam.getPosition().y);
             teleporterBeam.setSize(v1);
-            if (v1.x < 2) {
-                teleporterCond = true;
+            if (v1.x < 0.5) {
+                transitioning = true;
+                //teleporterCond = true;
                 beamGlowSpr.setColor(sf::Color(0, 0, 0, 255));
+                
+            }
+        }
+        
+        if (transitioning) {
+            if (level == 0) {
+                window.draw(titleSpr);
+                if (transitionDelay < 120) {
+                    sf::Color c = titleSpr.getColor();
+                    if (c.a > 4) {
+                        c.a -= 4;
+                    }
+                    else {
+                        c.a = 0;
+                    }
+                    if (transitionDelay < 80) {
+                        sf::Color c2 = transitionShape.getFillColor();
+                        if (c2.b > 4) {
+                            c2.r -= 3;
+                            c2.b -= 3;
+                            c2.g -= 3;
+                        }
+                        transitionShape.setFillColor(c2);
+                        window.draw(transitionShape, sf::BlendMultiply);
+                    }
+                    titleSpr.setColor(c);
+                }
+                if (--transitionDelay == 0) {
+                    transitioning = false;
+                    transitionDelay = 100;
+                    teleporterCond = true;
+                    titleSpr.setColor(sf::Color(255, 255, 255, 255));
+                    transitionShape.setFillColor(sf::Color(255, 255, 255, 255));
+                }
+            }
+            
+            else {
+                teleporterCond = true;
+                transitioning = false;
             }
         }
     }

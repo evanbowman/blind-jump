@@ -197,8 +197,6 @@ tileController::tileController() {
     zoomCounter = 0;
     
     //First load the all the textures for the overworld sprites
-    const std::string fileExts3[5] = {"moon_edge_tile.png", "field_tile.png", "field_tile_shrub.png", "orbit_edge_tile3.png", "orbit_edge_top.png"};
-    const std::string fileExts4[5] = {"regolith_border_tile.png", "regolith_tile.png", "regolith_tile_alt.png", "orbit_edge_tile4.png", "orbit_edge_top.png"};
     
     transitionLevels[0].loadFromFile(resourcePath() + "introLevel.png");
     
@@ -209,11 +207,6 @@ tileController::tileController() {
     lamplight.loadFromFile(resourcePath() + "lampLight.png");
     lmplght.setTexture(lamplight);
     
-    for (int i = 0; i < 5; i++) {
-        tileTexture3[i].loadFromFile(resourcePath() + fileExts3[i]);
-        tileTexture4[i].loadFromFile(resourcePath() + fileExts4[i]);
-    }
-    //std::cout << tileTexture[0].getMaximumSize();
     
     //Call the mapping function to transform the array into something useful
     int count = mappingFunction(mapArray, 0);

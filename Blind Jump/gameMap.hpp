@@ -98,11 +98,15 @@ private:
     // Locations to place lights
     std::vector<Coordinate> lightPositions;
     
+    sf::RectangleShape transitionShape;
+    
     sf::Texture creditsTexture;
     sf::Sprite creditsSprite;
     bool dispCredits;
     int creditsCounter;
 
+    sf::Texture titleTxtr;
+    sf::Sprite titleSpr;
     
     // Locations to place pillars
     std::vector<Coordinate> rockPositions;
@@ -117,6 +121,9 @@ private:
     
     // Create a screenshake controller for that effect
     ScreenShakeController ssc;
+    
+    bool transitioning;
+    short int transitionDelay;
     
 public:
     GameMap(float, float, sf::Texture*, InputController*);

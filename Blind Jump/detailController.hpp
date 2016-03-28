@@ -27,7 +27,6 @@ class detailController {
 private:
     sf::Texture doorTextures[4];
     sf::Texture rockTextures[2];
-    sf::Texture textures[2];
     sf::Texture damagedRobotTexture[2];
     sf::Texture teleporterTexture[2];
     sf::Texture chestTextures[6];

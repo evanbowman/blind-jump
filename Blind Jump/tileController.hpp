@@ -19,10 +19,6 @@
 
 class tileController {
 public:
-    sf::Texture tileTexture[5];
-    sf::Texture tileTexture2[5];
-    sf::Texture tileTexture3[5];
-    sf::Texture tileTexture4[5];
     sf::Texture lamplight;
     sf::Sprite lmplght;
     

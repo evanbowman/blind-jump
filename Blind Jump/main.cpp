@@ -78,35 +78,12 @@ int main(int, char const**) {
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     
     // Load start screen texture and apply it to a sprite object
-    sf::Texture titleTex[5];
-    sf::Sprite titleSpr[5];
     
-    for (int i = 0; i < 2; i++) {
-        titleTex[i].loadFromFile(resourcePath() + "title_scr.png", sf::IntRect(0, i * 10, 62, 10));
-        titleSpr[i].setTexture(titleTex[i]);
-    }
-    
-    sf::Texture titlebkgTxt;
-    titlebkgTxt.loadFromFile(resourcePath() + "bkg_title.png");
-    sf::Sprite titlebkgSpr;
-    titlebkgSpr.setTexture(titlebkgTxt);
-    titlebkgSpr.setScale(windowWidth / 450, windowHeight / 450);
-    if (!titleTex[2].loadFromFile(resourcePath() + "title_scr_bkg.png")) {
-        return EXIT_FAILURE;
-    }
-    titleSpr[2].setTexture(titleTex[2]);
-    titleSpr[2].setPosition((windowWidth / 2) - 110, (windowHeight / 4) - 14);
-    titleSpr[0].setPosition((windowWidth / 2) - 32, 2 * (windowHeight / 3) - 10);
-    titleSpr[1].setPosition((windowWidth / 2) - 32, 2 * (windowHeight / 3) + 15);
 
     // For scene transitions:
     sf::RectangleShape transition;
     transition.setScale(windowWidth / 450, windowHeight / 450);
     transition.setFillColor(sf::Color(37, 36, 72, 255));
-    
-    titleTex[3].loadFromFile(resourcePath() + "titleBkg.png");
-    titleSpr[3].setTexture(titleTex[3]);
-    titleSpr[3].setScale(windowWidth / 450, windowHeight / 450);
     
     // Load opening credits text and create a background
     sf::Texture creditsTextTxtr;
