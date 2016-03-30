@@ -93,16 +93,6 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     titleSpr.setTexture(titleTxtr);
     titleSpr.setPosition(windowW / 2 - 109, windowH / 5 - 15);
     
-    /*  Non-general code only used by the intro level */
-    details.addLamplight(tiles, 0, 0, 5, 2, windowWidth, windowHeight);
-    details.addLamplight(tiles, 0, 0, 5, -4, windowWidth, windowHeight);
-    details.addLamplight(tiles, 0, 0, 11, 8, windowWidth, windowHeight);
-    details.addLamplight(tiles, 0, 0, 11, -10, windowWidth, windowHeight);
-    details.addDoor(-16, 7, 6, 0, windowW, windowH);
-    tiles.teleporterLocation.x = 8;
-    tiles.teleporterLocation.y = -7;
-    /* End */
-    
     vignetteSprite.setTexture(*inptxtr);
     vignetteSprite.setScale(windowWidth/450, windowHeight/450);
     
@@ -112,14 +102,23 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     //Let the tile controller know where player is
     tiles.setPosition((windowWidth / 2) - 16, (windowHeight / 2));
     tiles.setWindowSize(windowWidth, windowHeight);
-    //tiles.init();
+    
+    /*  Completely non-general code only used by the intro level */
+    details.addLamplight(tiles, 0, 0, 5, 2, windowWidth, windowHeight);
+    details.addLamplight(tiles, 0, 0, 5, -4, windowWidth, windowHeight);
+    details.addLamplight(tiles, 0, 0, 11, 8, windowWidth, windowHeight);
+    details.addLamplight(tiles, 0, 0, 11, -10, windowWidth, windowHeight);
+    details.addDoor(tiles.posX - 192, tiles.posY + 301, 6, 0, windowW, windowH);
+    tiles.teleporterLocation.x = 8;
+    tiles.teleporterLocation.y = -7;
+    /* End of awful hard-coded block :) */
     
     en.setWindowSize(windowWidth, windowHeight);
     
     //Initialize the fonts
     fonts.setWaypointText(level, windowW, windowH);
     
-    details.addTeleporter(tiles, -5, -8, windowW, windowH);
+    details.addTeleporter(tiles, tiles.posX - 178, tiles.posY + 284, windowW, windowH);
     
     // initialize the rectangle shape for the teleporter beam effect
     sf::Vector2f v1(2, 1);
@@ -447,7 +446,8 @@ void GameMap::update(sf::RenderWindow& window) {
         if (transitioning) {
             if (level == 0) {
                 window.draw(titleSpr);
-                if (transitionDelay < 120) {
+                
+                if (transitionDelay < 130) {
                     sf::Color c = titleSpr.getColor();
                     if (c.a > 4) {
                         c.a -= 4;
@@ -455,7 +455,7 @@ void GameMap::update(sf::RenderWindow& window) {
                     else {
                         c.a = 0;
                     }
-                    if (transitionDelay < 80) {
+                    if (transitionDelay < 90) {
                         sf::Color c2 = transitionShape.getFillColor();
                         if (c2.b > 4) {
                             c2.r -= 3;
