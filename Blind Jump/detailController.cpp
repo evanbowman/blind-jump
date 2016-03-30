@@ -14,12 +14,6 @@
 #define NUM_ROCK_IMAGES 4
 
 detailController::detailController() {
-    const std::string numberFileExtensions[1] = {"brokenTurret.png"};
-    for (int i = 0; i < 1; i++) {
-        if (!textures[i].loadFromFile(resourcePath() + numberFileExtensions[i])) {
-            //return EXIT_FAILURE;
-        }
-    }
     teleporterTexture[0].loadFromFile(resourcePath() + "teleporter.png");
     teleporterTexture[1].loadFromFile(resourcePath() + "teleporterShadow.png");
     for (int i = 0; i < 6; i++) {
