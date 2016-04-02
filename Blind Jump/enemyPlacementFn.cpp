@@ -39,7 +39,7 @@ int initEnemies(GameMap* gm) {
             pVec->push_back(dasher);
             break;
             
-        case 9:
+        case 16:
             turret.first = 3;
             turret.second = abs(currentLevel - idealLevels[3]);
             pVec->push_back(turret);
@@ -70,9 +70,9 @@ int initEnemies(GameMap* gm) {
     // Slowly work up to the max number of enemies on the map
     // Normalized level is for the difficulty curve, so that fewer enemies are placed following a boss battle
     int normalizedLevel = (currentLevel < 11) ? currentLevel : currentLevel - 10 * (currentLevel % 10);
-    int iters = 1 + pow(normalizedLevel, 1.25);
-    if (iters > 15) {
-        iters = 15;
+    int iters = 1 + pow(normalizedLevel, 1.2);
+    if (iters > 13) {
+        iters = 13;
     }
     for (int i = 0; i < iters; i++) {
         // Generate a random number on the range of 0 to the sum of all enemy weights

@@ -43,8 +43,6 @@ public:
     sf::Sprite deathShadowSpr;
     sf::Texture weaponNames[6];
     sf::Sprite weaponName;
-    sf::Texture deathSpotlightTxtr;
-    sf::Sprite deathSpotlightSpr;
     sf::RectangleShape weaponNameUnderscore;
     bool visible;
     float r;

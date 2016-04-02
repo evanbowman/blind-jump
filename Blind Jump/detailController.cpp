@@ -11,7 +11,7 @@
 #include <iostream>
 #include <cmath>
 
-#define NUM_ROCK_IMAGES 4
+#define NUM_ROCK_IMAGES 2
 
 detailController::detailController() {
     teleporterTexture[0].loadFromFile(resourcePath() + "teleporter.png");
@@ -27,6 +27,8 @@ detailController::detailController() {
     enemyScraps[0].loadFromFile(resourcePath() + "enemyScraps.png");
     dasherScraps.loadFromFile(resourcePath() + "dasherDead.png");
     teleporterGlow.loadFromFile(resourcePath() + "teleporterGlow.png");
+    
+    podTexture.loadFromFile(resourcePath() + "pod.png");
     
     for (int i = 0; i < 4; i++) {
         doorTextures[i].loadFromFile(resourcePath() + "introWall.png", sf::IntRect(0, i * 95, 200, 95));
@@ -235,6 +237,14 @@ void detailController::addDoor(float xpos, float ypos, int x, int y, float w, fl
     doors.push_back(d);
 }
 
+void detailController::addPod(float xpos, float ypos, int x, int y) {
+    sf::Sprite tempSprite;
+    tempSprite.setOrigin(0, 30);
+    tempSprite.setTexture(podTexture);
+    GeneralDetail d(xpos + x * 32, ypos + y * 26, &tempSprite, 0, 0, 0);
+    misc32x26.push_back(d);
+}
+
 void detailController::addTeleporter(tileController& t, float posX, float posY, float width, float height) {
     Coordinate c = t.getTeleporterLoc();
     sf::Sprite tempSprites[2];
@@ -276,7 +286,6 @@ void detailController::update(float xOffset, float yOffset, effectsController& e
             glow2->push_back(element.getGlow());
         }
     }
-    
     
     if (!lamps.empty()) {
         for (auto & element : lamps) {

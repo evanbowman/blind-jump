@@ -27,6 +27,7 @@ class detailController {
 private:
     sf::Texture doorTextures[4];
     sf::Texture rockTextures[2];
+    sf::Texture podTexture;
     sf::Texture damagedRobotTexture[2];
     sf::Texture teleporterTexture[2];
     sf::Texture chestTextures[6];
@@ -55,6 +56,7 @@ public:
     detailController();
     void addCrystals(float, float, float, float);
     void addDoor(float, float, int, int, float, float);
+    void addPod(float, float, int, int);
     void addDamagedRobots(tileController&, float, float);
     void addLamplight(tileController&, float, float, int, int, float, float);
     void addChest(tileController&, float, float, float, float, char);

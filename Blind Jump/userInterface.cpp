@@ -86,9 +86,6 @@ userInterface::userInterface() {
     deathSeq = false;
     weaponName.setTexture(weaponNames[0]);
     weaponName.setColor(sf::Color(210, 210, 210));
-    deathSpotlightTxtr.loadFromFile(resourcePath() + "playerDeadSpotlight.png");
-    deathSpotlightSpr.setTexture(deathSpotlightTxtr);
-    deathSpotlightSpr.setColor(sf::Color(0, 0, 0, 255));
 }
 
 void userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned char* detailStates, FontController& f, effectsController& ef, float xOffset, float yOffset, InputController* pInput) {
@@ -122,15 +119,10 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
     if (deathSeq) {
         // During the player death sequence apply a vignette effect across the window
         sf::Color c = deathShadowSpr.getColor();
-        sf::Color c2 = deathSpotlightSpr.getColor();
         if (c.a < 246 && !deathSeqComplete) {
             c.a += 4;
             deathShadowSpr.setColor(c);
             deathTextSprite.setColor(c);
-            c2.r += 4;
-            c2.g += 4;
-            c2.b += 4;
-            deathSpotlightSpr.setColor(c2);
         }
         else {
             deathSeqComplete = true;
@@ -419,8 +411,6 @@ void userInterface::setPosition(float x, float y) {
     itemSprites[3].setPosition(x - 126, y);
     itemSprites[2].setPosition(x - 33, y + 90);
     selectedCircle.setPosition(x - 33, y - 108);
-    deathSpotlightSpr.setPosition(x - 36, 0);
-    deathSpotlightSpr.setScale(sf::Vector2f(1, 225 / (y * 2)));
     
     // Set the size of the shadow gradient to draw when displaying text
     txtShadowSprite.setScale((2 * x)/450, (2 * y)/450);
@@ -483,7 +473,6 @@ void userInterface::reset() {
     deathSeq = false;
     deathSeqComplete = false;
     deathShadowSpr.setColor(sf::Color(255,255,255,2));
-    deathSpotlightSpr.setColor(sf::Color(0,0,0,255));
     deathTextSprite.setColor(sf::Color(255,255,255,2));
 }
 

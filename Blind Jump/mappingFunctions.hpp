@@ -15,7 +15,7 @@
 
 #define BOSS_LEVEL_1 10
 
-int mappingFunction(short map[61][61], int level);
+int mappingFunction(short map[61][61], int level, bool enableGrass);
 Building addHouse(short map[61][61], tileController&);
 
 

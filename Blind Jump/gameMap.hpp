@@ -113,7 +113,7 @@ private:
     
     // Create a vector of pairs with enemy index and placement probability for enemy creation
     std::vector<std::pair<int, int>> enemySelectVec;
-    int idealLvs[4] = {4/*Scoot*/, 5/*Critter Swarms*/, 22/*Dasher*/, 38/*Heavybots*/};
+    int idealLvs[4] = {4/*Scoot*/, 5/*Critter Swarms*/, 22/*Dasher*/, 40/*Heavybots*/};
     
     // Stack of sprites with y-position and height, for z-ordering
     std::vector<std::tuple<sf::Sprite, float, int>> gameObjects;

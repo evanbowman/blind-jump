@@ -258,7 +258,7 @@ Building addHouse(short map[61][61], tileController& tiles) {
     return newBuilding;
 }
 
-int mappingFunction(short map[61][61], int level) {
+int mappingFunction(short map[61][61], int level, bool enableGrass) {
     if (level != BOSS_LEVEL_1) {
         short maptemp[61][61];
         //First initialize the whole map as walls (1)
@@ -307,16 +307,21 @@ int mappingFunction(short map[61][61], int level) {
                 }
             }
         }
-        short mapOverlay[61][61];
-        int count2;
-        do {
-            count2 = initMapOverlay(mapOverlay);
-        } while (count2 < 500);
         
-        combine(map, mapOverlay);
-        cleanEdgesPostCombine(map);
+        // If environments are enabled, draw in some grass...
+        if (enableGrass) {
+            short mapOverlay[61][61];
+            int count2;
+            do {
+                count2 = initMapOverlay(mapOverlay);
+            } while (count2 < 500);
+            
+            combine(map, mapOverlay);
+            cleanEdgesPostCombine(map);
+        }
         return count;
     }
+    
     else {
         for (int i = 0; i < 61; i++) {
             for (int j = 0; j < 61; j++) {

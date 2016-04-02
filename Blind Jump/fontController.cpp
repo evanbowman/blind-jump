@@ -32,7 +32,8 @@ FontController::FontController() {
     //Set the alpha for drawing the text
     alpha = 250;
     
-    zoneTextTxtr[0].loadFromFile(resourcePath() + "zoneTexts.png");
+    zoneTextTxtr[0].loadFromFile(resourcePath() + "zoneTexts.png", sf::IntRect(0, 0, 112, 6));
+    zoneTextTxtr[1].loadFromFile(resourcePath() + "zoneTexts.png", sf::IntRect(0, 6, 112, 6));
     zoneTextSpr.setTexture(zoneTextTxtr[0]);
     zoneTextSpr.setPosition(6, 27);
     
@@ -127,6 +128,21 @@ void FontController::setWaypointText(int level, float w, float h) {
 void FontController::clear() {
     textCharacters.clear();
     textNums.clear();
+}
+
+void FontController::setZoneText(char zone) {
+    switch (zone) {
+        case 0:
+            zoneTextSpr.setTexture(zoneTextTxtr[0]);
+            break;
+            
+        case 1:
+            zoneTextSpr.setTexture(zoneTextTxtr[1]);
+            break;
+            
+        default:
+            break;
+    }
 }
 
 void FontController::print(sf::RenderWindow& window) {

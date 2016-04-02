@@ -104,11 +104,12 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     tiles.setWindowSize(windowWidth, windowHeight);
     
     /*  Completely non-general code only used by the intro level */
-    details.addLamplight(tiles, 0, 0, 5, 2, windowWidth, windowHeight);
-    details.addLamplight(tiles, 0, 0, 5, -4, windowWidth, windowHeight);
-    details.addLamplight(tiles, 0, 0, 11, 8, windowWidth, windowHeight);
-    details.addLamplight(tiles, 0, 0, 11, -10, windowWidth, windowHeight);
+    details.addLamplight(tiles, tiles.posX - 180, tiles.posY + 200, 5, 6, windowWidth, windowHeight);
+    details.addLamplight(tiles, tiles.posX - 180, tiles.posY + 200, 5, 0, windowWidth, windowHeight);
+    details.addLamplight(tiles, tiles.posX - 170, tiles.posY + 200, 11, 11, windowWidth, windowHeight);
+    details.addLamplight(tiles, tiles.posX - 180, tiles.posY + 200, 10, -9, windowWidth, windowHeight);
     details.addDoor(tiles.posX - 192, tiles.posY + 301, 6, 0, windowW, windowH);
+    details.addPod(tiles.posX, tiles.posY + 33, 3, 17);
     tiles.teleporterLocation.x = 8;
     tiles.teleporterLocation.y = -7;
     /* End of awful hard-coded block :) */
@@ -278,6 +279,7 @@ void GameMap::update(sf::RenderWindow& window) {
     // could check for a keypress in every single object individually, but this way is (possibly) faster because it requires less condition checking)
     if (!player.isdead()) {
         UI.dispDeathSeq();
+        // If the death sequence is complete and the UI controller is finished playing its animation
         if (UI.isComplete() && pInput->zPressed()) {
             // Reset the UI controller
             UI.reset();
@@ -500,19 +502,29 @@ void GameMap::Reset() {
     teleporterCond = 0;
     int count;
     
+    if (level == 0) {
+        shadowShape.setFillColor(sf::Color(190, 190, 210, 255));
+    } else if (level > 0 && level <= BOSS_LEVEL_1) {
+        shadowShape.setFillColor(sf::Color(190, 190, 210, 255));
+        fonts.setZoneText(0);
+    } else if (level > BOSS_LEVEL_1) {
+        shadowShape.setFillColor(sf::Color(210, 195, 195, 255));
+        fonts.setZoneText(1);
+    }
+    
     vignetteSprite.setColor(sf::Color(255, 255, 255, 255));
 
     // If not on a boss level...
     if (level != BOSS_LEVEL_1) {
         //Now call the mapping function again to generate a new map, and make sure it's large enough
-        count = mappingFunction(tiles.mapArray, level);
+        count = mappingFunction(tiles.mapArray, level, level < BOSS_LEVEL_1);
         while (count < 300) {
-            count = mappingFunction(tiles.mapArray, level);
+            count = mappingFunction(tiles.mapArray, level, level < BOSS_LEVEL_1);
         }
     }
     
     else {
-        mappingFunction(tiles.mapArray, level);
+        mappingFunction(tiles.mapArray, level, level < BOSS_LEVEL_1);
     }
     
     //Now lets rebuild the map from the new array, using the same function from the tileController class constructor
@@ -552,14 +564,27 @@ void GameMap::Reset() {
         effects.getGlowSprs2()->clear();
         
         size_t len;
-        // Put rock/pillar detail things on map
-        getRockPositions(tiles.mapArray, rockPositions);
-        len = rockPositions.size();
-        for (auto element : rockPositions) {
-            details.addRock(tiles, tiles.posX, tiles.posY - 35, element.x, element.y);
+        Teleporter* pTeleporter = details.getTeleporter();
+        if (level < BOSS_LEVEL_1) {
+            // Put rock/pillar detail things on map
+            getRockPositions(tiles.mapArray, rockPositions);
+            len = rockPositions.size();
+            for (auto element : rockPositions) {
+                details.addRock(tiles, tiles.posX, tiles.posY - 35, element.x, element.y);
+            }
+            rockPositions.clear();
+            // Delete rocks close to the teleporter
+            std::vector<Rock>* pRocks = details.getRocks();
+            for (auto it = pRocks->begin(); it != pRocks->end();) {
+                if (fabsf(it->getxPos() - pTeleporter->getxPos()) < 80 && fabsf(it->getyPos() - pTeleporter->getyPos()) < 80) {
+                    it = pRocks->erase(it);
+                }
+                
+                else {
+                    ++it;
+                }
+            }
         }
-        rockPositions.clear();
-        
         
         // Put light sources on the map
         getLightingPositions(tiles.mapArray, lightPositions);
@@ -571,23 +596,10 @@ void GameMap::Reset() {
         
         // Delete lamps near the teleporter (light blending is additive, it would be too bright if they were close together)
         std::vector<LampLight>* pLamps = details.getLamps();
-        Teleporter* pTeleporter = details.getTeleporter();
         for (auto i = 0; i < details.getLamps()->size(); i++) {
             if (fabsf((*pLamps)[i].getxPos() - pTeleporter->xPos) < 70 && fabsf((*pLamps)[i].getyPos() - pTeleporter->yPos) < 70) {
                 (*pLamps)[i] = (*pLamps).back();
                 (*pLamps).pop_back();
-            }
-        }
-    
-        // Delete rocks close to the teleporter
-        std::vector<Rock>* pRocks = details.getRocks();
-        for (auto it = pRocks->begin(); it != pRocks->end();) {
-            if (fabsf(it->getxPos() - pTeleporter->getxPos()) < 80 && fabsf(it->getyPos() - pTeleporter->getyPos()) < 80) {
-                it = pRocks->erase(it);
-            }
-            
-            else {
-                ++it;
             }
         }
     }

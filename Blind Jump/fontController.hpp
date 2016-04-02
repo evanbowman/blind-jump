@@ -15,7 +15,7 @@
 class FontController {
 private:
     sf::Texture texture;
-    sf::Texture zoneTextTxtr[1];
+    sf::Texture zoneTextTxtr[2];
     sf::Sprite zoneTextSpr;
     sf::Texture nums[11];
     sf::Texture scoreNums[10];
@@ -44,6 +44,7 @@ private:
 public:
     FontController();
     void setWaypointText(int, float, float);
+    void setZoneText(char);
     void print(sf::RenderWindow&);
     void clear();
     void updateStamina(int);

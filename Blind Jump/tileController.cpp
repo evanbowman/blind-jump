@@ -188,8 +188,8 @@ tileController::tileController() {
     xOffset = 0;
     yOffset = 0;
     // Set specifically for player position in the first room
-    posX = -96;
-    posY = -457;
+    posX = -72;
+    posY = -476;
     windowH = 0;
     windowW = 0;
     tempX = 0;
@@ -201,18 +201,21 @@ tileController::tileController() {
     transitionLevels[0].loadFromFile(resourcePath() + "introLevel.png");
     
     tileImg[0].loadFromFile(resourcePath() + "soilTileset.png");
-    grassSet.loadFromFile(resourcePath() + "grassSet.png");
-    grassSetEdge.loadFromFile(resourcePath() + "grassSetEdge.png");
+    tileImg[1].loadFromFile(resourcePath() + "aquaTileset.png");
+    grassSet[0].loadFromFile(resourcePath() + "grassSet.png");
+    grassSetEdge[0].loadFromFile(resourcePath() + "grassSetEdge.png");
+    grassSet[1].loadFromFile(resourcePath() + "grassSetBluish.png");
+    grassSetEdge[1].loadFromFile(resourcePath() + "grassSetEdgeBluish.png");
     
     lamplight.loadFromFile(resourcePath() + "lampLight.png");
     lmplght.setTexture(lamplight);
     
     
     //Call the mapping function to transform the array into something useful
-    int count = mappingFunction(mapArray, 0);
+    int count = mappingFunction(mapArray, 0, true);
     // Yikes a while loop! I try to avoid them, but... This loop repeats until it yields a large enough map
     while (count < 200) {
-        count = mappingFunction(mapArray, 0);
+        count = mappingFunction(mapArray, 0, true);
     }
     char itemArray[48][3];
     for (int i = 0; i < 48; i++) {
@@ -220,11 +223,11 @@ tileController::tileController() {
             itemArray[i][j] = 0;
         }
     }
-    createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet, &grassSetEdge);
+    createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet[0], &grassSetEdge[0]);
 
     // Fill the container of maps with values
     initMapStack(maps);
-    createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet, &grassSetEdge);
+    createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet[0], &grassSetEdge[0]);
     mapSprite1.setTexture(mapTexture[0]);
     mapSprite2.setTexture(mapTexture[1]);
     transitionLvSpr.setTexture(transitionLevels[0]);
@@ -310,18 +313,19 @@ void tileController::clear() {
 
 void tileController::rebuild(char itemArray[48][3], int level) {
     // If the vector of map data contains values
-    if (maps.size() > 0) {
-        workingSet = maps[maps.size() - 1];
-        maps.pop_back();
-    }
-    // If not, re-initialize and do the same thing
-    else {
-        initMapStack(maps);
-        workingSet = maps[maps.size() - 1];
-        maps.pop_back();
+    if (level == 0) {
+        workingSet = 0;
+        shadow.setFillColor(sf::Color(188, 188, 198, 255));
+    } else if (level > 0 && level <= BOSS_LEVEL_1) {
+        workingSet = 1;
+        shadow.setFillColor(sf::Color(188, 188, 198, 255));
+        createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet[0], &grassSetEdge[0]);
+    } else if (level > BOSS_LEVEL_1) {
+        workingSet = 2;
+        shadow.setFillColor(sf::Color(215, 194, 194, 255));
+        createMapImage(&tileImg[1], mapArray, mapTexture, &grassSet[1], &grassSetEdge[1]);
     }
     
-    createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet, &grassSetEdge);
     mapSprite1.setTexture(mapTexture[0]);
     mapSprite2.setTexture(mapTexture[1]);
     

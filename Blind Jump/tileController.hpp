@@ -29,8 +29,8 @@ public:
     sf::Sprite spotlightSpr;
     
     sf::Image tileImg[2];
-    sf::Image grassSet;
-    sf::Image grassSetEdge;
+    sf::Image grassSet[2];
+    sf::Image grassSetEdge[2];
     sf::Image redSet;
     sf::Image redSetFlowers;
     
