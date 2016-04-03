@@ -16,6 +16,8 @@ private:
     float xInit, yInit, xPos, yPos;
     sf::Sprite spr, glow;
     bool killFlag;
+    // to keep time, for making hearts float up and down
+    sf::Clock clock;
     
 public:
     Hearts(sf::Sprite*, sf::Sprite, float, float);

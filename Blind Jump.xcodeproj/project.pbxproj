@@ -119,6 +119,7 @@
 		684B36BC1C7FF695000A1A99 /* building.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 684B36BA1C7FF695000A1A99 /* building.cpp */; };
 		684B36D71C811932000A1A99 /* critter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 684B36D51C811932000A1A99 /* critter.cpp */; };
 		684B36F21C820EE8000A1A99 /* critterSheet.png in Resources */ = {isa = PBXBuildFile; fileRef = 684B36F11C820EE8000A1A99 /* critterSheet.png */; };
+		684F172B1CB1590B00F27485 /* crimson.frag in Resources */ = {isa = PBXBuildFile; fileRef = 684F172A1CB1590B00F27485 /* crimson.frag */; };
 		6858BEA41C6D37A10057E574 /* generalDetail.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6858BEA21C6D37A10057E574 /* generalDetail.cpp */; };
 		6858BEA91C6D64E90057E574 /* dasher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6858BEA71C6D64E90057E574 /* dasher.cpp */; };
 		6858BEAB1C6D6CA30057E574 /* dasherSheet.png in Resources */ = {isa = PBXBuildFile; fileRef = 6858BEAA1C6D6CA30057E574 /* dasherSheet.png */; };
@@ -387,6 +388,7 @@
 		684B36D61C811932000A1A99 /* critter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = critter.hpp; sourceTree = "<group>"; };
 		684B36D91C812360000A1A99 /* aStar.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = aStar.hpp; sourceTree = "<group>"; };
 		684B36F11C820EE8000A1A99 /* critterSheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = critterSheet.png; sourceTree = "<group>"; };
+		684F172A1CB1590B00F27485 /* crimson.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = crimson.frag; sourceTree = "<group>"; };
 		68543E5C1C69597C00B0DE95 /* tileController.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tileController.hpp; sourceTree = "<group>"; };
 		6858BEA11C6D30DE0057E574 /* Teleporter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Teleporter.hpp; sourceTree = "<group>"; };
 		6858BEA21C6D37A10057E574 /* generalDetail.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generalDetail.cpp; sourceTree = "<group>"; };
@@ -575,6 +577,7 @@
 		6822270E1C794B18003AAFC9 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				684F172A1CB1590B00F27485 /* crimson.frag */,
 				682227391C7A159C003AAFC9 /* blue.frag */,
 				6822270C1C794652003AAFC9 /* white.frag */,
 				6822270A1C7937AA003AAFC9 /* color.frag */,
@@ -1144,6 +1147,7 @@
 				688633D61BE2FE56005D12C6 /* skeleton1.png in Resources */,
 				68E3F7891BCC566800349125 /* icon.png in Resources */,
 				685C4A0D1C93E12D002DAA92 /* bkg_stars_distant.png in Resources */,
+				684F172B1CB1590B00F27485 /* crimson.frag in Resources */,
 				6808FF711C51790800579FE9 /* enemyOrbShot1.png in Resources */,
 				682F41991BC9F29B0091BC2E /* player_still_right.png in Resources */,
 				6823AF491C93323000D13C99 /* poor_me_blues.ogg in Resources */,

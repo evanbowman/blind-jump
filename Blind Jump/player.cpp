@@ -54,6 +54,8 @@ Player::Player() {
     dodging = false;
     dodgeTimer = 4;
     state = NOMINAL;
+    gotHeart = false;
+    redTimer = 10;
     
     hurtCounter = 30;
     canhurt = true;
@@ -666,12 +668,21 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
     
     std::vector<Hearts>* pHearts = ef.getHearts();
     for (auto & element : *pHearts) {
-        if (fabsf(posX + 8 - element.getXpos()) < 12 && fabsf(posY + 8 - element.getYpos()) < 12) {
+        if (fabsf(posX + 16 - element.getXpos()) < 10 && fabsf(posY + 10 - element.getYpos()) < 10) {
             health = fmin(fonts.getMaxHealth(), health + 1);
             element.setKillFlag(true);
+            gotHeart = true;
         }
     }
     
+    if (gotHeart) {
+        std::get<2>(tPlayer) = 4;
+        std::get<2>(tGun) = 4;
+        if (--redTimer == 0) {
+            redTimer = 10;
+            gotHeart = false;
+        }
+    }
     // Check collisions will all energy beams
     /*std::vector<EnergyBeam>* beams = ef.getEnergyBeams();
     for (auto & element : *beams) {

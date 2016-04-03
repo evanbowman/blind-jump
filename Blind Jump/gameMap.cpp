@@ -72,6 +72,8 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     whiteShader.setParameter("texture", sf::Shader::CurrentTexture);
     blueShader.loadFromFile(resourcePath() + "blue.frag", sf::Shader::Fragment);
     blueShader.setParameter("texture", sf::Shader::CurrentTexture);
+    crimsonShader.loadFromFile(resourcePath() + "crimson.frag", sf::Shader::Fragment);
+    crimsonShader.setParameter("texture", sf::Shader::CurrentTexture);
     //Initialize the starting level to 1
     level = 0;
     
@@ -237,14 +239,12 @@ void GameMap::update(sf::RenderWindow& window) {
     for (auto & element : gameObjects) {
         if (std::get<2>(element) == 1) {
             window.draw(std::get<0>(element), &redShader);
-        }
-        
-        if (std::get<2>(element) == 2) {
+        } else if (std::get<2>(element) == 2) {
             window.draw(std::get<0>(element), &whiteShader);
-        }
-        
-        if (std::get<2>(element) == 3) {
+        } else if (std::get<2>(element) == 3) {
             window.draw(std::get<0>(element), &blueShader);
+        } else if (std::get<2>(element) == 4) {
+            window.draw(std::get<0>(element), &crimsonShader);
         }
     }
     

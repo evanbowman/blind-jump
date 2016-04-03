@@ -84,7 +84,7 @@ private:
     bool beamExpanding;
     bool dispEntryBeam;
     
-    sf::Shader redShader, whiteShader, blueShader;
+    sf::Shader redShader, whiteShader, blueShader, crimsonShader;
     
     sf::View worldView, hudView;
     

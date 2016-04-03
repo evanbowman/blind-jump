@@ -7,12 +7,16 @@
 //
 
 #include "Hearts.hpp"
+#include <cmath>
+
+#define PI 3.1415926535
 
 Hearts::Hearts(sf::Sprite* inpSpr, sf::Sprite glow, float xInit, float yInit) {
     this->xInit = xInit;
     this->yInit = yInit;
     this->glow = glow;
     spr = *inpSpr;
+    clock.restart();
 }
 
 void Hearts::update(float xoffset, float yoffset) {
@@ -21,7 +25,7 @@ void Hearts::update(float xoffset, float yoffset) {
 }
 
 sf::Sprite Hearts::getSprite() {
-    spr.setPosition(xPos, yPos);
+    spr.setPosition(xPos, yPos + (3 * sinf(2 * PI * 0.001 * clock.getElapsedTime().asMilliseconds() + 180)));
     return spr;
 }
 

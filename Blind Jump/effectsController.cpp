@@ -349,7 +349,7 @@ void effectsController::addHpRestored(float x, float y) {
 
 void effectsController::addScootShot(float x, float y, short dir, float playerPosX, float playerPosY) {
     turretShot t(turretShotSpr, redGlowSprite, x, y, dir);
-    t.speedFactor(3.2);
+    t.speedFactor(3.0);
     t.enableTracking(playerPosX, playerPosY);
     turretShots.push_back(t);
 }

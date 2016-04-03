@@ -91,6 +91,9 @@ private:
     int dodgeTimer;
     char dodgeDir;
     
+    bool gotHeart;
+    char redTimer;
+    
     //Include a function for setting the animation frame index
     void setImageIndex(char);
     
