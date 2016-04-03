@@ -53,7 +53,6 @@ Player::Player() {
     scrShakeState = 0;
     dodging = false;
     dodgeTimer = 4;
-    stamina = 1000;
     state = NOMINAL;
     
     hurtCounter = 30;
@@ -368,7 +367,7 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
         }
         
         if (pInput->zPressed() && z != zprevious) {
-            if (((spriteIndex == 6 && !left) || (spriteIndex == 7 && !right) || (spriteIndex == 4 && !down) || (spriteIndex == 5  && !up)) && stamina > 100) {
+            if (((spriteIndex == 6 && !left) || (spriteIndex == 7 && !right) || (spriteIndex == 4 && !down) || (spriteIndex == 5  && !up))) {
                 state = PREP_DASH;
                 if (spriteIndex == 7) {
                     if (up) {
@@ -444,10 +443,6 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
         if (state == PREP_DASH) {
             if (--dodgeTimer == 0) {
                 dodgeTimer = 5;
-                stamina -= 100;
-                if (stamina < 0) {
-                    stamina = 0;
-                }
                 state = DASHING;
             }
             if (left && !CollisionLeft) {
@@ -566,11 +561,6 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
         
     }
     
-    if (stamina < 1000) {
-        if (!x)
-            stamina += 0.5;
-    }
-    
     // Keep track of the previous key presses to the character can stop moving after a key release
     leftPrevious = left;
     rightPrevious = right;
@@ -638,7 +628,7 @@ bool checkShotCollision(std::vector<T>* shotVec, double playerXpos, double playe
 }
 
 //Returns the current sprite based on the values of imageIndex and spriteIndex
-void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, int>>& gameShadows, tileController& tiles, effectsController& ef, detailController& details, SoundController& sounds, userInterface& UI, InputController* pInput, sf::RenderWindow& window) {
+void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, int>>& gameShadows, tileController& tiles, effectsController& ef, detailController& details, SoundController& sounds, userInterface& UI, InputController* pInput, sf::RenderWindow& window, FontController& fonts) {
     checkCollision(tiles, details);//, details);
     drawController(pInput, ef);
     std::tuple<sf::Sprite, float, int> tPlayer, tGun, tShadow;
@@ -674,14 +664,11 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
         canhurt = false;
     }
     
-    std::vector<FireExplosion>* explosions = ef.getExplosions();
-    for (auto & element : *explosions) {
-        if (fabsf(element.getXpos() - posX - 16) < 16 && fabsf(element.getYpos() - posY - 40) < 16) {
-            if (element.isValid()) {
-                element.invalidate();
-                health -= 2;
-                canhurt = false;
-            }
+    std::vector<Hearts>* pHearts = ef.getHearts();
+    for (auto & element : *pHearts) {
+        if (fabsf(posX + 8 - element.getXpos()) < 12 && fabsf(posY + 8 - element.getYpos()) < 12) {
+            health = fmin(fonts.getMaxHealth(), health + 1);
+            element.setKillFlag(true);
         }
     }
     
@@ -1055,8 +1042,4 @@ void Player::reset() {
 
 void Player::fillHealth(char health) {
     this->health = health;
-}
-
-int Player::getStamina() const {
-    return (int) stamina;
 }

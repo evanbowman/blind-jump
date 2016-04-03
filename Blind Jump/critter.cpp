@@ -69,6 +69,10 @@ void Critter::checkBulletCollision(effectsController& ef, FontController& font) 
     if (health == 0) {
         killFlag = 1;
         ef.addLvP1(playerPosX / 2 - xOffset - 6, playerPosY / 2 - yOffset, font);
+        // With some random chance, add a heart item to the map
+        if ((rand() % 5) == 0) {
+            ef.addHearts(xInit, yInit);
+        }
         ef.addExplosion(xInit - 16, yInit - 16);
     }
 }

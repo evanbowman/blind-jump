@@ -185,7 +185,7 @@ void GameMap::update(sf::RenderWindow& window) {
     
     if (player.visible) {
         // Draw the player to the window, as long as the object is visible
-        player.draw(gameObjects, gameShadows, tiles, effects, details, sndCtrl, UI, pInput, window);
+        player.draw(gameObjects, gameShadows, tiles, effects, details, sndCtrl, UI, pInput, window, fonts);
     }
     
     // If player was hit rumble the screen.
@@ -304,7 +304,6 @@ void GameMap::update(sf::RenderWindow& window) {
             UI.drawMenu(window, &player, details.getUIStates(), fonts, effects, xOffset, yOffset, pInput);
             // Pass the player's health to the font controller
             fonts.updateHealth(player.getHealth());
-            fonts.updateStamina(player.getStamina());
             // Draw all of the game text to the window
             fonts.print(window);
         }
@@ -518,7 +517,7 @@ void GameMap::Reset() {
     if (level != BOSS_LEVEL_1) {
         //Now call the mapping function again to generate a new map, and make sure it's large enough
         count = mappingFunction(tiles.mapArray, level, level < BOSS_LEVEL_1);
-        while (count < 300) {
+        while (count < 150) {
             count = mappingFunction(tiles.mapArray, level, level < BOSS_LEVEL_1);
         }
     }

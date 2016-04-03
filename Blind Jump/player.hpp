@@ -60,9 +60,7 @@ private:
     sf::Texture deathTextures[11];
     sf::Sprite deathSprites[11];
     bool deathSeq;
-    
-    float stamina;
-    
+        
     //Declare a counter to step down the speed of the animations from the max framerate
     int animationCounter;
     
@@ -104,7 +102,6 @@ private:
     float previousCheckOffsetY;
 
 public:
-    int getStamina() const;
     float getWorldOffsetX() const;
     float getWorldOffsetY() const;
     void setWorldOffsetX(float);
@@ -113,7 +110,7 @@ public:
     float getPosX() const;
     float getPosY() const;
     void drawController(InputController*, effectsController& ef);
-    void draw(std::vector<std::tuple<sf::Sprite, float, int>>&, std::vector<std::tuple<sf::Sprite, float, int>>&, tileController&, effectsController&, detailController&, SoundController&, userInterface&, InputController*, sf::RenderWindow&);
+    void draw(std::vector<std::tuple<sf::Sprite, float, int>>&, std::vector<std::tuple<sf::Sprite, float, int>>&, tileController&, effectsController&, detailController&, SoundController&, userInterface&, InputController*, sf::RenderWindow&, FontController&);
     //Construct a default player object
     Player();
     //More functions for setting the current position

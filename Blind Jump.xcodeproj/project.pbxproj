@@ -47,6 +47,8 @@
 		681D917B1CAF7974009DF666 /* aquaTileset.png in Resources */ = {isa = PBXBuildFile; fileRef = 681D917A1CAF7974009DF666 /* aquaTileset.png */; };
 		681D917E1CB0283B009DF666 /* grassSetEdgeBluish.png in Resources */ = {isa = PBXBuildFile; fileRef = 681D917C1CB0283B009DF666 /* grassSetEdgeBluish.png */; };
 		681D917F1CB0283B009DF666 /* grassSetBluish.png in Resources */ = {isa = PBXBuildFile; fileRef = 681D917D1CB0283B009DF666 /* grassSetBluish.png */; };
+		681D91821CB09407009DF666 /* Hearts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 681D91801CB09407009DF666 /* Hearts.cpp */; };
+		681D91841CB0984C009DF666 /* hearts.png in Resources */ = {isa = PBXBuildFile; fileRef = 681D91831CB0984C009DF666 /* hearts.png */; };
 		682226E51C732AAB003AAFC9 /* whiteFloorGlow.png in Resources */ = {isa = PBXBuildFile; fileRef = 682226E41C732AAB003AAFC9 /* whiteFloorGlow.png */; };
 		682226E71C73880A003AAFC9 /* redFloorGlow.png in Resources */ = {isa = PBXBuildFile; fileRef = 682226E61C73880A003AAFC9 /* redFloorGlow.png */; };
 		682226E91C7393EA003AAFC9 /* teleporterGlow.png in Resources */ = {isa = PBXBuildFile; fileRef = 682226E81C7393EA003AAFC9 /* teleporterGlow.png */; };
@@ -296,6 +298,9 @@
 		681D917A1CAF7974009DF666 /* aquaTileset.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aquaTileset.png; sourceTree = "<group>"; };
 		681D917C1CB0283B009DF666 /* grassSetEdgeBluish.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grassSetEdgeBluish.png; sourceTree = "<group>"; };
 		681D917D1CB0283B009DF666 /* grassSetBluish.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grassSetBluish.png; sourceTree = "<group>"; };
+		681D91801CB09407009DF666 /* Hearts.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hearts.cpp; sourceTree = "<group>"; };
+		681D91811CB09407009DF666 /* Hearts.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Hearts.hpp; sourceTree = "<group>"; };
+		681D91831CB0984C009DF666 /* hearts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hearts.png; sourceTree = "<group>"; };
 		682226E41C732AAB003AAFC9 /* whiteFloorGlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteFloorGlow.png; sourceTree = "<group>"; };
 		682226E61C73880A003AAFC9 /* redFloorGlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redFloorGlow.png; sourceTree = "<group>"; };
 		682226E81C7393EA003AAFC9 /* teleporterGlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = teleporterGlow.png; sourceTree = "<group>"; };
@@ -701,6 +706,7 @@
 		686BCE841BC8B6270096128A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				681D91831CB0984C009DF666 /* hearts.png */,
 				681D917C1CB0283B009DF666 /* grassSetEdgeBluish.png */,
 				681D917D1CB0283B009DF666 /* grassSetBluish.png */,
 				681D917A1CAF7974009DF666 /* aquaTileset.png */,
@@ -963,6 +969,8 @@
 				68B3CE951C9CD8B8008DA0AD /* FireExplosion.hpp */,
 				68B3CE9D1C9D1C88008DA0AD /* smallExplosion.cpp */,
 				68B3CE9E1C9D1C88008DA0AD /* smallExplosion.hpp */,
+				681D91801CB09407009DF666 /* Hearts.cpp */,
+				681D91811CB09407009DF666 /* Hearts.hpp */,
 			);
 			name = Effects;
 			sourceTree = "<group>";
@@ -1161,6 +1169,7 @@
 				68ABE1071BD82A4F005E7757 /* num1.png in Resources */,
 				6837F69A1BCF1F1500AD20A8 /* poof1.png in Resources */,
 				682F41741BC95ACA0091BC2E /* walk_up4.png in Resources */,
+				681D91841CB0984C009DF666 /* hearts.png in Resources */,
 				68D4E1B61C441DD600318E38 /* hp_empty.png in Resources */,
 				680100051BEE8B86002AA2C2 /* exp32_1.png in Resources */,
 				681D917E1CB0283B009DF666 /* grassSetEdgeBluish.png in Resources */,
@@ -1303,6 +1312,7 @@
 				68ABE0A21BD71A96005E7757 /* turretFlashEffect.cpp in Sources */,
 				686CF2FB1BCECA790098BB7F /* bulletType1.cpp in Sources */,
 				6807255F1C5B04750038389C /* terminal.cpp in Sources */,
+				681D91821CB09407009DF666 /* Hearts.cpp in Sources */,
 				68ABE0A71BD80C7C005E7757 /* fontController.cpp in Sources */,
 				6893B6C11C984130006B24F3 /* IntroDoor.cpp in Sources */,
 				68B3CE8F1C9C588D008DA0AD /* dashSmoke.cpp in Sources */,

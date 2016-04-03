@@ -269,8 +269,8 @@ int mappingFunction(short map[61][61], int level, bool enableGrass) {
             }
         }
         //Loop through again, and create a series of other numbers greater than 2
-        for (int i = 12; i < 48; i++) {
-            for (int j = 12; j < 48; j++) {
+        for (int i = 18; i < 42; i++) {
+            for (int j = 18; j < 42; j++) {
                 map[i][j] = (rand() % 2);
             }
         }
@@ -314,7 +314,7 @@ int mappingFunction(short map[61][61], int level, bool enableGrass) {
             int count2;
             do {
                 count2 = initMapOverlay(mapOverlay);
-            } while (count2 < 500);
+            } while (count2 < 300);
             
             combine(map, mapOverlay);
             cleanEdgesPostCombine(map);

@@ -25,11 +25,14 @@
 #include "dashSmoke.hpp"
 #include "FireExplosion.hpp"
 #include "smallExplosion.hpp"
+#include "Hearts.hpp"
 
 class ScreenShakeController;
 
 class effectsController {
 private:
+    sf::Texture heartsTxtr[1];
+    sf::Sprite heartsSpr[1];
     sf::Texture blueExplosionTxtr[9];
     sf::Sprite blueExplosionSpr[9];
     sf::Sprite smallExplosionSpr[6];
@@ -89,6 +92,7 @@ private:
     std::vector<DasherShot> dasherShots;
     std::vector<sf::Sprite*> glowSprs;
     std::vector<sf::Sprite*> glowSprs2;
+    std::vector<Hearts> hearts;
     
 public:
     effectsController();
@@ -108,6 +112,7 @@ public:
     void addExplosion(float, float);
     void addHealthEffect(float, float);
     void addSmallExplosion(float, float);
+    void addHearts(float, float);
     void addPlayerHealthEffect(float, float, float, float);
     void addLvP1(float, float, FontController& font);
     void addLvP3(float, float, FontController& font);
@@ -126,6 +131,7 @@ public:
     void addSmokeEffect(float, float);
     // Now accessor functions for the class' private member datafields
     std::vector<Enemyshot>* getEnemyShots();
+    std::vector<Hearts>* getHearts();
     std::vector<turretShot>* getTurretShots();
     std::vector<DasherShot>* getDasherShots();
     std::vector<sf::Sprite*>* getGlowSprs();

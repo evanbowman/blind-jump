@@ -34,6 +34,10 @@ effectsController::effectsController() {
         dashSmokeSprites[i].setTexture(dashSmokeTextures[i]);
     }
     
+    heartsTxtr[0].loadFromFile(resourcePath() + "hearts.png");
+    heartsSpr[0].setTexture(heartsTxtr[0]);
+    heartsSpr[0].setOrigin(7, 7);
+    
     bulletGlow[0].loadFromFile(resourcePath() + "whiteFloorGlow.png");
     bulletSprites[2].setTexture(bulletGlow[0]);
     redGlowTexture.loadFromFile(resourcePath() + "redFloorGlow.png");
@@ -159,9 +163,11 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
             }
         }
     }
+    
     updateVectorGlow(smallExplosions, xOffset, yOffset, glowSprs);
     updateVector(healthEffects, xOffset, yOffset);
     updateVector(dodgeEffects, xOffset, yOffset);
+    updateVectorGlow(hearts, xOffset, yOffset, glowSprs);
     updateVectorGlow(turretShots, xOffset, yOffset, glowSprs);
     updateVectorGlow(dasherShots, xOffset, yOffset, glowSprs);
     updateVectorGlow(enemyShots, xOffset, yOffset, glowSprs);
@@ -258,6 +264,11 @@ void effectsController::addTurretFlash(float x, float y) {
 void effectsController::addTurretShot(float x, float y, short dir) {
     turretShot t(turretShotSpr, redGlowSprite, x, y, dir);
     turretShots.push_back(t);
+}
+
+void effectsController::addHearts(float x, float y) {
+    Hearts h(heartsSpr, redGlowSprite, x, y);
+    hearts.push_back(h);
 }
 
 void effectsController::addEnemyShot(float x, float y, short dir) {
@@ -394,6 +405,7 @@ void drawEffect(T& inpVec, sf::RenderWindow& window) {
 
 //Draw the sprites for all of the effect objects
 void effectsController::draw(sf::RenderWindow& window, std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects) {
+    drawEffect(hearts, window);
     drawEffect(turretFlashes, window);
     drawEffect(bullets, window);
     drawEffect(puffs, window);
@@ -494,4 +506,8 @@ std::vector<FireExplosion>* effectsController::getExplosions() {
 
 std::vector<sf::Sprite*>* effectsController::getGlowSprs2() {
     return &glowSprs2;
+}
+
+std::vector<Hearts>* effectsController::getHearts() {
+    return &hearts;
 }

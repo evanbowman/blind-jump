@@ -39,7 +39,6 @@ private:
     float width;
     float height;
     int score;
-    sf::RectangleShape stamina;
     
 public:
     FontController();
@@ -47,7 +46,6 @@ public:
     void setZoneText(char);
     void print(sf::RenderWindow&);
     void clear();
-    void updateStamina(int);
     void updateHealth(char);
     void updateMaxHealth(char);
     void recolor(char);

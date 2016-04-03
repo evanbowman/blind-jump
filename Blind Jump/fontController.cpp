@@ -65,9 +65,6 @@ FontController::FontController() {
     tempSprite.setTexture(scoreNums[0]);
     scoreString.push_back(tempSprite);
     score = 0;
-    stamina.setFillColor(sf::Color::White);
-    stamina.setSize(sf::Vector2f(1, 6));
-    stamina.setScale(sf::Vector2f(-1, 1));
 }
 
 void FontController::setWaypointText(int level, float w, float h) {
@@ -121,7 +118,6 @@ void FontController::setWaypointText(int level, float w, float h) {
         healthEmpty[i].setColor(sf::Color(255,255,255,250));
     }
     sprHealthText.setPosition(initPos - 42, 2);
-    stamina.setPosition(width - 6, 15);
 }
 
 //Need a function to clear out the font controller, for when the level resets and new numbers get pushed back to the font vector
@@ -174,8 +170,6 @@ void FontController::print(sf::RenderWindow& window) {
             window.draw(healthEmpty[i]);
         }
     }
-    
-    window.draw(stamina);
 }
 
 void FontController::updateHealth(char health) {
@@ -183,9 +177,6 @@ void FontController::updateHealth(char health) {
     this->health = std::min(health, maxHealth);
 }
 
-void FontController::updateStamina(int stamina) {
-    this->stamina.setSize(sf::Vector2f(stamina / 12, 6));
-}
 
 void FontController::updateMaxHealth(char health) {
     maxHealth = health;

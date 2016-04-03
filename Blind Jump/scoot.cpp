@@ -75,11 +75,10 @@ void Scoot::checkBulletCollision(effectsController& ef, FontController& font) {
     }
     if (health == 0) {
         killFlag = 1;
-        //ef.addScootShot(xInit - 8, yInit - 12, angleFunction(xPos -8, yPos - 8, playerPosX, playerPosY), playerPosX, playerPosY);
-        //ef.addScootShot(xInit - 8, yInit - 12, angleFunction(xPos -8, yPos - 8, playerPosX, playerPosY) + 28, playerPosX, playerPosY);
-        //ef.addScootShot(xInit - 8, yInit - 12, angleFunction(xPos -8, yPos - 8, playerPosX, playerPosY) - 28, playerPosX, playerPosY);
+        if ((rand() % 5) == 0) {
+            ef.addHearts(xInit, yInit);
+        }
         ef.addLvP1(playerPosX - xOffset - 6, playerPosY - yOffset, font);
-        //ef.addSmallExplosion(xInit, yInit);
         ef.addFireExplosion(xInit, yInit - 2);
     }
 }

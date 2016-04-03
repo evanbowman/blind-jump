@@ -108,6 +108,9 @@ void Dasher::checkBulletCollision(effectsController& ef, FontController& fonts) 
         deathSeq = true;
         // Set the frame index to the start of the death animation
         frameIndex = 6;
+        if ((rand() % 4) == 0) {
+            ef.addHearts(xInit, yInit);
+        }
         ef.addLvP3(playerPosX - xOffset - 6, playerPosY - yOffset, fonts);
         //ef.addFireExplosion(xInit + 4, yInit + 3);
         ef.addSmallExplosion(xInit, yInit);
