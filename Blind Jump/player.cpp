@@ -603,10 +603,10 @@ inline void updateHAnimCount(int& animationCounter, char& imageIndex, bool x) {
             imageIndex = 0;
         }
         if (!x) {
-            animationCounter = 7;
+            animationCounter = 6;
         }
         else {
-            animationCounter = 9;
+            animationCounter = 8;
         }
     }
 }

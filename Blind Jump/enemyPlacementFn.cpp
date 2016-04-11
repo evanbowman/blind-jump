@@ -71,8 +71,8 @@ int initEnemies(GameMap* gm) {
     // Normalized level is for the difficulty curve, so that fewer enemies are placed following a boss battle
     int normalizedLevel = (currentLevel < 11) ? currentLevel : currentLevel - 10 * (currentLevel % 10);
     int iters = 1 + pow(normalizedLevel, 1.2);
-    if (iters > 13) {
-        iters = 13;
+    if (iters > 12) {
+        iters = 12;
     }
     for (int i = 0; i < iters; i++) {
         // Generate a random number on the range of 0 to the sum of all enemy weights

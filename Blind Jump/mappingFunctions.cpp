@@ -269,8 +269,8 @@ int mappingFunction(short map[61][61], int level, bool enableGrass) {
             }
         }
         //Loop through again, and create a series of other numbers greater than 2
-        for (int i = 18; i < 42; i++) {
-            for (int j = 18; j < 42; j++) {
+        for (int i = 16; i < 44; i++) {
+            for (int j = 16; j < 44; j++) {
                 map[i][j] = (rand() % 2);
             }
         }
