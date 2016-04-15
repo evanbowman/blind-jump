@@ -30,8 +30,8 @@ private:
     sf::Sprite energySprite;
     float alpha;
     sf::Texture healthTexture[2];
-    sf::Sprite healthSprite[10];
-    sf::Sprite healthEmpty[10];
+    sf::CircleShape healthFull[10];
+    sf::CircleShape healthEmpty[10];
     char health;
     char maxHealth;
     bool doRecolor;

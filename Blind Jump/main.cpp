@@ -59,7 +59,11 @@ int main(int, char const**) {
     //Initialize the map
     GameMap Map(windowWidth, windowHeight, &vignetteTexture, &input);
     
-    sf::RenderWindow window(sf::VideoMode(windowWidth * 2, windowHeight * 2), "Blind Jump", sf::Style::Fullscreen);
+    // Setup the window context settings
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 6;
+    
+    sf::RenderWindow window(sf::VideoMode(windowWidth * 2, windowHeight * 2), "Blind Jump", sf::Style::Fullscreen, settings);
     // Hide cursor inside the window
     window.setMouseCursorVisible(false);
     //Since the view is half the size of the window, the interface will have a sort of stylistic pixelated apperance

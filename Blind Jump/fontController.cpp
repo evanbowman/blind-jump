@@ -48,6 +48,14 @@ FontController::FontController() {
     for (int i = 0; i < 10; i++) {
         // Load in score number textures
         scoreNums[i].loadFromFile(resourcePath() + "scoreNums.png", sf::IntRect(i * 5, 0, 5, 7));
+        healthFull[i].setRadius(3);
+        healthFull[i].setFillColor(sf::Color::White);
+        healthFull[i].setOutlineColor(sf::Color::White);
+        healthFull[i].setOutlineThickness(1);
+        healthEmpty[i].setRadius(3);
+        healthEmpty[i].setFillColor(sf::Color::Transparent);
+        healthEmpty[i].setOutlineColor(sf::Color::White);
+        healthEmpty[i].setOutlineThickness(1);
     }
     
     // Load the textures for lives
@@ -110,12 +118,8 @@ void FontController::setWaypointText(int level, float w, float h) {
     // Put the health text in the right spot
     float initPos = w - maxHealth * 9 - 5;
     for (int i = 0; i < 10; i++) {
-        healthSprite[i].setTexture(healthTexture[0]);
-        healthSprite[i].setPosition((i * 9) + initPos, 4);
-        healthSprite[i].setColor(sf::Color(255,255,255,250));
-        healthEmpty[i].setTexture(healthTexture[1]);
-        healthEmpty[i].setPosition((i * 9) + initPos, 4);
-        healthEmpty[i].setColor(sf::Color(255,255,255,250));
+        healthFull[i].setPosition((i * 9) + initPos, 6);
+        healthEmpty[i].setPosition((i * 9) + initPos, 6);
     }
     sprHealthText.setPosition(initPos - 42, 2);
 }
@@ -164,7 +168,7 @@ void FontController::print(sf::RenderWindow& window) {
     
     for (int i = 0; i < maxHealth; i++) {
         if (health > i) {
-            window.draw(healthSprite[i]);
+            window.draw(healthFull[i]);
         }
         else {
             window.draw(healthEmpty[i]);
@@ -183,12 +187,8 @@ void FontController::updateMaxHealth(char health) {
     // Put the health in the right spot in the window
     float initPos = width - maxHealth * 9 - 5;
     for (int i = 0; i < 10; i++) {
-        healthSprite[i].setTexture(healthTexture[0]);
-        healthSprite[i].setPosition((i * 9) + initPos, 4);
-        healthSprite[i].setColor(sf::Color(255,255,255,250));
-        healthEmpty[i].setTexture(healthTexture[1]);
+        healthFull[i].setPosition((i * 9) + initPos, 4);
         healthEmpty[i].setPosition((i * 9) + initPos, 4);
-        healthEmpty[i].setColor(sf::Color(255,255,255,250));
     }
     sprHealthText.setPosition(initPos - 42, 2);
 }
