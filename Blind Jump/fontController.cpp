@@ -116,10 +116,10 @@ void FontController::setWaypointText(int level, float w, float h) {
     textNums.push_back(tempSprite3);
     
     // Put the health text in the right spot
-    float initPos = w - maxHealth * 9 - 5;
+    float initPos = w - maxHealth * 10 - 5;
     for (int i = 0; i < 10; i++) {
-        healthFull[i].setPosition((i * 9) + initPos, 6);
-        healthEmpty[i].setPosition((i * 9) + initPos, 6);
+        healthFull[i].setPosition((i * 10) + initPos, 6);
+        healthEmpty[i].setPosition((i * 10) + initPos, 6);
     }
     sprHealthText.setPosition(initPos - 42, 2);
 }
@@ -185,10 +185,10 @@ void FontController::updateHealth(char health) {
 void FontController::updateMaxHealth(char health) {
     maxHealth = health;
     // Put the health in the right spot in the window
-    float initPos = width - maxHealth * 9 - 5;
+    float initPos = width - maxHealth * 10 - 5;
     for (int i = 0; i < 10; i++) {
-        healthFull[i].setPosition((i * 9) + initPos, 4);
-        healthEmpty[i].setPosition((i * 9) + initPos, 4);
+        healthFull[i].setPosition((i * 10) + initPos, 6);
+        healthEmpty[i].setPosition((i * 10) + initPos, 6);
     }
     sprHealthText.setPosition(initPos - 42, 2);
 }

@@ -25,7 +25,9 @@ class Player;
 class userInterface {
 public:
     userInterface();
-    void drawMenu(sf::RenderWindow&, Player*, unsigned char*, FontController&, effectsController&, float, float, InputController*);
+    // Draw menu draws, but also returns whether it is opening or closing
+    // Allows reuse of shaded resources, if the menu is open and not closing no need to keep running the blur shader
+    bool drawMenu(sf::RenderWindow&, Player*, unsigned char*, FontController&, effectsController&, float, float, InputController*);
     sf::CircleShape circle;
     // Declare selection circles to go around the object
     sf::CircleShape selCircle1;
@@ -73,6 +75,9 @@ public:
     void setEnemyValueCount(int);
     char getCurrentItem();
     
+    // Accessor for blur amount
+    float getBlurAmount();
+    
 private:
     char items[4];
     char selected;
@@ -84,6 +89,9 @@ private:
     std::vector<UIBubble> uiBubbles;
     
     int enemyValueCount;
+    
+    // The amount of blur to use when opening the items menu
+    float blurAmount;
     
     bool deathSeq;
     bool deathSeqComplete;

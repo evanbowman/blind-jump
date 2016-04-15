@@ -20,6 +20,8 @@ userInterface::userInterface() {
     circle.setFillColor(sf::Color::Transparent);
     circle.setOutlineThickness(2);
     circle.setOutlineColor(sf::Color(sf::Color::White));
+    circle.setPointCount(70);
+    circle2.setPointCount(70);
     circle2.setRadius(r);
     circle2.setFillColor(sf::Color::Transparent);
     circle2.setOutlineThickness(4);
@@ -32,6 +34,10 @@ userInterface::userInterface() {
     selCircle2.setRadius(2);
     selCircle3.setRadius(2);
     selCircle4.setRadius(2);
+    selCircle1.setPointCount(40);
+    selCircle2.setPointCount(40);
+    selCircle3.setPointCount(40);
+    selCircle4.setPointCount(40);
     selCircle1.setFillColor(sf::Color::White);
     selCircle2.setFillColor(sf::Color::White);
     selCircle3.setFillColor(sf::Color::White);
@@ -46,6 +52,7 @@ userInterface::userInterface() {
     itemCircle[3].setFillColor(sf::Color(44,57,83,240));
     weaponNameUnderscore.setFillColor(sf::Color(210, 210, 210));
     weaponNameUnderscore.setSize(sf::Vector2f(90, 1));
+    blurAmount = 0.1;
     angle = 275;
     closing = 0;
     deathSeqComplete = false;
@@ -88,7 +95,7 @@ userInterface::userInterface() {
     weaponName.setColor(sf::Color(210, 210, 210));
 }
 
-void userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned char* detailStates, FontController& f, effectsController& ef, float xOffset, float yOffset, InputController* pInput) {
+bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned char* detailStates, FontController& f, effectsController& ef, float xOffset, float yOffset, InputController* pInput) {
     bool c = pInput->cPressed();
     bool left = pInput->leftPressed();
     bool right = pInput->rightPressed();
@@ -169,6 +176,7 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
                 if (rectAlpha > 100) {
                     rectAlpha = 100;
                 }
+                
             }
             else {
                 msgOpened = true;
@@ -201,6 +209,7 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
             }
             
             rectAlpha *= 0.87;
+            
         }
         
         else {
@@ -224,17 +233,23 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
         if (r < 50) {
             r *= 1.3;
             r2 = r * 2;
-            //r2 *= 1.3;
             rectAlpha *= 1.3;
             if (r > 50) {
                 r = 50;
             }
+            
             if (r2 > 100) {
                 r2 = 100;
             }
+            
             if (rectAlpha > 125) {
                 rectAlpha = 125;
             }
+            
+            blurAmount *= 1.2;
+            if (blurAmount > 0.99999)
+                blurAmount = 0.99999;
+            
             circle.setRadius(r);
             circle.setPosition(xPos - r, yPos - r);
             circle2.setRadius(r2);
@@ -242,8 +257,8 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
             
             overlayRect.setFillColor(sf::Color(100,110,140,rectAlpha));
             
-            if (selectorShadowSprite.getColor().a < 240)
-                selectorShadowSprite.setColor(sf::Color(255,255,255,selectorShadowSprite.getColor().a + 14));
+            //if (selectorShadowSprite.getColor().a < 240)
+            //    selectorShadowSprite.setColor(sf::Color(255,255,255,selectorShadowSprite.getColor().a + 14));
 
             selCircle1.setPosition(xPos + r2 / 1.3 - 2, yPos - 2);
             selCircle2.setPosition(xPos - r2 / 1.3 - 2, yPos - 2);
@@ -308,6 +323,10 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
             selCircle2.setPosition(xPos - r2 / 1.3 - 2, yPos - 2);
             selCircle3.setPosition(xPos - 2, yPos + r2 / 1.3 - 2);
             selCircle4.setPosition(xPos - 2, yPos - r2 / 1.3 - 2);
+            
+            blurAmount *= 0.92;
+            if (blurAmount < 0.1)
+                blurAmount = 0.1;
            
             itemCircle[0].setPosition(xPos - r / 1.5, yPos - r2 / 1.1 - r / 1.5);
             itemCircle[0].setRadius(r/1.5);
@@ -321,8 +340,8 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
             itemCircle[2].setPosition(xPos - r / 1.5, yPos + r2 / 1.1 - r / 1.5);
             itemCircle[2].setRadius(r/1.5);
             
-            if (selectorShadowSprite.getColor().a > 15)
-                selectorShadowSprite.setColor(sf::Color(255,255,255,selectorShadowSprite.getColor().a - 14));
+            //if (selectorShadowSprite.getColor().a > 15)
+            //    selectorShadowSprite.setColor(sf::Color(255,255,255,selectorShadowSprite.getColor().a - 14));
             
         }
         else if (visible) {
@@ -331,15 +350,11 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
             r2 = 0.5;
             closing = 0;
             rectAlpha = 2;
-            selectorShadowSprite.setColor(sf::Color(255,255,255,1));
+            //selectorShadowSprite.setColor(sf::Color(255,255,255,1));
         }
     }
     
     if (visible) {
-        if (!msgVisible)
-            window.draw(overlayRect);
-        
-        
         window.draw(selectorShadowSprite);
         window.draw(circle);
         window.draw(circle2);
@@ -396,6 +411,8 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
             }
         }
     }
+    
+    return (!closing && c) || closing;
 }
 
 void userInterface::setPosition(float x, float y) {
@@ -462,6 +479,10 @@ void userInterface::dispDeathSeq() {
 
 bool userInterface::isComplete() {
     return deathSeqComplete;
+}
+
+float userInterface::getBlurAmount() {
+    return blurAmount;
 }
 
 void userInterface::reset() {

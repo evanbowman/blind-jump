@@ -38,6 +38,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     
     // Set the size of the target render texture
     target.create(windowWidth, windowHeight);
+    finalPass.create(windowWidth, windowHeight);
     
     // Store a pointer to the input controller in main
     pInput = input;
@@ -52,6 +53,9 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     windowW = windowWidth;
     windowH = windowHeight;
     
+    // Don't compute the blur effect when the ui menu is not opening or closing, use the cached version
+    // This variable allows for that
+    computeBlur = true;
     
     // Now call a function to procedurally distribute items across the array
     initLoot(itemArray);
@@ -84,6 +88,8 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     blueShader.setParameter("texture", sf::Shader::CurrentTexture);
     crimsonShader.loadFromFile(resourcePath() + "crimson.frag", sf::Shader::Fragment);
     crimsonShader.setParameter("texture", sf::Shader::CurrentTexture);
+    blurShader.loadFromFile(resourcePath() + "blur.frag", sf::Shader::Fragment);
+    blurShader.setParameter("texture", sf::Shader::CurrentTexture);
     //Initialize the starting level to 1
     level = 0;
     
@@ -175,6 +181,22 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     if (itemArray[level][1] == 90) {
         details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][1]);
     }
+}
+
+void applyShader(const sf::Shader& shader, sf::RenderTarget& output) {
+    sf::Vector2f outputSize = static_cast<sf::Vector2f>(output.getSize());
+    
+    sf::VertexArray vertices(sf::TrianglesStrip, 4);
+    vertices[0] = sf::Vertex(sf::Vector2f(0, 0),            sf::Vector2f(0, 1));
+    vertices[1] = sf::Vertex(sf::Vector2f(outputSize.x, 0), sf::Vector2f(1, 1));
+    vertices[2] = sf::Vertex(sf::Vector2f(0, outputSize.y), sf::Vector2f(0, 0));
+    vertices[3] = sf::Vertex(sf::Vector2f(outputSize),      sf::Vector2f(1, 0));
+    
+    sf::RenderStates states;
+    states.shader 	 = &shader;
+    states.blendMode = sf::BlendNone;
+    
+    output.draw(vertices, states);
 }
 
 void GameMap::update(sf::RenderWindow& window) {
@@ -273,8 +295,29 @@ void GameMap::update(sf::RenderWindow& window) {
     
     // Display the render texture target
     target.display();
+    
     // Finally draw it to the window
-    window.draw(sf::Sprite(target.getTexture()));
+    if (UI.isVisible()) {
+        if (computeBlur) {
+            finalPass.clear(sf::Color::Transparent);
+            sf::Vector2u textureSize = target.getSize();
+            // Get the blur amount from the UI controller
+            float blurAmount = UI.getBlurAmount();
+            blurShader.setParameter("blur_radius", sf::Vector2f(0.f, blurAmount / textureSize.y));
+            finalPass.draw(sf::Sprite(target.getTexture()), &blurShader);
+            finalPass.display();
+            blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
+            blurred = finalPass.getTexture();
+            blurred.setSmooth(1);
+            window.draw(sf::Sprite(blurred), &blurShader);
+        } else {
+            // If the UI interface is not opening or closing, reuse some of the previously created blur resources
+            // When the menu is opened, the game should be paused anyway, so it's fine to use a static image
+            window.draw(sf::Sprite(blurred), &blurShader);
+        }
+    } else {
+        window.draw(sf::Sprite(target.getTexture()));
+    }
     
     // Draw a nice vignette effect over the entire window, but behind the UI overlay
     window.draw(vignetteSprite, sf::BlendMultiply);
@@ -284,7 +327,7 @@ void GameMap::update(sf::RenderWindow& window) {
         if (--creditsCounter == 0) {
             dispCredits = false;
         }
-        target.draw(creditsSprite);
+        window.draw(creditsSprite);
     }
     
     else if (!dispCredits && creditsCounter > 0) {
@@ -316,11 +359,11 @@ void GameMap::update(sf::RenderWindow& window) {
             fonts.setWaypointText(level, windowW, windowH);
             dispEntryBeam = false;
         }
-        UI.drawMenu(window, &player, details.getUIStates(), fonts, effects, xOffset, yOffset, pInput);
+        computeBlur = UI.drawMenu(window, &player, details.getUIStates(), fonts, effects, xOffset, yOffset, pInput);
     }
     else {
         if (level != 0) {
-            UI.drawMenu(window, &player, details.getUIStates(), fonts, effects, xOffset, yOffset, pInput);
+            computeBlur = UI.drawMenu(window, &player, details.getUIStates(), fonts, effects, xOffset, yOffset, pInput);
             // Pass the player's health to the font controller
             fonts.updateHealth(player.getHealth());
             // Draw all of the game text to the window

@@ -63,6 +63,9 @@ private:
     // Instantiate a background controller
     backgroundHandler bkg;
     
+    sf::Texture blurred;
+    bool computeBlur;
+    
     // A boolean variable that is true when the player is nearby a teleporter
     bool teleporterCond;
     
@@ -84,7 +87,7 @@ private:
     bool beamExpanding;
     bool dispEntryBeam;
     
-    sf::Shader redShader, whiteShader, blueShader, crimsonShader;
+    sf::Shader redShader, whiteShader, blueShader, crimsonShader, blurShader;
     
     sf::View worldView, hudView;
     
@@ -92,7 +95,7 @@ private:
     sf::RenderTexture lightingMap;
     sf::RectangleShape shadowShape;
     
-    sf::RenderTexture target;
+    sf::RenderTexture target, finalPass;
     
     // Create a font controller
     FontController fonts;

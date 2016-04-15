@@ -9,22 +9,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Blind Jump/userInterface.cpp"
-            timestampString = "481226426.647945"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186"
-            landmarkName = "userInterface::drawMenu(sf::RenderWindow&amp; window, Player* player, unsigned char* detailStates, FontController&amp; f, effectsController&amp; ef, float xOffset, float yOffset, InputController* pInput)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Blind Jump/dasher.cpp"
             timestampString = "482366347.661418"
             startingColumnNumber = "9223372036854775807"
