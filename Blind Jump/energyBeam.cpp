@@ -85,7 +85,7 @@ void EnergyBeam::update(float xOffset, float yOffset) {
     }
 }
 
-void EnergyBeam::draw(sf::RenderWindow& window) {
+void EnergyBeam::draw(sf::RenderTexture& window) {
     switch (state) {
         case ENTERING:
             sprites[frameIndex].setPosition(xPos, yPos);

@@ -97,11 +97,11 @@ private:
     
 public:
     effectsController();
-    void draw(sf::RenderWindow&, std::vector<std::tuple<sf::Sprite, float, int>>&);
+    void draw(sf::RenderTexture&, std::vector<std::tuple<sf::Sprite, float, int>>&);
     void update(float, float, ScreenShakeController*);
     void addTurretFlash(float, float);
     void addBullet(bool, char, float, float);
-    void drawLower(sf::RenderWindow&);
+    void drawLower(sf::RenderTexture&);
     void clear();
     void addDodgeEffect(float, float, int, int);
     void addTurretShot(float, float, short);

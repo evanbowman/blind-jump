@@ -235,7 +235,7 @@ tileController::tileController() {
     shadow.setFillColor(sf::Color(188, 188, 198, 255));
 }
 
-void tileController::drawTiles(sf::RenderWindow& window, std::vector<sf::Sprite*>* glowSprites, std::vector<sf::Sprite*>* glowSprites2, int level) {
+void tileController::drawTiles(sf::RenderTexture& window, std::vector<sf::Sprite*>* glowSprites, std::vector<sf::Sprite*>* glowSprites2, int level) {
     if (!walls.empty()) {
         for (int i = 0; i < walls.size(); i++) {
             //Also move the walls with the same offset
@@ -280,7 +280,7 @@ void tileController::drawTiles(sf::RenderWindow& window, std::vector<sf::Sprite*
     window.draw(sprite2);
 }
 
-void tileController::drawTiles(sf::RenderWindow& window) {
+void tileController::drawTiles(sf::RenderTexture& window) {
     mapSprite1.setPosition(posX + xOffset, posY + yOffset);
     mapSprite2.setPosition(posX + xOffset, posY + yOffset);
     window.draw(mapSprite1);

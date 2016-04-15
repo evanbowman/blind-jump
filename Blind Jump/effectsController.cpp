@@ -395,7 +395,7 @@ void effectsController::addExplosion(float x, float y) {
 }
 
 template <typename T>
-void drawEffect(T& inpVec, sf::RenderWindow& window, std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects) {
+void drawEffect(T& inpVec, sf::RenderTexture& window, std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects) {
     // Create an effect object to pust to the gameObjects vector
     std::tuple<sf::Sprite, float, int> effectObject;
     // All effects are assigned the same identifier tag so that the drawing code can identify them
@@ -410,7 +410,7 @@ void drawEffect(T& inpVec, sf::RenderWindow& window, std::vector<std::tuple<sf::
 }
 
 template <typename T>
-void directDraw(T& inpVec, sf::RenderWindow& window, std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects) {
+void directDraw(T& inpVec, sf::RenderTexture& window, std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects) {
     if (!inpVec.empty()) {
         for (auto & element : inpVec) {
             window.draw(element.getSprite());
@@ -419,7 +419,7 @@ void directDraw(T& inpVec, sf::RenderWindow& window, std::vector<std::tuple<sf::
 }
 
 //Draw the sprites for all of the effect objects
-void effectsController::draw(sf::RenderWindow& window, std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects) {
+void effectsController::draw(sf::RenderTexture& window, std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects) {
     drawEffect(hearts, window, gameObjects);
     drawEffect(turretFlashes, window, gameObjects);
     drawEffect(bullets, window, gameObjects);
@@ -453,7 +453,7 @@ void effectsController::draw(sf::RenderWindow& window, std::vector<std::tuple<sf
     drawEffect(healthEffects, window, gameObjects);
 }
 
-void effectsController::drawLower(sf::RenderWindow& window) {
+void effectsController::drawLower(sf::RenderTexture& window) {
     if (!bulletLowerLayer.empty()) {
         for (auto & element : bulletLowerLayer) {
             window.draw(element.getSprite());  //Get the sprite, and update based on the overworld offset

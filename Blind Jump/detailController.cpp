@@ -363,7 +363,7 @@ void detailController::killTeleporter() {
     teleporters.clear();
 }
 
-void detailController::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, int>>& gameShadows, sf::RenderWindow& window) {
+void detailController::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, int>>& gameShadows, sf::RenderTexture& window) {
     std::tuple<sf::Sprite, float, int> tObject, tShadow;
     if (!misc32x26.empty()) {
         for (auto & element : misc32x26) {

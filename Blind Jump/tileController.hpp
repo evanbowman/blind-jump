@@ -36,9 +36,9 @@ public:
     
     sf::Sprite tileSprite;
     tileController();
-    void drawTiles(sf::RenderWindow&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, int level);
-    void drawTiles(sf::RenderWindow&);
-    void drawMiniMap(sf::RenderWindow&);
+    void drawTiles(sf::RenderTexture&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, int level);
+    void drawTiles(sf::RenderTexture&);
+    void drawMiniMap(sf::RenderTexture&);
     //The number of tiles to draw
     int tileCount;
     int xTiles;

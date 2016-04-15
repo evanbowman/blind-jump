@@ -182,25 +182,24 @@ void GameMap::update(sf::RenderWindow& window) {
     // Start by getting the displacement that the player has moved, in order to update the position of all of the tiles and game objects
     xOffset = player.getWorldOffsetX();
     yOffset = player.getWorldOffsetY();
-    window.setView(worldView);
     // Draw the images
     bkg.setOffset(xOffset, yOffset);
-    bkg.drawBackground(window);
+    bkg.drawBackground(target);
     tiles.setOffset(xOffset, yOffset);
-    tiles.drawTiles(window, effects.getGlowSprs(), effects.getGlowSprs2(), level);
+    tiles.drawTiles(target, effects.getGlowSprs(), effects.getGlowSprs2(), level);
     effects.getGlowSprs2()->clear();
     // Update the overworld objects based on the displacement of the player
     details.update(xOffset, yOffset, effects, player.getSprIndex(), tiles.walls, effects.getGlowSprs(), effects.getGlowSprs2(), UI, fonts, player, pInput, &ssc);
     // Draw the details / add them to the game objects vector
-    details.draw(gameObjects, gameShadows, window);
+    details.draw(gameObjects, gameShadows, target);
     // Update the enemy objects in the game based on the player's displacement
     en.updateEnemies(gameObjects, gameShadows, xOffset, yOffset, effects, tiles.walls, player.isdead(), &details, &tiles, &ssc, fonts);
     // Draw the lower layer of the effects, that is the ones that should show up behind the player sprite
-    effects.drawLower(window);
+    effects.drawLower(target);
     
     if (player.visible) {
         // Draw the player to the window, as long as the object is visible
-        player.draw(gameObjects, gameShadows, tiles, effects, details, sndCtrl, UI, pInput, window, fonts);
+        player.draw(gameObjects, gameShadows, tiles, effects, details, sndCtrl, UI, pInput, target, fonts);
     }
     
     // If player was hit rumble the screen.
@@ -214,7 +213,7 @@ void GameMap::update(sf::RenderWindow& window) {
     // Draw shadows to the window
     if (!gameShadows.empty()) {
         for (auto & element : gameShadows) {
-            window.draw(std::get<0>(element));
+            target.draw(std::get<0>(element));
         }
     }
     gameShadows.clear();
@@ -252,27 +251,30 @@ void GameMap::update(sf::RenderWindow& window) {
     // Display the lighting map
     lightingMap.display();
     sf::Sprite sprite(lightingMap.getTexture());
-    window.draw(sprite);
+    target.draw(sprite);
     for (auto & element : gameObjects) {
         if (std::get<2>(element) == RED_TARGET) {
-            window.draw(std::get<0>(element), &redShader);
+            target.draw(std::get<0>(element), &redShader);
         } else if (std::get<2>(element) == WHITE_TARGET) {
-            window.draw(std::get<0>(element), &whiteShader);
+            target.draw(std::get<0>(element), &whiteShader);
         } else if (std::get<2>(element) == BLUE_TARGET) {
-            window.draw(std::get<0>(element), &blueShader);
+            target.draw(std::get<0>(element), &blueShader);
         } else if (std::get<2>(element) == CRIMSON_TARGET) {
-            window.draw(std::get<0>(element), &crimsonShader);
+            target.draw(std::get<0>(element), &crimsonShader);
         }
     }
     
     // Now clear out the vectors for the next round of drawing
     gameObjects.clear();
     
-    effects.draw(window, gameObjects);
+    effects.draw(target, gameObjects);
     
-    bkg.drawForeground(window);
+    bkg.drawForeground(target);
     
-    window.setView(hudView);
+    // Display the render texture target
+    target.display();
+    // Finally draw it to the window
+    window.draw(sf::Sprite(target.getTexture()));
     
     // Draw a nice vignette effect over the entire window, but behind the UI overlay
     window.draw(vignetteSprite, sf::BlendMultiply);
@@ -282,7 +284,7 @@ void GameMap::update(sf::RenderWindow& window) {
         if (--creditsCounter == 0) {
             dispCredits = false;
         }
-        window.draw(creditsSprite);
+        target.draw(creditsSprite);
     }
     
     else if (!dispCredits && creditsCounter > 0) {

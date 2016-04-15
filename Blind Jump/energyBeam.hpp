@@ -30,7 +30,7 @@ private:
 public:
     void update(float, float);
     EnergyBeam(float, float, sf::Sprite*, float, float);
-    void draw(sf::RenderWindow&);
+    void draw(sf::RenderTexture&);
     bool getKillFlag();
     float getX1();
     float getY1();

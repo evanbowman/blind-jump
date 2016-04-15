@@ -630,7 +630,7 @@ bool checkShotCollision(std::vector<T>* shotVec, double playerXpos, double playe
 }
 
 //Returns the current sprite based on the values of imageIndex and spriteIndex
-void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, int>>& gameShadows, tileController& tiles, effectsController& ef, detailController& details, SoundController& sounds, userInterface& UI, InputController* pInput, sf::RenderWindow& window, FontController& fonts) {
+void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, int>>& gameShadows, tileController& tiles, effectsController& ef, detailController& details, SoundController& sounds, userInterface& UI, InputController* pInput, sf::RenderTexture& window, FontController& fonts) {
     checkCollision(tiles, details);//, details);
     drawController(pInput, ef);
     std::tuple<sf::Sprite, float, int> tPlayer, tGun, tShadow;

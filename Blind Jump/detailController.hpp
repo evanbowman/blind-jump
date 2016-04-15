@@ -67,7 +67,7 @@ public:
     void addTerminal(tileController&, float, float, float, float);
     void update(float, float, effectsController& ef, char, std::vector<wall>&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, userInterface&, FontController&, Player&, InputController*, ScreenShakeController * pscr);
     void addDasherScrap(tileController&, float, float, int);
-    void draw(std::vector<std::tuple<sf::Sprite, float, int>>&, std::vector<std::tuple<sf::Sprite, float, int>>&, sf::RenderWindow&);
+    void draw(std::vector<std::tuple<sf::Sprite, float, int>>&, std::vector<std::tuple<sf::Sprite, float, int>>&, sf::RenderTexture&);
     void clear();
     std::vector<TreasureChest> getChests();
     Teleporter* getTeleporter();
