@@ -29,6 +29,7 @@ public:
     sf::Sprite getSprite();
     HealthEffect(sf::Sprite, float, float);
     void setMode(char, float, float);
+    float getYpos();
 };
 
 #endif /* healthEffect_hpp */

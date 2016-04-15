@@ -34,7 +34,7 @@ void Critter::checkBulletCollision(effectsController& ef, FontController& font) 
     //Check collisions with player's shots, but only if the shot vectors aren't empty
     if (!ef.getBulletLayer1().empty()) {
         for (auto & element : ef.getBulletLayer1()) {
-            if (std::abs(element.getPosX() - (xPos - 4)) < 8 && std::abs(element.getPosY() - (yPos - 8)) < 8 && !isColored) {
+            if (std::abs(element.getXpos() - (xPos - 4)) < 8 && std::abs(element.getYpos() - (yPos - 8)) < 8 && !isColored) {
                 element.setKillFlag();           // Kill the bullet if there's a collision between the bullet and the enemy
                 // Tons of effects in one place is distracting, so don't draw another one if the enemy is about to explode
                 if (health == 1) {
@@ -48,7 +48,7 @@ void Critter::checkBulletCollision(effectsController& ef, FontController& font) 
     }
     if (!ef.getBulletLayer2().empty()) {
         for (auto & element : ef.getBulletLayer2()) {
-            if (std::abs(element.getPosX() - (xPos - 4)) < 8 && std::abs(element.getPosY() - (yPos - 8)) < 8 && !isColored) {
+            if (std::abs(element.getXpos() - (xPos - 4)) < 8 && std::abs(element.getYpos() - (yPos - 8)) < 8 && !isColored) {
                 element.setKillFlag();
                 if (health == 1) {
                     element.disablePuff();
@@ -68,7 +68,6 @@ void Critter::checkBulletCollision(effectsController& ef, FontController& font) 
     
     if (health == 0) {
         killFlag = 1;
-        ef.addLvP1(playerPosX / 2 - xOffset - 6, playerPosY / 2 - yOffset, font);
         // With some random chance, add a heart item to the map
         if ((rand() % 5) == 0) {
             ef.addHearts(xInit, yInit);

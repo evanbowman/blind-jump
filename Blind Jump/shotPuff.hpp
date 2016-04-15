@@ -26,6 +26,7 @@ public:
     bool imFinished;
     char animationLength;
     bool getKillFlag();
+    float getYpos();
     
 private:
     sf::Sprite sprPuff[4];

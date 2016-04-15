@@ -26,8 +26,8 @@ public:
     bool imFinished;
     char animationLength;
     sf::Sprite sprExp[6];
-    float getPosX();
-    float getPosY();
+    float getXpos();
+    float getYpos();
 };
 
 #endif /* shotPuff_hpp */

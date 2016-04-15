@@ -50,3 +50,7 @@ void turretFlashEffect::update(float xOffset, float yOffset) {
 sf::Sprite turretFlashEffect::getSprite() {
     return flashSprites[imageIndex];
 }
+
+float turretFlashEffect::getYpos() {
+    return yPos;
+}

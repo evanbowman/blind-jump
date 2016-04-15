@@ -94,11 +94,11 @@ void bulletType1::setPosition(float x, float y) {
     yPos = y;
 }
 
-float bulletType1::getPosX() {
+float bulletType1::getXpos() {
     return xPos;
 }
 
-float bulletType1::getPosY() {
+float bulletType1::getYpos() {
     return yPos;
 }
 

@@ -33,8 +33,8 @@ public:
     bool getKillFlag();
     void setKillFlag();
     void setPosition(float, float);
-    float getPosX();
-    float getPosY();
+    float getXpos();
+    float getYpos();
     char getDirection();
     bool checkCanPoof();
     void disablePuff();

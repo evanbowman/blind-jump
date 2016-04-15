@@ -18,6 +18,13 @@
 #include "math.h"
 #include "enemyCreationFunctions.hpp"
 
+// Define some macros to make the code easier to read
+#define WHITE_TARGET 2
+#define RED_TARGET 1
+#define BLUE_TARGET 3
+#define CRIMSON_TARGET 4
+#define EFFECT_OBJECT 10
+
 // Define a function to control the z-order sorting
 struct sortKey {
     inline bool operator() (const std::tuple<sf::Sprite, float, int> arg1, const std::tuple<sf::Sprite, float, int> arg2) {
@@ -90,6 +97,9 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     
     transitioning = false;
     transitionDelay = 320;
+    
+    // Each object that isn't an effect or passed through a shader gets darkened according to the ambient conditions of the current tileset
+    objectShadeColor = sf::Color(190, 190, 210, 255);
     
     titleTxtr.loadFromFile(resourcePath() + "title.png");
     titleSpr.setTexture(titleTxtr);
@@ -165,7 +175,6 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
 }
 
 void GameMap::update(sf::RenderWindow& window) {
-    sndCtrl.updateSoundtrack(player.getPosX(), player.getPosY(), details.getTeleporter()->getxPos(), details.getTeleporter()->getyPos());
     // Start by getting the displacement that the player has moved, in order to update the position of all of the tiles and game objects
     xOffset = player.getWorldOffsetX();
     yOffset = player.getWorldOffsetY();
@@ -214,15 +223,19 @@ void GameMap::update(sf::RenderWindow& window) {
     // Now draw the sorted list of game objects to the window
     if (!gameObjects.empty()) {
         for (auto & element : gameObjects) {
-            if (std::get<2>(element) != 1 || std::get<2>(element) != 2) {
+            // Retrieve each sprite from the tuple and draw it to the window
+            if (std::get<2>(element) == 0) {
+                // Darken the sprite's color channels according to the ambient conditions of the current area
+                std::get<0>(element).setColor(sf::Color(objectShadeColor.r, objectShadeColor.g, objectShadeColor.b, std::get<0>(element).getColor().a));
+                lightingMap.draw(std::get<0>(element));
+            } else if (std::get<2>(element) == EFFECT_OBJECT) {
+                // If the contents of the third element in the tuple correspond to an effect, draw the sprite without darkening
                 lightingMap.draw(std::get<0>(element));
             }
-            // Retrieve each sprite from the tuple and draw it to the window
         }
     }
-    
     // Draw the shadow overlay to everything in the lighting map
-    lightingMap.draw(shadowShape, sf::BlendMultiply);
+    //lightingMap.draw(shadowShape, sf::BlendMultiply); // Rather than doing this, shade the sprites individually? Would allow for z-ordering of effect objects
     // Draw lights to the objects
     sf::Color blendAmount(185, 185, 185, 255);
     sf::Sprite tempSprite;
@@ -237,13 +250,13 @@ void GameMap::update(sf::RenderWindow& window) {
     sf::Sprite sprite(lightingMap.getTexture());
     window.draw(sprite);
     for (auto & element : gameObjects) {
-        if (std::get<2>(element) == 1) {
+        if (std::get<2>(element) == RED_TARGET) {
             window.draw(std::get<0>(element), &redShader);
-        } else if (std::get<2>(element) == 2) {
+        } else if (std::get<2>(element) == WHITE_TARGET) {
             window.draw(std::get<0>(element), &whiteShader);
-        } else if (std::get<2>(element) == 3) {
+        } else if (std::get<2>(element) == BLUE_TARGET) {
             window.draw(std::get<0>(element), &blueShader);
-        } else if (std::get<2>(element) == 4) {
+        } else if (std::get<2>(element) == CRIMSON_TARGET) {
             window.draw(std::get<0>(element), &crimsonShader);
         }
     }
@@ -502,12 +515,12 @@ void GameMap::Reset() {
     int count;
     
     if (level == 0) {
-        shadowShape.setFillColor(sf::Color(190, 190, 210, 255));
+        objectShadeColor = sf::Color(190, 190, 210, 255);
     } else if (level > 0 && level <= BOSS_LEVEL_1) {
-        shadowShape.setFillColor(sf::Color(190, 190, 210, 255));
+        objectShadeColor = sf::Color(190, 190, 210, 255);
         fonts.setZoneText(0);
     } else if (level > BOSS_LEVEL_1) {
-        shadowShape.setFillColor(sf::Color(210, 195, 195, 255));
+        objectShadeColor = sf::Color(210, 195, 195, 255);
         fonts.setZoneText(1);
     }
     

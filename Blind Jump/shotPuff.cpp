@@ -46,3 +46,7 @@ sf::Sprite shotPuff::getSprite() {
 bool shotPuff::getKillFlag() {
     return imFinished;
 }
+
+float shotPuff::getYpos() {
+    return yPos;
+}

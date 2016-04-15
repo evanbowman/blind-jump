@@ -131,7 +131,7 @@ void turret::updateShots(effectsController& ef, FontController& fonts) {
     //Check collisions with player's shots, but only if the shot vectors aren't empty
     if (!ef.getBulletLayer1().empty()) {
         for (auto & element : ef.getBulletLayer1()) {
-            if (std::abs(element.getPosX() - xPos) < 8 && std::abs(element.getPosY() - (yPos + 6)) < 15) {
+            if (std::abs(element.getXpos() - xPos) < 8 && std::abs(element.getYpos() - (yPos + 6)) < 15) {
                 element.setKillFlag();           // Kill the bullet if there's a collision between the bullet and the enemy
                 // Tons of effects in one place is distracting, so don't draw another one if the enemy is about to explode
                 if (hp == 1) {
@@ -146,7 +146,7 @@ void turret::updateShots(effectsController& ef, FontController& fonts) {
         
     if (!ef.getBulletLayer2().empty()) {
         for (auto & element : ef.getBulletLayer2()) {
-            if (std::abs(element.getPosX() - xPos) < 8 && std::abs(element.getPosY() - (yPos + 6)) < 15) {
+            if (std::abs(element.getXpos() - xPos) < 8 && std::abs(element.getYpos() - (yPos + 6)) < 15) {
                 element.setKillFlag();
                 // Tons of effects in one place is distracting, so don't draw another one if the enemy is about to explode
                 if (hp == 1) {

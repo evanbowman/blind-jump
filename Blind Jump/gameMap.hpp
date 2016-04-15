@@ -108,6 +108,8 @@ private:
     sf::Texture titleTxtr;
     sf::Sprite titleSpr;
     
+    sf::Color objectShadeColor;
+    
     // Locations to place pillars
     std::vector<Coordinate> rockPositions;
     

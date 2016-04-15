@@ -49,3 +49,7 @@ void HealthEffect::setMode(char mode, float x, float y) {
     spr.setPosition(x, y);
     this->mode = mode;
 }
+
+float HealthEffect::getYpos() {
+    return spr.getPosition().y;
+}

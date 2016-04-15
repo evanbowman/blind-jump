@@ -666,7 +666,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
         canhurt = false;
     }
     
-    std::vector<Hearts>* pHearts = ef.getHearts();
+    std::vector<Powerup>* pHearts = ef.getHearts();
     for (auto & element : *pHearts) {
         if (fabsf(posX + 16 - element.getXpos()) < 10 && fabsf(posY + 10 - element.getYpos()) < 10) {
             health = fmin(fonts.getMaxHealth(), health + 1);

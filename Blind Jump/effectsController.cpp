@@ -180,7 +180,7 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
                 // Don't always want to add in additional effect where it could make the screen look cluttered, so check a condition first
                 if (it->checkCanPoof()) {
                     //Create another effect for bullet death
-                    shotPuff p(puffSprites, it->getPosX() - xOffset, it->getPosY() - yOffset, it->getDirection(), 0);
+                    shotPuff p(puffSprites, it->getXpos() - xOffset, it->getYpos() - yOffset, it->getDirection(), 0);
                     //Push it back
                     puffs.push_back(p);
                 }
@@ -200,7 +200,7 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
         for (std::vector<bulletType1>::iterator it = bulletLowerLayer.begin(); it != bulletLowerLayer.end();) {
             if (it->getKillFlag()) {
                 if (it->checkCanPoof()) {
-                shotPuff p(puffSprites, it->getPosX() - xOffset, it->getPosY() - yOffset, it->getDirection(), 0);
+                shotPuff p(puffSprites, it->getXpos() - xOffset, it->getYpos() - yOffset, it->getDirection(), 0);
                 puffs.push_back(p);
                 }
                 it = bulletLowerLayer.erase(it);
@@ -243,7 +243,7 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
             else {
                 // Throughout the duration of the explosion, throw in some fire effects for good measure
                 if (it->spriteIndex == 1 || it->spriteIndex == 2 || it->spriteIndex == 4) {
-                    TeleporterSmoke t(smokeSprites, it->getPosX() - xOffset + 6, it->getPosY() - yOffset + 4);
+                    TeleporterSmoke t(smokeSprites, it->getXpos() - xOffset + 6, it->getYpos() - yOffset + 4);
                     warpEffects.push_back(t);
                 }
                 it->positionUpdateF(xOffset, yOffset);
@@ -267,7 +267,7 @@ void effectsController::addTurretShot(float x, float y, short dir) {
 }
 
 void effectsController::addHearts(float x, float y) {
-    Hearts h(heartsSpr, redGlowSprite, x, y);
+    Powerup h(heartsSpr, redGlowSprite, x, y);
     hearts.push_back(h);
 }
 
@@ -395,7 +395,22 @@ void effectsController::addExplosion(float x, float y) {
 }
 
 template <typename T>
-void drawEffect(T& inpVec, sf::RenderWindow& window) {
+void drawEffect(T& inpVec, sf::RenderWindow& window, std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects) {
+    // Create an effect object to pust to the gameObjects vector
+    std::tuple<sf::Sprite, float, int> effectObject;
+    // All effects are assigned the same identifier tag so that the drawing code can identify them
+    std::get<2>(effectObject) = 10;
+    if (!inpVec.empty()) {
+        for (auto & element : inpVec) {
+            std::get<0>(effectObject) = element.getSprite();
+            std::get<1>(effectObject) = element.getYpos();
+            gameObjects.push_back(effectObject);
+        }
+    }
+}
+
+template <typename T>
+void directDraw(T& inpVec, sf::RenderWindow& window, std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects) {
     if (!inpVec.empty()) {
         for (auto & element : inpVec) {
             window.draw(element.getSprite());
@@ -405,14 +420,14 @@ void drawEffect(T& inpVec, sf::RenderWindow& window) {
 
 //Draw the sprites for all of the effect objects
 void effectsController::draw(sf::RenderWindow& window, std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects) {
-    drawEffect(hearts, window);
-    drawEffect(turretFlashes, window);
-    drawEffect(bullets, window);
-    drawEffect(puffs, window);
-    drawEffect(turretShots, window);
-    drawEffect(dasherShots, window);
-    drawEffect(fireExplosions, window);
-    drawEffect(smallExplosions, window);
+    drawEffect(hearts, window, gameObjects);
+    drawEffect(turretFlashes, window, gameObjects);
+    drawEffect(bullets, window, gameObjects);
+    drawEffect(puffs, window, gameObjects);
+    drawEffect(turretShots, window, gameObjects);
+    drawEffect(dasherShots, window, gameObjects);
+    drawEffect(fireExplosions, window, gameObjects);
+    drawEffect(smallExplosions, window, gameObjects);
     
     if (!energyBeams.empty()) {
         for (auto element : energyBeams) {
@@ -433,10 +448,9 @@ void effectsController::draw(sf::RenderWindow& window, std::vector<std::tuple<sf
             }
         }
     }
-    
-    drawEffect(bigExplosions, window);
-    drawEffect(enemyShots, window);
-    drawEffect(healthEffects, window);
+    drawEffect(bigExplosions, window, gameObjects);
+    drawEffect(enemyShots, window, gameObjects);
+    drawEffect(healthEffects, window, gameObjects);
 }
 
 void effectsController::drawLower(sf::RenderWindow& window) {
@@ -473,6 +487,7 @@ void effectsController::clear() {
     energyBeams.clear();
     smallExplosions.clear();
     fireExplosions.clear();
+    hearts.clear();
 }
 
 std::vector<bulletType1>& effectsController::getBulletLayer1() {
@@ -508,6 +523,6 @@ std::vector<sf::Sprite*>* effectsController::getGlowSprs2() {
     return &glowSprs2;
 }
 
-std::vector<Hearts>* effectsController::getHearts() {
+std::vector<Powerup>* effectsController::getHearts() {
     return &hearts;
 }

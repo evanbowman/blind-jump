@@ -25,5 +25,6 @@ public:
     char imageIndex;
     char frameLength;
     turretFlashEffect(sf::Sprite sprites[5], float, float);
+    float getYpos();
 };
 #endif /* turretFlashEffect_hpp */

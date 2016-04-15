@@ -13,18 +13,12 @@
 #include "SFML/Graphics.hpp"
 
 SoundController::SoundController() {
-    // Load game music
-    ambientBkg.openFromFile(resourcePath() + "cylinder_five.ogg");
-    // Set the music to loop
-    //ambientBkg.setLoop(true);
-    //ambientBkg.setVolume(10);
     
     // Load the soundtrack and play the first song
-    soundtrack[0].openFromFile(resourcePath() + "poor_me_blues.ogg");
-    soundtrack[1].openFromFile(resourcePath() + "deep_blue_sea_blues.ogg");
-    soundtrack[2].openFromFile(resourcePath() + "mister_moon_man.ogg");
-    currentSong = rand() % SOUNDTRACK_LENGTH;
-    //soundtrack[currentSong].play();
+    soundtrack[0].openFromFile(resourcePath() + "julia-florida.ogg"); /* Composed by Augustin Barrios Mangore, performed by Edson Lopez */
+    soundtrack[0].setLoop(true);
+    //soundtrack[1].openFromFile(resourcePath() + "deep_blue_sea_blues.ogg");
+    //soundtrack[2].openFromFile(resourcePath() + "mister_moon_man.ogg");
     
     // Load effects
     stepEffects[0].loadFromFile(resourcePath() + "step.wav");
@@ -33,32 +27,12 @@ SoundController::SoundController() {
 }
 
 void SoundController::playMusic(unsigned char musicIndex) {
-    switch (musicIndex) {
-        case 0:
-            //ambientBkg.play();
-            break;
-            
-        default:
-            // Don't play any sounds
-            break;
+    for (int i = 0; i < SOUNDTRACK_LENGTH; i++) {
+        // Stop all the other songs
+        soundtrack[i].stop();
     }
-}
-
-void SoundController::updateSoundtrack(float playerPosX, float playerPosY, float sourceX, float sourceY) {
-    /*float distance = sqrtf((playerPosX - sourceX) * (playerPosX - sourceX) + (playerPosY - sourceY) * (playerPosY - sourceY));
-    float volume = 100 - sqrt(distance) * 4;
-    if (volume < 0) {
-        volume = 0;
-    }
-    ambientBkg.setVolume(fmax(60 - volume, 0));
-    soundtrack[currentSong].setVolume(volume);
-    if (soundtrack[currentSong].getStatus() == sf::SoundSource::Status::Stopped) {
-        currentSong++;
-        if (currentSong > SOUNDTRACK_LENGTH - 1) {
-            currentSong = 0;
-        }
-        soundtrack[currentSong].play();
-    }*/
+    // Play the selected one
+    soundtrack[musicIndex].play();
 }
 
 void SoundController::playEffect(unsigned char effectIndex) {

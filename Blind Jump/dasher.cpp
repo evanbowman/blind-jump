@@ -69,7 +69,7 @@ void Dasher::checkBulletCollision(effectsController& ef, FontController& fonts) 
         //Check collisions with player's shots, but only if the shot vectors aren't empty
         if (!ef.getBulletLayer1().empty()) {
             for (auto & element : ef.getBulletLayer1()) {
-                if (std::abs(element.getPosX() - (xPos - 6)) < 10 && std::abs(element.getPosY() - (yPos)) < 12 && !isColored) {
+                if (std::abs(element.getXpos() - (xPos - 6)) < 10 && std::abs(element.getYpos() - (yPos)) < 12 && !isColored) {
                     element.setKillFlag();           // Kill the bullet if there's a collision between the bullet and the enemy
                     // Tons of effects in one place is distracting, so don't draw another one if the enemy is about to explode
                     if (health == 1) {
@@ -84,7 +84,7 @@ void Dasher::checkBulletCollision(effectsController& ef, FontController& fonts) 
 
         if (!ef.getBulletLayer2().empty()) {
             for (auto & element : ef.getBulletLayer2()) {
-                if (std::abs(element.getPosX() - (xPos - 6)) < 10 && std::abs(element.getPosY() - (yPos)) < 12 && !isColored) {
+                if (std::abs(element.getXpos() - (xPos - 6)) < 10 && std::abs(element.getYpos() - (yPos)) < 12 && !isColored) {
                     element.setKillFlag();
                     if (health == 1) {
                         element.disablePuff();
@@ -111,8 +111,6 @@ void Dasher::checkBulletCollision(effectsController& ef, FontController& fonts) 
         if ((rand() % 4) == 0) {
             ef.addHearts(xInit, yInit);
         }
-        ef.addLvP3(playerPosX - xOffset - 6, playerPosY - yOffset, fonts);
-        //ef.addFireExplosion(xInit + 4, yInit + 3);
         ef.addSmallExplosion(xInit, yInit);
         blurEffects.clear();
     }

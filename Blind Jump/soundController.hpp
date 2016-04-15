@@ -15,12 +15,7 @@
 #define SOUNDTRACK_LENGTH 3
 
 class SoundController {
-private:
-    // Ambient background music for the game
-    /* Ambient music plays all the time, but the soundtrack plays depending
-     on the player's distance from a sound source*/
-    sf::Music ambientBkg;
-    
+private:    
     // Game soundtrack
     sf::Music soundtrack[SOUNDTRACK_LENGTH];
     
@@ -35,7 +30,6 @@ public:
     // Game objects can pass a value to the music controller to
     void playEffect(unsigned char);
     void playMusic(unsigned char);
-    void updateSoundtrack(float, float, float, float);
     void stopMusic();
 };
 

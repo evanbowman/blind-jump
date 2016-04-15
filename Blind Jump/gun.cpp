@@ -143,7 +143,7 @@ void gun::updateShotVector(char playerSpriteIndex, effectsController& ef, float 
                     sounds.playEffect(1);
                 }
                 else if (sprIndex == 1 || sprIndex == 5) {
-                    ef.addBullet(0, playerSpriteIndex, xPos - xOffset - 3, yPos - yOffset - 18);
+                    ef.addBullet(0, playerSpriteIndex, xPos - xOffset + 3, yPos - yOffset - 14);
                     sounds.playEffect(1);
                 }
                 

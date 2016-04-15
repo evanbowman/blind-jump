@@ -11,7 +11,7 @@
 
 #include "SFML/Graphics.hpp"
 
-class Hearts {
+class Powerup {
 private:
     float xInit, yInit, xPos, yPos;
     sf::Sprite spr, glow;
@@ -20,7 +20,7 @@ private:
     sf::Clock clock;
     
 public:
-    Hearts(sf::Sprite*, sf::Sprite, float, float);
+    Powerup(sf::Sprite*, sf::Sprite, float, float);
     bool getKillFlag();
     void setKillFlag(bool);
     sf::Sprite getSprite();

@@ -43,10 +43,10 @@ sf::Sprite Explosion32effect::getSprite() {
     return sprExp[spriteIndex];
 }
 
-float Explosion32effect::getPosX() {
+float Explosion32effect::getXpos() {
     return xPos;
 }
 
-float Explosion32effect::getPosY() {
+float Explosion32effect::getYpos() {
     return yPos;
 }

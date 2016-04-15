@@ -38,6 +38,7 @@ public:
     bool driftSel;
     sf::Sprite* getGlow();
     
+    
 private:
     float scale;
     bool trackPlayer;
