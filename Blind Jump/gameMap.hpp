@@ -92,6 +92,8 @@ private:
     sf::RenderTexture lightingMap;
     sf::RectangleShape shadowShape;
     
+    sf::RenderTexture target;
+    
     // Create a font controller
     FontController fonts;
     

@@ -36,6 +36,9 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     //Make the background controller draw concenteric with the center of the view
     bkg.setPosition((tiles.posX / 2) + 226, tiles.posY / 2);
     
+    // Set the size of the target render texture
+    target.create(windowWidth, windowHeight);
+    
     // Store a pointer to the input controller in main
     pInput = input;
     
@@ -175,6 +178,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
 }
 
 void GameMap::update(sf::RenderWindow& window) {
+    target.clear(sf::Color::Transparent);
     // Start by getting the displacement that the player has moved, in order to update the position of all of the tiles and game objects
     xOffset = player.getWorldOffsetX();
     yOffset = player.getWorldOffsetY();
