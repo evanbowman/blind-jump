@@ -27,12 +27,12 @@ SoundController::SoundController() {
 }
 
 void SoundController::playMusic(unsigned char musicIndex) {
-    for (int i = 0; i < SOUNDTRACK_LENGTH; i++) {
+    /*for (int i = 0; i < SOUNDTRACK_LENGTH; i++) {
         // Stop all the other songs
         soundtrack[i].stop();
     }
     // Play the selected one
-    soundtrack[musicIndex].play();
+    soundtrack[musicIndex].play();*/
 }
 
 void SoundController::playEffect(unsigned char effectIndex) {

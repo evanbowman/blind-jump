@@ -369,9 +369,7 @@ bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
         
         if (items[0] == 0) {
             window.draw(selCircle4);
-        }
-        
-        else {
+        } else {
             window.draw(itemCircle[0]);
             if (rectAlpha > 100) {
                 window.draw(itemSprites[0]);
@@ -380,9 +378,7 @@ bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
         
         if (items[1] == 0) {
             window.draw(selCircle1);
-        }
-        
-        else {
+        } else {
             window.draw(itemCircle[1]);
             if (rectAlpha > 100) {
                 window.draw(itemSprites[1]);
@@ -391,9 +387,7 @@ bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
         
         if (items[3] == 0) {
             window.draw(selCircle2);
-        }
-        
-        else {
+        } else {
             window.draw(itemCircle[3]);
             if (rectAlpha > 100) {
                 window.draw(itemSprites[3]);
@@ -402,9 +396,7 @@ bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
         
         if (items[2] == 0) {
             window.draw(selCircle3);
-        }
-        
-        else {
+        } else {
             window.draw(itemCircle[2]);
             if (rectAlpha > 100) {
                 window.draw(itemSprites[2]);
@@ -446,11 +438,7 @@ void userInterface::setPosition(float x, float y) {
 void userInterface::addItem(char newItem, effectsController& ef, float xStart, float yStart, FontController& fonts, Player& player) {
     if (newItem == 90) {
         fonts.updateMaxHealth(fonts.getMaxHealth() + 1);
-        // Give the player one extra health as well (ie equivalent of giving a prefilled container)
-        player.fillHealth(player.getHealth() + 1);
-    }
-    
-    else {
+    } else {
         for (int i = 0; i < 4; i++) {
             if (items[i] == 0) {
                 itemSprites[i].setTexture(itemTextures[newItem]);
@@ -463,9 +451,7 @@ void userInterface::addItem(char newItem, effectsController& ef, float xStart, f
                 //ef.addNewItem(xStart, yStart, fonts);
                 // Found an empty spot, exit loop
                 break;
-            }
-            
-            else if (items[i] == newItem + 1) {
+            } else if (items[i] == newItem + 1) {
                 ef.addLvP30(xStart, yStart, fonts);
                 break;
             }
