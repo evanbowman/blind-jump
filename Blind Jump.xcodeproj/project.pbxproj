@@ -98,6 +98,7 @@
 		682F419A1BC9F29B0091BC2E /* player_still_down.png in Resources */ = {isa = PBXBuildFile; fileRef = 682F41961BC9F29B0091BC2E /* player_still_down.png */; };
 		682F419D1BCA1B250091BC2E /* tileController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 682F419B1BCA1B250091BC2E /* tileController.cpp */; };
 		682F41A71BCA9AAA0091BC2E /* backgroundHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 682F41A51BCA9AAA0091BC2E /* backgroundHandler.cpp */; };
+		682F85471CC270D60082FE8A /* Cornerstone.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 682F85461CC270D60082FE8A /* Cornerstone.ttf */; };
 		6831E2341BD0104D0030A166 /* gameMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6831E2321BD0104D0030A166 /* gameMap.cpp */; };
 		6831E2371BD0485A0030A166 /* mappingFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6831E2351BD0485A0030A166 /* mappingFunctions.cpp */; };
 		68353B311C63F6D500043ACB /* deathShadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 68353B301C63F6D500043ACB /* deathShadow.png */; };
@@ -357,6 +358,7 @@
 		682F419B1BCA1B250091BC2E /* tileController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tileController.cpp; sourceTree = "<group>"; };
 		682F41A51BCA9AAA0091BC2E /* backgroundHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = backgroundHandler.cpp; sourceTree = "<group>"; };
 		682F41A61BCA9AAA0091BC2E /* backgroundHandler.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = backgroundHandler.hpp; sourceTree = "<group>"; };
+		682F85461CC270D60082FE8A /* Cornerstone.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Cornerstone.ttf; sourceTree = "<group>"; };
 		6831E2321BD0104D0030A166 /* gameMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gameMap.cpp; sourceTree = "<group>"; };
 		6831E2331BD0104D0030A166 /* gameMap.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = gameMap.hpp; sourceTree = "<group>"; };
 		6831E2351BD0485A0030A166 /* mappingFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mappingFunctions.cpp; sourceTree = "<group>"; };
@@ -640,6 +642,14 @@
 			name = Player;
 			sourceTree = "<group>";
 		};
+		682F85451CC270CE0082FE8A /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				682F85461CC270D60082FE8A /* Cornerstone.ttf */,
+			);
+			name = Fonts;
+			sourceTree = "<group>";
+		};
 		684B36BD1C809A2F000A1A99 /* Pathfinding */ = {
 			isa = PBXGroup;
 			children = (
@@ -699,6 +709,7 @@
 		686BCE841BC8B6270096128A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				682F85451CC270CE0082FE8A /* Fonts */,
 				68DFE6EB1CC1CB6A00923E8F /* blueFloorGlow.png */,
 				68A4CBC81CC16EBA00ECF5E2 /* powerups.png */,
 				681D917C1CB0283B009DF666 /* grassSetEdgeBluish.png */,
@@ -1140,6 +1151,7 @@
 				687244921C66AC4700EC95EF /* bkg_title.png in Resources */,
 				688633D61BE2FE56005D12C6 /* skeleton1.png in Resources */,
 				68E3F7891BCC566800349125 /* icon.png in Resources */,
+				682F85471CC270D60082FE8A /* Cornerstone.ttf in Resources */,
 				685C4A0D1C93E12D002DAA92 /* bkg_stars_distant.png in Resources */,
 				6808FF711C51790800579FE9 /* enemyOrbShot1.png in Resources */,
 				682F41991BC9F29B0091BC2E /* player_still_right.png in Resources */,

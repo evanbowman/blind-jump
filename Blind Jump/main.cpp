@@ -57,21 +57,25 @@ int main(int, char const**) {
     // Wraps input from keyboard and gamepad
     InputController input;
     
+    // Don't want the fonts to be scaled and blurry, so define another view for drawing them
+    sf::View fontView(sf::FloatRect(0, 0, desktop.width, desktop.height));
+    
+    // Declare a font controller
+    FontController fonts(fontView);
+    
     //Initialize the map
-    GameMap Map(windowWidth, windowHeight, &vignetteTexture, &input);
+    GameMap Map(windowWidth, windowHeight, &vignetteTexture, &input, &fonts);
     
     // Setup the window context settings
     sf::ContextSettings settings;
     settings.antialiasingLevel = 6;
     
-    sf::RenderWindow window(sf::VideoMode(windowWidth * 2, windowHeight * 2), "Blind Jump", sf::Style::Fullscreen, settings);
+    sf::RenderWindow window(sf::VideoMode(desktop.width, desktop.height), "Blind Jump", sf::Style::Fullscreen, settings);
     // Hide cursor inside the window
     window.setMouseCursorVisible(false);
-    //Since the view is half the size of the window, the interface will have a sort of stylistic pixelated apperance
+    // Since the view is half the size of the window, the interface will have a sort of stylistic pixelated apperance
     sf::View view(sf::FloatRect(0, 0, windowWidth, windowHeight));
-    //Apply the view to the window.
-    window.setView(view);
-    //Set the framerate to 60, so that the window doesn't update constantly
+    // Set the framerate to 60, so that the window doesn't update constantly
     window.setFramerateLimit(60);
     // Set the Icon
     sf::Image icon;
@@ -81,9 +85,6 @@ int main(int, char const**) {
     
     // Set the game icon
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-    
-    // Load start screen texture and apply it to a sprite object
-    
 
     // For scene transitions:
     sf::RectangleShape transition;
@@ -120,7 +121,9 @@ int main(int, char const**) {
         
         //Update and draw all of the game objects by calling the update function within mapInit and passing in a reference to the window
         if (!title) {   // If not on the title screen
-                Map.update(window);
+            // Apply the view to the window.
+            window.setView(view);
+            Map.update(window);
             
             if (Map.getTeleporterCond()) {                     //Change the condition later to check for a value within Map
                 Map.Reset();

@@ -33,13 +33,14 @@ struct sortKey {
     }
 };
 
-GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, InputController* input) {
+GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, InputController* input, FontController* pFonts) {
     //Make the background controller draw concenteric with the center of the view
     bkg.setPosition((tiles.posX / 2) + 226, tiles.posY / 2);
     
     // Set the size of the target render texture
     target.create(windowWidth, windowHeight);
     finalPass.create(windowWidth, windowHeight);
+    finalPass.setSmooth(true);
     
     // Store a pointer to the input controller in main
     pInput = input;
@@ -70,8 +71,11 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     //Move the UI to the center of the screen
     UI.setPosition(windowW / 2, windowH/ 2);
     
+    // Store the pointer to the font controller as one of the object's datefields
+    this->pFonts = pFonts;
+    
     // Initialize the player's starting item
-    UI.addItem(0, effects, -20, -20, fonts, player);
+    UI.addItem(0, effects, -20, -20, *pFonts, player);
     
     // Load the credits image
     creditsTexture.loadFromFile(resourcePath() + "presentingText.png");
@@ -133,7 +137,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     en.setWindowSize(windowWidth, windowHeight);
     
     //Initialize the fonts
-    fonts.setWaypointText(level, windowW, windowH);
+    pFonts->setWaypointText(level, windowW, windowH);
     
     details.addTeleporter(tiles, tiles.posX - 178, tiles.posY + 284, windowW, windowH);
     
@@ -156,7 +160,6 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     dispEntryBeam = false;
     
     sndCtrl.playMusic(0);
-    fonts.zeroScore();
     beamGlowTxr.loadFromFile(resourcePath() + "teleporterBeamGlow.png");
     beamGlowSpr.setTexture(beamGlowTxr);
     beamGlowSpr.setPosition(windowWidth / 2 - 200, windowHeight / 2 - 200 + 30);
@@ -189,17 +192,17 @@ void GameMap::update(sf::RenderWindow& window) {
     tiles.drawTiles(target, effects.getGlowSprs(), effects.getGlowSprs2(), level);
     effects.getGlowSprs2()->clear();
     // Update the overworld objects based on the displacement of the player
-    details.update(xOffset, yOffset, effects, player.getSprIndex(), tiles.walls, effects.getGlowSprs(), effects.getGlowSprs2(), UI, fonts, player, pInput, &ssc);
+    details.update(xOffset, yOffset, effects, player.getSprIndex(), tiles.walls, effects.getGlowSprs(), effects.getGlowSprs2(), UI, *pFonts, player, pInput, &ssc);
     // Draw the details / add them to the game objects vector
     details.draw(gameObjects, gameShadows, target);
     // Update the enemy objects in the game based on the player's displacement
-    en.updateEnemies(gameObjects, gameShadows, xOffset, yOffset, effects, tiles.walls, player.isdead(), &details, &tiles, &ssc, fonts);
+    en.updateEnemies(gameObjects, gameShadows, xOffset, yOffset, effects, tiles.walls, player.isdead(), &details, &tiles, &ssc, *pFonts);
     // Draw the lower layer of the effects, that is the ones that should show up behind the player sprite
     effects.drawLower(target);
     
     if (player.visible) {
         // Draw the player to the window, as long as the object is visible
-        player.draw(gameObjects, gameShadows, tiles, effects, details, sndCtrl, UI, pInput, target, fonts);
+        player.draw(gameObjects, gameShadows, tiles, effects, details, sndCtrl, UI, pInput, target, *pFonts);
     }
     
     // If player was hit rumble the screen.
@@ -295,9 +298,7 @@ void GameMap::update(sf::RenderWindow& window) {
             finalPass.draw(sf::Sprite(target.getTexture()), &blurShader);
             finalPass.display();
             blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
-            blurred = finalPass.getTexture();
-            blurred.setSmooth(1);
-            finalSprite.setTexture(blurred);
+            finalSprite.setTexture(finalPass.getTexture());
             window.draw(finalSprite, &blurShader);
         } else {
             // If the UI interface is not opening or closing, reuse some of the previously created blur resources
@@ -341,22 +342,20 @@ void GameMap::update(sf::RenderWindow& window) {
             initLoot(itemArray);
             enemySelectVec.clear();
             Reset();
-            fonts.zeroScore();
             // Set the max health back to 3
-            fonts.updateMaxHealth(4);
-            fonts.clear();
-            fonts.setWaypointText(level, windowW, windowH);
+            pFonts->updateMaxHealth(4);
+            pFonts->setWaypointText(level, windowW, windowH);
             dispEntryBeam = false;
         }
-        computeBlur = UI.drawMenu(window, &player, details.getUIStates(), fonts, effects, xOffset, yOffset, pInput);
+        computeBlur = UI.drawMenu(window, &player, details.getUIStates(), *pFonts, effects, xOffset, yOffset, pInput);
     }
     else {
         if (level != 0) {
-            computeBlur = UI.drawMenu(window, &player, details.getUIStates(), fonts, effects, xOffset, yOffset, pInput);
+            computeBlur = UI.drawMenu(window, &player, details.getUIStates(), *pFonts, effects, xOffset, yOffset, pInput);
             // Pass the player's health to the font controller
-            fonts.updateHealth(player.getHealth());
+            pFonts->updateHealth(player.getHealth());
             // Draw all of the game text to the window
-            fonts.print(window);
+            pFonts->print(window);
         }
     }
     // Update the screen shake controller
@@ -539,9 +538,7 @@ void GameMap::update(sf::RenderWindow& window) {
 void GameMap::Reset() {
     //Increment the current level
     level += 1;
-    //Re-initialize the level font
-    fonts.clear();
-    fonts.setWaypointText(level, windowW, windowH);
+    pFonts->setWaypointText(level, windowW, windowH);
     //Clear all the vectors before re-initializing them, we don't want objects from the previous map showing up again!
     tiles.clear();
     effects.clear();
@@ -556,10 +553,10 @@ void GameMap::Reset() {
         objectShadeColor = sf::Color(190, 190, 210, 255);
     } else if (level > 0 && level <= BOSS_LEVEL_1) {
         objectShadeColor = sf::Color(190, 190, 210, 255);
-        fonts.setZoneText(0);
+        pFonts->setZoneText(0);
     } else if (level > BOSS_LEVEL_1) {
         objectShadeColor = sf::Color(210, 195, 195, 255);
-        fonts.setZoneText(1);
+        pFonts->setZoneText(1);
     }
     
     vignetteSprite.setColor(sf::Color(255, 255, 255, 255));

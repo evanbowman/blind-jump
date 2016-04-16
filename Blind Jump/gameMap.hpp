@@ -99,7 +99,7 @@ private:
     sf::RenderTexture target, finalPass;
     
     // Create a font controller
-    FontController fonts;
+    FontController* pFonts;
     
     // Locations to place lights
     std::vector<Coordinate> lightPositions;
@@ -134,7 +134,7 @@ private:
     short int transitionDelay;
     
 public:
-    GameMap(float, float, sf::Texture*, InputController*);
+    GameMap(float, float, sf::Texture*, InputController*, FontController*);
     //Pass in the render window and draw sprites to it
     void update(sf::RenderWindow&);
     // The opening map does not follow the procedural generation approach, have a separate function for this
