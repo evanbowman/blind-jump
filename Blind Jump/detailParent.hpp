@@ -28,6 +28,8 @@ public:
     void setInitPosition(float, float);
     float getxPos();
     float getyPos();
+    float getxInit();
+    float getyInit();
     float getWindowCenterX();
     float getWindowCenterY();
 };

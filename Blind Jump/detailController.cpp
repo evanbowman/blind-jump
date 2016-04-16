@@ -123,7 +123,7 @@ void detailController::addLamplight(tileController& t, float posX, float posY, i
     lamps.push_back(lmp);
 }
 
-void detailController::addRock(tileController& t, float posX, float posY, int i, int j) {
+void detailController::addRock(tileController& t, float posX, float posY, int i, int j, FontController * pFonts) {
     sf::Sprite tempSprite;
     tempSprite.setTexture(rockTextures[rand() % NUM_ROCK_IMAGES]);
     float placementXoffset = 0;
@@ -135,7 +135,7 @@ void detailController::addRock(tileController& t, float posX, float posY, int i,
     rocks.push_back(r);
 }
 
-void detailController::addChest(tileController& t, float posX, float posY, float width, float height, char chestContents) {
+void detailController::addChest(tileController& t, float posX, float posY, float width, float height, char chestContents, FontController * pFonts) {
     Coordinate c = pickLocation(t.emptyMapLocations);
     sf::Sprite tempSprites[7];
     tempSprites[6].setTexture(chestShadow);
@@ -146,6 +146,8 @@ void detailController::addChest(tileController& t, float posX, float posY, float
     placeOffsetX = (rand() % 6) - 3;
     TreasureChest tr((c.x * 32) + posX + 8 + placeOffsetX, (c.y * 26) + posY - 3, tempSprites, 7, width, height, chestContents);
     chests.push_back(tr);
+    pFonts->addCaption(chests.back().getxInit() + 8, chests.back().getyInit() - 6, "Abandoned Trunk");
+
 }
 
 void detailController::addEnemyScrap(tileController& t, float posX, float posY, float width, float height) {
@@ -155,7 +157,7 @@ void detailController::addEnemyScrap(tileController& t, float posX, float posY, 
     misc32x26.push_back(scrap);
 }
 
-void detailController::addDamagedRobots(tileController& t, float posX, float posY) {
+void detailController::addDamagedRobots(tileController& t, float posX, float posY, FontController * pFonts) {
     if (rand() % 2) {
         Coordinate c;
         bool choice = rand() % 2;
@@ -171,9 +173,8 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
             }
             DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
             damagedRobots.push_back(dr);
-        }
-        
-        catch(const char* e) {
+            //pFonts->addCaption(damagedRobots.back().getxInit(), damagedRobots.back().getyInit() - 8, "Broken Down");
+        } catch(const char* e) {
             std::cout << e << std::endl;
         }
         
@@ -184,9 +185,8 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
                 tempSprite.setTexture(damagedRobotTexture[!choice]);
                 DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
                 damagedRobots.push_back(dr);
-            }
-            
-            catch(const char* e) {
+                //pFonts->addCaption(damagedRobots.back().getxInit(), damagedRobots.back().getyInit() - 8, "Broken Down");
+            } catch(const char* e) {
                 std::cout << e << std::endl;
             }
         }
@@ -198,18 +198,15 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
                 if (tempSprite.getScale().x == -1) {
                     tempSprite.setScale(1, 1);
                     placeOffsetX -= 32;
-                }
-                
-                else {
+                } else {
                     tempSprite.setScale(-1, 1);
                     placeOffsetX += 32;
                 }
                 
                 DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
                 damagedRobots.push_back(dr);
-            }
-            
-            catch(const char* e) {
+                //pFonts->addCaption(damagedRobots.back().getxInit(), damagedRobots.back().getyInit() - 8, "Broken Down");
+            } catch(const char* e) {
                 std::cout << e << std::endl;
             }
         }
@@ -237,7 +234,7 @@ void detailController::addDoor(float xpos, float ypos, int x, int y, float w, fl
     doors.push_back(d);
 }
 
-void detailController::addPod(float xpos, float ypos, int x, int y) {
+void detailController::addPod(float xpos, float ypos, int x, int y, FontController * pFonts) {
     sf::Sprite tempSprite;
     tempSprite.setOrigin(0, 30);
     tempSprite.setTexture(podTexture);
@@ -245,7 +242,7 @@ void detailController::addPod(float xpos, float ypos, int x, int y) {
     misc32x26.push_back(d);
 }
 
-void detailController::addTeleporter(tileController& t, float posX, float posY, float width, float height) {
+void detailController::addTeleporter(tileController& t, float posX, float posY, float width, float height, FontController * pFonts) {
     Coordinate c = t.getTeleporterLoc();
     sf::Sprite tempSprites[2];
     tempSprites[0].setTexture(teleporterTexture[0]);
@@ -262,6 +259,7 @@ void detailController::addTeleporter(tileController& t, float posX, float posY, 
     // Initialize the teleporter countdown to 5
     T.initCountdown();
     teleporters.push_back(T);
+    pFonts->addCaption(teleporters.back().getxInit() + 12, teleporters.back().getyInit(), "Transporter");
 }
 
 void detailController::addTerminal(tileController & t, float posX, float posY, float width, float height) {

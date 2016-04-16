@@ -15,9 +15,12 @@
 
 #define healthLimit 10
 
-FontController::FontController(sf::View fontView) {
+FontController::FontController(sf::View fontView, float x, float y) {
     // Store the view to use when drawing fonts
     this->fontView = fontView;
+    
+    windowCenterX = x;
+    windowCenterY = y;
 
     // Load all of the game fonts into memory
     cornerstone.loadFromFile(resourcePath() + "Cornerstone.ttf");
@@ -40,12 +43,6 @@ FontController::FontController(sf::View fontView) {
     titleText.setCharacterSize(0.115 * fontView.getSize().y);
     titleText.setFont(cornerstone);
     titleText.setPosition(fontView.getSize().x / 2 - titleText.getLocalBounds().width / 2, fontView.getSize().y / 8);
-    
-    str = "( Broken Down )";
-    test.setString(str.c_str());
-    test.setCharacterSize(0.025 * fontView.getSize().y);
-    test.setFont(cornerstone);
-    test.setPosition(fontView.getSize().x / 2 - titleText.getLocalBounds().width / 2, fontView.getSize().y / 3);
     
     for (int i = 0; i < 10; i++) {
         // Load in score number textures
@@ -72,6 +69,10 @@ void FontController::setWaypointText(int level) {
         healthEmpty[i].setPosition((i * 34) + initPos, 18);
     }
     healthText.setPosition(initPos - 118, 10);
+    captions.clear();
+    std::string str = "Waypoint-";
+    str += std::to_string(level);
+    waypointText.setString(str.c_str());
 }
 
 void FontController::setZoneText(char zone) {
@@ -102,7 +103,19 @@ void FontController::print(sf::RenderWindow& window) {
     }
     window.draw(waypointText);
     window.draw(healthText);
-    window.draw(test);
+}
+
+void FontController::update(sf::RenderWindow & window, float xOffset, float yOffset) {
+    window.setView(fontView);
+    if (!captions.empty()) {
+        for (auto & element : captions) {
+            // Update each element with the new offset information
+            element.update(xOffset * ((fontView.getSize().x / 2) / windowCenterX), yOffset * ((fontView.getSize().y / 2) / windowCenterY));
+            // If the object has text to display...
+            if (!element.isClosed())
+                window.draw(*element.getText());
+        }
+    }
 }
 
 void FontController::drawTitle(unsigned char alpha, sf::RenderWindow& window) {
@@ -120,6 +133,13 @@ void FontController::updateHealth(char health) {
     this->health = std::min(health, maxHealth);
 }
 
+void FontController::terminateCaptions() {
+    if (!captions.empty()) {
+        for (auto & element : captions) {
+            element.forceClose();
+        }
+    }
+}
 
 void FontController::updateMaxHealth(char health) {
     maxHealth = health;
@@ -134,4 +154,12 @@ void FontController::updateMaxHealth(char health) {
 
 char FontController::getMaxHealth() {
     return maxHealth;
+}
+
+void FontController::addCaption(float x, float y, const char * msg) {
+    Caption cap(x * ((fontView.getSize().x / 2) / windowCenterX), y * ((fontView.getSize().y / 2) / windowCenterY), cornerstone);
+    cap.setText(msg);
+    cap.setWindowCenter(fontView.getSize().x / 2, fontView.getSize().y / 2);
+    cap.setCharacterSize(0.025 * fontView.getSize().y);
+    captions.push_back(cap);
 }

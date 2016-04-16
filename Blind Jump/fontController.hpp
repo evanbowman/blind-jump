@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "SFML/Graphics.hpp"
+#include "Caption.hpp"
 
 class FontController {
 private:
@@ -21,18 +22,18 @@ private:
     sf::View fontView;
     // The fonts to be used by the font controller
     sf::Font cornerstone;
-    sf::Text waypointText;
-    sf::Text healthText;
-    sf::Text titleText;
-    sf::Text test;
+    sf::Text waypointText, healthText, titleText;
     char health;
     char maxHealth;
     float width;
     float height;
     int score;
+    float windowCenterX, windowCenterY;
+    std::vector<Caption> captions;
     
 public:
-    FontController(sf::View);
+    FontController(sf::View, float, float);
+    void update(sf::RenderWindow&, float, float);
     void setWaypointText(int);
     void setZoneText(char);
     void print(sf::RenderWindow&);
@@ -41,5 +42,8 @@ public:
     void drawTitle(unsigned char, sf::RenderWindow&);
     char getMaxHealth();
     sf::Text* getTitle();
+    void addCaption(float, float, const char *);
+    std::vector<sf::Text *>* getCaptions();
+    void terminateCaptions();
 };
 #endif /* FontController_hpp */

@@ -70,6 +70,9 @@ private:
     // A boolean variable that is true when the player is nearby a teleporter
     bool teleporterCond;
     
+    // A vector to hold text captions for details
+    std::vector<sf::Text*> captions;
+    
     // Number of enemies on the map
     unsigned char turretCount;
     unsigned char dasherCount;

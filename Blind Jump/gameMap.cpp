@@ -129,7 +129,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     details.addLamplight(tiles, tiles.posX - 170, tiles.posY + 200, 11, 11, windowWidth, windowHeight);
     details.addLamplight(tiles, tiles.posX - 180, tiles.posY + 200, 10, -9, windowWidth, windowHeight);
     details.addDoor(tiles.posX - 192, tiles.posY + 301, 6, 0, windowW, windowH);
-    details.addPod(tiles.posX, tiles.posY + 33, 3, 17);
+    details.addPod(tiles.posX, tiles.posY + 33, 3, 17, pFonts);
     tiles.teleporterLocation.x = 8;
     tiles.teleporterLocation.y = -7;
     /* End of awful hard-coded block :) */
@@ -139,7 +139,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     //Initialize the fonts
     pFonts->setWaypointText(level);
     
-    details.addTeleporter(tiles, tiles.posX - 178, tiles.posY + 284, windowW, windowH);
+    details.addTeleporter(tiles, tiles.posX - 178, tiles.posY + 284, windowW, windowH, pFonts);
     
     // initialize the rectangle shape for the teleporter beam effect
     sf::Vector2f v1(2, 1);
@@ -159,8 +159,6 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     animationBegin = false;
     dispEntryBeam = false;
     
-    
-    
     sndCtrl.playMusic(0);
     beamGlowTxr.loadFromFile(resourcePath() + "teleporterBeamGlow.png");
     beamGlowSpr.setTexture(beamGlowTxr);
@@ -174,11 +172,11 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     
     // Place a weapon chest is needed
     if (itemArray[level][0] != 0) {
-        details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][0]);
+        details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][0], pFonts);
     }
     // place life capsule chests
     if (itemArray[level][1] == 90) {
-        details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][1]);
+        details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][1], pFonts);
     }
 }
 
@@ -211,6 +209,7 @@ void GameMap::update(sf::RenderWindow& window) {
     if (player.scrShakeState) {
         ssc.rumble();
     }
+    
     effects.getGlowSprs()->clear();
     // Update the positions of all the effect objects
     effects.update(xOffset, yOffset, &ssc);
@@ -263,8 +262,6 @@ void GameMap::update(sf::RenderWindow& window) {
         }
     }
     
-    // Draw the shadow overlay to everything in the lighting map
-    //lightingMap.draw(shadowShape, sf::BlendMultiply); // Rather than doing this, shade the sprites individually? Would allow for z-ordering of effect objects
     // Draw lights to the objects
     sf::Color blendAmount(185, 185, 185, 255);
     sf::Sprite tempSprite;
@@ -274,6 +271,7 @@ void GameMap::update(sf::RenderWindow& window) {
         tempSprite.setPosition(tempSprite.getPosition().x, tempSprite.getPosition().y - 12);
         lightingMap.draw(tempSprite, sf::BlendMode(sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One, sf::BlendMode::Add, sf::BlendMode::DstAlpha, sf::BlendMode::Zero, sf::BlendMode::Add)));
     }
+    
     // Display the lighting map
     lightingMap.display();
     sf::Sprite sprite(lightingMap.getTexture());
@@ -440,6 +438,8 @@ void GameMap::update(sf::RenderWindow& window) {
             player.setWorldOffsetY(yOffset + (player.getPosY() - details.getTeleporter()->getyPos()) + 16);
             beamExpanding = true;
             animationBegin = true;
+            // Force all captions closed
+            pFonts->terminateCaptions();
         }
         player.deActivate();
         // Cast the beam's glow to the overworld
@@ -498,6 +498,12 @@ void GameMap::update(sf::RenderWindow& window) {
             }
         }
         
+        // Draw captions to the window
+        if (!UI.isVisible()) {
+            pFonts->update(window, xOffset, yOffset);
+            window.setView(worldView);
+        }
+        
         if (transitioning) {
             if (level == 0) {
                 if (transitionDelay < 130) {
@@ -535,6 +541,12 @@ void GameMap::update(sf::RenderWindow& window) {
                 teleporterCond = true;
                 transitioning = false;
             }
+        }
+    } else {
+        // Draw captions to the window
+        if (!UI.isVisible()) {
+            pFonts->update(window, xOffset, yOffset);
+            window.setView(worldView);
         }
     }
 }
@@ -590,25 +602,25 @@ void GameMap::Reset() {
     
     // Perhaps there's a better way to not check the same condition multiple times, without tons of copy-pasting
     if (level != BOSS_LEVEL_1) {
-        details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH);
+        details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH, pFonts);
         
         // Now initialize enemies for the map based on level, and store sum of their exp values in a variable
         count = initEnemies(this);
         
         // Add broken down robots to the map (if correct tileset for it
         if (level < 10) {
-            details.addDamagedRobots(tiles, tiles.posX, tiles.posY);
+            details.addDamagedRobots(tiles, tiles.posX, tiles.posY, pFonts);
         }
         // Tell the UI controller what that variable is
         UI.setEnemyValueCount(count);
         
         // Place a weapon chest is needed
         if (itemArray[level][0] != 0) {
-            details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][0]);
+            details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][0], pFonts);
         }
         // place life capsule chests
         if (itemArray[level][1] == 90) {
-            details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][1]);
+            details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][1], pFonts);
         }
         
         effects.getGlowSprs()->clear();
@@ -621,7 +633,7 @@ void GameMap::Reset() {
             getRockPositions(tiles.mapArray, rockPositions);
             len = rockPositions.size();
             for (auto element : rockPositions) {
-                details.addRock(tiles, tiles.posX, tiles.posY - 35, element.x, element.y);
+                details.addRock(tiles, tiles.posX, tiles.posY - 35, element.x, element.y, pFonts);
             }
             rockPositions.clear();
             // Delete rocks close to the teleporter
@@ -658,9 +670,9 @@ void GameMap::Reset() {
     else if (level == BOSS_LEVEL_1) {
         tiles.teleporterLocation.x = 34;
         tiles.teleporterLocation.y = 17;
-        details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH);
+        details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH, pFonts);
         tiles.teleporterLocation.x = 38;
-        details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH);
+        details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH, pFonts);
         details.addLamplight(tiles, tiles.posX - 2, tiles.posY - 16, 39, 31, windowW, windowH);
         details.addLamplight(tiles, tiles.posX - 2, tiles.posY - 16, 33, 26, windowW, windowH);
     }

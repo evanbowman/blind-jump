@@ -63,7 +63,7 @@ int main(int, char const**) {
     sf::View view(sf::FloatRect(0, 0, windowWidth, windowHeight));
     
     // Declare a font controller
-    FontController fonts(fontView);
+    FontController fonts(fontView, windowWidth / 2, windowHeight / 2);
     
     //Initialize the map
     GameMap Map(windowWidth, windowHeight, &vignetteTexture, &input, &fonts);
@@ -128,20 +128,10 @@ int main(int, char const**) {
             if (Map.getTeleporterCond()) {                     //Change the condition later to check for a value within Map
                 Map.Reset();
             }
-        }
-        
-        else {
+        } else {
             if (input.zPressed() && title) {
                 title = false;
             }
-            //window.draw(titlebkgSpr);
-            //window.draw(titleSpr[3]);
-            
-            //window.draw(titleSpr[3]);
-            //window.draw(titleSpr[3]);
-            //window.draw(titleSpr[2]);
-            //window.draw(titleSpr[0]);
-            //window.draw(titleSpr[1]);
         }
         
         // Update the window

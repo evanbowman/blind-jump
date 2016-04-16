@@ -46,3 +46,11 @@ float detailParent::getWindowCenterX() {
 float detailParent::getWindowCenterY() {
     return windowCenterY;
 }
+
+float detailParent::getxInit() {
+    return xInit;
+}
+
+float detailParent::getyInit() {
+    return yInit;
+}

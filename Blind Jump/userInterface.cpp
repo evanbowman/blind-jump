@@ -188,7 +188,6 @@ bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
             }
             
             rectAlpha *= 0.87;
-            
         }
         
         else {
