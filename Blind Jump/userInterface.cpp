@@ -163,12 +163,12 @@ bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
             }
         }
         if (msgOpened && z && msgOpenSignal) {
-            if (selectDir == 'R' && f.getScore() >= enemyValueCount && canHeal) {
+            if (selectDir == 'R' && /*f.getScore() >= enemyValueCount*/ canHeal) {
                 // If selected yes at the terminal, refill the player's health
                 player->fillHealth(f.getMaxHealth());
                 msgOpenSignal = false;
                 ef.addHpRestored(xPos - xOffset - 60, yPos - yOffset);
-                f.updateScore(f.getScore() - enemyValueCount);
+                //f.updateScore(f.getScore() - enemyValueCount);
                 canHeal = false;
             }
             

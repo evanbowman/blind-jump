@@ -137,7 +137,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     en.setWindowSize(windowWidth, windowHeight);
     
     //Initialize the fonts
-    pFonts->setWaypointText(level, windowW, windowH);
+    pFonts->setWaypointText(level);
     
     details.addTeleporter(tiles, tiles.posX - 178, tiles.posY + 284, windowW, windowH);
     
@@ -158,6 +158,8 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     beamExpanding = false;
     animationBegin = false;
     dispEntryBeam = false;
+    
+    
     
     sndCtrl.playMusic(0);
     beamGlowTxr.loadFromFile(resourcePath() + "teleporterBeamGlow.png");
@@ -344,7 +346,7 @@ void GameMap::update(sf::RenderWindow& window) {
             Reset();
             // Set the max health back to 3
             pFonts->updateMaxHealth(4);
-            pFonts->setWaypointText(level, windowW, windowH);
+            pFonts->setWaypointText(level);
             dispEntryBeam = false;
         }
         computeBlur = UI.drawMenu(window, &player, details.getUIStates(), *pFonts, effects, xOffset, yOffset, pInput);
@@ -360,6 +362,8 @@ void GameMap::update(sf::RenderWindow& window) {
     }
     // Update the screen shake controller
     ssc.update(player);
+    
+    window.setView(worldView);
     
     if (dispEntryBeam) {
         // Cast the beam's glow to the overworld
@@ -496,10 +500,8 @@ void GameMap::update(sf::RenderWindow& window) {
         
         if (transitioning) {
             if (level == 0) {
-                window.draw(titleSpr);
-                
                 if (transitionDelay < 130) {
-                    sf::Color c = titleSpr.getColor();
+                    sf::Color c = pFonts->getTitle()->getColor();
                     if (c.a > 4) {
                         c.a -= 4;
                     }
@@ -516,7 +518,9 @@ void GameMap::update(sf::RenderWindow& window) {
                         transitionShape.setFillColor(c2);
                         window.draw(transitionShape, sf::BlendMultiply);
                     }
-                    titleSpr.setColor(c);
+                    pFonts->drawTitle(c.a, window);
+                } else {
+                    pFonts->drawTitle(255, window);
                 }
                 if (--transitionDelay == 0) {
                     transitioning = false;
@@ -538,7 +542,7 @@ void GameMap::update(sf::RenderWindow& window) {
 void GameMap::Reset() {
     //Increment the current level
     level += 1;
-    pFonts->setWaypointText(level, windowW, windowH);
+    pFonts->setWaypointText(level);
     //Clear all the vectors before re-initializing them, we don't want objects from the previous map showing up again!
     tiles.clear();
     effects.clear();

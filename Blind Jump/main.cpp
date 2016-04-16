@@ -59,6 +59,8 @@ int main(int, char const**) {
     
     // Don't want the fonts to be scaled and blurry, so define another view for drawing them
     sf::View fontView(sf::FloatRect(0, 0, desktop.width, desktop.height));
+    // Since the view is half the size of the window, the interface will have a sort of stylistic pixelated apperance
+    sf::View view(sf::FloatRect(0, 0, windowWidth, windowHeight));
     
     // Declare a font controller
     FontController fonts(fontView);
@@ -73,8 +75,6 @@ int main(int, char const**) {
     sf::RenderWindow window(sf::VideoMode(desktop.width, desktop.height), "Blind Jump", sf::Style::Fullscreen, settings);
     // Hide cursor inside the window
     window.setMouseCursorVisible(false);
-    // Since the view is half the size of the window, the interface will have a sort of stylistic pixelated apperance
-    sf::View view(sf::FloatRect(0, 0, windowWidth, windowHeight));
     // Set the framerate to 60, so that the window doesn't update constantly
     window.setFramerateLimit(60);
     // Set the Icon

@@ -19,21 +19,27 @@ private:
     sf::CircleShape healthFull[10];
     sf::CircleShape healthEmpty[10];
     sf::View fontView;
+    // The fonts to be used by the font controller
+    sf::Font cornerstone;
+    sf::Text waypointText;
+    sf::Text healthText;
+    sf::Text titleText;
+    sf::Text test;
     char health;
     char maxHealth;
-    bool doRecolor;
-    char colorState;
     float width;
     float height;
     int score;
     
 public:
     FontController(sf::View);
-    void setWaypointText(int, float, float);
+    void setWaypointText(int);
     void setZoneText(char);
     void print(sf::RenderWindow&);
     void updateHealth(char);
     void updateMaxHealth(char);
+    void drawTitle(unsigned char, sf::RenderWindow&);
     char getMaxHealth();
+    sf::Text* getTitle();
 };
 #endif /* FontController_hpp */

@@ -312,7 +312,7 @@ void effectsController::addHealthEffect(float x, float y) {
 
 void effectsController::addLvP1(float x, float y, FontController& font) {
     HealthEffect h(healthEffectSprites[1], x, y + 8);
-    font.updateScore(font.getScore() + 1);
+    //font.updateScore(font.getScore() + 1);
     healthEffects.push_back(h);
 }
 
@@ -328,19 +328,19 @@ void effectsController::addSmallExplosion(float x, float y) {
 
 void effectsController::addLvP3(float x, float y, FontController& font) {
     HealthEffect h(healthEffectSprites[2], x, y + 8);
-    font.updateScore(font.getScore() + 3);
+    //font.updateScore(font.getScore() + 3);
     healthEffects.push_back(h);
 }
 
 void effectsController::addLvP30(float x, float y, FontController& font) {
     HealthEffect h(healthEffectSprites[3], x, y + 8);
-    font.updateScore(font.getScore() + 30);
+    //font.updateScore(font.getScore() + 30);
     healthEffects.push_back(h); 
 }
 
 void effectsController::addLvP10(float x, float y, FontController &font) {
     HealthEffect h(healthEffectSprites[4], x, y + 8);
-    font.updateScore(font.getScore() + 10);
+    //font.updateScore(font.getScore() + 10);
     healthEffects.push_back(h);
 }
 
