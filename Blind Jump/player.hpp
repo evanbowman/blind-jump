@@ -91,7 +91,7 @@ private:
     int dodgeTimer;
     char dodgeDir;
     
-    bool gotHeart;
+    bool gotHeart, gotCoin;
     char redTimer;
     
     //Include a function for setting the animation frame index

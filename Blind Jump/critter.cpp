@@ -71,6 +71,8 @@ void Critter::checkBulletCollision(effectsController& ef, FontController& font) 
         // With some random chance, add a heart item to the map
         if ((rand() % 5) == 0) {
             ef.addHearts(xInit, yInit);
+        } else {
+            ef.addCoins(xInit, yInit);
         }
         ef.addExplosion(xInit - 16, yInit - 16);
     }

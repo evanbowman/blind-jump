@@ -110,6 +110,8 @@ void Dasher::checkBulletCollision(effectsController& ef, FontController& fonts) 
         frameIndex = 6;
         if ((rand() % 4) == 0) {
             ef.addHearts(xInit, yInit);
+        } else {
+            ef.addCoins(xInit, yInit);
         }
         ef.addSmallExplosion(xInit, yInit);
         blurEffects.clear();

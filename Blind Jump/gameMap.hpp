@@ -64,6 +64,7 @@ private:
     backgroundHandler bkg;
     
     sf::Texture blurred;
+    sf::Sprite finalSprite;
     bool computeBlur;
     
     // A boolean variable that is true when the player is nearby a teleporter
@@ -87,7 +88,7 @@ private:
     bool beamExpanding;
     bool dispEntryBeam;
     
-    sf::Shader redShader, whiteShader, blueShader, crimsonShader, blurShader;
+    sf::Shader colorShader, blurShader;
     
     sf::View worldView, hudView;
     

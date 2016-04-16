@@ -31,8 +31,8 @@ class ScreenShakeController;
 
 class effectsController {
 private:
-    sf::Texture heartsTxtr[1];
-    sf::Sprite heartsSpr[1];
+    sf::Texture powerupTxtr[2];
+    sf::Sprite powerupSpr[2];
     sf::Texture blueExplosionTxtr[9];
     sf::Sprite blueExplosionSpr[9];
     sf::Sprite smallExplosionSpr[6];
@@ -51,6 +51,8 @@ private:
     sf::Texture turretFlashTextures[5];
     sf::Sprite redGlowSprite;
     sf::Texture redGlowTexture;
+    sf::Sprite blueGlowSprite;
+    sf::Texture blueGlowTexture;
     sf::Sprite orbShotSprites[4];
     sf::Texture orbShotTextures[4];
     sf::Sprite bubbleShotSpr[2];
@@ -114,6 +116,7 @@ public:
     void addHealthEffect(float, float);
     void addSmallExplosion(float, float);
     void addHearts(float, float);
+    void addCoins(float, float);
     void addPlayerHealthEffect(float, float, float, float);
     void addLvP1(float, float, FontController& font);
     void addLvP3(float, float, FontController& font);
@@ -133,6 +136,7 @@ public:
     // Now accessor functions for the class' private member datafields
     std::vector<Enemyshot>* getEnemyShots();
     std::vector<Powerup>* getHearts();
+    std::vector<Powerup>* getCoins();
     std::vector<turretShot>* getTurretShots();
     std::vector<DasherShot>* getDasherShots();
     std::vector<sf::Sprite*>* getGlowSprs();

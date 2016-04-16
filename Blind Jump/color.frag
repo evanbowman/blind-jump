@@ -1,4 +1,5 @@
 uniform sampler2D texture;
+uniform vec3 targetColor;
 
 void main() {
     // lookup the pixel in the texture
@@ -6,7 +7,7 @@ void main() {
     
     // Output red where the input is opaque
     if (pixel.a == 1.0) {
-        gl_FragColor = vec4(0.98, 0.22, 0.03, pixel.a);
+        gl_FragColor = vec4(targetColor, pixel.a);
     }
     
     else {

@@ -55,6 +55,7 @@ Player::Player() {
     dodgeTimer = 4;
     state = NOMINAL;
     gotHeart = false;
+    gotCoin = false;
     redTimer = 10;
     
     hurtCounter = 30;
@@ -668,10 +669,19 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
     
     std::vector<Powerup>* pHearts = ef.getHearts();
     for (auto & element : *pHearts) {
-        if (fabsf(posX + 16 - element.getXpos()) < 10 && fabsf(posY + 10 - element.getYpos()) < 10) {
+        if (fabsf(posX + 16 - element.getXpos()) < 8 && fabsf(posY + 12 - element.getYpos()) < 8) {
             health = fmin(fonts.getMaxHealth(), health + 1);
             element.setKillFlag(true);
             gotHeart = true;
+        }
+    }
+    
+    std::vector<Powerup>* pCoins = ef.getCoins();
+    for (auto & element : *pCoins) {
+        if (fabsf(posX + 16 - element.getXpos()) < 8 && fabsf(posY + 12 - element.getYpos()) < 8) {
+            element.setKillFlag(true);
+            gotCoin = true;
+            gotHeart = false;
         }
     }
     
@@ -682,37 +692,14 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
             redTimer = 10;
             gotHeart = false;
         }
-    }
-    // Check collisions will all energy beams
-    /*std::vector<EnergyBeam>* beams = ef.getEnergyBeams();
-    for (auto & element : *beams) {
-        if (element.isValid()) {
-            //float a = (element.getY1() - element.getY2()) / (element.getX1() - element.getX2());
-            //float b = element.getY1() - a * element.getX1();
-            std::vector<sf::CircleShape> circles;
-            sf::CircleShape c;
-            c.setFillColor(sf::Color::Red);
-            c.setRadius(1);
-            for (int i = 0; i < 128; i++) {
-                for (int j = 0; j < 128; j++) {
-                    if (fabsf(j * 8 - (a * (i * 8) + 6 + b)) < 6 || fabsf(i * 8 - (j * 8 - b) / a) < 6) {
-                        c.setPosition(i * 8, j * 8);
-                        circles.push_back(c);
-                    }
-                }
-            }
-            for (auto & circle : circles) {
-                window.draw(circle);
-            }
-            
-            if (fabsf(posY + 12 - (a * posX + 12 + b)) < 5 || fabsf(posX + 12 - (posY + 12 - b) / a) < 5) {
-                health--;
-                element.invalidate();
-                scrShakeState = true;
-                canhurt = false;
-            }
+    } else if (gotCoin) {
+        std::get<2>(tPlayer) = 5;
+        std::get<2>(tGun) = 5;
+        if (--redTimer == 0) {
+            gotCoin = 0;
+            redTimer = 10;
         }
-    }*/
+    }
     
     if (health < 0) {
         state = NOMINAL;

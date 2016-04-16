@@ -29,7 +29,7 @@ userInterface::userInterface() {
     xPos = 0;
     yPos = 0;
     rectAlpha = 2;
-    overlayRect.setFillColor(sf::Color(80,90,120,rectAlpha)); // 100 , 110 , 140
+    overlayRect.setFillColor(sf::Color::White);
     selCircle1.setRadius(2);
     selCircle2.setRadius(2);
     selCircle3.setRadius(2);
@@ -139,27 +139,6 @@ bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
         window.draw(deathTextSprite);
     }
     
-    if (msgVisible) {
-        overlayRect.setFillColor(sf::Color(100,110,140,rectAlpha));
-        window.draw(overlayRect);
-        window.draw(txtShadowSprite);
-        if (left) {
-            selectDir = 'L';
-        }
-        
-        else if (right) {
-            selectDir = 'R';
-        }
-        
-        for (auto element : textToDisplay) {
-            window.draw(element);
-        }
-        
-        // If the selected detail requires a y/n response...
-        //if (detailStates[0] == 1) {
-        // Check whether the user has selected y/n
-
-    }
     
     if (msgOpenSignal) {
         player->deActivateFaceUp();
@@ -255,7 +234,7 @@ bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
             circle2.setRadius(r2);
             circle2.setPosition(xPos - r2, yPos - r2);
             
-            overlayRect.setFillColor(sf::Color(100,110,140,rectAlpha));
+            overlayRect.setFillColor(sf::Color(255 - blurAmount * 2, 255 - blurAmount * 2, 255 - blurAmount * 2));
             
             //if (selectorShadowSprite.getColor().a < 240)
             //    selectorShadowSprite.setColor(sf::Color(255,255,255,selectorShadowSprite.getColor().a + 14));
@@ -318,7 +297,7 @@ bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
             circle.setPosition(xPos - r, yPos - r);
             circle2.setRadius(r2);
             circle2.setPosition(xPos - r2, yPos - r2);
-            overlayRect.setFillColor(sf::Color(100,110,140,rectAlpha));
+            overlayRect.setFillColor(sf::Color(255 - blurAmount * 2, 255 - blurAmount * 2, 255 - blurAmount * 2));
             selCircle1.setPosition(xPos + r2 / 1.3 - 2, yPos - 2);
             selCircle2.setPosition(xPos - r2 / 1.3 - 2, yPos - 2);
             selCircle3.setPosition(xPos - 2, yPos + r2 / 1.3 - 2);
@@ -355,6 +334,7 @@ bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
     }
     
     if (visible) {
+        //window.draw(overlayRect, sf::BlendMultiply);
         window.draw(selectorShadowSprite);
         window.draw(circle);
         window.draw(circle2);

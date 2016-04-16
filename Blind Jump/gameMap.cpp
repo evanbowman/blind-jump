@@ -23,6 +23,7 @@
 #define RED_TARGET 1
 #define BLUE_TARGET 3
 #define CRIMSON_TARGET 4
+#define ARCTIC_TARGET 5
 #define EFFECT_OBJECT 10
 
 // Define a function to control the z-order sorting
@@ -80,14 +81,8 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     creditsCounter = 90;
     
     // Set up the shaders
-    redShader.loadFromFile(resourcePath() + "color.frag", sf::Shader::Fragment);
-    redShader.setParameter("texture", sf::Shader::CurrentTexture);
-    whiteShader.loadFromFile(resourcePath() + "white.frag", sf::Shader::Fragment);
-    whiteShader.setParameter("texture", sf::Shader::CurrentTexture);
-    blueShader.loadFromFile(resourcePath() + "blue.frag", sf::Shader::Fragment);
-    blueShader.setParameter("texture", sf::Shader::CurrentTexture);
-    crimsonShader.loadFromFile(resourcePath() + "crimson.frag", sf::Shader::Fragment);
-    crimsonShader.setParameter("texture", sf::Shader::CurrentTexture);
+    colorShader.loadFromFile(resourcePath() + "color.frag", sf::Shader::Fragment);
+    colorShader.setParameter("texture", sf::Shader::CurrentTexture);
     blurShader.loadFromFile(resourcePath() + "blur.frag", sf::Shader::Fragment);
     blurShader.setParameter("texture", sf::Shader::CurrentTexture);
     //Initialize the starting level to 1
@@ -159,14 +154,13 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     beamExpanding = false;
     animationBegin = false;
     dispEntryBeam = false;
-        
+    
     sndCtrl.playMusic(0);
     fonts.zeroScore();
     beamGlowTxr.loadFromFile(resourcePath() + "teleporterBeamGlow.png");
     beamGlowSpr.setTexture(beamGlowTxr);
     beamGlowSpr.setPosition(windowWidth / 2 - 200, windowHeight / 2 - 200 + 30);
     beamGlowSpr.setColor(sf::Color(0, 0, 0, 255));
-    //player.visible = false;
     
     transitionShape.setSize(sf::Vector2f(windowW, windowH));
     transitionShape.setFillColor(sf::Color(255, 255, 255, 255));
@@ -181,22 +175,6 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     if (itemArray[level][1] == 90) {
         details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][1]);
     }
-}
-
-void applyShader(const sf::Shader& shader, sf::RenderTarget& output) {
-    sf::Vector2f outputSize = static_cast<sf::Vector2f>(output.getSize());
-    
-    sf::VertexArray vertices(sf::TrianglesStrip, 4);
-    vertices[0] = sf::Vertex(sf::Vector2f(0, 0),            sf::Vector2f(0, 1));
-    vertices[1] = sf::Vertex(sf::Vector2f(outputSize.x, 0), sf::Vector2f(1, 1));
-    vertices[2] = sf::Vertex(sf::Vector2f(0, outputSize.y), sf::Vector2f(0, 0));
-    vertices[3] = sf::Vertex(sf::Vector2f(outputSize),      sf::Vector2f(1, 0));
-    
-    sf::RenderStates states;
-    states.shader 	 = &shader;
-    states.blendMode = sf::BlendNone;
-    
-    output.draw(vertices, states);
 }
 
 void GameMap::update(sf::RenderWindow& window) {
@@ -254,11 +232,32 @@ void GameMap::update(sf::RenderWindow& window) {
                 std::get<0>(element).setColor(sf::Color(objectShadeColor.r, objectShadeColor.g, objectShadeColor.b, std::get<0>(element).getColor().a));
                 lightingMap.draw(std::get<0>(element));
             } else if (std::get<2>(element) == EFFECT_OBJECT) {
-                // If the contents of the third element in the tuple correspond to an effect, draw the sprite without darkening
+                // If the contents of the third element in the tuple correspond to an effect, draw the sprite without darkening it
                 lightingMap.draw(std::get<0>(element));
+            } else if (std::get<2>(element) == RED_TARGET) {
+                // Shade red
+                colorShader.setParameter("targetColor", sf::Vector3f(0.98, 0.22, 0.03));
+                lightingMap.draw(std::get<0>(element), &colorShader);
+            } else if (std::get<2>(element) == WHITE_TARGET) {
+                // Shade white
+                colorShader.setParameter("targetColor", sf::Vector3f(1.00, 1.00, 1.00));
+                lightingMap.draw(std::get<0>(element), &colorShader);
+            } else if (std::get<2>(element) == BLUE_TARGET) {
+                // Shade blue
+                colorShader.setParameter("targetColor", sf::Vector3f(0.35, 0.35, 0.69));
+                lightingMap.draw(std::get<0>(element), &colorShader);
+            } else if (std::get<2>(element) == CRIMSON_TARGET) {
+                // Shade crimson
+                colorShader.setParameter("targetColor", sf::Vector3f(0.94, 0.09, 0.34));
+                lightingMap.draw(std::get<0>(element), &colorShader);
+            } else if (std::get<2>(element) == ARCTIC_TARGET) {
+                // Shade arctic, sort of a bright blue-greenish color
+                colorShader.setParameter("targetColor", sf::Vector3f(0.29, 0.99, 0.99));
+                lightingMap.draw(std::get<0>(element), &colorShader);
             }
         }
     }
+    
     // Draw the shadow overlay to everything in the lighting map
     //lightingMap.draw(shadowShape, sf::BlendMultiply); // Rather than doing this, shade the sprites individually? Would allow for z-ordering of effect objects
     // Draw lights to the objects
@@ -274,17 +273,6 @@ void GameMap::update(sf::RenderWindow& window) {
     lightingMap.display();
     sf::Sprite sprite(lightingMap.getTexture());
     target.draw(sprite);
-    for (auto & element : gameObjects) {
-        if (std::get<2>(element) == RED_TARGET) {
-            target.draw(std::get<0>(element), &redShader);
-        } else if (std::get<2>(element) == WHITE_TARGET) {
-            target.draw(std::get<0>(element), &whiteShader);
-        } else if (std::get<2>(element) == BLUE_TARGET) {
-            target.draw(std::get<0>(element), &blueShader);
-        } else if (std::get<2>(element) == CRIMSON_TARGET) {
-            target.draw(std::get<0>(element), &crimsonShader);
-        }
-    }
     
     // Now clear out the vectors for the next round of drawing
     gameObjects.clear();
@@ -309,11 +297,12 @@ void GameMap::update(sf::RenderWindow& window) {
             blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
             blurred = finalPass.getTexture();
             blurred.setSmooth(1);
-            window.draw(sf::Sprite(blurred), &blurShader);
+            finalSprite.setTexture(blurred);
+            window.draw(finalSprite, &blurShader);
         } else {
             // If the UI interface is not opening or closing, reuse some of the previously created blur resources
             // When the menu is opened, the game should be paused anyway, so it's fine to use a static image
-            window.draw(sf::Sprite(blurred), &blurShader);
+            window.draw(finalSprite, &blurShader);
         }
     } else {
         window.draw(sf::Sprite(target.getTexture()));

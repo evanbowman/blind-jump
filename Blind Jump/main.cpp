@@ -49,6 +49,7 @@ int main(int, char const**) {
     
     sf::Texture vignetteTexture;
     vignetteTexture.loadFromFile(resourcePath() + "vignetteMask.png");
+    vignetteTexture.setSmooth(true);
     sf::Sprite vignetteSpr;
     vignetteSpr.setTexture(vignetteTexture);
     vignetteSpr.setScale(windowWidth / 450, windowHeight / 450);

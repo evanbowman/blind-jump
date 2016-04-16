@@ -25,7 +25,9 @@ void Powerup::update(float xoffset, float yoffset) {
 }
 
 sf::Sprite Powerup::getSprite() {
-    spr.setPosition(xPos, yPos + (3 * sinf(2 * PI * 0.001 * clock.getElapsedTime().asMilliseconds() + 180)));
+    float offset = (3 * sinf(2 * PI * 0.001 * clock.getElapsedTime().asMilliseconds() + 180));
+    // Make the sprite float up and down
+    spr.setPosition(xPos, yPos + offset);
     return spr;
 }
 
@@ -47,5 +49,5 @@ float Powerup::getXpos() {
 }
 
 float Powerup::getYpos() {
-    return yPos;
+    return yPos - 8;
 }

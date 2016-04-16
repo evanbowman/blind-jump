@@ -77,6 +77,8 @@ void Scoot::checkBulletCollision(effectsController& ef, FontController& font) {
         killFlag = 1;
         if ((rand() % 5) == 0) {
             ef.addHearts(xInit, yInit);
+        } else {
+            ef.addCoins(xInit, yInit);
         }
         ef.addFireExplosion(xInit, yInit - 2);
     }

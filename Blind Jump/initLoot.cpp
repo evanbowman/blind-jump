@@ -52,7 +52,7 @@ void initLoot(char itemArray[48][3]) {
     // But if four levels have passed with no weapons placed, need to add one
     int placeCounter = 0;
     // Number of steps to place the next life capsule
-    char nextCapsule = rand() % 3 + 1;
+    char nextCapsule = rand() % 4 + 2;
     for (int i = 1; i < NUM_LEVELS; i++) {
         if (!items.empty()) {
             // First figure out the total sum of all item weights remaining in the vector
@@ -69,7 +69,7 @@ void initLoot(char itemArray[48][3]) {
                 distribution[fractionSoFar] = element.second;
             }
             // With 25% chance, place a weapon on the level, but only if there are items left to place
-            if (!(rand() % 6)) {
+            if (!(rand() % 8)) {
                 // Sample the map
                 double linear = rand() * 1.0 / RAND_MAX;
                 itemArray[i][0] = distribution.upper_bound(linear)->second;
@@ -92,7 +92,7 @@ void initLoot(char itemArray[48][3]) {
         }
         
         if (--nextCapsule == 0) {
-            nextCapsule = (rand() % 2) + 4;
+            nextCapsule = (rand() % 3) + 5;
             itemArray[i][1] = 90;
         }
     }
