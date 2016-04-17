@@ -1,1 +1,8 @@
+# Ignore xcode project files
 *.xcodeproj/project.pbxproj
+
+# Ignore C++ object files
+*.o
+
+# DS_STORE HAS GIVEN ME ENDLESS TROUBLE
+*.ds_store
