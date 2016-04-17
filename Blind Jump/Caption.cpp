@@ -13,6 +13,7 @@
 
 Caption::Caption(float xInit, float yInit, sf::Font & font) {
     msgText.setFont(font);
+    //msgText.setColor(sf::Color(180, 180, 180));
     this->xInit = xInit;
     this->yInit = yInit;
     state = CLOSED;
@@ -31,7 +32,7 @@ void Caption::update(float xOffset, float yOffset) {
     
     switch (state) {
         case CLOSED:
-            if (fabsf(xPos - windowCenterX) < windowCenterY * 0.55 && fabsf(yPos - windowCenterY) < windowCenterY * 0.55) {
+            if (fabsf(xPos - windowCenterX) < windowCenterY * 0.25 && fabsf(yPos - windowCenterY) < windowCenterY * 0.25) {
                 state = OPENING;
                 // Tilt the text a little bit
                 float rotationDir = (rand() % 2) ? -1 : 1;
@@ -53,7 +54,7 @@ void Caption::update(float xOffset, float yOffset) {
             break;
             
         case OPENED:
-            if (fabsf(xPos - windowCenterX) > windowCenterY * 0.80 || fabsf(yPos - windowCenterY) > windowCenterY * 0.80) {
+            if (fabsf(xPos - windowCenterX) > windowCenterY * 0.35 || fabsf(yPos - windowCenterY) > windowCenterY * 0.35) {
                 state = CLOSING;
             }
             break;

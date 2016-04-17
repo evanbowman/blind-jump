@@ -331,6 +331,7 @@ void GameMap::update(sf::RenderWindow& window) {
     // could check for a keypress in every single object individually, but this way is (possibly) faster because it requires less condition checking)
     if (!player.isdead()) {
         UI.dispDeathSeq();
+        pFonts->terminateCaptions();
         // If the death sequence is complete and the UI controller is finished playing its animation
         if (UI.isComplete() && pInput->zPressed()) {
             // Reset the UI controller

@@ -4,10 +4,9 @@ uniform vec2 blur_radius;
 void main() {
     vec2 textureCoordinates = gl_TexCoord[0].xy;
     vec4 color = vec4(0.0);
-    color += texture2D(texture, textureCoordinates - 11.0 * blur_radius) * 0.0108;
-    color += texture2D(texture, textureCoordinates - 10.0 * blur_radius) * 0.0158;
-    color += texture2D(texture, textureCoordinates - 9.0 * blur_radius) * 0.0175;
-    color += texture2D(texture, textureCoordinates - 8.0 * blur_radius) * 0.0222;
+    color += texture2D(texture, textureCoordinates - 10.0 * blur_radius) * 0.0175;
+    color += texture2D(texture, textureCoordinates - 9.0 * blur_radius) * 0.0222;
+    color += texture2D(texture, textureCoordinates - 8.0 * blur_radius) * 0.0266;
     color += texture2D(texture, textureCoordinates - 7.0 * blur_radius) * 0.0299;
     color += texture2D(texture, textureCoordinates - 6.0 * blur_radius) * 0.0388;
     color += texture2D(texture, textureCoordinates - 5.0 * blur_radius) * 0.0484;
@@ -23,9 +22,8 @@ void main() {
     color += texture2D(texture, textureCoordinates + 5.0 * blur_radius) * 0.0484;
     color += texture2D(texture, textureCoordinates + 6.0 * blur_radius) * 0.0388;
     color += texture2D(texture, textureCoordinates + 7.0 * blur_radius) * 0.0299;
-    color += texture2D(texture, textureCoordinates + 8.0 * blur_radius) * 0.0222;
-    color += texture2D(texture, textureCoordinates + 9.0 * blur_radius) * 0.0175;
-    color += texture2D(texture, textureCoordinates + 10.0 * blur_radius) * 0.0158;
-    color += texture2D(texture, textureCoordinates + 11.0 * blur_radius) * 0.0108;
+    color += texture2D(texture, textureCoordinates + 8.0 * blur_radius) * 0.0266;
+    color += texture2D(texture, textureCoordinates + 9.0 * blur_radius) * 0.0222;
+    color += texture2D(texture, textureCoordinates + 10.0 * blur_radius) * 0.0175;
     gl_FragColor = color;
 }

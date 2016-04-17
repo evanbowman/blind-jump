@@ -136,72 +136,8 @@ bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
         }
         
         window.draw(deathShadowSpr);
-        window.draw(deathTextSprite);
-    }
-    
-    
-    if (msgOpenSignal) {
-        player->deActivateFaceUp();
-        if (!msgOpened) {
-            if (txtShadowSprite.getColor().a < 240) {
-                txtShadowSprite.setColor(sf::Color(255,255,255,txtShadowSprite.getColor().a + 14));
-                for (auto & element : textToDisplay) {
-                    element.setColor(sf::Color(255,255,255,element.getColor().a + 13));
-                    element.setPosition(element.getPosition().x, element.getPosition().y - 1);
-                    textDisplacement -= 1;
-                }
-                
-                rectAlpha *= 1.22;
-                if (rectAlpha > 100) {
-                    rectAlpha = 100;
-                }
-                
-            }
-            else {
-                msgOpened = true;
-                canHeal = true;
-            }
-        }
-        if (msgOpened && z && msgOpenSignal) {
-            if (selectDir == 'R' && /*f.getScore() >= enemyValueCount*/ canHeal) {
-                // If selected yes at the terminal, refill the player's health
-                player->fillHealth(f.getMaxHealth());
-                msgOpenSignal = false;
-                ef.addHpRestored(xPos - xOffset - 60, yPos - yOffset);
-                //f.updateScore(f.getScore() - enemyValueCount);
-                canHeal = false;
-            }
-            
-            else {
-                msgOpenSignal = false;
-            }
-        }
-    }
-    
-    if (msgOpened && !msgOpenSignal) {
-        if (txtShadowSprite.getColor().a > 15) {
-            txtShadowSprite.setColor(sf::Color(255,255,255,txtShadowSprite.getColor().a - 14));
-            for (auto & element : textToDisplay) {
-                element.setColor(sf::Color(255,255,255,element.getColor().a - 13));
-                element.setPosition(element.getPosition().x, element.getPosition().y + 1);
-                textDisplacement += 1;
-            }
-            
-            rectAlpha *= 0.87;
-        }
-        
-        else {
-            msgOpened = false;
-            rectAlpha = 2;
-            msgVisible = false;
-            selectDir = 'L';
-            for (auto & element : textToDisplay) {
-                element.setColor(sf::Color(255,255,255,4));
-                element.setPosition(element.getPosition().x, element.getPosition().y - textDisplacement);
-            }
-            
-            textDisplacement = 0;
-        }
+        f.drawDeathText(c.a, window);
+        //window.draw(deathTextSprite);
     }
     
     if (c && !closing && !msgVisible) {
@@ -340,6 +276,8 @@ bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
         if (rectAlpha > 100) {
             window.draw(weaponName);
             window.draw(weaponNameUnderscore);
+            f.resetWPText();
+            f.resetHPText();
         }
         
         if (r > 35) {
