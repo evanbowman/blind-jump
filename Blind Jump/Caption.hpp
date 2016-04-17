@@ -30,6 +30,7 @@ private:
     // The current state of the object
     char state;
     char animationCounter;
+    sf::Clock clock;
     
 public:
     void setWindowCenter(float, float);

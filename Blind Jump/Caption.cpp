@@ -9,12 +9,15 @@
 #include "Caption.hpp"
 #include <cmath>
 
+#define PI 3.1415926535
+
 Caption::Caption(float xInit, float yInit, sf::Font & font) {
     msgText.setFont(font);
     this->xInit = xInit;
     this->yInit = yInit;
     state = CLOSED;
     animationCounter = 4;
+    clock.restart();
 }
 
 void Caption::setWindowCenter(float x, float y) {
@@ -28,17 +31,17 @@ void Caption::update(float xOffset, float yOffset) {
     
     switch (state) {
         case CLOSED:
-            if (fabsf(xPos - windowCenterX) < windowCenterY * 0.65 && fabsf(yPos - windowCenterY) < windowCenterY * 0.65) {
+            if (fabsf(xPos - windowCenterX) < windowCenterY * 0.55 && fabsf(yPos - windowCenterY) < windowCenterY * 0.55) {
                 state = OPENING;
                 // Tilt the text a little bit
                 float rotationDir = (rand() % 2) ? -1 : 1;
-                msgText.setRotation(rotationDir * (rand() % 4 + 4));
+                msgText.setRotation(rotationDir * (rand() % 4 + 3));
             }
             break;
             
         case OPENING:
             if (--animationCounter == 0) {
-                animationCounter = 4;
+                animationCounter = fmax(4 * workingString.length() / msgString.length(), 1.f);
                 if (workingString.length() < msgString.length()) {
                     workingString.push_back(msgString[workingString.length()]);
                     std::string tempstr = msgHeader + workingString + msgFooter;
@@ -50,14 +53,14 @@ void Caption::update(float xOffset, float yOffset) {
             break;
             
         case OPENED:
-            if (fabsf(xPos - windowCenterX) > windowCenterY * 0.9 || fabsf(yPos - windowCenterY) > windowCenterY * 0.9) {
+            if (fabsf(xPos - windowCenterX) > windowCenterY * 0.80 || fabsf(yPos - windowCenterY) > windowCenterY * 0.80) {
                 state = CLOSING;
             }
             break;
             
         case CLOSING:
             if (--animationCounter == 0) {
-                animationCounter = 3;
+                animationCounter = fmax(3 * workingString.length() / msgString.length(), 1.f);
                 if (workingString.length() > 0) {
                     workingString.pop_back();
                     std::string tempstr = msgHeader + workingString + msgFooter;
@@ -71,7 +74,7 @@ void Caption::update(float xOffset, float yOffset) {
             
         case FORCE_CLOSE:
             if (--animationCounter == 0) {
-                animationCounter = 2;
+                animationCounter = fmax(2 * workingString.length() / msgString.length(), 1.f);
                 if (workingString.length() > 0) {
                     workingString.pop_back();
                     std::string tempstr = msgHeader + workingString + msgFooter;
@@ -101,7 +104,8 @@ void Caption::setText(const char * cstrText) {
 
 sf::Text * Caption::getText() {
     // Horizontally center the text over the target position and return it
-    msgText.setPosition(xPos - msgText.getLocalBounds().width / 2, yPos - msgText.getLocalBounds().height / 2);
+    float offset = (2 * sinf(2 * PI * 0.001 * clock.getElapsedTime().asMilliseconds() + 180));
+    msgText.setPosition(xPos - msgText.getLocalBounds().width / 2, yPos - msgText.getLocalBounds().height / 2 + offset);
     return &msgText;
 }
 

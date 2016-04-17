@@ -35,7 +35,7 @@ FontController::FontController(sf::View fontView, float x, float y) {
     
     str = "Health:";
     healthText.setString(str.c_str());
-    healthText.setCharacterSize(0.025 * fontView.getSize().y);
+    healthText.setCharacterSize(0.026 * fontView.getSize().y);
     healthText.setFont(cornerstone);
     
     str = "Blind Jump";
@@ -160,6 +160,6 @@ void FontController::addCaption(float x, float y, const char * msg) {
     Caption cap(x * ((fontView.getSize().x / 2) / windowCenterX), y * ((fontView.getSize().y / 2) / windowCenterY), cornerstone);
     cap.setText(msg);
     cap.setWindowCenter(fontView.getSize().x / 2, fontView.getSize().y / 2);
-    cap.setCharacterSize(0.025 * fontView.getSize().y);
+    cap.setCharacterSize(0.026 * fontView.getSize().y);
     captions.push_back(cap);
 }
