@@ -29,8 +29,8 @@ private:
     sf::Text msgText;
     // The current state of the object
     char state;
-    char animationCounter;
-    sf::Clock clock;
+    int desiredDelay;
+    sf::Clock clock, animationTimer;
     
 public:
     void setWindowCenter(float, float);

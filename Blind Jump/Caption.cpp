@@ -17,8 +17,9 @@ Caption::Caption(float xInit, float yInit, sf::Font & font) {
     this->xInit = xInit;
     this->yInit = yInit;
     state = CLOSED;
-    animationCounter = 4;
+    desiredDelay = 20;
     clock.restart();
+    animationTimer.restart();
 }
 
 void Caption::setWindowCenter(float x, float y) {
@@ -37,12 +38,14 @@ void Caption::update(float xOffset, float yOffset) {
                 // Tilt the text a little bit
                 float rotationDir = (rand() % 2) ? -1 : 1;
                 msgText.setRotation(rotationDir * (rand() % 4 + 3));
+                animationTimer.restart();
             }
             break;
             
         case OPENING:
-            if (--animationCounter == 0) {
-                animationCounter = fmax(4 * workingString.length() / msgString.length(), 1.f);
+            if (animationTimer.getElapsedTime().asMilliseconds() > desiredDelay) {
+                animationTimer.restart();
+                desiredDelay = static_cast<int>(30 * workingString.length() / msgString.length()) + 20;
                 if (workingString.length() < msgString.length()) {
                     workingString.push_back(msgString[workingString.length()]);
                     std::string tempstr = msgHeader + workingString + msgFooter;
@@ -60,29 +63,29 @@ void Caption::update(float xOffset, float yOffset) {
             break;
             
         case CLOSING:
-            if (--animationCounter == 0) {
-                animationCounter = fmax(3 * workingString.length() / msgString.length(), 1.f);
+            if (animationTimer.getElapsedTime().asMilliseconds() > desiredDelay) {
+                animationTimer.restart();
+                desiredDelay = static_cast<int>(30 * workingString.length() / msgString.length()) + 20;
                 if (workingString.length() > 0) {
                     workingString.pop_back();
                     std::string tempstr = msgHeader + workingString + msgFooter;
                     msgText.setString(tempstr.c_str());
                 } else {
                     state = CLOSED;
-                    animationCounter = 4;
                 }
             }
             break;
             
         case FORCE_CLOSE:
-            if (--animationCounter == 0) {
-                animationCounter = fmax(2 * workingString.length() / msgString.length(), 1.f);
+            if (animationTimer.getElapsedTime().asMilliseconds() > desiredDelay) {
+                animationTimer.restart();
+                desiredDelay = static_cast<int>(10 * workingString.length() / msgString.length()) + 20;
                 if (workingString.length() > 0) {
                     workingString.pop_back();
                     std::string tempstr = msgHeader + workingString + msgFooter;
                     msgText.setString(tempstr.c_str());
                 } else {
                     state = LOCKED;
-                    animationCounter = 4;
                 }
             }
             break;
