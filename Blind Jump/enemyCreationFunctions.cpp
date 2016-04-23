@@ -18,7 +18,7 @@ void addTurret(short mapArray[61][61], short descriptionArray[61][61], enemyCont
     turret t(en.getTurretSprites());
     
     // Randomly pick an available empty location
-    int locationSelect = rand() % (emptyLocations.size() / 2);
+    int locationSelect = (rand() % 2) ? rand() % (emptyLocations.size() / 2 ) : rand() % (emptyLocations.size());
     Coordinate c = emptyLocations[locationSelect];
     // Don't want to place two objects in the same position, so remove coordinate from the vector if used
     emptyLocations[locationSelect] = std::move(emptyLocations.back());
@@ -35,7 +35,7 @@ void addScoot(short mapArray[61][61], short descriptionArray[61][61], enemyContr
     
     Scoot s(en.getScootSprites());
     
-    int locationSelect = rand() % (emptyLocations.size() / 2);
+    int locationSelect = (rand() % 2) ? rand() % (emptyLocations.size() / 2 ) : rand() % (emptyLocations.size());
     Coordinate c = emptyLocations[locationSelect];
     emptyLocations[locationSelect] = std::move(emptyLocations.back());
     emptyLocations.pop_back();
@@ -48,7 +48,7 @@ void addDasher(short mapArray[61][61], short descriptionArray[61][61], enemyCont
     
     Dasher d(en.getDasherSprites());
     
-    int locationSelect = rand() % (emptyLocations.size() / 3);
+    int locationSelect = (rand() % 2) ? rand() % (emptyLocations.size() / 3 ) : rand() % (emptyLocations.size() / 2);
     Coordinate c = emptyLocations[locationSelect];
     emptyLocations[locationSelect] = std::move(emptyLocations.back());
     emptyLocations.pop_back();

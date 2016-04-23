@@ -39,7 +39,7 @@ public:
     bool colored();
     
 private:
-    unsigned char health;
+    float health;
     sf::Sprite sprs[21];
     unsigned short dashCnt;
     bool isDashing;

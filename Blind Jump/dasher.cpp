@@ -211,24 +211,24 @@ void Dasher::update(float xOffset, float yOffset, std::vector<wall> walls, effec
             
             else if (dashCnt == 120 || dashCnt == 118 || dashCnt == 116) {
                 if (xPos > playerPosX) {
-                    ef.addDasherShot(xInit - 12, yInit - 12, angleFunction(xPos + 18, yPos, playerPosX, playerPosY) + 15);
+                    ef.addDasherShot(xInit - 12, yInit - 12, angleFunction(xPos + 18, yPos, playerPosX, playerPosY));
                     ef.addTurretFlash(xInit - 12, yInit - 12);
                 }
                 
                 else {
-                    ef.addDasherShot(xInit + 4, yInit - 12, angleFunction(xPos + 18, yPos, playerPosX, playerPosY) + 15);
+                    ef.addDasherShot(xInit + 4, yInit - 12, angleFunction(xPos + 18, yPos, playerPosX, playerPosY));
                     ef.addTurretFlash(xInit + 4, yInit - 12);
                 }
             }
             
             else if (dashCnt == 100 || dashCnt == 98 || dashCnt == 96) {
                 if (xPos > playerPosX) {
-                    ef.addDasherShot(xInit - 12, yInit - 12, angleFunction(xPos + 18, yPos, playerPosX, playerPosY) - 15);
+                    ef.addDasherShot(xInit - 12, yInit - 12, angleFunction(xPos + 18, yPos, playerPosX, playerPosY));
                     ef.addTurretFlash(xInit - 12, yInit - 12);
                 }
                 
                 else {
-                    ef.addDasherShot(xInit + 4, yInit - 12, angleFunction(xPos + 18, yPos, playerPosX, playerPosY) - 15);
+                    ef.addDasherShot(xInit + 4, yInit - 12, angleFunction(xPos + 18, yPos, playerPosX, playerPosY));
                     ef.addTurretFlash(xInit + 4, yInit - 12);
                 }
             }

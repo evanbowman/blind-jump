@@ -31,7 +31,7 @@ turret::turret(sf::Sprite spr[10]) {
     activateTimer = 120;
     shotCountdown = 40;
     shotsFired = 0;
-    hp = 18;
+    hp = 10;
     killFlag = 0;
     isColored = 0;
     colorCount = 0;
@@ -108,7 +108,7 @@ void turret::updateShots(effectsController& ef, FontController& fonts) {
             //Add a shot flash effect to the effects controller
             ef.addTurretFlash(xInit, yInit);
             //Create a shot object with an angle equal to the angle between the player and the turret
-            ef.addTurretShot(xInit + 8, yInit + 6, angleFunction(xPos + 18, yPos, playerPosX, playerPosY));
+            ef.addEnemyShot(xInit, yInit, angleFunction(xPos + 18, yPos, playerPosX, playerPosY));
             //Increment the number of shots fired
             shotsFired++;
             //Reset the countdown timer
@@ -121,11 +121,12 @@ void turret::updateShots(effectsController& ef, FontController& fonts) {
             }
         }
         if (shotCountdown == 20) {
-            ef.addTurretFlash(xInit, yInit);
-            ef.addEnemyShot(xInit, yInit, angleFunction(xPos + 18, yPos, playerPosX, playerPosY) + 15);
-            ef.addEnemyShot(xInit, yInit, angleFunction(xPos + 18, yPos, playerPosX, playerPosY) + 35);
-            ef.addEnemyShot(xInit, yInit, angleFunction(xPos + 18, yPos, playerPosX, playerPosY) - 15);
-            ef.addEnemyShot(xInit, yInit, angleFunction(xPos + 18, yPos, playerPosX, playerPosY) - 35);
+            //// Only higher level turrets do this?
+            //ef.addTurretFlash(xInit, yInit);
+            //ef.addEnemyShot(xInit, yInit, angleFunction(xPos + 18, yPos, playerPosX, playerPosY) + 15);
+            //ef.addEnemyShot(xInit, yInit, angleFunction(xPos + 18, yPos, playerPosX, playerPosY) + 35);
+            //ef.addEnemyShot(xInit, yInit, angleFunction(xPos + 18, yPos, playerPosX, playerPosY) - 15);
+            //ef.addEnemyShot(xInit, yInit, angleFunction(xPos + 18, yPos, playerPosX, playerPosY) - 35);
         }
         
     //Check collisions with player's shots, but only if the shot vectors aren't empty
@@ -198,8 +199,8 @@ double turret::getPlayerPosY() {
 }
 
 void turret::setPlayerPos(double x, double y) {
-    playerPosX = x;
-    playerPosY = y;
+    playerPosX = x / 2;
+    playerPosY = y / 2;
 }
 
 double turret::getXpos() {

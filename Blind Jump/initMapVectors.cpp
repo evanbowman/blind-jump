@@ -52,7 +52,7 @@ void initMapVectors(short mapArray[61][61], wall w, std::vector<wall>& walls, fl
     transporterLocation.y = transporterY;
 
     
-    int count;
+    //int count;
     for (int i = 0; i < 61; i++) {
         for (int j = 0; j < 61; j++) {
             if (mapArray[i][j] == 3 || mapArray[i][j] == 4 || mapArray[i][j] == 11) {                 //This function checks the case for each map element, and pushes back the correct sprites and positions
@@ -60,8 +60,8 @@ void initMapVectors(short mapArray[61][61], wall w, std::vector<wall>& walls, fl
                 Coordinate c1;
                 c1.x = i;
                 c1.y = j;
-                count = countNeighbors(mapArray, i, j, 3, 4);
-                count += countNeighbors(mapArray, i, j, 8, 8);
+                //count = countNeighbors(mapArray, i, j, 3, 4);
+                //count += countNeighbors(mapArray, i, j, 8, 8);
                 // Assign coordinate priority based on distance from the transporter (and possibly items, tbd)
                 c1.priority = sqrtf((i - transporterX) * (i - transporterX) + (j - transporterY) * (j - transporterY));
                 emptyLocations.push_back(c1);

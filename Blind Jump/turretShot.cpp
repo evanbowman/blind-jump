@@ -27,7 +27,7 @@ turretShot::turretShot(sf::Sprite* sprs, sf::Sprite glow, float x, float y, floa
     direction = (dir - 270 + diff) * (3.14 / 180);     // I added 270 previously to get the sprite to face in the right direction, so subract it
                                                 //back out and convert back to radians
     killFlag = false;
-    scale = 3.4;
+    scale = 3.8;
     trackPlayer = false;
     frameIndex = 0;
     frameRate = 6;

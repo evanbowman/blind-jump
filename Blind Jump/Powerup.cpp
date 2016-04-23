@@ -49,5 +49,5 @@ float Powerup::getXpos() {
 }
 
 float Powerup::getYpos() {
-    return yPos - 8;
+    return yPos - 16;
 }

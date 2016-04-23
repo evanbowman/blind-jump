@@ -34,7 +34,7 @@ public:
     char frameRate;
     
 private:
-    char health;
+    float health;
     float currentDir, chargeDir;
     float jumpTargetx, jumpTargety;
     void newPath(tileController*);

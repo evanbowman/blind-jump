@@ -13,9 +13,9 @@
 
 #define NUM_ROCK_IMAGES 2
 
-static const char* const teleporterStrings[] = {"Ready to Warp?", "Try here", "A Trasporter", "This Way"};
-static const char* const chestStrings[] = {"Left behind", "Discarded", "Forgotten", "Left Behind"};
-static const char* const robotStrings[] = {"It's Broken", "Broken Down", "Dangerous once", "Dilapidated"};
+//static const char* const teleporterStrings[] = {"Ready to Warp?", "Try here", "A Trasporter", "This Way"};
+//static const char* const chestStrings[] = {"Left behind", "Discarded", "Forgotten", "Left Behind"};
+//static const char* const robotStrings[] = {"It's Broken", "Broken Down", "Dangerous once", "Dilapidated"};
 
 detailController::detailController() {
     teleporterTexture[0].loadFromFile(resourcePath() + "teleporter.png");
@@ -150,7 +150,7 @@ void detailController::addChest(tileController& t, float posX, float posY, float
     placeOffsetX = (rand() % 6) - 3;
     TreasureChest tr((c.x * 32) + posX + 8 + placeOffsetX, (c.y * 26) + posY - 3, tempSprites, 7, width, height, chestContents);
     chests.push_back(tr);
-    pFonts->addCaption(chests.back().getxInit() + 8, chests.back().getyInit() - 6, chestStrings[rand() % 4]);
+    ////pFonts->addCaption(chests.back().getxInit() + 8, chests.back().getyInit() - 6, chestStrings[rand() % 4]);
 
 }
 
@@ -177,7 +177,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
             }
             DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
             damagedRobots.push_back(dr);
-            pFonts->addCaption(damagedRobots.back().getxInit(), damagedRobots.back().getyInit() - 8, robotStrings[rand() % 4]);
+            ////pFonts->addCaption(damagedRobots.back().getxInit(), damagedRobots.back().getyInit() - 8, robotStrings[rand() % 4]);
         } catch(const char* e) {
             std::cout << e << std::endl;
         }
@@ -189,7 +189,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
                 tempSprite.setTexture(damagedRobotTexture[!choice]);
                 DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
                 damagedRobots.push_back(dr);
-                pFonts->addCaption(damagedRobots.back().getxInit(), damagedRobots.back().getyInit() - 8, robotStrings[rand() % 4]);
+                ///pFonts->addCaption(damagedRobots.back().getxInit(), damagedRobots.back().getyInit() - 8, robotStrings[rand() % 4]);
             } catch(const char* e) {
                 std::cout << e << std::endl;
             }
@@ -209,7 +209,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
                 
                 DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
                 damagedRobots.push_back(dr);
-                pFonts->addCaption(damagedRobots.back().getxInit(), damagedRobots.back().getyInit() - 8, robotStrings[rand() % 4]);
+                ///pFonts->addCaption(damagedRobots.back().getxInit(), damagedRobots.back().getyInit() - 8, robotStrings[rand() % 4]);
             } catch(const char* e) {
                 std::cout << e << std::endl;
             }
@@ -263,7 +263,7 @@ void detailController::addTeleporter(tileController& t, float posX, float posY, 
     // Initialize the teleporter countdown to 5
     T.initCountdown();
     teleporters.push_back(T);
-    pFonts->addCaption(teleporters.back().getxInit() + 12, teleporters.back().getyInit() - 14, teleporterStrings[rand() % 4]);
+    ////pFonts->addCaption(teleporters.back().getxInit() + 12, teleporters.back().getyInit() - 14, teleporterStrings[rand() % 4]);
 }
 
 void detailController::addTerminal(tileController & t, float posX, float posY, float width, float height) {
@@ -451,7 +451,7 @@ std::vector<Terminal> detailController::getTerms() {
     return terminals;
 }
 
-unsigned char* detailController::getUIStates() {
+unsigned char * detailController::getUIStates() {
     return UIStates;
 }
 

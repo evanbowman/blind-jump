@@ -13,7 +13,7 @@
 #include "ResourcePath.hpp"
 #include <iostream>
 
-#define healthLimit 18
+#define healthLimit 10
 
 FontController::FontController(sf::View fontView, float x, float y) {
     // Store the view to use when drawing fonts
@@ -58,12 +58,12 @@ FontController::FontController(sf::View fontView, float x, float y) {
     for (int i = 0; i < 10; i++) {
         // Load in score number textures
         healthFull[i].setRadius(0.009 * fontView.getSize().y);
-        healthFull[i].setFillColor(sf::Color::White);
-        healthFull[i].setOutlineColor(sf::Color::White);
+        healthFull[i].setFillColor(sf::Color(255, 255, 255, 4));
+        healthFull[i].setOutlineColor(sf::Color(255, 255, 255, 4));
         healthFull[i].setOutlineThickness(0.004 * fontView.getSize().y);
         healthEmpty[i].setRadius(0.009 * fontView.getSize().y);
         healthEmpty[i].setFillColor(sf::Color::Transparent);
-        healthEmpty[i].setOutlineColor(sf::Color::White);
+        healthEmpty[i].setOutlineColor(sf::Color(255, 255, 255, 4));
         healthEmpty[i].setOutlineThickness(0.004 * fontView.getSize().y);
     }
     
@@ -79,10 +79,10 @@ void FontController::setWaypointText(int level) {
     for (int i = 0; i < 10; i++) {
         healthFull[i].setPosition((i * 0.030 * scrnSize) + initPos, 0.0030 * scrnSize + healthFull[i].getRadius());
         healthEmpty[i].setPosition((i * 0.030 * scrnSize) + initPos, 0.0030 * scrnSize + healthFull[i].getRadius());
-        healthFull[i].setFillColor(sf::Color::White);
-        healthFull[i].setOutlineColor(sf::Color::White);
-        healthEmpty[i].setFillColor(sf::Color::White);
-        healthEmpty[i].setOutlineColor(sf::Color::White);
+        healthFull[i].setFillColor(sf::Color(255, 255, 255, 4));
+        healthFull[i].setOutlineColor(sf::Color(255, 255, 255, 4));
+        healthEmpty[i].setFillColor(sf::Color::Transparent);
+        healthEmpty[i].setOutlineColor(sf::Color(255, 255, 255, 4));
     }
     healthText.setPosition(initPos - healthText.getLocalBounds().width - 0.015 * scrnSize, 0.0032 * scrnSize + healthFull[0].getRadius() - healthText.getLocalBounds().height / 2);
     captions.clear();
@@ -91,7 +91,7 @@ void FontController::setWaypointText(int level) {
     waypointText.setString(str.c_str());
     // Reset the color, it will fade out
     waypointText.setColor(sf::Color::White);
-    healthText.setColor(sf::Color::White);
+    healthText.setColor(sf::Color(255, 255, 255, 4));
     wpTextFadeSeconds = 3;
     healtTextFadeSeconds = 3;
     wpTextDisplayTimer.restart();
@@ -125,14 +125,14 @@ void FontController::print(sf::RenderWindow& window) {
         }
         window.draw(waypointText);
     }
-    c = healthEmpty[0].getFillColor();
+    c = healthFull[0].getFillColor();
+    
     if (c.a > 5) {
         if (healthDisplayTimer.getElapsedTime().asSeconds() > healtTextFadeSeconds) {
             c.a -= 4;
             for (int i = 0; i < 10; i++) {
                 healthFull[i].setFillColor(c);
                 healthFull[i].setOutlineColor(c);
-                healthEmpty[i].setFillColor(c);
                 healthEmpty[i].setOutlineColor(c);
             }
             healthText.setColor(c);
@@ -161,7 +161,6 @@ void FontController::resetHPText() {
     for (int i = 0; i < 10; i++) {
         healthFull[i].setFillColor(sf::Color::White);
         healthFull[i].setOutlineColor(sf::Color::White);
-        healthEmpty[i].setFillColor(sf::Color::White);
         healthEmpty[i].setOutlineColor(sf::Color::White);
     }
     healthDisplayTimer.restart();
@@ -220,9 +219,10 @@ void FontController::updateMaxHealth(char health) {
         healthEmpty[i].setPosition((i * 0.030 * scrnSize) + initPos, 0.0030 * scrnSize + healthFull[i].getRadius());
     }
     healthText.setPosition(initPos - healthText.getLocalBounds().width - 0.015 * scrnSize, 0.0032 * scrnSize + healthFull[0].getRadius() - healthText.getLocalBounds().height / 2);
+    resetHPText();
 }
 
-char FontController::getMaxHealth() {
+char FontController::getMaxHealth() const {
     return maxHealth;
 }
 

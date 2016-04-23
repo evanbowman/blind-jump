@@ -68,7 +68,7 @@ void initLoot(char itemArray[48][3]) {
                 fractionSoFar += ((double) element.first) / ((double) weightSum);
                 distribution[fractionSoFar] = element.second;
             }
-            // With 25% chance, place a weapon on the level, but only if there are items left to place
+            // With 12.5% chance, place a weapon on the level, but only if there are items left to place
             if (!(rand() % 8)) {
                 // Sample the map
                 double linear = rand() * 1.0 / RAND_MAX;

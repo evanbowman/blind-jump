@@ -44,7 +44,7 @@ public:
     void updateMaxHealth(char);
     void drawTitle(unsigned char, sf::RenderWindow&);
     void drawDeathText(unsigned char, sf::RenderWindow&);
-    char getMaxHealth();
+    char getMaxHealth() const;
     sf::Text * getTitle();
     sf::Text * getDeathText();
     void addCaption(float, float, const char *);

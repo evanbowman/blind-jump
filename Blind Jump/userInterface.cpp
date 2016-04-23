@@ -95,13 +95,12 @@ userInterface::userInterface() {
     weaponName.setColor(sf::Color(210, 210, 210));
 }
 
-bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned char* detailStates, FontController& f, effectsController& ef, float xOffset, float yOffset, InputController* pInput) {
+bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned char * detailStates, FontController& f, effectsController& ef, float xOffset, float yOffset, InputController* pInput) {
     bool c = pInput->cPressed();
     bool left = pInput->leftPressed();
     bool right = pInput->rightPressed();
     bool up = pInput->upPressed();
     bool down = pInput->downPressed();
-    bool z = pInput->zPressed();
     
     if (detailStates[0] == 1 && !msgOpenSignal) {
         msgOpenSignal = true;

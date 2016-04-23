@@ -35,7 +35,7 @@ private:
     short shotsFired;
     double xOffset;
     double yOffset;
-    char hp;
+    float hp;
     bool killFlag;
     char colorCount;
     bool isColored;

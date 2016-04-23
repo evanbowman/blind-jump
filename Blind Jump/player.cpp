@@ -651,34 +651,42 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
     if (checkShotCollision(ef.getEnemyShots(), posX, posY) && !deathSeq && canhurt) {
         // Decrement health
         health--;
+        fonts.resetHPText();
         scrShakeState = true;
         canhurt = false;
     }
     
     if (checkShotCollision(ef.getTurretShots(), posX, posY) && !deathSeq && canhurt) {
         health--;
+        fonts.resetHPText();
         scrShakeState = true;
         canhurt = false;
     }
     
     if (checkShotCollision(ef.getDasherShots(), posX, posY) && !deathSeq && canhurt) {
         health--;
+        fonts.resetHPText();
         scrShakeState = true;
         canhurt = false;
     }
     
-    std::vector<Powerup>* pHearts = ef.getHearts();
-    for (auto & element : *pHearts) {
-        if (fabsf(posX + 16 - element.getXpos()) < 8 && fabsf(posY + 12 - element.getYpos()) < 8) {
-            health = fmin(fonts.getMaxHealth(), health + 1);
-            element.setKillFlag(true);
-            gotHeart = true;
+    // Don't bother doing all this if health is empty!
+    if (health < fonts.getMaxHealth()) {
+        std::vector<Powerup>* pHearts = ef.getHearts();
+        for (auto & element : *pHearts) {
+            if (fabsf(posX + 16 - element.getXpos()) < 8 && fabsf(posY + 4 - element.getYpos()) < 8) {
+                health = fmin(fonts.getMaxHealth(), health + 1);
+                element.setKillFlag(true);
+                gotHeart = true;
+                // Display the UI element for health text
+                fonts.resetHPText();
+            }
         }
     }
     
     std::vector<Powerup>* pCoins = ef.getCoins();
     for (auto & element : *pCoins) {
-        if (fabsf(posX + 16 - element.getXpos()) < 8 && fabsf(posY + 12 - element.getYpos()) < 8) {
+        if (fabsf(posX + 16 - element.getXpos()) < 8 && fabsf(posY + 4 - element.getYpos()) < 8) {
             element.setKillFlag(true);
             gotCoin = true;
             gotHeart = false;

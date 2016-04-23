@@ -39,7 +39,7 @@ int initEnemies(GameMap* gm) {
             pVec->push_back(dasher);
             break;
             
-        case 16:
+        case 4:
             turret.first = 3;
             turret.second = abs(currentLevel - idealLevels[3]);
             pVec->push_back(turret);
@@ -69,10 +69,11 @@ int initEnemies(GameMap* gm) {
     // Now it's time to actually place the enemies on the map based on weighted values
     // Slowly work up to the max number of enemies on the map
     // Normalized level is for the difficulty curve, so that fewer enemies are placed following a boss battle
-    int normalizedLevel = (currentLevel < 11) ? currentLevel : currentLevel - 10 * (currentLevel % 10);
+    int divisibility = static_cast<int>(floor(static_cast<float>(currentLevel) / 10.f));
+    int normalizedLevel = (currentLevel < 11) ? currentLevel : currentLevel - 10 * divisibility + pow(divisibility, 1.8);
     int iters = 1 + pow(normalizedLevel, 1.2);
-    if (iters > 12) {
-        iters = 12;
+    if (iters > 15) {
+        iters = 15;
     }
     for (int i = 0; i < iters; i++) {
         // Generate a random number on the range of 0 to the sum of all enemy weights
@@ -120,7 +121,7 @@ int initEnemies(GameMap* gm) {
                 break;
                 
             case 3:
-                addHeavyBot(gm->tiles.mapArray, gm->tiles.descriptionArray, gm->en, gm->tiles.posX, gm->tiles.posY, gm->windowW, gm->windowH, gm->tiles.emptyMapLocations);
+                addTurret(gm->tiles.mapArray, gm->tiles.descriptionArray, gm->en, gm->tiles.posX, gm->tiles.posY, gm->windowW, gm->windowH, gm->tiles.emptyMapLocations);
                 count += 8;
                 break;
                 

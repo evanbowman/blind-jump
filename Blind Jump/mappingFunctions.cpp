@@ -1,5 +1,4 @@
 #include <iostream>
-#include "building.hpp"
 #include "tileController.hpp"
 #include "mappingFunctions.hpp"
 #include "bossLevels.h"
@@ -228,34 +227,6 @@ bool checkFootprint(short map[61][61], int x, int y, int w, int h) {
         }
     }
     return true;
-}
-
-Building addHouse(short map[61][61], tileController& tiles) {
-    int counter = 1000;
-    bool exitCond = false;
-    int xind, yind, houseW, houseH;
-    do {
-        if (--counter == 0) {
-            exitCond = true;
-        }
-        
-        do {
-            xind = rand() % 50;
-            yind = rand() % 50;
-            houseW = rand() % 2 + 4;
-            houseH = rand() % 2 + 4;
-        } while (map[xind][yind] != 3 && map[xind][yind] != 4 && map[xind][yind] != 11);
-    } while (!checkFootprint(map, xind, yind, houseW, houseH) && !exitCond);
-    
-    for (int i = xind; i < xind + houseW; i++) {
-        for (int j = yind; j < yind + houseH; j++) {
-            map[i][j] = 7;
-        }
-    }
-    
-    Building newBuilding(xind - houseW, yind - houseH, houseW, houseH);
-    
-    return newBuilding;
 }
 
 int mappingFunction(short map[61][61], int level, bool enableGrass) {

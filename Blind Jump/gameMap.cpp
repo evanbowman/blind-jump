@@ -106,6 +106,9 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     transitioning = false;
     transitionDelay = 320;
     
+    dispEntryBeam = false;
+    transitionIn = false;
+    
     // Each object that isn't an effect or passed through a shader gets darkened according to the ambient conditions of the current tileset
     objectShadeColor = sf::Color(190, 190, 210, 255);
     
@@ -326,9 +329,7 @@ void GameMap::update(sf::RenderWindow& window) {
             creditsCounter = 200;
         }
     }
-    
-    //Activating the user interface menu de-activates everything, so we need to give it references to all the objects (alternatively one
-    // could check for a keypress in every single object individually, but this way is (possibly) faster because it requires less condition checking)
+
     if (!player.isdead()) {
         UI.dispDeathSeq();
         pFonts->terminateCaptions();
@@ -428,6 +429,25 @@ void GameMap::update(sf::RenderWindow& window) {
             entryBeam.setFillColor(sf::Color(104, 255, 229, 180));
             // Reactivate the player now that the beam animation has finished
             player.activate();
+        }
+    }
+    
+    if (transitionIn) {
+        sf::Color c = transitionShape.getFillColor();
+        if (c.b < 245) {
+            c.r += 10;
+            c.b += 10;
+            c.g += 10;
+        }
+        transitionShape.setFillColor(c);
+        window.draw(transitionShape, sf::BlendMultiply);
+
+        if (--transitionDelay == 0) {
+            transitionIn = false;
+            dispEntryBeam = true;
+            // Allow the teleporter animation to play again
+            animationBegin = false;
+            transitionDelay = 65;
         }
     }
     
@@ -531,23 +551,30 @@ void GameMap::update(sf::RenderWindow& window) {
                 }
                 if (--transitionDelay == 0) {
                     transitioning = false;
-                    transitionDelay = 100;
+                    transitionDelay = 55;
                     teleporterCond = true;
                     titleSpr.setColor(sf::Color(255, 255, 255, 255));
-                    transitionShape.setFillColor(sf::Color(255, 255, 255, 255));
                 }
             }
             
             else {
-                teleporterCond = true;
-                transitioning = false;
+                if (transitionDelay < 50) {
+                    sf::Color c = transitionShape.getFillColor();
+                    if (c.b > 5) {
+                        c.r -= 5;
+                        c.b -= 5;
+                        c.g -= 5;
+                    }
+                    transitionShape.setFillColor(c);
+                    window.draw(transitionShape, sf::BlendMultiply);
+                }
+                if (--transitionDelay == 0) {
+                    transitioning = false;
+                    transitionDelay = 30;
+                    teleporterCond = true;
+                    //transitionShape.setFillColor(sf::Color(255, 255, 255, 255));
+                }
             }
-        }
-    } else {
-        // Draw captions to the window
-        if (!UI.isVisible()) {
-            pFonts->update(window, xOffset, yOffset);
-            window.setView(worldView);
         }
     }
 }
@@ -632,7 +659,6 @@ void GameMap::Reset() {
         if (level < BOSS_LEVEL_1) {
             // Put rock/pillar detail things on map
             getRockPositions(tiles.mapArray, rockPositions);
-            len = rockPositions.size();
             for (auto element : rockPositions) {
                 details.addRock(tiles, tiles.posX, tiles.posY - 35, element.x, element.y, pFonts);
             }
@@ -683,9 +709,8 @@ void GameMap::Reset() {
     teleporterBeam.setPosition(windowW/2 - 1, windowH/2 + 36);
     teleporterBeam.setSize(v1);
     teleporterBeam.setFillColor(sf::Color(104, 255, 229, 6));
-    // Allow the teleporter animation to play again
-    animationBegin = false;
-    dispEntryBeam = true;
+    transitionIn = true;
+    //dispEntryBeam = true;
 }
 
 Player GameMap::getPlayer() {

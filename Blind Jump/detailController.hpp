@@ -22,6 +22,7 @@
 #include "damagedRobot.hpp"
 #include "rock.hpp"
 #include "IntroDoor.hpp"
+#include <array>
 
 class detailController {
 private:
@@ -75,7 +76,7 @@ public:
     std::vector<Rock>* getRocks();
     void addWarpImpact(float, float);
     std::vector<Terminal> getTerms();
-    unsigned char* getUIStates();
+    unsigned char * getUIStates();
     void killTeleporter();
     void setWindowSize(float, float);
 };

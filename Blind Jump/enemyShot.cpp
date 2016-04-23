@@ -26,8 +26,8 @@ Enemyshot::Enemyshot(sf::Sprite* inpsprs, sf::Sprite glow, float x, float y, flo
 }
 
 void Enemyshot::update(float xOffset, float yOffset) {
-    xPos = xInit + xOffset + 3.4 * (65 - timeout) * (cos(direction));         // Note: timeout starts at 60, so 60 - timout grows linearly with time
-    yPos = yInit + 11 + yOffset + 3.4 * (65 - timeout) * (sin(direction));
+    xPos = xInit + xOffset + 4.4 * (65 - timeout) * (cos(direction));         // Note: timeout starts at 60, so 60 - timout grows linearly with time
+    yPos = yInit + 11 + yOffset + 4.4 * (65 - timeout) * (sin(direction));
     for (int i = 0; i < 2; i++) {
         sprites[i].setPosition(xPos, yPos);
     }

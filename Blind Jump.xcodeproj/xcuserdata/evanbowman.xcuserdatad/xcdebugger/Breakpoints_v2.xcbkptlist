@@ -330,11 +330,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Blind Jump/mappingFunctions.cpp"
-            timestampString = "479951665.960153"
+            timestampString = "483113619.101074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "226"
-            endingLineNumber = "226"
+            startingLineNumber = "225"
+            endingLineNumber = "225"
             landmarkName = "checkFootprint(short map[61][61], int x, int y, int w, int h)"
             landmarkType = "7">
          </BreakpointContent>
@@ -346,28 +346,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Blind Jump/mappingFunctions.cpp"
-            timestampString = "479951665.960153"
+            timestampString = "483113619.101074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "223"
-            endingLineNumber = "223"
+            startingLineNumber = "222"
+            endingLineNumber = "222"
             landmarkName = "checkFootprint(short map[61][61], int x, int y, int w, int h)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Blind Jump/mappingFunctions.cpp"
-            timestampString = "479951665.960153"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "255"
-            endingLineNumber = "255"
-            landmarkName = "addHouse(short map[61][61], tileController&amp; tiles)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -602,11 +586,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Blind Jump/mappingFunctions.cpp"
-            timestampString = "481309608.953814"
+            timestampString = "483113619.101074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "322"
-            endingLineNumber = "322"
+            startingLineNumber = "293"
+            endingLineNumber = "293"
             landmarkName = "mappingFunction(short map[61][61], int level, bool enableGrass)"
             landmarkType = "7">
          </BreakpointContent>
@@ -618,11 +602,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Blind Jump/mappingFunctions.cpp"
-            timestampString = "481309608.953814"
+            timestampString = "483113619.101074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "331"
-            endingLineNumber = "331"
+            startingLineNumber = "302"
+            endingLineNumber = "302"
             landmarkName = "mappingFunction(short map[61][61], int level, bool enableGrass)"
             landmarkType = "7">
          </BreakpointContent>
@@ -634,27 +618,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Blind Jump/mappingFunctions.cpp"
-            timestampString = "480619243.475093"
+            timestampString = "483113619.101074"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "245"
-            endingLineNumber = "245"
-            landmarkName = "addHouse(short map[61][61], tileController&amp; tiles)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Blind Jump/mappingFunctions.cpp"
-            timestampString = "480619428.582237"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "173"
-            endingLineNumber = "173"
+            startingLineNumber = "172"
+            endingLineNumber = "172"
             landmarkName = "initMapOverlay(short map[61][61])"
             landmarkType = "7">
          </BreakpointContent>
@@ -671,7 +639,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "260"
             endingLineNumber = "260"
-            landmarkName = "tileController::drawTiles(sf::RenderWindow&amp; window, std::vector&lt;sf::Sprite*&gt;* glowSprites, std::vector&lt;sf::Sprite*&gt;* glowSprites2, int level)"
+            landmarkName = "tileController::drawTiles(sf::RenderTexture&amp; window, std::vector&lt;sf::Sprite*&gt;* glowSprites, std::vector&lt;sf::Sprite*&gt;* glowSprites2, int level)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -687,7 +655,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "238"
             endingLineNumber = "238"
-            landmarkName = "tileController::drawTiles(sf::RenderWindow&amp; window, std::vector&lt;sf::Sprite*&gt;* glowSprites, std::vector&lt;sf::Sprite*&gt;* glowSprites2, int level)"
+            landmarkName = "tileController::drawTiles(sf::RenderTexture&amp; window, std::vector&lt;sf::Sprite*&gt;* glowSprites, std::vector&lt;sf::Sprite*&gt;* glowSprites2, int level)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -703,7 +671,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "246"
             endingLineNumber = "246"
-            landmarkName = "tileController::drawTiles(sf::RenderWindow&amp; window, std::vector&lt;sf::Sprite*&gt;* glowSprites, std::vector&lt;sf::Sprite*&gt;* glowSprites2, int level)"
+            landmarkName = "tileController::drawTiles(sf::RenderTexture&amp; window, std::vector&lt;sf::Sprite*&gt;* glowSprites, std::vector&lt;sf::Sprite*&gt;* glowSprites2, int level)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -768,6 +736,38 @@
             startingLineNumber = "327"
             endingLineNumber = "327"
             landmarkName = "detailController::update(float xOffset, float yOffset, effectsController&amp; ef, char PlayerSprIndex, std::vector&lt;wall&gt;&amp; walls, std::vector&lt;sf::Sprite*&gt;* glow1, std::vector&lt;sf::Sprite*&gt;* glow2, userInterface&amp; ui, FontController&amp; fonts, Player&amp; player, InputController* pInput, ScreenShakeController * pscr)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Blind Jump/gameMap.cpp"
+            timestampString = "483139689.29395"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "712"
+            endingLineNumber = "712"
+            landmarkName = "GameMap::Reset()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Blind Jump/gameMap.cpp"
+            timestampString = "483139689.29395"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "570"
+            endingLineNumber = "570"
+            landmarkName = "GameMap::update(sf::RenderWindow&amp; window)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
