@@ -40,7 +40,7 @@ void turretShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
     sprs[1].setPosition(xPos, yPos);
     glowSprite.setPosition(xPos, yPos + 18);
     timer += elapsedTime.asMilliseconds();
-    if (timer > 400) {
+    if (timer > 600) {
         killFlag = true;
     }
     float offset = rand() % 20;

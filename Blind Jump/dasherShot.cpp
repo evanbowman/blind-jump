@@ -21,7 +21,6 @@ DasherShot::DasherShot(sf::Sprite* sprite, sf::Sprite glow, float x, float y, fl
     xInit = x;
     yInit = y;
     imageIndex = 0;
-    frameLength = 2;
     timeout = 50;
     int diff = pow(-1,rand() % 2) + rand() % 6 - 3;
     direction = (dir - 270 + diff) * (3.14 / 180);     // I added 270 previously to get the sprite to face in the right direction, so subract it
@@ -30,23 +29,26 @@ DasherShot::DasherShot(sf::Sprite* sprite, sf::Sprite glow, float x, float y, fl
     scale = 5.8 + (0.8 * (rand() % 3));
     trackPlayer = false;
     frameIndex = false;
-    frameLength = 4;
+    timer = 0;
+    timeout = 0;
     driftSel = rand() % 2;
 }
 
-void DasherShot::update(float xOffset, float yOffset, sf::Time &) {
-    xPos = xInit + xOffset + scale * (50 - timeout) * (cos(direction));         // Note: timeout starts at 60, so 60 - timout grows linearly with time
-    yPos = yInit + 11 + yOffset + scale * (50 - timeout) * (sin(direction));
-    sprs[0].setPosition(xPos, yPos);
-    sprs[1].setPosition(xPos, yPos);
+void DasherShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
+    xInit += scale * (elapsedTime.asMilliseconds() / 17.6) * (cos(direction));         // Note: timeout starts at 60, so 60 - timout grows linearly with time
+    yInit += scale * (elapsedTime.asMilliseconds() / 17.6) * (sin(direction));
+    xPos = xInit + xOffset;
+    yPos = yInit + yOffset + 11;
     glowSprite.setPosition(xPos, yPos + 18);
     if (--timeout == 0) {
         killFlag = true;
     }
+    timer += elapsedTime.asMilliseconds();
+    timeout += elapsedTime.asMilliseconds();
     // Alternate between frames
-    if (--frameLength == 0) {
+    if (timer > 70) {
         frameIndex = !frameIndex;
-        frameLength = 4;
+        timer -= 70;
     }
     if (driftSel) {
         direction += 0.002;
@@ -55,17 +57,19 @@ void DasherShot::update(float xOffset, float yOffset, sf::Time &) {
         direction -= 0.002;
     }
     scale *= 0.993;
-    if (timeout < 10) {
-        sf::Color c = glowSprite.getColor();
-        c.r -= 10;
-        c.b -= 10;
-        c.g -= 10;
-        glowSprite.setColor(c);
+    
+    if (timeout > 750) {
+        killFlag = true;
     }
 }
 
 sf::Sprite DasherShot::getSprite() {
+    sprs[frameIndex].setPosition(xPos, yPos);
     return sprs[frameIndex];
+}
+
+void DasherShot::setKillFlag() {
+    killFlag = true;
 }
 
 sf::Sprite* DasherShot::getGlow() {
@@ -74,10 +78,6 @@ sf::Sprite* DasherShot::getGlow() {
 
 bool DasherShot::getKillFlag() {
     return killFlag;
-}
-
-void DasherShot::setKillFlag() {
-    killFlag = true;
 }
 
 float DasherShot::getXpos() {

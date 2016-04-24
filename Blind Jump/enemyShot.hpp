@@ -20,8 +20,8 @@ private:
     float xInit;
     double yInit;
     unsigned char imageIndex;
-    unsigned char frameLength;
-    unsigned char timeout;
+    unsigned int frameTimer;
+    unsigned int elapsedTime;
     float direction;
     bool killFlag;
     sf::Sprite glowSprite;

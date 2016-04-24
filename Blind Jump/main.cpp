@@ -76,7 +76,8 @@ int main(int, char const**) {
     // Hide cursor inside the window
     window.setMouseCursorVisible(false);
     // Set the framerate to 60, so that the window doesn't update constantly
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(240);
+    //window.setVerticalSyncEnabled(false);
     // Set the Icon
     sf::Image icon;
     if (!icon.loadFromFile(resourcePath() + "icon.png")) {

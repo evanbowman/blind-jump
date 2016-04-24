@@ -15,7 +15,6 @@
 class DasherShot {
 public:
     DasherShot(sf::Sprite*, sf::Sprite, float, float, float);
-    unsigned short timeout;
     float xPos;
     float yPos;
     float xInit;
@@ -24,11 +23,9 @@ public:
     sf::Sprite getSprite();
     void update(float, float, sf::Time &);
     char imageIndex;
-    char frameLength;
     float direction;
     bool killFlag;
     bool getKillFlag();
-    void setKillFlag();
     float getXpos();
     float getYpos();
     void speedFactor(float);
@@ -37,9 +34,10 @@ public:
     bool frameIndex;
     bool driftSel;
     sf::Sprite* getGlow();
-    
+    void setKillFlag();
     
 private:
+    unsigned int timer, timeout;
     float scale;
     bool trackPlayer;
     sf::Sprite glowSprite;

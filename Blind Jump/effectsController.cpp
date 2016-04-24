@@ -109,10 +109,10 @@ effectsController::effectsController() {
 
 // In the process of shortening the code with template functions
 template<typename T>
-void updateVector(std::vector<T>& vec, float xOffset, float yOffset) {
+void updateVector(std::vector<T>& vec, float xOffset, float yOffset, sf::Time & elapsedTime) {
     if (!vec.empty()) {
         for (typename std::vector<T>::iterator it = vec.begin(); it != vec.end();) {
-            it->update(xOffset, yOffset);
+            it->update(xOffset, yOffset, elapsedTime);
             if (it->getKillFlag()) {
                 it = vec.erase(it);
             }
@@ -164,8 +164,8 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
     }
     
     updateVectorGlow(smallExplosions, xOffset, yOffset, glowSprs, elapsedTime);
-    updateVector(healthEffects, xOffset, yOffset);
-    updateVector(dodgeEffects, xOffset, yOffset);
+    updateVector(healthEffects, xOffset, yOffset, elapsedTime);
+    updateVector(dodgeEffects, xOffset, yOffset, elapsedTime);
     updateVectorGlow(hearts, xOffset, yOffset, glowSprs, elapsedTime);
     updateVectorGlow(coins, xOffset, yOffset, glowSprs, elapsedTime);
     updateVectorGlow(turretShots, xOffset, yOffset, glowSprs, elapsedTime);
@@ -214,7 +214,7 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
         }
     }
     
-    updateVector(puffs, xOffset, yOffset);
+    updateVector(puffs, xOffset, yOffset, elapsedTime);
     
     if (!energyBeams.empty()) {
         for (auto it = energyBeams.begin(); it != energyBeams.end();) {
@@ -253,7 +253,7 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
         }
     }
     
-    updateVector(warpEffects, xOffset, yOffset);
+    updateVector(warpEffects, xOffset, yOffset, elapsedTime);
 }
 
 //A function for adding a turret flash animation

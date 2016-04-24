@@ -168,8 +168,12 @@ void turret::updateShots(effectsController& ef, FontController& fonts) {
     }
     if (hp == 0) {
         killFlag = 1;
-        ef.addLvP10(xInit - 8, yInit, fonts);
-        ef.addExplosion(xInit - 8, yInit);
+        if ((rand() % 4) == 0) {
+            ef.addHearts(xInit, yInit);
+        } else {
+            ef.addCoins(xInit, yInit);
+        }
+        ef.addFireExplosion(xInit - 8, yInit);
     }
 }
 

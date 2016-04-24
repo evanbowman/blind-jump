@@ -16,8 +16,8 @@ Enemyshot::Enemyshot(sf::Sprite* inpsprs, sf::Sprite glow, float x, float y, flo
     yInit = y;
     imageIndex = 0;
     glowSprite = glow;
-    frameLength = 12;
-    timeout = 65;
+    frameTimer = 0;
+    elapsedTime = 0;
     for (int i = 0; i < 2; i++) {
         sprites[i] = inpsprs[i];
     }
@@ -26,16 +26,18 @@ Enemyshot::Enemyshot(sf::Sprite* inpsprs, sf::Sprite glow, float x, float y, flo
 }
 
 void Enemyshot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
-    xPos = xInit + xOffset + 4.4 * (65 - timeout) * (cos(direction));         // Note: timeout starts at 60, so 60 - timout grows linearly with time
-    yPos = yInit + 11 + yOffset + 4.4 * (65 - timeout) * (sin(direction));
-    for (int i = 0; i < 2; i++) {
-        sprites[i].setPosition(xPos, yPos);
-    }
-    
+    xInit += 4.4 * (elapsedTime.asMilliseconds() / 17.6) * (cos(direction));         // Note: timeout starts at 60, so 60 - timout grows linearly with time
+    yInit += 4.4 * (elapsedTime.asMilliseconds() / 17.6) * (sin(direction));
+    xPos = xInit + xOffset;
+    yPos = yInit + yOffset + 11;
+
     glowSprite.setPosition(xPos, yPos + 18);
     
-    if (--frameLength == 0) {
-        frameLength = 12;
+    this->elapsedTime += elapsedTime.asMilliseconds();
+    frameTimer += elapsedTime.asMilliseconds();
+    
+    if (frameTimer > 211) {
+        frameTimer -= 211;
         if (imageIndex == 0) {
             imageIndex = 1;
         }
@@ -44,7 +46,7 @@ void Enemyshot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
         }
     }
     
-    if (--timeout == 0) {
+    if (this->elapsedTime > 800) {
         killFlag = true;
     }
     
@@ -58,6 +60,7 @@ sf::Sprite* Enemyshot::getGlow() {
 }
 
 sf::Sprite Enemyshot::getSprite() {
+    sprites[imageIndex].setPosition(xPos, yPos);
     return sprites[imageIndex];
 }
 
