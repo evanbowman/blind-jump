@@ -18,9 +18,6 @@ turretShot::turretShot(sf::Sprite* sprs, sf::Sprite glow, float x, float y, floa
     xInit = x;
     yInit = y;
     imageIndex = 0;
-    frameLength = 2;
-    timeout = 60;
-    duration = 60;
     int diff = pow(-1,rand() % 2) + rand() % 6 - 3;
     this->sprs[0].setRotation(dir + diff);
     this->sprs[1].setRotation(dir + diff);
@@ -30,23 +27,27 @@ turretShot::turretShot(sf::Sprite* sprs, sf::Sprite glow, float x, float y, floa
     scale = 3.8;
     trackPlayer = false;
     frameIndex = 0;
-    frameRate = 6;
+    timer = 0;
+    animationTimer = 0;
 }
 
-void turretShot::update(float xOffset, float yOffset) {
-    xPos = xInit + xOffset + scale * 1.5 * (duration - timeout) * (cos(direction));         // Note: timeout starts at 60, so 60 - timout grows linearly with time
-    yPos = yInit + 11 + yOffset + scale * 1.5 * (duration - timeout) * (sin(direction));
+void turretShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
+    xInit += scale * 1.5 * (elapsedTime.asMilliseconds() / 17.6) * (cos(direction));         // Note: timeout starts at 60, so 60 - timout grows linearly with time
+    yInit += scale * 1.5 * (elapsedTime.asMilliseconds() / 17.6) * (sin(direction));
+    xPos = xInit + xOffset;
+    yPos = yInit + yOffset + 11;
     sprs[0].setPosition(xPos, yPos);
     sprs[1].setPosition(xPos, yPos);
     glowSprite.setPosition(xPos, yPos + 18);
-    if (--timeout == 0) {
+    timer += elapsedTime.asMilliseconds();
+    if (timer > 400) {
         killFlag = true;
     }
     float offset = rand() % 20;
     glowSprite.setColor(sf::Color(230 + offset, 230 + offset, 230 + offset, 255));
-    
-    if (--frameRate == 0) {
-        frameRate = 6;
+    animationTimer += elapsedTime.asMilliseconds();
+    if (animationTimer > 50) {
+        animationTimer -= 50;
         if (frameIndex == 1) {
             frameIndex = 0;
         }
@@ -83,8 +84,6 @@ float turretShot::getYpos() {
 
 void turretShot::speedFactor(float factor) {
     scale = factor;
-    duration -= 10;
-    timeout -= 10;
 }
 
 void turretShot::enableTracking(float windowW, float windowH) {

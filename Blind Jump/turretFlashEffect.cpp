@@ -18,8 +18,8 @@ turretFlashEffect::turretFlashEffect(sf::Sprite sprites[5], float x, float y) {
     xInit = x;
     yInit = y;
     imageIndex = 0;
-    frameLength = 2;
-    timeout = 10;
+    clock.restart();
+    killFlag = false;
     bool select = rand() % 2;
     if (select) {
         for (int i = 0; i < 5; i++) {
@@ -32,25 +32,28 @@ turretFlashEffect::turretFlashEffect(sf::Sprite sprites[5], float x, float y) {
 
 //Update the position of the image
 void turretFlashEffect::update(float xOffset, float yOffset) {
-    //Why call two seperate functions when we can decrement the effect's timeout variable right here?
-    --frameLength;
-    --timeout;
-    if (frameLength == 0) {
+    if (clock.getElapsedTime().asMilliseconds() > 50) {
         imageIndex += 1;
-        frameLength = 2;
+        if (imageIndex > 4) {
+            killFlag = true;
+            imageIndex = 4;
+        }
+        clock.restart();
     }
     xPos = xInit + xOffset;
     yPos = yInit + 11 + yOffset;
-    for (int i = 0; i < 5; i++) {
-        flashSprites[i].setPosition(xPos, yPos);
-    }
 }
 
 //A funtion to return the current sprite
 sf::Sprite turretFlashEffect::getSprite() {
+    flashSprites[imageIndex].setPosition(xPos, yPos);
     return flashSprites[imageIndex];
 }
 
 float turretFlashEffect::getYpos() {
     return yPos;
+}
+
+bool turretFlashEffect::getKillFlag() {
+    return killFlag;
 }

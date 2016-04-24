@@ -15,19 +15,20 @@ TreasureChest::TreasureChest(float xStart, float yStart, sf::Sprite* sprs, int l
     for (int i = 0; i < len; i++) {
         chestSprites[i] = sprs[i];
     }
-    frameLength = 4;
     isOpen = false;
     animationIsRunning = false;
     frameIndex = 0;
     // Place the input contents in the chest
     item = contents;
+    valid = true;
+    animationTimer = 0;
 }
 
 sf::Sprite* TreasureChest::getShadow() {
     return &chestSprites[6];
 }
 
-void TreasureChest::update(float xOffset, float yOffset, char playerSpriteIndex, InputController* input) {
+void TreasureChest::update(float xOffset, float yOffset, char playerSpriteIndex, InputController* input, sf::Time & elapsedTime) {
     xPos = xOffset + xInit;
     yPos = yOffset + yInit;
     
@@ -40,11 +41,9 @@ void TreasureChest::update(float xOffset, float yOffset, char playerSpriteIndex,
     }
     
     if (animationIsRunning) {
-        if (--frameLength == 0) {
-            frameLength = 2;
-            if (frameIndex > 2) {
-                frameLength = 4;
-            }
+        animationTimer += elapsedTime.asMilliseconds();
+        if (animationTimer > 50) {
+            animationTimer -= 50;
             frameIndex++;
         }
         if (frameIndex > 5) {
@@ -65,12 +64,14 @@ float TreasureChest::getZY() {
 }
 
 char TreasureChest::getFrameIndex() {
-    if (frameLength == 1)
-        return frameIndex;
-    
-    return 0;
+    return frameIndex;
+}
+
+bool TreasureChest::isValid() {
+    return valid;
 }
 
 char TreasureChest::getItem() {
+    valid = false;
     return item;
 }

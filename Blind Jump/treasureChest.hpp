@@ -16,21 +16,22 @@
 class TreasureChest : public detailParent {
 public:
     TreasureChest(float, float, sf::Sprite*, int, float, float, char);
-    using detailParent::detailParent;
     sf::Sprite* getShadow();
     sf::Sprite* getSprite();
-    void update(float, float, char, InputController*);
+    void update(float, float, char, InputController*, sf::Time&);
     sf::Sprite chestSprites[7];
     float getZY();
     char getFrameIndex();
+    bool isValid();
     char getItem();
     
 private:
     bool animationIsRunning;
-    char frameLength;
+    unsigned int animationTimer;
     char frameIndex;
     // Boolean to keep track of opened or closed
     bool isOpen;
     char item;
+    bool valid;
 };
 #endif /* treasureChest_hpp */

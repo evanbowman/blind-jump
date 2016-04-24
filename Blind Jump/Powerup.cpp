@@ -16,16 +16,17 @@ Powerup::Powerup(sf::Sprite* inpSpr, sf::Sprite glow, float xInit, float yInit) 
     this->yInit = yInit;
     this->glow = glow;
     spr = *inpSpr;
-    clock.restart();
+    timer = 0;
 }
 
-void Powerup::update(float xoffset, float yoffset) {
+void Powerup::update(float xoffset, float yoffset, sf::Time & elapsedTime) {
     xPos = xInit + xoffset;
     yPos = yInit + yoffset;
+    timer += elapsedTime.asMilliseconds();
 }
 
 sf::Sprite Powerup::getSprite() {
-    float offset = (3 * sinf(2 * PI * 0.001 * clock.getElapsedTime().asMilliseconds() + 180));
+    float offset = (3 * sinf(2 * PI * 0.001 * timer + 180));
     // Make the sprite float up and down
     spr.setPosition(xPos, yPos + offset);
     return spr;

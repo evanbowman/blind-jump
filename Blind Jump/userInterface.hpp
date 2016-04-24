@@ -27,7 +27,7 @@ public:
     userInterface();
     // Draw menu draws, but also returns whether it is opening or closing
     // Allows reuse of shaded resources, if the menu is open and not closing no need to keep running the blur shader
-    bool drawMenu(sf::RenderWindow&, Player*, unsigned char *, FontController&, effectsController&, float, float, InputController*);
+    bool drawMenu(sf::RenderWindow&, Player*, unsigned char *, FontController&, effectsController&, float, float, InputController*, sf::Time&);
     sf::CircleShape circle;
     // Declare selection circles to go around the object
     sf::CircleShape selCircle1;

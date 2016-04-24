@@ -37,7 +37,7 @@ private:
     char imageIndex;
     char spriteIndex;
     //The player's movement speed
-    char speed;
+    float speed;
     //In some instances we might want to deactivate the player object
     bool active;
     //The game works by keeping the player object central and moving everything else
@@ -76,7 +76,7 @@ private:
     bool downPrevious;
     bool zprevious;
     
-    char slowSpeed;
+    float slowSpeed;
     
     // Variables to determine whether player can take damage
     bool canhurt;
@@ -113,7 +113,7 @@ public:
     float getPosX() const;
     float getPosY() const;
     void drawController(InputController*, effectsController& ef);
-    void draw(std::vector<std::tuple<sf::Sprite, float, int>>&, std::vector<std::tuple<sf::Sprite, float, int>>&, tileController&, effectsController&, detailController&, SoundController&, userInterface&, InputController*, sf::RenderTexture&, FontController&);
+    void draw(std::vector<std::tuple<sf::Sprite, float, int>>&, std::vector<std::tuple<sf::Sprite, float, int>>&, tileController&, effectsController&, detailController&, SoundController&, userInterface&, InputController*, sf::RenderTexture&, FontController&, sf::Time&);
     //Construct a default player object
     Player();
     //More functions for setting the current position

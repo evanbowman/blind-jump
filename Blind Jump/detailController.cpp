@@ -276,7 +276,7 @@ void detailController::addTerminal(tileController & t, float posX, float posY, f
     terminals.push_back(term);
 }
 
-void detailController::update(float xOffset, float yOffset, effectsController& ef, char PlayerSprIndex, std::vector<wall>& walls, std::vector<sf::Sprite*>* glow1, std::vector<sf::Sprite*>* glow2, userInterface& ui, FontController& fonts, Player& player, InputController* pInput, ScreenShakeController * pscr) {
+void detailController::update(float xOffset, float yOffset, effectsController& ef, char PlayerSprIndex, std::vector<wall>& walls, std::vector<sf::Sprite*>* glow1, std::vector<sf::Sprite*>* glow2, userInterface& ui, FontController& fonts, Player& player, InputController* pInput, ScreenShakeController * pscr, sf::Time & elapsedTime) {
     UIStates[0] = 0;
     if (!teleporters.empty()) {
         for (auto & element : teleporters) {
@@ -304,10 +304,12 @@ void detailController::update(float xOffset, float yOffset, effectsController& e
     
     if (!chests.empty()) {
         for (int i = 0; i < chests.size(); i++) {
-            chests[i].update(xOffset, yOffset, PlayerSprIndex, pInput);
+            chests[i].update(xOffset, yOffset, PlayerSprIndex, pInput, elapsedTime);
             // If the user opened a chest, put it's item into the UI menu
             if (chests[i].getFrameIndex() == 3) {
-                ui.addItem(chests[i].getItem(), ef, chests[i].getxPos() - xOffset, chests[i].getyPos() - yOffset, fonts, player);
+                if (chests[i].isValid()) {
+                    ui.addItem(chests[i].getItem(), ef, chests[i].getxPos() - xOffset, chests[i].getyPos() - yOffset, fonts, player);
+                }
             }
         }
     }

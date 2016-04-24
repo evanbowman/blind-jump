@@ -19,16 +19,16 @@ FireExplosion::FireExplosion(sf::Sprite* sprs, sf::Sprite glow, float x, float y
     yInit = y;
     killFlag = false;
     frameIndex = 0;
-    speed = 4;
-    frameRate = speed;
+    animationTimer = 0;
     valid = true;
 }
 
-void FireExplosion::update(float xOffset, float yOffset) {
+void FireExplosion::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
     xPos = xInit + xOffset;
     yPos = yInit + yOffset;
-    if (--frameRate == 0) {
-        frameRate = speed;
+    animationTimer += elapsedTime.asMilliseconds();
+    if (animationTimer > 70) {
+        animationTimer -= 70;
         frameIndex++;
         if (frameIndex > 8) {
             frameIndex = 8;

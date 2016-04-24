@@ -164,7 +164,7 @@ sf::Sprite* Critter::getShadow() {
 
 sf::Sprite* Critter::getSprite() {
     // Update the position of the current sprite (rounding is important, otherwise movement will be shaky)
-    sprites[frameIndex].setPosition(floor(xPos) + 6, floor(yPos));
+    sprites[frameIndex].setPosition(xPos + 6, yPos);
     return &sprites[frameIndex];
 }
 

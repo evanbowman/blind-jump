@@ -39,7 +39,7 @@ sf::Sprite shotPuff::getSprite() {
             imFinished = 1;
         }
     }
-    sprPuff[spriteIndex].setPosition(xPos, yPos);
+    sprPuff[spriteIndex].setPosition(round(xPos), round(yPos));
     return sprPuff[spriteIndex];
 }
 

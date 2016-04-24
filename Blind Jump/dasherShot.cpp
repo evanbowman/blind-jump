@@ -34,7 +34,7 @@ DasherShot::DasherShot(sf::Sprite* sprite, sf::Sprite glow, float x, float y, fl
     driftSel = rand() % 2;
 }
 
-void DasherShot::update(float xOffset, float yOffset) {
+void DasherShot::update(float xOffset, float yOffset, sf::Time &) {
     xPos = xInit + xOffset + scale * (50 - timeout) * (cos(direction));         // Note: timeout starts at 60, so 60 - timout grows linearly with time
     yPos = yInit + 11 + yOffset + scale * (50 - timeout) * (sin(direction));
     sprs[0].setPosition(xPos, yPos);

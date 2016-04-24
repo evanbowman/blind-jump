@@ -13,18 +13,21 @@
 #include "SFML/graphics.hpp"
 
 class turretFlashEffect {
-public:
-    short timeout;
+private:
     float xPos;
     float yPos;
     float xInit;
     float yInit;
     sf::Sprite flashSprites[5];
-    sf::Sprite getSprite();
+    sf::Clock clock;
+    bool killFlag;
+    
+public:
     void update(float, float);
     char imageIndex;
-    char frameLength;
     turretFlashEffect(sf::Sprite sprites[5], float, float);
     float getYpos();
+    bool getKillFlag();
+    sf::Sprite getSprite();
 };
 #endif /* turretFlashEffect_hpp */

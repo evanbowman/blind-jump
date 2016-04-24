@@ -23,7 +23,7 @@ private:
     
 public:
     SmallExplosion(sf::Sprite*, sf::Sprite, float, float);
-    void update(float, float);
+    void update(float, float, sf::Time &);
     sf::Sprite getSprite();
     bool getKillFlag();
     float getYpos();

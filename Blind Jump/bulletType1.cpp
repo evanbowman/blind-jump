@@ -8,7 +8,7 @@
 
 #include "bulletType1.hpp"
 
-#define TIME 14
+#define MOVEMENT_RATE 0.45
 
 bulletType1::bulletType1(sf::Sprite s, sf::Sprite s2, char dir, float x, float y) {
     //Initialize the starting x position to the player's x position
@@ -19,8 +19,8 @@ bulletType1::bulletType1(sf::Sprite s, sf::Sprite s2, char dir, float x, float y
     direction = dir;
     bulletSprite[0] = s;
     bulletSprite[1] = s2;
-    duration = TIME;
     killFlag = 0;
+    clock.restart();
     canPoof = true;
 }
 
@@ -39,42 +39,41 @@ void bulletType1::update(float xOffset, float yOffset) {
             // so each case needs to set a specific origin for the shot object.
         case 0:
             xPos = xInit + xOffset + 6;
-            yPos = yInit + 11 + yOffset + 18 + 9 * (TIME - duration); //'20 - duration' term grows with time, thus moving the bullet across the screen
+            yPos = yInit + 11 + yOffset + 18 + MOVEMENT_RATE * clock.getElapsedTime().asMilliseconds(); //'20 - duration' term grows with time, thus moving the bullet across the screen
             break;
         case 1:
             xPos = xInit + xOffset + 6;
-            yPos = yInit + 11 + yOffset - 9 * (TIME - duration);
+            yPos = yInit + 11 + yOffset - MOVEMENT_RATE * clock.getElapsedTime().asMilliseconds();
             break;
         case 2:
-            xPos = xInit + xOffset - 13 - 9 * (TIME - duration);
+            xPos = xInit + xOffset - 13 - MOVEMENT_RATE * clock.getElapsedTime().asMilliseconds();
             yPos = yInit + 11 + yOffset + 8;
             break;
         case 3:
-            xPos = xInit + xOffset + 29 + 9 * (TIME - duration);
+            xPos = xInit + xOffset + 29 + MOVEMENT_RATE * clock.getElapsedTime().asMilliseconds();
             yPos = yInit + 11 + yOffset + 8;
             break;
         case 4:
             xPos = xInit + xOffset + 6;
-            yPos = yInit + 11 + yOffset + 18 + 9 * (TIME - duration);
+            yPos = yInit + 11 + yOffset + 18 + MOVEMENT_RATE * clock.getElapsedTime().asMilliseconds();
             break;
         case 5:
             xPos = xInit + xOffset + 6;
-            yPos = yInit + 11 + yOffset - 9 * (TIME - duration);
+            yPos = yInit + 11 + yOffset - MOVEMENT_RATE * clock.getElapsedTime().asMilliseconds();
             break;
         case 6:
-            xPos = xInit + xOffset - 13 - 9 * (TIME - duration);
+            xPos = xInit + xOffset - 13 - MOVEMENT_RATE * clock.getElapsedTime().asMilliseconds();
             yPos = yInit + 11 + yOffset + 8;
             break;
         case 7:
-            xPos = xInit + xOffset + 29 + 9 * (TIME - duration);
+            xPos = xInit + xOffset + 29 + MOVEMENT_RATE * clock.getElapsedTime().asMilliseconds();
             yPos = yInit + 11 + yOffset + 8;
             break;
     }
     //Now that we've done all of that legwork, actually set the sprite's position
     bulletSprite[0].setPosition(xPos, yPos);
     bulletSprite[1].setPosition(xPos - 16, yPos - 1);
-    --duration;
-    if (duration == 0) {
+    if (clock.getElapsedTime().asMilliseconds() > 200) {
         killFlag = true;
     }
     float offset = rand() % 20;

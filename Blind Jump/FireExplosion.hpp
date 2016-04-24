@@ -17,13 +17,14 @@ private:
     sf::Sprite glow;
     float xInit, yInit, xPos, yPos;
     bool killFlag;
-    char frameIndex, frameRate;
+    char frameIndex;
+    unsigned int animationTimer;
     char speed;
     bool valid;
     
 public:
     FireExplosion(sf::Sprite*, sf::Sprite, float, float);
-    void update(float, float);
+    void update(float, float, sf::Time &);
     sf::Sprite getSprite();
     bool getKillFlag();
     float getYpos();

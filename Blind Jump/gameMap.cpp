@@ -169,7 +169,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     beamGlowSpr.setColor(sf::Color(0, 0, 0, 255));
     
     transitionShape.setSize(sf::Vector2f(windowW, windowH));
-    transitionShape.setFillColor(sf::Color(255, 255, 255, 255));
+    transitionShape.setFillColor(sf::Color(0, 0, 0, 0));
     
     vignetteSprite.setColor(sf::Color(255, 255, 255, 96));
     
@@ -183,7 +183,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     }
 }
 
-void GameMap::update(sf::RenderWindow& window) {
+void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     target.clear(sf::Color::Transparent);
     // Start by getting the displacement that the player has moved, in order to update the position of all of the tiles and game objects
     xOffset = player.getWorldOffsetX();
@@ -195,7 +195,7 @@ void GameMap::update(sf::RenderWindow& window) {
     tiles.drawTiles(target, effects.getGlowSprs(), effects.getGlowSprs2(), level);
     effects.getGlowSprs2()->clear();
     // Update the overworld objects based on the displacement of the player
-    details.update(xOffset, yOffset, effects, player.getSprIndex(), tiles.walls, effects.getGlowSprs(), effects.getGlowSprs2(), UI, *pFonts, player, pInput, &ssc);
+    details.update(xOffset, yOffset, effects, player.getSprIndex(), tiles.walls, effects.getGlowSprs(), effects.getGlowSprs2(), UI, *pFonts, player, pInput, &ssc, elapsedTime);
     // Draw the details / add them to the game objects vector
     details.draw(gameObjects, gameShadows, target);
     // Update the enemy objects in the game based on the player's displacement
@@ -205,8 +205,12 @@ void GameMap::update(sf::RenderWindow& window) {
     
     if (player.visible) {
         // Draw the player to the window, as long as the object is visible
-        player.draw(gameObjects, gameShadows, tiles, effects, details, sndCtrl, UI, pInput, target, *pFonts);
+        player.draw(gameObjects, gameShadows, tiles, effects, details, sndCtrl, UI, pInput, target, *pFonts, elapsedTime);
     }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y)) {
+        std::cout << elapsedTime.asMilliseconds() << std::endl;
+    }
+    
     
     // If player was hit rumble the screen.
     if (player.scrShakeState) {
@@ -215,7 +219,7 @@ void GameMap::update(sf::RenderWindow& window) {
     
     effects.getGlowSprs()->clear();
     // Update the positions of all the effect objects
-    effects.update(xOffset, yOffset, &ssc);
+    effects.update(xOffset, yOffset, &ssc, elapsedTime);
     
     // Draw shadows to the window
     if (!gameShadows.empty()) {
@@ -293,6 +297,7 @@ void GameMap::update(sf::RenderWindow& window) {
     // Finally draw it to the window
     if (UI.isVisible()) {
         if (computeBlur) {
+            // Blurring takes a lot of cpu resources. Limit the framerate
             finalPass.clear(sf::Color::Transparent);
             sf::Vector2u textureSize = target.getSize();
             // Get the blur amount from the UI controller
@@ -349,11 +354,11 @@ void GameMap::update(sf::RenderWindow& window) {
             pFonts->setWaypointText(level);
             dispEntryBeam = false;
         }
-        computeBlur = UI.drawMenu(window, &player, details.getUIStates(), *pFonts, effects, xOffset, yOffset, pInput);
+        computeBlur = UI.drawMenu(window, &player, details.getUIStates(), *pFonts, effects, xOffset, yOffset, pInput, elapsedTime);
     }
     else {
         if (level != 0) {
-            computeBlur = UI.drawMenu(window, &player, details.getUIStates(), *pFonts, effects, xOffset, yOffset, pInput);
+            computeBlur = UI.drawMenu(window, &player, details.getUIStates(), *pFonts, effects, xOffset, yOffset, pInput, elapsedTime);
             // Pass the player's health to the font controller
             pFonts->updateHealth(player.getHealth());
             // Draw all of the game text to the window
@@ -434,13 +439,11 @@ void GameMap::update(sf::RenderWindow& window) {
     
     if (transitionIn) {
         sf::Color c = transitionShape.getFillColor();
-        if (c.b < 245) {
-            c.r += 10;
-            c.b += 10;
-            c.g += 10;
+        if (c.a > 10) {
+            c.a -= 10;
         }
         transitionShape.setFillColor(c);
-        window.draw(transitionShape, sf::BlendMultiply);
+        window.draw(transitionShape);
 
         if (--transitionDelay == 0) {
             transitionIn = false;
@@ -537,13 +540,11 @@ void GameMap::update(sf::RenderWindow& window) {
                     }
                     if (transitionDelay < 90) {
                         sf::Color c2 = transitionShape.getFillColor();
-                        if (c2.b > 4) {
-                            c2.r -= 3;
-                            c2.b -= 3;
-                            c2.g -= 3;
+                        if (c2.a < 253) {
+                            c2.a += 3;
                         }
                         transitionShape.setFillColor(c2);
-                        window.draw(transitionShape, sf::BlendMultiply);
+                        window.draw(transitionShape);
                     }
                     pFonts->drawTitle(c.a, window);
                 } else {
@@ -560,13 +561,11 @@ void GameMap::update(sf::RenderWindow& window) {
             else {
                 if (transitionDelay < 50) {
                     sf::Color c = transitionShape.getFillColor();
-                    if (c.b > 5) {
-                        c.r -= 5;
-                        c.b -= 5;
-                        c.g -= 5;
+                    if (c.a < 250) {
+                        c.a += 5;
                     }
                     transitionShape.setFillColor(c);
-                    window.draw(transitionShape, sf::BlendMultiply);
+                    window.draw(transitionShape);
                 }
                 if (--transitionDelay == 0) {
                     transitioning = false;

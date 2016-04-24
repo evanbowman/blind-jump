@@ -164,7 +164,7 @@ void Scoot::softUpdate(float xOffset, float yOffset) {
     // Update the enemy's position
     setPosition(xOffset, yOffset);
     for (auto i = 0; i < 2; i++) {
-        sprites[i].setPosition(floorf(xPos), floorf(yPos));
+        sprites[i].setPosition(xPos, yPos);
     }
 }
 

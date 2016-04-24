@@ -12,10 +12,8 @@
 
 #include <stdio.h>
 
-
 class bulletType1 {
 private:
-    unsigned short duration;
     sf::Sprite bulletSprite[2];
     char direction;
     float xPos;
@@ -24,6 +22,7 @@ private:
     float yInit;
     bool killFlag;
     bool canPoof;
+    sf::Clock clock;
     
 public:
     bulletType1(sf::Sprite s, sf::Sprite s2, char, float, float);

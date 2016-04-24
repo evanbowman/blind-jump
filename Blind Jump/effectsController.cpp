@@ -124,10 +124,10 @@ void updateVector(std::vector<T>& vec, float xOffset, float yOffset) {
 }
 
 template<typename T>
-void updateVectorGlow(std::vector<T>& vec, float xOffset, float yOffset, std::vector<sf::Sprite*>& glowSprs) {
+void updateVectorGlow(std::vector<T>& vec, float xOffset, float yOffset, std::vector<sf::Sprite*>& glowSprs, sf::Time & elapsedTime) {
     if (!vec.empty()) {
         for (typename std::vector<T>::iterator it = vec.begin(); it != vec.end();) {
-            it->update(xOffset, yOffset);
+            it->update(xOffset, yOffset, elapsedTime);
             glowSprs.push_back(it->getGlow());
             if (it->getKillFlag()) {
                 it = vec.erase(it);
@@ -140,7 +140,7 @@ void updateVectorGlow(std::vector<T>& vec, float xOffset, float yOffset, std::ve
 }
 
 //This function updates the positions of all of the effect objects whenever called
-void effectsController::update(float xOffset, float yOffset, ScreenShakeController* scrn) {
+void effectsController::update(float xOffset, float yOffset, ScreenShakeController* scrn, sf::Time & elapsedTime) {
     // Begin by clearing out the outdated glow sprites for the effects
     //glowSprs.clear();
     //Only attempt to loop through the vector and update or delete elements if the vector is not empty
@@ -150,9 +150,9 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
             element.update(xOffset, yOffset);
         }
         //Loop through based on index...
-        for (std::vector<turretFlashEffect>::iterator it = turretFlashes.begin(); it != turretFlashes.end();) {
+        for (auto it = turretFlashes.begin(); it != turretFlashes.end();) {
             //If the timeout for an element has reached 0
-            if (it->timeout == 0) {
+            if (it->getKillFlag()) {
                 //Erase it from the vector
                 it = turretFlashes.erase(it);
             }
@@ -163,14 +163,14 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
         }
     }
     
-    updateVectorGlow(smallExplosions, xOffset, yOffset, glowSprs);
+    updateVectorGlow(smallExplosions, xOffset, yOffset, glowSprs, elapsedTime);
     updateVector(healthEffects, xOffset, yOffset);
     updateVector(dodgeEffects, xOffset, yOffset);
-    updateVectorGlow(hearts, xOffset, yOffset, glowSprs);
-    updateVectorGlow(coins, xOffset, yOffset, glowSprs);
-    updateVectorGlow(turretShots, xOffset, yOffset, glowSprs);
-    updateVectorGlow(dasherShots, xOffset, yOffset, glowSprs);
-    updateVectorGlow(enemyShots, xOffset, yOffset, glowSprs);
+    updateVectorGlow(hearts, xOffset, yOffset, glowSprs, elapsedTime);
+    updateVectorGlow(coins, xOffset, yOffset, glowSprs, elapsedTime);
+    updateVectorGlow(turretShots, xOffset, yOffset, glowSprs, elapsedTime);
+    updateVectorGlow(dasherShots, xOffset, yOffset, glowSprs, elapsedTime);
+    updateVectorGlow(enemyShots, xOffset, yOffset, glowSprs, elapsedTime);
     
     //Only attempt to loop through the vector and update or delete elements if the vector is not empty
     if (!bullets.empty()) {
@@ -234,7 +234,7 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
         }
     }
     
-    updateVectorGlow(fireExplosions, xOffset, yOffset, glowSprs);
+    updateVectorGlow(fireExplosions, xOffset, yOffset, glowSprs, elapsedTime);
     
     if (!bigExplosions.empty()) {
         for (std::vector<Explosion32effect>::iterator it = bigExplosions.begin(); it != bigExplosions.end();) {

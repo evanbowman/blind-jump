@@ -98,6 +98,9 @@ int main(int, char const**) {
     creditsBkg.setSize(sf::Vector2f(windowWidth, windowHeight));
     creditsBkg.setFillColor(sf::Color(47, 51, 98, 255));
     
+    sf::Clock gameClock;
+    sf::Time elapsedTime;
+    
     // Start the game loop
     while (window.isOpen()) {
         // Process events
@@ -123,7 +126,9 @@ int main(int, char const**) {
         if (!title) {   // If not on the title screen
             // Apply the view to the window.
             window.setView(view);
-            Map.update(window);
+            
+            elapsedTime = gameClock.restart();
+            Map.update(window, elapsedTime);
             
             if (Map.getTeleporterCond()) {                     //Change the condition later to check for a value within Map
                 Map.Reset();

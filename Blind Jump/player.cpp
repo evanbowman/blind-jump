@@ -35,7 +35,7 @@ Player::Player() {
     posY = 0;
     active = 1;
     visible = true;
-    speed = 2;
+    speed = 2.2;
     worldOffsetX = 0;
     worldOffsetY = 0;
     animationCounter = 6;
@@ -46,7 +46,7 @@ Player::Player() {
     weapon.setPosition(posX, posY);
     CollisionLeft = 0;
     CollisionRight = 0;
-    slowSpeed = 1;
+    slowSpeed = 1.5;
     previousCheckOffsetX = 0;
     previousCheckOffsetY = 0;
     sortCounter = 40;
@@ -164,7 +164,7 @@ inline void compareSpriteIndex(char& spriteIndex) {
 }
 
 //This function updates the player's sprite index, resets the animation counter, and if the collision state is low, adjusts the world offset to move the player
-inline void updateWorldOffset(char& spriteIndex, int& animationCounter, bool collisionState, char externalNum, float& offset, char speed) {
+inline void updateWorldOffset(char& spriteIndex, int& animationCounter, bool collisionState, char externalNum, float& offset, float speed) {
     if (spriteIndex != externalNum) {
         spriteIndex = externalNum;
         animationCounter = 10;
@@ -177,14 +177,6 @@ inline void updateWorldOffset(char& spriteIndex, int& animationCounter, bool col
 //Sets imageIndex and spriteIndex based on keyboard button presses, and also controls movement
 //Add conditions for collisions later
 void Player::drawController(InputController* pInput, effectsController& ef) {
-    //*******| MOVEMENT CODE |********
-    if (slowSpeed == 1) {
-        slowSpeed = 2;
-    }
-    
-    else if (slowSpeed == 2) {
-        slowSpeed = 1;
-    }
     
     // If the player has no health and the death sequence isn't running, start it
     if (health == 0 && !deathSeq) {
@@ -631,12 +623,15 @@ bool checkShotCollision(std::vector<T>* shotVec, double playerXpos, double playe
 }
 
 //Returns the current sprite based on the values of imageIndex and spriteIndex
-void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, int>>& gameShadows, tileController& tiles, effectsController& ef, detailController& details, SoundController& sounds, userInterface& UI, InputController* pInput, sf::RenderTexture& window, FontController& fonts) {
+void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, int>>& gameShadows, tileController& tiles, effectsController& ef, detailController& details, SoundController& sounds, userInterface& UI, InputController* pInput, sf::RenderTexture& window, FontController& fonts, sf::Time& elapsedTime) {
     checkCollision(tiles, details);//, details);
     drawController(pInput, ef);
     std::tuple<sf::Sprite, float, int> tPlayer, tGun, tShadow;
     
     std::get<1>(tPlayer) = posY;
+    
+    speed = 2.2 * (elapsedTime.asMilliseconds() / 17.6);
+    slowSpeed = 1.5 * (elapsedTime.asMilliseconds() / 17.6);
     
     // If the death sequence isn't running, draw the player's shadow
     if (!deathSeq) {

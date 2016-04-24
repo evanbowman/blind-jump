@@ -22,7 +22,7 @@ SmallExplosion::SmallExplosion(sf::Sprite* sprs, sf::Sprite glow, float x, float
     frameRate = 5;
 }
 
-void SmallExplosion::update(float xOffset, float yOffset) {
+void SmallExplosion::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
     xPos = xInit + xOffset;
     yPos = yInit + yOffset;
     if (--frameRate == 0) {

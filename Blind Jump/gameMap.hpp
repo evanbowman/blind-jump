@@ -140,7 +140,7 @@ private:
 public:
     GameMap(float, float, sf::Texture*, InputController*, FontController*);
     //Pass in the render window and draw sprites to it
-    void update(sf::RenderWindow&);
+    void update(sf::RenderWindow&, sf::Time&);
     // The opening map does not follow the procedural generation approach, have a separate function for this
     void updateLv1(sf::RenderWindow&);
     Player getPlayer();

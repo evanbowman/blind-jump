@@ -15,7 +15,6 @@
 class turretShot {
 public:
     turretShot(sf::Sprite*, sf::Sprite, float, float, float);
-    unsigned short timeout;
     float xPos;
     float yPos;
     float xInit;
@@ -24,9 +23,8 @@ public:
     sf::Sprite glowSprite;
     sf::Sprite* getGlow();
     sf::Sprite getSprite();
-    void update(float, float);
+    void update(float, float, sf::Time&);
     char imageIndex;
-    char frameLength;
     float direction;
     bool killFlag;
     bool getKillFlag();
@@ -37,13 +35,12 @@ public:
     void enableTracking(float, float);
     float playerPosX;
     float playerPosY;
+    unsigned int timer;
+    unsigned int animationTimer;
     
 private:
     float scale;
     bool trackPlayer;
-    int duration;
-    char frameIndex;
-    char frameRate;
-    
+    char frameIndex;    
 };
 #endif /* turretShot_hpp */
