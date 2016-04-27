@@ -15,6 +15,7 @@ Teleporter::Teleporter(float xStart, float yStart, sf::Sprite* sprs, sf::Sprite 
     }
     glowSprite = glow;
     glowSprite.setOrigin(200, 200);
+    smokeTimer = 0;
 }
 
 sf::Sprite* Teleporter::getShadow() {
@@ -25,7 +26,8 @@ sf::Sprite* Teleporter::getSprite() {
     return &TeleporterSprites[0];
 }
 
-void Teleporter::update(float xOffset, float yOffset) {
+void Teleporter::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
+    smokeTimer += elapsedTime.asMilliseconds();
     xPos = xOffset + xInit;
     yPos = yOffset + yInit;
     glowSprite.setPosition(xPos + 16, yPos + 13);
@@ -37,13 +39,10 @@ sf::Sprite* Teleporter::getGlow() {
     return &glowSprite;
 }
 
-unsigned char Teleporter::getCountdown() {
-    if (--smokeCountdown == 0) {
-        smokeCountdown = 15;
+bool Teleporter::smokeReady() {
+    if (smokeTimer > 264) {
+        smokeTimer -= 264;
+        return true;
     }
-    return smokeCountdown;
-}
-
-void Teleporter::initCountdown() {
-    smokeCountdown = 15;
+    return false;
 }

@@ -40,9 +40,6 @@ void DasherShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
     xPos = xInit + xOffset;
     yPos = yInit + yOffset + 11;
     glowSprite.setPosition(xPos, yPos + 18);
-    if (--timeout == 0) {
-        killFlag = true;
-    }
     timer += elapsedTime.asMilliseconds();
     timeout += elapsedTime.asMilliseconds();
     // Alternate between frames

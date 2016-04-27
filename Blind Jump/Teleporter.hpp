@@ -17,15 +17,14 @@ class Teleporter : public detailParent {
 public:
     Teleporter(float, float, sf::Sprite*, sf::Sprite, int, float, float);
     sf::Sprite* getShadow();
-    unsigned char getCountdown();
-    void initCountdown();
+    bool smokeReady();
     sf::Sprite* getSprite();
-    void update(float, float);
+    void update(float, float, sf::Time &);
     sf::Sprite glowSprite;
     sf::Sprite* getGlow();
     
 private:
-    unsigned char smokeCountdown;
+    unsigned int smokeTimer;
     sf::Sprite TeleporterSprites[2];
 };
 

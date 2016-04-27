@@ -164,7 +164,6 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
     }
     
     updateVectorGlow(smallExplosions, xOffset, yOffset, glowSprs, elapsedTime);
-    updateVector(healthEffects, xOffset, yOffset, elapsedTime);
     updateVector(dodgeEffects, xOffset, yOffset, elapsedTime);
     updateVectorGlow(hearts, xOffset, yOffset, glowSprs, elapsedTime);
     updateVectorGlow(coins, xOffset, yOffset, glowSprs, elapsedTime);

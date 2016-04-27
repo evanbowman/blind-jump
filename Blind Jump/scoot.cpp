@@ -20,7 +20,7 @@ Scoot::Scoot(sf::Sprite* inpSpr) : EnemyParent(inpSpr) {
         sprites[i] = inpSpr[i];
         sprites[i].setOrigin(6, 6);
     }
-    frameCountdown = 10 + rand() % 30;
+    frameTimer = 10 + rand() % 30;
     frameIndex = rand() % 2;
     // Start the enemy moving in a random direction
     float dir = rand() % 359;
@@ -28,9 +28,10 @@ Scoot::Scoot(sf::Sprite* inpSpr) : EnemyParent(inpSpr) {
     vSpeed = sin(dir) * 0.5;
     // Offset each enemy object so they don't all do the same thing at once
     unsigned char offset = (unsigned char) rand() % 240;
-    changeDirCounter = offset;
-    shotCountdown = 80 + offset;
+    changeDirTimer = offset;
+    shotCountdownTimer = 80 + offset;
     health = 2;
+    speedScale = 1.f;
 }
 
 void Scoot::randDir() {
@@ -84,7 +85,7 @@ void Scoot::checkBulletCollision(effectsController& ef, FontController& font) {
     }
 }
 
-void Scoot::update(float xOffset, float yOffset, std::vector<wall> w, effectsController & ef, FontController& font) {
+void Scoot::update(float xOffset, float yOffset, std::vector<wall> w, effectsController & ef, FontController& font, sf::Time & elapsedTime) {
     // Update the enemy's position
     setPosition(xOffset, yOffset);
     checkBulletCollision(ef, font);
@@ -111,11 +112,15 @@ void Scoot::update(float xOffset, float yOffset, std::vector<wall> w, effectsCon
         sprites[0].setScale(scaleVec);
         sprites[1].setScale(scaleVec);
     }
-    xInit += hSpeed;
-    yInit += vSpeed;
+    xInit += (elapsedTime.asMilliseconds() / 17.6) * hSpeed * speedScale;
+    yInit += (elapsedTime.asMilliseconds() / 17.6) * vSpeed * speedScale;
     
-    if (--changeDirCounter == 0) {
-        changeDirCounter = 80;
+    changeDirTimer += elapsedTime.asMilliseconds();
+    shotCountdownTimer += elapsedTime.asMilliseconds();
+    frameTimer += elapsedTime.asMilliseconds();
+    
+    if (changeDirTimer > 1400) {
+        changeDirTimer -= 1408;
         if (rand() % 2) {
             float dir = rand() % 359;
             hSpeed = cos(dir) * 0.5;
@@ -132,32 +137,34 @@ void Scoot::update(float xOffset, float yOffset, std::vector<wall> w, effectsCon
             }
         }
     }
-    if (changeDirCounter == 30) {
-        hSpeed *= 0.5;
-        vSpeed *= 0.5;
+    if (shotCountdownTimer > 420) {
+        speedScale = 0.5;
     }
     
-    if (--shotCountdown == 0) {
-        shotCountdown = 240;
+    if (shotCountdownTimer > 4224) {
+        shotCountdownTimer -= 4224;
         // Push back away from the player and shoot some lasers
         ef.addTurretFlash(xInit - 8, yInit - 12);
         ef.addScootShot(xInit - 8, yInit - 12, angleFunction(xPos -8, yPos - 8, playerPosX, playerPosY), playerPosX, playerPosY);
         ef.addScootShot(xInit - 8, yInit - 12, angleFunction(xPos -8, yPos - 8, playerPosX, playerPosY) + 28, playerPosX, playerPosY);
         ef.addScootShot(xInit - 8, yInit - 12, angleFunction(xPos -8, yPos - 8, playerPosX, playerPosY) - 28, playerPosX, playerPosY);
         float dir = atan((yPos - playerPosY) / (xPos - playerPosX));
-        hSpeed = -cos(dir) * 3.0;
-        vSpeed = -sin(dir) * 3.0;
+        speedScale = 3.0;
+        hSpeed = -cos(dir);
+        vSpeed = -sin(dir);
         // To correct for negative sine and cosine function outputs
         if (xPos > playerPosX) {
             hSpeed *= -1;
             vSpeed *= -1;
         }
     }
-    // Slow down the enemy as it recoils from shooting
+    
+    //// TODO:
+    /*// Slow down the enemy as it recoils from shooting
     if (shotCountdown == 238 || shotCountdown == 236 || shotCountdown == 234 || shotCountdown == 232) {
         hSpeed *= 0.75;
         vSpeed *= 0.75;
-    }
+    }*/
 }
 
 void Scoot::softUpdate(float xOffset, float yOffset) {
@@ -170,8 +177,8 @@ void Scoot::softUpdate(float xOffset, float yOffset) {
 
 sf::Sprite* Scoot::getSprite() {
     // Step through the frames of the animation
-    if (--frameCountdown == 0) {
-        frameCountdown = 5;
+    if (frameTimer > 87) {
+        frameTimer -= 87;
         if (frameIndex == 0) {
             frameIndex = 1;
         }

@@ -17,11 +17,12 @@ private:
     sf::Sprite sprites[8];
     float xInit, yInit, xPos, yPos;
     bool killFlag;
-    char frameIndex, frameRate;
+    char frameIndex;
+    unsigned int frameTimer;
     
 public:
     DashSmoke(sf::Sprite*, float, float, int, int);
-    void update(float, float);
+    void update(float, float, sf::Time &);
     sf::Sprite getSprite();
     bool getKillFlag();
     float getYpos();

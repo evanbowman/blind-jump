@@ -20,17 +20,16 @@ public:
     float yPos;
     float xInit;
     float yInit;
-    void update(float, float);
+    void update(float, float, sf::Time &);
     sf::Sprite getSprite();
-    char spriteIndex;
-    char animationCounter;
-    bool imFinished;
-    char animationLength;
     bool getKillFlag();
     float getYpos();
     
 private:
+    char frameIndex;
+    unsigned int frameTimer;
     sf::Sprite sprPuff[4];
     sf::Texture sprText[4];
+    bool killFlag;
 };
 #endif /* shotPuff_hpp */

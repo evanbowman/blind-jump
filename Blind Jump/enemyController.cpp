@@ -51,7 +51,7 @@ enemyController::enemyController() {
 }
 
 //A function to draw the enemies' current sprites to the screen
-void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, int>>& gameShadows, float x, float y, effectsController& ef, std::vector<wall> w, bool enabled, detailController* dets, tileController* pTiles, ScreenShakeController* scrn, FontController& fonts) {
+void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, int>>& gameShadows, float x, float y, effectsController& ef, std::vector<wall> w, bool enabled, detailController* dets, tileController* pTiles, ScreenShakeController* scrn, FontController& fonts, sf::Time & elapsedTime) {
     if (!turrets.empty()) {
         for (std::vector<turret>::iterator it = turrets.begin(); it != turrets.end();) {
             if (it->getKillFlag() == 1) {
@@ -104,7 +104,7 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, in
             else {
                 if (it->getXpos() > -64 && it->getXpos() < windowW + 64 && it->getYpos() > -64 && it->getYpos() < windowH + 64) {
                     if (enabled) {
-                        it->update(x, y, w, ef, fonts);
+                        it->update(x, y, w, ef, fonts, elapsedTime);
                     }
                     // Get the enemy's shadow
                     std::tuple<sf::Sprite, float, int> shadow;

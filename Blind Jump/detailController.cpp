@@ -260,8 +260,7 @@ void detailController::addTeleporter(tileController& t, float posX, float posY, 
     glow.setTexture(teleporterGlow);
     
     Teleporter T((c.x * 32) + posX + 2/* + placeOffsetX*/, (c.y * 26) + posY - 4, tempSprites, glow, 2, width, height);
-    // Initialize the teleporter countdown to 5
-    T.initCountdown();
+
     teleporters.push_back(T);
     ////pFonts->addCaption(teleporters.back().getxInit() + 12, teleporters.back().getyInit() - 14, teleporterStrings[rand() % 4]);
 }
@@ -280,8 +279,8 @@ void detailController::update(float xOffset, float yOffset, effectsController& e
     UIStates[0] = 0;
     if (!teleporters.empty()) {
         for (auto & element : teleporters) {
-            element.update(xOffset, yOffset);
-            if (element.getCountdown() == 5) {
+            element.update(xOffset, yOffset, elapsedTime);
+            if (element.smokeReady()) {
                 ef.addWarpEffect(element.getxPos() - xOffset + 4 + (rand() % 6), element.getyPos() - yOffset + 2);
             }
             glow1->push_back(element.getGlow());

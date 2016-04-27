@@ -21,8 +21,8 @@
     
 int main(int, char const**) {
     //Set the seed for random generation
-    srand((unsigned int)time(0));   // Compiler warning for implicit conversion, so wrote it out explicitly (seeding with a time_t is probably fine though...)
-    // An variable that can be decremented to make the 'Press Z' text flash
+    srand(static_cast<unsigned int>(time(0)));
+
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     
     float aspectRatio = (float)desktop.width / (float)desktop.height;
@@ -76,7 +76,7 @@ int main(int, char const**) {
     // Hide cursor inside the window
     window.setMouseCursorVisible(false);
     // Set the framerate to 60, so that the window doesn't update constantly
-    window.setFramerateLimit(240);
+    window.setFramerateLimit(60);
     //window.setVerticalSyncEnabled(false);
     // Set the Icon
     sf::Image icon;

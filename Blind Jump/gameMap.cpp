@@ -199,7 +199,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     // Draw the details / add them to the game objects vector
     details.draw(gameObjects, gameShadows, target);
     // Update the enemy objects in the game based on the player's displacement
-    en.updateEnemies(gameObjects, gameShadows, xOffset, yOffset, effects, tiles.walls, player.isdead(), &details, &tiles, &ssc, *pFonts);
+    en.updateEnemies(gameObjects, gameShadows, xOffset, yOffset, effects, tiles.walls, player.isdead(), &details, &tiles, &ssc, *pFonts, elapsedTime);
     // Draw the lower layer of the effects, that is the ones that should show up behind the player sprite
     effects.drawLower(target);
     

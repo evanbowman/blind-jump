@@ -21,14 +21,15 @@ DashSmoke::DashSmoke(sf::Sprite* sprs, float x, float y, int dir, int scale) {
     yInit = y;
     killFlag = false;
     frameIndex = 0;
-    frameRate = 4;
+    frameTimer = 0;
 }
 
-void DashSmoke::update(float xOffset, float yOffset) {
+void DashSmoke::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
     xPos = xInit + xOffset;
     yPos = yInit + yOffset;
-    if (--frameRate == 0) {
-        frameRate = 4;
+    frameTimer += elapsedTime.asMilliseconds();
+    if (frameTimer > 70) {
+        frameTimer -= 70;
         frameIndex++;
         if (frameIndex > 7) {
             frameIndex = 7;

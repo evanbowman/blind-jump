@@ -19,52 +19,49 @@ TeleporterSmoke::TeleporterSmoke(sf::Sprite inputSprites[6], float x, float y) {
         effectSprites[i] = inputSprites[i];
     }
     // Initialize the current frame of the animation to the first one
-    currentFrame = 0;
-    // Set the duration for which each frame draws to the screen before switching to the next one
-    animationCount = 7;
-    // Initially, the boolean varaible denoting the end of the animation of course must be 0
-    imFinished = false;
-    // The smoke hasn't begun moving up yet, so initialize the drift variable that keeps track of motion to 0
-    yDrift = 0;
+    frameIndex = 0;
+    frameTimer = 0;
+    killFlag = false;
     // Initialize the depth to 0
     drawOrder = 0;
 }
 
-void TeleporterSmoke::update(float xOffset, float yOffset) {
+void TeleporterSmoke::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
     xPos = xInit + xOffset;
-    yPos = yInit + yOffset - yDrift;
-    // Increment the drift variable, so the smoke moves up relative to its current position on the next frame
-    yDrift += 0.6;
-}
-
-sf::Sprite TeleporterSmoke::getSprite() {
-    if (--animationCount == 0) {
-        animationCount = 6;
-        currentFrame += 1;
-        if (currentFrame > 2) {
+    yPos = yInit + yOffset;
+    // Drift up
+    yInit -= (elapsedTime.asMilliseconds() / 17.6) * 0.6;
+    frameTimer += elapsedTime.asMilliseconds();
+    if (frameTimer > 105) {
+        frameTimer -= 105;
+        frameIndex++;
+        if (frameIndex > 2) {
             drawOrder = 1;
         }
         
-        if (currentFrame == ANIMATION_LENGTH) {
-            currentFrame = 5;
-            imFinished = true;
+        if (frameIndex == ANIMATION_LENGTH) {
+            frameIndex = 5;
+            killFlag = true;
         }
     }
-    // Better to just update the sprite position when we need it, rather than updating six frames ever time the update function gets called!
-    effectSprites[currentFrame].setPosition(xPos, yPos);
+
+}
+
+sf::Sprite TeleporterSmoke::getSprite() {
+    effectSprites[frameIndex].setPosition(xPos, yPos);
     // Return the desired frame:
-    return effectSprites[currentFrame];
+    return effectSprites[frameIndex];
 }
 
 bool TeleporterSmoke::getKillFlag() {
-    return imFinished;
+    return killFlag;
 }
 
 float TeleporterSmoke::getPosX() {
     return xPos;
 }
 
-float TeleporterSmoke::getPosY() {
+float TeleporterSmoke::getYpos() {
     return yPos;
 }
 

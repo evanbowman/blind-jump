@@ -15,36 +15,35 @@ shotPuff::shotPuff(sf::Sprite sprIn[4], float x, float y, char dir, int p) {
     for (int i = 0; i < 4; i++) {
         sprPuff[i] = sprIn[i];
     }
-    spriteIndex = 0;
-    animationCounter = 3;
-    //A variable to tell the effect controller when to pop the effect
-    imFinished = 0;
+    frameIndex = 0;
+    frameTimer = 0;
+    killFlag = false;
     xInit = x;
     yInit = y;
-    animationLength = 4;
 }
 
 //Updates the position of the effect
-void shotPuff::update(float xOffset, float yOffset) {
+void shotPuff::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
     xPos = xInit + xOffset;
     yPos = yInit + yOffset;
+    frameTimer += elapsedTime.asMilliseconds();
+    if (frameTimer > 50) {
+        frameTimer -= 50;
+        frameIndex += 1;
+        if (frameIndex == 4) {
+            frameIndex = 3;
+            killFlag = true;
+        }
+    }
 }
 
 sf::Sprite shotPuff::getSprite() {
-    if (--animationCounter == 0) {
-        animationCounter = 3;
-        spriteIndex += 1;
-        if (spriteIndex == animationLength) {
-            spriteIndex = 3;
-            imFinished = 1;
-        }
-    }
-    sprPuff[spriteIndex].setPosition(round(xPos), round(yPos));
-    return sprPuff[spriteIndex];
+    sprPuff[frameIndex].setPosition(round(xPos), round(yPos));
+    return sprPuff[frameIndex];
 }
 
 bool shotPuff::getKillFlag() {
-    return imFinished;
+    return killFlag;
 }
 
 float shotPuff::getYpos() {

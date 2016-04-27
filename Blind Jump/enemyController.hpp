@@ -50,7 +50,7 @@ private:
     
 public:
     enemyController();
-    void updateEnemies(std::vector<std::tuple<sf::Sprite, float, int>>&, std::vector<std::tuple<sf::Sprite, float, int>>&, float, float, effectsController&, std::vector<wall>, bool, detailController*, tileController*, ScreenShakeController*, FontController&);
+    void updateEnemies(std::vector<std::tuple<sf::Sprite, float, int>>&, std::vector<std::tuple<sf::Sprite, float, int>>&, float, float, effectsController&, std::vector<wall>, bool, detailController*, tileController*, ScreenShakeController*, FontController&, sf::Time &);
     void clear();
     sf::Sprite* getTurretSprites();
     sf::Sprite* getGuardianSprites();
