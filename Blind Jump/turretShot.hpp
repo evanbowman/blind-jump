@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "SFML/Graphics.hpp"
+#include <cmath>
 
 class turretShot {
 public:

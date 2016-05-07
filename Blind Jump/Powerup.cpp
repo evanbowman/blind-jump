@@ -7,7 +7,6 @@
 //
 
 #include "Powerup.hpp"
-#include <cmath>
 
 #define PI 3.1415926535
 
@@ -33,7 +32,7 @@ sf::Sprite Powerup::getSprite() {
 }
 
 sf::Sprite* Powerup::getGlow() {
-    glow.setPosition(xPos, yPos + 8);
+    glow.setPosition(xPos, yPos + 10);
     return &glow;
 }
 

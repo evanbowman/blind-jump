@@ -693,6 +693,10 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
         std::get<2>(tGun) = 4;
         if (--redTimer == 0) {
             redTimer = 10;
+            ////float initDir = rand() % 120;
+            ////ef.addPowerupParticle(posX, posY, initDir);
+            ////ef.addPowerupParticle(posX, posY, initDir + 120);
+            ////ef.addPowerupParticle(posX, posY, initDir + 240);
             gotHeart = false;
         }
     } else if (gotCoin) {
@@ -700,6 +704,10 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
         std::get<2>(tGun) = 5;
         if (--redTimer == 0) {
             gotCoin = 0;
+            ////float initDir = rand() % 120;
+            ////ef.addPowerupParticle(posX, posY, initDir);
+            ////ef.addPowerupParticle(posX, posY, initDir + 120);
+            ////ef.addPowerupParticle(posX, posY, initDir + 240);
             redTimer = 10;
         }
     }

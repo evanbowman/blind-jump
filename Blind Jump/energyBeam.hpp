@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "SFML/Graphics.hpp"
+#include <cmath>
 
 // Define states for the state machine
 #define ENTERING 'e'

@@ -7,7 +7,6 @@
 //
 
 #include "turretShot.hpp"
-#include <cmath>
 
 turretShot::turretShot(sf::Sprite* sprs, sf::Sprite glow, float x, float y, float dir) {
     this->sprs[0] = sprs[0];

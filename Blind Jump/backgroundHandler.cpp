@@ -52,9 +52,7 @@ backgroundHandler::backgroundHandler() {
     workingSet = 1;
 }
 
-void backgroundHandler::reset() {
-    
-}
+
 
 void backgroundHandler::drawForeground(sf::RenderTexture & window) {
     switch (workingSet) {
@@ -70,7 +68,7 @@ void backgroundHandler::drawForeground(sf::RenderTexture & window) {
 void backgroundHandler::drawBackground(sf::RenderTexture& window) {
     switch (workingSet) {
         case 0:
-            foregroundTreesSpr.setPosition(foregroundTreesSpr.getPosition().x - (xOffPrev - xOffset), foregroundTreesSpr.getPosition().y - (yOffPrev - yOffset));
+            foregroundTreesSpr.setPosition(windowW / 2 + xOffset - 108, windowH / 2 + yOffset - 494);
             window.draw(solidBkg);
             break;
             

@@ -7,7 +7,6 @@
 //
 
 #include "enemyShot.hpp"
-#include <cmath>
 
 Enemyshot::Enemyshot(sf::Sprite* inpsprs, sf::Sprite glow, float x, float y, float dir) {
     xPos = 0;
@@ -46,7 +45,7 @@ void Enemyshot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
         }
     }
     
-    if (this->elapsedTime > 800) {
+    if (this->elapsedTime > 600) {
         killFlag = true;
     }
     

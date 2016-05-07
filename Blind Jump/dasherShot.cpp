@@ -8,7 +8,6 @@
 
 #include "dasherShot.hpp"
 
-#include <cmath>
 
 DasherShot::DasherShot(sf::Sprite* sprite, sf::Sprite glow, float x, float y, float dir) {
     for (int i = 0; i < 2; i++) {

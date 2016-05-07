@@ -7,7 +7,6 @@
 //
 
 #include "energyBeam.hpp"
-#include <cmath>
 
 EnergyBeam::EnergyBeam(float xInit, float yInit, sf::Sprite* inpSprs, float dir, float length) {
     this->xInit = xInit;

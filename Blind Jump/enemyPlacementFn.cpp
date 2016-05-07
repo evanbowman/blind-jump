@@ -103,17 +103,10 @@ int initEnemies(GameMap* gm) {
                 break;
                 
             case 1:
-                if (currentLevel < 12)
-                    addCritter(gm->tiles.mapArray, gm->tiles.descriptionArray, gm->en, gm->tiles.posX, gm->tiles.posY, gm->windowW, gm->windowH, gm->tiles.emptyMapLocations, 1);
-                
-                // If the current level is high, create swarms rather than single enemies
-                else if (currentLevel < 20)
-                    addCritter(gm->tiles.mapArray, gm->tiles.descriptionArray, gm->en, gm->tiles.posX, gm->tiles.posY, gm->windowW, gm->windowH, gm->tiles.emptyMapLocations, 3 + (rand() % 2));
-                
-                else
-                    addCritter(gm->tiles.mapArray, gm->tiles.descriptionArray, gm->en, gm->tiles.posX, gm->tiles.posY, gm->windowW, gm->windowH, gm->tiles.emptyMapLocations, 4 + (rand() % 2));
-                
+                addCritter(gm->tiles.mapArray, gm->tiles.descriptionArray, gm->en, gm->tiles.posX, gm->tiles.posY, gm->windowW, gm->windowH, gm->tiles.emptyMapLocations, 1);
+                count += 2;
                 break;
+                
                 
             case 2:
                 addDasher(gm->tiles.mapArray, gm->tiles.descriptionArray, gm->en, gm->tiles.posX, gm->tiles.posY, gm->windowW/2, gm->windowH/2, gm->tiles.emptyMapLocations);

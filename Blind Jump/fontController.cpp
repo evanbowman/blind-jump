@@ -52,7 +52,7 @@ FontController::FontController(sf::View fontView, float x, float y) {
     deathText.setFont(cornerstone);
     deathText.setString("YOU DIED");
     deathText.setColor(sf::Color(231, 26, 83));
-    deathText.setPosition(fontView.getSize().x / 2 - deathText.getLocalBounds().width / 2, fontView.getSize().y / 8 - deathText.getLocalBounds().height / 2);
+    deathText.setPosition(fontView.getSize().x / 2 - deathText.getLocalBounds().width / 2, fontView.getSize().y / 12 - deathText.getLocalBounds().height / 2);
     
     
     for (int i = 0; i < 10; i++) {
@@ -175,7 +175,7 @@ void FontController::update(sf::RenderWindow & window, float xOffset, float yOff
             element.update(xOffset * ((fontView.getSize().x / 2) / windowCenterX), yOffset * ((fontView.getSize().y / 2) / windowCenterY));
             // If the object has text to display...
             if (!element.isClosed())
-                window.draw(*element.getText());//, sf::BlendAdd);
+                window.draw(*element.getText());
         }
     }
 }

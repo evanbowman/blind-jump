@@ -110,11 +110,6 @@ private:
     
     sf::RectangleShape transitionShape;
     
-    sf::Texture creditsTexture;
-    sf::Sprite creditsSprite;
-    bool dispCredits;
-    int creditsCounter;
-
     sf::Texture titleTxtr;
     sf::Sprite titleSpr;
     

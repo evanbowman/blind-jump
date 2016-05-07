@@ -26,6 +26,7 @@
 #include "FireExplosion.hpp"
 #include "smallExplosion.hpp"
 #include "Powerup.hpp"
+#include "ResourcePath.hpp"
 
 class ScreenShakeController;
 

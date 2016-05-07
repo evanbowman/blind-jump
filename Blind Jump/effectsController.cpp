@@ -7,7 +7,6 @@
 //
 
 #include "effectsController.hpp"
-#include "ResourcePath.hpp"
 #include "screenShakeController.hpp"
 
 

@@ -10,6 +10,7 @@
 #define Hearts_hpp
 
 #include "SFML/Graphics.hpp"
+#include <cmath>
 
 class Powerup {
 private:

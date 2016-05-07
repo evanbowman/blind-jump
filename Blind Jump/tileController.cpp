@@ -20,21 +20,6 @@
 #define GRASS_TILESET 2
 #define METEOR_TILESET 3
 
-
-// A function to put values onto the vector of map data when it runs out
-// Important to have the shuffled vector to avoid running into the same maps over again
-void initMapStack(std::vector<unsigned char> &mps) {
-    
-    const unsigned char tilesets[1] = {DIRT_TILESET};
-    for (auto i = 0; i < 1; i++) {
-        // Fill the map vector with all the available sets
-        mps.push_back(tilesets[i]);
-    }
-    // Randomly shuffle the stack of maps with an stl function
-    std::mt19937 gen(static_cast<uint32_t>(time(0)));
-    shuffle(mps.begin(), mps.end(), gen);
-}
-
 void createMapImage(sf::Image* tileImage, short mapArray[61][61], sf::Texture tx[2], sf::Image* grassSet, sf::Image* grassSetEdge) {
     // Loop through the entire image and create a tilemap for drawing grass
     short mapTemp[61][61], bitMask[61][61], gratePositions[61][61];
@@ -213,10 +198,11 @@ tileController::tileController() {
     
     //Call the mapping function to transform the array into something useful
     int count = mappingFunction(mapArray, 0, true);
-    // Yikes a while loop! I try to avoid them, but... This loop repeats until it yields a large enough map
+    
     while (count < 200) {
         count = mappingFunction(mapArray, 0, true);
     }
+    
     char itemArray[48][3];
     for (int i = 0; i < 48; i++) {
         for (int j = 0; j < 3; j++) {
@@ -225,8 +211,6 @@ tileController::tileController() {
     }
     createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet[0], &grassSetEdge[0]);
 
-    // Fill the container of maps with values
-    initMapStack(maps);
     createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet[0], &grassSetEdge[0]);
     mapSprite1.setTexture(mapTexture[0]);
     mapSprite2.setTexture(mapTexture[1]);
@@ -250,7 +234,7 @@ void tileController::drawTiles(sf::RenderTexture& window, std::vector<sf::Sprite
     rt.clear(sf::Color::Transparent);
     // Draw the map sprite to the texture
     if (level != 0)
-    rt.draw(mapSprite1);
+        rt.draw(mapSprite1);
     else
         rt.draw(transitionLvSpr);
     // Draw a shadow over everything
@@ -315,21 +299,24 @@ void tileController::rebuild(char itemArray[48][3], int level) {
     // If the vector of map data contains values
     if (level == 0) {
         workingSet = 0;
+        posX = -72;
+        posY = -476;
         shadow.setFillColor(sf::Color(188, 188, 198, 255));
     } else if (level > 0 && level <= BOSS_LEVEL_1) {
         workingSet = 1;
         shadow.setFillColor(sf::Color(188, 188, 198, 255));
         createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet[0], &grassSetEdge[0]);
+        initMapVectors(mapArray, w, walls, posX, posY, emptyMapLocations, largeEmptyLocations, edgeLocations, primeChestLocations, teleporterLocation, itemArray, level);
     } else if (level > BOSS_LEVEL_1) {
         workingSet = 2;
         shadow.setFillColor(sf::Color(215, 194, 194, 255));
         createMapImage(&tileImg[1], mapArray, mapTexture, &grassSet[1], &grassSetEdge[1]);
+        initMapVectors(mapArray, w, walls, posX, posY, emptyMapLocations, largeEmptyLocations, edgeLocations, primeChestLocations, teleporterLocation, itemArray, level);
     }
     
     mapSprite1.setTexture(mapTexture[0]);
     mapSprite2.setTexture(mapTexture[1]);
     
-    initMapVectors(mapArray, w, walls, posX, posY, emptyMapLocations, largeEmptyLocations, edgeLocations, primeChestLocations, teleporterLocation, itemArray, level);
 }
 
 unsigned char tileController::getWorkingSet() {
@@ -346,7 +333,11 @@ void tileController::setWindowSize(float w, float h) {
     shadow.setSize(v);
 }
 
-
 Coordinate tileController::getTeleporterLoc() {
     return teleporterLocation;
+}
+
+void tileController::reset() {
+
+    
 }

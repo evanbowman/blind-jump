@@ -37,19 +37,18 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     //Make the background controller draw concenteric with the center of the view
     bkg.setPosition((tiles.posX / 2) + 226, tiles.posY / 2);
     
-    // Set the size of the target render texture
+    // Set the size of the target render texture so that they'll fill the screen
     target.create(windowWidth, windowHeight);
     finalPass.create(windowWidth, windowHeight);
     finalPass.setSmooth(true);
     
-    // Store a pointer to the input controller in main
+    // Store a pointer to the input controller in main()
     pInput = input;
     
     worldView.setSize(windowWidth, windowHeight);
     worldView.setCenter(windowWidth / 2, windowHeight / 2);
     hudView.setSize(windowWidth, windowHeight);
     hudView.setCenter(windowWidth / 2, windowHeight / 2);
-    //worldView.zoom(0.90);
     
     //Store the inputs for later
     windowW = windowWidth;
@@ -59,30 +58,23 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     // This variable allows for that
     computeBlur = true;
     
-    // Now call a function to procedurally distribute items across the array
+    // Now call a function to procedurally distribute items
     initLoot(itemArray);
     
-    // Initial teleporter condition to 0
+    // Initial teleporter condition to 0, meaning the player is not standing on a teleporter
     teleporterCond = 0;
     
-    //Tell the background controller how big the window is so it doesn't draw out of bounds
+    // Tell the background controller how big the window is so it doesn't draw out of bounds
     bkg.giveWindowSize(windowW, windowH);
     
-    //Move the UI to the center of the screen
+    // Tell the UI where the center of the window is
     UI.setPosition(windowW / 2, windowH/ 2);
     
-    // Store the pointer to the font controller as one of the object's datefields
+    // Store the pointer to the font controller in main() as one of the object's datefields
     this->pFonts = pFonts;
     
     // Initialize the player's starting item
     UI.addItem(0, effects, -20, -20, *pFonts, player);
-    
-    // Load the credits image
-    creditsTexture.loadFromFile(resourcePath() + "presentingText.png");
-    creditsSprite.setTexture(creditsTexture);
-    creditsSprite.setPosition(30, windowHeight / 2 + 35);
-    dispCredits = false;
-    creditsCounter = 90;
     
     // Set up the shaders
     colorShader.loadFromFile(resourcePath() + "color.frag", sf::Shader::Fragment);
@@ -135,7 +127,6 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     details.addPod(tiles.posX, tiles.posY + 33, 3, 17, pFonts);
     tiles.teleporterLocation.x = 8;
     tiles.teleporterLocation.y = -7;
-    /* End of awful hard-coded block :) */
     
     en.setWindowSize(windowWidth, windowHeight);
     
@@ -173,7 +164,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     
     vignetteSprite.setColor(sf::Color(255, 255, 255, 96));
     
-    // Place a weapon chest is needed
+    // Place a weapon chest if needed
     if (itemArray[level][0] != 0) {
         details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][0], pFonts);
     }
@@ -207,10 +198,6 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
         // Draw the player to the window, as long as the object is visible
         player.draw(gameObjects, gameShadows, tiles, effects, details, sndCtrl, UI, pInput, target, *pFonts, elapsedTime);
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y)) {
-        std::cout << elapsedTime.asMilliseconds() << std::endl;
-    }
-    
     
     // If player was hit rumble the screen.
     if (player.scrShakeState) {
@@ -229,7 +216,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     }
     gameShadows.clear();
     
-    // Sort the game object based on y-position
+    // Sort the game object based on y-position (runtime for this is fine, only sorts objects inside the window, roughly 10 in most cases)
     std::sort(gameObjects.begin(), gameObjects.end(), sortKey());
     
     lightingMap.clear(sf::Color::Transparent);
@@ -319,21 +306,6 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     
     // Draw a nice vignette effect over the entire window, but behind the UI overlay
     window.draw(vignetteSprite, sf::BlendMultiply);
-    
-    // Display the credits textures
-    if (dispCredits) {
-        if (--creditsCounter == 0) {
-            dispCredits = false;
-        }
-        window.draw(creditsSprite);
-    }
-    
-    else if (!dispCredits && creditsCounter > 0) {
-        if (--creditsCounter == 0) {
-            dispCredits = true;
-            creditsCounter = 200;
-        }
-    }
 
     if (!player.isdead()) {
         UI.dispDeathSeq();
@@ -387,10 +359,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
             c.b += 5;
             c.g += 5;
             beamGlowSpr.setColor(c);
-        }
-        
-        
-        else if (v2.y > 518) {
+        } else if (v2.y > 518) {
             player.visible = true;
             // Call a function within the screen shake controller to shake the screen
             ssc.shake();
@@ -399,8 +368,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
             effects.addWarpEffect(windowW / 2 - 8, windowH / 2 + 16);
             // Add a warp impack detail to the overworld where the player landed
             details.addWarpImpact(windowW / 2 - 12, windowH / 2 + 18);
-        }
-        else {
+        } else {
             player.deActivate();
         }
         // Get the current color of the beam shape, in order to decrement its alpha value
@@ -493,14 +461,12 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
                 double temp = v1.x;
                 v1.x *= 1.18;
                 teleporterBeam.setPosition(teleporterBeam.getPosition().x - (v1.x - temp) * 0.5, teleporterBeam.getPosition().y);
-            }
-            else if (v1.x > 21) {
+            } else if (v1.x > 21) {
                 beamExpanding = false;
                 player.visible = false;
             }
             teleporterBeam.setSize(v1);
-        }
-        else if (!beamExpanding) {
+        } else if (!beamExpanding) {
             double temp = v1.x;
             v1.x *= 0.92;
             beamColor.a -= 1.4;
@@ -534,8 +500,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
                     sf::Color c = pFonts->getTitle()->getColor();
                     if (c.a > 4) {
                         c.a -= 4;
-                    }
-                    else {
+                    } else {
                         c.a = 0;
                     }
                     if (transitionDelay < 90) {
@@ -550,15 +515,14 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
                 } else {
                     pFonts->drawTitle(255, window);
                 }
+                
                 if (--transitionDelay == 0) {
                     transitioning = false;
                     transitionDelay = 55;
                     teleporterCond = true;
                     titleSpr.setColor(sf::Color(255, 255, 255, 255));
                 }
-            }
-            
-            else {
+            } else {
                 if (transitionDelay < 50) {
                     sf::Color c = transitionShape.getFillColor();
                     if (c.a < 250) {
@@ -611,9 +575,9 @@ void GameMap::Reset() {
         while (count < 150) {
             count = mappingFunction(tiles.mapArray, level, level < BOSS_LEVEL_1);
         }
-    }
+    } else if (level == 0) {
     
-    else {
+    } else {
         mappingFunction(tiles.mapArray, level, level < BOSS_LEVEL_1);
     }
     
@@ -625,10 +589,9 @@ void GameMap::Reset() {
     */
     tiles.setPosition((windowW / 2) - 16, (windowH / 2));
     bkg.setPosition((tiles.posX / 2) + 206, tiles.posY / 2);
-    bkg.reset();
     
     // Perhaps there's a better way to not check the same condition multiple times, without tons of copy-pasting
-    if (level != BOSS_LEVEL_1) {
+    if (level != BOSS_LEVEL_1 && level != 0) {
         details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH, pFonts);
         
         // Now initialize enemies for the map based on level, and store sum of their exp values in a variable
@@ -667,9 +630,7 @@ void GameMap::Reset() {
             for (auto it = pRocks->begin(); it != pRocks->end();) {
                 if (fabsf(it->getxPos() - pTeleporter->getxPos()) < 80 && fabsf(it->getyPos() - pTeleporter->getyPos()) < 80) {
                     it = pRocks->erase(it);
-                }
-                
-                else {
+                } else {
                     ++it;
                 }
             }
@@ -686,7 +647,7 @@ void GameMap::Reset() {
         // Delete lamps near the teleporter (light blending is additive, it would be too bright if they were close together)
         std::vector<LampLight>* pLamps = details.getLamps();
         for (auto i = 0; i < details.getLamps()->size(); i++) {
-            if (fabsf((*pLamps)[i].getxPos() - pTeleporter->xPos) < 70 && fabsf((*pLamps)[i].getyPos() - pTeleporter->yPos) < 70) {
+            if (fabsf((*pLamps)[i].getxPos() - pTeleporter->xPos) < 90 && fabsf((*pLamps)[i].getyPos() - pTeleporter->yPos) < 90) {
                 (*pLamps)[i] = (*pLamps).back();
                 (*pLamps).pop_back();
             }
@@ -701,6 +662,16 @@ void GameMap::Reset() {
         details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH, pFonts);
         details.addLamplight(tiles, tiles.posX - 2, tiles.posY - 16, 39, 31, windowW, windowH);
         details.addLamplight(tiles, tiles.posX - 2, tiles.posY - 16, 33, 26, windowW, windowH);
+    } else if (level == 0) {
+        details.addLamplight(tiles, tiles.posX - 180, tiles.posY + 200, 5, 6, windowW, windowH);
+        details.addLamplight(tiles, tiles.posX - 180, tiles.posY + 200, 5, 0, windowW, windowH);
+        details.addLamplight(tiles, tiles.posX - 170, tiles.posY + 200, 11, 11, windowW, windowH);
+        details.addLamplight(tiles, tiles.posX - 180, tiles.posY + 200, 10, -9, windowW, windowH);
+        details.addDoor(tiles.posX - 192, tiles.posY + 301, 6, 0, windowW, windowH);
+        details.addPod(tiles.posX, tiles.posY + 33, 3, 17, pFonts);
+        tiles.teleporterLocation.x = 8;
+        tiles.teleporterLocation.y = -7;
+        details.addTeleporter(tiles, tiles.posX - 178, tiles.posY + 284, windowW, windowH, pFonts);
     }
     
     // Reset the teleporter beam coordinates, alpha, & size
@@ -708,8 +679,8 @@ void GameMap::Reset() {
     teleporterBeam.setPosition(windowW/2 - 1, windowH/2 + 36);
     teleporterBeam.setSize(v1);
     teleporterBeam.setFillColor(sf::Color(104, 255, 229, 6));
-    transitionIn = true;
-    //dispEntryBeam = true;
+    if (level != 0)
+        transitionIn = true;
 }
 
 Player GameMap::getPlayer() {

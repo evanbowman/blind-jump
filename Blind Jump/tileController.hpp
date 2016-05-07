@@ -59,8 +59,6 @@ public:
     // Rendertexture top, rendertexture edge
     sf::RenderTexture rt, re;
     
-    // Include a vector of maps to designate the order of future tilesets
-    std::vector<unsigned char> maps;
     //Declare a map array variable
     short mapArray[61][61];
     //Some temporary variables for assigning enemy position
@@ -94,7 +92,7 @@ public:
     // Return the working set of tiles background controller access
     unsigned char getWorkingSet();
     void setWindowSize(float, float);
-
+    void reset();
 };
 
 #endif /* tileController_hpp */

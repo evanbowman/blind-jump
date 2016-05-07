@@ -43,7 +43,6 @@ public:
     void setPosition(float, float);
     void giveWindowSize(float, float);
     void setBkg(unsigned char);
-    void reset();
 };
 
 #endif /* backgroundHandler_hpp */

@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "sfml/graphics.hpp"
+#include <cmath>
 
 class DasherShot {
 public:
