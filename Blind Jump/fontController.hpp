@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "SFML/Graphics.hpp"
 #include "Caption.hpp"
+#include "ResourcePath.hpp"
 
 class FontController {
 private:
@@ -23,7 +24,7 @@ private:
     // The fonts to be used by the font controller
     sf::Font cornerstone;
     sf::Font museo;
-    sf::Text waypointText, healthText, titleText, credit, deathText;
+    sf::Text waypointText, healthText, titleText, credit, deathText, scoreText;
     char health;
     char maxHealth;
     float width;
@@ -31,8 +32,7 @@ private:
     int score;
     float windowCenterX, windowCenterY;
     std::vector<Caption> captions;
-    sf::Clock wpTextDisplayTimer, healthDisplayTimer;
-    int wpTextFadeSeconds, healtTextFadeSeconds;
+    sf::Clock wpTextDisplayTimer, healthDisplayTimer, scoreDisplayTimer;
     
 public:
     FontController(sf::View, float, float);
@@ -52,5 +52,7 @@ public:
     void terminateCaptions();
     void resetWPText();
     void resetHPText();
+    void resetSCText();
+    void updateScore(int);
 };
 #endif /* FontController_hpp */

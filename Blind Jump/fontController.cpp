@@ -10,10 +10,11 @@
 //
 
 #include "fontController.hpp"
-#include "ResourcePath.hpp"
-#include <iostream>
 
 #define healthLimit 10
+#define HEALTH_TEXT_FADE_SECONDS 3
+#define SCORE_TEXT_FADE_SECONDS 3
+#define WAYPOINT_TEXT_FADE_SECONDS 3
 
 FontController::FontController(sf::View fontView, float x, float y) {
     // Store the view to use when drawing fonts
@@ -29,21 +30,20 @@ FontController::FontController(sf::View fontView, float x, float y) {
 
     // Set the waypoint text
     waypointText.setFont(cornerstone);
-    std::string str = "WAYPOINT-1";
-    waypointText.setString(str.c_str());
+    waypointText.setString("WAYPOINT-1");
     waypointText.setCharacterSize(0.055 * fontView.getSize().y);
     waypointText.setPosition(16, 0);
     
-    wpTextFadeSeconds = 3;
-    healtTextFadeSeconds = 3;
     
-    str = "Health:";
-    healthText.setString(str.c_str());
+    healthText.setString("Health:");
     healthText.setCharacterSize(0.026 * fontView.getSize().y);
     healthText.setFont(cornerstone);
     
-    str = "Blind Jump";
-    titleText.setString(str.c_str());
+    scoreText.setString("Score: 0");
+    scoreText.setCharacterSize(0.026 * fontView.getSize().y);
+    scoreText.setFont(cornerstone);
+    
+    titleText.setString("Blind Jump");
     titleText.setCharacterSize(0.115 * fontView.getSize().y);
     titleText.setFont(cornerstone);
     titleText.setPosition(fontView.getSize().x / 2 - titleText.getLocalBounds().width / 2, fontView.getSize().y / 8 - titleText.getLocalBounds().height / 2);
@@ -85,17 +85,18 @@ void FontController::setWaypointText(int level) {
         healthEmpty[i].setOutlineColor(sf::Color(255, 255, 255, 4));
     }
     healthText.setPosition(initPos - healthText.getLocalBounds().width - 0.015 * scrnSize, 0.0032 * scrnSize + healthFull[0].getRadius() - healthText.getLocalBounds().height / 2);
+    scoreText.setPosition(fontView.getSize().x - scoreText.getLocalBounds().width - fontView.getSize().x * 0.015, scoreText.getLocalBounds().height * 2.5);
     captions.clear();
     std::string str = "WAYPOINT-";
     str += std::to_string(level);
-    waypointText.setString(str.c_str());
+    waypointText.setString(str);
     // Reset the color, it will fade out
     waypointText.setColor(sf::Color::White);
     healthText.setColor(sf::Color(255, 255, 255, 4));
-    wpTextFadeSeconds = 3;
-    healtTextFadeSeconds = 3;
+    scoreText.setColor(sf::Color(255, 255, 255, 4));
     wpTextDisplayTimer.restart();
     healthDisplayTimer.restart();
+    scoreDisplayTimer.restart();
 }
 
 void FontController::setZoneText(char zone) {
@@ -119,7 +120,7 @@ void FontController::print(sf::RenderWindow& window) {
     // Slowly fade out the  waypoint text
     sf::Color c = waypointText.getColor();
     if (c.a > 5) {
-        if (wpTextDisplayTimer.getElapsedTime().asSeconds() > wpTextFadeSeconds) {
+        if (wpTextDisplayTimer.getElapsedTime().asSeconds() > WAYPOINT_TEXT_FADE_SECONDS) {
             c.a -= 4;
             waypointText.setColor(c);
         }
@@ -128,7 +129,7 @@ void FontController::print(sf::RenderWindow& window) {
     c = healthFull[0].getFillColor();
     
     if (c.a > 5) {
-        if (healthDisplayTimer.getElapsedTime().asSeconds() > healtTextFadeSeconds) {
+        if (healthDisplayTimer.getElapsedTime().asSeconds() > HEALTH_TEXT_FADE_SECONDS) {
             c.a -= 4;
             for (int i = 0; i < 10; i++) {
                 healthFull[i].setFillColor(c);
@@ -148,12 +149,34 @@ void FontController::print(sf::RenderWindow& window) {
         }
     }
     window.draw(healthText);
+    
+    c = scoreText.getColor();
+    if (c.a > 5) {
+        if (scoreDisplayTimer.getElapsedTime().asSeconds() > SCORE_TEXT_FADE_SECONDS) {
+            c.a -= 4;
+            scoreText.setColor(c);
+        }
+        window.draw(scoreText);
+    }
 }
 
 void FontController::resetWPText() {
     waypointText.setColor(sf::Color::White);
     wpTextDisplayTimer.restart();
-    wpTextFadeSeconds = 2;
+}
+
+void FontController::resetSCText() {
+    scoreText.setColor(sf::Color::White);
+    scoreDisplayTimer.restart();
+}
+
+void FontController::updateScore(int offset) {
+    score += offset;
+    std::string str = "Energy: ";
+    str += std::to_string(score);
+    scoreText.setString(str);
+    scoreText.setPosition(fontView.getSize().x - scoreText.getLocalBounds().width - fontView.getSize().x * 0.015, scoreText.getLocalBounds().height * 2.5);
+    resetSCText();
 }
 
 void FontController::resetHPText() {
@@ -164,7 +187,6 @@ void FontController::resetHPText() {
         healthEmpty[i].setOutlineColor(sf::Color::White);
     }
     healthDisplayTimer.restart();
-    healtTextFadeSeconds = 2;
 }
 
 void FontController::update(sf::RenderWindow & window, float xOffset, float yOffset) {

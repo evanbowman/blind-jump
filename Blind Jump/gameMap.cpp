@@ -127,6 +127,12 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     details.addPod(tiles.posX, tiles.posY + 33, 3, 17, pFonts);
     tiles.teleporterLocation.x = 8;
     tiles.teleporterLocation.y = -7;
+    for (auto it = global_levelZeroWalls.begin(); it != global_levelZeroWalls.end(); ++it) {
+        wall w;
+        w.setXinit(it->first);
+        w.setYinit(it->second);
+        tiles.walls.push_back(w);
+    }
     
     en.setWindowSize(windowWidth, windowHeight);
     
@@ -672,6 +678,12 @@ void GameMap::Reset() {
         tiles.teleporterLocation.x = 8;
         tiles.teleporterLocation.y = -7;
         details.addTeleporter(tiles, tiles.posX - 178, tiles.posY + 284, windowW, windowH, pFonts);
+        for (auto it = global_levelZeroWalls.begin(); it != global_levelZeroWalls.end(); ++it) {
+            wall w;
+            w.setXinit(it->first);
+            w.setYinit(it->second);
+            tiles.walls.push_back(w);
+        }
     }
     
     // Reset the teleporter beam coordinates, alpha, & size

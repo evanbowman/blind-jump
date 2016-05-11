@@ -277,6 +277,7 @@ bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
             window.draw(weaponNameUnderscore);
             f.resetWPText();
             f.resetHPText();
+            f.resetSCText();
         }
         
         if (r > 35) {

@@ -683,6 +683,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
     for (auto & element : *pCoins) {
         if (fabsf(posX + 16 - element.getXpos()) < 8 && fabsf(posY + 4 - element.getYpos()) < 8) {
             element.setKillFlag(true);
+            fonts.updateScore(1);
             gotCoin = true;
             gotHeart = false;
         }
@@ -693,10 +694,6 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
         std::get<2>(tGun) = 4;
         if (--redTimer == 0) {
             redTimer = 10;
-            ////float initDir = rand() % 120;
-            ////ef.addPowerupParticle(posX, posY, initDir);
-            ////ef.addPowerupParticle(posX, posY, initDir + 120);
-            ////ef.addPowerupParticle(posX, posY, initDir + 240);
             gotHeart = false;
         }
     } else if (gotCoin) {
@@ -704,10 +701,6 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
         std::get<2>(tGun) = 5;
         if (--redTimer == 0) {
             gotCoin = 0;
-            ////float initDir = rand() % 120;
-            ////ef.addPowerupParticle(posX, posY, initDir);
-            ////ef.addPowerupParticle(posX, posY, initDir + 120);
-            ////ef.addPowerupParticle(posX, posY, initDir + 240);
             redTimer = 10;
         }
     }

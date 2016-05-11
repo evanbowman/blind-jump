@@ -93,11 +93,7 @@ void Critter::update(float xOffset, float yOffset, effectsController &effects, F
         }
         // If the enemy is finished following its path to the player
         if (path.empty() || recalc == 0) {
-            // Run A* less frequently if far away
-            if (fabsf(playerPosX / 2 - xPos) > 120 && fabsf(playerPosY / 2 - yPos) > 120)
-                recalc = 24;
-            else
-                recalc = 8;
+            recalc = 8;
             
             aStrCoordinate origin, target;
             origin.x = (xPos - pTiles->posX - xOffset) / 32;
