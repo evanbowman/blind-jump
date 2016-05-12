@@ -155,6 +155,7 @@
 		68A4CB841CC05DDE00ECF5E2 /* julia-florida.ogg in Resources */ = {isa = PBXBuildFile; fileRef = 68A4CB831CC05DDE00ECF5E2 /* julia-florida.ogg */; };
 		68A4CBC71CC0952D00ECF5E2 /* blur.frag in Resources */ = {isa = PBXBuildFile; fileRef = 68A4CBC61CC0952D00ECF5E2 /* blur.frag */; };
 		68A4CBC91CC16EBA00ECF5E2 /* powerups.png in Resources */ = {isa = PBXBuildFile; fileRef = 68A4CBC81CC16EBA00ECF5E2 /* powerups.png */; };
+		68A8ADBE1CE3A9D80082A9A9 /* GradientCircle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68A8ADBC1CE3A9D80082A9A9 /* GradientCircle.cpp */; };
 		68ABE08D1BD5CFCA005E7757 /* enemyCreationFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68ABE08B1BD5CFCA005E7757 /* enemyCreationFunctions.cpp */; };
 		68ABE0901BD66CE7005E7757 /* effectsController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68ABE08E1BD66CE7005E7757 /* effectsController.cpp */; };
 		68ABE0961BD66D37005E7757 /* turretFlash5.png in Resources */ = {isa = PBXBuildFile; fileRef = 68ABE0911BD66D37005E7757 /* turretFlash5.png */; };
@@ -434,6 +435,8 @@
 		68A4CB831CC05DDE00ECF5E2 /* julia-florida.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = "julia-florida.ogg"; sourceTree = "<group>"; };
 		68A4CBC61CC0952D00ECF5E2 /* blur.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = blur.frag; sourceTree = "<group>"; };
 		68A4CBC81CC16EBA00ECF5E2 /* powerups.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = powerups.png; sourceTree = "<group>"; };
+		68A8ADBC1CE3A9D80082A9A9 /* GradientCircle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GradientCircle.cpp; sourceTree = "<group>"; };
+		68A8ADBD1CE3A9D80082A9A9 /* GradientCircle.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GradientCircle.hpp; sourceTree = "<group>"; };
 		68ABE08B1BD5CFCA005E7757 /* enemyCreationFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = enemyCreationFunctions.cpp; sourceTree = "<group>"; };
 		68ABE08C1BD5CFCA005E7757 /* enemyCreationFunctions.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = enemyCreationFunctions.hpp; sourceTree = "<group>"; };
 		68ABE08E1BD66CE7005E7757 /* effectsController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = effectsController.cpp; sourceTree = "<group>"; };
@@ -907,6 +910,8 @@
 		68ABE09F1BD71A42005E7757 /* Effects */ = {
 			isa = PBXGroup;
 			children = (
+				68A8ADBC1CE3A9D80082A9A9 /* GradientCircle.cpp */,
+				68A8ADBD1CE3A9D80082A9A9 /* GradientCircle.hpp */,
 				68ABE08E1BD66CE7005E7757 /* effectsController.cpp */,
 				6872448E1C665C6600EC95EF /* effectsController.hpp */,
 				68ABE0A01BD71A96005E7757 /* turretFlashEffect.cpp */,
@@ -1274,6 +1279,7 @@
 				6801FFF91BEE8456002AA2C2 /* explosion32effect.cpp in Sources */,
 				68EC08021C619D4E00E2D425 /* enemyShot.cpp in Sources */,
 				680725541C5A5C240038389C /* soundController.cpp in Sources */,
+				68A8ADBE1CE3A9D80082A9A9 /* GradientCircle.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
