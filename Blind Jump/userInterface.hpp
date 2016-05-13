@@ -39,13 +39,8 @@ public:
     sf::RectangleShape overlayRect;
     sf::Texture txtShadowTexture;
     sf::Sprite txtShadowSprite;
-    sf::Texture deathTextTexture;
-    sf::Sprite deathTextSprite;
     sf::Texture deathShadowTxt;
     sf::Sprite deathShadowSpr;
-    sf::Texture weaponNames[6];
-    sf::Sprite weaponName;
-    sf::RectangleShape weaponNameUnderscore;
     bool visible;
     float r;
     float r2;
@@ -59,8 +54,6 @@ public:
     void addItem(char, effectsController&, float, float, FontController&, Player&);
     sf::CircleShape itemCircle[4];
     bool closing;
-    // Keep track of whether the user has pressed key with state variable
-    char selectDir = 'L';
     
     // Function to display the death sequence
     void dispDeathSeq();

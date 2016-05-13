@@ -73,9 +73,6 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     // Store the pointer to the font controller in main() as one of the object's datefields
     this->pFonts = pFonts;
     
-    // Initialize the player's starting item
-    UI.addItem(0, effects, -20, -20, *pFonts, player);
-    
     // Set up the shaders
     colorShader.loadFromFile(resourcePath() + "color.frag", sf::Shader::Fragment);
     colorShader.setParameter("texture", sf::Shader::CurrentTexture);

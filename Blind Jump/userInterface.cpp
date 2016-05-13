@@ -50,8 +50,6 @@ userInterface::userInterface() {
     itemCircle[1].setFillColor(sf::Color(44,57,83,240));
     itemCircle[2].setFillColor(sf::Color(44,57,83,240));
     itemCircle[3].setFillColor(sf::Color(44,57,83,240));
-    weaponNameUnderscore.setFillColor(sf::Color(210, 210, 210));
-    weaponNameUnderscore.setSize(sf::Vector2f(90, 1));
     blurAmount = 0.1;
     angle = 275;
     closing = 0;
@@ -66,9 +64,6 @@ userInterface::userInterface() {
     }
     
     sf::Color c(255,255,255,2);
-    deathTextTexture.loadFromFile(resourcePath() + "deathText.png");
-    deathTextSprite.setTexture(deathTextTexture);
-    deathTextSprite.setColor(c);
     
     deathShadowTxt.loadFromFile(resourcePath() + "deathShadow.png");
     deathShadowSpr.setTexture(deathShadowTxt);
@@ -78,7 +73,6 @@ userInterface::userInterface() {
     for (int i = 0; i < 6; i++) {
         itemTextures[i].loadFromFile(resourcePath() + "items.png", sf::IntRect(i * 66, 0, 66, 34));
         items[i] = 0;
-        weaponNames[i].loadFromFile(resourcePath() + "weaponNames.png", sf::IntRect(0, i * 6, 80, 6));
     }
     
     
@@ -91,8 +85,6 @@ userInterface::userInterface() {
     selectorShadowTexture.loadFromFile(resourcePath() + "itemSelectorVignette.png");
     selectorShadowSprite.setTexture(selectorShadowTexture);
     deathSeq = false;
-    weaponName.setTexture(weaponNames[0]);
-    weaponName.setColor(sf::Color(210, 210, 210));
 }
 
 bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned char * detailStates, FontController& f, effectsController& ef, float xOffset, float yOffset, InputController* pInput, sf::Time& elapsed) {
@@ -128,7 +120,6 @@ bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
         if (c.a < 246 && !deathSeqComplete) {
             c.a += 4;
             deathShadowSpr.setColor(c);
-            deathTextSprite.setColor(c);
         }
         else {
             deathSeqComplete = true;
@@ -194,25 +185,21 @@ bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
         if (r > 35) {
             if (up && items[0] != 0) {
                 selectedCircle.setPosition(xPos - 33, yPos - 124);
-                weaponName.setTexture(weaponNames[items[0] - 1]);
                 selected = 0;
             }
         
             if (down && items[2] != 0) {
                 selectedCircle.setPosition(xPos - 33, yPos + 58);
-                weaponName.setTexture(weaponNames[items[2] - 1]);
                 selected = 2;
             }
         
             if (left && items[3] != 0) {
                 selectedCircle.setPosition(xPos - 124, yPos - 33);
-                weaponName.setTexture(weaponNames[items[3] - 1]);
                 selected = 3;
             }
         
             if (right && items[1] != 0) {
                 selectedCircle.setPosition(xPos + 58, yPos - 33);
-                weaponName.setTexture(weaponNames[items[1] - 1]);
                 selected = 1;
             }
         }
@@ -273,15 +260,14 @@ bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
         window.draw(circle);
         window.draw(circle2);
         if (rectAlpha > 100) {
-            window.draw(weaponName);
-            window.draw(weaponNameUnderscore);
             f.resetWPText();
             f.resetHPText();
             f.resetSCText();
         }
         
         if (r > 35) {
-            window.draw(selectedCircle);
+            if (items[selected] != 0)
+                window.draw(selectedCircle);
         }
         
         if (items[0] == 0) {
@@ -325,8 +311,6 @@ bool userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
 }
 
 void userInterface::setPosition(float x, float y) {
-    weaponName.setPosition(x - 40, y - 130);
-    weaponNameUnderscore.setPosition(x - 45, y - 122);
     circle.setPosition(x, y);
     xPos = x;
     yPos = y + 16;
@@ -348,7 +332,6 @@ void userInterface::setPosition(float x, float y) {
     
     selectorShadowSprite.setColor(sf::Color(255,255,255,1));
     selectorShadowSprite.setScale((x * 2) / 450, (y * 2) / 450);
-    deathTextSprite.setPosition(x - 239 / 2, 6);
     deathShadowSpr.setScale((x * 2) / 450, (y * 2) / 450);
 }
 
@@ -393,11 +376,9 @@ void userInterface::reset() {
     for (int i = 1; i < 4; i++)
         items[i] = 0;
     
-    weaponName.setTexture(weaponNames[items[0] - 1]);
     deathSeq = false;
     deathSeqComplete = false;
     deathShadowSpr.setColor(sf::Color(255,255,255,2));
-    deathTextSprite.setColor(sf::Color(255,255,255,2));
 }
 
 bool userInterface::isVisible() {
