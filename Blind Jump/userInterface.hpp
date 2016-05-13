@@ -25,35 +25,20 @@ class Player;
 class userInterface {
 public:
     userInterface();
-    // Draw menu draws, but also returns whether it is opening or closing
-    // Allows reuse of shaded resources, if the menu is open and not closing no need to keep running the blur shader
-    bool drawMenu(sf::RenderWindow&, Player*, unsigned char *, FontController&, effectsController&, float, float, InputController*, sf::Time&);
-    sf::CircleShape circle;
+    void drawMenu(sf::RenderWindow&, Player*, unsigned char *, FontController&, effectsController&, float, float, InputController*, sf::Time&);
     // Declare selection circles to go around the object
-    sf::CircleShape selCircle1;
-    sf::CircleShape selCircle2;
-    sf::CircleShape selCircle3;
-    sf::CircleShape selCircle4;
-    sf::CircleShape circle2;
-    sf::CircleShape selectedCircle;
-    sf::RectangleShape overlayRect;
     sf::Texture txtShadowTexture;
     sf::Sprite txtShadowSprite;
     sf::Texture deathShadowTxt;
     sf::Sprite deathShadowSpr;
     bool visible;
-    float r;
-    float r2;
     void setPosition(float, float);
     float xPos;
     float yPos;
-    float rectAlpha;
-    float angle;
     sf::Texture itemTextures[6];
-    sf::Sprite itemSprites[5];
     void addItem(char, effectsController&, float, float, FontController&, Player&);
-    sf::CircleShape itemCircle[4];
-    bool closing;
+    
+    char state;
     
     // Function to display the death sequence
     void dispDeathSeq();
@@ -66,17 +51,13 @@ public:
     void reset();
     
     void setEnemyValueCount(int);
-    char getCurrentItem();
     
     // Accessor for blur amount
     float getBlurAmount();
     
 private:
-    char items[4];
-    char selected;
-    bool msgOpenSignal;
-    bool msgOpened;
-    bool msgVisible;
+    sf::Sprite gunSprite;
+    float weaponDispOffset;
     
     // Vector to hold UI bubbles for new items (although there should only be one at a time...
     std::vector<UIBubble> uiBubbles;

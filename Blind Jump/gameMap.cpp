@@ -54,10 +54,6 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     windowW = windowWidth;
     windowH = windowHeight;
     
-    // Don't compute the blur effect when the ui menu is not opening or closing, use the cached version
-    // This variable allows for that
-    computeBlur = true;
-    
     // Now call a function to procedurally distribute items
     initLoot(itemArray);
     
@@ -281,28 +277,23 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     
     bkg.drawForeground(target);
     
+    //target.draw(vignetteSprite, sf::BlendMultiply);
+    
     // Display the render texture target
     target.display();
     
     // Finally draw it to the window
     if (UI.isVisible()) {
-        if (computeBlur) {
-            // Blurring takes a lot of cpu resources. Limit the framerate
-            finalPass.clear(sf::Color::Transparent);
-            sf::Vector2u textureSize = target.getSize();
-            // Get the blur amount from the UI controller
-            float blurAmount = UI.getBlurAmount();
-            blurShader.setParameter("blur_radius", sf::Vector2f(0.f, blurAmount / textureSize.y));
-            finalPass.draw(sf::Sprite(target.getTexture()), &blurShader);
-            finalPass.display();
-            blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
-            finalSprite.setTexture(finalPass.getTexture());
-            window.draw(finalSprite, &blurShader);
-        } else {
-            // If the UI interface is not opening or closing, reuse some of the previously created blur resources
-            // When the menu is opened, the game should be paused anyway, so it's fine to use a static image
-            window.draw(finalSprite, &blurShader);
-        }
+        finalPass.clear(sf::Color::Transparent);
+        sf::Vector2u textureSize = target.getSize();
+        // Get the blur amount from the UI controller
+        float blurAmount = UI.getBlurAmount();
+        blurShader.setParameter("blur_radius", sf::Vector2f(0.f, blurAmount / textureSize.y));
+        finalPass.draw(sf::Sprite(target.getTexture()), &blurShader);
+        finalPass.display();
+        blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
+        finalSprite.setTexture(finalPass.getTexture());
+        window.draw(finalSprite, &blurShader);
     } else {
         window.draw(sf::Sprite(target.getTexture()));
     }
@@ -329,11 +320,11 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
             pFonts->setWaypointText(level);
             dispEntryBeam = false;
         }
-        computeBlur = UI.drawMenu(window, &player, details.getUIStates(), *pFonts, effects, xOffset, yOffset, pInput, elapsedTime);
+        UI.drawMenu(window, &player, details.getUIStates(), *pFonts, effects, xOffset, yOffset, pInput, elapsedTime);
     }
     else {
         if (level != 0) {
-            computeBlur = UI.drawMenu(window, &player, details.getUIStates(), *pFonts, effects, xOffset, yOffset, pInput, elapsedTime);
+            UI.drawMenu(window, &player, details.getUIStates(), *pFonts, effects, xOffset, yOffset, pInput, elapsedTime);
             // Pass the player's health to the font controller
             pFonts->updateHealth(player.getHealth());
             // Draw all of the game text to the window

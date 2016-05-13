@@ -66,7 +66,6 @@ private:
     
     sf::Texture blurred;
     sf::Sprite finalSprite;
-    bool computeBlur;
     
     // A boolean variable that is true when the player is nearby a teleporter
     bool teleporterCond;
