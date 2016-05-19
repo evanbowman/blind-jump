@@ -50,8 +50,6 @@ private:
     std::vector<DamagedRobot> damagedRobots;
     // A vector of general details, for background details that don't need any added functionality
     std::vector<GeneralDetail> misc32x26;
-    // Variables to keep track of which ui elements to draw
-    unsigned char UIStates[1];
 
 public:
     detailController();
@@ -76,7 +74,6 @@ public:
     std::vector<Rock>* getRocks();
     void addWarpImpact(float, float);
     std::vector<Terminal> getTerms();
-    unsigned char * getUIStates();
     void killTeleporter();
     void setWindowSize(float, float);
 };

@@ -12,16 +12,16 @@
 #include "detailParent.hpp"
 #include "inputController.hpp"
 
-#define DORMANT 'd'
-#define OPENING 'o'
-#define OPENED 'O'
-
 class ScreenShakeController;
 
 class IntroDoor : public detailParent {
+    
+    enum State { dormant, opening, opened };
+    
 private:
     sf::Sprite sprite[4];
-    char frameIndex, frameRate, state;
+    char frameIndex, frameRate;
+    State state;
     
 public:
     void update(float, float, InputController * pInput, ScreenShakeController * pscr);

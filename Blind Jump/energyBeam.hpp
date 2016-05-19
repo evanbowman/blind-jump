@@ -13,15 +13,14 @@
 #include "SFML/Graphics.hpp"
 #include <cmath>
 
-// Define states for the state machine
-#define ENTERING 'e'
-#define LEAVING 'l'
-#define RUNNING 'r'
-
 class EnergyBeam {
+    
+    enum State { entering, leaving, running };
+    
 private:
     double xInit, yInit, xPos, yPos;
-    char state, frameIndex, frameRate;
+    State state;
+    char frameIndex, frameRate;
     sf::Sprite sprites[6];
     sf::RectangleShape beamShape;
     bool killFlag;

@@ -15,20 +15,18 @@
 #include "fontController.hpp"
 #include "aStar.hpp"
 
-// Define states for the state machine
-#define DORMANT 'd'
-#define RUN 'r'
-#define SHOOT 's'
-#define OVERHEAT 'o'
-
 // Forward declaration for tilecontroller
 class tileController;
 
 class HeavyBot : public EnemyParent {
+    
+    enum State { dormant, run, shoot, overheat };
+    
 private:
     sf::Sprite sprites[17];
     float currentDir;
-    char frameIndex, frameRate, state, health;
+    char frameIndex, frameRate, health;
+    State state;
     bool runShootAnim;
     std::vector<aStrCoordinate> path;
     int recalc;

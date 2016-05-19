@@ -46,7 +46,6 @@ detailController::detailController() {
         rockTextures[i].loadFromFile(resourcePath() + "boulderSheet.png", sf::IntRect(i * 32, 0, 32, 64));
     }
     
-    UIStates[0] = 0;
     lampGlow.loadFromFile(resourcePath() + "lampLight.png");
     for (int i = 0; i < 3; i++) {
         lampTextures[i].loadFromFile(resourcePath() + "lamp.png", sf::IntRect(i * 32, 0, 32, 32));
@@ -276,7 +275,6 @@ void detailController::addTerminal(tileController & t, float posX, float posY, f
 }
 
 void detailController::update(float xOffset, float yOffset, effectsController& ef, char PlayerSprIndex, std::vector<wall>& walls, std::vector<sf::Sprite*>* glow1, std::vector<sf::Sprite*>* glow2, userInterface& ui, FontController& fonts, Player& player, InputController* pInput, ScreenShakeController * pscr, sf::Time & elapsedTime) {
-    UIStates[0] = 0;
     if (!teleporters.empty()) {
         for (auto & element : teleporters) {
             element.update(xOffset, yOffset, elapsedTime);
@@ -340,8 +338,6 @@ void detailController::update(float xOffset, float yOffset, effectsController& e
     if (!terminals.empty()) {
         for (auto & element : terminals) {
             element.update(xOffset, yOffset);
-            if ((PlayerSprIndex == 1) && (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) && std::abs(8 + element.getxPos() - element.getWindowCenterX() / 2) < 10 && std::abs(element.getyPos() - element.getWindowCenterY() / 2) < 16)
-                UIStates[0] = 1;
         }
     }
 }
@@ -450,10 +446,6 @@ Teleporter* detailController::getTeleporter() {
 
 std::vector<Terminal> detailController::getTerms() {
     return terminals;
-}
-
-unsigned char * detailController::getUIStates() {
-    return UIStates;
 }
 
 std::vector<LampLight>* detailController::getLamps() {

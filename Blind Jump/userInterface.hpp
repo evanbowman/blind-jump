@@ -24,6 +24,9 @@
 class Player;
 
 class userInterface {
+    
+    enum State { opening, open, closing, closed };
+    
 public:
     userInterface();
     void drawMenu(sf::RenderWindow&, Player*, FontController&, effectsController&, float, float, InputController*, sf::Time&);
@@ -32,14 +35,9 @@ public:
     sf::Sprite txtShadowSprite;
     sf::Texture deathShadowTxt;
     sf::Sprite deathShadowSpr;
-    bool visible;
     void setPosition(float, float);
-    float xPos;
-    float yPos;
     sf::Texture itemTextures[3][3];
     void addItem(char, effectsController&, float, float, FontController&, Player&);
-    
-    char state;
     
     char selectedColumn;
     std::array<unsigned char, 3> rowIndices;
@@ -62,6 +60,12 @@ public:
     float getBlurAmount();
     
 private:
+    State state;
+    
+    float xPos, yPos;
+    
+    bool visible;
+    
     std::array<sf::Sprite, 3> gunSprites;
     float weaponDispOffset;
     
@@ -75,12 +79,7 @@ private:
     
     bool keyPressed;
     
-    bool deathSeq;
-    bool deathSeqComplete;
-    float msgBoxXorigin;
-    float msgBoxYorigin;
-    float msgBoxWidth;
-    float msgBoxHeight;
+    bool deathSeq, deathSeqComplete;
         
     sf::Texture selectorShadowTexture;
     sf::Sprite selectorShadowSprite;

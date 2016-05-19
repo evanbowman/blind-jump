@@ -19,12 +19,12 @@ HeavyBot::HeavyBot(sf::Sprite* inpSprs, short map[61][61]) : EnemyParent(inpSprs
     frameRate = 4;
     this->map = map;
     health = 18;
-    state = DORMANT;
+    state = dormant;
 }
 
 sf::Sprite* HeavyBot::getSprite() {
     switch (state) {
-        case RUN:
+        case run:
             // Flip the sprite to face the player always do when running
             if (xPos > playerPosX) {
                 sf::Vector2f scaleVec(1, 1);
@@ -38,7 +38,7 @@ sf::Sprite* HeavyBot::getSprite() {
             }
             break;
             
-        case SHOOT:
+        case shoot:
             if (runShootAnim) {
                 if (xPos > playerPosX) {
                     sf::Vector2f scaleVec(1, 1);
@@ -113,15 +113,15 @@ void HeavyBot::update(float xOffset, float yOffset, effectsController& ef, FontC
     setPosition(xOffset, yOffset);
     checkBulletCollision(ef, fonts);
     switch (state) {
-        case DORMANT:
+        case dormant:
             if (fabsf(xPos - playerPosX) < 150 && fabsf(yPos - playerPosY) < 150) {
-                state = RUN;
+                state = run;
                 frameIndex = 1;
                 frameRate = 4;
             }
             break;
             
-        case RUN:
+        case run:
             if (--frameRate == 0) {
                 frameIndex++;
                 frameRate = 4;
@@ -158,7 +158,7 @@ void HeavyBot::update(float xOffset, float yOffset, effectsController& ef, FontC
                 if (fabs(xInit - (((path.back().x * 32) + 4 + pTiles->posX))) < 8 && fabs(yInit - (((path.back().y * 26) + 4 + pTiles->posY))) < 8) {
                     // If the enemy is close to the player, do a beam attack
                     if (fabsf(xPos - playerPosX) < 120 && fabsf(yPos - playerPosY) < 120) {
-                        state = SHOOT;
+                        state = shoot;
                         runShootAnim = true;
                         frameIndex = 8;
                         frameRate = 4;
@@ -175,7 +175,7 @@ void HeavyBot::update(float xOffset, float yOffset, effectsController& ef, FontC
             
             break;
             
-        case SHOOT:
+        case shoot:
             if (runShootAnim) {
                 if (--frameRate == 0) {
                     frameRate = 4;
@@ -203,15 +203,15 @@ void HeavyBot::update(float xOffset, float yOffset, effectsController& ef, FontC
                 }
                 
                 if (--frameRate == 0) {
-                    state = OVERHEAT;
+                    state = overheat;
                     frameRate = 40;
                 }
             }
             break;
             
-        case OVERHEAT:
+        case overheat:
             if (--frameRate == 0) {
-                state = RUN;
+                state = run;
                 frameRate = 4;
                 frameIndex = 1;
             }

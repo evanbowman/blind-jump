@@ -12,12 +12,6 @@
 #include "Strings.h"
 #include "player.hpp"
 
-// Macros to make the state machine more easily readable
-#define OPENING 'o'
-#define OPEN 'O'
-#define CLOSING 'c'
-#define CLOSED 'C'
-
 userInterface::userInterface() {
     visible = 0;
     xPos = 0;
@@ -26,7 +20,7 @@ userInterface::userInterface() {
     deathSeqComplete = false;
     textDisplacement = 0;
     canHeal = true;
-    state = CLOSED;
+    state = closed;
     
     sf::Color c(255,255,255,2);
     
@@ -66,17 +60,17 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontContr
     bool x = pInput->xPressed();
     
     switch (state) {
-        case CLOSED:
+        case closed:
             if (c) {
-                state = OPENING;
+                state = opening;
                 visible = true;
                 player->deActivate();
             }
             break;
             
-        case OPEN:
+        case open:
             if (c) {
-                state = CLOSING;
+                state = closing;
                 player->activate();
             }
             
@@ -98,12 +92,12 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontContr
             //window.draw(column1, sf::BlendAdd);
             break;
             
-        case OPENING:
+        case opening:
             if (blurAmount < 0.99999f) {
                 blurAmount *= 1.2f;
                 if (blurAmount > 0.99999f) {
                     blurAmount = 0.99999f;
-                    state = OPEN;
+                    state = open;
                 }
             }
             if (weaponDispOffset > 1) {
@@ -121,12 +115,12 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontContr
             }
             break;
             
-        case CLOSING:
+        case closing:
             if (blurAmount > 0.1f) {
                 blurAmount *= 0.92f;
                 if (blurAmount < 0.1f) {
                     blurAmount = 0.1f;
-                    state = CLOSED;
+                    state = closed;
                     visible = false;
                 }
             }
@@ -232,7 +226,7 @@ bool userInterface::isVisible() {
 }
 
 bool userInterface::isOpen() {
-    return state == OPEN;
+    return state == open;
 }
 
 void userInterface::setEnemyValueCount(int count) {
