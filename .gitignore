@@ -10,7 +10,7 @@ Thumbs.db
 *.out
 
 # Ignore pikopixel save files
-# *.piko
+*.piko
 
 # Ignore the xcode user state
 *.xcuserstate
