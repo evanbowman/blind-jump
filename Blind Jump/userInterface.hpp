@@ -15,6 +15,7 @@
 #include "effectsController.hpp"
 #include "ui_bubble.hpp"
 #include "inputController.hpp"
+#include <array>
 
 // This part of the code is so tied to the aesthetic appearance of the game,
 // making it difficult to describe. If there is a constant and you can't tell
@@ -25,7 +26,7 @@ class Player;
 class userInterface {
 public:
     userInterface();
-    void drawMenu(sf::RenderWindow&, Player*, unsigned char *, FontController&, effectsController&, float, float, InputController*, sf::Time&);
+    void drawMenu(sf::RenderWindow&, Player*, FontController&, effectsController&, float, float, InputController*, sf::Time&);
     // Declare selection circles to go around the object
     sf::Texture txtShadowTexture;
     sf::Sprite txtShadowSprite;
@@ -35,10 +36,13 @@ public:
     void setPosition(float, float);
     float xPos;
     float yPos;
-    sf::Texture itemTextures[6];
+    sf::Texture itemTextures[3][3];
     void addItem(char, effectsController&, float, float, FontController&, Player&);
     
     char state;
+    
+    char selectedColumn;
+    std::array<unsigned char, 3> rowIndices;
     
     // Function to display the death sequence
     void dispDeathSeq();
@@ -52,11 +56,13 @@ public:
     
     void setEnemyValueCount(int);
     
+    bool isOpen();
+    
     // Accessor for blur amount
     float getBlurAmount();
     
 private:
-    sf::Sprite gunSprite;
+    std::array<sf::Sprite, 3> gunSprites;
     float weaponDispOffset;
     
     // Vector to hold UI bubbles for new items (although there should only be one at a time...
@@ -67,9 +73,10 @@ private:
     // The amount of blur to use when opening the items menu
     float blurAmount;
     
+    bool keyPressed;
+    
     bool deathSeq;
     bool deathSeqComplete;
-    
     float msgBoxXorigin;
     float msgBoxYorigin;
     float msgBoxWidth;

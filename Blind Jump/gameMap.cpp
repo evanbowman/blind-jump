@@ -103,6 +103,10 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     
     vignetteSprite.setTexture(*inptxtr);
     vignetteSprite.setScale(windowWidth/450, windowHeight/450);
+    vignetteShadowTxtr.loadFromFile(resourcePath() + "vignetteShadow.png");
+    vignetteShadowSpr.setTexture(vignetteShadowTxtr);
+    vignetteShadowSpr.setScale(windowWidth / 450, windowHeight / 450);
+    vignetteShadowSpr.setColor(sf::Color(255,255,255,100));
     
     //Put the player in the center of the view
     player.setPosition(windowWidth / 2 - 16, windowHeight / 2);
@@ -161,7 +165,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     transitionShape.setSize(sf::Vector2f(windowW, windowH));
     transitionShape.setFillColor(sf::Color(0, 0, 0, 0));
     
-    vignetteSprite.setColor(sf::Color(255, 255, 255, 96));
+    vignetteSprite.setColor(sf::Color(255, 255, 255));
     
     // Place a weapon chest if needed
     if (itemArray[level][0] != 0) {
@@ -205,7 +209,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     
     effects.getGlowSprs()->clear();
     // Update the positions of all the effect objects
-    effects.update(xOffset, yOffset, &ssc, elapsedTime);
+    effects.update(player.getWorldOffsetX(), player.getWorldOffsetY(), &ssc, elapsedTime);
     
     // Draw shadows to the window
     if (!gameShadows.empty()) {
@@ -277,7 +281,10 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     
     bkg.drawForeground(target);
     
-    //target.draw(vignetteSprite, sf::BlendMultiply);
+    // Draw a nice vignette effect over the entire window, but behind the UI overlay
+    target.draw(vignetteSprite, sf::BlendMultiply);
+    // A combination of an alpha blended edge shadow really completes the vignette look
+    target.draw(vignetteShadowSpr);
     
     // Display the render texture target
     target.display();
@@ -294,13 +301,15 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
         blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
         finalSprite.setTexture(finalPass.getTexture());
         window.draw(finalSprite, &blurShader);
+        // The gaussian blur effect used by the UI can really put a strain on the graphics card. Since the background is blurry anyway, draw fewer frames when the menu is open
+        if (UI.isOpen())
+            window.setFramerateLimit(30);
+        else
+            window.setFramerateLimit(60);
     } else {
         window.draw(sf::Sprite(target.getTexture()));
     }
     
-    // Draw a nice vignette effect over the entire window, but behind the UI overlay
-    window.draw(vignetteSprite, sf::BlendMultiply);
-
     if (!player.isdead()) {
         UI.dispDeathSeq();
         pFonts->terminateCaptions();
@@ -315,16 +324,17 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
             initLoot(itemArray);
             enemySelectVec.clear();
             Reset();
+            transitionDelay = 320;
             // Set the max health back to 3
             pFonts->updateMaxHealth(4);
             pFonts->setWaypointText(level);
             dispEntryBeam = false;
         }
-        UI.drawMenu(window, &player, details.getUIStates(), *pFonts, effects, xOffset, yOffset, pInput, elapsedTime);
+        UI.drawMenu(window, &player, *pFonts, effects, xOffset, yOffset, pInput, elapsedTime);
     }
     else {
         if (level != 0) {
-            UI.drawMenu(window, &player, details.getUIStates(), *pFonts, effects, xOffset, yOffset, pInput, elapsedTime);
+            UI.drawMenu(window, &player, *pFonts, effects, xOffset, yOffset, pInput, elapsedTime);
             // Pass the player's health to the font controller
             pFonts->updateHealth(player.getHealth());
             // Draw all of the game text to the window
@@ -345,7 +355,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
         sf::Vector2f v2 = entryBeam.getSize();
         // Keep track of the original size of the beam, makes it easier later to update the shape position
         double originalYval = v2.y;
-        // Until the beam reaches the player position at the center of the window, increase it's height and move it down
+        // Until the beam reaches the player position at the center of the window, increase it's height and move it down. Purely an aesthetic thing
         if (v2.y < 518) {
             v2.y *= 1.11;
             sf::Color c = beamGlowSpr.getColor();

@@ -70,6 +70,9 @@ private:
     // A boolean variable that is true when the player is nearby a teleporter
     bool teleporterCond;
     
+    sf::Texture vignetteShadowTxtr;
+    sf::Sprite vignetteShadowSpr;
+    
     // A vector to hold text captions for details
     std::vector<sf::Text*> captions;
     

@@ -28,44 +28,41 @@ userInterface::userInterface() {
     canHeal = true;
     state = CLOSED;
     
-    
-    // Load textures in from a sprite sheet
-    for (int i = 0; i < 29; i++) {
-        letterTextures[i].loadFromFile(resourcePath() + "alphabetSheet.png", sf::IntRect(1 + i * 7, 0, 6, 9));
-        inverseLetterTextures[i].loadFromFile(resourcePath() + "alphabetSheetInverse.png", sf::IntRect(i * 7, 0, 8, 9));
-    }
-    
     sf::Color c(255,255,255,2);
-    
-    
     
     deathShadowTxt.loadFromFile(resourcePath() + "deathShadow.png");
     deathShadowSpr.setTexture(deathShadowTxt);
     deathShadowSpr.setColor(c);
+
     
     // Load in all of the item textures
-    for (int i = 0; i < 6; i++) {
-        itemTextures[i].loadFromFile(resourcePath() + "items.png", sf::IntRect(i * 66, 0, 66, 34));
-    }
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            itemTextures[i][j].loadFromFile(resourcePath() + "items.png", sf::IntRect(j * 24, i * 34, 24, 34));
     
-    gunSprite.setTexture(itemTextures[0]);
-    gunSprite.setScale(6, 6);
-    gunSprite.setOrigin(gunSprite.getLocalBounds().width / 2, gunSprite.getLocalBounds().height / 2);
+    for (int i = 0; i < 3; i++) {
+        gunSprites[i].setTexture(itemTextures[0][i]);
+        gunSprites[i].setScale(5, 5);
+        gunSprites[i].setOrigin(gunSprites[i].getLocalBounds().width / 2, gunSprites[i].getLocalBounds().height / 2 + 5);
+        rowIndices[i] = 0;
+    }
     
     txtShadowTexture.loadFromFile(resourcePath() + "overworldTextShadow.png");
     txtShadowSprite.setTexture(txtShadowTexture);
     selectorShadowTexture.loadFromFile(resourcePath() + "itemSelectorVignette.png");
     selectorShadowSprite.setTexture(selectorShadowTexture);
     deathSeq = false;
+    selectedColumn = 0;
+    keyPressed = false;
 }
 
-void userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned char * detailStates, FontController& f, effectsController& ef, float xOffset, float yOffset, InputController* pInput, sf::Time& elapsed) {
+void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontController& f, effectsController& ef, float xOffset, float yOffset, InputController* pInput, sf::Time& elapsed) {
     bool c = pInput->cPressed();
-    /*bool left = pInput->leftPressed();
+    bool left = pInput->leftPressed();
     bool right = pInput->rightPressed();
     bool up = pInput->upPressed();
     bool down = pInput->downPressed();
-    bool z = pInput->zPressed();*/
+    bool z = pInput->zPressed();
     bool x = pInput->xPressed();
     
     switch (state) {
@@ -78,11 +75,26 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
             break;
             
         case OPEN:
-            if (c || x) {
+            if (c) {
                 state = CLOSING;
                 player->activate();
             }
-            window.draw(gunSprite);
+            
+            for (int i = 0; i < 3; i++) {
+                window.draw(gunSprites[i]);
+            }
+            
+            if (left && selectedColumn > 0 && !keyPressed) {
+                selectedColumn--;
+            } else if (right && selectedColumn < 2 && !keyPressed) {
+                selectedColumn++;
+            } else if (up && rowIndices[selectedColumn] > 0 && !keyPressed) {
+                rowIndices[selectedColumn]--;
+                gunSprites[selectedColumn].setTexture(itemTextures[rowIndices[selectedColumn]][selectedColumn]);
+            } else if (down && rowIndices[selectedColumn] < 2 && !keyPressed) {
+                rowIndices[selectedColumn]++;
+                gunSprites[selectedColumn].setTexture(itemTextures[rowIndices[selectedColumn]][selectedColumn]);
+            }
             //window.draw(column1, sf::BlendAdd);
             break;
             
@@ -94,6 +106,19 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
                     state = OPEN;
                 }
             }
+            if (weaponDispOffset > 1) {
+                weaponDispOffset *= 0.8;
+                if (weaponDispOffset < 1) {
+                    weaponDispOffset = 1;
+                }
+            }
+            
+            gunSprites[0].setPosition(xPos - 120, yPos + weaponDispOffset);
+            gunSprites[1].setPosition(xPos, yPos + weaponDispOffset);
+            gunSprites[2].setPosition(xPos + 120, yPos + weaponDispOffset);
+            for (int i = 0; i < 3; i++) {
+                window.draw(gunSprites[i]);
+            }
             break;
             
         case CLOSING:
@@ -104,6 +129,19 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
                     state = CLOSED;
                     visible = false;
                 }
+            }
+            
+            if (weaponDispOffset < yPos * 2) {
+                weaponDispOffset *= 1.2;
+                if (weaponDispOffset > yPos * 2) {
+                    weaponDispOffset = yPos * 2;
+                }
+            }
+            gunSprites[0].setPosition(xPos - 120, yPos + weaponDispOffset);
+            gunSprites[1].setPosition(xPos, yPos + weaponDispOffset);
+            gunSprites[2].setPosition(xPos + 120, yPos + weaponDispOffset);
+            for (int i = 0; i < 3; i++) {
+                window.draw(gunSprites[i]);
             }
             break;
             
@@ -135,6 +173,12 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, unsigned 
             f.resetSCText();
         }
     }
+    
+    if (left || right || up || down) {
+        keyPressed = true;
+    } else {
+        keyPressed = false;
+    }
 }
 
 void userInterface::setPosition(float x, float y) {
@@ -150,7 +194,7 @@ void userInterface::setPosition(float x, float y) {
         element.setColor(sf::Color(255, 255, 255, 1));
     }
     
-    gunSprite.setPosition(x, y);
+    weaponDispOffset = y * 2;
     
     selectorShadowSprite.setColor(sf::Color(255,255,255,1));
     selectorShadowSprite.setScale((x * 2) / 450, (y * 2) / 450);
@@ -185,6 +229,10 @@ void userInterface::reset() {
 
 bool userInterface::isVisible() {
     return visible;
+}
+
+bool userInterface::isOpen() {
+    return state == OPEN;
 }
 
 void userInterface::setEnemyValueCount(int count) {

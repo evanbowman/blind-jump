@@ -672,7 +672,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
             if (fabsf(posX + 16 - element.getXpos()) < 8 && fabsf(posY + 4 - element.getYpos()) < 8) {
                 health = fmin(fonts.getMaxHealth(), health + 1);
                 element.setKillFlag(true);
-                gotHeart = true;
+                ////gotHeart = true;
                 // Display the UI element for health text
                 fonts.resetHPText();
             }
@@ -684,8 +684,8 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
         if (fabsf(posX + 16 - element.getXpos()) < 8 && fabsf(posY + 4 - element.getYpos()) < 8) {
             element.setKillFlag(true);
             fonts.updateScore(1);
-            gotCoin = true;
-            gotHeart = false;
+            ////gotCoin = true;
+            ////gotHeart = false;
         }
     }
     

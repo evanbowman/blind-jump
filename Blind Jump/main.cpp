@@ -25,10 +25,10 @@ int main(int, char const**) {
 
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     
-    float aspectRatio = (float)desktop.width / (float)desktop.height;
+    float aspectRatio = static_cast<float>(desktop.width) / static_cast<float>(desktop.height);
     float windowWidth = 450;
     float windowHeight = 450;
-    if (aspectRatio > 1) {
+    if (aspectRatio > 1.f) {
         float windowAspect;
         do {
             windowWidth += 0.025;
@@ -36,6 +36,8 @@ int main(int, char const**) {
             windowAspect = windowWidth / windowHeight;
         }
         while (fabs(aspectRatio - windowAspect) > 0.005);
+    } else {
+        std::cerr << "FAILURE: Game does not support vertical displays." << std::endl;
     }
     
     // Boolean that stores whether the game is on the title screen
