@@ -17,16 +17,6 @@
 #include "soundController.hpp"
 #include "inputController.hpp"
 
-/*
- #define DEACTIVATED 'D'
- #define NOMINAL 'N'
- #define DASHING 'd'
- #define COOLDOWN 'C'
- #define DYING 'x'
- #define DEAD 'X'
- #define PREP_DASH 'p'
- */
-
 class Player {
     enum class State {
         deactivated,    // 0: Player is not active, ie does not respond to user keystrokes

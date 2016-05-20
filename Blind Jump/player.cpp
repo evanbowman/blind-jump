@@ -17,7 +17,8 @@
  7: Walk right
  8: Death
  */
-//The code in this section looks long, but it's mostly importing textures and repeated condition checking that cannot easily be looped.
+
+//// IMPORTANT: NEEDS REFACTORING URGENTLY. AT THE TIME OF WRITING AN EIGHTH OF THE CODE BASE IS IN THIS SINGLE FILE
 
 #include "player.hpp"
 #include "ResourcePath.hpp"
@@ -181,13 +182,16 @@ inline void updateWorldOffset(char& spriteIndex, int& animationCounter, bool col
 void Player::drawController(InputController* pInput, effectsController& ef) {
     
     // If the player has no health and the death sequence isn't running, start it
-    if (health == 0 && !deathSeq) {
-        deathSeq = true;
-        state = State::nominal;
-        spriteIndex = 8;
-        imageIndex = 0;
-        animationCounter = 6;
+    if (health == 0) {
+        if (state != State::dying && state != State::dead) {
+            deathSeq = true;
+            state = State::nominal;
+            spriteIndex = 8;
+            imageIndex = 0;
+            animationCounter = 6;
+        }
     }
+    
     bool left, right, up, down, x, z;
     
     z = pInput->zPressed();
