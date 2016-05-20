@@ -25,7 +25,7 @@ class Player;
 
 class userInterface {
     
-    enum State { opening, open, closing, closed };
+    enum class State { opening, open, closing, closed };
     
 public:
     userInterface();

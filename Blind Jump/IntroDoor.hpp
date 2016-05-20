@@ -16,7 +16,7 @@ class ScreenShakeController;
 
 class IntroDoor : public detailParent {
     
-    enum State { dormant, opening, opened };
+    enum class State { dormant, opening, opened };
     
 private:
     sf::Sprite sprite[4];

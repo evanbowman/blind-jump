@@ -20,7 +20,7 @@ userInterface::userInterface() {
     deathSeqComplete = false;
     textDisplacement = 0;
     canHeal = true;
-    state = closed;
+    state = State::closed;
     
     sf::Color c(255,255,255,2);
     
@@ -60,17 +60,17 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontContr
     bool x = pInput->xPressed();
     
     switch (state) {
-        case closed:
+        case State::closed:
             if (c) {
-                state = opening;
+                state = State::opening;
                 visible = true;
                 player->deActivate();
             }
             break;
             
-        case open:
+        case State::open:
             if (c) {
-                state = closing;
+                state = State::closing;
                 player->activate();
             }
             
@@ -92,12 +92,12 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontContr
             //window.draw(column1, sf::BlendAdd);
             break;
             
-        case opening:
+        case State::opening:
             if (blurAmount < 0.99999f) {
                 blurAmount *= 1.2f;
                 if (blurAmount > 0.99999f) {
                     blurAmount = 0.99999f;
-                    state = open;
+                    state = State::open;
                 }
             }
             if (weaponDispOffset > 1) {
@@ -115,12 +115,12 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontContr
             }
             break;
             
-        case closing:
+        case State::closing:
             if (blurAmount > 0.1f) {
                 blurAmount *= 0.92f;
                 if (blurAmount < 0.1f) {
                     blurAmount = 0.1f;
-                    state = closed;
+                    state = State::closed;
                     visible = false;
                 }
             }
@@ -226,7 +226,7 @@ bool userInterface::isVisible() {
 }
 
 bool userInterface::isOpen() {
-    return state == open;
+    return state == State::open;
 }
 
 void userInterface::setEnemyValueCount(int count) {

@@ -53,7 +53,7 @@ Player::Player() {
     scrShakeState = 0;
     dodging = false;
     dodgeTimer = 4;
-    state = nominal;
+    state = State::nominal;
     gotHeart = false;
     gotCoin = false;
     redTimer = 10;
@@ -127,9 +127,11 @@ void Player::setPosition(float X, float Y) {
         spriteRight[i].setPosition(posX, posY);
         deathSprites[i].setPosition(posX - 13, posY - 1);
     }
+    
     for (i = 6; i < 11; i++) {
         deathSprites[i].setPosition(posX - 13, posY - 1);
     }
+    
     spriteLeft[6].setPosition(posX, posY);
     spriteRight[6].setPosition(posX, posY);
     shadowSprite.setPosition(posX + 7, posY + 24);
@@ -181,7 +183,7 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
     // If the player has no health and the death sequence isn't running, start it
     if (health == 0 && !deathSeq) {
         deathSeq = true;
-        state = nominal;
+        state = State::nominal;
         spriteIndex = 8;
         imageIndex = 0;
         animationCounter = 6;
@@ -191,7 +193,7 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
     z = pInput->zPressed();
     x = pInput->xPressed();
     // If the player isn't in dodge mode, get left, right, etc from the input controller
-    if (state == nominal) {
+    if (state == State::nominal) {
         left = pInput->leftPressed();
         right = pInput->rightPressed();
         up = pInput->upPressed();
@@ -206,7 +208,7 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
     }
     
     if (active && !deathSeq) {
-    if (!x && state == nominal) {      //Holding the x key strafes the player and changes the animation, so account for that condition
+        if (!x && state == State::nominal) {      //Holding the x key strafes the player and changes the animation, so account for that condition
         if (up) {
             if (!down && !left && !right && spriteIndex != 5)  {
                 spriteIndex = 5;
@@ -281,7 +283,7 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
         }
     }
     
-    else if (x && state == nominal) {
+        else if (x && state == State::nominal) {
         //The user is holding the x key, so set the gun timeout to max value
         if (weapon.getTimeout() == 0) {
         weapon.setTimeout(100);
@@ -363,7 +365,7 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
         
         if (pInput->zPressed() && z != zprevious) {
             if (((spriteIndex == 6 && !left) || (spriteIndex == 7 && !right) || (spriteIndex == 4 && !down) || (spriteIndex == 5  && !up))) {
-                state = prepdash;
+                state = State::prepdash;
                 if (spriteIndex == 7) {
                     if (up) {
                         if (left)
@@ -435,10 +437,10 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
         }
     }
         
-        if (state == prepdash) {
+        if (state == State::prepdash) {
             if (--dodgeTimer == 0) {
                 dodgeTimer = 5;
-                state = dashing;
+                state = State::dashing;
             }
             if (left && !CollisionLeft) {
                 worldOffsetX += 1;
@@ -454,9 +456,9 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
             }
         }
         
-        else if (state == dashing) {
+        else if (state == State::dashing) {
             if (--dodgeTimer == 0) {
-                state = cooldown;
+                state = State::cooldown;
                 dodgeTimer = 12;
             }
             if (left && !CollisionLeft) {
@@ -485,10 +487,10 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
             }
         }
         
-        else if (state == cooldown) {
+        else if (state == State::cooldown) {
             if (--dodgeTimer == 0) {
                 dodgeTimer = 3;
-                state = nominal;
+                state = State::nominal;
                 imageIndex = 4;
             }
             if (left && !CollisionLeft) {
@@ -639,7 +641,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
         gameShadows.push_back(tShadow);
     }
     // Allow the player's weapon to push created instances to the effects controller
-    weapon.updateShotVector(spriteIndex, ef, worldOffsetX, worldOffsetY, UI, pInput, sounds, state);
+    weapon.updateShotVector(spriteIndex, ef, worldOffsetX, worldOffsetY, UI, pInput, sounds, static_cast<int>(state));
     scrShakeState = false;
     
     // First check for collisions with enemy shot objects, as long as the death sequence isn't running
@@ -706,7 +708,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
     }
     
     if (health < 0) {
-        state = nominal;
+        state = State::nominal;
         health = 0;
     }
     
@@ -729,7 +731,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
         }
     }
     
-    if (state == nominal) {
+    if (state == State::nominal) {
         switch (spriteIndex) {
             // Common cases first!
             case 4:
@@ -832,7 +834,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
                 break;
         }
     }
-    else if (state == prepdash) {
+    else if (state == State::prepdash) {
         if ((rightPrevious || upPrevious || downPrevious) && spriteIndex == 6) {
             if (weapon.getTimeout() != 0 && rightPrevious) {
                 std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
@@ -868,7 +870,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
         }
     }
     
-    else if (state == dashing || state == cooldown) {
+    else if (state == State::dashing || state == State::cooldown) {
         if (rightPrevious && spriteIndex == 6) {
             if (weapon.getTimeout() != 0) {
                 std::get<0>(tGun) = *weapon.getSprite(spriteIndex);

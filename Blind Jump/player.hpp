@@ -28,15 +28,14 @@
  */
 
 class Player {
-    
-    enum State {
-        deactivated,    // Player is not active, ie does not respond to user keystrokes
-        nominal,        // The default state
-        dashing,        // The player moves faster than normal for a short time
-        cooldown,       // Refractory period after a dash
-        dying,          // Running the death animation
-        dead,           // Dead, return the final sprite of the death sequence and also disallow keystrokes
-        prepdash        // Preparatory period while waiting for a dash
+    enum class State {
+        deactivated,    // 0: Player is not active, ie does not respond to user keystrokes
+        nominal,        // 1: The default state
+        dashing,        // 2: The player moves faster than normal for a short time
+        cooldown,       // 3: Refractory period after a dash
+        dying,          // 4: Running the death animation
+        dead,           // 5: Dead, return the final sprite of the death sequence and also disallow keystrokes
+        prepdash        // 6: Preparatory period while waiting for a dash
     };
     
 private:

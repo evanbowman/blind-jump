@@ -25,7 +25,7 @@ EnergyBeam::EnergyBeam(float xInit, float yInit, sf::Sprite* inpSprs, float dir,
     frameIndex = 0;
     frameRate = 2;
     valid = false;
-    state = entering;
+    state = State::entering;
     if (rand() % 2) {
         rotationDir = -1;
     }
@@ -39,19 +39,19 @@ void EnergyBeam::update(float xOffset, float yOffset) {
     yPos = yInit + yOffset;
     
     switch (state) {
-        case entering:
+        case State::entering:
             if (--frameRate == 0) {
                 frameRate = 2;
                 frameIndex++;
                 if (frameIndex > 2) {
-                    state = running;
+                    state = State::running;
                     frameRate = 6;
                     valid = true;
                 }
             }
             break;
             
-        case running:
+        case State::running:
             // Make the beam pulse by adjusting its border thickness
             if (rand() % 2) {
                 beamShape.setOutlineThickness(1);
@@ -64,11 +64,11 @@ void EnergyBeam::update(float xOffset, float yOffset) {
             
             if (--frameRate == 0) {
                 frameRate = 4;
-                state = leaving;
+                state = State::leaving;
             }
             break;
             
-        case leaving:
+        case State::leaving:
             if (--frameRate == 0) {
                 frameRate = 4;
                 frameIndex++;
@@ -86,17 +86,17 @@ void EnergyBeam::update(float xOffset, float yOffset) {
 
 void EnergyBeam::draw(sf::RenderTexture& window) {
     switch (state) {
-        case entering:
+        case State::entering:
             sprites[frameIndex].setPosition(xPos, yPos);
             window.draw(sprites[frameIndex]);
             break;
             
-        case running:
+        case State::running:
             beamShape.setPosition(xPos, yPos);
             window.draw(beamShape);
             break;
             
-        case leaving:
+        case State::leaving:
             sprites[frameIndex].setPosition(xPos, yPos);
             window.draw(sprites[frameIndex]);
             break;

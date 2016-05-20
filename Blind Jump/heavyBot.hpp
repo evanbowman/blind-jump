@@ -20,7 +20,7 @@ class tileController;
 
 class HeavyBot : public EnemyParent {
     
-    enum State { dormant, run, shoot, overheat };
+    enum class State { dormant, run, shoot, overheat };
     
 private:
     sf::Sprite sprites[17];

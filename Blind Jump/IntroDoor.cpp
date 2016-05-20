@@ -17,31 +17,31 @@ IntroDoor::IntroDoor(float xStart, float yStart, sf::Sprite* inpSpr, int len, fl
     
     frameIndex = 0;
     frameRate = 3;
-    state = dormant;
+    state = State::dormant;
 }
 
 void IntroDoor::update(float xOffset, float yOffset, InputController * pInput, ScreenShakeController * pscr) {
     switch (state) {
-        case dormant:
+        case State::dormant:
             // If the player presses the button by the door, go to the opening state
             if (pInput->zPressed() && fabsf(windowCenterX - (xPos + 130)) < 6 && fabsf(windowCenterY - (yPos + 70)) < 10) {
-                state = opening;
+                state = State::opening;
             }
             break;
             
-        case opening:
+        case State::opening:
             if (--frameRate == 0) {
                 frameIndex++;
                 frameRate = 3;
                 if (frameIndex > 3) {
                     frameIndex = 3;
-                    state = opened;
+                    state = State::opened;
                     pscr->rumble();
                 }
             }
             break;
             
-        case opened:
+        case State::opened:
             // Does nothing
             break;
             

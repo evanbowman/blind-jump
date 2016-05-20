@@ -53,7 +53,7 @@ public:
     //The returned sprite depends on which way the player is facing
     sf::Sprite* getSprite(char);
     //Update the positions of all of the shot objects
-    void updateShotVector(char, effectsController& ef, float, float, userInterface&, InputController*, SoundController&, char);
+    void updateShotVector(char, effectsController& ef, float, float, userInterface&, InputController*, SoundController&, int);
     float getXpos();
     float getYpos();
 };

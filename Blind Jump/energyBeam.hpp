@@ -15,7 +15,7 @@
 
 class EnergyBeam {
     
-    enum State { entering, leaving, running };
+    enum class State { entering, leaving, running };
     
 private:
     double xInit, yInit, xPos, yPos;
