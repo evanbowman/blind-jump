@@ -27,6 +27,16 @@
 #include "GradientCircle.hpp"
 
 class GameMap {
+    
+    enum class Rendertype {
+        shadeWhite,
+        shadeRed,
+        shadeBlue,
+        shadeCrimson,
+        shadeNeon,
+        shadeNone
+    };
+    
 private:
     // Instaintiate a player object
     Player player;
