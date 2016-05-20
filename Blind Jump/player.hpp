@@ -17,22 +17,32 @@
 #include "soundController.hpp"
 #include "inputController.hpp"
 
-#define DEACTIVATED 'D'
-#define NOMINAL 'N'
-#define DASHING 'd'
-#define COOLDOWN 'C'
-#define DYING 'x'
-#define DEAD 'X'
-#define PREP_DASH 'p' 
+/*
+ #define DEACTIVATED 'D'
+ #define NOMINAL 'N'
+ #define DASHING 'd'
+ #define COOLDOWN 'C'
+ #define DYING 'x'
+ #define DEAD 'X'
+ #define PREP_DASH 'p'
+ */
 
 class Player {
+    
+    enum State {
+        deactivated,    // Player is not active, ie does not respond to user keystrokes
+        nominal,        // The default state
+        dashing,        // The player moves faster than normal for a short time
+        cooldown,       // Refractory period after a dash
+        dying,          // Running the death animation
+        dead,           // Dead, return the final sprite of the death sequence and also disallow keystrokes
+        prepdash        // Preparatory period while waiting for a dash
+    };
+    
 private:
     //Current number of lives for the player object
     char health;
-    //Also store the current position of the player object. Don't need to store
-    //the previous position because the object is fixed to the center of the screen.
-    int posX;
-    int posY;
+    int posX, posY;
     //Keep track of the current image index and sprite
     char imageIndex;
     char spriteIndex;
@@ -41,8 +51,7 @@ private:
     //In some instances we might want to deactivate the player object
     bool active;
     //The game works by keeping the player object central and moving everything else
-    float worldOffsetX;
-    float worldOffsetY;
+    float worldOffsetX, worldOffsetY;
     //Declare the textures and sprites.
     sf::Texture shadowTexture;
     sf::Sprite shadowSprite;
@@ -87,7 +96,7 @@ private:
     
     // Dodge direction and mode variables
     bool dodging;
-    char state;
+    State state;
     int dodgeTimer;
     char dodgeDir;
     
@@ -143,6 +152,5 @@ public:
     // Accessor function to set the player's health to full
     void fillHealth(char);
 };
-
 
 #endif
