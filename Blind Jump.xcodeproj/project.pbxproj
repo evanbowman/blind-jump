@@ -44,7 +44,6 @@
 		681649781C375FBB007BF457 /* teleporterSmoke1.png in Resources */ = {isa = PBXBuildFile; fileRef = 681649721C375FBB007BF457 /* teleporterSmoke1.png */; };
 		6816497B1C37612F007BF457 /* teleporterSmoke.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 681649791C37612F007BF457 /* teleporterSmoke.cpp */; };
 		6816497D1C377C02007BF457 /* vignetteMask.png in Resources */ = {isa = PBXBuildFile; fileRef = 6816497C1C377C02007BF457 /* vignetteMask.png */; };
-		6816E40C1CC3FB1000DF2716 /* Caption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6816E40A1CC3FB1000DF2716 /* Caption.cpp */; };
 		681D91791CAEEBEB009DF666 /* pod.png in Resources */ = {isa = PBXBuildFile; fileRef = 681D91781CAEEBEB009DF666 /* pod.png */; };
 		681D917B1CAF7974009DF666 /* aquaTileset.png in Resources */ = {isa = PBXBuildFile; fileRef = 681D917A1CAF7974009DF666 /* aquaTileset.png */; };
 		681D917E1CB0283B009DF666 /* grassSetEdgeBluish.png in Resources */ = {isa = PBXBuildFile; fileRef = 681D917C1CB0283B009DF666 /* grassSetEdgeBluish.png */; };
@@ -284,8 +283,6 @@
 		681649791C37612F007BF457 /* teleporterSmoke.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = teleporterSmoke.cpp; sourceTree = "<group>"; };
 		6816497A1C37612F007BF457 /* teleporterSmoke.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = teleporterSmoke.hpp; sourceTree = "<group>"; };
 		6816497C1C377C02007BF457 /* vignetteMask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vignetteMask.png; sourceTree = "<group>"; };
-		6816E40A1CC3FB1000DF2716 /* Caption.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Caption.cpp; sourceTree = "<group>"; };
-		6816E40B1CC3FB1000DF2716 /* Caption.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Caption.hpp; sourceTree = "<group>"; };
 		68187BD11C34307A006577B0 /* enemyCollisionFunctions.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = enemyCollisionFunctions.hpp; sourceTree = "<group>"; };
 		681D91781CAEEBEB009DF666 /* pod.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pod.png; sourceTree = "<group>"; };
 		681D917A1CAF7974009DF666 /* aquaTileset.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aquaTileset.png; sourceTree = "<group>"; };
@@ -373,6 +370,7 @@
 		684B36D61C811932000A1A99 /* critter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = critter.hpp; sourceTree = "<group>"; };
 		684B36D91C812360000A1A99 /* aStar.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = aStar.hpp; sourceTree = "<group>"; };
 		684B36F11C820EE8000A1A99 /* critterSheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = critterSheet.png; sourceTree = "<group>"; };
+		684F0C9B1CEE94E900E282ED /* RenderType.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RenderType.hpp; sourceTree = "<group>"; };
 		68543E5C1C69597C00B0DE95 /* tileController.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tileController.hpp; sourceTree = "<group>"; };
 		6858BEA11C6D30DE0057E574 /* Teleporter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Teleporter.hpp; sourceTree = "<group>"; };
 		6858BEA21C6D37A10057E574 /* generalDetail.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generalDetail.cpp; sourceTree = "<group>"; };
@@ -564,8 +562,6 @@
 		6823AF181C8D38BF00D13C99 /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
-				6816E40A1CC3FB1000DF2716 /* Caption.cpp */,
-				6816E40B1CC3FB1000DF2716 /* Caption.hpp */,
 				68ABE0A51BD80C7C005E7757 /* fontController.cpp */,
 				68ABE0A61BD80C7C005E7757 /* fontController.hpp */,
 				685CD4141BD99E52004907E0 /* userInterface.cpp */,
@@ -668,6 +664,7 @@
 				682F41601BC8B9FB0091BC2E /* Enemies */,
 				6831E2321BD0104D0030A166 /* gameMap.cpp */,
 				6831E2331BD0104D0030A166 /* gameMap.hpp */,
+				684F0C9B1CEE94E900E282ED /* RenderType.hpp */,
 				68D224DF1C89FC4D0047CA27 /* initLoot.cpp */,
 				68D224E01C89FC4D0047CA27 /* initLoot.hpp */,
 				686BCE7F1BC8B6270096128A /* ResourcePath.mm */,
@@ -869,12 +866,12 @@
 		688633DD1BE306BB005D12C6 /* Overworld Details */ = {
 			isa = PBXGroup;
 			children = (
+				688633E41BE308BA005D12C6 /* detailController.cpp */,
+				688633E51BE308BA005D12C6 /* detailController.hpp */,
 				680100061BEEC508002AA2C2 /* Teleporter.cpp */,
 				6858BEA11C6D30DE0057E574 /* Teleporter.hpp */,
 				688633DE1BE306D0005D12C6 /* detailParent.cpp */,
 				688633DF1BE306D0005D12C6 /* detailParent.hpp */,
-				688633E41BE308BA005D12C6 /* detailController.cpp */,
-				688633E51BE308BA005D12C6 /* detailController.hpp */,
 				68D7712D1BF6F95800E40CEA /* treasureChest.cpp */,
 				68D7712E1BF6F95800E40CEA /* treasureChest.hpp */,
 				6807255D1C5B04750038389C /* terminal.cpp */,
@@ -916,10 +913,10 @@
 		68ABE09F1BD71A42005E7757 /* Effects */ = {
 			isa = PBXGroup;
 			children = (
-				68A8ADBC1CE3A9D80082A9A9 /* GradientCircle.cpp */,
-				68A8ADBD1CE3A9D80082A9A9 /* GradientCircle.hpp */,
 				68ABE08E1BD66CE7005E7757 /* effectsController.cpp */,
 				6872448E1C665C6600EC95EF /* effectsController.hpp */,
+				68A8ADBC1CE3A9D80082A9A9 /* GradientCircle.cpp */,
+				68A8ADBD1CE3A9D80082A9A9 /* GradientCircle.hpp */,
 				68ABE0A01BD71A96005E7757 /* turretFlashEffect.cpp */,
 				68ABE0A11BD71A96005E7757 /* turretFlashEffect.hpp */,
 				686CF2F91BCECA790098BB7F /* bulletType1.cpp */,
@@ -1274,7 +1271,6 @@
 				682226EE1C73CB10003AAFC9 /* lampLight.cpp in Sources */,
 				680C37681CED342200F9D186 /* PowerupParticles.cpp in Sources */,
 				688B99B31C840E4F003ABBE8 /* wallinpath.cpp in Sources */,
-				6816E40C1CC3FB1000DF2716 /* Caption.cpp in Sources */,
 				682F419D1BCA1B250091BC2E /* tileController.cpp in Sources */,
 				68ABE0A21BD71A96005E7757 /* turretFlashEffect.cpp in Sources */,
 				686CF2FB1BCECA790098BB7F /* bulletType1.cpp in Sources */,

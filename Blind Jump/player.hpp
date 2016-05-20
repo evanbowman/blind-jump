@@ -16,6 +16,7 @@
 #include "detailController.hpp"
 #include "soundController.hpp"
 #include "inputController.hpp"
+#include "RenderType.hpp"
 
 class Player {
     enum class State {
@@ -111,7 +112,7 @@ public:
     float getPosX() const;
     float getPosY() const;
     void drawController(InputController*, effectsController& ef);
-    void draw(std::vector<std::tuple<sf::Sprite, float, int>>&, std::vector<std::tuple<sf::Sprite, float, int>>&, tileController&, effectsController&, detailController&, SoundController&, userInterface&, InputController*, sf::RenderTexture&, FontController&, sf::Time&);
+    void draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>&, std::vector<std::tuple<sf::Sprite, float, Rendertype>>&, tileController&, effectsController&, detailController&, SoundController&, userInterface&, InputController*, sf::RenderTexture&, FontController&, sf::Time&);
     //Construct a default player object
     Player();
     //More functions for setting the current position

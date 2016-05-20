@@ -11,7 +11,6 @@
 
 #include <stdio.h>
 #include "SFML/Graphics.hpp"
-#include "Caption.hpp"
 #include "ResourcePath.hpp"
 
 class FontController {
@@ -31,7 +30,6 @@ private:
     float height;
     int score;
     float windowCenterX, windowCenterY;
-    std::vector<Caption> captions;
     sf::Clock wpTextDisplayTimer, healthDisplayTimer, scoreDisplayTimer;
     
 public:

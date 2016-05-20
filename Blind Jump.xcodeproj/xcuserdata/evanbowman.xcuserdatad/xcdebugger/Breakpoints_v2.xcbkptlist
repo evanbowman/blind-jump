@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Blind Jump/enemyController.cpp"
-            timestampString = "479401122.929397"
+            timestampString = "485399619.672401"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186"
+            startingLineNumber = "192"
+            endingLineNumber = "192"
             landmarkName = "enemyController::updateEnemies(std::vector&lt;std::tuple&lt;sf::Sprite, float, int&gt;&gt;&amp; gameObjects, std::vector&lt;std::tuple&lt;sf::Sprite, float, int&gt;&gt;&amp; gameShadows, float x, float y, effectsController&amp; ef, std::vector&lt;wall&gt; w, bool enabled, detailController* dets, tileController* pTiles, ScreenShakeController* scrn, FontController&amp; fonts, sf::Time &amp; elapsedTime)"
             landmarkType = "5">
          </BreakpointContent>
@@ -346,28 +346,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Blind Jump/detailController.cpp"
-            timestampString = "485394137.90569"
+            timestampString = "485399619.672401"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "320"
-            endingLineNumber = "320"
+            startingLineNumber = "314"
+            endingLineNumber = "314"
             landmarkName = "detailController::update(float xOffset, float yOffset, effectsController&amp; ef, char PlayerSprIndex, std::vector&lt;wall&gt;&amp; walls, std::vector&lt;sf::Sprite*&gt;* glow1, std::vector&lt;sf::Sprite*&gt;* glow2, userInterface&amp; ui, FontController&amp; fonts, Player&amp; player, InputController* pInput, ScreenShakeController * pscr, sf::Time &amp; elapsedTime)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Blind Jump/detailController.cpp"
-            timestampString = "485394137.90569"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "236"
-            endingLineNumber = "236"
-            landmarkName = "detailController::addDoor(float xpos, float ypos, int x, int y, float w, float h)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -634,11 +618,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Blind Jump/detailController.cpp"
-            timestampString = "485394137.90569"
+            timestampString = "485399619.672401"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "326"
-            endingLineNumber = "326"
+            startingLineNumber = "320"
+            endingLineNumber = "320"
             landmarkName = "detailController::update(float xOffset, float yOffset, effectsController&amp; ef, char PlayerSprIndex, std::vector&lt;wall&gt;&amp; walls, std::vector&lt;sf::Sprite*&gt;* glow1, std::vector&lt;sf::Sprite*&gt;* glow2, userInterface&amp; ui, FontController&amp; fonts, Player&amp; player, InputController* pInput, ScreenShakeController * pscr, sf::Time &amp; elapsedTime)"
             landmarkType = "5">
          </BreakpointContent>

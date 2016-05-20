@@ -6,7 +6,6 @@
 //  Copyright © 2015 Evan Bowman. All rights reserved.
 //
 
-#include "gameMap.hpp"
 #include "mappingFunctions.hpp"
 #include "initMapVectors.hpp"
 #include <iostream>
@@ -17,18 +16,11 @@
 #include "pillarPlacement.h"
 #include "math.h"
 #include "enemyCreationFunctions.hpp"
+#include "gameMap.hpp"
 
-// Define some macros to make the code easier to read
-#define WHITE_TARGET 2
-#define RED_TARGET 1
-#define BLUE_TARGET 3
-#define CRIMSON_TARGET 4
-#define ARCTIC_TARGET 5
-#define EFFECT_OBJECT 10
-
-// Define a function to control the z-order sorting
+// Define a function to control the z-order sorting --> could be a lambda
 struct sortKey {
-    inline bool operator() (const std::tuple<sf::Sprite, float, int> arg1, const std::tuple<sf::Sprite, float, int> arg2) {
+    inline bool operator() (const std::tuple<sf::Sprite, float, Rendertype> arg1, const std::tuple<sf::Sprite, float, Rendertype> arg2) {
         return (std::get<1>(arg1) < std::get<1>(arg2));
     }
 };
@@ -228,30 +220,30 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     if (!gameObjects.empty()) {
         for (auto & element : gameObjects) {
             // Retrieve each sprite from the tuple and draw it to the window
-            if (std::get<2>(element) == 0) {
+            if (std::get<2>(element) == Rendertype::shadeDefault) {
                 // Darken the sprite's color channels according to the ambient conditions of the current area
                 std::get<0>(element).setColor(sf::Color(objectShadeColor.r, objectShadeColor.g, objectShadeColor.b, std::get<0>(element).getColor().a));
                 lightingMap.draw(std::get<0>(element));
-            } else if (std::get<2>(element) == EFFECT_OBJECT) {
+            } else if (std::get<2>(element) == Rendertype::shadeNone) {
                 // If the contents of the third element in the tuple correspond to an effect, draw the sprite without darkening it
                 lightingMap.draw(std::get<0>(element));
-            } else if (std::get<2>(element) == RED_TARGET) {
+            } else if (std::get<2>(element) == Rendertype::shadeRed) {
                 // Shade red
                 colorShader.setParameter("targetColor", sf::Vector3f(0.98, 0.22, 0.03));
                 lightingMap.draw(std::get<0>(element), &colorShader);
-            } else if (std::get<2>(element) == WHITE_TARGET) {
+            } else if (std::get<2>(element) == Rendertype::shadeWhite) {
                 // Shade white
                 colorShader.setParameter("targetColor", sf::Vector3f(1.00, 1.00, 1.00));
                 lightingMap.draw(std::get<0>(element), &colorShader);
-            } else if (std::get<2>(element) == BLUE_TARGET) {
+            } else if (std::get<2>(element) == Rendertype::shadeBlue) {
                 // Shade blue
                 colorShader.setParameter("targetColor", sf::Vector3f(0.35, 0.35, 0.69));
                 lightingMap.draw(std::get<0>(element), &colorShader);
-            } else if (std::get<2>(element) == CRIMSON_TARGET) {
+            } else if (std::get<2>(element) == Rendertype::shadeCrimson) {
                 // Shade crimson
                 colorShader.setParameter("targetColor", sf::Vector3f(0.94, 0.09, 0.34));
                 lightingMap.draw(std::get<0>(element), &colorShader);
-            } else if (std::get<2>(element) == ARCTIC_TARGET) {
+            } else if (std::get<2>(element) == Rendertype::shadeNeon) {
                 // Shade arctic, sort of a bright blue-greenish color
                 colorShader.setParameter("targetColor", sf::Vector3f(0.29, 0.99, 0.99));
                 lightingMap.draw(std::get<0>(element), &colorShader);
@@ -312,7 +304,6 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     
     if (!player.isdead()) {
         UI.dispDeathSeq();
-        pFonts->terminateCaptions();
         // If the death sequence is complete and the UI controller is finished playing its animation
         if (UI.isComplete() && pInput->zPressed()) {
             // Reset the UI controller
@@ -435,7 +426,6 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
             beamExpanding = true;
             animationBegin = true;
             // Force all captions closed
-            pFonts->terminateCaptions();
         }
         player.deActivate();
         // Cast the beam's glow to the overworld

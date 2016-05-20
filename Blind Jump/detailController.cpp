@@ -149,8 +149,6 @@ void detailController::addChest(tileController& t, float posX, float posY, float
     placeOffsetX = (rand() % 6) - 3;
     TreasureChest tr((c.x * 32) + posX + 8 + placeOffsetX, (c.y * 26) + posY - 3, tempSprites, 7, width, height, chestContents);
     chests.push_back(tr);
-    ////pFonts->addCaption(chests.back().getxInit() + 8, chests.back().getyInit() - 6, chestStrings[rand() % 4]);
-
 }
 
 void detailController::addEnemyScrap(tileController& t, float posX, float posY, float width, float height) {
@@ -176,7 +174,6 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
             }
             DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
             damagedRobots.push_back(dr);
-            ////pFonts->addCaption(damagedRobots.back().getxInit(), damagedRobots.back().getyInit() - 8, robotStrings[rand() % 4]);
         } catch(const char* e) {
             std::cout << e << std::endl;
         }
@@ -188,7 +185,6 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
                 tempSprite.setTexture(damagedRobotTexture[!choice]);
                 DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
                 damagedRobots.push_back(dr);
-                ///pFonts->addCaption(damagedRobots.back().getxInit(), damagedRobots.back().getyInit() - 8, robotStrings[rand() % 4]);
             } catch(const char* e) {
                 std::cout << e << std::endl;
             }
@@ -208,7 +204,6 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
                 
                 DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
                 damagedRobots.push_back(dr);
-                ///pFonts->addCaption(damagedRobots.back().getxInit(), damagedRobots.back().getyInit() - 8, robotStrings[rand() % 4]);
             } catch(const char* e) {
                 std::cout << e << std::endl;
             }
@@ -261,7 +256,6 @@ void detailController::addTeleporter(tileController& t, float posX, float posY, 
     Teleporter T((c.x * 32) + posX + 2/* + placeOffsetX*/, (c.y * 26) + posY - 4, tempSprites, glow, 2, width, height);
 
     teleporters.push_back(T);
-    ////pFonts->addCaption(teleporters.back().getxInit() + 12, teleporters.back().getyInit() - 14, teleporterStrings[rand() % 4]);
 }
 
 void detailController::addTerminal(tileController & t, float posX, float posY, float width, float height) {
@@ -342,28 +336,13 @@ void detailController::update(float xOffset, float yOffset, effectsController& e
     }
 }
 
-template <typename T>
-void drawElements(std::vector<T>& vec, std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, int>>& gameShadows) {
-    if (!vec.empty()) {
-        std::tuple<sf::Sprite, float, int> tObject, tShadow;
-        for (auto & element : vec) {
-            // Push back the object
-            std::get<0>(tObject) = *element.getSprite();
-            std::get<1>(tObject) = element.getyPos() - 8;
-            gameObjects.push_back(tObject);
-            // Push back its shadow
-            std::get<0>(tShadow) = *element.getShadow();
-            gameShadows.push_back(tShadow);
-        }
-    }
-}
-
 void detailController::killTeleporter() {
     teleporters.clear();
 }
 
-void detailController::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, int>>& gameShadows, sf::RenderTexture& window) {
-    std::tuple<sf::Sprite, float, int> tObject, tShadow;
+void detailController::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>> & gameObjects, std::vector<std::tuple<sf::Sprite, float, Rendertype>> & gameShadows, sf::RenderTexture& window) {
+    std::tuple<sf::Sprite, float, Rendertype> tObject, tShadow;
+    std::get<2>(tObject) = Rendertype::shadeDefault;
     if (!misc32x26.empty()) {
         for (auto & element : misc32x26) {
             std::get<0>(tObject) = *element.getSprite();
@@ -421,8 +400,6 @@ void detailController::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gam
             window.draw(*element.getSprite());
         }
     }
-    
-    drawElements(terminals, gameObjects, gameShadows);
 }
 
 void detailController::clear() {

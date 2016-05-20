@@ -27,6 +27,7 @@
 #include "smallExplosion.hpp"
 #include "Powerup.hpp"
 #include "ResourcePath.hpp"
+#include "RenderType.hpp"
 
 class ScreenShakeController;
 
@@ -100,7 +101,7 @@ private:
     
 public:
     effectsController();
-    void draw(sf::RenderTexture&, std::vector<std::tuple<sf::Sprite, float, int>>&);
+    void draw(sf::RenderTexture&, std::vector<std::tuple<sf::Sprite, float, Rendertype>>&);
     void update(float, float, ScreenShakeController*, sf::Time &);
     void addTurretFlash(float, float);
     void addBullet(bool, char, float, float);

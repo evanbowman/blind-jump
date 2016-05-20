@@ -629,10 +629,10 @@ bool checkShotCollision(std::vector<T>* shotVec, double playerXpos, double playe
 }
 
 //Returns the current sprite based on the values of imageIndex and spriteIndex
-void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, int>>& gameShadows, tileController& tiles, effectsController& ef, detailController& details, SoundController& sounds, userInterface& UI, InputController* pInput, sf::RenderTexture& window, FontController& fonts, sf::Time& elapsedTime) {
+void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameShadows, tileController& tiles, effectsController& ef, detailController& details, SoundController& sounds, userInterface& UI, InputController* pInput, sf::RenderTexture& window, FontController& fonts, sf::Time& elapsedTime) {
     checkCollision(tiles, details);//, details);
     drawController(pInput, ef);
-    std::tuple<sf::Sprite, float, int> tPlayer, tGun, tShadow;
+    std::tuple<sf::Sprite, float, Rendertype> tPlayer, tGun, tShadow;
     
     std::get<1>(tPlayer) = posY;
     
@@ -696,15 +696,15 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
     }
     
     if (gotHeart) {
-        std::get<2>(tPlayer) = 4;
-        std::get<2>(tGun) = 4;
+        std::get<2>(tPlayer) = Rendertype::shadeCrimson;
+        std::get<2>(tGun) = Rendertype::shadeCrimson;
         if (--redTimer == 0) {
             redTimer = 10;
             gotHeart = false;
         }
     } else if (gotCoin) {
-        std::get<2>(tPlayer) = 5;
-        std::get<2>(tGun) = 5;
+        std::get<2>(tPlayer) = Rendertype::shadeNeon;
+        std::get<2>(tGun) = Rendertype::shadeNeon;
         if (--redTimer == 0) {
             gotCoin = 0;
             redTimer = 10;
@@ -724,14 +724,14 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, 
         
         if (hurtCounter < 24 && hurtCounter > 18) {
             // Shade the player red
-            std::get<2>(tPlayer) = 3;
-            std::get<2>(tGun) = 3;
+            std::get<2>(tPlayer) = Rendertype::shadeRed;
+            std::get<2>(tGun) = Rendertype::shadeRed;
         }
         
         else if (hurtCounter >= 24 && hurtCounter != 30) {
             // Shade the player blue
-            std::get<2>(tPlayer) = 1;
-            std::get<2>(tGun) = 1;
+            std::get<2>(tPlayer) = Rendertype::shadeBlue;
+            std::get<2>(tGun) = Rendertype::shadeBlue;
         }
     }
     

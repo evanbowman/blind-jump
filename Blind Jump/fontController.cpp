@@ -86,7 +86,6 @@ void FontController::setWaypointText(int level) {
     }
     healthText.setPosition(initPos - healthText.getLocalBounds().width - 0.015 * scrnSize, 0.0032 * scrnSize + healthFull[0].getRadius() - healthText.getLocalBounds().height / 2);
     scoreText.setPosition(fontView.getSize().x - scoreText.getLocalBounds().width - fontView.getSize().x * 0.015, scoreText.getLocalBounds().height * 2.5);
-    captions.clear();
     std::string str = "WAYPOINT-";
     str += std::to_string(level);
     waypointText.setString(str);
@@ -191,15 +190,6 @@ void FontController::resetHPText() {
 
 void FontController::update(sf::RenderWindow & window, float xOffset, float yOffset) {
     window.setView(fontView);
-    if (!captions.empty()) {
-        for (auto & element : captions) {
-            // Update each element with the new offset information
-            element.update(xOffset * ((fontView.getSize().x / 2) / windowCenterX), yOffset * ((fontView.getSize().y / 2) / windowCenterY));
-            // If the object has text to display...
-            if (!element.isClosed())
-                window.draw(*element.getText());
-        }
-    }
 }
 
 void FontController::drawTitle(unsigned char alpha, sf::RenderWindow& window) {
@@ -223,14 +213,6 @@ void FontController::updateHealth(char health) {
     this->health = std::min(health, maxHealth);
 }
 
-void FontController::terminateCaptions() {
-    if (!captions.empty()) {
-        for (auto & element : captions) {
-            element.forceClose();
-        }
-    }
-}
-
 void FontController::updateMaxHealth(char health) {
     maxHealth = health;
     // Put the health in the right spot in the window
@@ -250,12 +232,4 @@ char FontController::getMaxHealth() const {
 
 sf::Text * FontController::getDeathText() {
     return &deathText;
-}
-
-void FontController::addCaption(float x, float y, const char * msg) {
-    Caption cap(x * ((fontView.getSize().x / 2) / windowCenterX), y * ((fontView.getSize().y / 2) / windowCenterY), cornerstone);
-    cap.setText(msg);
-    cap.setWindowCenter(fontView.getSize().x / 2, fontView.getSize().y / 2);
-    cap.setCharacterSize(0.025 * fontView.getSize().y);
-    captions.push_back(cap);
 }

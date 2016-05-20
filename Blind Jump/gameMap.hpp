@@ -25,17 +25,9 @@
 #include "initLoot.hpp"
 #include "inputController.hpp"
 #include "GradientCircle.hpp"
+#include "RenderType.hpp"
 
 class GameMap {
-    
-    enum class Rendertype {
-        shadeWhite,
-        shadeRed,
-        shadeBlue,
-        shadeCrimson,
-        shadeNeon,
-        shadeNone
-    };
     
 private:
     // Instaintiate a player object
@@ -137,8 +129,8 @@ private:
     int idealLvs[4] = {4/*Scoot*/, 5/*Critter Swarms*/, 28/*Dasher*/, 34/*Turrets*/};
     
     // Stack of sprites with y-position and height, for z-ordering
-    std::vector<std::tuple<sf::Sprite, float, int>> gameObjects;
-    std::vector<std::tuple<sf::Sprite, float, int>> gameShadows;
+    std::vector<std::tuple<sf::Sprite, float, Rendertype>> gameObjects;
+    std::vector<std::tuple<sf::Sprite, float, Rendertype>> gameShadows;
     
     // Create a screenshake controller for that effect
     ScreenShakeController ssc;

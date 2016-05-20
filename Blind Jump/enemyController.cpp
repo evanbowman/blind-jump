@@ -51,7 +51,7 @@ enemyController::enemyController() {
 }
 
 //A function to draw the enemies' current sprites to the screen
-void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, int>>& gameShadows, float x, float y, effectsController& ef, std::vector<wall> w, bool enabled, detailController* dets, tileController* pTiles, ScreenShakeController* scrn, FontController& fonts, sf::Time & elapsedTime) {
+void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameShadows, float x, float y, effectsController& ef, std::vector<wall> w, bool enabled, detailController* dets, tileController* pTiles, ScreenShakeController* scrn, FontController& fonts, sf::Time & elapsedTime) {
     if (!turrets.empty()) {
         for (std::vector<turret>::iterator it = turrets.begin(); it != turrets.end();) {
             if (it->getKillFlag() == 1) {
@@ -70,16 +70,18 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, in
             element.setPosition(x + element.getXinit(), y + element.getYinit());         //Update the enemies' position, x and y are offsets
             if (element.getXpos() > -64 && element.getXpos() < windowW + 64 && element.getYpos() > -64 && element.getYpos() < windowH + 64) {
                 // Get the enemy's shadow
-                std::tuple<sf::Sprite, float, int> shadow;
+                std::tuple<sf::Sprite, float, Rendertype> shadow;
                 std::get<0>(shadow) = *element.getShadow();
                 gameShadows.push_back(shadow);
 
-                std::tuple<sf::Sprite, float, int> tSpr;
+                std::tuple<sf::Sprite, float, Rendertype> tSpr;
                 std::get<0>(tSpr) = *element.getSprite();
                 std::get<1>(tSpr) = element.getYpos();
                 
                 if (element.colored()) {
-                    std::get<2>(tSpr) = 2;
+                    std::get<2>(tSpr) = Rendertype::shadeWhite;
+                } else {
+                    std::get<2>(tSpr) = Rendertype::shadeDefault;
                 }
                 
                 gameObjects.push_back(tSpr);
@@ -107,16 +109,18 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, in
                         it->update(x, y, w, ef, fonts, elapsedTime);
                     }
                     // Get the enemy's shadow
-                    std::tuple<sf::Sprite, float, int> shadow;
+                    std::tuple<sf::Sprite, float, Rendertype> shadow;
                     std::get<0>(shadow) = *it->getShadow();
                     gameShadows.push_back(shadow);
                     
-                    std::tuple<sf::Sprite, float, int> tSpr;
+                    std::tuple<sf::Sprite, float, Rendertype> tSpr;
                     std::get<0>(tSpr) = *it->getSprite();
                     std::get<1>(tSpr) = it->getYpos() - 16;
                     // If the enemy should be colored, let the rendering code know to pass it through a fragment shader
                     if (it->colored()) {
-                        std::get<2>(tSpr) = 2;
+                        std::get<2>(tSpr) = Rendertype::shadeWhite;
+                    } else {
+                        std::get<2>(tSpr) = Rendertype::shadeDefault;
                     }
                     
                     gameObjects.push_back(tSpr);
@@ -144,16 +148,18 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, in
                     it->update(x, y, ef, fonts, pTiles);
                 }
                 // Get the enemy's shadow
-                std::tuple<sf::Sprite, float, int> shadow;
+                std::tuple<sf::Sprite, float, Rendertype> shadow;
                 std::get<0>(shadow) = *it->getShadow();
                 gameShadows.push_back(shadow);
                 
-                std::tuple<sf::Sprite, float, int> tSpr;
+                std::tuple<sf::Sprite, float, Rendertype> tSpr;
                 std::get<0>(tSpr) = *it->getSprite();
                 std::get<1>(tSpr) = it->getYpos() - 16;
                 // If the enemy should be colored, let the rendering code know to pass it through a fragment shader
                 if (it->colored()) {
-                    std::get<2>(tSpr) = 2;
+                    std::get<2>(tSpr) = Rendertype::shadeWhite;
+                } else {
+                    std::get<2>(tSpr) = Rendertype::shadeDefault;
                 }
                 
                 gameObjects.push_back(tSpr);
@@ -190,16 +196,18 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, in
                         it->update(x, y, ef, fonts, pTiles);
                     }
                     // Get the enemy's shadow
-                    std::tuple<sf::Sprite, float, int> shadow;
+                    std::tuple<sf::Sprite, float, Rendertype> shadow;
                     std::get<0>(shadow) = *it->getShadow();
                     gameShadows.push_back(shadow);
                     
-                    std::tuple<sf::Sprite, float, int> tSpr;
+                    std::tuple<sf::Sprite, float, Rendertype> tSpr;
                     std::get<0>(tSpr) = *it->getSprite();
                     std::get<1>(tSpr) = it->getYpos() - 16;
                     // If the enemy should be colored, let the rendering code know to pass it through a fragment shader
                     if (it->colored()) {
-                        std::get<2>(tSpr) = 2;
+                        std::get<2>(tSpr) = Rendertype::shadeWhite;
+                    } else {
+                        std::get<2>(tSpr) = Rendertype::shadeDefault;
                     }
                     
                     gameObjects.push_back(tSpr);
@@ -235,24 +243,27 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, in
                     }
                     // Get the enemy's shadow
                     if (!it->dying()) {
-                        std::tuple<sf::Sprite, float, int> shadow;
+                        std::tuple<sf::Sprite, float, Rendertype> shadow;
                         std::get<0>(shadow) = *it->getShadow();
                         gameShadows.push_back(shadow);
                     }
                     
                     for (auto & element2 : *it->getBlurEffects()) {
-                        std::tuple<sf::Sprite, float, int> t;
+                        std::tuple<sf::Sprite, float, Rendertype> t;
                         std::get<0>(t) = *element2.getSprite();
                         std::get<1>(t) = element2.yInit + y;
+                        std::get<2>(t) = Rendertype::shadeDefault;
                         gameObjects.push_back(t);
                     }
                     
-                    std::tuple<sf::Sprite, float, int> tSpr;
+                    std::tuple<sf::Sprite, float, Rendertype> tSpr;
                     std::get<0>(tSpr) = *it->getSprite();
                     std::get<1>(tSpr) = it->getYpos();
                     
                     if (it->colored()) {
-                        std::get<2>(tSpr) = 2;
+                        std::get<2>(tSpr) = Rendertype::shadeWhite;
+                    } else {
+                        std::get<2>(tSpr) = Rendertype::shadeDefault;
                     }
                     
                     gameObjects.push_back(tSpr);

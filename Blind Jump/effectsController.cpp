@@ -400,22 +400,20 @@ void effectsController::addExplosion(float x, float y) {
 }
 
 template <typename T>
-void drawEffect(T& inpVec, sf::RenderTexture& window, std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects) {
-    // Create an effect object to pust to the gameObjects vector
-    std::tuple<sf::Sprite, float, int> effectObject;
-    // All effects are assigned the same identifier tag so that the drawing code can identify them
-    std::get<2>(effectObject) = 10;
+void drawEffect(T& inpVec, sf::RenderTexture& window, std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameObjects) {
     if (!inpVec.empty()) {
         for (auto & element : inpVec) {
+            std::tuple<sf::Sprite, float, Rendertype> effectObject;
             std::get<0>(effectObject) = element.getSprite();
             std::get<1>(effectObject) = element.getYpos();
+            std::get<2>(effectObject) = Rendertype::shadeNone;
             gameObjects.push_back(effectObject);
         }
     }
 }
 
 template <typename T>
-void directDraw(T& inpVec, sf::RenderTexture& window, std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects) {
+void directDraw(T& inpVec, sf::RenderTexture& window, std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameObjects) {
     if (!inpVec.empty()) {
         for (auto & element : inpVec) {
             window.draw(element.getSprite());
@@ -424,7 +422,7 @@ void directDraw(T& inpVec, sf::RenderTexture& window, std::vector<std::tuple<sf:
 }
 
 //Draw the sprites for all of the effect objects
-void effectsController::draw(sf::RenderTexture& window, std::vector<std::tuple<sf::Sprite, float, int>>& gameObjects) {
+void effectsController::draw(sf::RenderTexture& window, std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameObjects) {
     drawEffect(hearts, window, gameObjects);
     drawEffect(coins, window, gameObjects);
     drawEffect(turretFlashes, window, gameObjects);
@@ -443,7 +441,7 @@ void effectsController::draw(sf::RenderTexture& window, std::vector<std::tuple<s
     
     if (!dodgeEffects.empty()) {
         for (auto & element : dodgeEffects) {
-            gameObjects.push_back(std::make_tuple(element.getSprite(), element.getYpos(), (int) 0));
+            gameObjects.push_back(std::make_tuple(element.getSprite(), element.getYpos(), Rendertype::shadeDefault));
         }
     }
     
@@ -454,6 +452,7 @@ void effectsController::draw(sf::RenderTexture& window, std::vector<std::tuple<s
             }
         }
     }
+    
     drawEffect(bigExplosions, window, gameObjects);
     drawEffect(enemyShots, window, gameObjects);
     drawEffect(healthEffects, window, gameObjects);
