@@ -18,13 +18,6 @@
 #include "enemyCreationFunctions.hpp"
 #include "gameMap.hpp"
 
-// Define a function to control the z-order sorting --> could be a lambda
-struct sortKey {
-    inline bool operator() (const std::tuple<sf::Sprite, float, Rendertype> arg1, const std::tuple<sf::Sprite, float, Rendertype> arg2) {
-        return (std::get<1>(arg1) < std::get<1>(arg2));
-    }
-};
-
 GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, InputController* input, FontController* pFonts) {
     //Make the background controller draw concenteric with the center of the view
     bkg.setPosition((tiles.posX / 2) + 226, tiles.posY / 2);
@@ -211,8 +204,10 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     }
     gameShadows.clear();
     
-    // Sort the game object based on y-position (runtime for this is fine, only sorts objects inside the window, roughly 10 in most cases)
-    std::sort(gameObjects.begin(), gameObjects.end(), sortKey());
+    // Sort the game object based on y-position (performance for this is fine, only sorts objects inside the window, on the ordr of 10 in most cases)
+    std::sort(gameObjects.begin(), gameObjects.end(), [](const std::tuple<sf::Sprite, float, Rendertype> arg1, const std::tuple<sf::Sprite, float, Rendertype> arg2) {
+        return (std::get<1>(arg1) < std::get<1>(arg2));
+    });
     
     lightingMap.clear(sf::Color::Transparent);
     
