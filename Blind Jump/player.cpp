@@ -17,8 +17,7 @@
  7: Walk right
  8: Death
  */
-
-//// IMPORTANT: NEEDS REFACTORING URGENTLY. AT THE TIME OF WRITING AN EIGHTH OF THE CODE BASE IS IN THIS SINGLE FILE
+//The code in this section looks long, but it's mostly importing textures and repeated condition checking that cannot easily be looped.
 
 #include "player.hpp"
 #include "ResourcePath.hpp"
@@ -54,7 +53,7 @@ Player::Player() {
     scrShakeState = 0;
     dodging = false;
     dodgeTimer = 4;
-    state = State::nominal;
+    state = NOMINAL;
     gotHeart = false;
     gotCoin = false;
     redTimer = 10;
@@ -72,7 +71,7 @@ Player::Player() {
     const std::string fileExt2[6] = {"player_face_up.png", "walk_up3.png", "walk_up4.png", "walk_up1.png", "walk_up2.png", "player_still_up.png"};
     const std::string fileExt3[7] = {"player_face_left.png", "walk_left1.png", "walk_left2.png", "walk_left3.png", "walk_left4.png", "walk_left5.png", "player_still_left.png"};
     const std::string fileExt4[7] = {"player_face_right.png", "walk_right1.png", "walk_right2.png", "walk_right3.png", "walk_right4.png", "walk_right5.png", "player_still_right.png"};
-
+    
     for (int i = 0; i < 12; i++) {
         dashTexture[i].loadFromFile(resourcePath() + "playerDashSheet.png", sf::IntRect(i * 32, 0, 32, 33));
         dashSprites[i].setTexture(dashTexture[i]);
@@ -128,11 +127,9 @@ void Player::setPosition(float X, float Y) {
         spriteRight[i].setPosition(posX, posY);
         deathSprites[i].setPosition(posX - 13, posY - 1);
     }
-    
     for (i = 6; i < 11; i++) {
         deathSprites[i].setPosition(posX - 13, posY - 1);
     }
-    
     spriteLeft[6].setPosition(posX, posY);
     spriteRight[6].setPosition(posX, posY);
     shadowSprite.setPosition(posX + 7, posY + 24);
@@ -182,22 +179,19 @@ inline void updateWorldOffset(char& spriteIndex, int& animationCounter, bool col
 void Player::drawController(InputController* pInput, effectsController& ef) {
     
     // If the player has no health and the death sequence isn't running, start it
-    if (health == 0) {
-        if (state != State::dying && state != State::dead) {
-            deathSeq = true;
-            state = State::nominal;
-            spriteIndex = 8;
-            imageIndex = 0;
-            animationCounter = 6;
-        }
+    if (health == 0 && !deathSeq) {
+        deathSeq = true;
+        state = NOMINAL;
+        spriteIndex = 8;
+        imageIndex = 0;
+        animationCounter = 6;
     }
-    
     bool left, right, up, down, x, z;
     
     z = pInput->zPressed();
     x = pInput->xPressed();
     // If the player isn't in dodge mode, get left, right, etc from the input controller
-    if (state == State::nominal) {
+    if (state == NOMINAL) {
         left = pInput->leftPressed();
         right = pInput->rightPressed();
         up = pInput->upPressed();
@@ -212,239 +206,239 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
     }
     
     if (active && !deathSeq) {
-        if (!x && state == State::nominal) {      //Holding the x key strafes the player and changes the animation, so account for that condition
-        if (up) {
-            if (!down && !left && !right && spriteIndex != 5)  {
-                spriteIndex = 5;
-                //imageIndex = 0;
-                animationCounter = 6;
-            }
-            
-            if (CollisionUp == 0) {
-                if (left || right) {
-                    worldOffsetY += speed * 0.85;
-                }
-                
-                else {
-                    worldOffsetY += speed;
-                }
-            }
-        }
-        
-        if (down) {
-            if (!up && !left && !right && spriteIndex != 4) {
-                spriteIndex = 4;
-                //imageIndex = 0;
-                animationCounter = 6;
-            }
-            if (CollisionDown == 0) {
-                if (right || left) {
-                    worldOffsetY -= speed * 0.85;
-                }
-                
-                else {
-                    worldOffsetY -= speed;
-                }
-            }
-        }
-        
-        if (right) {
-            if (!left && !down && !up && spriteIndex != 7) {
-                spriteIndex = 7;
-                if (imageIndex > 5) {
-                    imageIndex = 0;
-                }
-                animationCounter = 6;
-            }
-            if (CollisionRight == 0) {
-                if (up || down) {
-                    worldOffsetX -= speed * 0.85;
-                }
-                
-                else {
-                    worldOffsetX -= speed;
-                }
-            }
-        }
-        
-        if (left) {
-            if (!right && !up && !down && spriteIndex != 6) {
-                spriteIndex = 6;
-                if (imageIndex > 5) {
-                    imageIndex = 0;
-                }
-                animationCounter = 6;
-            }
-            if (CollisionLeft == 0) {
-                if (up || down) {
-                    worldOffsetX += speed * 0.85;
-                }
-                
-                else {
-                    worldOffsetX += speed;
-                }
-            }
-        }
-    }
-    
-        else if (x && state == State::nominal) {
-        //The user is holding the x key, so set the gun timeout to max value
-        if (weapon.getTimeout() == 0) {
-        weapon.setTimeout(100);
-        }
-        if (weapon.getTimeout() < 90 && weapon.getTimeout() > 0) {
-            weapon.setTimeout(90);
-        }
-        //Now we want the player to stay facing the same direction and strafe while the user holds the x key, which requires a lot more condition checking
-        
-        //Regardless of which direction key(s) active, the player needs to face the direction it was facing when x was pressed
-        if (spriteIndex == 0 || spriteIndex == 4) {
-            if (down) {
-                updateWorldOffset(spriteIndex, animationCounter, CollisionDown, 4, worldOffsetY, -slowSpeed);
-            }
-            
+        if (!x && state == NOMINAL) {      //Holding the x key strafes the player and changes the animation, so account for that condition
             if (up) {
-                updateWorldOffset(spriteIndex, animationCounter, CollisionUp, 4, worldOffsetY, slowSpeed);
+                if (!down && !left && !right && spriteIndex != 5)  {
+                    spriteIndex = 5;
+                    //imageIndex = 0;
+                    animationCounter = 6;
+                }
+                
+                if (CollisionUp == 0) {
+                    if (left || right) {
+                        worldOffsetY += speed * 0.85;
+                    }
+                    
+                    else {
+                        worldOffsetY += speed;
+                    }
+                }
             }
             
-            if (left) {
-                updateWorldOffset(spriteIndex, animationCounter, CollisionLeft, 4, worldOffsetX, slowSpeed);
+            if (down) {
+                if (!up && !left && !right && spriteIndex != 4) {
+                    spriteIndex = 4;
+                    //imageIndex = 0;
+                    animationCounter = 6;
+                }
+                if (CollisionDown == 0) {
+                    if (right || left) {
+                        worldOffsetY -= speed * 0.85;
+                    }
+                    
+                    else {
+                        worldOffsetY -= speed;
+                    }
+                }
             }
             
             if (right) {
-                updateWorldOffset(spriteIndex, animationCounter, CollisionRight, 4, worldOffsetX, -slowSpeed);
-            }
-        }
-        if (spriteIndex == 1 || spriteIndex == 5) {
-            if (down) {
-                updateWorldOffset(spriteIndex, animationCounter, CollisionDown, 5, worldOffsetY, -slowSpeed);
-            }
-            
-            if (up) {
-                updateWorldOffset(spriteIndex, animationCounter, CollisionUp, 5, worldOffsetY, slowSpeed);
-            }
-            
-            if (left) {
-                updateWorldOffset(spriteIndex, animationCounter, CollisionLeft, 5, worldOffsetX, slowSpeed);
-            }
-            
-            if (right) {
-                updateWorldOffset(spriteIndex, animationCounter, CollisionRight, 5, worldOffsetX, -slowSpeed);
-            }
-        }
-        if (spriteIndex == 2 || spriteIndex == 6) {
-            if (down) {
-                updateWorldOffset(spriteIndex, animationCounter, CollisionDown, 6, worldOffsetY, -slowSpeed);
-            }
-            
-            if (up) {
-                updateWorldOffset(spriteIndex, animationCounter, CollisionUp, 6, worldOffsetY, slowSpeed);
+                if (!left && !down && !up && spriteIndex != 7) {
+                    spriteIndex = 7;
+                    if (imageIndex > 5) {
+                        imageIndex = 0;
+                    }
+                    animationCounter = 6;
+                }
+                if (CollisionRight == 0) {
+                    if (up || down) {
+                        worldOffsetX -= speed * 0.85;
+                    }
+                    
+                    else {
+                        worldOffsetX -= speed;
+                    }
+                }
             }
             
             if (left) {
-                updateWorldOffset(spriteIndex, animationCounter, CollisionLeft, 6, worldOffsetX, slowSpeed);
-            }
-            
-            if (right) {
-                updateWorldOffset(spriteIndex, animationCounter, CollisionRight, 6, worldOffsetX, -slowSpeed);
-            }
-        }
-        if (spriteIndex == 3 || spriteIndex == 7) {
-            if (down) {
-                updateWorldOffset(spriteIndex, animationCounter, CollisionDown, 7, worldOffsetY, -slowSpeed);
-            }
-            
-            if (up) {
-                updateWorldOffset(spriteIndex, animationCounter, CollisionUp, 7, worldOffsetY, slowSpeed);
-            }
-            
-            if (left) {
-                updateWorldOffset(spriteIndex, animationCounter, CollisionLeft, 7, worldOffsetX, slowSpeed);
-            }
-            
-            if (right) {
-                updateWorldOffset(spriteIndex, animationCounter, CollisionRight, 7, worldOffsetX, -slowSpeed);
+                if (!right && !up && !down && spriteIndex != 6) {
+                    spriteIndex = 6;
+                    if (imageIndex > 5) {
+                        imageIndex = 0;
+                    }
+                    animationCounter = 6;
+                }
+                if (CollisionLeft == 0) {
+                    if (up || down) {
+                        worldOffsetX += speed * 0.85;
+                    }
+                    
+                    else {
+                        worldOffsetX += speed;
+                    }
+                }
             }
         }
         
-        if (pInput->zPressed() && z != zprevious) {
-            if (((spriteIndex == 6 && !left) || (spriteIndex == 7 && !right) || (spriteIndex == 4 && !down) || (spriteIndex == 5  && !up))) {
-                state = State::prepdash;
-                if (spriteIndex == 7) {
-                    if (up) {
-                        if (left)
-                            ef.addDodgeEffect(posX - worldOffsetX + 27, posY - worldOffsetY + 6, 45, 1);
-                        //else
+        else if (x && state == NOMINAL) {
+            //The user is holding the x key, so set the gun timeout to max value
+            if (weapon.getTimeout() == 0) {
+                weapon.setTimeout(100);
+            }
+            if (weapon.getTimeout() < 90 && weapon.getTimeout() > 0) {
+                weapon.setTimeout(90);
+            }
+            //Now we want the player to stay facing the same direction and strafe while the user holds the x key, which requires a lot more condition checking
+            
+            //Regardless of which direction key(s) active, the player needs to face the direction it was facing when x was pressed
+            if (spriteIndex == 0 || spriteIndex == 4) {
+                if (down) {
+                    updateWorldOffset(spriteIndex, animationCounter, CollisionDown, 4, worldOffsetY, -slowSpeed);
+                }
+                
+                if (up) {
+                    updateWorldOffset(spriteIndex, animationCounter, CollisionUp, 4, worldOffsetY, slowSpeed);
+                }
+                
+                if (left) {
+                    updateWorldOffset(spriteIndex, animationCounter, CollisionLeft, 4, worldOffsetX, slowSpeed);
+                }
+                
+                if (right) {
+                    updateWorldOffset(spriteIndex, animationCounter, CollisionRight, 4, worldOffsetX, -slowSpeed);
+                }
+            }
+            if (spriteIndex == 1 || spriteIndex == 5) {
+                if (down) {
+                    updateWorldOffset(spriteIndex, animationCounter, CollisionDown, 5, worldOffsetY, -slowSpeed);
+                }
+                
+                if (up) {
+                    updateWorldOffset(spriteIndex, animationCounter, CollisionUp, 5, worldOffsetY, slowSpeed);
+                }
+                
+                if (left) {
+                    updateWorldOffset(spriteIndex, animationCounter, CollisionLeft, 5, worldOffsetX, slowSpeed);
+                }
+                
+                if (right) {
+                    updateWorldOffset(spriteIndex, animationCounter, CollisionRight, 5, worldOffsetX, -slowSpeed);
+                }
+            }
+            if (spriteIndex == 2 || spriteIndex == 6) {
+                if (down) {
+                    updateWorldOffset(spriteIndex, animationCounter, CollisionDown, 6, worldOffsetY, -slowSpeed);
+                }
+                
+                if (up) {
+                    updateWorldOffset(spriteIndex, animationCounter, CollisionUp, 6, worldOffsetY, slowSpeed);
+                }
+                
+                if (left) {
+                    updateWorldOffset(spriteIndex, animationCounter, CollisionLeft, 6, worldOffsetX, slowSpeed);
+                }
+                
+                if (right) {
+                    updateWorldOffset(spriteIndex, animationCounter, CollisionRight, 6, worldOffsetX, -slowSpeed);
+                }
+            }
+            if (spriteIndex == 3 || spriteIndex == 7) {
+                if (down) {
+                    updateWorldOffset(spriteIndex, animationCounter, CollisionDown, 7, worldOffsetY, -slowSpeed);
+                }
+                
+                if (up) {
+                    updateWorldOffset(spriteIndex, animationCounter, CollisionUp, 7, worldOffsetY, slowSpeed);
+                }
+                
+                if (left) {
+                    updateWorldOffset(spriteIndex, animationCounter, CollisionLeft, 7, worldOffsetX, slowSpeed);
+                }
+                
+                if (right) {
+                    updateWorldOffset(spriteIndex, animationCounter, CollisionRight, 7, worldOffsetX, -slowSpeed);
+                }
+            }
+            
+            if (pInput->zPressed() && z != zprevious) {
+                if (((spriteIndex == 6 && !left) || (spriteIndex == 7 && !right) || (spriteIndex == 4 && !down) || (spriteIndex == 5  && !up))) {
+                    state = PREP_DASH;
+                    if (spriteIndex == 7) {
+                        if (up) {
+                            if (left)
+                                ef.addDodgeEffect(posX - worldOffsetX + 27, posY - worldOffsetY + 6, 45, 1);
+                            //else
                             //
-                    }
-                    
-                    else if (down) {
-                        if (left)
-                            ef.addDodgeEffect(posX - worldOffsetX - 4, posY - worldOffsetY + 16, -45, 1);
-                    }
-                    
-                    else
-                        ef.addDodgeEffect(posX - worldOffsetX + 9, posY - worldOffsetY + 5, 0, 1);
-                }
-                else if (spriteIndex == 6) {
-                    if (up) {
-                        if (right)
-                            ef.addDodgeEffect(posX - worldOffsetX + 2, posY - worldOffsetY + 6, -45, -1);
-                        //else
-                            //
-                    }
-                    
-                    else if (down) {
-                        if (right)
-                            ef.addDodgeEffect(posX - worldOffsetX  + 32, posY - worldOffsetY + 16, 45, -1);
-                    }
-                    
-                    else
-                        ef.addDodgeEffect(posX - worldOffsetX + 23, posY - worldOffsetY + 5, 0, -1);
-                }
-                
-                else if (spriteIndex == 4) {
-                    if (left) {
-                        if (up)
-                            ef.addDodgeEffect(posX - worldOffsetX + 29, posY - worldOffsetY + 6, 45, 1);
-                        else
-                            ef.addDodgeEffect(posX - worldOffsetX + 9, posY - worldOffsetY + 5, 0, 1);
-                    }
-                    
-                    else if (right) {
-                        if (up)
-                            ef.addDodgeEffect(posX - worldOffsetX + 2, posY - worldOffsetY + 6, -45, -1);
+                        }
                         
-                        else
-                            ef.addDodgeEffect(posX - worldOffsetX + 23, posY - worldOffsetY + 5, 0, -1);
-                    }
-                }
-                
-                else if (spriteIndex == 5) {
-                    if (left) {
-                        if (down)
-                            ef.addDodgeEffect(posX - worldOffsetX - 4, posY - worldOffsetY + 16, -45, 1);
+                        else if (down) {
+                            if (left)
+                                ef.addDodgeEffect(posX - worldOffsetX - 4, posY - worldOffsetY + 16, -45, 1);
+                        }
                         
                         else
                             ef.addDodgeEffect(posX - worldOffsetX + 9, posY - worldOffsetY + 5, 0, 1);
                     }
-                    
-                    else if (right) {
-                        if (down)
-                            ef.addDodgeEffect(posX - worldOffsetX  + 32, posY - worldOffsetY + 16, 45, -1);
+                    else if (spriteIndex == 6) {
+                        if (up) {
+                            if (right)
+                                ef.addDodgeEffect(posX - worldOffsetX + 2, posY - worldOffsetY + 6, -45, -1);
+                            //else
+                            //
+                        }
+                        
+                        else if (down) {
+                            if (right)
+                                ef.addDodgeEffect(posX - worldOffsetX  + 32, posY - worldOffsetY + 16, 45, -1);
+                        }
                         
                         else
                             ef.addDodgeEffect(posX - worldOffsetX + 23, posY - worldOffsetY + 5, 0, -1);
                     }
+                    
+                    else if (spriteIndex == 4) {
+                        if (left) {
+                            if (up)
+                                ef.addDodgeEffect(posX - worldOffsetX + 29, posY - worldOffsetY + 6, 45, 1);
+                            else
+                                ef.addDodgeEffect(posX - worldOffsetX + 9, posY - worldOffsetY + 5, 0, 1);
+                        }
+                        
+                        else if (right) {
+                            if (up)
+                                ef.addDodgeEffect(posX - worldOffsetX + 2, posY - worldOffsetY + 6, -45, -1);
+                            
+                            else
+                                ef.addDodgeEffect(posX - worldOffsetX + 23, posY - worldOffsetY + 5, 0, -1);
+                        }
+                    }
+                    
+                    else if (spriteIndex == 5) {
+                        if (left) {
+                            if (down)
+                                ef.addDodgeEffect(posX - worldOffsetX - 4, posY - worldOffsetY + 16, -45, 1);
+                            
+                            else
+                                ef.addDodgeEffect(posX - worldOffsetX + 9, posY - worldOffsetY + 5, 0, 1);
+                        }
+                        
+                        else if (right) {
+                            if (down)
+                                ef.addDodgeEffect(posX - worldOffsetX  + 32, posY - worldOffsetY + 16, 45, -1);
+                            
+                            else
+                                ef.addDodgeEffect(posX - worldOffsetX + 23, posY - worldOffsetY + 5, 0, -1);
+                        }
+                    }
                 }
             }
         }
-    }
         
-        if (state == State::prepdash) {
+        if (state == PREP_DASH) {
             if (--dodgeTimer == 0) {
                 dodgeTimer = 5;
-                state = State::dashing;
+                state = DASHING;
             }
             if (left && !CollisionLeft) {
                 worldOffsetX += 1;
@@ -460,9 +454,9 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
             }
         }
         
-        else if (state == State::dashing) {
+        else if (state == DASHING) {
             if (--dodgeTimer == 0) {
-                state = State::cooldown;
+                state = COOLDOWN;
                 dodgeTimer = 12;
             }
             if (left && !CollisionLeft) {
@@ -491,10 +485,10 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
             }
         }
         
-        else if (state == State::cooldown) {
+        else if (state == COOLDOWN) {
             if (--dodgeTimer == 0) {
                 dodgeTimer = 3;
-                state = State::nominal;
+                state = NOMINAL;
                 imageIndex = 4;
             }
             if (left && !CollisionLeft) {
@@ -510,55 +504,55 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
                 worldOffsetY -= 1;
             }
         }
-
-    //Code making the player stand still after key releases
-    if (!left && leftPrevious == 1) {
-        if (!left && !right && !up && !down) {
-            if (!x) {
-                spriteIndex = 2;
-                imageIndex = 0;
-            }
-            else if (x) {
-                compareSpriteIndex(spriteIndex);
-            }
-        }
-    }
-    
-    if (!right && rightPrevious == 1) {
-        if (!left && !right && !up && !down) {
-            if (!x) {
-            spriteIndex = 3;
-            imageIndex = 0;
-            }
-            else if (x) {
-                compareSpriteIndex(spriteIndex);
+        
+        //Code making the player stand still after key releases
+        if (!left && leftPrevious == 1) {
+            if (!left && !right && !up && !down) {
+                if (!x) {
+                    spriteIndex = 2;
+                    imageIndex = 0;
+                }
+                else if (x) {
+                    compareSpriteIndex(spriteIndex);
+                }
             }
         }
-    }
-    
-    if (!up && upPrevious == 1) {
-        if (!left && !right && !up && !down) {
-            if (!x) {
-                spriteIndex = 1;
-                imageIndex = 0;
-            }
-            else if (x) {
-                compareSpriteIndex(spriteIndex);
-            }
-        }
-    }
-    
-    if (!down && downPrevious == 1) {
-        if (!left && !right && !up && !down) {
-            if (!x) {
-                spriteIndex = 0;
-                imageIndex = 0;
-            }
-            else if (x) {
-                compareSpriteIndex(spriteIndex);
+        
+        if (!right && rightPrevious == 1) {
+            if (!left && !right && !up && !down) {
+                if (!x) {
+                    spriteIndex = 3;
+                    imageIndex = 0;
+                }
+                else if (x) {
+                    compareSpriteIndex(spriteIndex);
+                }
             }
         }
-    }
+        
+        if (!up && upPrevious == 1) {
+            if (!left && !right && !up && !down) {
+                if (!x) {
+                    spriteIndex = 1;
+                    imageIndex = 0;
+                }
+                else if (x) {
+                    compareSpriteIndex(spriteIndex);
+                }
+            }
+        }
+        
+        if (!down && downPrevious == 1) {
+            if (!left && !right && !up && !down) {
+                if (!x) {
+                    spriteIndex = 0;
+                    imageIndex = 0;
+                }
+                else if (x) {
+                    compareSpriteIndex(spriteIndex);
+                }
+            }
+        }
         
     }
     
@@ -645,7 +639,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameOb
         gameShadows.push_back(tShadow);
     }
     // Allow the player's weapon to push created instances to the effects controller
-    weapon.updateShotVector(spriteIndex, ef, worldOffsetX, worldOffsetY, UI, pInput, sounds, static_cast<int>(state));
+    weapon.updateShotVector(spriteIndex, ef, worldOffsetX, worldOffsetY, UI, pInput, sounds, state);
     scrShakeState = false;
     
     // First check for collisions with enemy shot objects, as long as the death sequence isn't running
@@ -678,7 +672,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameOb
             if (fabsf(posX + 16 - element.getXpos()) < 8 && fabsf(posY + 4 - element.getYpos()) < 8) {
                 health = fmin(fonts.getMaxHealth(), health + 1);
                 element.setKillFlag(true);
-                ////gotHeart = true;
+                gotHeart = true;
                 // Display the UI element for health text
                 fonts.resetHPText();
             }
@@ -689,9 +683,8 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameOb
     for (auto & element : *pCoins) {
         if (fabsf(posX + 16 - element.getXpos()) < 8 && fabsf(posY + 4 - element.getYpos()) < 8) {
             element.setKillFlag(true);
-            fonts.updateScore(1);
-            ////gotCoin = true;
-            ////gotHeart = false;
+            gotCoin = true;
+            gotHeart = false;
         }
     }
     
@@ -712,7 +705,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameOb
     }
     
     if (health < 0) {
-        state = State::nominal;
+        state = NOMINAL;
         health = 0;
     }
     
@@ -735,9 +728,9 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameOb
         }
     }
     
-    if (state == State::nominal) {
+    if (state == NOMINAL) {
         switch (spriteIndex) {
-            // Common cases first!
+                // Common cases first!
             case 4:
                 updateVAnimCount(animationCounter, imageIndex, pInput->xPressed());
                 if (imageIndex == 4 || imageIndex == 8) {
@@ -789,7 +782,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameOb
                 std::get<0>(tPlayer) = spriteRight[horizontalAnimationDecoder(imageIndex)];
                 gameObjects.push_back(tPlayer);
                 break;
-            
+                
             case 0:
                 std::get<0>(tPlayer) = spriteDown[5];
                 gameObjects.push_back(tPlayer);
@@ -799,7 +792,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameOb
                     gameObjects.push_back(tGun);
                 }
                 break;
-            
+                
             case 1:
                 std::get<0>(tPlayer) = spriteUp[5];
                 gameObjects.push_back(tPlayer);
@@ -815,7 +808,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameOb
                 std::get<0>(tPlayer) = spriteLeft[6];
                 gameObjects.push_back(tPlayer);
                 break;
-            
+                
             case 3:
                 if (weapon.getTimeout() != 0) {
                     std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
@@ -838,7 +831,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameOb
                 break;
         }
     }
-    else if (state == State::prepdash) {
+    else if (state == PREP_DASH) {
         if ((rightPrevious || upPrevious || downPrevious) && spriteIndex == 6) {
             if (weapon.getTimeout() != 0 && rightPrevious) {
                 std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
@@ -874,7 +867,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameOb
         }
     }
     
-    else if (state == State::dashing || state == State::cooldown) {
+    else if (state == DASHING || state == COOLDOWN) {
         if (rightPrevious && spriteIndex == 6) {
             if (weapon.getTimeout() != 0) {
                 std::get<0>(tGun) = *weapon.getSprite(spriteIndex);

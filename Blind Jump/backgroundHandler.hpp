@@ -6,6 +6,7 @@
 //  Copyright © 2015 Evan Bowman. All rights reserved.
 //
 
+#pragma once
 #ifndef backgroundHandler_hpp
 #define backgroundHandler_hpp
 

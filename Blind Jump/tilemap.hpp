@@ -6,6 +6,7 @@
 //  Note: This class was provided by sfml developers, I didn't write this (no need to reinvent the wheel)
 //
 
+#pragma once
 #ifndef tilemap_hpp
 #define tilemap_hpp
 

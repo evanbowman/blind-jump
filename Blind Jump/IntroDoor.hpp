@@ -6,6 +6,7 @@
 //  Copyright © 2016 Evan Bowman. All rights reserved.
 //
 
+#pragma once
 #ifndef IntroDoor_hpp
 #define IntroDoor_hpp
 

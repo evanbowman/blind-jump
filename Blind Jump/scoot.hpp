@@ -6,6 +6,7 @@
 //  Copyright © 2016 Evan Bowman. All rights reserved.
 //
 
+#pragma once
 #ifndef scoot_hpp
 #define scoot_hpp
 

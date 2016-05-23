@@ -11,6 +11,7 @@
 //  Copyright © 2016 Evan Bowman. All rights reserved.
 //
 
+#pragma once
 #ifndef ui_bubble_hpp
 #define ui_bubble_hpp
 

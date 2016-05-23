@@ -6,6 +6,7 @@
 //  Copyright © 2016 Evan Bowman. All rights reserved.
 //
 
+#pragma once
 #ifndef GradientCircle_hpp
 #define GradientCircle_hpp
 

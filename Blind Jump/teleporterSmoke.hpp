@@ -6,6 +6,7 @@
 //  Copyright © 2016 Evan Bowman. All rights reserved.
 //
 
+#pragma once
 #ifndef teleporterSmoke_hpp
 #define teleporterSmoke_hpp
 

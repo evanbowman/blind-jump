@@ -6,6 +6,7 @@
 //  Copyright © 2015 Evan Bowman. All rights reserved.
 //
 
+#pragma once
 #ifndef player_hpp
 #define player_hpp
 
@@ -18,21 +19,22 @@
 #include "inputController.hpp"
 #include "RenderType.hpp"
 
+#define DEACTIVATED 'D'
+#define NOMINAL 'N'
+#define DASHING 'd'
+#define COOLDOWN 'C'
+#define DYING 'x'
+#define DEAD 'X'
+#define PREP_DASH 'p'
+
 class Player {
-    enum class State {
-        deactivated,    // 0: Player is not active, ie does not respond to user keystrokes
-        nominal,        // 1: The default state
-        dashing,        // 2: The player moves faster than normal for a short time
-        cooldown,       // 3: Refractory period after a dash
-        dying,          // 4: Running the death animation
-        dead,           // 5: Dead, return the final sprite of the death sequence and also disallow keystrokes
-        prepdash        // 6: Preparatory period while waiting for a dash
-    };
-    
 private:
     //Current number of lives for the player object
     char health;
-    int posX, posY;
+    //Also store the current position of the player object. Don't need to store
+    //the previous position because the object is fixed to the center of the screen.
+    int posX;
+    int posY;
     //Keep track of the current image index and sprite
     char imageIndex;
     char spriteIndex;
@@ -41,7 +43,8 @@ private:
     //In some instances we might want to deactivate the player object
     bool active;
     //The game works by keeping the player object central and moving everything else
-    float worldOffsetX, worldOffsetY;
+    float worldOffsetX;
+    float worldOffsetY;
     //Declare the textures and sprites.
     sf::Texture shadowTexture;
     sf::Sprite shadowSprite;
@@ -59,7 +62,7 @@ private:
     sf::Texture deathTextures[11];
     sf::Sprite deathSprites[11];
     bool deathSeq;
-        
+    
     //Declare a counter to step down the speed of the animations from the max framerate
     int animationCounter;
     
@@ -86,7 +89,7 @@ private:
     
     // Dodge direction and mode variables
     bool dodging;
-    State state;
+    char state;
     int dodgeTimer;
     char dodgeDir;
     
@@ -102,7 +105,7 @@ private:
     // Note: wall objects sorted by distance, but performing a sort all the time eats up the cpu usage
     float previousCheckOffsetX;
     float previousCheckOffsetY;
-
+    
 public:
     float getWorldOffsetX() const;
     float getWorldOffsetY() const;
@@ -126,7 +129,7 @@ public:
     bool scrShakeState;
     char getHealth() const;
     char getSprIndex() const;
-        
+    
     // Whether or not the player is teleporting
     bool visible = false;
     
@@ -142,5 +145,6 @@ public:
     // Accessor function to set the player's health to full
     void fillHealth(char);
 };
+
 
 #endif

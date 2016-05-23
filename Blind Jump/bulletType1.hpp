@@ -6,10 +6,11 @@
 //  Copyright © 2015 Evan Bowman. All rights reserved.
 //
 
+#pragma once
 #ifndef bulletType1_hpp
 #define bulletType1_hpp
-#include <SFML/Graphics.hpp>
 
+#include <SFML/Graphics.hpp>
 #include <stdio.h>
 
 class bulletType1 {

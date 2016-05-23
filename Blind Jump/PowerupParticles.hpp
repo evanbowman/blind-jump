@@ -6,6 +6,7 @@
 //  Copyright © 2016 Evan Bowman. All rights reserved.
 //
 
+#pragma once
 #ifndef PowerupParticles_hpp
 #define PowerupParticles_hpp
 

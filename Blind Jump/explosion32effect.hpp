@@ -6,6 +6,7 @@
 //  Copyright © 2015 Evan Bowman. All rights reserved.
 //
 
+#pragma once
 #ifndef explosion32effect_hpp
 #define explosion32effect_hpp
 

@@ -131,7 +131,7 @@ int gun::getTimeout() {
 //This updates the effects vector that holds all of the shots and hit animations
 void gun::updateShotVector(char playerSpriteIndex, effectsController& ef, float xOffset, float yOffset, userInterface& UI, InputController* pInput, SoundController& sounds, int playerState) {
     sprIndex = playerSpriteIndex;
-    if (bulletTimer == 0 && pInput->xPressed() && timeout < 95 && playerState != 0) {
+    if (bulletTimer == 0 && pInput->xPressed() && timeout < 95 && playerState != 'D') {
         if (sprIndex == 0 || sprIndex == 4) {  //If the gun sprite is up or down, construct a bullet with a corresponding sprite
             ef.addBullet(0, playerSpriteIndex, xPos - xOffset, yPos - yOffset - 10);
             sounds.playEffect(1);
@@ -149,13 +149,13 @@ void gun::updateShotVector(char playerSpriteIndex, effectsController& ef, float 
         bulletTimer += 1;
     }
     
-    if (bulletTimer != 0 && playerState == 1) {
+    if (bulletTimer != 0 && playerState == 'N') {
         if (++bulletTimer == 20) {  //If enough time has passed since the last shot, set the counter back down to shoot again
             bulletTimer = 0;
         }
     }
     
-    if (playerState != 1) {
+    if (playerState != 'N') {
         timeout = 6;
         bulletTimer = 10;
     }

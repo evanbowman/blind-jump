@@ -6,6 +6,7 @@
 //  Copyright © 2015 Evan Bowman. All rights reserved.
 //
 
+#pragma once
 #ifndef playerAnimationFunctions_hpp
 #define playerAnimationFunctions_hpp
 
