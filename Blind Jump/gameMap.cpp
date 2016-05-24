@@ -214,34 +214,40 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     // Now draw the sorted list of game objects to the window
     if (!gameObjects.empty()) {
         for (auto & element : gameObjects) {
-            // Retrieve each sprite from the tuple and draw it to the window
-            if (std::get<2>(element) == Rendertype::shadeDefault) {
-                // Darken the sprite's color channels according to the ambient conditions of the current area
-                std::get<0>(element).setColor(sf::Color(objectShadeColor.r, objectShadeColor.g, objectShadeColor.b, std::get<0>(element).getColor().a));
-                lightingMap.draw(std::get<0>(element));
-            } else if (std::get<2>(element) == Rendertype::shadeNone) {
-                // If the contents of the third element in the tuple correspond to an effect, draw the sprite without darkening it
-                lightingMap.draw(std::get<0>(element));
-            } else if (std::get<2>(element) == Rendertype::shadeRed) {
-                // Shade red
-                colorShader.setParameter("targetColor", sf::Vector3f(0.98, 0.22, 0.03));
-                lightingMap.draw(std::get<0>(element), &colorShader);
-            } else if (std::get<2>(element) == Rendertype::shadeWhite) {
-                // Shade white
-                colorShader.setParameter("targetColor", sf::Vector3f(1.00, 1.00, 1.00));
-                lightingMap.draw(std::get<0>(element), &colorShader);
-            } else if (std::get<2>(element) == Rendertype::shadeBlue) {
-                // Shade blue
-                colorShader.setParameter("targetColor", sf::Vector3f(0.35, 0.35, 0.69));
-                lightingMap.draw(std::get<0>(element), &colorShader);
-            } else if (std::get<2>(element) == Rendertype::shadeCrimson) {
-                // Shade crimson
-                colorShader.setParameter("targetColor", sf::Vector3f(0.94, 0.09, 0.34));
-                lightingMap.draw(std::get<0>(element), &colorShader);
-            } else if (std::get<2>(element) == Rendertype::shadeNeon) {
-                // Shade arctic, sort of a bright blue-greenish color
-                colorShader.setParameter("targetColor", sf::Vector3f(0.29, 0.99, 0.99));
-                lightingMap.draw(std::get<0>(element), &colorShader);
+            switch (std::get<2>(element)) {
+                case Rendertype::shadeDefault:
+                    std::get<0>(element).setColor(sf::Color(objectShadeColor.r, objectShadeColor.g, objectShadeColor.b, std::get<0>(element).getColor().a));
+                    lightingMap.draw(std::get<0>(element));
+                    break;
+                    
+                case Rendertype::shadeNone:
+                    lightingMap.draw(std::get<0>(element));
+                    break;
+                    
+                case Rendertype::shadeWhite:
+                    colorShader.setParameter("targetColor", sf::Vector3f(1.00, 1.00, 1.00));
+                    lightingMap.draw(std::get<0>(element), &colorShader);
+                    break;
+                    
+                case Rendertype::shadeRed:
+                    colorShader.setParameter("targetColor", sf::Vector3f(0.98, 0.22, 0.03));
+                    lightingMap.draw(std::get<0>(element), &colorShader);
+                    break;
+                    
+                case Rendertype::shadeCrimson:
+                    colorShader.setParameter("targetColor", sf::Vector3f(0.94, 0.09, 0.34));
+                    lightingMap.draw(std::get<0>(element), &colorShader);
+                    break;
+                    
+                case Rendertype::shadeBlue:
+                    colorShader.setParameter("targetColor", sf::Vector3f(0.35, 0.35, 0.69));
+                    lightingMap.draw(std::get<0>(element), &colorShader);
+                    break;
+                    
+                case Rendertype::shadeNeon:
+                    colorShader.setParameter("targetColor", sf::Vector3f(0.29, 0.99, 0.99));
+                    lightingMap.draw(std::get<0>(element), &colorShader);
+                    break;
             }
         }
     }

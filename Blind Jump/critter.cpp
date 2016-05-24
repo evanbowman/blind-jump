@@ -34,7 +34,7 @@ void Critter::checkBulletCollision(effectsController& ef, FontController& font) 
     //Check collisions with player's shots, but only if the shot vectors aren't empty
     if (!ef.getBulletLayer1().empty()) {
         for (auto & element : ef.getBulletLayer1()) {
-            if (std::abs(element.getXpos() - (xPos - 4)) < 8 && std::abs(element.getYpos() - (yPos - 8)) < 8 && !isColored) {
+            if (std::abs(element.getXpos() - (xPos + 4)) < 8 && std::abs(element.getYpos() - (yPos - 8)) < 8 && !isColored) {
                 element.setKillFlag();           // Kill the bullet if there's a collision between the bullet and the enemy
                 // Tons of effects in one place is distracting, so don't draw another one if the enemy is about to explode
                 if (health == 1) {
@@ -48,7 +48,7 @@ void Critter::checkBulletCollision(effectsController& ef, FontController& font) 
     }
     if (!ef.getBulletLayer2().empty()) {
         for (auto & element : ef.getBulletLayer2()) {
-            if (std::abs(element.getXpos() - (xPos - 4)) < 8 && std::abs(element.getYpos() - (yPos - 8)) < 8 && !isColored) {
+            if (std::abs(element.getXpos() - (xPos + 4)) < 8 && std::abs(element.getYpos() - (yPos - 8)) < 8 && !isColored) {
                 element.setKillFlag();
                 if (health == 1) {
                     element.disablePuff();
@@ -81,7 +81,6 @@ void Critter::checkBulletCollision(effectsController& ef, FontController& font) 
 void Critter::update(float xOffset, float yOffset, effectsController &effects, FontController &fonts, tileController* pTiles) {
     setPosition(xOffset, yOffset);
     checkBulletCollision(effects, fonts);
-    sprites[3].setPosition(xPos + 6, yPos + 1);
     if (awake) {
         float speed;
         if (active) {
@@ -155,12 +154,13 @@ void Critter::update(float xOffset, float yOffset, effectsController &effects, F
 }
 
 sf::Sprite* Critter::getShadow() {
+    sprites[3].setPosition(xPos + 12, yPos + 1);
     return &sprites[3];
 }
 
 sf::Sprite* Critter::getSprite() {
     // Update the position of the current sprite (rounding is important, otherwise movement will be shaky)
-    sprites[frameIndex].setPosition(xPos + 6, yPos);
+    sprites[frameIndex].setPosition(xPos + 12, yPos);
     return &sprites[frameIndex];
 }
 

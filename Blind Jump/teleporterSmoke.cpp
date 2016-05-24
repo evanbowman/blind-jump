@@ -17,6 +17,7 @@ TeleporterSmoke::TeleporterSmoke(sf::Sprite inputSprites[6], float x, float y) {
     yInit = y;
     for (int i = 0; i < 6; i++) {
         effectSprites[i] = inputSprites[i];
+        effectSprites[i].setColor(sf::Color(255, 255, 255));
     }
     // Initialize the current frame of the animation to the first one
     frameIndex = 0;

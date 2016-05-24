@@ -400,7 +400,7 @@ void effectsController::addExplosion(float x, float y) {
 }
 
 template <typename T>
-void drawEffect(T& inpVec, sf::RenderTexture& window, std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameObjects) {
+void drawEffect(T& inpVec, std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameObjects) {
     if (!inpVec.empty()) {
         for (auto & element : inpVec) {
             std::tuple<sf::Sprite, float, Rendertype> effectObject;
@@ -423,15 +423,15 @@ void directDraw(T& inpVec, sf::RenderTexture& window, std::vector<std::tuple<sf:
 
 //Draw the sprites for all of the effect objects
 void effectsController::draw(sf::RenderTexture& window, std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameObjects) {
-    drawEffect(hearts, window, gameObjects);
-    drawEffect(coins, window, gameObjects);
-    drawEffect(turretFlashes, window, gameObjects);
-    drawEffect(bullets, window, gameObjects);
-    drawEffect(puffs, window, gameObjects);
-    drawEffect(turretShots, window, gameObjects);
-    drawEffect(dasherShots, window, gameObjects);
-    drawEffect(fireExplosions, window, gameObjects);
-    drawEffect(smallExplosions, window, gameObjects);
+    drawEffect(hearts, gameObjects);
+    drawEffect(coins, gameObjects);
+    drawEffect(turretFlashes, gameObjects);
+    drawEffect(bullets, gameObjects);
+    drawEffect(puffs, gameObjects);
+    drawEffect(turretShots, gameObjects);
+    drawEffect(dasherShots, gameObjects);
+    drawEffect(fireExplosions, gameObjects);
+    drawEffect(smallExplosions, gameObjects);
     
     if (!energyBeams.empty()) {
         for (auto element : energyBeams) {
@@ -453,9 +453,9 @@ void effectsController::draw(sf::RenderTexture& window, std::vector<std::tuple<s
         }
     }
     
-    drawEffect(bigExplosions, window, gameObjects);
-    drawEffect(enemyShots, window, gameObjects);
-    drawEffect(healthEffects, window, gameObjects);
+    drawEffect(bigExplosions, gameObjects);
+    drawEffect(enemyShots, gameObjects);
+    drawEffect(healthEffects, gameObjects);
 }
 
 void effectsController::drawLower(sf::RenderTexture& window) {
@@ -464,6 +464,7 @@ void effectsController::drawLower(sf::RenderTexture& window) {
             window.draw(element.getSprite());  //Get the sprite, and update based on the overworld offset
         }
     }
+    
     if (!warpEffects.empty()) {
         for (auto & element : warpEffects) {
             if (element.getDrawOrder() == 1) {
