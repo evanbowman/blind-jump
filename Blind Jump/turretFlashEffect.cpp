@@ -32,7 +32,7 @@ turretFlashEffect::turretFlashEffect(sf::Sprite sprites[5], float x, float y) {
 
 //Update the position of the image
 void turretFlashEffect::update(float xOffset, float yOffset) {
-    if (clock.getElapsedTime().asMilliseconds() > 50) {
+    if (clock.getElapsedTime().asMilliseconds() > 40) {
         imageIndex += 1;
         if (imageIndex > 4) {
             killFlag = true;

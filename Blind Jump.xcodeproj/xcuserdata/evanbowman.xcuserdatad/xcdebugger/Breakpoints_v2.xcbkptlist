@@ -47,7 +47,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "192"
             endingLineNumber = "192"
-            landmarkName = "enemyController::updateEnemies(std::vector&lt;std::tuple&lt;sf::Sprite, float, int&gt;&gt;&amp; gameObjects, std::vector&lt;std::tuple&lt;sf::Sprite, float, int&gt;&gt;&amp; gameShadows, float x, float y, effectsController&amp; ef, std::vector&lt;wall&gt; w, bool enabled, detailController* dets, tileController* pTiles, ScreenShakeController* scrn, FontController&amp; fonts, sf::Time &amp; elapsedTime)"
+            landmarkName = "enemyController::updateEnemies(std::vector&lt;std::tuple&lt;sf::Sprite, float, Rendertype&gt;&gt;&amp; gameObjects, std::vector&lt;std::tuple&lt;sf::Sprite, float, Rendertype&gt;&gt;&amp; gameShadows, float x, float y, effectsController&amp; ef, std::vector&lt;wall&gt; w, bool enabled, detailController* dets, tileController* pTiles, ScreenShakeController* scrn, FontController&amp; fonts, sf::Time &amp; elapsedTime)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -26,18 +26,24 @@ int main(int, char const**) {
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     
     float aspectRatio = static_cast<float>(desktop.width) / static_cast<float>(desktop.height);
-    float windowWidth = 450;
-    float windowHeight = 450;
+    float windowWidth = 450.f;
+    float windowHeight = 450.f;
     if (aspectRatio > 1.f) {
         float windowAspect;
         do {
-            windowWidth += 0.025;
-            windowHeight -= 0.025;
+            windowWidth += 0.025f;
+            windowHeight -= 0.025f;
             windowAspect = windowWidth / windowHeight;
         }
-        while (fabs(aspectRatio - windowAspect) > 0.005);
+        while (fabs(aspectRatio - windowAspect) > 0.005f);
     } else {
-        std::cerr << "FAILURE: Game does not support vertical displays." << std::endl;
+        float windowAspect;
+        do {
+            windowWidth -= 0.025f;
+            windowHeight += 0.025f;
+            windowAspect = windowWidth / windowHeight;
+        }
+        while (fabs(aspectRatio - windowAspect) < 1.995f);
     }
     
     // Boolean that stores whether the game is on the title screen
@@ -75,8 +81,8 @@ int main(int, char const**) {
     settings.antialiasingLevel = 6;
     
     sf::RenderWindow window(sf::VideoMode(desktop.width, desktop.height), "Blind Jump", sf::Style::Fullscreen, settings);
-    // Hide cursor inside the window
     window.setMouseCursorVisible(false);
+    window.setVerticalSyncEnabled(true);
     // Set the framerate to 60, so that the window doesn't update constantly
     window.setFramerateLimit(60);   //// Increase to test delta timing... final version to run at what FPS though?
     //window.setVerticalSyncEnabled(false);
