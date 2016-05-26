@@ -83,9 +83,6 @@ int main(int, char const**) {
     sf::RenderWindow window(sf::VideoMode(desktop.width, desktop.height), "Blind Jump", sf::Style::Fullscreen, settings);
     window.setMouseCursorVisible(false);
     window.setVerticalSyncEnabled(true);
-    // Set the framerate to 60, so that the window doesn't update constantly
-    window.setFramerateLimit(60);   //// Increase to test delta timing... final version to run at what FPS though?
-    //window.setVerticalSyncEnabled(false);
     // Set the Icon
     sf::Image icon;
     if (!icon.loadFromFile(resourcePath() + "icon.png")) {

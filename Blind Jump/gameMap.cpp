@@ -295,10 +295,10 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
         finalSprite.setTexture(finalPass.getTexture());
         window.draw(finalSprite, &blurShader);
         // The gaussian blur effect used by the UI can really put a strain on the graphics card. Since the background is blurry anyway, draw fewer frames when the menu is open
-        if (UI.isOpen())
+        /*if (UI.isOpen())
             window.setFramerateLimit(30);
         else
-            window.setFramerateLimit(60);
+            window.setFramerateLimit(60);*/
     } else {
         window.draw(sf::Sprite(target.getTexture()));
     }
