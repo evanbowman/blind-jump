@@ -239,7 +239,7 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
             else {
                 if (it->getXpos() > -64 && it->getXpos() < windowW + 64 && it->getYpos() > -64 && it->getYpos() < windowH + 64) {
                     if (enabled) {
-                        it->update(x, y, w, ef, fonts);
+                        it->update(x, y, w, ef, fonts, elapsedTime);
                     }
                     // Get the enemy's shadow
                     if (!it->dying()) {

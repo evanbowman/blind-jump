@@ -11,8 +11,6 @@
 #include "angleFunction.hpp"
 #include "wallinpath.hpp"
 
-//// LOW LEVEL ENEMY, BUT NOT WEAK. ONLY A FEW PER EARLY MAPS
-
 DasherBlur::DasherBlur(sf::Sprite* spr, float xInit, float yInit) {
     this->spr = *spr;
     this->xInit = xInit;
@@ -57,7 +55,7 @@ Dasher::Dasher(sf::Sprite* sprs) : EnemyParent(sprs) {
     blurCountDown = 3;
     health = 8;
     deathSeq = false;
-    frameRate = 3;
+    timer = 0;
 }
 
 sf::Sprite* Dasher::getSprite() {
@@ -118,7 +116,7 @@ void Dasher::checkBulletCollision(effectsController& ef, FontController& fonts) 
     }
 }
 
-void Dasher::update(float xOffset, float yOffset, std::vector<wall> walls, effectsController& ef, FontController& fonts) {
+void Dasher::update(float xOffset, float yOffset, std::vector<wall> walls, effectsController& ef, FontController& fonts, sf::Time & elapsedTime) {
     // Update the object's position variables
     setPosition(xOffset, yOffset);
     checkBulletCollision(ef, fonts);
@@ -321,15 +319,13 @@ void Dasher::update(float xOffset, float yOffset, std::vector<wall> walls, effec
     
     // If it's time to play the death sequence
     else {
-        if (--frameRate == 0) {
+        timer += elapsedTime.asMilliseconds();
+        if (timer > 52.8) {
+            timer = 0;
             if (frameIndex < 16) {
-                frameRate = 3;
                 if (!::checkWallCollision(walls, 48, xPos, yPos))
                     xInit += 0.5 * sprs[frameIndex].getScale().x;
-            }
-            
-            else {
-                frameRate = 4;
+            } else {
                 if (!::checkWallCollision(walls, 48, xPos, yPos))
                     xInit += 0.35 * sprs[frameIndex].getScale().x;
             }
@@ -358,7 +354,7 @@ std::vector<DasherBlur>* Dasher::getBlurEffects() {
 }
 
 bool Dasher::shakeReady() {
-    return (frameIndex == 6 and frameRate == 1);
+    return (frameIndex == 6 && timer == 0);
 }
 
 bool Dasher::dying() {
@@ -366,10 +362,9 @@ bool Dasher::dying() {
 }
 
 bool Dasher::scrapReady() {
-    return (frameIndex == 19 and frameRate == 1);
+    return (frameIndex == 19 && timer == 0);
 }
 
 bool Dasher::colored() {
     return isColored;
 }
-

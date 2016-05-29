@@ -268,10 +268,12 @@ void detailController::addTerminal(tileController & t, float posX, float posY, f
     terminals.push_back(term);
 }
 
-void detailController::update(float xOffset, float yOffset, effectsController& ef, char PlayerSprIndex, std::vector<wall>& walls, std::vector<sf::Sprite*>* glow1, std::vector<sf::Sprite*>* glow2, userInterface& ui, FontController& fonts, Player& player, InputController* pInput, ScreenShakeController * pscr, sf::Time & elapsedTime) {
+void detailController::update(float xOffset, float yOffset, effectsController& ef, char PlayerSprIndex, std::vector<wall>& walls, std::vector<sf::Sprite*>* glow1, std::vector<sf::Sprite*>* glow2, userInterface& ui, FontController& fonts, Player& player, InputController* pInput, ScreenShakeController * pscr, sf::Time & elapsedTime, bool enabled) {
     if (!teleporters.empty()) {
         for (auto & element : teleporters) {
-            element.update(xOffset, yOffset, elapsedTime);
+            if (enabled) {
+                element.update(xOffset, yOffset, elapsedTime);
+            }
             if (element.smokeReady()) {
                 ef.addWarpEffect(element.getxPos() - xOffset + 4 + (rand() % 6), element.getyPos() - yOffset + 2);
             }
@@ -282,7 +284,9 @@ void detailController::update(float xOffset, float yOffset, effectsController& e
     
     if (!lamps.empty()) {
         for (auto & element : lamps) {
-            element.update(xOffset, yOffset);
+            if (enabled) {
+                element.update(xOffset, yOffset);
+            }
             // Push the light effects back
             float xPos = element.getxPos();
             float yPos = element.getyPos();

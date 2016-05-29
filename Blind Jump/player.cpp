@@ -182,6 +182,7 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
     if (health == 0 && !deathSeq) {
         deathSeq = true;
         state = NOMINAL;
+        ef.clear();
         spriteIndex = 8;
         imageIndex = 0;
         animationCounter = 6;

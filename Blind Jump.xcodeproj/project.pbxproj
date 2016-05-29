@@ -128,6 +128,7 @@
 		6858BEF11C727C320057E574 /* energyText.png in Resources */ = {isa = PBXBuildFile; fileRef = 6858BEF01C727C320057E574 /* energyText.png */; };
 		685C4A0D1C93E12D002DAA92 /* bkg_stars_distant.png in Resources */ = {isa = PBXBuildFile; fileRef = 685C4A0C1C93E12D002DAA92 /* bkg_stars_distant.png */; };
 		685CD4161BD99E52004907E0 /* userInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 685CD4141BD99E52004907E0 /* userInterface.cpp */; };
+		686616F01CF925BA00040D50 /* desaturate.frag in Resources */ = {isa = PBXBuildFile; fileRef = 686616EF1CF925BA00040D50 /* desaturate.frag */; };
 		686BCE801BC8B6270096128A /* ResourcePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = 686BCE7F1BC8B6270096128A /* ResourcePath.mm */; };
 		686BCE831BC8B6270096128A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 686BCE821BC8B6270096128A /* main.cpp */; };
 		686BCE9A1BC8B72F0096128A /* player_face_down.png in Resources */ = {isa = PBXBuildFile; fileRef = 686BCE941BC8B72F0096128A /* player_face_down.png */; };
@@ -393,6 +394,7 @@
 		685C4A0C1C93E12D002DAA92 /* bkg_stars_distant.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bkg_stars_distant.png; sourceTree = "<group>"; };
 		685CD4141BD99E52004907E0 /* userInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = userInterface.cpp; sourceTree = "<group>"; };
 		685CD4151BD99E52004907E0 /* userInterface.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = userInterface.hpp; sourceTree = "<group>"; };
+		686616EF1CF925BA00040D50 /* desaturate.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = desaturate.frag; sourceTree = "<group>"; };
 		686BCE7A1BC8B6270096128A /* Blind Jump.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blind Jump.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		686BCE7E1BC8B6270096128A /* Blind Jump-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Blind Jump-Info.plist"; sourceTree = "<group>"; };
 		686BCE7F1BC8B6270096128A /* ResourcePath.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ResourcePath.mm; sourceTree = "<group>"; };
@@ -553,6 +555,7 @@
 		6822270E1C794B18003AAFC9 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				686616EF1CF925BA00040D50 /* desaturate.frag */,
 				68A4CBC61CC0952D00ECF5E2 /* blur.frag */,
 				6822270A1C7937AA003AAFC9 /* color.frag */,
 			);
@@ -1144,6 +1147,7 @@
 				682F41661BC93C3B0091BC2E /* bkg_orbit.png in Resources */,
 				6837F69A1BCF1F1500AD20A8 /* poof1.png in Resources */,
 				682F41741BC95ACA0091BC2E /* walk_up4.png in Resources */,
+				686616F01CF925BA00040D50 /* desaturate.frag in Resources */,
 				68D4E1B61C441DD600318E38 /* hp_empty.png in Resources */,
 				680100051BEE8B86002AA2C2 /* exp32_1.png in Resources */,
 				68DFE6EC1CC1CB6A00923E8F /* blueFloorGlow.png in Resources */,

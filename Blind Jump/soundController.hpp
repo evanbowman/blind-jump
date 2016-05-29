@@ -12,8 +12,9 @@
 
 #include <stdio.h>
 #include "sfml/audio.hpp"
+#include <array>
 
-#define SOUNDTRACK_LENGTH 3
+static constexpr int SOUNDTRACK_LENGTH = 3;
 
 class SoundController {
 private:    
@@ -21,8 +22,9 @@ private:
     sf::Music soundtrack[SOUNDTRACK_LENGTH];
     
     // Effect sounds
-    sf::SoundBuffer laserSounds[1];
-    sf::SoundBuffer stepEffects[2];
+    std::array<sf::SoundBuffer, 1> laserSounds;
+    std::array<sf::SoundBuffer, 1> stepEffects;
+    std::array<sf::SoundBuffer, 2> machineSounds;
     sf::Sound sounds[4];
     int currentSong;
     

@@ -66,7 +66,7 @@ public:
     void addTeleporter(tileController&, float, float, float, float, FontController *);
     void addRock(tileController&, float, float, int, int, FontController *);
     void addTerminal(tileController&, float, float, float, float);
-    void update(float, float, effectsController& ef, char, std::vector<wall>&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, userInterface&, FontController&, Player&, InputController*, ScreenShakeController * pscr, sf::Time&);
+    void update(float, float, effectsController& ef, char, std::vector<wall>&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, userInterface&, FontController&, Player&, InputController*, ScreenShakeController * pscr, sf::Time&, bool enabled);
     void addDasherScrap(tileController&, float, float, int);
     void draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>&, std::vector<std::tuple<sf::Sprite, float, Rendertype>>&, sf::RenderTexture&);
     void clear();

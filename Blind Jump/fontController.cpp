@@ -25,15 +25,12 @@ FontController::FontController(sf::View fontView, float x, float y) {
 
     // Load all of the game fonts into memory
     cornerstone.loadFromFile(resourcePath() + "Cornerstone.ttf");
-    museo.loadFromFile(resourcePath() + "Museo_Slab_500_2.otf");
-    //const_cast<sf::Texture&>(cornerstone.getTexture(12)).setSmooth(false);
 
     // Set the waypoint text
     waypointText.setFont(cornerstone);
     waypointText.setString("WAYPOINT-1");
     waypointText.setCharacterSize(0.055 * fontView.getSize().y);
     waypointText.setPosition(16, 0);
-    
     
     healthText.setString("Health:");
     healthText.setCharacterSize(0.026 * fontView.getSize().y);

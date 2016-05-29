@@ -99,7 +99,7 @@ private:
     bool dispEntryBeam;
     bool transitionIn;
     
-    sf::Shader colorShader, blurShader;
+    sf::Shader colorShader, blurShader, desaturateShader;
     
     sf::View worldView, hudView;
     

@@ -59,6 +59,8 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     colorShader.setParameter("texture", sf::Shader::CurrentTexture);
     blurShader.loadFromFile(resourcePath() + "blur.frag", sf::Shader::Fragment);
     blurShader.setParameter("texture", sf::Shader::CurrentTexture);
+    desaturateShader.loadFromFile(resourcePath() + "desaturate.frag", sf::Shader::Fragment);
+    desaturateShader.setParameter("texture", sf::Shader::CurrentTexture);
     //Initialize the starting level to 1
     level = 0;
     
@@ -174,7 +176,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     tiles.drawTiles(target, effects.getGlowSprs(), effects.getGlowSprs2(), level);
     effects.getGlowSprs2()->clear();
     // Update the overworld objects based on the displacement of the player
-    details.update(xOffset, yOffset, effects, player.getSprIndex(), tiles.walls, effects.getGlowSprs(), effects.getGlowSprs2(), UI, *pFonts, player, pInput, &ssc, elapsedTime);
+    details.update(xOffset, yOffset, effects, player.getSprIndex(), tiles.walls, effects.getGlowSprs(), effects.getGlowSprs2(), UI, *pFonts, player, pInput, &ssc, elapsedTime, player.isdead());
     // Draw the details / add them to the game objects vector
     details.draw(gameObjects, gameShadows, target);
     // Update the enemy objects in the game based on the player's displacement
@@ -294,11 +296,9 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
         blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
         finalSprite.setTexture(finalPass.getTexture());
         window.draw(finalSprite, &blurShader);
-        // The gaussian blur effect used by the UI can really put a strain on the graphics card. Since the background is blurry anyway, draw fewer frames when the menu is open
-        /*if (UI.isOpen())
-            window.setFramerateLimit(30);
-        else
-            window.setFramerateLimit(60);*/
+    } else if (!player.isdead()) {
+        desaturateShader.setParameter("amount", UI.getDesaturateAmount());
+        window.draw(sf::Sprite(target.getTexture()), &desaturateShader);
     } else {
         window.draw(sf::Sprite(target.getTexture()));
     }

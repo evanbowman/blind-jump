@@ -30,7 +30,7 @@ public:
     Dasher(sf::Sprite*);
     sf::Sprite* getSprite();
     sf::Sprite* getShadow();
-    void update(float, float, std::vector<wall>, effectsController&, FontController&);
+    void update(float, float, std::vector<wall>, effectsController&, FontController&, sf::Time &);
     void softUpdate(float, float);
     std::vector<DasherBlur>* getBlurEffects();
     void checkBulletCollision(effectsController&, FontController&);
@@ -45,7 +45,7 @@ private:
     unsigned short dashCnt;
     bool isDashing;
     unsigned char frameIndex;
-    unsigned char frameRate;
+    unsigned int timer;
     float hspeed;
     float vspeed;
     unsigned char blurCountDown;

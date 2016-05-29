@@ -13,7 +13,7 @@
 #include "player.hpp"
 
 userInterface::userInterface() {
-    visible = 0;
+    visible = false;
     xPos = 0;
     yPos = 0;
     blurAmount = 0.1;
@@ -21,13 +21,8 @@ userInterface::userInterface() {
     textDisplacement = 0;
     canHeal = true;
     state = State::closed;
+    desaturateAmount = 0.f;
     
-    sf::Color c(255,255,255,2);
-    
-    deathShadowTxt.loadFromFile(resourcePath() + "deathShadow.png");
-    deathShadowSpr.setTexture(deathShadowTxt);
-    deathShadowSpr.setColor(c);
-
     
     // Load in all of the item textures
     for (int i = 0; i < 3; i++)
@@ -146,19 +141,16 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontContr
     
     if (deathSeq) {
         // During the player death sequence apply a vignette effect across the window
-        sf::Color c = deathShadowSpr.getColor();
-        if (c.a < 246 && !deathSeqComplete) {
-            c.a += 4;
-            deathShadowSpr.setColor(c);
-        }
-        else {
+        if (desaturateAmount < 0.75f) {
+            desaturateAmount += 0.01f;
+        } else {
             deathSeqComplete = true;
         }
         
-        window.draw(deathShadowSpr);
-        f.drawDeathText(c.a, window);
+        // window.draw(deathShadowSpr);
+        f.drawDeathText(255, window);
     }
-    
+
     if (visible) {
         //window.draw(selectorShadowSprite);
         if (blurAmount == 0.99999f) {
@@ -192,14 +184,13 @@ void userInterface::setPosition(float x, float y) {
     
     selectorShadowSprite.setColor(sf::Color(255,255,255,1));
     selectorShadowSprite.setScale((x * 2) / 450, (y * 2) / 450);
-    deathShadowSpr.setScale((x * 2) / 450, (y * 2) / 450);
 }
 
 void userInterface::addItem(char newItem, effectsController& ef, float xStart, float yStart, FontController& fonts, Player& player) {
     if (newItem == 90) {
         fonts.updateMaxHealth(fonts.getMaxHealth() + 1);
     } else {
-        
+        //// TODO
     }
 }
 
@@ -218,7 +209,7 @@ float userInterface::getBlurAmount() {
 void userInterface::reset() {
     deathSeq = false;
     deathSeqComplete = false;
-    deathShadowSpr.setColor(sf::Color(255,255,255,2));
+    desaturateAmount = 0.f;
 }
 
 bool userInterface::isVisible() {
@@ -231,4 +222,8 @@ bool userInterface::isOpen() {
 
 void userInterface::setEnemyValueCount(int count) {
     enemyValueCount = count;
+}
+
+float userInterface::getDesaturateAmount() {
+    return desaturateAmount;
 }

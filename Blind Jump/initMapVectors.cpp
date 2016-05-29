@@ -24,7 +24,6 @@ int countNeighbors(short mapArray[61][61], int xIndex, int yIndex, char desiredN
             }
         }
     }
-    
     return count;
 }
 

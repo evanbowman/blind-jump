@@ -34,8 +34,6 @@ public:
     // Declare selection circles to go around the object
     sf::Texture txtShadowTexture;
     sf::Sprite txtShadowSprite;
-    sf::Texture deathShadowTxt;
-    sf::Sprite deathShadowSpr;
     void setPosition(float, float);
     sf::Texture itemTextures[3][3];
     void addItem(char, effectsController&, float, float, FontController&, Player&);
@@ -47,6 +45,8 @@ public:
     void dispDeathSeq();
     bool isComplete();
     bool canHeal;
+    
+    float getDesaturateAmount();
     
     bool isVisible();
     
@@ -78,6 +78,8 @@ private:
     // The amount of blur to use when opening the items menu
     float blurAmount;
     
+    float desaturateAmount;
+    
     bool keyPressed;
     
     bool deathSeq, deathSeqComplete;
@@ -88,7 +90,5 @@ private:
     std::vector<sf::Sprite> textToDisplay;
     // Store the amount the text moves during the entry animation to reset it to the original value
     float textDisplacement;
-    sf::Texture letterTextures[29];
-    sf::Texture inverseLetterTextures[29];
 };
 #endif /* userInterface_hpp */

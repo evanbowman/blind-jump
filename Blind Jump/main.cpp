@@ -43,7 +43,7 @@ int main(int, char const**) {
             windowHeight += 0.025f;
             windowAspect = windowWidth / windowHeight;
         }
-        while (fabs(aspectRatio - windowAspect) < 1.995f);
+        while (fabs(aspectRatio - windowAspect) > 0.005f);
     }
     
     // Boolean that stores whether the game is on the title screen
@@ -83,6 +83,8 @@ int main(int, char const**) {
     sf::RenderWindow window(sf::VideoMode(desktop.width, desktop.height), "Blind Jump", sf::Style::Fullscreen, settings);
     window.setMouseCursorVisible(false);
     window.setVerticalSyncEnabled(true);
+    window.setFramerateLimit(60);
+    
     // Set the Icon
     sf::Image icon;
     if (!icon.loadFromFile(resourcePath() + "icon.png")) {
