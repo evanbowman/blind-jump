@@ -165,7 +165,19 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
     updateVectorGlow(smallExplosions, xOffset, yOffset, glowSprs, elapsedTime);
     updateVector(dodgeEffects, xOffset, yOffset, elapsedTime);
     updateVectorGlow(hearts, xOffset, yOffset, glowSprs, elapsedTime);
-    updateVectorGlow(coins, xOffset, yOffset, glowSprs, elapsedTime);
+    //updateVectorGlow(coins, xOffset, yOffset, glowSprs, elapsedTime);
+    if (!coins.empty()) {
+        for (typename std::vector<Powerup>::iterator it = coins.begin(); it != coins.end();) {
+            it->update(xOffset, yOffset, elapsedTime);
+            glowSprs.push_back(it->getGlow());
+            if (it->getKillFlag()) {
+                it = coins.erase(it);
+            }
+            else {
+                ++it;
+            }
+        }
+    }
     updateVectorGlow(turretShots, xOffset, yOffset, glowSprs, elapsedTime);
     updateVectorGlow(dasherShots, xOffset, yOffset, glowSprs, elapsedTime);
     updateVectorGlow(enemyShots, xOffset, yOffset, glowSprs, elapsedTime);
@@ -308,12 +320,6 @@ void effectsController::addHealthEffect(float x, float y) {
     healthEffects.push_back(h);
 }
 
-void effectsController::addLvP1(float x, float y, FontController& font) {
-    HealthEffect h(healthEffectSprites[1], x, y + 8);
-    //font.updateScore(font.getScore() + 1);
-    healthEffects.push_back(h);
-}
-
 void effectsController::addFireExplosion(float x, float y) {
     FireExplosion f(fireExplosionSpr, fireExplosionGlowSpr, x, y);
     fireExplosions.push_back(f);
@@ -324,23 +330,7 @@ void effectsController::addSmallExplosion(float x, float y) {
     smallExplosions.push_back(s);
 }
 
-void effectsController::addLvP3(float x, float y, FontController& font) {
-    HealthEffect h(healthEffectSprites[2], x, y + 8);
-    //font.updateScore(font.getScore() + 3);
-    healthEffects.push_back(h);
-}
 
-void effectsController::addLvP30(float x, float y, FontController& font) {
-    HealthEffect h(healthEffectSprites[3], x, y + 8);
-    //font.updateScore(font.getScore() + 30);
-    healthEffects.push_back(h); 
-}
-
-void effectsController::addLvP10(float x, float y, FontController &font) {
-    HealthEffect h(healthEffectSprites[4], x, y + 8);
-    //font.updateScore(font.getScore() + 10);
-    healthEffects.push_back(h);
-}
 
 void effectsController::addEnergyBeam(float x, float y, float dir, float length) {
     EnergyBeam en(x, y, energyBeamSprites, dir, length);
@@ -359,7 +349,7 @@ void effectsController::addScootShot(float x, float y, short dir, float playerPo
     turretShots.push_back(t);
 }
 
-void effectsController::addNewItem(float x, float y, FontController &font) {
+void effectsController::addNewItem(float x, float y) {
     HealthEffect h(newItemSpr, x - 30, y);
     healthEffects.push_back(h);
 }

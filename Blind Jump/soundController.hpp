@@ -14,10 +14,9 @@
 #include "sfml/audio.hpp"
 #include <array>
 
-static constexpr int SOUNDTRACK_LENGTH = 3;
-
 class SoundController {
-private:    
+private:
+    static constexpr int SOUNDTRACK_LENGTH = 3;
     // Game soundtrack
     sf::Music soundtrack[SOUNDTRACK_LENGTH];
     
@@ -25,13 +24,19 @@ private:
     std::array<sf::SoundBuffer, 1> laserSounds;
     std::array<sf::SoundBuffer, 1> stepEffects;
     std::array<sf::SoundBuffer, 2> machineSounds;
-    sf::Sound sounds[4];
+    std::array<sf::Sound, 3> sounds;
     int currentSong;
     
 public:
+    enum class Effect {
+        step,
+        gunshot,
+        coin
+    };
+    
     SoundController();
     // Game objects can pass a value to the music controller to
-    void playEffect(unsigned char);
+    void playEffect(Effect);
     void playMusic(unsigned char);
     void stopMusic();
 };

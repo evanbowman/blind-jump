@@ -56,7 +56,7 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
         for (std::vector<turret>::iterator it = turrets.begin(); it != turrets.end();) {
             if (it->getKillFlag() == 1) {
                 // Add some scrap to the map
-                dets->addEnemyScrap(*pTiles, it->getXinit() + 4, it->getYinit() + 6, 0, 0);
+                dets->addEnemyScrap(it->getXinit() + 4, it->getYinit() + 6, 0, 0);
                 // Rumble the screen
                 scrn->rumble();
                 it = turrets.erase(it);
@@ -97,7 +97,7 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
         for (std::vector<Scoot>::iterator it = scoots.begin(); it != scoots.end();) {
             if (it->getKillFlag()) {
                 // Add some scrap to the map
-                dets->addEnemyScrap(*pTiles, it->getXinit(), it->getYinit(), 0, 0);
+                dets->addEnemyScrap(it->getXinit(), it->getYinit(), 0, 0);
                 // Rumble the screen
                 scrn->rumble();
                 it = scoots.erase(it);
@@ -106,7 +106,7 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
             else {
                 if (it->getXpos() > -64 && it->getXpos() < windowW + 64 && it->getYpos() > -64 && it->getYpos() < windowH + 64) {
                     if (enabled) {
-                        it->update(x, y, w, ef, fonts, elapsedTime);
+                        it->update(x, y, w, ef, elapsedTime);
                     }
                     // Get the enemy's shadow
                     std::tuple<sf::Sprite, float, Rendertype, float> shadow;
@@ -196,6 +196,8 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
                 //if (it->getXpos() > -64 && it->getXpos() < windowW + 64 && it->getYpos() > -64 && it->getYpos() < windowH + 64) {
                     if (enabled) {
                         it->update(x, y, ef, fonts, pTiles, elapsedTime);
+                    } else {
+                        it->updatePlayerDead();
                     }
                     // Get the enemy's shadow
                     std::tuple<sf::Sprite, float, Rendertype, float> shadow;

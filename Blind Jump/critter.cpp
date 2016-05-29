@@ -63,13 +63,18 @@ void Critter::checkBulletCollision(effectsController& ef, FontController& font) 
     if (health == 0) {
         killFlag = 1;
         // With some random chance, add a heart item to the map
-        if ((rand() % 5) == 0) {
+        unsigned long int temp = rand() % 5;
+        if (temp == 0) {
             ef.addHearts(xInit, yInit);
         } else {
             ef.addCoins(xInit, yInit);
         }
         ef.addExplosion(xInit - 16, yInit - 16);
     }
+}
+
+void Critter::updatePlayerDead() {
+    frameIndex = 0;
 }
 
 void Critter::update(float xOffset, float yOffset, effectsController &effects, FontController &fonts, tileController* pTiles, sf::Time & elapsedTime) {

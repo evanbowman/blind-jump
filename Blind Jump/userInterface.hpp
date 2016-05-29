@@ -26,7 +26,17 @@ class Player;
 
 class userInterface {
     
-    enum class State { opening, open, closing, closed };
+    enum class State {
+        opening,
+        open,
+        closing,
+        closed,
+        deathScreenEntry,
+        deathScreen,
+        deathScreenExit,
+        statsScreen,
+        complete
+    };
     
 public:
     userInterface();
@@ -52,28 +62,28 @@ public:
     
     // Function to reset the ui controller
     void reset();
-    
     void setEnemyValueCount(int);
     
     bool isOpen();
+    
+    bool blurEnabled();
+    bool desaturateEnabled();
     
     // Accessor for blur amount
     float getBlurAmount();
     
 private:
     State state;
-    
     float xPos, yPos;
-    
     bool visible;
-    
     std::array<sf::Sprite, 3> gunSprites;
     float weaponDispOffset;
-    
     // Vector to hold UI bubbles for new items (although there should only be one at a time...
     std::vector<UIBubble> uiBubbles;
     
     int enemyValueCount;
+    
+    unsigned int timer;
     
     // The amount of blur to use when opening the items menu
     float blurAmount;

@@ -13,7 +13,6 @@ enum class Rendertype {
     shadeDefault,
     shadeWhite,
     shadeRed,
-    shadeBlue,
     shadeCrimson,
     shadeNeon,
     shadeNone

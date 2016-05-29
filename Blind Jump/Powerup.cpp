@@ -16,6 +16,7 @@ Powerup::Powerup(sf::Sprite* inpSpr, sf::Sprite glow, float xInit, float yInit) 
     this->glow = glow;
     spr = *inpSpr;
     timer = 0;
+    killFlag = false;
 }
 
 void Powerup::update(float xoffset, float yoffset, sf::Time & elapsedTime) {

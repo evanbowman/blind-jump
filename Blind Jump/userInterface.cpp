@@ -22,7 +22,7 @@ userInterface::userInterface() {
     canHeal = true;
     state = State::closed;
     desaturateAmount = 0.f;
-    
+    timer = 0.f;
     
     // Load in all of the item textures
     for (int i = 0; i < 3; i++)
@@ -52,7 +52,7 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontContr
     bool up = pInput->upPressed();
     bool down = pInput->downPressed();
     bool z = pInput->zPressed();
-    bool x = pInput->xPressed();
+    ////bool x = pInput->xPressed();
     
     switch (state) {
         case State::closed:
@@ -135,21 +135,35 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontContr
             }
             break;
             
-        default:
-            // Shouldn't ever hit the default case
+        case State::deathScreenEntry:
+            timer += elapsed.asMilliseconds();
+            if (timer > 20.f) {
+                timer -= 20.f;
+                desaturateAmount += 0.0075f;
+            }
+            
+            if (desaturateAmount > 0.7f) {
+                state = State::deathScreen;
+            }
+            f.drawDeathText(255, window);
             break;
-    }
-    
-    if (deathSeq) {
-        // During the player death sequence apply a vignette effect across the window
-        if (desaturateAmount < 0.85f) {
-            desaturateAmount += 0.01f;
-        } else {
-            deathSeqComplete = true;
-        }
-        
-        // window.draw(deathShadowSpr);
-        f.drawDeathText(255, window);
+            
+        case State::deathScreen:
+            f.drawDeathText(255, window);
+            if (z)
+                state = State::deathScreenExit;
+            break;
+            
+        case State::deathScreenExit:
+            state = State::statsScreen;
+            break;
+            
+        case State::statsScreen:
+            state = State::complete;
+            break;
+            
+        case State::complete:
+            break;
     }
 
     if (visible) {
@@ -196,11 +210,13 @@ void userInterface::addItem(char newItem, effectsController& ef, float xStart, f
 }
 
 void userInterface::dispDeathSeq() {
-    deathSeq = true;
+    if (state != userInterface::State::deathScreenEntry)
+        timer = 0.f;
+        state = userInterface::State::deathScreenEntry;
 }
 
 bool userInterface::isComplete() {
-    return deathSeqComplete;
+    return state == State::complete;
 }
 
 float userInterface::getBlurAmount() {
@@ -208,9 +224,9 @@ float userInterface::getBlurAmount() {
 }
 
 void userInterface::reset() {
-    deathSeq = false;
-    deathSeqComplete = false;
+    state = State::closed;
     desaturateAmount = 0.f;
+    blurAmount = 0.1f;
 }
 
 bool userInterface::isVisible() {
@@ -227,4 +243,12 @@ void userInterface::setEnemyValueCount(int count) {
 
 float userInterface::getDesaturateAmount() {
     return desaturateAmount;
+}
+
+bool userInterface::blurEnabled() {
+    return blurAmount != 0.1f;
+}
+
+bool userInterface::desaturateEnabled() {
+    return desaturateAmount > 0.f;
 }

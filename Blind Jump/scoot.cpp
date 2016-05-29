@@ -40,7 +40,7 @@ void Scoot::randDir() {
     vSpeed = sin(dir) * 0.5;
 }
 
-void Scoot::checkBulletCollision(effectsController& ef, FontController& font) {
+void Scoot::checkBulletCollision(effectsController& ef) {
     //Check collisions with player's shots, but only if the shot vectors aren't empty
     if (!ef.getBulletLayer1().empty()) {
         for (auto & element : ef.getBulletLayer1()) {
@@ -72,7 +72,8 @@ void Scoot::checkBulletCollision(effectsController& ef, FontController& font) {
     
     if (health == 0) {
         killFlag = 1;
-        if ((rand() % 5) == 0) {
+        unsigned long int temp = rand() % 5;
+        if (temp == 0) {
             ef.addHearts(xInit, yInit);
         } else {
             ef.addCoins(xInit, yInit);
@@ -81,10 +82,10 @@ void Scoot::checkBulletCollision(effectsController& ef, FontController& font) {
     }
 }
 
-void Scoot::update(float xOffset, float yOffset, std::vector<wall> w, effectsController & ef, FontController& font, sf::Time & elapsedTime) {
+void Scoot::update(float xOffset, float yOffset, std::vector<wall> w, effectsController & ef, sf::Time & elapsedTime) {
     // Update the enemy's position
     setPosition(xOffset, yOffset);
-    checkBulletCollision(ef, font);
+    checkBulletCollision(ef);
     if (isColored) {
         colorTimer += elapsedTime.asMilliseconds();
         if (colorTimer > 20.f) {

@@ -121,12 +121,8 @@ public:
     void addHearts(float, float);
     void addCoins(float, float);
     void addPlayerHealthEffect(float, float, float, float);
-    void addLvP1(float, float, FontController& font);
-    void addLvP3(float, float, FontController& font);
-    void addLvP30(float, float, FontController& font);
-    void addLvP10(float, float, FontController& font);
     void addHpRestored(float, float);
-    void addNewItem(float, float, FontController& font);
+    void addNewItem(float, float);
     void addPuff(float, float);
     void addEnergyBeam(float, float, float, float);
     void addMissile(float, float);

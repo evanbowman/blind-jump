@@ -19,15 +19,18 @@
 #include "inputController.hpp"
 #include "RenderType.hpp"
 
-#define DEACTIVATED 'D'
-#define NOMINAL 'N'
-#define DASHING 'd'
-#define COOLDOWN 'C'
-#define DYING 'x'
-#define DEAD 'X'
-#define PREP_DASH 'p'
-
 class Player {
+    
+    enum class State {
+        deactivated,
+        nominal,
+        dashing,
+        cooldown,
+        dying,
+        dead,
+        prepdash
+    };
+    
 private:
     //Current number of lives for the player object
     char health;
@@ -89,7 +92,7 @@ private:
     
     // Dodge direction and mode variables
     bool dodging;
-    char state;
+    State state;
     int dodgeTimer;
     char dodgeDir;
     

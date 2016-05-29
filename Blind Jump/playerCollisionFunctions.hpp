@@ -17,7 +17,7 @@
 
 inline void checkCollisionWall(std::vector<wall> walls, bool& CollisionDown, bool& CollisionUp, bool& CollisionRight, bool& CollisionLeft, float posY, float posX) {
     bool foundCollision[4] = {0, 0, 0, 0};
-    for (int i = 0; i < walls.size(); i++) {
+    for (size_t i = 0; i < walls.size(); i++) {
         //if (walls[i].isInsideWindow()) {
         if ((posX + 6 < (walls[i].getPosX() + walls[i].width) && (posX + 6 > (walls[i].getPosX()))) && (fabs((posY + 16) - walls[i].getPosY()) <= 13) && foundCollision[0] == 0)  {
             CollisionLeft =  1;
@@ -44,7 +44,7 @@ inline void checkCollisionWall(std::vector<wall> walls, bool& CollisionDown, boo
 
 inline void checkCollisionChest (std::vector<TreasureChest> chests, bool& CollisionDown, bool& CollisionUp, bool& CollisionRight, bool& CollisionLeft, float posY, float posX) {
     bool foundCollision[4] = {0, 0, 0, 0};
-    for (int i = 0; i < chests.size(); i++) {
+    for (size_t i = 0; i < chests.size(); i++) {
         if ((posX + 6 < (chests[i].getxPos() + 16) && (posX + 6 > (chests[i].getxPos()))) && (fabs((posY + 16) - chests[i].getyPos()) <= 8) && foundCollision[0] == 0)  {
             CollisionLeft =  1;
             foundCollision[0] = 1;
@@ -69,7 +69,7 @@ inline void checkCollisionChest (std::vector<TreasureChest> chests, bool& Collis
 
 inline void checkCollisionTerminal (std::vector<Terminal> terms, bool& CollisionDown, bool& CollisionUp, bool& CollisionRight, bool& CollisionLeft, float posY, float posX) {
     bool foundCollision[4] = {0, 0, 0, 0};
-    for (int i = 0; i < terms.size(); i++) {
+    for (size_t i = 0; i < terms.size(); i++) {
         if ((posX + 6 < (terms[i].getxPos() + 16) && (posX + 6 > (terms[i].getxPos()))) && (fabs((posY + 16) - terms[i].getyPos()) <= 8) && foundCollision[0] == 0)  {
             CollisionLeft =  1;
             foundCollision[0] = 1;

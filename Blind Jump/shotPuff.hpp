@@ -27,7 +27,7 @@ public:
     float getYpos();
     
 private:
-    char frameIndex;
+    int frameIndex;
     unsigned int frameTimer;
     sf::Sprite sprPuff[4];
     sf::Texture sprText[4];

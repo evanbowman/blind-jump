@@ -32,8 +32,6 @@ private:
     sf::Sprite splitterSprite[6];
     sf::Texture firstLightTexture[6];
     sf::Sprite firstLightSprite[6];
-    // Keep track of which gun the user has selected from the UI menu
-    char selectedGun;
     
     //Need to know how often to create a bullet
     int bulletTimer;

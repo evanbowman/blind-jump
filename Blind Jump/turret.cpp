@@ -180,7 +180,7 @@ void turret::updateShots(effectsController& ef, FontController& fonts) {
         } else {
             ef.addCoins(xInit, yInit);
         }
-        ef.addFireExplosion(xInit - 8, yInit);
+        ef.addFireExplosion(xInit, yInit);
     }
 }
 

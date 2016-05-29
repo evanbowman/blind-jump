@@ -24,8 +24,10 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     
     // Set the size of the target render texture so that they'll fill the screen
     target.create(windowWidth, windowHeight);
-    finalPass.create(windowWidth, windowHeight);
-    finalPass.setSmooth(true);
+    secondPass.create(windowWidth, windowHeight);
+    secondPass.setSmooth(true);
+    thirdPass.create(windowWidth, windowHeight);
+    thirdPass.setSmooth(true);
     
     // Store a pointer to the input controller in main()
     pInput = input;
@@ -103,10 +105,10 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     tiles.setWindowSize(windowWidth, windowHeight);
     
     /*  Completely non-general code only used by the intro level */
-    details.addLamplight(tiles, tiles.posX - 180, tiles.posY + 200, 5, 6, windowWidth, windowHeight);
-    details.addLamplight(tiles, tiles.posX - 180, tiles.posY + 200, 5, 0, windowWidth, windowHeight);
-    details.addLamplight(tiles, tiles.posX - 170, tiles.posY + 200, 11, 11, windowWidth, windowHeight);
-    details.addLamplight(tiles, tiles.posX - 180, tiles.posY + 200, 10, -9, windowWidth, windowHeight);
+    details.addLamplight(tiles.posX - 180, tiles.posY + 200, 5, 6, windowWidth, windowHeight);
+    details.addLamplight(tiles.posX - 180, tiles.posY + 200, 5, 0, windowWidth, windowHeight);
+    details.addLamplight(tiles.posX - 170, tiles.posY + 200, 11, 11, windowWidth, windowHeight);
+    details.addLamplight(tiles.posX - 180, tiles.posY + 200, 10, -9, windowWidth, windowHeight);
     details.addDoor(tiles.posX - 192, tiles.posY + 301, 6, 0, windowW, windowH);
     details.addPod(tiles.posX, tiles.posY + 33, 3, 17, pFonts);
     tiles.teleporterLocation.x = 8;
@@ -156,11 +158,11 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     
     // Place a weapon chest if needed
     if (itemArray[level][0] != 0) {
-        details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][0], pFonts);
+        details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][0]);
     }
     // place life capsule chests
     if (itemArray[level][1] == 90) {
-        details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][1], pFonts);
+        details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][1]);
     }
 }
 
@@ -176,7 +178,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     tiles.drawTiles(target, effects.getGlowSprs(), effects.getGlowSprs2(), level);
     effects.getGlowSprs2()->clear();
     // Update the overworld objects based on the displacement of the player
-    details.update(xOffset, yOffset, effects, player.getSprIndex(), tiles.walls, effects.getGlowSprs(), effects.getGlowSprs2(), UI, *pFonts, player, pInput, &ssc, elapsedTime);
+    details.update(player.getWorldOffsetX(), player.getWorldOffsetY(), effects, player.getSprIndex(), tiles.walls, effects.getGlowSprs(), effects.getGlowSprs2(), UI, *pFonts, player, pInput, &ssc, elapsedTime);
     // Draw the details / add them to the game objects vector
     details.draw(gameObjects, gameShadows, target);
     // Update the enemy objects in the game based on the player's displacement
@@ -213,7 +215,12 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     
     lightingMap.clear(sf::Color::Transparent);
     
-    // Now draw the sorted list of game objects to the window
+    
+    /*-----------------------------------------------------------------------------------*/
+    //
+    //  OBJECT LEVEL SHADING
+    //
+    /*-----------------------------------------------------------------------------------*/
     if (!gameObjects.empty()) {
         for (auto & element : gameObjects) {
             switch (std::get<2>(element)) {
@@ -244,12 +251,6 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
                     lightingMap.draw(std::get<0>(element), &colorShader);
                     break;
                     
-                case Rendertype::shadeBlue:
-                    colorShader.setParameter("amount", 0.8);
-                    colorShader.setParameter("targetColor", sf::Vector3f(0.35, 0.35, 0.69));
-                    lightingMap.draw(std::get<0>(element), &colorShader);
-                    break;
-                    
                 case Rendertype::shadeNeon:
                     colorShader.setParameter("amount", std::get<3>(element));
                     colorShader.setParameter("targetColor", sf::Vector3f(0.29, 0.99, 0.99));
@@ -259,7 +260,6 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
         }
     }
     
-    // Draw lights to the objects
     sf::Color blendAmount(185, 185, 185, 255);
     sf::Sprite tempSprite;
     for (auto element : *effects.getGlowSprs2()) {
@@ -269,39 +269,48 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
         lightingMap.draw(tempSprite, sf::BlendMode(sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One, sf::BlendMode::Add, sf::BlendMode::DstAlpha, sf::BlendMode::Zero, sf::BlendMode::Add)));
     }
     
-    // Display the lighting map
     lightingMap.display();
     sf::Sprite sprite(lightingMap.getTexture());
     target.draw(sprite);
     
     // Now clear out the vectors for the next round of drawing
     gameObjects.clear();
-    
     effects.draw(target, gameObjects);
-    
     bkg.drawForeground(target);
-    
-    // Draw a nice vignette effect over the entire window, but behind the UI overlay
     target.draw(vignetteSprite, sf::BlendMultiply);
-    // A combination of an alpha blended edge shadow really completes the vignette look
     target.draw(vignetteShadowSpr);
-    
-    // Display the render texture target
     target.display();
     
-    // Finally draw it to the window
-    if (UI.isVisible()) {
-        finalPass.clear(sf::Color::Transparent);
+    /*-----------------------------------------------------------------------------------*/
+    //
+    //  POST PROCESSING EFFECTS
+    //
+    /*-----------------------------------------------------------------------------------*/
+    if (UI.blurEnabled() && UI.desaturateEnabled()) {
+        secondPass.clear(sf::Color::Transparent);
+        thirdPass.clear(sf::Color::Transparent);
         sf::Vector2u textureSize = target.getSize();
         // Get the blur amount from the UI controller
         float blurAmount = UI.getBlurAmount();
         blurShader.setParameter("blur_radius", sf::Vector2f(0.f, blurAmount / textureSize.y));
-        finalPass.draw(sf::Sprite(target.getTexture()), &blurShader);
-        finalPass.display();
+        secondPass.draw(sf::Sprite(target.getTexture()), &blurShader);
+        secondPass.display();
         blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
-        finalSprite.setTexture(finalPass.getTexture());
-        window.draw(finalSprite, &blurShader);
-    } else if (!player.isdead()) {
+        thirdPass.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
+        thirdPass.display();
+        desaturateShader.setParameter("amount", UI.getDesaturateAmount());
+        window.draw(sf::Sprite(thirdPass.getTexture()), &desaturateShader);
+    } else if (UI.blurEnabled() && !UI.desaturateEnabled()) {
+        secondPass.clear(sf::Color::Transparent);
+        sf::Vector2u textureSize = target.getSize();
+        // Get the blur amount from the UI controller
+        float blurAmount = UI.getBlurAmount();
+        blurShader.setParameter("blur_radius", sf::Vector2f(0.f, blurAmount / textureSize.y));
+        secondPass.draw(sf::Sprite(target.getTexture()), &blurShader);
+        secondPass.display();
+        blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
+        window.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
+    } else if (!UI.blurEnabled() && UI.getDesaturateAmount()) {
         desaturateShader.setParameter("amount", UI.getDesaturateAmount());
         window.draw(sf::Sprite(target.getTexture()), &desaturateShader);
     } else {
@@ -309,9 +318,10 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     }
     
     if (!player.isdead()) {
-        UI.dispDeathSeq();
+        if (!UI.desaturateEnabled())
+            UI.dispDeathSeq();
         // If the death sequence is complete and the UI controller is finished playing its animation
-        if (UI.isComplete() && pInput->zPressed()) {
+        if (UI.isComplete()) {
             // Reset the UI controller
             UI.reset();
             // Reset the player
@@ -567,7 +577,7 @@ void GameMap::Reset() {
     }
     
     vignetteSprite.setColor(sf::Color(255, 255, 255, 255));
-
+    
     // If not on a boss level...
     if (level != BOSS_LEVEL_1) {
         //Now call the mapping function again to generate a new map, and make sure it's large enough
@@ -599,18 +609,18 @@ void GameMap::Reset() {
         
         // Add broken down robots to the map (if correct tileset for it
         if (level < 10) {
-            details.addDamagedRobots(tiles, tiles.posX, tiles.posY, pFonts);
+            details.addDamagedRobots(tiles, tiles.posX, tiles.posY);
         }
         // Tell the UI controller what that variable is
         UI.setEnemyValueCount(count);
         
         // Place a weapon chest is needed
         if (itemArray[level][0] != 0) {
-            details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][0], pFonts);
+            details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][0]);
         }
         // place life capsule chests
         if (itemArray[level][1] == 90) {
-            details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][1], pFonts);
+            details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][1]);
         }
         
         effects.getGlowSprs()->clear();
@@ -622,7 +632,7 @@ void GameMap::Reset() {
             // Put rock/pillar detail things on map
             getRockPositions(tiles.mapArray, rockPositions);
             for (auto element : rockPositions) {
-                details.addRock(tiles, tiles.posX, tiles.posY - 35, element.x, element.y, pFonts);
+                details.addRock(tiles.posX, tiles.posY - 35, element.x, element.y);
             }
             rockPositions.clear();
             // Delete rocks close to the teleporter
@@ -639,14 +649,14 @@ void GameMap::Reset() {
         // Put light sources on the map
         getLightingPositions(tiles.mapArray, lightPositions);
         len = lightPositions.size();
-        for (auto i = 0; i < len; i++) {
-            details.addLamplight(tiles, tiles.posX - 2, tiles.posY - 16, lightPositions[i].x, lightPositions[i].y, windowW, windowH);
+        for (size_t i = 0; i < len; i++) {
+            details.addLamplight(tiles.posX - 2, tiles.posY - 16, lightPositions[i].x, lightPositions[i].y, windowW, windowH);
         }
         lightPositions.clear();
         
         // Delete lamps near the teleporter (light blending is additive, it would be too bright if they were close together)
         std::vector<LampLight>* pLamps = details.getLamps();
-        for (auto i = 0; i < details.getLamps()->size(); i++) {
+        for (size_t i = 0; i < details.getLamps()->size(); i++) {
             if (fabsf((*pLamps)[i].getxPos() - pTeleporter->xPos) < 90 && fabsf((*pLamps)[i].getyPos() - pTeleporter->yPos) < 90) {
                 (*pLamps)[i] = (*pLamps).back();
                 (*pLamps).pop_back();
@@ -660,13 +670,13 @@ void GameMap::Reset() {
         details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH, pFonts);
         tiles.teleporterLocation.x = 38;
         details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH, pFonts);
-        details.addLamplight(tiles, tiles.posX - 2, tiles.posY - 16, 39, 31, windowW, windowH);
-        details.addLamplight(tiles, tiles.posX - 2, tiles.posY - 16, 33, 26, windowW, windowH);
+        details.addLamplight(tiles.posX - 2, tiles.posY - 16, 39, 31, windowW, windowH);
+        details.addLamplight(tiles.posX - 2, tiles.posY - 16, 33, 26, windowW, windowH);
     } else if (level == 0) {
-        details.addLamplight(tiles, tiles.posX - 180, tiles.posY + 200, 5, 6, windowW, windowH);
-        details.addLamplight(tiles, tiles.posX - 180, tiles.posY + 200, 5, 0, windowW, windowH);
-        details.addLamplight(tiles, tiles.posX - 170, tiles.posY + 200, 11, 11, windowW, windowH);
-        details.addLamplight(tiles, tiles.posX - 180, tiles.posY + 200, 10, -9, windowW, windowH);
+        details.addLamplight(tiles.posX - 180, tiles.posY + 200, 5, 6, windowW, windowH);
+        details.addLamplight(tiles.posX - 180, tiles.posY + 200, 5, 0, windowW, windowH);
+        details.addLamplight(tiles.posX - 170, tiles.posY + 200, 11, 11, windowW, windowH);
+        details.addLamplight(tiles.posX - 180, tiles.posY + 200, 10, -9, windowW, windowH);
         details.addDoor(tiles.posX - 192, tiles.posY + 301, 6, 0, windowW, windowH);
         details.addPod(tiles.posX, tiles.posY + 33, 3, 17, pFonts);
         tiles.teleporterLocation.x = 8;

@@ -43,7 +43,7 @@ void getRockPositions(short gameMap[61][61], std::vector<Coordinate>& availableL
     size_t length = pillarMap.size();
     // Randomly shuffle the vector so not to just pick elements that are spatially close
     std::random_shuffle(pillarMap.begin(), pillarMap.end());
-    for (auto i = 0; i < length; i++) {
+    for (size_t i = 0; i < length; i++) {
         // Remove all intersecting circles
         for (std::vector<Circle>::iterator it = pillarMap.begin(); it != pillarMap.end();) {
             if (checkOverlap(pillarMap[i], *it) && (it->x != pillarMap[i].x || it->y != pillarMap[i].y)) {

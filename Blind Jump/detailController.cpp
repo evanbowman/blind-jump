@@ -118,7 +118,7 @@ void detailController::addWarpImpact(float posX, float posY) {
     misc32x26.push_back(d);
 }
 
-void detailController::addLamplight(tileController& t, float posX, float posY, int i, int j, float width, float height) {
+void detailController::addLamplight(float posX, float posY, int i, int j, float width, float height) {
     sf::Sprite tempSprites[2];
     tempSprites[0].setTexture(lampTextures[0]);
     tempSprites[1].setTexture(lampGlow);
@@ -126,7 +126,7 @@ void detailController::addLamplight(tileController& t, float posX, float posY, i
     lamps.push_back(lmp);
 }
 
-void detailController::addRock(tileController& t, float posX, float posY, int i, int j, FontController * pFonts) {
+void detailController::addRock(float posX, float posY, int i, int j) {
     sf::Sprite tempSprite;
     tempSprite.setTexture(rockTextures[rand() % NUM_ROCK_IMAGES]);
     float placementXoffset = 0;
@@ -138,7 +138,7 @@ void detailController::addRock(tileController& t, float posX, float posY, int i,
     rocks.push_back(r);
 }
 
-void detailController::addChest(tileController& t, float posX, float posY, float width, float height, char chestContents, FontController * pFonts) {
+void detailController::addChest(tileController& t, float posX, float posY, float width, float height, char chestContents) {
     Coordinate c = pickLocation(t.emptyMapLocations);
     sf::Sprite tempSprites[7];
     tempSprites[6].setTexture(chestShadow);
@@ -151,14 +151,14 @@ void detailController::addChest(tileController& t, float posX, float posY, float
     chests.push_back(tr);
 }
 
-void detailController::addEnemyScrap(tileController& t, float posX, float posY, float width, float height) {
+void detailController::addEnemyScrap(float posX, float posY, float width, float height) {
     sf::Sprite tempSprite;
     tempSprite.setTexture(enemyScraps[0]);
     GeneralDetail scrap(posX - 6, posY - 2, &tempSprite, 0, width, height);
     misc32x26.push_back(scrap);
 }
 
-void detailController::addDamagedRobots(tileController& t, float posX, float posY, FontController * pFonts) {
+void detailController::addDamagedRobots(tileController& t, float posX, float posY) {
     if (rand() % 2) {
         Coordinate c;
         bool choice = rand() % 2;
@@ -294,7 +294,7 @@ void detailController::update(float xOffset, float yOffset, effectsController& e
     }
     
     if (!chests.empty()) {
-        for (int i = 0; i < chests.size(); i++) {
+        for (size_t i = 0; i < chests.size(); i++) {
             chests[i].update(xOffset, yOffset, PlayerSprIndex, pInput, elapsedTime);
             // If the user opened a chest, put it's item into the UI menu
             if (chests[i].getFrameIndex() == 3) {

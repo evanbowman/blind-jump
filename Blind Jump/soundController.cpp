@@ -11,6 +11,7 @@
 #include <iostream>
 #include <cmath>
 #include "SFML/Graphics.hpp"
+#include <iostream>
 
 SoundController::SoundController() {
     
@@ -35,28 +36,27 @@ void SoundController::playMusic(unsigned char musicIndex) {
     soundtrack[musicIndex].play();*/
 }
 
-void SoundController::playEffect(unsigned char effectIndex) {
+void SoundController::playEffect(SoundController::Effect index) {
     sf::Sound sound;
-    switch (effectIndex) {
-        case 0:
+    switch (index) {
+        case SoundController::Effect::step:
             sounds[0].setBuffer(stepEffects[0]);
             sounds[0].setVolume(40);
             sounds[0].play();
             break;
             
-        case 1:
+        case SoundController::Effect::gunshot:
             sounds[1].setBuffer(laserSounds[0]);
             sounds[1].setVolume(80);
             sounds[1].play();
             break;
             
-        case 2:
-            sounds[0].setBuffer(stepEffects[1]);
-            sounds[0].setVolume(80);
-            sounds[0].play();
+        case SoundController::Effect::coin:
+            //sounds[2].setBuffer(<#const sf::SoundBuffer &buffer#>);
             break;
             
         default:
+            std::cerr << "Unexpected effect index in playEffect" << std::endl;
             break;
     }
 }

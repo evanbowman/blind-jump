@@ -57,7 +57,7 @@ int initEnemies(GameMap* gm) {
     // Heap allocation for interval array, where the length of each interval represents the weight of each enemy
     int* intervals = new int[enemyVecLen];
     // First loop through all enemies and update their probability values based on current level
-    for (auto i = 0; i < enemyVecLen; i++) {
+    for (size_t i = 0; i < enemyVecLen; i++) {
         // Set the weight to 100 divided by the difference between the current level and the ideal level
         // Max function to prevent divide by 0
         diff = (100 + currentLevel) / std::max(abs(currentLevel - idealLevels[i]), 1);
@@ -80,7 +80,7 @@ int initEnemies(GameMap* gm) {
         int select = rand() % std::max(collector, 1);
         // Find the interval that the selected value falls into in intervals[]
         int selectedIndex = 0;
-        for (int i = 0; i < enemyVecLen; i++) {
+        for (size_t i = 0; i < enemyVecLen; i++) {
             if (i == 0) {
                 if (select < intervals[0]) {
                     selectedIndex = 0;
@@ -90,7 +90,7 @@ int initEnemies(GameMap* gm) {
             
             else {
                 if (select < intervals[i]) {
-                    selectedIndex = i;
+                    selectedIndex = static_cast<int>(i);
                     break;
                 }
             }

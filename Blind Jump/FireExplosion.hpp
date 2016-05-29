@@ -20,7 +20,6 @@ private:
     bool killFlag;
     char frameIndex;
     unsigned int animationTimer;
-    char speed;
     bool valid;
     
 public:

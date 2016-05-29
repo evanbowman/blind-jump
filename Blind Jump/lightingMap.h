@@ -54,7 +54,7 @@ void getLightingPositions(short gameMap[61][61], std::vector<Coordinate>& availa
     size_t length = lightMap.size();
     // Randomly shuffle the vector so not to just pick elements that are spatially close
     std::random_shuffle(lightMap.begin(), lightMap.end());
-    for (auto i = 0; i < length; i++) {
+    for (size_t i = 0; i < length; i++) {
         // Remove all intersecting circles
         for (std::vector<Circle>::iterator it = lightMap.begin(); it != lightMap.end();) {
             if (checkOverlap(lightMap[i], *it) && (it->x != lightMap[i].x || it->y != lightMap[i].y)) {

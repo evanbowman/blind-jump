@@ -58,13 +58,13 @@ public:
     void addCrystals(float, float, float, float);
     void addDoor(float, float, int, int, float, float);
     void addPod(float, float, int, int, FontController *);
-    void addDamagedRobots(tileController&, float, float, FontController *);
-    void addLamplight(tileController&, float, float, int, int, float, float);
-    void addChest(tileController&, float, float, float, float, char, FontController *);
-    void addEnemyScrap(tileController&, float, float, float, float);
+    void addDamagedRobots(tileController&, float, float);
+    void addLamplight(float, float, int, int, float, float);
+    void addChest(tileController&, float, float, float, float, char);
+    void addEnemyScrap(float, float, float, float);
     void addDamagedTurret(float, float, float, float);
     void addTeleporter(tileController&, float, float, float, float, FontController *);
-    void addRock(tileController&, float, float, int, int, FontController *);
+    void addRock(float, float, int, int);
     void addTerminal(tileController&, float, float, float, float);
     void update(float, float, effectsController& ef, char, std::vector<wall>&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, userInterface&, FontController&, Player&, InputController*, ScreenShakeController * pscr, sf::Time&);
     void addDasherScrap(tileController&, float, float, int);

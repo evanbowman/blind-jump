@@ -21,8 +21,6 @@ private:
     bool killFlag;
     unsigned short lifeCounter;
     char mode;
-    float windowCenterX;
-    float windowCenterY;
     
 public:
     void update(float, float);

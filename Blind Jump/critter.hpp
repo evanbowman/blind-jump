@@ -33,6 +33,7 @@ public:
     bool isActive();
     char frameIndex;
     char frameRate;
+    void updatePlayerDead();
     
 private:
     float health;

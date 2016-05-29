@@ -100,7 +100,8 @@ void Dasher::checkBulletCollision(effectsController& ef, FontController& fonts) 
         deathSeq = true;
         // Set the frame index to the start of the death animation
         frameIndex = 6;
-        if ((rand() % 4) == 0) {
+        unsigned long int temp = rand() % 4;
+        if (temp == 0) {
             ef.addHearts(xInit, yInit);
         } else {
             ef.addCoins(xInit, yInit);

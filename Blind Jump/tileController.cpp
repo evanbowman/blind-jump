@@ -221,7 +221,7 @@ tileController::tileController() {
 
 void tileController::drawTiles(sf::RenderTexture& window, std::vector<sf::Sprite*>* glowSprites, std::vector<sf::Sprite*>* glowSprites2, int level) {
     if (!walls.empty()) {
-        for (int i = 0; i < walls.size(); i++) {
+        for (size_t i = 0; i < walls.size(); i++) {
             //Also move the walls with the same offset
             walls[i].setPosition(walls[i].getXinit() + xOffset + posX, walls[i].getYinit() + yOffset + posY);
         }

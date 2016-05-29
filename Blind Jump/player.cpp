@@ -54,7 +54,7 @@ Player::Player() {
     scrShakeState = 0;
     dodging = false;
     dodgeTimer = 4;
-    state = NOMINAL;
+    state = Player::State::nominal;
     gotHeart = false;
     gotCoin = false;
     colorTimer = 0.f;
@@ -182,7 +182,7 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
     // If the player has no health and the death sequence isn't running, start it
     if (health == 0 && !deathSeq) {
         deathSeq = true;
-        state = NOMINAL;
+        state = Player::State::nominal;
         spriteIndex = 8;
         imageIndex = 0;
         animationCounter = 6;
@@ -192,7 +192,7 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
     z = pInput->zPressed();
     x = pInput->xPressed();
     // If the player isn't in dodge mode, get left, right, etc from the input controller
-    if (state == NOMINAL) {
+    if (state == Player::State::nominal) {
         left = pInput->leftPressed();
         right = pInput->rightPressed();
         up = pInput->upPressed();
@@ -207,7 +207,7 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
     }
     
     if (active && !deathSeq) {
-        if (!x && state == NOMINAL) {      //Holding the x key strafes the player and changes the animation, so account for that condition
+        if (!x && state == Player::State::nominal) {      //Holding the x key strafes the player and changes the animation, so account for that condition
             if (up) {
                 if (!down && !left && !right && spriteIndex != 5)  {
                     spriteIndex = 5;
@@ -282,7 +282,7 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
             }
         }
         
-        else if (x && state == NOMINAL) {
+        else if (x && state == Player::State::nominal) {
             //The user is holding the x key, so set the gun timeout to max value
             if (weapon.getTimeout() == 0) {
                 weapon.setTimeout(100);
@@ -364,82 +364,15 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
             
             if (pInput->zPressed() && z != zprevious) {
                 if (((spriteIndex == 6 && !left) || (spriteIndex == 7 && !right) || (spriteIndex == 4 && !down) || (spriteIndex == 5  && !up))) {
-                    state = PREP_DASH;
-                    if (spriteIndex == 7) {
-                        if (up) {
-                            if (left)
-                                ef.addDodgeEffect(posX - worldOffsetX + 27, posY - worldOffsetY + 6, 45, 1);
-                            //else
-                            //
-                        }
-                        
-                        else if (down) {
-                            if (left)
-                                ef.addDodgeEffect(posX - worldOffsetX - 4, posY - worldOffsetY + 16, -45, 1);
-                        }
-                        
-                        else
-                            ef.addDodgeEffect(posX - worldOffsetX + 9, posY - worldOffsetY + 5, 0, 1);
-                    }
-                    else if (spriteIndex == 6) {
-                        if (up) {
-                            if (right)
-                                ef.addDodgeEffect(posX - worldOffsetX + 2, posY - worldOffsetY + 6, -45, -1);
-                            //else
-                            //
-                        }
-                        
-                        else if (down) {
-                            if (right)
-                                ef.addDodgeEffect(posX - worldOffsetX  + 32, posY - worldOffsetY + 16, 45, -1);
-                        }
-                        
-                        else
-                            ef.addDodgeEffect(posX - worldOffsetX + 23, posY - worldOffsetY + 5, 0, -1);
-                    }
-                    
-                    else if (spriteIndex == 4) {
-                        if (left) {
-                            if (up)
-                                ef.addDodgeEffect(posX - worldOffsetX + 29, posY - worldOffsetY + 6, 45, 1);
-                            else
-                                ef.addDodgeEffect(posX - worldOffsetX + 9, posY - worldOffsetY + 5, 0, 1);
-                        }
-                        
-                        else if (right) {
-                            if (up)
-                                ef.addDodgeEffect(posX - worldOffsetX + 2, posY - worldOffsetY + 6, -45, -1);
-                            
-                            else
-                                ef.addDodgeEffect(posX - worldOffsetX + 23, posY - worldOffsetY + 5, 0, -1);
-                        }
-                    }
-                    
-                    else if (spriteIndex == 5) {
-                        if (left) {
-                            if (down)
-                                ef.addDodgeEffect(posX - worldOffsetX - 4, posY - worldOffsetY + 16, -45, 1);
-                            
-                            else
-                                ef.addDodgeEffect(posX - worldOffsetX + 9, posY - worldOffsetY + 5, 0, 1);
-                        }
-                        
-                        else if (right) {
-                            if (down)
-                                ef.addDodgeEffect(posX - worldOffsetX  + 32, posY - worldOffsetY + 16, 45, -1);
-                            
-                            else
-                                ef.addDodgeEffect(posX - worldOffsetX + 23, posY - worldOffsetY + 5, 0, -1);
-                        }
-                    }
+                    state = Player::State::prepdash;
                 }
             }
         }
         
-        if (state == PREP_DASH) {
+        if (state == Player::State::prepdash) {
             if (--dodgeTimer == 0) {
                 dodgeTimer = 5;
-                state = DASHING;
+                state = Player::State::dashing;
             }
             if (left && !CollisionLeft) {
                 worldOffsetX += 1;
@@ -455,9 +388,9 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
             }
         }
         
-        else if (state == DASHING) {
+        else if (state == Player::State::dashing) {
             if (--dodgeTimer == 0) {
-                state = COOLDOWN;
+                state = Player::State::cooldown;
                 dodgeTimer = 12;
             }
             if (left && !CollisionLeft) {
@@ -486,10 +419,10 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
             }
         }
         
-        else if (state == COOLDOWN) {
+        else if (state == Player::State::cooldown) {
             if (--dodgeTimer == 0) {
                 dodgeTimer = 3;
-                state = NOMINAL;
+                state = Player::State::nominal;
                 imageIndex = 4;
             }
             if (left && !CollisionLeft) {
@@ -640,7 +573,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
         gameShadows.push_back(tShadow);
     }
     // Allow the player's weapon to push created instances to the effects controller
-    weapon.updateShotVector(spriteIndex, ef, worldOffsetX, worldOffsetY, UI, pInput, sounds, state);
+    weapon.updateShotVector(spriteIndex, ef, worldOffsetX, worldOffsetY, UI, pInput, sounds, static_cast<int>(state)); // I didn't want to have to resolve another circular dependency, hence the cast
     scrShakeState = false;
     
     // First check for collisions with enemy shot objects, as long as the death sequence isn't running
@@ -736,17 +669,17 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
     }
     
     if (health < 0) {
-        state = NOMINAL;
+        state = Player::State::nominal;
         health = 0;
     }
     
-    if (state == NOMINAL) {
+    if (state == Player::State::nominal) {
         switch (spriteIndex) {
                 // Common cases first!
             case 4:
                 updateVAnimCount(animationCounter, imageIndex, pInput->xPressed());
                 if (imageIndex == 4 || imageIndex == 8) {
-                    sounds.playEffect(0);
+                    sounds.playEffect(SoundController::Effect::step);
                 }
                 std::get<0>(tPlayer) = spriteDown[verticalAnimationDecoder(imageIndex)];
                 gameObjects.push_back(tPlayer);
@@ -760,7 +693,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
             case 5:
                 updateVAnimCount(animationCounter, imageIndex, pInput->xPressed());
                 if (imageIndex == 4 || imageIndex == 8) {
-                    sounds.playEffect(0);
+                    sounds.playEffect(SoundController::Effect::step);
                 }
                 weapon.getTimeout();
                 std::get<0>(tPlayer) = spriteUp[verticalAnimationDecoder(imageIndex)];
@@ -775,7 +708,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
                 }
                 updateHAnimCount(animationCounter, imageIndex, pInput->xPressed());
                 if (imageIndex == 1) {
-                    sounds.playEffect(0);
+                    sounds.playEffect(SoundController::Effect::step);
                 }
                 std::get<0>(tPlayer) = spriteLeft[horizontalAnimationDecoder(imageIndex)];
                 gameObjects.push_back(tPlayer);
@@ -789,7 +722,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
                 }
                 updateHAnimCount(animationCounter, imageIndex, pInput->xPressed());
                 if (imageIndex == 1) {
-                    sounds.playEffect(0);
+                    sounds.playEffect(SoundController::Effect::step);
                 }
                 std::get<0>(tPlayer) = spriteRight[horizontalAnimationDecoder(imageIndex)];
                 gameObjects.push_back(tPlayer);
@@ -843,7 +776,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
                 break;
         }
     }
-    else if (state == PREP_DASH) {
+    else if (state == Player::State::prepdash) {
         if ((rightPrevious || upPrevious || downPrevious) && spriteIndex == 6) {
             if (weapon.getTimeout() != 0 && rightPrevious) {
                 std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
@@ -879,7 +812,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
         }
     }
     
-    else if (state == DASHING || state == COOLDOWN) {
+    else if (state == Player::State::dashing || state == Player::State::cooldown) {
         if (rightPrevious && spriteIndex == 6) {
             if (weapon.getTimeout() != 0) {
                 std::get<0>(tGun) = *weapon.getSprite(spriteIndex);

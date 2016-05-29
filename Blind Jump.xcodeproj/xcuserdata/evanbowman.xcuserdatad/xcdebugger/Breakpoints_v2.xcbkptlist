@@ -2,4 +2,258 @@
 <Bucket
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Blind Jump/scoot.cpp"
+            timestampString = "486191997.896574"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "77"
+            endingLineNumber = "77"
+            landmarkName = "Scoot::checkBulletCollision(effectsController&amp; ef)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Blind Jump/scoot.cpp"
+            timestampString = "486192003.217474"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
+            landmarkName = "Scoot::checkBulletCollision(effectsController&amp; ef)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Blind Jump/critter.cpp"
+            timestampString = "486192223.336406"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "68"
+            endingLineNumber = "68"
+            landmarkName = "Critter::checkBulletCollision(effectsController&amp; ef, FontController&amp; font)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Blind Jump/critter.cpp"
+            timestampString = "486192224.798239"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
+            landmarkName = "Critter::checkBulletCollision(effectsController&amp; ef, FontController&amp; font)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Blind Jump/effectsController.cpp"
+            timestampString = "486192344.48697"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
+            landmarkName = "updateVectorGlow(std::vector&lt;T&gt;&amp; vec, float xOffset, float yOffset, std::vector&lt;sf::Sprite*&gt;&amp; glowSprs, sf::Time &amp; elapsedTime)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "void updateVectorGlow&lt;SmallExplosion&gt;(std::__1::vector&lt;SmallExplosion, std::__1::allocator&lt;SmallExplosion&gt; &gt;&amp;, float, float, std::__1::vector&lt;sf::Sprite*, std::__1::allocator&lt;sf::Sprite*&gt; &gt;&amp;, sf::Time&amp;)"
+                  moduleName = "Blind Jump"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/evanbowman/Documents/Game-Development/Blind%20Jump/Blind%20Jump/effectsController.cpp"
+                  timestampString = "486192355.587229"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "139"
+                  endingLineNumber = "139"
+                  offsetFromSymbolStart = "1040">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "void updateVectorGlow&lt;Powerup&gt;(std::__1::vector&lt;Powerup, std::__1::allocator&lt;Powerup&gt; &gt;&amp;, float, float, std::__1::vector&lt;sf::Sprite*, std::__1::allocator&lt;sf::Sprite*&gt; &gt;&amp;, sf::Time&amp;)"
+                  moduleName = "Blind Jump"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/evanbowman/Documents/Game-Development/Blind%20Jump/Blind%20Jump/effectsController.cpp"
+                  timestampString = "486192355.587345"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "139"
+                  endingLineNumber = "139"
+                  offsetFromSymbolStart = "910">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "void updateVectorGlow&lt;turretShot&gt;(std::__1::vector&lt;turretShot, std::__1::allocator&lt;turretShot&gt; &gt;&amp;, float, float, std::__1::vector&lt;sf::Sprite*, std::__1::allocator&lt;sf::Sprite*&gt; &gt;&amp;, sf::Time&amp;)"
+                  moduleName = "Blind Jump"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/evanbowman/Documents/Game-Development/Blind%20Jump/Blind%20Jump/effectsController.cpp"
+                  timestampString = "486192355.587595"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "139"
+                  endingLineNumber = "139"
+                  offsetFromSymbolStart = "1079">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "void updateVectorGlow&lt;DasherShot&gt;(std::__1::vector&lt;DasherShot, std::__1::allocator&lt;DasherShot&gt; &gt;&amp;, float, float, std::__1::vector&lt;sf::Sprite*, std::__1::allocator&lt;sf::Sprite*&gt; &gt;&amp;, sf::Time&amp;)"
+                  moduleName = "Blind Jump"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/evanbowman/Documents/Game-Development/Blind%20Jump/Blind%20Jump/effectsController.cpp"
+                  timestampString = "486192355.587742"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "139"
+                  endingLineNumber = "139"
+                  offsetFromSymbolStart = "1078">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "void updateVectorGlow&lt;Enemyshot&gt;(std::__1::vector&lt;Enemyshot, std::__1::allocator&lt;Enemyshot&gt; &gt;&amp;, float, float, std::__1::vector&lt;sf::Sprite*, std::__1::allocator&lt;sf::Sprite*&gt; &gt;&amp;, sf::Time&amp;)"
+                  moduleName = "Blind Jump"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/evanbowman/Documents/Game-Development/Blind%20Jump/Blind%20Jump/effectsController.cpp"
+                  timestampString = "486192355.587939"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "139"
+                  endingLineNumber = "139"
+                  offsetFromSymbolStart = "1070">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "void updateVectorGlow&lt;FireExplosion&gt;(std::__1::vector&lt;FireExplosion, std::__1::allocator&lt;FireExplosion&gt; &gt;&amp;, float, float, std::__1::vector&lt;sf::Sprite*, std::__1::allocator&lt;sf::Sprite*&gt; &gt;&amp;, sf::Time&amp;)"
+                  moduleName = "Blind Jump"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/evanbowman/Documents/Game-Development/Blind%20Jump/Blind%20Jump/effectsController.cpp"
+                  timestampString = "486192355.588127"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "139"
+                  endingLineNumber = "139"
+                  offsetFromSymbolStart = "1041">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Blind Jump/effectsController.cpp"
+            timestampString = "486192432.822045"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "174"
+            endingLineNumber = "174"
+            landmarkName = "effectsController::update(float xOffset, float yOffset, ScreenShakeController* scrn, sf::Time &amp; elapsedTime)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Blind Jump/userInterface.cpp"
+            timestampString = "486230863.44918"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "139"
+            endingLineNumber = "139"
+            landmarkName = "userInterface::drawMenu(sf::RenderWindow&amp; window, Player* player, FontController&amp; f, effectsController&amp; ef, float xOffset, float yOffset, InputController* pInput, sf::Time&amp; elapsed)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Blind Jump/userInterface.cpp"
+            timestampString = "486230871.042874"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "146"
+            endingLineNumber = "146"
+            landmarkName = "userInterface::drawMenu(sf::RenderWindow&amp; window, Player* player, FontController&amp; f, effectsController&amp; ef, float xOffset, float yOffset, InputController* pInput, sf::Time&amp; elapsed)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Blind Jump/userInterface.cpp"
+            timestampString = "486230892.890503"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "142"
+            endingLineNumber = "142"
+            landmarkName = "userInterface::drawMenu(sf::RenderWindow&amp; window, Player* player, FontController&amp; f, effectsController&amp; ef, float xOffset, float yOffset, InputController* pInput, sf::Time&amp; elapsed)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Blind Jump/userInterface.cpp"
+            timestampString = "486231031.108274"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "147"
+            endingLineNumber = "147"
+            landmarkName = "userInterface::drawMenu(sf::RenderWindow&amp; window, Player* player, FontController&amp; f, effectsController&amp; ef, float xOffset, float yOffset, InputController* pInput, sf::Time&amp; elapsed)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>
