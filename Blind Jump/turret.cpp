@@ -34,11 +34,23 @@ turret::turret(sf::Sprite spr[10]) {
     hp = 10;
     killFlag = 0;
     isColored = 0;
-    colorCount = 0;
+    colorTimer = 0.f;
+    colorAmount = 0.f;
 }
 
 //Returns the turret's sprite based on its animation sequence
-sf::Sprite* turret::getSprite() {
+sf::Sprite* turret::getSprite(sf::Time & elapsedTime) {
+    if (isColored) {
+        colorTimer += elapsedTime.asMilliseconds();
+        if (colorTimer > 20.f) {
+            colorTimer -= 20.f;
+            colorAmount -= 0.1f;
+        }
+        
+        if (colorAmount <= 0.f) {
+            isColored = false;
+        }
+    }
     if (active) {
         if (sqrt(pow((xPos - playerPosX + 8), 2) + pow((yPos - playerPosY + 16), 2)) > 174) {
             if (imageIndex != 0 && sqrt(pow((xPos - playerPosX + 8), 2) + pow((yPos - playerPosY + 16), 2)) > 228) {    //If the player is far enough away de-activate it
@@ -140,7 +152,7 @@ void turret::updateShots(effectsController& ef, FontController& fonts) {
                 }
                 hp -= 1;
                 isColored = true;
-                colorCount = 5;
+                colorAmount = 1.f;
             }
         }
     }
@@ -155,17 +167,12 @@ void turret::updateShots(effectsController& ef, FontController& fonts) {
                 }
                 hp -= 1;
                 isColored = true;
-                colorCount = 5;
+                colorAmount = 1.f;
             }
         }
     }
     }
     
-    if (isColored) {
-        if (--colorCount == 0) {
-            isColored = false;
-        }
-    }
     if (hp == 0) {
         killFlag = 1;
         if ((rand() % 4) == 0) {

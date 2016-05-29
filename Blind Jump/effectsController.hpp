@@ -102,7 +102,7 @@ private:
     
 public:
     effectsController();
-    void draw(sf::RenderTexture&, std::vector<std::tuple<sf::Sprite, float, Rendertype>>&);
+    void draw(sf::RenderTexture&, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&);
     void update(float, float, ScreenShakeController*, sf::Time &);
     void addTurretFlash(float, float);
     void addBullet(bool, char, float, float);

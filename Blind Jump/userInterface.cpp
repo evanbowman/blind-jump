@@ -56,11 +56,12 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontContr
     
     switch (state) {
         case State::closed:
-            if (c) {
+            //// TODO: Does the game even need a UI menu?
+            /*if (c) {
                 state = State::opening;
                 visible = true;
                 player->deActivate();
-            }
+            }*/
             break;
             
         case State::open:
@@ -141,7 +142,7 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontContr
     
     if (deathSeq) {
         // During the player death sequence apply a vignette effect across the window
-        if (desaturateAmount < 0.75f) {
+        if (desaturateAmount < 0.85f) {
             desaturateAmount += 0.01f;
         } else {
             deathSeqComplete = true;

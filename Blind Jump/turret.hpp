@@ -38,14 +38,15 @@ private:
     double yOffset;
     float hp;
     bool killFlag;
-    char colorCount;
+    char colorTimer;
     bool isColored;
+    float colorAmount;
     
 public:
     turret(sf::Sprite spr[10]);
     void setPosition(double, double);
     sf::Sprite* getShadow();
-    sf::Sprite* getSprite();
+    sf::Sprite* getSprite(sf::Time &);
     void updateShots(effectsController&, FontController&);
     double getXinit();
     double getYinit();
@@ -57,6 +58,7 @@ public:
     double getXpos();
     double getYpos();
     bool colored();
+    float getColorAmount();
 };
 
 #endif /* turret_hpp */

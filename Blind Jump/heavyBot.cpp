@@ -78,7 +78,7 @@ void HeavyBot::checkBulletCollision(effectsController& ef, FontController& font)
                 }
                 health -= 1;
                 isColored = true;
-                colorCount = 7;
+                colorAmount = 1.f;
             }
         }
     }
@@ -91,14 +91,8 @@ void HeavyBot::checkBulletCollision(effectsController& ef, FontController& font)
                 }
                 health -= 1;
                 isColored = true;
-                colorCount = 7;
+                colorAmount = 1.f;
             }
-        }
-    }
-    
-    if (isColored) {
-        if (--colorCount == 0) {
-            isColored = false;
         }
     }
     
@@ -109,9 +103,22 @@ void HeavyBot::checkBulletCollision(effectsController& ef, FontController& font)
     }
 }
 
-void HeavyBot::update(float xOffset, float yOffset, effectsController& ef, FontController& fonts, tileController* pTiles) {
+void HeavyBot::update(float xOffset, float yOffset, effectsController& ef, FontController& fonts, tileController* pTiles, sf::Time & elapsedTime) {
     setPosition(xOffset, yOffset);
     checkBulletCollision(ef, fonts);
+    
+    if (isColored) {
+        colorTimer += elapsedTime.asMilliseconds();
+        if (colorTimer > 20.f) {
+            colorTimer -= 20.f;
+            colorAmount -= 0.05f;
+        }
+        
+        if (colorAmount <= 0.f) {
+            isColored = false;
+        }
+    }
+    
     switch (state) {
         case State::dormant:
             if (fabsf(xPos - playerPosX) < 150 && fabsf(yPos - playerPosY) < 150) {

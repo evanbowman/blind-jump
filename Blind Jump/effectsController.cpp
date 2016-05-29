@@ -400,10 +400,10 @@ void effectsController::addExplosion(float x, float y) {
 }
 
 template <typename T>
-void drawEffect(T& inpVec, std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameObjects) {
+void drawEffect(T& inpVec, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>& gameObjects) {
     if (!inpVec.empty()) {
         for (auto & element : inpVec) {
-            std::tuple<sf::Sprite, float, Rendertype> effectObject;
+            std::tuple<sf::Sprite, float, Rendertype, float> effectObject;
             std::get<0>(effectObject) = element.getSprite();
             std::get<1>(effectObject) = element.getYpos();
             std::get<2>(effectObject) = Rendertype::shadeNone;
@@ -413,7 +413,7 @@ void drawEffect(T& inpVec, std::vector<std::tuple<sf::Sprite, float, Rendertype>
 }
 
 template <typename T>
-void directDraw(T& inpVec, sf::RenderTexture& window, std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameObjects) {
+void directDraw(T& inpVec, sf::RenderTexture& window, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>& gameObjects) {
     if (!inpVec.empty()) {
         for (auto & element : inpVec) {
             window.draw(element.getSprite());
@@ -422,7 +422,7 @@ void directDraw(T& inpVec, sf::RenderTexture& window, std::vector<std::tuple<sf:
 }
 
 //Draw the sprites for all of the effect objects
-void effectsController::draw(sf::RenderTexture& window, std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameObjects) {
+void effectsController::draw(sf::RenderTexture& window, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>& gameObjects) {
     drawEffect(hearts, gameObjects);
     drawEffect(coins, gameObjects);
     drawEffect(turretFlashes, gameObjects);
@@ -441,7 +441,7 @@ void effectsController::draw(sf::RenderTexture& window, std::vector<std::tuple<s
     
     if (!dodgeEffects.empty()) {
         for (auto & element : dodgeEffects) {
-            gameObjects.push_back(std::make_tuple(element.getSprite(), element.getYpos(), Rendertype::shadeDefault));
+            gameObjects.push_back(std::make_tuple(element.getSprite(), element.getYpos(), Rendertype::shadeDefault, 0.f));
         }
     }
     

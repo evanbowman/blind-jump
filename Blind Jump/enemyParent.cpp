@@ -17,6 +17,8 @@ EnemyParent::EnemyParent(sf::Sprite* sprArr) {
     yPos = 0;
     frameIndex = 0;
     isColored = false;
+    colorAmount = 0.f;
+    colorTimer = 0.f;
 }
 
 bool EnemyParent::getKillFlag() const {

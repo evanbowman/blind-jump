@@ -34,7 +34,7 @@ void Critter::checkBulletCollision(effectsController& ef, FontController& font) 
     //Check collisions with player's shots, but only if the shot vectors aren't empty
     if (!ef.getBulletLayer1().empty()) {
         for (auto & element : ef.getBulletLayer1()) {
-            if (std::abs(element.getXpos() - (xPos + 4)) < 8 && std::abs(element.getYpos() - (yPos - 8)) < 8 && !isColored) {
+            if (std::abs(element.getXpos() - (xPos + 4)) < 8 && std::abs(element.getYpos() - (yPos - 8)) < 8) {
                 element.setKillFlag();           // Kill the bullet if there's a collision between the bullet and the enemy
                 // Tons of effects in one place is distracting, so don't draw another one if the enemy is about to explode
                 if (health == 1) {
@@ -42,27 +42,21 @@ void Critter::checkBulletCollision(effectsController& ef, FontController& font) 
                 }
                 health -= 1;
                 isColored = true;
-                colorCount = 7;
+                colorAmount = 1.f;
             }
         }
     }
     if (!ef.getBulletLayer2().empty()) {
         for (auto & element : ef.getBulletLayer2()) {
-            if (std::abs(element.getXpos() - (xPos + 4)) < 8 && std::abs(element.getYpos() - (yPos - 8)) < 8 && !isColored) {
+            if (std::abs(element.getXpos() - (xPos + 4)) < 8 && std::abs(element.getYpos() - (yPos - 8)) < 8) {
                 element.setKillFlag();
                 if (health == 1) {
                     element.disablePuff();
                 }
                 health -= 1;
                 isColored = true;
-                colorCount = 7;
+                colorAmount = 1.f;
             }
-        }
-    }
-    
-    if (isColored) {
-        if (--colorCount == 0) {
-            isColored = false;
         }
     }
     
@@ -78,9 +72,21 @@ void Critter::checkBulletCollision(effectsController& ef, FontController& font) 
     }
 }
 
-void Critter::update(float xOffset, float yOffset, effectsController &effects, FontController &fonts, tileController* pTiles) {
+void Critter::update(float xOffset, float yOffset, effectsController &effects, FontController &fonts, tileController* pTiles, sf::Time & elapsedTime) {
     setPosition(xOffset, yOffset);
     checkBulletCollision(effects, fonts);
+    if (isColored) {
+        colorTimer += elapsedTime.asMilliseconds();
+        if (colorTimer > 20.f) {
+            colorTimer -= 20.f;
+            colorAmount -= 0.1f;
+        }
+        
+        if (colorAmount <= 0.f) {
+            isColored = false;
+        }
+    }
+    
     if (awake) {
         float speed;
         if (active) {

@@ -176,7 +176,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     tiles.drawTiles(target, effects.getGlowSprs(), effects.getGlowSprs2(), level);
     effects.getGlowSprs2()->clear();
     // Update the overworld objects based on the displacement of the player
-    details.update(xOffset, yOffset, effects, player.getSprIndex(), tiles.walls, effects.getGlowSprs(), effects.getGlowSprs2(), UI, *pFonts, player, pInput, &ssc, elapsedTime, player.isdead());
+    details.update(xOffset, yOffset, effects, player.getSprIndex(), tiles.walls, effects.getGlowSprs(), effects.getGlowSprs2(), UI, *pFonts, player, pInput, &ssc, elapsedTime);
     // Draw the details / add them to the game objects vector
     details.draw(gameObjects, gameShadows, target);
     // Update the enemy objects in the game based on the player's displacement
@@ -207,7 +207,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     gameShadows.clear();
     
     // Sort the game object based on y-position (performance for this is fine, only sorts objects inside the window, on the ordr of 10 in most cases)
-    std::sort(gameObjects.begin(), gameObjects.end(), [](const std::tuple<sf::Sprite, float, Rendertype> arg1, const std::tuple<sf::Sprite, float, Rendertype> arg2) {
+    std::sort(gameObjects.begin(), gameObjects.end(), [](const std::tuple<sf::Sprite, float, Rendertype, float> arg1, const std::tuple<sf::Sprite, float, Rendertype, float> arg2) {
         return (std::get<1>(arg1) < std::get<1>(arg2));
     });
     
@@ -227,26 +227,31 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
                     break;
                     
                 case Rendertype::shadeWhite:
+                    colorShader.setParameter("amount", std::get<3>(element));
                     colorShader.setParameter("targetColor", sf::Vector3f(1.00, 1.00, 1.00));
                     lightingMap.draw(std::get<0>(element), &colorShader);
                     break;
                     
                 case Rendertype::shadeRed:
+                    colorShader.setParameter("amount", std::get<3>(element));
                     colorShader.setParameter("targetColor", sf::Vector3f(0.98, 0.22, 0.03));
                     lightingMap.draw(std::get<0>(element), &colorShader);
                     break;
                     
                 case Rendertype::shadeCrimson:
+                    colorShader.setParameter("amount", std::get<3>(element));
                     colorShader.setParameter("targetColor", sf::Vector3f(0.94, 0.09, 0.34));
                     lightingMap.draw(std::get<0>(element), &colorShader);
                     break;
                     
                 case Rendertype::shadeBlue:
+                    colorShader.setParameter("amount", 0.8);
                     colorShader.setParameter("targetColor", sf::Vector3f(0.35, 0.35, 0.69));
                     lightingMap.draw(std::get<0>(element), &colorShader);
                     break;
                     
                 case Rendertype::shadeNeon:
+                    colorShader.setParameter("amount", std::get<3>(element));
                     colorShader.setParameter("targetColor", sf::Vector3f(0.29, 0.99, 0.99));
                     lightingMap.draw(std::get<0>(element), &colorShader);
                     break;

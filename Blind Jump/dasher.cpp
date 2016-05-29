@@ -75,7 +75,7 @@ void Dasher::checkBulletCollision(effectsController& ef, FontController& fonts) 
                     }
                     health -= 1;
                     isColored = true;
-                    colorCount = 5;
+                    colorAmount = 1.f;
                 }
             }
         }
@@ -89,15 +89,9 @@ void Dasher::checkBulletCollision(effectsController& ef, FontController& fonts) 
                     }
                     health -= 1;
                     isColored = 1;
-                    colorCount = 5;
+                    colorAmount = 1.f;
                 }
             }
-        }
-    }
-    
-    if (isColored) {
-        if (--colorCount == 0) {
-            isColored = false;
         }
     }
     
@@ -121,6 +115,17 @@ void Dasher::update(float xOffset, float yOffset, std::vector<wall> walls, effec
     setPosition(xOffset, yOffset);
     checkBulletCollision(ef, fonts);
     // Update the sprite positions
+    if (isColored) {
+        colorTimer += elapsedTime.asMilliseconds();
+        if (colorTimer > 20.f) {
+            colorTimer -= 20.f;
+            colorAmount -= 0.1f;
+        }
+        
+        if (colorAmount <= 0.f) {
+            isColored = false;
+        }
+    }
     for (int i = 0; i < 21; i++) {
         sprs[i].setPosition(xPos + 4, yPos);
     }

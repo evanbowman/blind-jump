@@ -38,7 +38,7 @@ private:
     
 public:
     HeavyBot(sf::Sprite*, short map[61][61]);
-    void update(float, float, effectsController&, FontController&, tileController*);
+    void update(float, float, effectsController&, FontController&, tileController*, sf::Time &);
     sf::Sprite* getSprite();
     sf::Sprite* getShadow();
     void checkBulletCollision(effectsController&, FontController&);

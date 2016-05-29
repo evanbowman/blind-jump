@@ -46,6 +46,7 @@ Player::Player() {
     weapon.setPosition(posX, posY);
     CollisionLeft = 0;
     CollisionRight = 0;
+    colorAmount = 0.f;
     slowSpeed = 1.5;
     previousCheckOffsetX = 0;
     previousCheckOffsetY = 0;
@@ -56,7 +57,7 @@ Player::Player() {
     state = NOMINAL;
     gotHeart = false;
     gotCoin = false;
-    redTimer = 10;
+    colorTimer = 0.f;
     
     hurtCounter = 30;
     canhurt = true;
@@ -182,7 +183,6 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
     if (health == 0 && !deathSeq) {
         deathSeq = true;
         state = NOMINAL;
-        ef.clear();
         spriteIndex = 8;
         imageIndex = 0;
         animationCounter = 6;
@@ -624,10 +624,10 @@ bool checkShotCollision(std::vector<T>* shotVec, double playerXpos, double playe
 }
 
 //Returns the current sprite based on the values of imageIndex and spriteIndex
-void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameShadows, tileController& tiles, effectsController& ef, detailController& details, SoundController& sounds, userInterface& UI, InputController* pInput, sf::RenderTexture& window, FontController& fonts, sf::Time& elapsedTime) {
+void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>& gameShadows, tileController& tiles, effectsController& ef, detailController& details, SoundController& sounds, userInterface& UI, InputController* pInput, sf::RenderTexture& window, FontController& fonts, sf::Time& elapsedTime) {
     checkCollision(tiles, details);//, details);
     drawController(pInput, ef);
-    std::tuple<sf::Sprite, float, Rendertype> tPlayer, tGun, tShadow;
+    std::tuple<sf::Sprite, float, Rendertype, float> tPlayer, tGun, tShadow;
     
     std::get<1>(tPlayer) = posY;
     
@@ -650,6 +650,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameOb
         fonts.resetHPText();
         scrShakeState = true;
         canhurt = false;
+        colorAmount = 1.f;
     }
     
     if (checkShotCollision(ef.getTurretShots(), posX, posY) && !deathSeq && canhurt) {
@@ -657,6 +658,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameOb
         fonts.resetHPText();
         scrShakeState = true;
         canhurt = false;
+        colorAmount = 1.f;
     }
     
     if (checkShotCollision(ef.getDasherShots(), posX, posY) && !deathSeq && canhurt) {
@@ -664,6 +666,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameOb
         fonts.resetHPText();
         scrShakeState = true;
         canhurt = false;
+        colorAmount = 1.f;
     }
     
     // Don't bother doing all this if health is empty!
@@ -674,6 +677,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameOb
                 health = fmin(fonts.getMaxHealth(), health + 1);
                 element.setKillFlag(true);
                 gotHeart = true;
+                colorAmount = 1.f;
                 // Display the UI element for health text
                 fonts.resetHPText();
             }
@@ -686,47 +690,54 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>& gameOb
             element.setKillFlag(true);
             gotCoin = true;
             gotHeart = false;
+            colorAmount = 1.f;
         }
     }
     
     if (gotHeart) {
         std::get<2>(tPlayer) = Rendertype::shadeCrimson;
         std::get<2>(tGun) = Rendertype::shadeCrimson;
-        if (--redTimer == 0) {
-            redTimer = 10;
+        colorTimer += elapsedTime.asMilliseconds();
+        if (colorTimer > 20.f) {
+            colorTimer -= 20.f;
+            colorAmount -= 0.05f;
+        }
+        if (colorAmount <= 0.f) {
             gotHeart = false;
         }
+        std::get<3>(tPlayer) = colorAmount;
+        std::get<3>(tGun) = colorAmount;
     } else if (gotCoin) {
         std::get<2>(tPlayer) = Rendertype::shadeNeon;
         std::get<2>(tGun) = Rendertype::shadeNeon;
-        if (--redTimer == 0) {
-            gotCoin = 0;
-            redTimer = 10;
+        colorTimer += elapsedTime.asMilliseconds();
+        if (colorTimer > 20.f) {
+            colorTimer -= 20.f;
+            colorAmount -= 0.05f;
         }
+        if (colorAmount <= 0.f) {
+            gotCoin = false;
+        }
+        std::get<3>(tPlayer) = colorAmount;
+        std::get<3>(tGun) = colorAmount;
+    } else if (!canhurt) {
+        std::get<2>(tPlayer) = Rendertype::shadeRed;
+        std::get<2>(tGun) = Rendertype::shadeRed;
+        colorTimer += elapsedTime.asMilliseconds();
+        if (colorTimer > 20.f) {
+            colorTimer -= 20.f;
+            colorAmount -= 0.05f;
+        }
+        if (colorAmount <= 0.f) {
+            canhurt = !canhurt;
+        }
+        std::get<3>(tPlayer) = colorAmount;
+        std::get<3>(tGun) = colorAmount;
     }
     
     if (health < 0) {
         state = NOMINAL;
         health = 0;
-    }
-    
-    if (!canhurt) {
-        if (--hurtCounter == 0) {
-            hurtCounter = 30;
-            canhurt = true;
-        }
-        
-        if (hurtCounter < 24 && hurtCounter > 18) {
-            // Shade the player red
-            std::get<2>(tPlayer) = Rendertype::shadeRed;
-            std::get<2>(tGun) = Rendertype::shadeRed;
-        }
-        
-        else if (hurtCounter >= 24 && hurtCounter != 30) {
-            // Shade the player blue
-            std::get<2>(tPlayer) = Rendertype::shadeBlue;
-            std::get<2>(tGun) = Rendertype::shadeBlue;
-        }
     }
     
     if (state == NOMINAL) {

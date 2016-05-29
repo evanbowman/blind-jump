@@ -268,12 +268,10 @@ void detailController::addTerminal(tileController & t, float posX, float posY, f
     terminals.push_back(term);
 }
 
-void detailController::update(float xOffset, float yOffset, effectsController& ef, char PlayerSprIndex, std::vector<wall>& walls, std::vector<sf::Sprite*>* glow1, std::vector<sf::Sprite*>* glow2, userInterface& ui, FontController& fonts, Player& player, InputController* pInput, ScreenShakeController * pscr, sf::Time & elapsedTime, bool enabled) {
+void detailController::update(float xOffset, float yOffset, effectsController& ef, char PlayerSprIndex, std::vector<wall>& walls, std::vector<sf::Sprite*>* glow1, std::vector<sf::Sprite*>* glow2, userInterface& ui, FontController& fonts, Player& player, InputController* pInput, ScreenShakeController * pscr, sf::Time & elapsedTime) {
     if (!teleporters.empty()) {
         for (auto & element : teleporters) {
-            if (enabled) {
-                element.update(xOffset, yOffset, elapsedTime);
-            }
+            element.update(xOffset, yOffset, elapsedTime);
             if (element.smokeReady()) {
                 ef.addWarpEffect(element.getxPos() - xOffset + 4 + (rand() % 6), element.getyPos() - yOffset + 2);
             }
@@ -284,9 +282,7 @@ void detailController::update(float xOffset, float yOffset, effectsController& e
     
     if (!lamps.empty()) {
         for (auto & element : lamps) {
-            if (enabled) {
-                element.update(xOffset, yOffset);
-            }
+            element.update(xOffset, yOffset);
             // Push the light effects back
             float xPos = element.getxPos();
             float yPos = element.getyPos();
@@ -344,8 +340,8 @@ void detailController::killTeleporter() {
     teleporters.clear();
 }
 
-void detailController::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>> & gameObjects, std::vector<std::tuple<sf::Sprite, float, Rendertype>> & gameShadows, sf::RenderTexture& window) {
-    std::tuple<sf::Sprite, float, Rendertype> tObject, tShadow;
+void detailController::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> & gameObjects, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> & gameShadows, sf::RenderTexture& window) {
+    std::tuple<sf::Sprite, float, Rendertype, float> tObject, tShadow;
     std::get<2>(tObject) = Rendertype::shadeDefault;
     if (!misc32x26.empty()) {
         for (auto & element : misc32x26) {

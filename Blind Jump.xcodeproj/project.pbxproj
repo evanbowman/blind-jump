@@ -32,7 +32,6 @@
 		6808FF711C51790800579FE9 /* enemyOrbShot1.png in Resources */ = {isa = PBXBuildFile; fileRef = 6808FF6D1C51790800579FE9 /* enemyOrbShot1.png */; };
 		6808FF791C51AA2E00579FE9 /* OrbShot2.png in Resources */ = {isa = PBXBuildFile; fileRef = 6808FF771C51AA2E00579FE9 /* OrbShot2.png */; };
 		6808FF7A1C51AA2E00579FE9 /* OrbShot1.png in Resources */ = {isa = PBXBuildFile; fileRef = 6808FF781C51AA2E00579FE9 /* OrbShot1.png */; };
-		680C37681CED342200F9D186 /* PowerupParticles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 680C37661CED342200F9D186 /* PowerupParticles.cpp */; };
 		680C376A1CED373E00F9D186 /* vignetteShadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 680C37691CED373E00F9D186 /* vignetteShadow.png */; };
 		6816496A1C36DBDD007BF457 /* teleporter.png in Resources */ = {isa = PBXBuildFile; fileRef = 681649691C36DBDD007BF457 /* teleporter.png */; };
 		6816496C1C36DED6007BF457 /* teleporterShadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 6816496B1C36DED6007BF457 /* teleporterShadow.png */; };
@@ -270,8 +269,6 @@
 		6808FF6D1C51790800579FE9 /* enemyOrbShot1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemyOrbShot1.png; sourceTree = "<group>"; };
 		6808FF771C51AA2E00579FE9 /* OrbShot2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OrbShot2.png; sourceTree = "<group>"; };
 		6808FF781C51AA2E00579FE9 /* OrbShot1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OrbShot1.png; sourceTree = "<group>"; };
-		680C37661CED342200F9D186 /* PowerupParticles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PowerupParticles.cpp; sourceTree = "<group>"; };
-		680C37671CED342200F9D186 /* PowerupParticles.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PowerupParticles.hpp; sourceTree = "<group>"; };
 		680C37691CED373E00F9D186 /* vignetteShadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vignetteShadow.png; sourceTree = "<group>"; };
 		681649691C36DBDD007BF457 /* teleporter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = teleporter.png; sourceTree = "<group>"; };
 		6816496B1C36DED6007BF457 /* teleporterShadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = teleporterShadow.png; sourceTree = "<group>"; };
@@ -948,8 +945,6 @@
 				68B3CE9E1C9D1C88008DA0AD /* smallExplosion.hpp */,
 				681D91801CB09407009DF666 /* Powerup.cpp */,
 				681D91811CB09407009DF666 /* Powerup.hpp */,
-				680C37661CED342200F9D186 /* PowerupParticles.cpp */,
-				680C37671CED342200F9D186 /* PowerupParticles.hpp */,
 			);
 			name = Effects;
 			sourceTree = "<group>";
@@ -1273,7 +1268,6 @@
 				685CD4161BD99E52004907E0 /* userInterface.cpp in Sources */,
 				6823AF171C8D35D300D13C99 /* ui_bubble.cpp in Sources */,
 				682226EE1C73CB10003AAFC9 /* lampLight.cpp in Sources */,
-				680C37681CED342200F9D186 /* PowerupParticles.cpp in Sources */,
 				688B99B31C840E4F003ABBE8 /* wallinpath.cpp in Sources */,
 				682F419D1BCA1B250091BC2E /* tileController.cpp in Sources */,
 				68ABE0A21BD71A96005E7757 /* turretFlashEffect.cpp in Sources */,

@@ -52,7 +52,7 @@ void Scoot::checkBulletCollision(effectsController& ef, FontController& font) {
                 }
                 health -= 1;
                 isColored = true;
-                colorCount = 5;
+                colorAmount = 1.f;
             }
         }
     }
@@ -65,15 +65,11 @@ void Scoot::checkBulletCollision(effectsController& ef, FontController& font) {
                 }
                 health -= 1;
                 isColored = true;
-                colorCount = 5;
+                colorAmount = 1.f;
             }
         }
     }
-    if (isColored) {
-        if (--colorCount == 0) {
-            isColored = false;
-        }
-    }
+    
     if (health == 0) {
         killFlag = 1;
         if ((rand() % 5) == 0) {
@@ -89,6 +85,17 @@ void Scoot::update(float xOffset, float yOffset, std::vector<wall> w, effectsCon
     // Update the enemy's position
     setPosition(xOffset, yOffset);
     checkBulletCollision(ef, font);
+    if (isColored) {
+        colorTimer += elapsedTime.asMilliseconds();
+        if (colorTimer > 20.f) {
+            colorTimer -= 20.f;
+            colorAmount -= 0.1f;
+        }
+        
+        if (colorAmount <= 0.f) {
+            isColored = false;
+        }
+    }
     for (auto i = 0; i < 2; i++) {
         sprites[i].setPosition(xPos, yPos);
     }
@@ -158,13 +165,6 @@ void Scoot::update(float xOffset, float yOffset, std::vector<wall> w, effectsCon
             vSpeed *= -1;
         }
     }
-    
-    //// TODO:
-    /*// Slow down the enemy as it recoils from shooting
-    if (shotCountdown == 238 || shotCountdown == 236 || shotCountdown == 234 || shotCountdown == 232) {
-        hSpeed *= 0.75;
-        vSpeed *= 0.75;
-    }*/
 }
 
 void Scoot::softUpdate(float xOffset, float yOffset) {

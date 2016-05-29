@@ -93,8 +93,10 @@ private:
     int dodgeTimer;
     char dodgeDir;
     
+    float colorAmount;
+    
     bool gotHeart, gotCoin;
-    char redTimer;
+    unsigned int colorTimer;
     
     //Include a function for setting the animation frame index
     void setImageIndex(char);
@@ -115,7 +117,7 @@ public:
     float getPosX() const;
     float getPosY() const;
     void drawController(InputController*, effectsController& ef);
-    void draw(std::vector<std::tuple<sf::Sprite, float, Rendertype>>&, std::vector<std::tuple<sf::Sprite, float, Rendertype>>&, tileController&, effectsController&, detailController&, SoundController&, userInterface&, InputController*, sf::RenderTexture&, FontController&, sf::Time&);
+    void draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&, tileController&, effectsController&, detailController&, SoundController&, userInterface&, InputController*, sf::RenderTexture&, FontController&, sf::Time&);
     //Construct a default player object
     Player();
     //More functions for setting the current position
