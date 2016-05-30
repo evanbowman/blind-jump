@@ -15,18 +15,18 @@
 
 class LampLight : public detailParent {
 public:
-    LampLight(float, float, sf::Sprite, sf::Sprite, int, float, float);
-    sf::Sprite* getSprite();
-    sf::Sprite* getGlow();
-    void update(float, float);
-    bool getKillFlag();
-    void setKillFlag(bool);
-    
+	LampLight(float, float, sf::Sprite, sf::Sprite, int, float, float);
+	sf::Sprite* getSprite();
+	sf::Sprite* getGlow();
+	void update(float, float);
+	bool getKillFlag();
+	void setKillFlag(bool);
+	
 private:
-    sf::Sprite lampSprite;
-    sf::Sprite glowSprite;
-    bool killflag;
-    
+	sf::Sprite lampSprite;
+	sf::Sprite glowSprite;
+	bool killflag;
+	
 };
 
 #endif /* lampLight_hpp */

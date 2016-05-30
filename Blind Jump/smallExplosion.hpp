@@ -15,20 +15,20 @@
 
 class SmallExplosion {
 private:
-    sf::Sprite sprites[9];
-    sf::Sprite glow;
-    float xInit, yInit, xPos, yPos;
-    bool killFlag;
-    char frameIndex, frameRate;
-    
-    
+	sf::Sprite sprites[9];
+	sf::Sprite glow;
+	float xInit, yInit, xPos, yPos;
+	bool killFlag;
+	char frameIndex, frameRate;
+	
+	
 public:
-    SmallExplosion(sf::Sprite*, sf::Sprite, float, float);
-    void update(float, float, sf::Time &);
-    sf::Sprite getSprite();
-    bool getKillFlag();
-    float getYpos();
-    sf::Sprite* getGlow();
+	SmallExplosion(sf::Sprite*, sf::Sprite, float, float);
+	void update(float, float, sf::Time &);
+	sf::Sprite getSprite();
+	bool getKillFlag();
+	float getYpos();
+	sf::Sprite* getGlow();
 };
 
 #endif /* smallExplosion_hpp */

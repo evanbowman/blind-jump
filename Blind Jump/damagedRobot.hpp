@@ -16,13 +16,13 @@
 
 class DamagedRobot : public detailParent {
 public:
-    DamagedRobot(float, float, sf::Sprite*, int, float, float);
-    void update(float, float);
-    sf::Sprite* getSprite();
-    
+	DamagedRobot(float, float, sf::Sprite*, int, float, float);
+	void update(float, float);
+	sf::Sprite* getSprite();
+	
 private:
-    sf::Sprite sprite;
-    
+	sf::Sprite sprite;
+	
 };
 
 #endif /* damagedRobot_hpp */

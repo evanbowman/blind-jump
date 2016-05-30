@@ -15,20 +15,20 @@
 
 class HealthEffect {
 private:
-    float xInit;
-    float yInit;
-    sf::Sprite spr;
-    bool killFlag;
-    unsigned short lifeCounter;
-    char mode;
-    
+	float xInit;
+	float yInit;
+	sf::Sprite spr;
+	bool killFlag;
+	unsigned short lifeCounter;
+	char mode;
+	
 public:
-    void update(float, float);
-    bool getKillFlag();
-    sf::Sprite getSprite();
-    HealthEffect(sf::Sprite, float, float);
-    void setMode(char, float, float);
-    float getYpos();
+	void update(float, float);
+	bool getKillFlag();
+	sf::Sprite getSprite();
+	HealthEffect(sf::Sprite, float, float);
+	void setMode(char, float, float);
+	float getYpos();
 };
 
 #endif /* healthEffect_hpp */

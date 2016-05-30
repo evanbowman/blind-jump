@@ -9,49 +9,49 @@
 #include "wall.hpp"
 
 wall::wall() {
-    //Besides existing for the player to run into, the walls do not need to have any functionality
-    xPosInitial = 0;
-    yPosInitial = 0;
-    xPos = 0;
-    yPos = 0;
-    width = 32;
-    height = 26;
-    insideWindow = false;
+	//Besides existing for the player to run into, the walls do not need to have any functionality
+	xPosInitial = 0;
+	yPosInitial = 0;
+	xPos = 0;
+	yPos = 0;
+	width = 32;
+	height = 26;
+	insideWindow = false;
 }
 
 float wall::getPosY() {
-    return yPos;
+	return yPos;
 }
 
 float wall::getPosX() {
-    return xPos;
+	return xPos;
 }
 
 void wall::setPosition(float x, float y) {
-    xPos = x;
-    yPos = y;
+	xPos = x;
+	yPos = y;
 }
 
 void wall::setXinit(float x) {
-    xPosInitial = x;
+	xPosInitial = x;
 }
 
 void wall::setYinit(float y) {
-    yPosInitial = y;
+	yPosInitial = y;
 }
 
 float wall::getXinit() {
-    return xPosInitial;
+	return xPosInitial;
 }
 
 float wall::getYinit() {
-    return yPosInitial;
+	return yPosInitial;
 }
 
 void wall::setInsideWindow(bool cond) {
-    insideWindow = cond;
+	insideWindow = cond;
 }
 
 bool wall::isInsideWindow() const {
-    return insideWindow;
+	return insideWindow;
 }

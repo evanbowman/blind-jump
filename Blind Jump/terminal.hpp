@@ -14,16 +14,16 @@
 #include "detailParent.hpp"
 
 class Terminal : public detailParent {
-    
+	
 public:
-    Terminal(float, float, sf::Sprite*, int, float, float);
-    sf::Sprite* getSprite();
-    sf::Sprite* getShadow();
-    void update(float, float);
-    
+	Terminal(float, float, sf::Sprite*, int, float, float);
+	sf::Sprite* getSprite();
+	sf::Sprite* getShadow();
+	void update(float, float);
+	
 private:
-    bool currentframe;
-    sf::Sprite termSprites[3];
+	bool currentframe;
+	sf::Sprite termSprites[3];
 };
 
 #endif /* energyCube_hpp */

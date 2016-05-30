@@ -16,39 +16,39 @@
 
 class FontController {
 private:
-    sf::Texture texture;
-    float alpha;
-    sf::View fontView;
-    // The fonts to be used by the font controller
-    sf::Font cornerstone;
-    sf::Text waypointText, titleText, credit, deathText, scoreText, continueText, healthNumText;
-    char health;
-    char maxHealth;
-    float width;
-    float height;
-    int score;
-    float windowCenterX, windowCenterY;
-    sf::Clock wpTextDisplayTimer, healthDisplayTimer, scoreDisplayTimer;
-    
+	sf::Texture texture;
+	float alpha;
+	sf::View fontView;
+	// The fonts to be used by the font controller
+	sf::Font cornerstone;
+	sf::Text waypointText, titleText, credit, deathText, scoreText, continueText, healthNumText;
+	char health;
+	char maxHealth;
+	float width;
+	float height;
+	int score;
+	float windowCenterX, windowCenterY;
+	sf::Clock wpTextDisplayTimer, healthDisplayTimer, scoreDisplayTimer;
+	
 public:
-    FontController(sf::View, float, float);
-    void update(sf::RenderWindow&, float, float);
-    void setWaypointText(int);
-    void setZoneText(char);
-    void print(sf::RenderWindow&);
-    void updateHealth(char);
-    void updateMaxHealth(char);
-    void drawTitle(unsigned char, sf::RenderWindow&);
-    void drawDeathText(unsigned char, sf::RenderWindow&);
-    char getMaxHealth() const;
-    sf::Text * getTitle();
-    sf::Text * getDeathText();
-    void addCaption(float, float, const char *);
-    std::vector<sf::Text *>* getCaptions();
-    void terminateCaptions();
-    void resetWPText();
-    void resetHPText();
-    void resetSCText();
-    void updateScore(int);
+	FontController(sf::View, float, float);
+	void update(sf::RenderWindow&, float, float);
+	void setWaypointText(int);
+	void setZoneText(char);
+	void print(sf::RenderWindow&);
+	void updateHealth(char);
+	void updateMaxHealth(char);
+	void drawTitle(unsigned char, sf::RenderWindow&);
+	void drawDeathText(unsigned char, sf::RenderWindow&);
+	char getMaxHealth() const;
+	sf::Text * getTitle();
+	sf::Text * getDeathText();
+	void addCaption(float, float, const char *);
+	std::vector<sf::Text *>* getCaptions();
+	void terminateCaptions();
+	void resetWPText();
+	void resetHPText();
+	void resetSCText();
+	void updateScore(int);
 };
 #endif /* FontController_hpp */

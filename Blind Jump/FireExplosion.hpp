@@ -14,25 +14,25 @@
 
 class FireExplosion {
 private:
-    sf::Sprite sprites[9];
-    sf::Sprite glow;
-    float xInit, yInit, xPos, yPos;
-    bool killFlag;
-    char frameIndex;
-    unsigned int animationTimer;
-    bool valid;
-    
+	sf::Sprite sprites[9];
+	sf::Sprite glow;
+	float xInit, yInit, xPos, yPos;
+	bool killFlag;
+	char frameIndex;
+	unsigned int animationTimer;
+	bool valid;
+	
 public:
-    FireExplosion(sf::Sprite*, sf::Sprite, float, float);
-    void update(float, float, sf::Time &);
-    sf::Sprite getSprite();
-    bool getKillFlag();
-    float getYpos();
-    float getXpos();
-    sf::Sprite* getGlow();
-    void setOrigin(int, int);
-    bool isValid();
-    void invalidate();
+	FireExplosion(sf::Sprite*, sf::Sprite, float, float);
+	void update(float, float, sf::Time &);
+	sf::Sprite getSprite();
+	bool getKillFlag();
+	float getYpos();
+	float getXpos();
+	sf::Sprite* getGlow();
+	void setOrigin(int, int);
+	bool isValid();
+	void invalidate();
 };
 
 #endif /* FireExplosion_hpp */

@@ -20,20 +20,20 @@
 
 class UIBubble {
 private:
-    sf::CircleShape bubbleOutline;
-    float xPos;
-    float yPos;
-    bool killFlag;
-    sf::Sprite spr;
-    int timeout;
-    float xStep;
-    float yStep;
-    
+	sf::CircleShape bubbleOutline;
+	float xPos;
+	float yPos;
+	bool killFlag;
+	sf::Sprite spr;
+	int timeout;
+	float xStep;
+	float yStep;
+	
 public:
-    UIBubble(float, float, sf::Sprite*);
-    void update(sf::RenderWindow&);
-    bool getKillFlag();
-    
+	UIBubble(float, float, sf::Sprite*);
+	void update(sf::RenderWindow&);
+	bool getKillFlag();
+	
 };
 
 #endif /* ui_bubble_hpp */

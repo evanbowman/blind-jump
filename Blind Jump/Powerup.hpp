@@ -15,21 +15,21 @@
 
 class Powerup {
 private:
-    float xInit, yInit, xPos, yPos;
-    sf::Sprite spr, glow;
-    bool killFlag;
-    // to keep time, for making hearts float up and down
-    unsigned int timer;
-    
+	float xInit, yInit, xPos, yPos;
+	sf::Sprite spr, glow;
+	bool killFlag;
+	// to keep time, for making hearts float up and down
+	unsigned int timer;
+	
 public:
-    Powerup(sf::Sprite*, sf::Sprite, float, float);
-    bool getKillFlag();
-    void setKillFlag(bool);
-    sf::Sprite getSprite();
-    sf::Sprite* getGlow();
-    void update(float, float, sf::Time &);
-    float getXpos();
-    float getYpos();
+	Powerup(sf::Sprite*, sf::Sprite, float, float);
+	bool getKillFlag();
+	void setKillFlag(bool);
+	sf::Sprite getSprite();
+	sf::Sprite* getGlow();
+	void update(float, float, sf::Time &);
+	float getXpos();
+	float getYpos();
 };
 
 #endif /* Hearts_hpp */

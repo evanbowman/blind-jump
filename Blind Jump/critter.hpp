@@ -19,37 +19,37 @@ class tileController;
 
 class Critter : public EnemyParent {
 public:
-    // This calls the parent constructor, which initializes common values like initial position
-    Critter(sf::Sprite*, short map[61][61]);
-    // A function to update all of the enemy's values
-    void update(float, float, effectsController&, FontController&, tileController*, sf::Time &);
-    sf::Sprite* getSprite();
-    sf::Sprite* getShadow();
-    void softUpdate(float, float);
-    void checkBulletCollision(effectsController& ef, FontController&);
-    void randDir();
-    void activate();
-    void deActivate();
-    bool isActive();
-    char frameIndex;
-    char frameRate;
-    void updatePlayerDead();
-    
+	// This calls the parent constructor, which initializes common values like initial position
+	Critter(sf::Sprite*, short map[61][61]);
+	// A function to update all of the enemy's values
+	void update(float, float, effectsController&, FontController&, tileController*, sf::Time &);
+	sf::Sprite* getSprite();
+	sf::Sprite* getShadow();
+	void softUpdate(float, float);
+	void checkBulletCollision(effectsController& ef, FontController&);
+	void randDir();
+	void activate();
+	void deActivate();
+	bool isActive();
+	char frameIndex;
+	char frameRate;
+	void updatePlayerDead();
+	
 private:
-    float health;
-    float currentDir, chargeDir;
-    float jumpTargetx, jumpTargety;
-    void newPath(tileController*);
-    sf::Sprite sprites[4];
-    aStrCoordinate previous;
-    bool awake;
-    // The current path of enemy to the player
-    std::vector<aStrCoordinate> path;
-    // Next positon to move to
-    bool active, attacking;
-    int moveCounter, recalc, moveCount, dashCount;
-    // Store a pointer to the game map
-    short (*map)[61]; //*** I know this is a nasty solution, perhaps there's a better way to not store it locally...
+	float health;
+	float currentDir, chargeDir;
+	float jumpTargetx, jumpTargety;
+	void newPath(tileController*);
+	sf::Sprite sprites[4];
+	aStrCoordinate previous;
+	bool awake;
+	// The current path of enemy to the player
+	std::vector<aStrCoordinate> path;
+	// Next positon to move to
+	bool active, attacking;
+	int moveCounter, recalc, moveCount, dashCount;
+	// Store a pointer to the game map
+	short (*map)[61]; //*** I know this is a nasty solution, perhaps there's a better way to not store it locally...
 };
 
 #endif /* chaser_hpp */

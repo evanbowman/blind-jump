@@ -10,12 +10,12 @@
 #define renderType_h
 
 enum class Rendertype {
-    shadeDefault,
-    shadeWhite,
-    shadeRed,
-    shadeCrimson,
-    shadeNeon,
-    shadeNone
+	shadeDefault,
+	shadeWhite,
+	shadeRed,
+	shadeCrimson,
+	shadeNeon,
+	shadeNone
 };
 
 #endif /* renderType_h */

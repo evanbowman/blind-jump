@@ -14,20 +14,20 @@
 
 class GradientCircle : public sf::Drawable {
 private:
-    sf::VertexArray vertices;
-    float radius, xPos, yPos;
-    virtual void draw(sf::RenderTarget& target, const sf::RenderStates states) const;
-    
+	sf::VertexArray vertices;
+	float radius, xPos, yPos;
+	virtual void draw(sf::RenderTarget& target, const sf::RenderStates states) const;
+	
 public:
-    GradientCircle();
-    void setCenterColor(const sf::Color);
-    void setOuterColor(const sf::Color);
-    sf::Color getCenterColor() const;
-    sf::Color getOuterColor() const;
-    void setRadius(float);
-    float getRadius() const;
-    void setPosition(float, float);
-    void setPointCount(int);
+	GradientCircle();
+	void setCenterColor(const sf::Color);
+	void setOuterColor(const sf::Color);
+	sf::Color getCenterColor() const;
+	sf::Color getOuterColor() const;
+	void setRadius(float);
+	float getRadius() const;
+	void setPosition(float, float);
+	void setPointCount(int);
 };
 
 #endif /* GradientCircle_hpp */

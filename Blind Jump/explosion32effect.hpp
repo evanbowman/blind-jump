@@ -15,20 +15,20 @@
 
 class Explosion32effect {
 public:
-    Explosion32effect(sf::Sprite[6], float, float);
-    float xPos;
-    float yPos;
-    float xInit;
-    float yInit;
-    void positionUpdateF(float, float);
-    sf::Sprite getSprite();
-    char spriteIndex;
-    char animationCounter;
-    bool imFinished;
-    char animationLength;
-    sf::Sprite sprExp[6];
-    float getXpos();
-    float getYpos();
+	Explosion32effect(sf::Sprite[6], float, float);
+	float xPos;
+	float yPos;
+	float xInit;
+	float yInit;
+	void positionUpdateF(float, float);
+	sf::Sprite getSprite();
+	char spriteIndex;
+	char animationCounter;
+	bool imFinished;
+	char animationLength;
+	sf::Sprite sprExp[6];
+	float getXpos();
+	float getYpos();
 };
 
 #endif /* shotPuff_hpp */

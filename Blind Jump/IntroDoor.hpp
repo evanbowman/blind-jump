@@ -16,18 +16,18 @@
 class ScreenShakeController;
 
 class IntroDoor : public detailParent {
-    
-    enum class State { dormant, opening, opened };
-    
+	
+	enum class State { dormant, opening, opened };
+	
 private:
-    sf::Sprite sprite[4];
-    char frameIndex, frameRate;
-    State state;
-    
+	sf::Sprite sprite[4];
+	char frameIndex, frameRate;
+	State state;
+	
 public:
-    void update(float, float, InputController * pInput, ScreenShakeController * pscr);
-    IntroDoor(float, float, sf::Sprite*, int, float, float);
-    sf::Sprite* getSprite();
+	void update(float, float, InputController * pInput, ScreenShakeController * pscr);
+	IntroDoor(float, float, sf::Sprite*, int, float, float);
+	sf::Sprite* getSprite();
 };
 
 #endif /* Pillar_hpp */

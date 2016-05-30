@@ -16,17 +16,17 @@
 
 class Teleporter : public detailParent {
 public:
-    Teleporter(float, float, sf::Sprite*, sf::Sprite, int, float, float);
-    sf::Sprite* getShadow();
-    bool smokeReady();
-    sf::Sprite* getSprite();
-    void update(float, float, sf::Time &);
-    sf::Sprite glowSprite;
-    sf::Sprite* getGlow();
-    
+	Teleporter(float, float, sf::Sprite*, sf::Sprite, int, float, float);
+	sf::Sprite* getShadow();
+	bool smokeReady();
+	sf::Sprite* getSprite();
+	void update(float, float, sf::Time &);
+	sf::Sprite glowSprite;
+	sf::Sprite* getGlow();
+	
 private:
-    unsigned int smokeTimer;
-    sf::Sprite TeleporterSprites[2];
+	unsigned int smokeTimer;
+	sf::Sprite TeleporterSprites[2];
 };
 
 #endif /* mapTower_hpp */

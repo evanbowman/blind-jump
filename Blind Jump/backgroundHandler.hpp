@@ -17,33 +17,33 @@
 
 class backgroundHandler {
 private:
-    sf::Texture foregroundTreesTxtr;
-    sf::Sprite foregroundTreesSpr;
-    sf::Texture bkgLayer[3];
-    sf::Texture bkgStars;
-    sf::Texture bkgStarsFar;
-    sf::Sprite bkgSprite[3];
-    sf::Sprite stars[STARMAP_SIZE][STARMAP_SIZE];
-    sf::Sprite starsFar[STARMAP_SIZE][STARMAP_SIZE];
-    sf::CircleShape planet[2];
-    sf::RectangleShape solidBkg;
-    float xOffset, xOffPrev;
-    float yOffset, yOffPrev;
-    float posX;
-    float posY;
-    float windowW;
-    float windowH;
-    unsigned char workingSet;
-    sf::RenderTexture rt;
-    
+	sf::Texture foregroundTreesTxtr;
+	sf::Sprite foregroundTreesSpr;
+	sf::Texture bkgLayer[3];
+	sf::Texture bkgStars;
+	sf::Texture bkgStarsFar;
+	sf::Sprite bkgSprite[3];
+	sf::Sprite stars[STARMAP_SIZE][STARMAP_SIZE];
+	sf::Sprite starsFar[STARMAP_SIZE][STARMAP_SIZE];
+	sf::CircleShape planet[2];
+	sf::RectangleShape solidBkg;
+	float xOffset, xOffPrev;
+	float yOffset, yOffPrev;
+	float posX;
+	float posY;
+	float windowW;
+	float windowH;
+	unsigned char workingSet;
+	sf::RenderTexture rt;
+	
 public:
-    backgroundHandler();
-    void drawBackground(sf::RenderTexture&);
-    void drawForeground(sf::RenderTexture&);
-    void setOffset(float, float);
-    void setPosition(float, float);
-    void giveWindowSize(float, float);
-    void setBkg(unsigned char);
+	backgroundHandler();
+	void drawBackground(sf::RenderTexture&);
+	void drawForeground(sf::RenderTexture&);
+	void setOffset(float, float);
+	void setPosition(float, float);
+	void giveWindowSize(float, float);
+	void setBkg(unsigned char);
 };
 
 #endif /* backgroundHandler_hpp */

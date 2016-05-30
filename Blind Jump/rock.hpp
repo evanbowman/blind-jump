@@ -16,12 +16,12 @@
 
 class Rock : public detailParent {
 private:
-    sf::Sprite sprite;
-    
+	sf::Sprite sprite;
+	
 public:
-    void update(float, float);
-    Rock(float, float, sf::Sprite*, int, float, float);
-    sf::Sprite* getSprite();
+	void update(float, float);
+	Rock(float, float, sf::Sprite*, int, float, float);
+	sf::Sprite* getSprite();
 };
 
 #endif /* rock_hpp */

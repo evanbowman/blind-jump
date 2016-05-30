@@ -15,24 +15,24 @@
 
 class detailParent {
 public:
-    float xInit;
-    float yInit;
-    float xPos;
-    float yPos;
-    float windowCenterX;
-    float windowCenterY;
-    detailParent();
-    detailParent(float, float, sf::Sprite*, int, float, float);
-    bool getDrawOrder();
-    void setDrawOrder(bool);
-    void setPosition(float, float);
-    void setInitPosition(float, float);
-    float getxPos();
-    float getyPos();
-    float getxInit();
-    float getyInit();
-    float getWindowCenterX();
-    float getWindowCenterY();
+	float xInit;
+	float yInit;
+	float xPos;
+	float yPos;
+	float windowCenterX;
+	float windowCenterY;
+	detailParent();
+	detailParent(float, float, sf::Sprite*, int, float, float);
+	bool getDrawOrder();
+	void setDrawOrder(bool);
+	void setPosition(float, float);
+	void setInitPosition(float, float);
+	float getxPos();
+	float getyPos();
+	float getxInit();
+	float getyInit();
+	float getWindowCenterX();
+	float getWindowCenterY();
 };
 
 #endif /* detailParent_hpp */

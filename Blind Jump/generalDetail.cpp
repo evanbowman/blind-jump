@@ -9,15 +9,15 @@
 #include "generalDetail.hpp"
 
 GeneralDetail::GeneralDetail(float xStart, float yStart, sf::Sprite* spr, int len, float width, float height) : detailParent(xStart, yStart, spr, len, width, height) {
-    this->spr = *spr;
+	this->spr = *spr;
 }
 
 void GeneralDetail::update(float xOffset, float yOffset) {
-    xPos = xOffset + xInit;
-    yPos = yOffset + yInit;
-    spr.setPosition(xPos - 3, yPos);
+	xPos = xOffset + xInit;
+	yPos = yOffset + yInit;
+	spr.setPosition(xPos - 3, yPos);
 }
 
 sf::Sprite* GeneralDetail::getSprite() {
-    return &spr;
+	return &spr;
 }

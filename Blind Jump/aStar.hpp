@@ -18,8 +18,8 @@
 
 // A simple structure to hold ordered pairs
 struct aStrCoordinate {
-    int x, y;
-    float f, g;
+	int x, y;
+	float f, g;
 };
 
 // Define a class for a node

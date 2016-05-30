@@ -16,21 +16,21 @@
 
 class shotPuff {
 public:
-    shotPuff(sf::Sprite[4], float, float, char, int);
-    float xPos;
-    float yPos;
-    float xInit;
-    float yInit;
-    void update(float, float, sf::Time &);
-    sf::Sprite getSprite();
-    bool getKillFlag();
-    float getYpos();
-    
+	shotPuff(sf::Sprite[4], float, float, char, int);
+	float xPos;
+	float yPos;
+	float xInit;
+	float yInit;
+	void update(float, float, sf::Time &);
+	sf::Sprite getSprite();
+	bool getKillFlag();
+	float getYpos();
+	
 private:
-    int frameIndex;
-    unsigned int frameTimer;
-    sf::Sprite sprPuff[4];
-    sf::Texture sprText[4];
-    bool killFlag;
+	int frameIndex;
+	unsigned int frameTimer;
+	sf::Sprite sprPuff[4];
+	sf::Texture sprText[4];
+	bool killFlag;
 };
 #endif /* shotPuff_hpp */

@@ -10,79 +10,79 @@
 #include <math.h>
 
 EnemyParent::EnemyParent(sf::Sprite* sprArr) {
-    killFlag = false;
-    xInit = 0;
-    yInit = 0;
-    xPos = 0;
-    yPos = 0;
-    frameIndex = 0;
-    isColored = false;
-    colorAmount = 0.f;
-    colorTimer = 0.f;
+	killFlag = false;
+	xInit = 0;
+	yInit = 0;
+	xPos = 0;
+	yPos = 0;
+	frameIndex = 0;
+	isColored = false;
+	colorAmount = 0.f;
+	colorTimer = 0.f;
 }
 
 bool EnemyParent::getKillFlag() const {
-    return killFlag;
+	return killFlag;
 }
 
 bool EnemyParent::colored() {
-    return isColored;
+	return isColored;
 }
 
 void EnemyParent::setPlayerPos(float x, float y) {
-    playerPosX = x;
-    playerPosY = y;
+	playerPosX = x;
+	playerPosY = y;
 }
 
 void EnemyParent::setPosition(float xOffset, float yOffset) {
-    xPos = xOffset + xInit;
-    yPos = yOffset + yInit;
-    this->xOffset = xOffset;
-    this->yOffset = yOffset;
+	xPos = xOffset + xInit;
+	yPos = yOffset + yInit;
+	this->xOffset = xOffset;
+	this->yOffset = yOffset;
 }
 
 void EnemyParent::setInitPosition(float x, float y) {
-    xInit = x;
-    yInit = y;
+	xInit = x;
+	yInit = y;
 }
 
 float EnemyParent::getXpos() const {
-    return xPos;
+	return xPos;
 }
 
 float EnemyParent::getYpos() const {
-    return yPos;
+	return yPos;
 }
 
 float EnemyParent::getXinit() const {
-    return xInit;
+	return xInit;
 }
 
 float EnemyParent::getYinit() const {
-    return yInit;
+	return yInit;
 }
 
 bool EnemyParent::checkCollisionWall(std::vector<wall> w, float collisionRadius) {
-    for (auto & element : w) {
-        if ((xPos - 4 < (element.getPosX() + element.width) && (xPos - 4 > (element.getPosX()))) && (fabs((yPos + 4) - element.getPosY()) <= 16))  {
-            xInit += 1;
-            return true;
-        }
-            
-        if ((xPos + 12 > (element.getPosX()) && (xPos + 12 < (element.getPosX() + element.width))) && (fabs((yPos + 4) - element.getPosY()) <= 16))  {
-            xInit -= 1;
-            return true;
-        }
-            
-        if (((yPos - 6 < (element.getPosY() + element.height)) && (yPos - 6 > (element.getPosY()))) && (fabs((xPos) - element.getPosX()) <= 16))  {
-            yInit += 1;
-            return true;
-        }
-            
-        if (((yPos + 6 > element.getPosY()) && (yPos + 6 < element.getPosY() + element.height)) && (fabs((xPos) - element.getPosX()) <= 16))  {
-            yInit -= 1;
-            return true;
-        }
-    }
-    return false;
+	for (auto & element : w) {
+		if ((xPos - 4 < (element.getPosX() + element.width) && (xPos - 4 > (element.getPosX()))) && (fabs((yPos + 4) - element.getPosY()) <= 16))  {
+			xInit += 1;
+			return true;
+		}
+			
+		if ((xPos + 12 > (element.getPosX()) && (xPos + 12 < (element.getPosX() + element.width))) && (fabs((yPos + 4) - element.getPosY()) <= 16))  {
+			xInit -= 1;
+			return true;
+		}
+			
+		if (((yPos - 6 < (element.getPosY() + element.height)) && (yPos - 6 > (element.getPosY()))) && (fabs((xPos) - element.getPosX()) <= 16))  {
+			yInit += 1;
+			return true;
+		}
+			
+		if (((yPos + 6 > element.getPosY()) && (yPos + 6 < element.getPosY() + element.height)) && (fabs((xPos) - element.getPosX()) <= 16))  {
+			yInit -= 1;
+			return true;
+		}
+	}
+	return false;
 }

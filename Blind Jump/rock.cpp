@@ -9,16 +9,16 @@
 #include "rock.hpp"
 
 Rock::Rock(float xStart, float yStart, sf::Sprite* inpSpr, int len, float width, float height) : detailParent(xStart, yStart, inpSpr, len, width, height) {
-    sprite = inpSpr[0];
+	sprite = inpSpr[0];
 }
 
 void Rock::update(float xOffset, float yOffset) {
-    // Update the object's position
-    xPos = xOffset + xInit;
-    yPos = yOffset + yInit;
+	// Update the object's position
+	xPos = xOffset + xInit;
+	yPos = yOffset + yInit;
 }
 
 sf::Sprite* Rock::getSprite() {
-    sprite.setPosition(xPos, yPos);
-    return &sprite;
+	sprite.setPosition(xPos, yPos);
+	return &sprite;
 }

@@ -363,7 +363,7 @@
 		6846F73B1CA616630015ABAA /* introLevel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = introLevel.png; sourceTree = "<group>"; };
 		6846F73D1CA630A80015ABAA /* introLevelMask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = introLevelMask.png; sourceTree = "<group>"; };
 		684B36B81C7F376B000A1A99 /* titleBkg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = titleBkg.png; sourceTree = "<group>"; };
-		684B36BF1C809A44000A1A99 /* aStar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = aStar.cpp; sourceTree = "<group>"; };
+		684B36BF1C809A44000A1A99 /* aStar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = aStar.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		684B36D51C811932000A1A99 /* critter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = critter.cpp; sourceTree = "<group>"; };
 		684B36D61C811932000A1A99 /* critter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = critter.hpp; sourceTree = "<group>"; };
 		684B36D91C812360000A1A99 /* aStar.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = aStar.hpp; sourceTree = "<group>"; };
@@ -520,7 +520,7 @@
 		68E8B5841BDF25D700A2F720 /* turretShot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = turretShot.png; sourceTree = "<group>"; };
 		68E8B5861BDF263100A2F720 /* turretShot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = turretShot.cpp; sourceTree = "<group>"; };
 		68E8B5871BDF263100A2F720 /* turretShot.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = turretShot.hpp; sourceTree = "<group>"; };
-		68E8B58A1BDFBAA200A2F720 /* angleFunction.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = angleFunction.hpp; sourceTree = "<group>"; };
+		68E8B58A1BDFBAA200A2F720 /* angleFunction.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = angleFunction.hpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		68E8E59C1BCD82950089ED4F /* gun.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gun.cpp; sourceTree = "<group>"; };
 		68E8E59D1BCD82950089ED4F /* gun.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = gun.hpp; sourceTree = "<group>"; };
 		68E8E59F1BCD87690089ED4F /* gunRight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gunRight.png; sourceTree = "<group>"; };

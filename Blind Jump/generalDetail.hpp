@@ -15,12 +15,12 @@
 
 class GeneralDetail : public detailParent {
 public:
-    GeneralDetail(float, float, sf::Sprite*, int, float, float);
-    sf::Sprite* getSprite();
-    void update(float, float);
-    
+	GeneralDetail(float, float, sf::Sprite*, int, float, float);
+	sf::Sprite* getSprite();
+	void update(float, float);
+	
 private:
-    sf::Sprite spr;
+	sf::Sprite spr;
 };
 
 #endif /* generalDetail_hpp */

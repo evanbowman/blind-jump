@@ -9,73 +9,73 @@
 #include "FireExplosion.hpp"
 
 FireExplosion::FireExplosion(sf::Sprite* sprs, sf::Sprite glow, float x, float y) {
-    for (int i = 0; i < 9; i++) {
-        sprites[i] = sprs[i];
-        sprites[i].setOrigin(29, 25);
-    }
-    this->glow = glow;
-    this->glow.setColor(sf::Color(240, 240, 240));
-    xInit = x;
-    yInit = y;
-    killFlag = false;
-    frameIndex = 0;
-    animationTimer = 0;
-    valid = true;
+	for (int i = 0; i < 9; i++) {
+		sprites[i] = sprs[i];
+		sprites[i].setOrigin(29, 25);
+	}
+	this->glow = glow;
+	this->glow.setColor(sf::Color(240, 240, 240));
+	xInit = x;
+	yInit = y;
+	killFlag = false;
+	frameIndex = 0;
+	animationTimer = 0;
+	valid = true;
 }
 
 void FireExplosion::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
-    xPos = xInit + xOffset;
-    yPos = yInit + yOffset;
-    animationTimer += elapsedTime.asMilliseconds();
-    if (animationTimer > 70) {
-        animationTimer -= 70;
-        frameIndex++;
-        if (frameIndex > 8) {
-            frameIndex = 8;
-            killFlag = true;
-        }
-    }
-    sf::Color c = glow.getColor();
-    if (c.r > 8) {
-        c.r -= 8;
-        c.g -= 8;
-        c.b -= 8;
-        glow.setColor(c);
-    }
-    sprites[frameIndex].setPosition(xPos, yPos);
-    glow.setPosition(xPos - 225, yPos - 225);
+	xPos = xInit + xOffset;
+	yPos = yInit + yOffset;
+	animationTimer += elapsedTime.asMilliseconds();
+	if (animationTimer > 70) {
+		animationTimer -= 70;
+		frameIndex++;
+		if (frameIndex > 8) {
+			frameIndex = 8;
+			killFlag = true;
+		}
+	}
+	sf::Color c = glow.getColor();
+	if (c.r > 8) {
+		c.r -= 8;
+		c.g -= 8;
+		c.b -= 8;
+		glow.setColor(c);
+	}
+	sprites[frameIndex].setPosition(xPos, yPos);
+	glow.setPosition(xPos - 225, yPos - 225);
 }
 
 void FireExplosion::setOrigin(int x, int y) {
-    for (int i = 0; i < 9; i++) {
-        sprites[i].setOrigin(x, y);
-    }
+	for (int i = 0; i < 9; i++) {
+		sprites[i].setOrigin(x, y);
+	}
 }
 
 sf::Sprite* FireExplosion::getGlow() {
-    return &glow;
+	return &glow;
 }
 
 sf::Sprite FireExplosion::getSprite() {
-    return sprites[frameIndex];
+	return sprites[frameIndex];
 }
 
 bool FireExplosion::getKillFlag() {
-    return killFlag;
+	return killFlag;
 }
 
 float FireExplosion::getYpos() {
-    return yPos;
+	return yPos;
 }
 
 float FireExplosion::getXpos() {
-    return xPos;
+	return xPos;
 }
 
 bool FireExplosion::isValid() {
-    return valid;
+	return valid;
 }
 
 void FireExplosion::invalidate() {
-    valid = false;
+	valid = false;
 }
