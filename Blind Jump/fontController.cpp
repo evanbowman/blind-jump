@@ -25,20 +25,24 @@ FontController::FontController(sf::View fontView, float x, float y) {
 
     // Load all of the game fonts into memory
     cornerstone.loadFromFile(resourcePath() + "Cornerstone.ttf");
-
+    
+    health = 4;
+    maxHealth = 4;
+    score = 0;
+    
     // Set the waypoint text
     waypointText.setFont(cornerstone);
     waypointText.setString("WAYPOINT-1");
     waypointText.setCharacterSize(0.055 * fontView.getSize().y);
     waypointText.setPosition(16, 0);
     
-    healthText.setString("Health:");
-    healthText.setCharacterSize(0.026 * fontView.getSize().y);
-    healthText.setFont(cornerstone);
-    
     scoreText.setString("Score: 0");
     scoreText.setCharacterSize(0.026 * fontView.getSize().y);
     scoreText.setFont(cornerstone);
+    
+    healthNumText.setString(": " + std::to_string(static_cast<int>(health)) + " / " + std::to_string(static_cast<int>(maxHealth)));
+    healthNumText.setCharacterSize(0.026 * fontView.getSize().y);
+    healthNumText.setFont(cornerstone);
     
     continueText.setString("Press z to continue");
     continueText.setCharacterSize(0.026 * fontView.getSize().y);
@@ -48,51 +52,24 @@ FontController::FontController(sf::View fontView, float x, float y) {
     titleText.setCharacterSize(0.115 * fontView.getSize().y);
     titleText.setFont(cornerstone);
     titleText.setPosition(fontView.getSize().x / 2 - titleText.getLocalBounds().width / 2, fontView.getSize().y / 8 - titleText.getLocalBounds().height / 2);
+    titleText.setColor(sf::Color(255, 255, 255, 0));
     
     deathText.setCharacterSize(0.115 * fontView.getSize().y);
     deathText.setFont(cornerstone);
     deathText.setString("YOU DIED");
     deathText.setColor(sf::Color(231, 26, 83));
     deathText.setPosition(fontView.getSize().x / 2 - deathText.getLocalBounds().width / 2, fontView.getSize().y / 12 - deathText.getLocalBounds().height / 2);
-    
-    
-    for (int i = 0; i < 10; i++) {
-        // Load in score number textures
-        healthFull[i].setRadius(0.009 * fontView.getSize().y);
-        healthFull[i].setFillColor(sf::Color(255, 255, 255, 4));
-        healthFull[i].setOutlineColor(sf::Color(255, 255, 255, 4));
-        healthFull[i].setOutlineThickness(0.004 * fontView.getSize().y);
-        healthEmpty[i].setRadius(0.009 * fontView.getSize().y);
-        healthEmpty[i].setFillColor(sf::Color::Transparent);
-        healthEmpty[i].setOutlineColor(sf::Color(255, 255, 255, 4));
-        healthEmpty[i].setOutlineThickness(0.004 * fontView.getSize().y);
-    }
-    
-    health = 4;
-    maxHealth = 4;
-    score = 0;
 }
 
 void FontController::setWaypointText(int level) {
-    // Put the health text in the right spot
-    float initPos = fontView.getSize().x - maxHealth * 0.030 * fontView.getSize().y - 12;
-    float scrnSize = fontView.getSize().y;
-    for (int i = 0; i < 10; i++) {
-        healthFull[i].setPosition((i * 0.030 * scrnSize) + initPos, 0.0030 * scrnSize + healthFull[i].getRadius());
-        healthEmpty[i].setPosition((i * 0.030 * scrnSize) + initPos, 0.0030 * scrnSize + healthFull[i].getRadius());
-        healthFull[i].setFillColor(sf::Color(255, 255, 255, 4));
-        healthFull[i].setOutlineColor(sf::Color(255, 255, 255, 4));
-        healthEmpty[i].setFillColor(sf::Color::Transparent);
-        healthEmpty[i].setOutlineColor(sf::Color(255, 255, 255, 4));
-    }
-    healthText.setPosition(initPos - healthText.getLocalBounds().width - 0.015 * scrnSize, 0.0032 * scrnSize + healthFull[0].getRadius() - healthText.getLocalBounds().height / 2);
+    healthNumText.setPosition(fontView.getSize().x - healthNumText.getLocalBounds().width - 0.008f * fontView.getSize().x, healthNumText.getLocalBounds().height);
+    healthNumText.setColor(sf::Color(255, 255, 255, 0));
     scoreText.setPosition(fontView.getSize().x - scoreText.getLocalBounds().width - fontView.getSize().x * 0.015, scoreText.getLocalBounds().height * 2.5);
     std::string str = "WAYPOINT-";
     str += std::to_string(level);
     waypointText.setString(str);
     // Reset the color, it will fade out
     waypointText.setColor(sf::Color::White);
-    healthText.setColor(sf::Color(255, 255, 255, 4));
     scoreText.setColor(sf::Color(255, 255, 255, 4));
     wpTextDisplayTimer.restart();
     healthDisplayTimer.restart();
@@ -126,29 +103,17 @@ void FontController::print(sf::RenderWindow& window) {
         }
         window.draw(waypointText);
     }
-    c = healthFull[0].getFillColor();
-    
+
+    c = healthNumText.getColor();
     if (c.a > 5) {
         if (healthDisplayTimer.getElapsedTime().asSeconds() > HEALTH_TEXT_FADE_SECONDS) {
             c.a -= 4;
-            for (int i = 0; i < 10; i++) {
-                healthFull[i].setFillColor(c);
-                healthFull[i].setOutlineColor(c);
-                healthEmpty[i].setOutlineColor(c);
-            }
-            healthText.setColor(c);
+            healthNumText.setColor(c);
         }
         
-        for (int i = 0; i < maxHealth; i++) {
-            if (health > i) {
-                window.draw(healthFull[i]);
-            }
-            else {
-                window.draw(healthEmpty[i]);
-            }
-        }
+        window.draw(healthNumText);
+        // Draw the heart
     }
-    window.draw(healthText);
     
     c = scoreText.getColor();
     if (c.a > 5) {
@@ -180,12 +145,7 @@ void FontController::updateScore(int offset) {
 }
 
 void FontController::resetHPText() {
-    healthText.setColor(sf::Color::White);
-    for (int i = 0; i < 10; i++) {
-        healthFull[i].setFillColor(sf::Color::White);
-        healthFull[i].setOutlineColor(sf::Color::White);
-        healthEmpty[i].setOutlineColor(sf::Color::White);
-    }
+    healthNumText.setColor(sf::Color::White);
     healthDisplayTimer.restart();
 }
 
@@ -212,18 +172,13 @@ sf::Text* FontController::getTitle() {
 void FontController::updateHealth(char health) {
     // Set health equal to the input parameter or the max health, depending on which is lower
     this->health = std::min(health, maxHealth);
+    healthNumText.setString(": " + std::to_string(static_cast<int>(health)) + " / " + std::to_string(static_cast<int>(maxHealth)));
+    healthNumText.setPosition(fontView.getSize().x - healthNumText.getLocalBounds().width - 0.008f * fontView.getSize().x, healthNumText.getLocalBounds().height);
 }
 
 void FontController::updateMaxHealth(char health) {
     maxHealth = health;
-    // Put the health in the right spot in the window
-    float initPos = fontView.getSize().x - maxHealth * 0.030 * fontView.getSize().y - 12;
-    float scrnSize = fontView.getSize().y;
-    for (int i = 0; i < 10; i++) {
-        healthFull[i].setPosition((i * 0.030 * scrnSize) + initPos, 0.0030 * scrnSize + healthFull[i].getRadius());
-        healthEmpty[i].setPosition((i * 0.030 * scrnSize) + initPos, 0.0030 * scrnSize + healthFull[i].getRadius());
-    }
-    healthText.setPosition(initPos - healthText.getLocalBounds().width - 0.015 * scrnSize, 0.0032 * scrnSize + healthFull[0].getRadius() - healthText.getLocalBounds().height / 2);
+    healthNumText.setString(": " + std::to_string(static_cast<int>(health)) + " / " + std::to_string(static_cast<int>(maxHealth)));
     resetHPText();
 }
 

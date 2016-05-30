@@ -18,12 +18,10 @@ class FontController {
 private:
     sf::Texture texture;
     float alpha;
-    sf::CircleShape healthFull[10];
-    sf::CircleShape healthEmpty[10];
     sf::View fontView;
     // The fonts to be used by the font controller
     sf::Font cornerstone;
-    sf::Text waypointText, healthText, titleText, credit, deathText, scoreText, continueText;
+    sf::Text waypointText, titleText, credit, deathText, scoreText, continueText, healthNumText;
     char health;
     char maxHealth;
     float width;
