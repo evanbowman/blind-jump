@@ -44,7 +44,7 @@ public:
     // Declare selection circles to go around the object
     sf::Texture txtShadowTexture;
     sf::Sprite txtShadowSprite;
-    void setPosition(float, float);
+    void setup(float, float, sf::View *);
     sf::Texture itemTextures[3][3];
     void addItem(char, effectsController&, float, float, FontController&, Player&);
     
@@ -83,13 +83,18 @@ private:
     
     int enemyValueCount;
     
-    unsigned int timer;
+    unsigned int timer, timerAlt;
+    
+    float zoomDegree;
     
     // The amount of blur to use when opening the items menu
     float blurAmount;
     
-    float desaturateAmount;
+    sf::View * pWorldView;
+    sf::View cachedView;
     
+    float desaturateAmount;
+    float textAlpha;
     bool keyPressed;
     
     bool deathSeq, deathSeqComplete;

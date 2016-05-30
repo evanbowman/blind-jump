@@ -23,6 +23,9 @@ userInterface::userInterface() {
     state = State::closed;
     desaturateAmount = 0.f;
     timer = 0.f;
+    timerAlt = 0.f;
+    textAlpha = 0.f;
+    zoomDegree = 0.999f;
     
     // Load in all of the item textures
     for (int i = 0; i < 3; i++)
@@ -139,27 +142,64 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontContr
             timer += elapsed.asMilliseconds();
             if (timer > 20.f) {
                 timer -= 20.f;
-                desaturateAmount += 0.0075f;
+                desaturateAmount += 0.01f;
+                zoomDegree += 0.000007f;
+                pWorldView->zoom(zoomDegree);
             }
             
-            if (desaturateAmount > 0.7f) {
+            if (desaturateAmount > 0.65f) {
+                desaturateAmount = 0.65f;
                 state = State::deathScreen;
+                timerAlt = 0.f;
             }
-            f.drawDeathText(255, window);
+            textAlpha = desaturateAmount * 255 + 89.25f;
+            f.drawDeathText(static_cast<unsigned char>(textAlpha), window);
             break;
             
         case State::deathScreen:
             f.drawDeathText(255, window);
-            if (z)
+            timer += elapsed.asMilliseconds();
+            timerAlt += elapsed.asMilliseconds();
+            if (timer > 20.f) {
+                timer -= 20.f;
+                if (timerAlt < 1400.f) {
+                    zoomDegree += 0.000007f;
+                    pWorldView->zoom(zoomDegree);
+                }
+            }
+            
+            if (z) {
+                timer = 0.f;
                 state = State::deathScreenExit;
+            }
             break;
             
         case State::deathScreenExit:
-            state = State::statsScreen;
+            timer += elapsed.asMilliseconds();
+            if (timer > 20.f) {
+                timer -= 20.f;
+                if (textAlpha > 15.f)
+                    textAlpha -= 15.f;
+                blurAmount *= 1.2f;
+            }
+            
+            f.drawDeathText(static_cast<unsigned char>(textAlpha), window);
+            
+            if (blurAmount > 0.99999f) {
+                blurAmount = 0.99999f;
+                state = State::statsScreen;
+                // Blurring is heavy on the graphics card
+                window.setFramerateLimit(30);
+            }
             break;
             
         case State::statsScreen:
-            state = State::complete;
+            if (z) {
+                state = State::complete;
+                window.setFramerateLimit(60);
+                *pWorldView = cachedView;
+                zoomDegree = 0.999f;
+            }
             break;
             
         case State::complete:
@@ -182,7 +222,7 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontContr
     }
 }
 
-void userInterface::setPosition(float x, float y) {
+void userInterface::setup(float x, float y, sf::View * pWorldView) {
     xPos = x;
     yPos = y + 16;
     sf::Vector2f v1(x * 2 / 3, y * 1.6);
@@ -190,10 +230,13 @@ void userInterface::setPosition(float x, float y) {
     // Set the size of the shadow gradient to draw when displaying text
     txtShadowSprite.setScale((2 * x) / 450, (2 * y) / 450);
     txtShadowSprite.setColor(sf::Color(255, 255, 255, 4));
-    
+
     for (auto & element : textToDisplay) {
         element.setColor(sf::Color(255, 255, 255, 1));
     }
+    
+    this->pWorldView = pWorldView;
+    cachedView = *pWorldView;
     
     weaponDispOffset = y * 2;
     
@@ -210,9 +253,10 @@ void userInterface::addItem(char newItem, effectsController& ef, float xStart, f
 }
 
 void userInterface::dispDeathSeq() {
-    if (state != userInterface::State::deathScreenEntry)
+    if (state == userInterface::State::closed) {
         timer = 0.f;
         state = userInterface::State::deathScreenEntry;
+    }
 }
 
 bool userInterface::isComplete() {

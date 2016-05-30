@@ -51,7 +51,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
     bkg.giveWindowSize(windowW, windowH);
     
     // Tell the UI where the center of the window is
-    UI.setPosition(windowW / 2, windowH/ 2);
+    UI.setup(windowW / 2, windowH/ 2, &worldView);
     
     // Store the pointer to the font controller in main() as one of the object's datefields
     this->pFonts = pFonts;
@@ -215,6 +215,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     
     lightingMap.clear(sf::Color::Transparent);
     
+    window.setView(worldView);
     
     /*-----------------------------------------------------------------------------------*/
     //
@@ -318,8 +319,8 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
     }
     
     if (!player.isdead()) {
-        if (!UI.desaturateEnabled())
-            UI.dispDeathSeq();
+        //if (!UI.desaturateEnabled())
+        UI.dispDeathSeq();
         // If the death sequence is complete and the UI controller is finished playing its animation
         if (UI.isComplete()) {
             // Reset the UI controller

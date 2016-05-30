@@ -23,7 +23,7 @@ private:
     sf::View fontView;
     // The fonts to be used by the font controller
     sf::Font cornerstone;
-    sf::Text waypointText, healthText, titleText, credit, deathText, scoreText;
+    sf::Text waypointText, healthText, titleText, credit, deathText, scoreText, continueText;
     char health;
     char maxHealth;
     float width;

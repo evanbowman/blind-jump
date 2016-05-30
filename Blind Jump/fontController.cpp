@@ -40,6 +40,10 @@ FontController::FontController(sf::View fontView, float x, float y) {
     scoreText.setCharacterSize(0.026 * fontView.getSize().y);
     scoreText.setFont(cornerstone);
     
+    continueText.setString("Press z to continue");
+    continueText.setCharacterSize(0.026 * fontView.getSize().y);
+    continueText.setFont(cornerstone);
+    
     titleText.setString("Blind Jump");
     titleText.setCharacterSize(0.115 * fontView.getSize().y);
     titleText.setFont(cornerstone);
