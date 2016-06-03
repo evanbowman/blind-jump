@@ -9,8 +9,15 @@ Thumbs.db
 # Compiled C++ code
 *.out
 
+# C++ object files
+*.o
+
 # Ignore pikopixel save files
 *.piko
 
-# Ignore the xcode user state
-*.xcuserstate
+# emacs temporary files
+*~
+\#*\#
+
+# Project executable
+Blind_Jump

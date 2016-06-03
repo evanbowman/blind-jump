@@ -25,7 +25,7 @@ private:
 	
 public:
 	void update(float, float);
-	char imageIndex;
+	uint8_t imageIndex;
 	turretFlashEffect(sf::Sprite sprites[5], float, float);
 	float getYpos();
 	bool getKillFlag();

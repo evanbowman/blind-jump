@@ -39,7 +39,7 @@ private:
 	int posX;
 	int posY;
 	//Keep track of the current image index and sprite
-	char imageIndex;
+	uint8_t imageIndex;
 	char spriteIndex;
 	//The player's movement speed
 	float speed;

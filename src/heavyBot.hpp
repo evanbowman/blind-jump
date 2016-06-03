@@ -26,7 +26,8 @@ class HeavyBot : public EnemyParent {
 private:
 	sf::Sprite sprites[17];
 	float currentDir;
-	char frameIndex, frameRate, health;
+        uint8_t frameIndex;
+        char frameRate, health;
 	State state;
 	bool runShootAnim;
 	std::vector<aStrCoordinate> path;

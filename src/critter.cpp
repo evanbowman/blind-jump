@@ -30,7 +30,7 @@ Critter::Critter(sf::Sprite* sprs, short map[61][61]) : EnemyParent(sprs) {
 	awake = false;
 }
 
-void Critter::checkBulletCollision(effectsController& ef, FontController& font) {
+void Critter::checkBulletCollision(effectsController& ef) {
 	//Check collisions with player's shots, but only if the shot vectors aren't empty
 	if (!ef.getBulletLayer1().empty()) {
 		for (auto & element : ef.getBulletLayer1()) {
@@ -77,9 +77,9 @@ void Critter::updatePlayerDead() {
 	frameIndex = 0;
 }
 
-void Critter::update(float xOffset, float yOffset, effectsController &effects, FontController &fonts, tileController* pTiles, sf::Time & elapsedTime) {
+void Critter::update(float xOffset, float yOffset, effectsController &effects, tileController* pTiles, sf::Time & elapsedTime) {
 	setPosition(xOffset, yOffset);
-	checkBulletCollision(effects, fonts);
+	checkBulletCollision(effects);
 	if (isColored) {
 		colorTimer += elapsedTime.asMilliseconds();
 		if (colorTimer > 20.f) {

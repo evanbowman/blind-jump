@@ -110,7 +110,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
 	details.addLamplight(tiles.posX - 170, tiles.posY + 200, 11, 11, windowWidth, windowHeight);
 	details.addLamplight(tiles.posX - 180, tiles.posY + 200, 10, -9, windowWidth, windowHeight);
 	details.addDoor(tiles.posX - 192, tiles.posY + 301, 6, 0, windowW, windowH);
-	details.addPod(tiles.posX, tiles.posY + 33, 3, 17, pFonts);
+	details.addPod(tiles.posX, tiles.posY + 33, 3, 17);
 	tiles.teleporterLocation.x = 8;
 	tiles.teleporterLocation.y = -7;
 	for (auto it = global_levelZeroWalls.begin(); it != global_levelZeroWalls.end(); ++it) {
@@ -125,7 +125,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
 	//Initialize the fonts
 	pFonts->setWaypointText(level);
 	
-	details.addTeleporter(tiles, tiles.posX - 178, tiles.posY + 284, windowW, windowH, pFonts);
+	details.addTeleporter(tiles, tiles.posX - 178, tiles.posY + 284, windowW, windowH);
 	
 	// initialize the rectangle shape for the teleporter beam effect
 	sf::Vector2f v1(2, 1);
@@ -178,7 +178,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
 	tiles.drawTiles(target, effects.getGlowSprs(), effects.getGlowSprs2(), level);
 	effects.getGlowSprs2()->clear();
 	// Update the overworld objects based on the displacement of the player
-	details.update(player.getWorldOffsetX(), player.getWorldOffsetY(), effects, player.getSprIndex(), tiles.walls, effects.getGlowSprs(), effects.getGlowSprs2(), UI, *pFonts, player, pInput, &ssc, elapsedTime);
+	details.update(player.getWorldOffsetX(), player.getWorldOffsetY(), effects, player.getSprIndex(), effects.getGlowSprs(), effects.getGlowSprs2(), UI, *pFonts, player, pInput, &ssc, elapsedTime);
 	// Draw the details / add them to the game objects vector
 	details.draw(gameObjects, gameShadows, target);
 	// Update the enemy objects in the game based on the player's displacement
@@ -332,6 +332,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
 			initLoot(itemArray);
 			enemySelectVec.clear();
 			Reset();
+			pFonts->reset();
 			transitionDelay = 320;
 			// Set the max health back to 3
 			pFonts->updateMaxHealth(4);
@@ -580,7 +581,7 @@ void GameMap::Reset() {
 	vignetteSprite.setColor(sf::Color(255, 255, 255, 255));
 	
 	// If not on a boss level...
-	if (level != BOSS_LEVEL_1) {
+	if (level != 0) {
 		//Now call the mapping function again to generate a new map, and make sure it's large enough
 		count = mappingFunction(tiles.mapArray, level, level < BOSS_LEVEL_1);
 		while (count < 150) {
@@ -588,8 +589,6 @@ void GameMap::Reset() {
 		}
 	} else if (level == 0) {
 	
-	} else {
-		mappingFunction(tiles.mapArray, level, level < BOSS_LEVEL_1);
 	}
 	
 	//Now lets rebuild the map from the new array, using the same function from the tileController class constructor
@@ -602,8 +601,8 @@ void GameMap::Reset() {
 	bkg.setPosition((tiles.posX / 2) + 206, tiles.posY / 2);
 	
 	// Perhaps there's a better way to not check the same condition multiple times, without tons of copy-pasting
-	if (level != BOSS_LEVEL_1 && level != 0) {
-		details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH, pFonts);
+	if (level != 0) {
+		details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH);
 		
 		// Now initialize enemies for the map based on level, and store sum of their exp values in a variable
 		count = initEnemies(this);
@@ -663,26 +662,16 @@ void GameMap::Reset() {
 				(*pLamps).pop_back();
 			}
 		}
-	}
-	
-	else if (level == BOSS_LEVEL_1) {
-		tiles.teleporterLocation.x = 34;
-		tiles.teleporterLocation.y = 17;
-		details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH, pFonts);
-		tiles.teleporterLocation.x = 38;
-		details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH, pFonts);
-		details.addLamplight(tiles.posX - 2, tiles.posY - 16, 39, 31, windowW, windowH);
-		details.addLamplight(tiles.posX - 2, tiles.posY - 16, 33, 26, windowW, windowH);
 	} else if (level == 0) {
 		details.addLamplight(tiles.posX - 180, tiles.posY + 200, 5, 6, windowW, windowH);
 		details.addLamplight(tiles.posX - 180, tiles.posY + 200, 5, 0, windowW, windowH);
 		details.addLamplight(tiles.posX - 170, tiles.posY + 200, 11, 11, windowW, windowH);
 		details.addLamplight(tiles.posX - 180, tiles.posY + 200, 10, -9, windowW, windowH);
 		details.addDoor(tiles.posX - 192, tiles.posY + 301, 6, 0, windowW, windowH);
-		details.addPod(tiles.posX, tiles.posY + 33, 3, 17, pFonts);
+		details.addPod(tiles.posX, tiles.posY + 33, 3, 17);
 		tiles.teleporterLocation.x = 8;
 		tiles.teleporterLocation.y = -7;
-		details.addTeleporter(tiles, tiles.posX - 178, tiles.posY + 284, windowW, windowH, pFonts);
+		details.addTeleporter(tiles, tiles.posX - 178, tiles.posY + 284, windowW, windowH);
 		for (auto it = global_levelZeroWalls.begin(); it != global_levelZeroWalls.end(); ++it) {
 			wall w;
 			w.setXinit(it->first);

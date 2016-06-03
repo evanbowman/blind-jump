@@ -21,7 +21,8 @@ class IntroDoor : public detailParent {
 	
 private:
 	sf::Sprite sprite[4];
-	char frameIndex, frameRate;
+        uint8_t frameIndex;
+	char frameRate;
 	State state;
 	
 public:

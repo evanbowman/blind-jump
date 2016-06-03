@@ -30,10 +30,10 @@ public:
 	Dasher(sf::Sprite*);
 	sf::Sprite* getSprite();
 	sf::Sprite* getShadow();
-	void update(float, float, std::vector<wall>, effectsController&, FontController&, sf::Time &);
+	void update(float, float, std::vector<wall>, effectsController&, sf::Time &);
 	void softUpdate(float, float);
 	std::vector<DasherBlur>* getBlurEffects();
-	void checkBulletCollision(effectsController&, FontController&);
+	void checkBulletCollision(effectsController&);
 	bool shakeReady();
 	bool dying();
 	bool scrapReady();

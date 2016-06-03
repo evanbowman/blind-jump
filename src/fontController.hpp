@@ -17,15 +17,12 @@
 class FontController {
 private:
 	sf::Texture texture;
-	float alpha;
 	sf::View fontView;
 	// The fonts to be used by the font controller
 	sf::Font cornerstone;
 	sf::Text waypointText, titleText, credit, deathText, scoreText, continueText, healthNumText;
 	char health;
 	char maxHealth;
-	float width;
-	float height;
 	int score;
 	float windowCenterX, windowCenterY;
 	sf::Clock wpTextDisplayTimer, healthDisplayTimer, scoreDisplayTimer;
@@ -44,9 +41,7 @@ public:
 	char getMaxHealth() const;
 	sf::Text * getTitle();
 	sf::Text * getDeathText();
-	void addCaption(float, float, const char *);
-	std::vector<sf::Text *>* getCaptions();
-	void terminateCaptions();
+        void reset();
 	void resetWPText();
 	void resetHPText();
 	void resetSCText();

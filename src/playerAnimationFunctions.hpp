@@ -13,7 +13,7 @@
 #include <stdio.h>
 
 //Decodes the horizontal movement based on the input (animation sprites are not in sequence, and I reused some of them). It's long, so we dont want this in the player object
-inline char horizontalAnimationDecoder(char index) {
+inline uint8_t horizontalAnimationDecoder(uint8_t index) {
 	switch(index) {
 		case 0:
 			return 0;
@@ -45,7 +45,7 @@ inline char horizontalAnimationDecoder(char index) {
 	}
 }
 
-inline char verticalAnimationDecoder(char index) {
+inline uint8_t verticalAnimationDecoder(uint8_t index) {
 	switch(index) {
 		case 0:
 			return 1;

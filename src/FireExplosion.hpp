@@ -18,7 +18,7 @@ private:
 	sf::Sprite glow;
 	float xInit, yInit, xPos, yPos;
 	bool killFlag;
-	char frameIndex;
+	uint8_t frameIndex;
 	unsigned int animationTimer;
 	bool valid;
 	

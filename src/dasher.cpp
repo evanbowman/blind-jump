@@ -62,7 +62,7 @@ sf::Sprite* Dasher::getSprite() {
 	return &sprs[frameIndex];
 }
 
-void Dasher::checkBulletCollision(effectsController& ef, FontController& fonts) {
+void Dasher::checkBulletCollision(effectsController& ef) {
 	if (!deathSeq) {
 		//Check collisions with player's shots, but only if the shot vectors aren't empty
 		if (!ef.getBulletLayer1().empty()) {
@@ -111,10 +111,10 @@ void Dasher::checkBulletCollision(effectsController& ef, FontController& fonts) 
 	}
 }
 
-void Dasher::update(float xOffset, float yOffset, std::vector<wall> walls, effectsController& ef, FontController& fonts, sf::Time & elapsedTime) {
+void Dasher::update(float xOffset, float yOffset, std::vector<wall> walls, effectsController& ef, sf::Time & elapsedTime) {
 	// Update the object's position variables
 	setPosition(xOffset, yOffset);
-	checkBulletCollision(ef, fonts);
+	checkBulletCollision(ef);
 	// Update the sprite positions
 	if (isColored) {
 		colorTimer += elapsedTime.asMilliseconds();

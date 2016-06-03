@@ -6,16 +6,14 @@
 #
 
 CC = clang++
-CFLAGS = -O1 -std=c++11
+CFLAGS = -O2 -std=c++11 -Wall -Weffc++ -Werror
 LFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
-EXENAME = BlindJump
+EXENAME = Blind_Jump
 OBJECTS = aStar.o backgroundHandler.o bulletType1.o critter.o damagedRobot.o dasher.o dasherShot.o dashSmoke.o detailController.o detailParent.o drawPixels.o effectsController.o enemyController.o enemyCreationFunctions.o enemyParent.o enemyPlacementFn.o enemyShot.o energyBeam.o explosion32effect.o FireExplosion.o fontController.o generalDetail.o gameMap.o GradientCircle.o gun.o healthEffect.o heavyBot.o initLoot.o initMapVectors.o inputController.o IntroDoor.o lampLight.o main.o mappingFunctions.o player.o playerCollisionFunctions.o Powerup.o ResourcePath.o rock.o scoot.o screenShakeController.o shotPuff.o smallExplosion.o soundController.o Teleporter.o teleporterSmoke.o terminal.o tileController.o treasureChest.o turret.o turretFlashEffect.o turretShot.o ui_bubble.o userInterface.o wall.o wallinpath.o worldDetailsController.o
 RSP = resourcePath.hpp resourcePath.cpp
 
 all: $(OBJECTS)
-	echo Linking object files...
 	$(CC) $(OBJECTS) $(LFLAGS) -o $(EXENAME)
-	echo Build complete.
 
 aStar.o: aStar.hpp aStar.cpp
 	$(CC) aStar.cpp $(CFLAGS) -c -o aStar.o
@@ -190,3 +188,4 @@ worldDetailsController.o: worldDetailsController.cpp worldDetailsController.hpp
 
 clean:
 	rm *.o
+

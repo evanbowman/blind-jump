@@ -19,8 +19,8 @@ private:
 	sf::Sprite glow;
 	float xInit, yInit, xPos, yPos;
 	bool killFlag;
-	char frameIndex, frameRate;
-	
+        uint8_t frameIndex;
+	char frameRate;
 	
 public:
 	SmallExplosion(sf::Sprite*, sf::Sprite, float, float);

@@ -209,7 +209,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
 	}
 }
 
-void detailController::addDasherScrap(tileController& t, float posX, float posY, int scale) {
+void detailController::addDasherScrap(float posX, float posY, int scale) {
 	if (scale == -1) {
 		posX += -14;
 	}
@@ -230,7 +230,7 @@ void detailController::addDoor(float xpos, float ypos, int x, int y, float w, fl
 	doors.push_back(d);
 }
 
-void detailController::addPod(float xpos, float ypos, int x, int y, FontController * pFonts) {
+void detailController::addPod(float xpos, float ypos, int x, int y) {
 	sf::Sprite tempSprite;
 	tempSprite.setOrigin(0, 30);
 	tempSprite.setTexture(podTexture);
@@ -238,7 +238,7 @@ void detailController::addPod(float xpos, float ypos, int x, int y, FontControll
 	misc32x26.push_back(d);
 }
 
-void detailController::addTeleporter(tileController& t, float posX, float posY, float width, float height, FontController * pFonts) {
+void detailController::addTeleporter(tileController& t, float posX, float posY, float width, float height) {
 	Coordinate c = t.getTeleporterLoc();
 	sf::Sprite tempSprites[2];
 	tempSprites[0].setTexture(teleporterTexture[0]);
@@ -256,7 +256,7 @@ void detailController::addTeleporter(tileController& t, float posX, float posY, 
 	teleporters.push_back(T);
 }
 
-void detailController::update(float xOffset, float yOffset, effectsController& ef, char PlayerSprIndex, std::vector<wall>& walls, std::vector<sf::Sprite*>* glow1, std::vector<sf::Sprite*>* glow2, userInterface& ui, FontController& fonts, Player& player, InputController* pInput, ScreenShakeController * pscr, sf::Time & elapsedTime) {
+void detailController::update(float xOffset, float yOffset, effectsController& ef, char PlayerSprIndex, std::vector<sf::Sprite*>* glow1, std::vector<sf::Sprite*>* glow2, userInterface& ui, FontController& fonts, Player& player, InputController* pInput, ScreenShakeController * pscr, sf::Time & elapsedTime) {
 	if (!teleporters.empty()) {
 		for (auto & element : teleporters) {
 			element.update(xOffset, yOffset, elapsedTime);

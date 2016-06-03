@@ -499,7 +499,7 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
 }
 
 //This part of the code was getting called repeatedly, so I'll let the compiler do the copy-pasting for me
-inline void updateVAnimCount(int& animationCounter, char& imageIndex, bool x) {
+inline void updateVAnimCount(int& animationCounter, uint8_t& imageIndex, bool x) {
 	//We don't want to go through a 10 frame animation 6 times a second, only go to the next frame when the animation counter reaches 0
 	if (--animationCounter == 0) {
 		if (imageIndex < 10) {
@@ -520,7 +520,7 @@ inline void updateVAnimCount(int& animationCounter, char& imageIndex, bool x) {
 	}
 }
 
-inline void updateHAnimCount(int& animationCounter, char& imageIndex, bool x) {
+inline void updateHAnimCount(int& animationCounter, uint8_t& imageIndex, bool x) {
 	//We don't want to go through a 10 frame animation 6 times a second, only go to the next frame when the animation counter reaches 0
 	if (--animationCounter == 0) {
 		if (imageIndex < 10) {

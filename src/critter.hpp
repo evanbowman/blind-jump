@@ -22,16 +22,16 @@ public:
 	// This calls the parent constructor, which initializes common values like initial position
 	Critter(sf::Sprite*, short map[61][61]);
 	// A function to update all of the enemy's values
-	void update(float, float, effectsController&, FontController&, tileController*, sf::Time &);
+	void update(float, float, effectsController&, tileController*, sf::Time &);
 	sf::Sprite* getSprite();
 	sf::Sprite* getShadow();
 	void softUpdate(float, float);
-	void checkBulletCollision(effectsController& ef, FontController&);
+	void checkBulletCollision(effectsController& ef);
 	void randDir();
 	void activate();
 	void deActivate();
 	bool isActive();
-	char frameIndex;
+	uint8_t frameIndex;
 	char frameRate;
 	void updatePlayerDead();
 	

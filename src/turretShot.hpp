@@ -26,7 +26,6 @@ public:
 	sf::Sprite* getGlow();
 	sf::Sprite getSprite();
 	void update(float, float, sf::Time&);
-	char imageIndex;
 	float direction;
 	bool killFlag;
 	bool getKillFlag();
@@ -43,6 +42,6 @@ public:
 private:
 	float scale;
 	bool trackPlayer;
-	char frameIndex;	
+	uint8_t frameIndex;	
 };
 #endif /* turretShot_hpp */

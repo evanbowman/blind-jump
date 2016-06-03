@@ -48,7 +48,7 @@ public:
 	sf::Texture itemTextures[3][3];
 	void addItem(char, effectsController&, float, float, FontController&, Player&);
 	
-	char selectedColumn;
+	uint8_t selectedColumn;
 	std::array<unsigned char, 3> rowIndices;
 	
 	// Function to display the death sequence

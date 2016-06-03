@@ -18,7 +18,7 @@ private:
 	sf::Sprite sprites[8];
 	float xInit, yInit, xPos, yPos;
 	bool killFlag;
-	char frameIndex;
+	uint8_t frameIndex;
 	unsigned int frameTimer;
 	
 public:

@@ -85,6 +85,10 @@ FontController::FontController(sf::View fontView, float x, float y) {
 	deathText.setPosition(fontView.getSize().x / 2 - deathText.getLocalBounds().width / 2, fontView.getSize().y / 12 - deathText.getLocalBounds().height / 2);
 }
 
+void FontController::reset() {
+  score = 0;
+}
+
 void FontController::setWaypointText(int level) {
 	heart.setPosition(fontView.getSize().x - heart.getLocalBounds().width, heart.getLocalBounds().height / 2.5);
 	healthNumText.setPosition(fontView.getSize().x - healthNumText.getLocalBounds().width - fontView.getSize().x * 0.015 - heart.getLocalBounds().width, healthNumText.getLocalBounds().height);

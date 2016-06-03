@@ -1,7 +1,6 @@
 #include <iostream>
 #include "tileController.hpp"
 #include "mappingFunctions.hpp"
-#include "bossLevels.h"
 
 void floodFillspread(short screen[61][61], short x, short y, short prevC, short newC) {
 	// Base cases
@@ -230,8 +229,8 @@ bool checkFootprint(short map[61][61], int x, int y, int w, int h) {
 }
 
 int mappingFunction(short map[61][61], int level, bool enableGrass) {
-	if (level != BOSS_LEVEL_1) {
-		short maptemp[61][61];
+//// TODO: BOSS LEVELS
+                short maptemp[61][61];
 		//First initialize the whole map as walls (1)
 		for (int i = 0; i < 61; i++) {
 			for (int j = 0; j < 61; j++) {
@@ -291,14 +290,4 @@ int mappingFunction(short map[61][61], int level, bool enableGrass) {
 			cleanEdgesPostCombine(map);
 		}
 		return count;
-	}
-	
-	else {
-		for (int i = 0; i < 61; i++) {
-			for (int j = 0; j < 61; j++) {
-				map[i][j] = bossLevel1[i][j];
-			}
-		}
-		return 0;
-	}
 }

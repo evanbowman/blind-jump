@@ -22,7 +22,7 @@ public:
 	float yInit;
 	void positionUpdateF(float, float);
 	sf::Sprite getSprite();
-	char spriteIndex;
+	uint8_t spriteIndex;
 	char animationCounter;
 	bool imFinished;
 	char animationLength;

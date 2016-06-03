@@ -195,7 +195,7 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
 			else {
 				//if (it->getXpos() > -64 && it->getXpos() < windowW + 64 && it->getYpos() > -64 && it->getYpos() < windowH + 64) {
 					if (enabled) {
-						it->update(x, y, ef, fonts, pTiles, elapsedTime);
+						it->update(x, y, ef, pTiles, elapsedTime);
 					} else {
 						it->updatePlayerDead();
 					}
@@ -230,7 +230,7 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
 		for (std::vector<Dasher>::iterator it = dashers.begin(); it != dashers.end();) {
 			if (it->scrapReady()) {
 				// Add some scrap to the map
-				dets->addDasherScrap(*pTiles, it->getXinit() + 14, it->getYinit() + 15, it->getSprite()->getScale().x);
+				dets->addDasherScrap(it->getXinit() + 14, it->getYinit() + 15, it->getSprite()->getScale().x);
 			}
 			
 			if (it->shakeReady()) {
@@ -244,7 +244,7 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
 			else {
 				if (it->getXpos() > -64 && it->getXpos() < windowW + 64 && it->getYpos() > -64 && it->getYpos() < windowH + 64) {
 					if (enabled) {
-						it->update(x, y, w, ef, fonts, elapsedTime);
+						it->update(x, y, w, ef, elapsedTime);
 					}
 					// Get the enemy's shadow
 					if (!it->dying()) {

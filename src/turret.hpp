@@ -23,7 +23,7 @@ private:
 	double yInit;
 	double playerPosX;
 	double playerPosY;
-	char imageIndex;
+	uint8_t imageIndex;
 	char spriteIndex;
 	short disableCountdown;
 	bool visibility;

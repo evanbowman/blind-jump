@@ -21,7 +21,8 @@ class EnergyBeam {
 private:
 	double xInit, yInit, xPos, yPos;
 	State state;
-	char frameIndex, frameRate;
+        uint8_t frameIndex;
+	char frameRate;
 	sf::Sprite sprites[6];
 	sf::RectangleShape beamShape;
 	bool killFlag;

@@ -16,7 +16,6 @@ turretShot::turretShot(sf::Sprite* sprs, sf::Sprite glow, float x, float y, floa
 	yPos = 0;
 	xInit = x;
 	yInit = y;
-	imageIndex = 0;
 	int diff = pow(-1,rand() % 2) + rand() % 6 - 3;
 	this->sprs[0].setRotation(dir + diff);
 	this->sprs[1].setRotation(dir + diff);
