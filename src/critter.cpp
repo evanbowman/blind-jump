@@ -65,11 +65,11 @@ void Critter::checkBulletCollision(effectsController& ef) {
 		// With some random chance, add a heart item to the map
 		unsigned long int temp = rand() % 5;
 		if (temp == 0) {
-			ef.addHearts(xInit, yInit);
+			ef.addHearts(xInit + 10, yInit);
 		} else {
-			ef.addCoins(xInit, yInit);
+			ef.addCoins(xInit + 10, yInit);
 		}
-		ef.addExplosion(xInit - 16, yInit - 16);
+		ef.addExplosion(xInit - 4, yInit - 16);
 	}
 }
 
