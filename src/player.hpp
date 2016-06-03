@@ -65,10 +65,9 @@ private:
 	sf::Texture deathTextures[11];
 	sf::Sprite deathSprites[11];
 	bool deathSeq;
-	
-	//Declare a counter to step down the speed of the animations from the max framerate
-	int animationCounter;
-	
+
+        unsigned int animationTimer;
+  
 	bool CollisionLeft;
 	bool CollisionRight;
 	bool CollisionUp;

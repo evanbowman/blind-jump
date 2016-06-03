@@ -38,7 +38,7 @@ Player::Player() {
 	speed = 2.2;
 	worldOffsetX = 0;
 	worldOffsetY = 0;
-	animationCounter = 6;
+	animationTimer = 0;
 	leftPrevious = (sf::Keyboard::isKeyPressed(sf::Keyboard::Left));
 	rightPrevious = (sf::Keyboard::isKeyPressed(sf::Keyboard::Right));
 	upPrevious = (sf::Keyboard::isKeyPressed(sf::Keyboard::Up));
@@ -165,10 +165,10 @@ inline void compareSpriteIndex(char& spriteIndex) {
 }
 
 //This function updates the player's sprite index, resets the animation counter, and if the collision state is low, adjusts the world offset to move the player
-inline void updateWorldOffset(char& spriteIndex, int& animationCounter, bool collisionState, char externalNum, float& offset, float speed) {
+inline void updateWorldOffset(char& spriteIndex, unsigned int& animationTimer, bool collisionState, char externalNum, float& offset, float speed) {
 	if (spriteIndex != externalNum) {
 		spriteIndex = externalNum;
-		animationCounter = 10;
+		animationTimer = 0;
 	}
 	if (collisionState == 0) {
 		offset += speed;
@@ -185,7 +185,7 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
 		state = Player::State::nominal;
 		spriteIndex = 8;
 		imageIndex = 0;
-		animationCounter = 6;
+		animationTimer = 0;
 	}
 	bool left, right, up, down, x, z;
 	
@@ -212,7 +212,7 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
 				if (!down && !left && !right && spriteIndex != 5)  {
 					spriteIndex = 5;
 					//imageIndex = 0;
-					animationCounter = 6;
+					animationTimer = 0;
 				}
 				
 				if (CollisionUp == 0) {
@@ -230,7 +230,7 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
 				if (!up && !left && !right && spriteIndex != 4) {
 					spriteIndex = 4;
 					//imageIndex = 0;
-					animationCounter = 6;
+					animationTimer = 0;
 				}
 				if (CollisionDown == 0) {
 					if (right || left) {
@@ -249,7 +249,7 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
 					if (imageIndex > 5) {
 						imageIndex = 0;
 					}
-					animationCounter = 6;
+					animationTimer = 0;
 				}
 				if (CollisionRight == 0) {
 					if (up || down) {
@@ -268,7 +268,7 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
 					if (imageIndex > 5) {
 						imageIndex = 0;
 					}
-					animationCounter = 6;
+					animationTimer = 6;
 				}
 				if (CollisionLeft == 0) {
 					if (up || down) {
@@ -295,70 +295,71 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
 			//Regardless of which direction key(s) active, the player needs to face the direction it was facing when x was pressed
 			if (spriteIndex == 0 || spriteIndex == 4) {
 				if (down) {
-					updateWorldOffset(spriteIndex, animationCounter, CollisionDown, 4, worldOffsetY, -slowSpeed);
+				        updateWorldOffset(spriteIndex, animationTimer, CollisionDown, 4, worldOffsetY, -slowSpeed);
 				}
 				
 				if (up) {
-					updateWorldOffset(spriteIndex, animationCounter, CollisionUp, 4, worldOffsetY, slowSpeed);
+					updateWorldOffset(spriteIndex, animationTimer, CollisionUp, 4, worldOffsetY, slowSpeed);
 				}
 				
 				if (left) {
-					updateWorldOffset(spriteIndex, animationCounter, CollisionLeft, 4, worldOffsetX, slowSpeed);
+					updateWorldOffset(spriteIndex, animationTimer, CollisionLeft, 4, worldOffsetX, slowSpeed);
 				}
 				
 				if (right) {
-					updateWorldOffset(spriteIndex, animationCounter, CollisionRight, 4, worldOffsetX, -slowSpeed);
+					updateWorldOffset(spriteIndex, animationTimer, CollisionRight, 4, worldOffsetX, -slowSpeed);
 				}
 			}
 			if (spriteIndex == 1 || spriteIndex == 5) {
 				if (down) {
-					updateWorldOffset(spriteIndex, animationCounter, CollisionDown, 5, worldOffsetY, -slowSpeed);
+					updateWorldOffset(spriteIndex, animationTimer, CollisionDown, 5, worldOffsetY, -slowSpeed);
 				}
 				
 				if (up) {
-					updateWorldOffset(spriteIndex, animationCounter, CollisionUp, 5, worldOffsetY, slowSpeed);
+					updateWorldOffset(spriteIndex, animationTimer, CollisionUp, 5, worldOffsetY, slowSpeed);
 				}
 				
 				if (left) {
-					updateWorldOffset(spriteIndex, animationCounter, CollisionLeft, 5, worldOffsetX, slowSpeed);
+					updateWorldOffset(spriteIndex, animationTimer, CollisionLeft, 5, worldOffsetX, slowSpeed);
 				}
 				
 				if (right) {
-					updateWorldOffset(spriteIndex, animationCounter, CollisionRight, 5, worldOffsetX, -slowSpeed);
+					updateWorldOffset(spriteIndex, animationTimer, CollisionRight, 5, worldOffsetX, -slowSpeed);
 				}
 			}
 			if (spriteIndex == 2 || spriteIndex == 6) {
 				if (down) {
-					updateWorldOffset(spriteIndex, animationCounter, CollisionDown, 6, worldOffsetY, -slowSpeed);
+					updateWorldOffset(spriteIndex, animationTimer, CollisionDown, 6, worldOffsetY, -slowSpeed);
 				}
 				
 				if (up) {
-					updateWorldOffset(spriteIndex, animationCounter, CollisionUp, 6, worldOffsetY, slowSpeed);
+				        
+					updateWorldOffset(spriteIndex, animationTimer, CollisionUp, 6, worldOffsetY, slowSpeed);
 				}
 				
 				if (left) {
-					updateWorldOffset(spriteIndex, animationCounter, CollisionLeft, 6, worldOffsetX, slowSpeed);
+					updateWorldOffset(spriteIndex, animationTimer, CollisionLeft, 6, worldOffsetX, slowSpeed);
 				}
 				
 				if (right) {
-					updateWorldOffset(spriteIndex, animationCounter, CollisionRight, 6, worldOffsetX, -slowSpeed);
+					updateWorldOffset(spriteIndex, animationTimer, CollisionRight, 6, worldOffsetX, -slowSpeed);
 				}
 			}
 			if (spriteIndex == 3 || spriteIndex == 7) {
 				if (down) {
-					updateWorldOffset(spriteIndex, animationCounter, CollisionDown, 7, worldOffsetY, -slowSpeed);
+					updateWorldOffset(spriteIndex, animationTimer, CollisionDown, 7, worldOffsetY, -slowSpeed);
 				}
 				
 				if (up) {
-					updateWorldOffset(spriteIndex, animationCounter, CollisionUp, 7, worldOffsetY, slowSpeed);
+					updateWorldOffset(spriteIndex, animationTimer, CollisionUp, 7, worldOffsetY, slowSpeed);
 				}
 				
 				if (left) {
-					updateWorldOffset(spriteIndex, animationCounter, CollisionLeft, 7, worldOffsetX, slowSpeed);
+					updateWorldOffset(spriteIndex, animationTimer, CollisionLeft, 7, worldOffsetX, slowSpeed);
 				}
 				
 				if (right) {
-					updateWorldOffset(spriteIndex, animationCounter, CollisionRight, 7, worldOffsetX, -slowSpeed);
+					updateWorldOffset(spriteIndex, animationTimer, CollisionRight, 7, worldOffsetX, -slowSpeed);
 				}
 			}
 			
@@ -499,42 +500,29 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
 }
 
 //This part of the code was getting called repeatedly, so I'll let the compiler do the copy-pasting for me
-inline void updateVAnimCount(int& animationCounter, uint8_t& imageIndex, bool x) {
+inline void updateVAnimCount(unsigned int& animationTimer, uint8_t& imageIndex, bool x) {
 	//We don't want to go through a 10 frame animation 6 times a second, only go to the next frame when the animation counter reaches 0
-	if (--animationCounter == 0) {
+	if (animationTimer > 105.6) {
 		if (imageIndex < 10) {
 			imageIndex += 1;
 		}
 		if (imageIndex == 10) {
 			imageIndex = 0;
 		}
-		if (!x) {
-			animationCounter = 6;
-		}
-		else {
-			animationCounter = 8;
-		}
-		if (imageIndex == 6) {
-			animationCounter += 2;
-		}
+		animationTimer -= 105.6;
 	}
 }
 
-inline void updateHAnimCount(int& animationCounter, uint8_t& imageIndex, bool x) {
+inline void updateHAnimCount(unsigned int& animationTimer, uint8_t& imageIndex, bool x) {
 	//We don't want to go through a 10 frame animation 6 times a second, only go to the next frame when the animation counter reaches 0
-	if (--animationCounter == 0) {
+	if (animationTimer > 105.6) {
 		if (imageIndex < 10) {
 			imageIndex += 1;
 		}
 		if (imageIndex == 6) {
 			imageIndex = 0;
 		}
-		if (!x) {
-			animationCounter = 6;
-		}
-		else {
-			animationCounter = 8;
-		}
+		animationTimer -= 105.6;
 	}
 }
 
@@ -676,10 +664,10 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 	}
 	
 	if (state == Player::State::nominal) {
-		switch (spriteIndex) {
-				// Common cases first!
-			case 4:
-				updateVAnimCount(animationCounter, imageIndex, pInput->xPressed());
+	        switch (spriteIndex) {
+	        	case 4:
+			        animationTimer += elapsedTime.asMilliseconds();
+			        updateVAnimCount(animationTimer, imageIndex, pInput->xPressed());
 				if (imageIndex == 4 || imageIndex == 8) {
 					sounds.playEffect(SoundController::Effect::step);
 				}
@@ -693,7 +681,8 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				break;
 				
 			case 5:
-				updateVAnimCount(animationCounter, imageIndex, pInput->xPressed());
+			        animationTimer += elapsedTime.asMilliseconds();
+				updateVAnimCount(animationTimer, imageIndex, pInput->xPressed());
 				if (imageIndex == 4 || imageIndex == 8) {
 					sounds.playEffect(SoundController::Effect::step);
 				}
@@ -703,12 +692,13 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				break;
 				
 			case 6:
+			        animationTimer += elapsedTime.asMilliseconds();
 				if (weapon.getTimeout() != 0) {
 					std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
 					std::get<1>(tGun) = weapon.getYpos() - 1;
 					gameObjects.push_back(tGun);
 				}
-				updateHAnimCount(animationCounter, imageIndex, pInput->xPressed());
+				updateHAnimCount(animationTimer, imageIndex, pInput->xPressed());
 				if (imageIndex == 1) {
 					sounds.playEffect(SoundController::Effect::step);
 				}
@@ -717,12 +707,13 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				break;
 				
 			case 7:
+			        animationTimer += elapsedTime.asMilliseconds();
 				if (weapon.getTimeout() != 0) {
 					std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
 					std::get<1>(tGun) = weapon.getYpos() - 1;
 					gameObjects.push_back(tGun);
 				}
-				updateHAnimCount(animationCounter, imageIndex, pInput->xPressed());
+				updateHAnimCount(animationTimer, imageIndex, pInput->xPressed());
 				if (imageIndex == 1) {
 					sounds.playEffect(SoundController::Effect::step);
 				}
@@ -767,8 +758,9 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				break;
 				
 			case 8:
-				if (--animationCounter == 0) {
-					animationCounter = 4;
+			        animationTimer += elapsedTime.asMilliseconds();
+				if (animationTimer >= 70.4) {
+				        animationTimer -= 70.4;
 					if (imageIndex < 9) {
 						imageIndex++;
 					}
