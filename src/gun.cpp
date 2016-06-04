@@ -128,7 +128,6 @@ void gun::updateShotVector(char playerSpriteIndex, effectsController& ef, float 
 	}
 	
 	if (playerState != 1) {
-		timeout = 6;
 		bulletTimer = 178;
 	}
 }

@@ -284,9 +284,13 @@ void Player::drawController(InputController* pInput, effectsController& ef, sf::
 		
 		else if (x && state == Player::State::nominal) {
 			//The user is holding the x key, so set the gun timeout to max value
-			weapon.setTimeout(1671);
+			if (weapon.getTimeout(elapsedTime) == 0) {
+				weapon.setTimeout(1760);
+			} else if (weapon.getTimeout(elapsedTime) < 1671) {
+				weapon.setTimeout(1671);
+			}
 			
-			//Now we want the player to stay facing the same direction and strafe while the user holds the x key, which requires a lot more condition checking
+			// Now we want the player to stay facing the same direction and strafe while the user holds the x key, which requires a lot more condition checking
 			
 			//Regardless of which direction key(s) active, the player needs to face the direction it was facing when x was pressed
 			if (spriteIndex == 0 || spriteIndex == 4) {

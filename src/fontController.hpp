@@ -5,6 +5,10 @@
 //  Created by Evan Bowman on 10/21/15.
 //  Copyright © 2015 Evan Bowman. All rights reserved.
 //
+//  This class is responsible for creating text and shapes and drawing them to the screen.
+//  The userInterface class has similar functionality, but it is more concerned with images
+//  and post-processing effects.
+//
 
 #pragma once
 #ifndef fontController_hpp
@@ -27,6 +31,7 @@ private:
 	float windowCenterX, windowCenterY;
 	sf::Clock wpTextDisplayTimer, healthDisplayTimer, scoreDisplayTimer;
 	sf::ConvexShape heart;
+	sf::CircleShape coin;
 	
 public:
 	FontController(sf::View, float, float);
