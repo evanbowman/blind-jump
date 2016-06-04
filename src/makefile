@@ -9,7 +9,7 @@ CC = clang++
 CFLAGS = -O2 -std=c++11 -Wall -Weffc++ -Werror
 LFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 EXENAME = Blind_Jump
-OBJECTS = aStar.o backgroundHandler.o bulletType1.o critter.o damagedRobot.o dasher.o dasherShot.o dashSmoke.o detailController.o detailParent.o drawPixels.o effectsController.o enemyController.o enemyCreationFunctions.o enemyParent.o enemyPlacementFn.o enemyShot.o energyBeam.o explosion32effect.o FireExplosion.o fontController.o generalDetail.o gameMap.o GradientCircle.o gun.o healthEffect.o heavyBot.o initLoot.o initMapVectors.o inputController.o IntroDoor.o lampLight.o main.o mappingFunctions.o player.o playerCollisionFunctions.o Powerup.o ResourcePath.o rock.o scoot.o screenShakeController.o shotPuff.o smallExplosion.o soundController.o Teleporter.o teleporterSmoke.o terminal.o tileController.o treasureChest.o turret.o turretFlashEffect.o turretShot.o ui_bubble.o userInterface.o wall.o wallinpath.o worldDetailsController.o
+OBJECTS = aStar.o backgroundHandler.o bulletType1.o critter.o damagedRobot.o dasher.o dasherShot.o dashSmoke.o detailController.o detailParent.o drawPixels.o effectsController.o enemyController.o enemyCreationFunctions.o enemyParent.o enemyPlacementFn.o enemyShot.o energyBeam.o explosion32effect.o FireExplosion.o fontController.o generalDetail.o gameMap.o GradientCircle.o gun.o healthEffect.o heavyBot.o initLoot.o initMapVectors.o inputController.o IntroDoor.o lampLight.o main.o mappingFunctions.o player.o playerCollisionFunctions.o Powerup.o ResourcePath.o rock.o scoot.o screenShakeController.o shotPuff.o smallExplosion.o soundController.o Teleporter.o teleporterSmoke.o terminal.o tileController.o treasureChest.o turret.o turretFlashEffect.o turretShot.o userInterface.o wall.o wallinpath.o
 RSP = resourcePath.hpp resourcePath.cpp
 
 all: $(OBJECTS)
@@ -171,9 +171,6 @@ turretFlashEffect.o: turretFlashEffect.cpp turretFlashEffect.hpp
 turretShot.o: turretShot.cpp turretShot.hpp
 	$(CC) turretShot.cpp $(CFLAGS) -c -o turretShot.o
 
-ui_bubble.o: ui_bubble.cpp ui_bubble.hpp
-	$(CC) ui_bubble.cpp $(CFLAGS) -c -o ui_bubble.o
-
 userInterface.o: userInterface.cpp userInterface.hpp $(RSP) player.hpp fontController.hpp inputController.hpp
 	$(CC) userInterface.cpp $(CFLAGS) -c -o userInterface.o
 
@@ -182,9 +179,6 @@ wall.o: wall.cpp wall.hpp
 
 wallinpath.o: wallinpath.cpp wallinpath.hpp wall.hpp
 	$(CC) wallinpath.cpp $(CFLAGS) -c -o wallinpath.o
-
-worldDetailsController.o: worldDetailsController.cpp worldDetailsController.hpp
-	$(CC) worldDetailsController.cpp $(CFLAGS) -c -o worldDetailsController.o
 
 clean:
 	rm *.o

@@ -14,7 +14,6 @@
 #include "SFML/Graphics.hpp"
 #include "fontController.hpp"
 #include "effectsController.hpp"
-#include "ui_bubble.hpp"
 #include "inputController.hpp"
 #include <array>
 
@@ -78,9 +77,7 @@ private:
 	bool visible;
 	std::array<sf::Sprite, 3> gunSprites;
 	float weaponDispOffset;
-	// Vector to hold UI bubbles for new items (although there should only be one at a time...
-	std::vector<UIBubble> uiBubbles;
-	
+        
 	int enemyValueCount;
 	
 	unsigned int timer, timerAlt;
