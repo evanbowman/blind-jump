@@ -1,4 +1,4 @@
-//
+
 //  Pillar.hpp
 //  Blind Jump
 //

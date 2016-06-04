@@ -177,7 +177,7 @@ inline void updateWorldOffset(char& spriteIndex, unsigned int& animationTimer, b
 
 //Sets imageIndex and spriteIndex based on keyboard button presses, and also controls movement
 //Add conditions for collisions later
-void Player::drawController(InputController* pInput, effectsController& ef) {
+void Player::drawController(InputController* pInput, effectsController& ef, sf::Time & elapsedTime) {
 	
 	// If the player has no health and the death sequence isn't running, start it
 	if (health == 0 && !deathSeq) {
@@ -284,12 +284,8 @@ void Player::drawController(InputController* pInput, effectsController& ef) {
 		
 		else if (x && state == Player::State::nominal) {
 			//The user is holding the x key, so set the gun timeout to max value
-			if (weapon.getTimeout() == 0) {
-				weapon.setTimeout(100);
-			}
-			if (weapon.getTimeout() < 90 && weapon.getTimeout() > 0) {
-				weapon.setTimeout(90);
-			}
+			weapon.setTimeout(1671);
+			
 			//Now we want the player to stay facing the same direction and strafe while the user holds the x key, which requires a lot more condition checking
 			
 			//Regardless of which direction key(s) active, the player needs to face the direction it was facing when x was pressed
@@ -533,7 +529,7 @@ bool checkShotCollision(std::vector<T>* shotVec, double playerXpos, double playe
 	if (!shotVec->empty()) {
 		// Loop through the vector and check whether the enemy shot objects are close to the player
 		for (auto & element : *shotVec) {
-			if (std::abs(playerXpos + 16 - element.getXpos()) < 8 && std::abs(playerYpos + 16 - element.getYpos()) < 8) {
+			if (std::abs(playerXpos + 16 - element.getXpos()) < 10 && std::abs(playerYpos + 16 - element.getYpos()) < 10) {
 				// Set a flag within the element that tells its controller to remove it from its vector
 				element.setKillFlag();
 				return true;
@@ -547,7 +543,7 @@ bool checkShotCollision(std::vector<T>* shotVec, double playerXpos, double playe
 //Returns the current sprite based on the values of imageIndex and spriteIndex
 void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>& gameShadows, tileController& tiles, effectsController& ef, detailController& details, SoundController& sounds, userInterface& UI, InputController* pInput, sf::RenderTexture& window, FontController& fonts, sf::Time& elapsedTime) {
 	checkCollision(tiles, details);//, details);
-	drawController(pInput, ef);
+	drawController(pInput, ef, elapsedTime);
 	std::tuple<sf::Sprite, float, Rendertype, float> tPlayer, tGun, tShadow;
 	
 	std::get<1>(tPlayer) = posY;
@@ -561,7 +557,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 		gameShadows.push_back(tShadow);
 	}
 	// Allow the player's weapon to push created instances to the effects controller
-	weapon.updateShotVector(spriteIndex, ef, worldOffsetX, worldOffsetY, UI, pInput, sounds, static_cast<int>(state)); // I didn't want to have to resolve another circular dependency, hence the cast
+	weapon.updateShotVector(spriteIndex, ef, worldOffsetX, worldOffsetY, UI, pInput, sounds, static_cast<int>(state), elapsedTime); // I didn't want to have to resolve another circular dependency, hence the cast
 	scrShakeState = false;
 	
 	// First check for collisions with enemy shot objects, as long as the death sequence isn't running
@@ -582,7 +578,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 		colorAmount = 1.f;
 	}
 	
-	if (checkShotCollision(ef.getDasherShots(), posX, posY) && !deathSeq && canhurt) {
+	if (checkShotCollision(ef.getDasherShots(), posX - 8, posY - 8) && !deathSeq && canhurt) {
 		health--;
 		fonts.resetHPText();
 		scrShakeState = true;
@@ -673,7 +669,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				}
 				std::get<0>(tPlayer) = spriteDown[verticalAnimationDecoder(imageIndex)];
 				gameObjects.push_back(tPlayer);
-				if (weapon.getTimeout() != 0) {
+				if (weapon.getTimeout(elapsedTime) != 0) {
 					std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
 					std::get<1>(tGun) = weapon.getYpos() + 2;
 					gameObjects.push_back(tGun);
@@ -686,14 +682,14 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				if (imageIndex == 4 || imageIndex == 8) {
 					sounds.playEffect(SoundController::Effect::step);
 				}
-				weapon.getTimeout();
+				weapon.getTimeout(elapsedTime);
 				std::get<0>(tPlayer) = spriteUp[verticalAnimationDecoder(imageIndex)];
 				gameObjects.push_back(tPlayer);
 				break;
 				
 			case 6:
 			        animationTimer += elapsedTime.asMilliseconds();
-				if (weapon.getTimeout() != 0) {
+				if (weapon.getTimeout(elapsedTime) != 0) {
 					std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
 					std::get<1>(tGun) = weapon.getYpos() - 1;
 					gameObjects.push_back(tGun);
@@ -708,7 +704,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				
 			case 7:
 			        animationTimer += elapsedTime.asMilliseconds();
-				if (weapon.getTimeout() != 0) {
+				if (weapon.getTimeout(elapsedTime) != 0) {
 					std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
 					std::get<1>(tGun) = weapon.getYpos() - 1;
 					gameObjects.push_back(tGun);
@@ -724,7 +720,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 			case 0:
 				std::get<0>(tPlayer) = spriteDown[5];
 				gameObjects.push_back(tPlayer);
-				if (weapon.getTimeout() != 0) {
+				if (weapon.getTimeout(elapsedTime) != 0) {
 					std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
 					std::get<1>(tGun) = weapon.getYpos() + 2;
 					gameObjects.push_back(tGun);
@@ -734,11 +730,11 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 			case 1:
 				std::get<0>(tPlayer) = spriteUp[5];
 				gameObjects.push_back(tPlayer);
-				weapon.getTimeout();
+				weapon.getTimeout(elapsedTime);
 				break;
 				
 			case 2:
-				if (weapon.getTimeout() != 0) {
+				if (weapon.getTimeout(elapsedTime) != 0) {
 					std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
 					std::get<1>(tGun) = weapon.getYpos() - 1;
 					gameObjects.push_back(tGun);
@@ -748,7 +744,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				break;
 				
 			case 3:
-				if (weapon.getTimeout() != 0) {
+				if (weapon.getTimeout(elapsedTime) != 0) {
 					std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
 					std::get<1>(tGun) = weapon.getYpos() - 1;
 					gameObjects.push_back(tGun);
@@ -772,7 +768,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 	}
 	else if (state == Player::State::prepdash) {
 		if ((rightPrevious || upPrevious || downPrevious) && spriteIndex == 6) {
-			if (weapon.getTimeout() != 0 && rightPrevious) {
+			if (weapon.getTimeout(elapsedTime) != 0 && rightPrevious) {
 				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
 				std::get<1>(tGun) = weapon.getYpos() - 1;
 				gameObjects.push_back(tGun);
@@ -781,7 +777,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 			gameObjects.push_back(tPlayer);
 		}
 		else if ((leftPrevious || upPrevious || downPrevious) && spriteIndex == 7) {
-			if (weapon.getTimeout() != 0 && rightPrevious) {
+			if (weapon.getTimeout(elapsedTime) != 0 && rightPrevious) {
 				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
 				std::get<1>(tGun) = weapon.getYpos() - 1;
 				gameObjects.push_back(tGun);
@@ -790,7 +786,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 			gameObjects.push_back(tPlayer);
 		}
 		else if (spriteIndex == 4) {
-			if (weapon.getTimeout() != 0) {
+			if (weapon.getTimeout(elapsedTime) != 0) {
 				sf::Sprite tempSpr = *weapon.getSprite(spriteIndex);
 				tempSpr.setPosition(tempSpr.getPosition().x, tempSpr.getPosition().y - 1);
 				std::get<0>(tGun) = tempSpr;
@@ -808,7 +804,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 	
 	else if (state == Player::State::dashing || state == Player::State::cooldown) {
 		if (rightPrevious && spriteIndex == 6) {
-			if (weapon.getTimeout() != 0) {
+			if (weapon.getTimeout(elapsedTime) != 0) {
 				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
 				std::get<1>(tGun) = weapon.getYpos() - 1;
 				gameObjects.push_back(tGun);
@@ -817,7 +813,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 			gameObjects.push_back(tPlayer);
 		}
 		else if (leftPrevious && spriteIndex == 7) {
-			if (weapon.getTimeout() != 0) {
+			if (weapon.getTimeout(elapsedTime) != 0) {
 				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
 				std::get<1>(tGun) = weapon.getYpos() - 1;
 				gameObjects.push_back(tGun);
@@ -826,7 +822,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 			gameObjects.push_back(tPlayer);
 		}
 		else if (upPrevious && spriteIndex == 6) {
-			if (weapon.getTimeout() != 0) {
+			if (weapon.getTimeout(elapsedTime) != 0) {
 				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
 				std::get<1>(tGun) = weapon.getYpos() - 1;
 				gameObjects.push_back(tGun);
@@ -846,7 +842,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 		}
 		
 		else if (upPrevious && spriteIndex == 7) {
-			if (weapon.getTimeout() != 0) {
+			if (weapon.getTimeout(elapsedTime) != 0) {
 				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
 				std::get<1>(tGun) = weapon.getYpos() - 1;
 				gameObjects.push_back(tGun);
@@ -857,7 +853,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 		
 		else if (spriteIndex == 4) {
 			if (upPrevious) {
-				if (weapon.getTimeout() != 0) {
+				if (weapon.getTimeout(elapsedTime) != 0) {
 					sf::Sprite tempSpr = *weapon.getSprite(spriteIndex);
 					tempSpr.setPosition(tempSpr.getPosition().x, tempSpr.getPosition().y - 1);
 					std::get<0>(tGun) = tempSpr;
@@ -869,7 +865,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 			}
 			
 			else if (leftPrevious) {
-				if (weapon.getTimeout() != 0) {
+				if (weapon.getTimeout(elapsedTime) != 0) {
 					sf::Sprite tempSpr = *weapon.getSprite(spriteIndex);
 					tempSpr.setPosition(tempSpr.getPosition().x, tempSpr.getPosition().y - 1);
 					std::get<0>(tGun) = tempSpr;
@@ -881,7 +877,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 			}
 			
 			else if (rightPrevious) {
-				if (weapon.getTimeout() != 0) {
+				if (weapon.getTimeout(elapsedTime) != 0) {
 					sf::Sprite tempSpr = *weapon.getSprite(spriteIndex);
 					tempSpr.setPosition(tempSpr.getPosition().x, tempSpr.getPosition().y - 1);
 					std::get<0>(tGun) = tempSpr;

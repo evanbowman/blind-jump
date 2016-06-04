@@ -118,7 +118,7 @@ public:
 	//Functions for getting the current position of the player object
 	float getPosX() const;
 	float getPosY() const;
-	void drawController(InputController*, effectsController& ef);
+        void drawController(InputController*, effectsController& ef, sf::Time &);
 	void draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&, tileController&, effectsController&, detailController&, SoundController&, userInterface&, InputController*, sf::RenderTexture&, FontController&, sf::Time&);
 	//Construct a default player object
 	Player();

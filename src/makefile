@@ -111,7 +111,7 @@ IntroDoor.o: IntroDoor.cpp IntroDoor.hpp screenShakeController.hpp detailControl
 lampLight.o: lampLight.cpp lampLight.hpp detailParent.hpp
 	$(CC) lampLight.cpp $(CFLAGS) -c -o lampLight.o
 
-main.o: player.hpp backgroundHandler.hpp gameMap.hpp $(RSP) inputController.hpp
+main.o: player.hpp backgroundHandler.hpp gameMap.hpp $(RSP) inputController.hpp main.cpp
 	$(CC) main.cpp $(CFLAGS) -c -o main.o
 
 mappingFunctions.o: mappingFunctions.hpp mappingFunctions.cpp tileController.hpp

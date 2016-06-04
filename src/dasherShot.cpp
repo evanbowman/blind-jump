@@ -47,10 +47,10 @@ void DasherShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 		timer -= 70;
 	}
 	if (driftSel) {
-		direction += 0.002;
+		direction += 0.004;
 	}
 	else {
-		direction -= 0.002;
+		direction -= 0.004;
 	}
 	scale *= 0.993;
 	
