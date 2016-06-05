@@ -1,0 +1,8 @@
+if [ $# == 2 ]; then
+   mkdir -p ../prod/$2.app/Contents/MacOS
+   mv $1 ../prod/$2.app/Contents/MacOS/$1
+   cp -r ../Resources ../prod/$2.app/Contents/Resources
+else
+   printf "Usage: packagescript_Mac <executable> <name>"
+fi
+

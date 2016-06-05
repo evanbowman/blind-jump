@@ -18,6 +18,7 @@ Thumbs.db
 # emacs temporary files
 *~
 \#*\#
+*.#*
 
 # Project executable
 Blind_Jump

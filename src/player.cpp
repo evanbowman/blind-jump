@@ -58,7 +58,6 @@ Player::Player() {
 	gotHeart = false;
 	gotCoin = false;
 	colorTimer = 0.f;
-	
 	hurtCounter = 30;
 	canhurt = true;
 	

@@ -61,7 +61,7 @@ FontController::FontController(sf::View fontView, float x, float y) {
 
 	coin.setFillColor(sf::Color::White);
 	coin.setPointCount(20);
-	coin.setRadius(0.02f * scale);
+	coin.setRadius(0.018f * scale);
 	
 	// Set the waypoint text
 	waypointText.setFont(cornerstone);
