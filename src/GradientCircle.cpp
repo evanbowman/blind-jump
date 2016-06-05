@@ -37,7 +37,7 @@ void GradientCircle::setPosition(float xPos, float yPos) {
 	long int pointCount = vertices.getVertexCount();
 	for (int i = 1; i < pointCount; i++) {
 		angle = i * 2 * PI / (pointCount - 2) - PI / 2;
-		vertices[i].position = sf::Vector2f(xPos + radius * std::cosf(angle), yPos + radius * std::sinf(angle));
+		vertices[i].position = sf::Vector2f(xPos + radius * cosf(angle), yPos + radius * sinf(angle));
 	}
 }
 
@@ -74,7 +74,7 @@ void GradientCircle::setPointCount(int pointCount) {
 	vertices[0].position = sf::Vector2f(xPos, yPos);
 	for (int i = 1; i < pointCount + 2; i++) {
 		angle = i * 2 * PI / pointCount - PI / 2;
-		vertices[i].position = sf::Vector2f(xPos + radius * std::cosf(angle), yPos + radius * std::sinf(angle));
+		vertices[i].position = sf::Vector2f(xPos + radius * cosf(angle), yPos + radius * sinf(angle));
 	}
 }
 
@@ -84,6 +84,6 @@ void GradientCircle::setRadius(float radius) {
 	long int pointCount = vertices.getVertexCount();
 	for (int i = 1; i < pointCount; i++) {
 		angle = i * 2 * PI / (pointCount - 2) - PI / 2;
-		vertices[i].position = sf::Vector2f(xPos + radius * std::cosf(angle), yPos + radius * std::sinf(angle));
+		vertices[i].position = sf::Vector2f(xPos + radius * cosf(angle), yPos + radius * sinf(angle));
 	}
 }

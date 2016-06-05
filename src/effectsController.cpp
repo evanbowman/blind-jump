@@ -42,7 +42,7 @@ effectsController::effectsController() {
 	blueGlowSprite.setOrigin(22.5, 22.5);
 	
 	const std::string fileExt3[4] = {"poof1.png", "poof2.png", "poof3.png", "poof4.png"};
-	const std::string fileExt7[4] = {"EnemyOrbShot1.png", "EnemyOrbShot2.png", "EnemyOrbShot3.png", "EnemyOrbShot4.png"};
+	const std::string fileExt7[4] = {"enemyOrbShot1.png", "enemyOrbShot2.png", "enemyOrbShot3.png", "enemyOrbShot4.png"};
 	for (int i = 0; i < 4; i++) {
 		puffTexture[i].loadFromFile(resourcePath() + fileExt3[i]);
 		puffSprites[i].setTexture(puffTexture[i]);

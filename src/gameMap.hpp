@@ -12,7 +12,7 @@
 
 #include <stdio.h>
 #include "SFML/Graphics.hpp"
-#include "Player.hpp"
+#include "player.hpp"
 #include "backgroundHandler.hpp"
 #include "effectsController.hpp"
 #include "detailController.hpp"

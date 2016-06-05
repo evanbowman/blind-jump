@@ -12,7 +12,7 @@
 
 #include <stdio.h>
 #include "detailParent.hpp"
-#include "SFML/graphics.hpp"
+#include "SFML/Graphics.hpp"
 
 class DamagedRobot : public detailParent {
 public:

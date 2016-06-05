@@ -11,7 +11,7 @@
 #define soundController_hpp
 
 #include <stdio.h>
-#include "sfml/audio.hpp"
+#include "SFML/Audio.hpp"
 #include <array>
 
 class SoundController {

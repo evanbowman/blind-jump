@@ -11,7 +11,7 @@
 #define teleporterSmoke_hpp
 
 #include <stdio.h>
-#include "sfml/graphics.hpp"
+#include "SFML/Graphics.hpp"
 
 class TeleporterSmoke {
 private:

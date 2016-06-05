@@ -11,7 +11,7 @@
 #define turret_hpp
 
 #include <stdio.h>
-#include "SFML/graphics.hpp"
+#include "SFML/Graphics.hpp"
 #include "turret.hpp"
 #include "effectsController.hpp"
 

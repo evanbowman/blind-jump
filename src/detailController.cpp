@@ -7,7 +7,7 @@
 //
 
 #include "detailController.hpp"
-#include "resourcepath.hpp"
+#include "ResourcePath.hpp"
 #include <iostream>
 #include <cmath>
 

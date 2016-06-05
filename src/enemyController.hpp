@@ -11,7 +11,7 @@
 #define enemyController_hpp
 
 #include <stdio.h>
-#include "SFML/graphics.hpp"
+#include "SFML/Graphics.hpp"
 #include <iostream>
 #include "turret.hpp"
 #include "effectsController.hpp"

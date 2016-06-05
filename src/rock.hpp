@@ -12,7 +12,7 @@
 
 #include <stdio.h>
 #include "detailParent.hpp"
-#include "sfml/graphics.hpp"
+#include "SFML/Graphics.hpp"
 
 class Rock : public detailParent {
 private:

@@ -11,7 +11,7 @@
 #define healthEffect_hpp
 
 #include <stdio.h>
-#include "SFML/graphics.hpp"
+#include "SFML/Graphics.hpp"
 
 class HealthEffect {
 private:

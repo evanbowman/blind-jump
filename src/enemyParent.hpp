@@ -11,7 +11,7 @@
 #define enemyParent_hpp
 
 #include <stdio.h>
-#include "sfml/graphics.hpp"
+#include "SFML/Graphics.hpp"
 #include "wall.hpp"
 
 class EnemyParent {
