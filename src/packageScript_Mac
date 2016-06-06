@@ -1,8 +1,8 @@
 if [ $# == 2 ]; then
    mkdir -p ../prod/$2.app/Contents/MacOS
-   mv $1 ../prod/$2.app/Contents/MacOS/$1
-   cp -r ../Resources ../prod/$2.app/Contents/Resources
-   cp -r ../Frameworks ../prod/$2.app/Contents/Frameworks
+   mv -f $1 ../prod/$2.app/Contents/MacOS/$1
+   cp -rf ../Resources ../prod/$2.app/Contents/Resources
+   cp -rf ../Frameworks ../prod/$2.app/Contents/Frameworks
 else
    printf "Usage: packagescript_Mac <executable> <name>"
 fi
