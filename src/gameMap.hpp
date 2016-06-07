@@ -29,60 +29,27 @@
 #include "RenderType.hpp"
 
 class GameMap {
-	
-private:
-	// Instaintiate a player object
+	private:
 	Player player;
-	
-	// Set the world type
-	short worldType;
-	
-	// Declare a user Interface object
 	userInterface UI;
-	
-	// Define an object to control sounds
 	SoundController sndCtrl;
-	
-	// Store the current level
 	int level;
-	
-	// The engine creates the illusion of motion by offsetting the background during key presses
+	// The backend code creates the illusion of motion by offsetting the background during key presses
 	float xOffset;
 	float yOffset;
-	
 	// Controls input from the keyboard and joystick
 	InputController *pInput;
-	
 	sf::Texture vignetteTexture;
 	sf::Sprite vignetteSprite;
-	
 	char itemArray[48][3];
-	
-	// Add a detail controller
 	detailController details;
-	
-	// Instantiate an effects controller to handle drawing sfx
 	effectsController effects;
-	
-	// Instantiate a background controller
-	backgroundHandler bkg;
-	
+   	backgroundHandler bkg;	
 	sf::Texture blurred;
 	sf::Sprite finalSprite;
-	
-	// A boolean variable that is true when the player is nearby a teleporter
 	bool teleporterCond;
-	
 	sf::Texture vignetteShadowTxtr;
 	sf::Sprite vignetteShadowSpr;
-	
-	// A vector to hold text captions for details
-	std::vector<sf::Text*> captions;
-	
-	// Number of enemies on the map
-	unsigned char turretCount;
-	unsigned char dasherCount;
-	unsigned char scootCount;
 	
 	// Create a GL rectangle primitive for the teleporter effect
 	sf::RectangleShape teleporterBeam;
@@ -108,8 +75,6 @@ private:
 	sf::RectangleShape shadowShape;
 	
 	sf::RenderTexture target, secondPass, thirdPass;
-	
-	// Create a font controller
 	FontController* pFonts;
 	
 	// Locations to place lights
@@ -132,8 +97,6 @@ private:
 	// Stack of sprites with y-position and height, for z-ordering
 	std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> gameObjects;
 	std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> gameShadows;
-	
-	// Create a screenshake controller for that effect
 	ScreenShakeController ssc;
 	
 	bool transitioning;

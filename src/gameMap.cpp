@@ -53,7 +53,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
 	// Tell the UI where the center of the window is
 	UI.setup(windowW / 2, windowH/ 2, &worldView);
 	
-	// Store the pointer to the font controller in main() as one of the object's datefields
+	// Store the pointer to the font controller in main()
 	this->pFonts = pFonts;
 	
 	// Set up the shaders
@@ -63,19 +63,17 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
 	blurShader.setParameter("texture", sf::Shader::CurrentTexture);
 	desaturateShader.loadFromFile(resourcePath() + "desaturate.frag", sf::Shader::Fragment);
 	desaturateShader.setParameter("texture", sf::Shader::CurrentTexture);
-	//Initialize the starting level to 1
+
+	//Initialize the starting level to 0
 	level = 0;
 	
-	// Setup the lighting map
+	// Set up the lighting map
 	lightingMap.create(windowWidth, windowHeight);
 	shadowShape.setFillColor(sf::Color(190, 190, 210, 255));
 	sf::Vector2f v;
 	v.x = windowWidth;
 	v.y = windowHeight;
 	shadowShape.setSize(v);
-	
-	//Initialize the world type
-	worldType = rand() % 2;
 	
 	transitioning = false;
 	transitionDelay = 320;
@@ -160,6 +158,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
 	if (itemArray[level][0] != 0) {
 		details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][0]);
 	}
+	
 	// place life capsule chests
 	if (itemArray[level][1] == 90) {
 		details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][1]);
