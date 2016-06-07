@@ -120,15 +120,83 @@ int main(int, char const**) {
 			}
 
 			// Escape pressed: exit
-			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
-				window.close();
+			if (event.type == sf::Event::KeyPressed/* && event.key.code == sf::Keyboard::Escape*/) {
+				switch(event.key.code) {
+				case sf::Keyboard::Escape:
+					window.close();
+					break;
+
+				case sf::Keyboard::Left:
+					input.setLeft(true);
+					break;
+
+				case sf::Keyboard::Right:
+					input.setRight(true);
+					break;
+
+				case sf::Keyboard::Up:
+					input.setUp(true);
+					break;
+
+				case sf::Keyboard::Down:
+					input.setDown(true);
+					break;
+
+				case sf::Keyboard::X:
+					input.setX(true);
+					break;
+
+				case sf::Keyboard::Z:
+					input.setZ(true);
+					break;
+
+				case sf::Keyboard::C:
+					input.setC(true);
+					break;
+
+				default:
+					break;
+				}
+			} else if (event.type == sf::Event::KeyReleased) {
+				switch(event.key.code) {
+				case sf::Keyboard::Left:
+					input.setLeft(false);
+					break;
+
+				case sf::Keyboard::Right:
+					input.setRight(false);
+					break;
+
+				case sf::Keyboard::Up:
+					input.setUp(false);
+					break;
+
+				case sf::Keyboard::Down:
+					input.setDown(false);
+					break;
+
+				case sf::Keyboard::X:
+					input.setX(false);
+					break;
+
+				case sf::Keyboard::Z:
+					input.setZ(false);
+					break;
+
+				case sf::Keyboard::C:
+					input.setC(false);
+					break;
+
+				default:
+					break;
+				}
 			}
 		}
 		
 		// Clear screen
 		window.clear();
 		
-		input.update();
+		//input.update();
 		
 		//Update and draw all of the game objects by calling the update function within mapInit and passing in a reference to the window
 		if (!title) {   // If not on the title screen

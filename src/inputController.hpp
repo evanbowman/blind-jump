@@ -15,7 +15,6 @@
 
 class InputController {
 private:
-	bool connectedJoystick;
 	bool left, right, up, down, x, z, c;
 	
 public:
@@ -28,6 +27,13 @@ public:
 	bool xPressed() const;
 	bool zPressed() const;
 	bool cPressed() const;
+	void setLeft(bool);
+	void setRight(bool);
+	void setUp(bool);
+	void setDown(bool);
+	void setX(bool);
+	void setZ(bool);
+	void setC(bool);
 };
 
 #endif /* inputController_hpp */
