@@ -8,7 +8,7 @@
 CC = clang++
 CFLAGS = -O2 -std=c++11 -Wall -Weffc++ -Werror
 #LFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
-LDFLAGS = -framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio
+LDFLAGS = -lsfml-window -lsfml-graphics -lsfml-system -lsfml-audio
 EXENAME = BlindJump
 OBJECTS = aStar.o backgroundHandler.o bulletType1.o critter.o damagedRobot.o dasher.o dasherShot.o dashSmoke.o detailController.o detailParent.o drawPixels.o effectsController.o enemyController.o enemyCreationFunctions.o enemyParent.o enemyPlacementFn.o enemyShot.o energyBeam.o explosion32effect.o FireExplosion.o fontController.o generalDetail.o gameMap.o GradientCircle.o gun.o healthEffect.o heavyBot.o initLoot.o initMapVectors.o inputController.o IntroDoor.o lampLight.o main.o mappingFunctions.o player.o playerCollisionFunctions.o Powerup.o ResourcePath.o rock.o scoot.o screenShakeController.o shotPuff.o smallExplosion.o soundController.o teleporter.o teleporterSmoke.o terminal.o tileController.o treasureChest.o turret.o turretFlashEffect.o turretShot.o userInterface.o wall.o wallinpath.o
 RSP = ResourcePath.hpp ResourcePath.cpp
