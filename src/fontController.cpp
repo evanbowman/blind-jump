@@ -58,10 +58,12 @@ FontController::FontController(sf::View fontView, float x, float y) {
 	heart.setPoint(18, sf::Vector2f(72, 38));
 	heart.setPoint(19, sf::Vector2f(68, 44));
 	heart.setScale(0.0005f * scale, 0.0005f * scale);
-
+	heart.setOrigin(heart.getLocalBounds().width / 2, heart.getLocalBounds().height / 2);
+	
 	coin.setFillColor(sf::Color::White);
 	coin.setPointCount(20);
 	coin.setRadius(0.018f * scale);
+	coin.setOrigin(coin.getLocalBounds().width / 2, coin.getLocalBounds().height / 2);
 	
 	// Set the waypoint text
 	waypointText.setFont(cornerstone);
@@ -99,11 +101,11 @@ void FontController::reset() {
 }
 
 void FontController::setWaypointText(int level) {
-	heart.setPosition(fontView.getSize().x - heart.getLocalBounds().width, heart.getLocalBounds().height / 2.5);
+        heart.setPosition(fontView.getSize().x - heart.getLocalBounds().width / 2, heart.getLocalBounds().height / 1.8);
 	//coin.setPosition(fontView.getSize().x - coin.getLocalBounds().width, heart.getPosition().y + coin.getLocalBounds().height);
-	coin.setPosition(fontView.getSize().x - coin.getLocalBounds().width * 1.75f, heart.getLocalBounds().height);
+	coin.setPosition(heart.getPosition().x, heart.getPosition().y + coin.getLocalBounds().height * 1.25);
 	coin.setFillColor(sf::Color(255, 255, 255, 0));
-	healthNumText.setPosition(fontView.getSize().x - healthNumText.getLocalBounds().width - fontView.getSize().x * 0.015 - heart.getLocalBounds().width, healthNumText.getLocalBounds().height);
+	healthNumText.setPosition(fontView.getSize().x - healthNumText.getLocalBounds().width - heart.getLocalBounds().width, healthNumText.getLocalBounds().height);
 	healthNumText.setColor(sf::Color(255, 255, 255, 0));
 	heart.setFillColor(sf::Color(255, 255, 255, 0));
 	scoreText.setPosition(fontView.getSize().x - scoreText.getLocalBounds().width - fontView.getSize().x * 0.015 - heart.getLocalBounds().width, scoreText.getLocalBounds().height * 3);
