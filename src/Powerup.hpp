@@ -19,7 +19,7 @@ private:
 	sf::Sprite spr, glow;
 	bool killFlag;
 	// to keep time, for making hearts float up and down
-	unsigned int timer;
+	int32_t timer;
 	
 public:
 	Powerup(sf::Sprite*, sf::Sprite, float, float);

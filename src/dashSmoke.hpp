@@ -19,7 +19,7 @@ private:
 	float xInit, yInit, xPos, yPos;
 	bool killFlag;
 	uint8_t frameIndex;
-	unsigned int frameTimer;
+	int32_t frameTimer;
 	
 public:
 	DashSmoke(sf::Sprite*, float, float, int, int);

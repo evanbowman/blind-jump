@@ -6,7 +6,7 @@
 #
 
 CC = clang++
-CFLAGS = -O2 -std=c++11 -Wall -Weffc++ -Werror
+CFLAGS = -O2 -std=c++11 -Wall -Werror 
 #LFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 LDFLAGS = -lsfml-window -lsfml-graphics -lsfml-system -lsfml-audio
 EXENAME = BlindJump
@@ -47,7 +47,7 @@ detailParent.o: detailParent.hpp detailParent.cpp
 	$(CC) detailParent.cpp $(CFLAGS) -c -o detailParent.o
 
 drawPixels.o: drawPixels.hpp drawPixels.cpp
-	$(CC) drawPixels.cpp $(CFLAGS) -c -o drawPixels.o
+	$(CC) drawPixels.cpp -Ofast -std=c++11 -c -o drawPixels.o
 
 effectsController.o: effectsController.cpp effectsController.hpp screenShakeController.hpp turretFlashEffect.hpp bulletType1.hpp shotPuff.hpp turretShot.hpp explosion32effect.hpp teleporterSmoke.hpp enemyShot.hpp dasherShot.hpp healthEffect.hpp fontController.hpp energyBeam.hpp dashSmoke.hpp FireExplosion.hpp smallExplosion.hpp Powerup.hpp RenderType.hpp
 	$(CC) effectsController.cpp $(CFLAGS) -c -o effectsController.o

@@ -22,13 +22,11 @@
 class gun {
 private:
 	//The gun object shouldn't display all the time
-	unsigned int timeout;
-	//The gun should have some textures
+	int32_t timeout;
 	sf::Texture gunTexture[6];
 	sf::Sprite gunSprite[6];
-	
-	//Need to know how often to create a bullet
-	unsigned int bulletTimer;
+   	int32_t bulletTimer;
+
 	//Store the player sprite index after retrieving it
 	char sprIndex;
 	

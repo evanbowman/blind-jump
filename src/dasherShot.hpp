@@ -39,7 +39,7 @@ public:
 	void setKillFlag();
 	
 private:
-	unsigned int timer, timeout;
+	int32_t timer, timeout;
 	float scale;
 	bool trackPlayer;
 	sf::Sprite glowSprite;

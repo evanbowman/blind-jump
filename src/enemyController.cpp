@@ -173,8 +173,8 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
 	
 	if (!critters.empty()) {
 		// Need to check if each enemy overlaps with any other enemies so that they don't bunch up
-		for (int i = 0; i < critters.size(); i++) {
-			for (int j = 0; j < critters.size(); j++) {
+		for (size_t i = 0; i < critters.size(); i++) {
+			for (size_t j = 0; j < critters.size(); j++) {
 				// Obviously it would be bad to compare an object to itself.
 				if (i != j) {
 					// If the enemy at index i is active and overlaps with another enemy that is also active...

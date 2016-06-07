@@ -25,7 +25,7 @@ public:
 	sf::Sprite* getGlow();
 	
 private:
-	unsigned int smokeTimer;
+	int32_t smokeTimer;
 	sf::Sprite TeleporterSprites[2];
 };
 

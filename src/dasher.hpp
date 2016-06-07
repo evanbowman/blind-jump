@@ -45,7 +45,7 @@ private:
 	unsigned short dashCnt;
 	bool isDashing;
 	unsigned char frameIndex;
-	unsigned int timer;
+	int32_t timer;
 	float hspeed;
 	float vspeed;
 	unsigned char blurCountDown;

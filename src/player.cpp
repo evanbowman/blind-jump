@@ -39,10 +39,10 @@ Player::Player() {
 	worldOffsetX = 0;
 	worldOffsetY = 0;
 	animationTimer = 0;
-	leftPrevious = (sf::Keyboard::isKeyPressed(sf::Keyboard::Left));
-	rightPrevious = (sf::Keyboard::isKeyPressed(sf::Keyboard::Right));
-	upPrevious = (sf::Keyboard::isKeyPressed(sf::Keyboard::Up));
-	downPrevious = (sf::Keyboard::isKeyPressed(sf::Keyboard::Down));
+	leftPrevious = false;
+	rightPrevious = false;
+	upPrevious = false;
+	downPrevious = false;
 	weapon.setPosition(posX, posY);
 	CollisionLeft = 0;
 	CollisionRight = 0;
@@ -50,7 +50,6 @@ Player::Player() {
 	slowSpeed = 1.5;
 	previousCheckOffsetX = 0;
 	previousCheckOffsetY = 0;
-	sortCounter = 40;
 	scrShakeState = 0;
 	dodging = false;
 	dodgeTimer = 4;
@@ -164,7 +163,7 @@ inline void compareSpriteIndex(char& spriteIndex) {
 }
 
 //This function updates the player's sprite index, resets the animation counter, and if the collision state is low, adjusts the world offset to move the player
-inline void updateWorldOffset(char& spriteIndex, unsigned int& animationTimer, bool collisionState, char externalNum, float& offset, float speed) {
+inline void updateWorldOffset(char& spriteIndex, int32_t& animationTimer, bool collisionState, char externalNum, float& offset, float speed) {
 	if (spriteIndex != externalNum) {
 		spriteIndex = externalNum;
 		animationTimer = 0;
@@ -499,7 +498,7 @@ void Player::drawController(InputController* pInput, effectsController& ef, sf::
 }
 
 //This part of the code was getting called repeatedly, so I'll let the compiler do the copy-pasting for me
-inline void updateVAnimCount(unsigned int& animationTimer, uint8_t& imageIndex, bool x) {
+inline void updateVAnimCount(int32_t& animationTimer, uint8_t& imageIndex, bool x) {
 	//We don't want to go through a 10 frame animation 6 times a second, only go to the next frame when the animation counter reaches 0
 	if (animationTimer > 105.6) {
 		if (imageIndex < 10) {
@@ -512,7 +511,7 @@ inline void updateVAnimCount(unsigned int& animationTimer, uint8_t& imageIndex, 
 	}
 }
 
-inline void updateHAnimCount(unsigned int& animationTimer, uint8_t& imageIndex, bool x) {
+inline void updateHAnimCount(int32_t& animationTimer, uint8_t& imageIndex, bool x) {
 	//We don't want to go through a 10 frame animation 6 times a second, only go to the next frame when the animation counter reaches 0
 	if (animationTimer > 105.6) {
 		if (imageIndex < 10) {

@@ -37,9 +37,9 @@ public:
 	unsigned char frameIndex;
 	bool killFlag;
 	bool isColored;
-	unsigned int colorTimer;
+	int32_t colorTimer;
 	float colorAmount;
-	unsigned char health;
+	uint8_t health;
 	bool colored();
 	
 };

@@ -19,7 +19,6 @@ private:
 	
 public:
 	InputController();
-	void update();
 	bool leftPressed() const;
 	bool rightPressed() const;
 	bool upPressed() const;
@@ -27,13 +26,13 @@ public:
 	bool xPressed() const;
 	bool zPressed() const;
 	bool cPressed() const;
-	void setLeft(bool);
-	void setRight(bool);
-	void setUp(bool);
-	void setDown(bool);
-	void setX(bool);
-	void setZ(bool);
-	void setC(bool);
+	void setLeft(const bool);
+	void setRight(const bool);
+	void setUp(const bool);
+	void setDown(const bool);
+	void setX(const bool);
+	void setZ(const bool);
+	void setC(const bool);
 };
 
 #endif /* inputController_hpp */

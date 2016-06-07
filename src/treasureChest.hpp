@@ -28,7 +28,7 @@ public:
 	
 private:
 	bool animationIsRunning;
-	unsigned int animationTimer;
+	int32_t animationTimer;
 	uint8_t frameIndex;
 	// Boolean to keep track of opened or closed
 	bool isOpen;

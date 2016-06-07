@@ -22,8 +22,8 @@ private:
 	float xInit;
 	double yInit;
 	unsigned char imageIndex;
-	unsigned int frameTimer;
-	unsigned int elapsedTime;
+	int32_t frameTimer;
+	int32_t elapsedTime;
 	float direction;
 	bool killFlag;
 	sf::Sprite glowSprite;

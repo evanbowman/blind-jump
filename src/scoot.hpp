@@ -33,11 +33,11 @@ public:
 private:
 	sf::Sprite sprites[3];
 	float speedScale;
-	unsigned int frameTimer;
+	int32_t frameTimer;
 	float hSpeed;
 	float vSpeed;
-	unsigned int changeDirTimer;
-	unsigned int shotCountdownTimer;
+	int32_t changeDirTimer;
+	int32_t shotCountdownTimer;
 };
 
 #endif /* scoot_hpp */

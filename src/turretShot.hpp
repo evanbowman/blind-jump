@@ -36,8 +36,8 @@ public:
 	void enableTracking(float, float);
 	float playerPosX;
 	float playerPosY;
-	unsigned int timer;
-	unsigned int animationTimer;
+	int32_t timer;
+	int32_t animationTimer;
 	
 private:
 	float scale;

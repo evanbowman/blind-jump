@@ -80,7 +80,7 @@ private:
         
 	int enemyValueCount;
 	
-	unsigned int timer, timerAlt;
+    int32_t timer, timerAlt;
 	
 	float zoomDegree;
 	

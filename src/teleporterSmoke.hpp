@@ -19,7 +19,7 @@ private:
 	float yPos;
 	float xInit;
 	float yInit;
-	unsigned int frameTimer;
+    int32_t frameTimer;
 	uint8_t frameIndex;
 	sf::Sprite effectSprites[6];
 	// Boolean variable that goes from low to high when the animation ends (triggers controller to remove the object)

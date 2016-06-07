@@ -19,10 +19,6 @@ InputController::InputController() {
 	down = false;
 }
 
-void InputController::update() {
-  
-}
-
 bool InputController::xPressed() const {
 	return x;
 }
@@ -51,30 +47,30 @@ bool InputController::cPressed() const {
 	return c;
 }
 
-void InputController::setLeft(bool pressed) {
+void InputController::setLeft(const bool pressed) {
   left = pressed;
 }
 
-void InputController::setRight(bool pressed) {
+void InputController::setRight(const bool pressed) {
   right = pressed;
 }
 
-void InputController::setUp(bool pressed) {
+void InputController::setUp(const bool pressed) {
   up = pressed;
 }
 
-void InputController::setDown(bool pressed) {
+void InputController::setDown(const bool pressed) {
   down = pressed;
 }
 
-void InputController::setX(bool pressed) {
+void InputController::setX(const bool pressed) {
   x = pressed;
 }
 
-void InputController::setZ(bool pressed) {
+void InputController::setZ(const bool pressed) {
   z = pressed;
 }
 
-void InputController::setC(bool pressed) {
+void InputController::setC(const bool pressed) {
   c = pressed;
 }

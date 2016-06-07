@@ -66,7 +66,7 @@ private:
 	sf::Sprite deathSprites[11];
 	bool deathSeq;
 
-        unsigned int animationTimer;
+	int32_t animationTimer;
   
 	bool CollisionLeft;
 	bool CollisionRight;
@@ -98,7 +98,7 @@ private:
 	float colorAmount;
 	
 	bool gotHeart, gotCoin;
-	unsigned int colorTimer;
+	int32_t colorTimer;
 	
 	//Include a function for setting the animation frame index
 	void setImageIndex(char);
@@ -136,9 +136,6 @@ public:
 	
 	// Whether or not the player is teleporting
 	bool visible = false;
-	
-	// Counter for sorting the wall tiles during collision checking
-	unsigned short sortCounter;
 	
 	// Accessor function to check whether the player is dead
 	bool isdead();

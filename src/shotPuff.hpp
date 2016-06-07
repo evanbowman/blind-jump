@@ -28,7 +28,7 @@ public:
 	
 private:
 	int frameIndex;
-	unsigned int frameTimer;
+	int32_t frameTimer;
 	sf::Sprite sprPuff[4];
 	sf::Texture sprText[4];
 	bool killFlag;

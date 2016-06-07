@@ -19,7 +19,7 @@ private:
 	float xInit, yInit, xPos, yPos;
 	bool killFlag;
 	uint8_t frameIndex;
-	unsigned int animationTimer;
+	int32_t animationTimer;
 	bool valid;
 	
 public:
