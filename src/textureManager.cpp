@@ -15,6 +15,18 @@ bool TextureManager::load() {
 		return false;
 	}
 	textures[static_cast<int>(Texture::vignetteShadow)] = vignetteShadow;
+
+	sf::Texture lampLight;
+	if (!lampLight.loadFromFile(resourcePath() + "lampLight.png")) {
+		return false;
+	}
+	textures[static_cast<int>(Texture::lamplight)] = lampLight;
+
+	sf::Texture introLevel;
+	if (!introLevel.loadFromFile(resourcePath() + "introLevel.png")) {
+		return false;
+	}
+	textures[static_cast<int>(Texture::introLevel)] = introLevel;
 	
 	return true;
 }

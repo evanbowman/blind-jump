@@ -21,10 +21,8 @@
 
 class tileController {
 public:
-	sf::Texture lamplight;
-	sf::Sprite lmplght;
-	
-	sf::Texture transitionLevels[1];
+    sf::Sprite lmplght;
+
 	sf::Sprite transitionLvSpr;
 	
 	sf::Image tileImg[2];

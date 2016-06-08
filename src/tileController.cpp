@@ -177,20 +177,14 @@ tileController::tileController() {
 	posY = -476;
 	windowH = 0;
 	windowW = 0;
-	
-	transitionLevels[0].loadFromFile(resourcePath() + "introLevel.png");
-	
+		
 	tileImg[0].loadFromFile(resourcePath() + "soilTileset.png");
 	tileImg[1].loadFromFile(resourcePath() + "aquaTileset.png");
 	grassSet[0].loadFromFile(resourcePath() + "grassSet.png");
 	grassSetEdge[0].loadFromFile(resourcePath() + "grassSetEdge.png");
 	grassSet[1].loadFromFile(resourcePath() + "grassSetBluish.png");
 	grassSetEdge[1].loadFromFile(resourcePath() + "grassSetEdgeBluish.png");
-	
-	lamplight.loadFromFile(resourcePath() + "lampLight.png");
-	lmplght.setTexture(lamplight);
-	
-	
+    
 	//Call the mapping function to transform the array into something useful
 	int count = mappingFunction(mapArray, 0, true);
 	
@@ -209,8 +203,7 @@ tileController::tileController() {
 	createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet[0], &grassSetEdge[0]);
 	mapSprite1.setTexture(mapTexture[0]);
 	mapSprite2.setTexture(mapTexture[1]);
-	transitionLvSpr.setTexture(transitionLevels[0]);
-	
+    
 	shadow.setFillColor(sf::Color(188, 188, 198, 255));
 }
 
@@ -287,6 +280,11 @@ void tileController::clear() {
 	primeChestLocations.clear();
 	emptyMapLocations.clear();
 	edgeLocations.clear();
+}
+
+void tileController::setTextures(TextureManager * pTM) {
+	lmplght.setTexture(*pTM->getTexture(TextureManager::Texture::lamplight));
+	transitionLvSpr.setTexture(*pTM-getTexture(TextureManager::Texture::introLevel));
 }
 
 void tileController::rebuild(char itemArray[48][3], int level) {

@@ -23,6 +23,8 @@ GameMap::GameMap(float windowWidth, float windowHeight, TextureManager * pTM, In
 	bkg.setPosition((tiles.posX / 2) + 226, tiles.posY / 2);
 
 	this->pTM = pTM;
+
+	tiles.setTextures(pTM);
 	
 	// Set the size of the target render texture so that they'll fill the screen
 	target.create(windowWidth, windowHeight);
