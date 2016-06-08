@@ -34,3 +34,7 @@ bool TextureManager::load() {
 sf::Texture * TextureManager::getTexture(Texture id) {
 	return &textures[static_cast<int>(id)];
 }
+
+sf::Texture * TextureManager::getTexture(int id) {
+	return &textures[id];
+}

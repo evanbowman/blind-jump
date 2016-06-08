@@ -284,7 +284,7 @@ void tileController::clear() {
 
 void tileController::setTextures(TextureManager * pTM) {
 	lmplght.setTexture(*pTM->getTexture(TextureManager::Texture::lamplight));
-	transitionLvSpr.setTexture(*pTM-getTexture(TextureManager::Texture::introLevel));
+	transitionLvSpr.setTexture(*pTM->getTexture(TextureManager::Texture::introLevel));
 }
 
 void tileController::rebuild(char itemArray[48][3], int level) {
