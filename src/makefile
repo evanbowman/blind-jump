@@ -118,7 +118,7 @@ main.o: player.hpp backgroundHandler.hpp gameMap.hpp $(RSP) inputController.hpp 
 mappingFunctions.o: mappingFunctions.hpp mappingFunctions.cpp tileController.hpp
 	$(CC) mappingFunctions.cpp $(CFLAGS) -c -o mappingFunctions.o
 
-player.o: player.hpp player.cpp $(RSP) playerAnimationFunctions.hpp playerCollisionFunctions.hpp wall.hpp gun.hpp tileController.hpp detailController.hpp soundController.hpp inputController.hpp RenderType.hpp
+player.o: player.hpp player.cpp $(RSP) playerAnimationFunctions.hpp playerCollisionFunctions.hpp wall.hpp gun.hpp tileController.hpp detailController.hpp soundController.hpp inputController.hpp RenderType.hpp textureManager.hpp
 	$(CC) player.cpp $(CFLAGS) -c -o player.o
 
 playerCollisionFunctions.o: playerCollisionFunctions.hpp playerCollisionFunctions.cpp wall.hpp treasureChest.hpp terminal.hpp
@@ -157,7 +157,7 @@ teleporterSmoke.o: teleporterSmoke.cpp teleporterSmoke.hpp
 terminal.o: terminal.cpp terminal.hpp detailParent.hpp
 	$(CC) terminal.cpp $(CFLAGS) -c -o terminal.o
 
-textureManager.o: $(RSP) textureManager.cpp textureManager.hpp
+textureManager.o: $(RSP) textureManager.cpp textureManager.hpp textureEnum.hpp
 	$(CC) textureManager.cpp $(CFLAGS) -c -o textureManager.o
 
 tileController.o: tileController.cpp tileController.hpp $(RSP) mappingFunctions.hpp turret.hpp initMapVectors.hpp drawPixels.hpp wall.hpp enemyController.hpp coordinate.h textureManager.hpp

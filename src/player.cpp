@@ -59,60 +59,34 @@ Player::Player() {
 	colorTimer = 0.f;
 	hurtCounter = 30;
 	canhurt = true;
-	
-	if (!shadowTexture.loadFromFile(resourcePath() + "player_shadow.png")) {
-		//return EXIT_FAILURE;
-	}
-	shadowSprite.setTexture(shadowTexture);
-	shadowSprite.setPosition(posX + 7, posY + 24);
-	//First load all of the textures from files, and apply them to corresponging sprite objects
-	const std::string fileExt1[6] = {"player_face_down.png", "walk_down1.png", "walk_down2.png", "walk_down4.png", "walk_down5.png", "player_still_down.png"};
-	const std::string fileExt2[6] = {"player_face_up.png", "walk_up3.png", "walk_up4.png", "walk_up1.png", "walk_up2.png", "player_still_up.png"};
-	const std::string fileExt3[7] = {"player_face_left.png", "walk_left1.png", "walk_left2.png", "walk_left3.png", "walk_left4.png", "walk_left5.png", "player_still_left.png"};
-	const std::string fileExt4[7] = {"player_face_right.png", "walk_right1.png", "walk_right2.png", "walk_right3.png", "walk_right4.png", "walk_right5.png", "player_still_right.png"};
-	
-	for (int i = 0; i < 12; i++) {
-		dashTexture[i].loadFromFile(resourcePath() + "playerDashSheet.png", sf::IntRect(i * 32, 0, 32, 33));
-		dashSprites[i].setTexture(dashTexture[i]);
-		dashSprites[i].setOrigin(0, 1);
-	}
-	
+}
+
+void Player::setTextures(TextureManager * pTM) {
+	int id1 = static_cast<int>(TextureManager::Texture::playerDown);
+	int id2 = static_cast<int>(TextureManager::Texture::playerUp);
 	for (int i = 0; i < 6; i++) {
-		if (!textureDown[i].loadFromFile(resourcePath() + fileExt1[i])) {
-			//return EXIT_FAILURE;
-		}
-		spriteDown[i].setTexture(textureDown[i]);
-		spriteDown[i].setPosition(posX, posY);
-	}
-	for (int i = 0; i < 6; i++) {
-		if (!textureUp[i].loadFromFile(resourcePath() + fileExt2[i])) {
-			//return EXIT_FAILURE;
-		}
-		spriteUp[i].setTexture(textureUp[i]);
-		spriteUp[i].setPosition(posX, posY);
+		spriteDown[i].setTexture(*pTM->getTexture(id1 + i));
+		spriteUp[i].setTexture(*pTM->getTexture(id2 + i));
 	}
 	
+	id1 = static_cast<int>(TextureManager::Texture::playerLeft);
+	id2 = static_cast<int>(TextureManager::Texture::playerRight);
 	for (int i = 0; i < 7; i++) {
-		if (!textureLeft[i].loadFromFile(resourcePath() + fileExt3[i])) {
-			//return EXIT_FAILURE;
-		}
-		spriteLeft[i].setTexture(textureLeft[i]);
-		spriteLeft[i].setPosition(posX, posY);
+		spriteLeft[i].setTexture(*pTM->getTexture(id1 + i));
+		spriteRight[i].setTexture(*pTM->getTexture(id2 + i));
 	}
-	for (int i = 0; i < 7; i++) {
-		if (!textureRight[i].loadFromFile(resourcePath() + fileExt4[i])) {
-			//
-		}
-		spriteRight[i].setTexture(textureRight[i]);
-		spriteRight[i].setPosition(posX, posY);
-	}
-	
-	// Load the death animation textures and apply them to sprites
-	// You can tell I added this much later because I'm using more advanced functions from the sf namespace to load everything from a sheet
+
+	id1 = static_cast<int>(TextureManager::Texture::playerDash);
+	id2 = static_cast<int>(TextureManager::Texture::playerDeath);
 	for (int i = 0; i < 11; i++) {
-		deathTextures[i].loadFromFile(resourcePath() + "player_death_animation.png", sf::IntRect(i * 40, 0, 40, 38));
-		deathSprites[i].setTexture(deathTextures[i]);
+		dashSprites[i].setTexture(*pTM->getTexture(id1 + i));
+		dashSprites[i].setOrigin(0, 1);
+		deathSprites[i].setTexture(*pTM->getTexture(id2 + i));
 	}
+	dashSprites[11].setTexture(*pTM->getTexture(id1 + 11));
+	dashSprites[11].setOrigin(0, 1);
+
+	shadowSprite.setTexture(*pTM->getTexture(TextureManager::Texture::playerShadow));
 }
 
 void Player::setPosition(float X, float Y) {

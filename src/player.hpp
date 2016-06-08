@@ -18,6 +18,7 @@
 #include "soundController.hpp"
 #include "inputController.hpp"
 #include "RenderType.hpp"
+#include "textureManager.hpp"
 
 class Player {
 	
@@ -48,22 +49,15 @@ private:
 	//The game works by keeping the player object central and moving everything else
 	float worldOffsetX;
 	float worldOffsetY;
-	//Declare the textures and sprites.
-	sf::Texture shadowTexture;
+
 	sf::Sprite shadowSprite;
-	sf::Texture textureUp[6];
 	sf::Sprite spriteUp[6];
-	sf::Texture textureDown[6];
 	sf::Sprite spriteDown[6];
-	sf::Texture textureRight[7];
 	sf::Sprite spriteRight[7];
-	sf::Texture textureLeft[7];
 	sf::Sprite spriteLeft[7];
-	sf::Texture dashTexture[12];
 	sf::Sprite dashSprites[12];
-	// For player death sequence:
-	sf::Texture deathTextures[11];
 	sf::Sprite deathSprites[11];
+
 	bool deathSeq;
 
 	int32_t animationTimer;
@@ -128,6 +122,8 @@ public:
 	void activate();
 	void deActivate();
 	void deActivateFaceUp();
+
+	void setTextures(TextureManager *);
 	
 	// When the player is hit shake the screen. Would pass in reference to the screen shake controller but that would create a circular dependency
 	bool scrShakeState;

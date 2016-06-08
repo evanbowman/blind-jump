@@ -26,6 +26,8 @@ GameMap::GameMap(float windowWidth, float windowHeight, TextureManager * pTM, In
 
 	tiles.setTextures(pTM);
 	
+	player.setTextures(pTM);	
+
 	// Set the size of the target render texture so that they'll fill the screen
 	target.create(windowWidth, windowHeight);
 	secondPass.create(windowWidth, windowHeight);
