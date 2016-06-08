@@ -27,9 +27,11 @@
 #include "inputController.hpp"
 #include "GradientCircle.hpp"
 #include "RenderType.hpp"
+#include "textureManager.hpp"
 
 class GameMap {
 	private:
+	TextureManager * pTM;
 	Player player;
 	userInterface UI;
 	SoundController sndCtrl;
@@ -39,7 +41,6 @@ class GameMap {
 	float yOffset;
 	// Controls input from the keyboard and joystick
 	InputController *pInput;
-	sf::Texture vignetteTexture;
 	sf::Sprite vignetteSprite;
 	char itemArray[48][3];
 	detailController details;
@@ -48,8 +49,7 @@ class GameMap {
 	sf::Texture blurred;
 	sf::Sprite finalSprite;
 	bool teleporterCond;
-	sf::Texture vignetteShadowTxtr;
-	sf::Sprite vignetteShadowSpr;
+    sf::Sprite vignetteShadowSpr;
 	
 	// Create a GL rectangle primitive for the teleporter effect
 	sf::RectangleShape teleporterBeam;
@@ -103,7 +103,7 @@ class GameMap {
 	short int transitionDelay;
 	
 public:
-	GameMap(float, float, sf::Texture*, InputController*, FontController*);
+	GameMap(float, float, TextureManager *, InputController *, FontController *);
 	//Pass in the render window and draw sprites to it
 	void update(sf::RenderWindow&, sf::Time&);
 	// The opening map does not follow the procedural generation approach, have a separate function for this

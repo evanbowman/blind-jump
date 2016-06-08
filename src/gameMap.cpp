@@ -18,9 +18,11 @@
 #include "enemyCreationFunctions.hpp"
 #include "gameMap.hpp"
 
-GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, InputController* input, FontController* pFonts) {
+GameMap::GameMap(float windowWidth, float windowHeight, TextureManager * pTM, InputController* input, FontController* pFonts) {
 	//Make the background controller draw concenteric with the center of the view
 	bkg.setPosition((tiles.posX / 2) + 226, tiles.posY / 2);
+
+	this->pTM = pTM;
 	
 	// Set the size of the target render texture so that they'll fill the screen
 	target.create(windowWidth, windowHeight);
@@ -88,10 +90,9 @@ GameMap::GameMap(float windowWidth, float windowHeight, sf::Texture* inptxtr, In
 	titleSpr.setTexture(titleTxtr);
 	titleSpr.setPosition(windowW / 2 - 109, windowH / 5 - 15);
 	
-	vignetteSprite.setTexture(*inptxtr);
+	vignetteSprite.setTexture(*pTM->getTexture(TextureManager::Texture::vignette));
 	vignetteSprite.setScale(windowWidth/450, windowHeight/450);
-	vignetteShadowTxtr.loadFromFile(resourcePath() + "vignetteShadow.png");
-	vignetteShadowSpr.setTexture(vignetteShadowTxtr);
+	vignetteShadowSpr.setTexture(*pTM->getTexture(TextureManager::Texture::vignetteShadow));
 	vignetteShadowSpr.setScale(windowWidth / 450, windowHeight / 450);
 	vignetteShadowSpr.setColor(sf::Color(255,255,255,100));
 	
@@ -704,7 +705,7 @@ std::vector<std::pair<int, int>>* GameMap::getEnemySelectVec() {
 	return &enemySelectVec;
 }
 
-int* GameMap::getIdealLvs() {
+int * GameMap::getIdealLvs() {
 	return idealLvs;
 }
 

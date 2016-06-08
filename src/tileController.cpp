@@ -177,11 +177,6 @@ tileController::tileController() {
 	posY = -476;
 	windowH = 0;
 	windowW = 0;
-	tempX = 0;
-	tempY = 0;
-	zoomCounter = 0;
-	
-	//First load the all the textures for the overworld sprites
 	
 	transitionLevels[0].loadFromFile(resourcePath() + "introLevel.png");
 	
@@ -292,7 +287,6 @@ void tileController::clear() {
 	primeChestLocations.clear();
 	emptyMapLocations.clear();
 	edgeLocations.clear();
-	largeEmptyLocations.clear();
 }
 
 void tileController::rebuild(char itemArray[48][3], int level) {
@@ -306,12 +300,12 @@ void tileController::rebuild(char itemArray[48][3], int level) {
 		workingSet = 1;
 		shadow.setFillColor(sf::Color(188, 188, 198, 255));
 		createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet[0], &grassSetEdge[0]);
-		initMapVectors(mapArray, w, walls, posX, posY, emptyMapLocations, largeEmptyLocations, edgeLocations, primeChestLocations, teleporterLocation, itemArray, level);
+		initMapVectors(this, level);
 	} else if (level > BOSS_LEVEL_1) {
 		workingSet = 2;
 		shadow.setFillColor(sf::Color(215, 194, 194, 255));
 		createMapImage(&tileImg[1], mapArray, mapTexture, &grassSet[1], &grassSetEdge[1]);
-		initMapVectors(mapArray, w, walls, posX, posY, emptyMapLocations, largeEmptyLocations, edgeLocations, primeChestLocations, teleporterLocation, itemArray, level);
+		initMapVectors(this, level);
 	}
 	
 	mapSprite1.setTexture(mapTexture[0]);

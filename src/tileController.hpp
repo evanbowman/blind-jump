@@ -17,6 +17,7 @@
 #include <queue>
 #include <stack>
 #include "coordinate.h"
+#include "textureManager.hpp"
 
 class tileController {
 public:
@@ -26,33 +27,25 @@ public:
 	sf::Texture transitionLevels[1];
 	sf::Sprite transitionLvSpr;
 	
-	sf::Texture spotlightTxtr;
-	sf::Sprite spotlightSpr;
-	
 	sf::Image tileImg[2];
 	sf::Image grassSet[2];
 	sf::Image grassSetEdge[2];
 	sf::Image redSet;
 	sf::Image redSetFlowers;
-	
-	sf::Sprite tileSprite;
+
 	tileController();
 	void drawTiles(sf::RenderTexture&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, int level);
 	void drawTiles(sf::RenderTexture&);
 	void drawMiniMap(sf::RenderTexture&);
-	//The number of tiles to draw
-	int tileCount;
-	int xTiles;
-	int yTiles;
+
 	float xOffset;
 	float yOffset;
 	float posX;
 	float posY;
 	void setPosition(float, float);
 	void setOffset(float, float);
+
 	sf::RectangleShape shadow;
-	
-	int zoomCounter;
 	
 	sf::Texture mapTexture[2];
 	sf::Sprite mapSprite1, mapSprite2;
@@ -62,17 +55,13 @@ public:
 	
 	//Declare a map array variable
 	short mapArray[61][61];
-	//Some temporary variables for assigning enemy position
-	short tempX;
-	short tempY;
+
 	//Declare a wall vector
 	std::vector <wall> walls;
-	//Declare a wall object to push to the wall vector
-	wall w;
+
 	//Declare vectors to hold posible positions for object placement
 	std::vector<Coordinate> emptyMapLocations;
 	std::vector<Coordinate> edgeLocations;
-	std::vector<Coordinate> largeEmptyLocations;	// For large footprint object placement
 	std::vector<Coordinate> primeChestLocations;	// Find tiles with small number of neighbors, good place to hide items
 	
 	Coordinate teleporterLocation;
@@ -94,6 +83,7 @@ public:
 	unsigned char getWorkingSet();
 	void setWindowSize(float, float);
 	void reset();
+	void setTextures(TextureManager *);
 };
 
 #endif /* tileController_hpp */

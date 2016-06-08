@@ -13,8 +13,8 @@
 #include <cmath>
 
 int initEnemies(GameMap* gm) {
-	// Store local references to expected frequently accessed values
-	int* idealLevels = gm->getIdealLvs();
+	// Store local references to expected frequently accessed
+	int * idealLevels = gm->getIdealLvs();
 	int currentLevel = gm->getLevel();
 	// Count sum of energy values for all enemies, used in health station cost calculations
 	int count = 0;

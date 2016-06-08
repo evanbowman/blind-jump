@@ -16,7 +16,8 @@
 #include "gameMap.hpp"
 #include "ResourcePath.hpp"
 #include "inputController.hpp"
-	
+#include "textureManager.hpp"
+
 int main(int, char const**) {
 	srand(static_cast<unsigned int>(time(0)));
 
@@ -42,10 +43,11 @@ int main(int, char const**) {
 		}
 		while (fabs(aspectRatio - windowAspect) > 0.005f);
 	}
-	
-	sf::Texture vignetteTexture;
-	vignetteTexture.loadFromFile(resourcePath() + "vignetteMask.png");
-	vignetteTexture.setSmooth(true);
+
+	TextureManager TM;
+	if(!TM.load()) {
+		return EXIT_FAILURE;
+	}
 	
 	// Wraps input from keyboard and gamepad
 	InputController input;
@@ -56,7 +58,7 @@ int main(int, char const**) {
 	FontController fonts(fontView, windowWidth / 2, windowHeight / 2);
 	
 	//Initialize the map
-	GameMap Map(windowWidth, windowHeight, &vignetteTexture, &input, &fonts);
+	GameMap Map(windowWidth, windowHeight, &TM, &input, &fonts);
 	
 	// Set up the window context settings
 	sf::ContextSettings settings;

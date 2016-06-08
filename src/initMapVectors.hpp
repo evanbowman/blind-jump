@@ -15,7 +15,8 @@
 #include "wall.hpp"
 #include "coordinate.h"
 
+class tileController;
 
-void initMapVectors(short mapArray[61][61], wall, std::vector<wall>&, float&, float&, std::vector<Coordinate>&, std::vector<Coordinate>&, std::vector<Coordinate>&, std::vector<Coordinate>&, Coordinate&, char itemArray[48][3], int);
+void initMapVectors(tileController *, int);
 
 #endif /* initMapVectors_hpp */
