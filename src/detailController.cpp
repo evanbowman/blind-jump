@@ -87,7 +87,7 @@ void detailController::addLamplight(float posX, float posY, int i, int j, float 
 	sf::Sprite tempSprites[2];
 	tempSprites[0].setTexture(*pTM->getTexture(TextureManager::Texture::lamp));
 	tempSprites[1].setTexture(*pTM->getTexture(TextureManager::Texture::lamplight));
-	LampLight lmp((i * 32) + posX, (j * 26) + posY, tempSprites[0], tempSprites[1], 2, width, height);
+	LampLight lmp((i * 32) + 16 + posX, (j * 26) + 16 + posY, tempSprites[0], tempSprites[1], 2, width, height);
 	lamps.push_back(lmp);
 }
 
