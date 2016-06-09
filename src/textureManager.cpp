@@ -12,17 +12,6 @@ bool loadTexture(const char * fname, TextureManager::Texture id, std::map<int, s
 	return true;
 }
 
-bool loadTextures(const char * fname, TextureManager::Texture id, std::map<int, sf::Texture> & textures, int8_t iters, const std::pair<int, int> & size) {
-	for (int i = 0; i < iters; i++) {
-		sf::Texture temp;
-		if (!temp.loadFromFile(resourcePath() + fname, sf::IntRect(size.first * i, 0, size.first, size.second))) {
-			return false;
-		}
-		textures[static_cast<int>(id) + i] = temp;
-	}
-	return true;
-}
-
 bool TextureManager::load() {
 	if (!loadTexture("vignetteMask.png", Texture::vignette, textures))
 		return false;
