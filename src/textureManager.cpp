@@ -51,7 +51,7 @@ bool TextureManager::load() {
 	if (!loadTexture("playerWalkRight.png", Texture::playerRight, textures))
 		return false;
 
-	if (!loadTextures("playerDashsheet.png", Texture::playerDash, textures, 12, std::make_pair(32, 33)))
+	if (!loadTexture("playerDashsheet.png", Texture::playerDash, textures))
 		return false;
 
 	if (!loadTexture("player_death_animation.png", Texture::playerDeath, textures))

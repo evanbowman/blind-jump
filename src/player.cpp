@@ -62,28 +62,14 @@ Player::Player() {
 }
 
 void Player::setTextures(TextureManager * pTM) {
-	deathSheet.setSize(40, 38);
 	deathSheet.setTexture(pTM->getTexture(TextureManager::Texture::playerDeath));
-
-	walkDown.setSize(32, 32);
 	walkDown.setTexture(pTM->getTexture(TextureManager::Texture::playerDown));
-
-	walkUp.setSize(32, 32);
 	walkUp.setTexture(pTM->getTexture(TextureManager::Texture::playerUp));
-
-	walkLeft.setSize(32, 32);
 	walkLeft.setTexture(pTM->getTexture(TextureManager::Texture::playerLeft));
-
-	walkRight.setSize(32, 32);
 	walkRight.setTexture(pTM->getTexture(TextureManager::Texture::playerRight));
 
-	int id1 = static_cast<int>(TextureManager::Texture::playerDash);
-	for (int i = 0; i < 11; i++) {
-		dashSprites[i].setTexture(*pTM->getTexture(id1 + i));
-		dashSprites[i].setOrigin(0, 1);
-	}
-	dashSprites[11].setTexture(*pTM->getTexture(id1 + 11));
-	dashSprites[11].setOrigin(0, 1);
+	dashSheet.setTexture(pTM->getTexture(TextureManager::Texture::playerDash));
+	dashSheet.setOrigin(0, 1);
 	
 	shadowSprite.setTexture(*pTM->getTexture(TextureManager::Texture::playerShadow));
 }
@@ -99,10 +85,9 @@ void Player::setPosition(float X, float Y) {
 
 	shadowSprite.setPosition(posX + 7, posY + 24);
 	weapon.setPosition(posX, posY);
-	for (int i = 0; i < 12; i++) {
-		dashSprites[i].setPosition(posX, posY);
-	}
 
+	dashSheet.setPosition(posX, posY);
+	
 	deathSheet.setPosition(posX - 13, posY - 1);
 }
 
@@ -743,7 +728,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				std::get<1>(tGun) = weapon.getYpos() - 1;
 				gameObjects.push_back(tGun);
 			}
-			std::get<0>(tPlayer) = dashSprites[0];
+			std::get<0>(tPlayer) = dashSheet[0];
 			gameObjects.push_back(tPlayer);
 		}
 		else if ((leftPrevious || upPrevious || downPrevious) && spriteIndex == 7) {
@@ -752,7 +737,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				std::get<1>(tGun) = weapon.getYpos() - 1;
 				gameObjects.push_back(tGun);
 			}
-			std::get<0>(tPlayer) = dashSprites[2];
+			std::get<0>(tPlayer) = dashSheet[2];
 			gameObjects.push_back(tPlayer);
 		}
 		else if (spriteIndex == 4) {
@@ -763,11 +748,11 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				std::get<1>(tGun) = weapon.getYpos() + 3;
 				gameObjects.push_back(tGun);
 			}
-			std::get<0>(tPlayer) = dashSprites[6];
+			std::get<0>(tPlayer) = dashSheet[6];
 			gameObjects.push_back(tPlayer);
 		}
 		else if (spriteIndex == 5) {
-			std::get<0>(tPlayer) = dashSprites[8];
+			std::get<0>(tPlayer) = dashSheet[8];
 			gameObjects.push_back(tPlayer);
 		}
 	}
@@ -779,7 +764,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				std::get<1>(tGun) = weapon.getYpos() - 1;
 				gameObjects.push_back(tGun);
 			}
-			std::get<0>(tPlayer) = dashSprites[1];
+			std::get<0>(tPlayer) = dashSheet[1];
 			gameObjects.push_back(tPlayer);
 		}
 		else if (leftPrevious && spriteIndex == 7) {
@@ -788,7 +773,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				std::get<1>(tGun) = weapon.getYpos() - 1;
 				gameObjects.push_back(tGun);
 			}
-			std::get<0>(tPlayer) = dashSprites[3];
+			std::get<0>(tPlayer) = dashSheet[3];
 			gameObjects.push_back(tPlayer);
 		}
 		else if (upPrevious && spriteIndex == 6) {
@@ -797,17 +782,17 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				std::get<1>(tGun) = weapon.getYpos() - 1;
 				gameObjects.push_back(tGun);
 			}
-			std::get<0>(tPlayer) = dashSprites[4];
+			std::get<0>(tPlayer) = dashSheet[4];
 			gameObjects.push_back(tPlayer);
 		}
 		
 		else if (downPrevious && spriteIndex == 6) {
-			std::get<0>(tPlayer) = dashSprites[11];
+			std::get<0>(tPlayer) = dashSheet[11];
 			gameObjects.push_back(tPlayer);
 		}
 		
 		else if (downPrevious && spriteIndex == 7) {
-			std::get<0>(tPlayer) = dashSprites[10];
+			std::get<0>(tPlayer) = dashSheet[10];
 			gameObjects.push_back(tPlayer);
 		}
 		
@@ -817,7 +802,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				std::get<1>(tGun) = weapon.getYpos() - 1;
 				gameObjects.push_back(tGun);
 			}
-			std::get<0>(tPlayer) = dashSprites[5];
+			std::get<0>(tPlayer) = dashSheet[5];
 			gameObjects.push_back(tPlayer);
 		}
 		
@@ -830,7 +815,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 					std::get<1>(tGun) = weapon.getYpos() + 2;
 					gameObjects.push_back(tGun);
 				}
-				std::get<0>(tPlayer) = dashSprites[7];
+				std::get<0>(tPlayer) = dashSheet[7];
 				gameObjects.push_back(tPlayer);
 			}
 			
@@ -842,7 +827,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 					std::get<1>(tGun) = weapon.getYpos() + 2;
 					gameObjects.push_back(tGun);
 				}
-				std::get<0>(tPlayer) = dashSprites[5];
+				std::get<0>(tPlayer) = dashSheet[5];
 				gameObjects.push_back(tPlayer);
 			}
 			
@@ -854,24 +839,24 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 					std::get<1>(tGun) = weapon.getYpos() + 2;
 					gameObjects.push_back(tGun);
 				}
-				std::get<0>(tPlayer) = dashSprites[4];
+				std::get<0>(tPlayer) = dashSheet[4];
 				gameObjects.push_back(tPlayer);
 			}
 		}
 		
 		else if (spriteIndex == 5) {
 			if (downPrevious) {
-				std::get<0>(tPlayer) = dashSprites[9];
+				std::get<0>(tPlayer) = dashSheet[9];
 				gameObjects.push_back(tPlayer);
 			}
 			
 			else if (leftPrevious) {
-				std::get<0>(tPlayer) = dashSprites[10];
+				std::get<0>(tPlayer) = dashSheet[10];
 				gameObjects.push_back(tPlayer);
 			}
 			
 			else if (rightPrevious) {
-				std::get<0>(tPlayer) = dashSprites[11];
+				std::get<0>(tPlayer) = dashSheet[11];
 				gameObjects.push_back(tPlayer);
 			}
 		}
