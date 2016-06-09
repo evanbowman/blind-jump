@@ -13,14 +13,14 @@
 #include <stdio.h>
 #include "detailParent.hpp"
 #include "inputController.hpp"
+#include "spriteSheet.hpp"
 
 class TreasureChest : public detailParent {
 public:
-	TreasureChest(float, float, sf::Sprite*, int, float, float, char);
+	TreasureChest(float, float, sf::Texture *, sf::Texture *, int, float, float, char);
 	sf::Sprite* getShadow();
 	sf::Sprite* getSprite();
 	void update(float, float, char, InputController*, sf::Time&);
-	sf::Sprite chestSprites[7];
 	float getZY();
 	char getFrameIndex();
 	bool isValid();
@@ -34,5 +34,7 @@ private:
 	bool isOpen;
 	char item;
 	bool valid;
+	SpriteSheet<16, 32> chestSheet;
+	sf::Sprite chestShadow;
 };
 #endif /* treasureChest_hpp */

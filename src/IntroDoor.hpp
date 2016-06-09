@@ -12,6 +12,7 @@
 
 #include "detailParent.hpp"
 #include "inputController.hpp"
+#include "spriteSheet.hpp"
 
 class ScreenShakeController;
 
@@ -20,14 +21,14 @@ class IntroDoor : public detailParent {
 	enum class State { dormant, opening, opened };
 	
 private:
-	sf::Sprite sprite[4];
-        uint8_t frameIndex;
+	SpriteSheet<200, 95> doorSheet;
+	uint8_t frameIndex;
 	char frameRate;
 	State state;
 	
 public:
 	void update(float, float, InputController * pInput, ScreenShakeController * pscr);
-	IntroDoor(float, float, sf::Sprite*, int, float, float);
+	IntroDoor(float, float, sf::Texture *, int, float, float);
 	sf::Sprite* getSprite();
 };
 

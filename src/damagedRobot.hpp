@@ -13,15 +13,16 @@
 #include <stdio.h>
 #include "detailParent.hpp"
 #include "SFML/Graphics.hpp"
+#include "spriteSheet.hpp"
 
 class DamagedRobot : public detailParent {
 public:
-	DamagedRobot(float, float, sf::Sprite*, int, float, float);
+	DamagedRobot(float, float, sf::Texture *, int, float, float);
 	void update(float, float);
-	sf::Sprite* getSprite();
+	sf::Sprite * getSprite();
 	
 private:
-	sf::Sprite sprite;
+	SpriteSheet<40, 43> robotSheet;
 	
 };
 

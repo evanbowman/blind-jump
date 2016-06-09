@@ -10,9 +10,17 @@ private:
 	sf::Sprite sprite;
 	
 public:
-	sf::Sprite operator[](std::size_t idx) {
+	sf::Sprite operator[](const std::size_t idx) {
 		sprite.setTextureRect(sf::IntRect(idx * w, 0, w, h));
 		return sprite;
+	}
+
+	sf::Sprite * getSpritePtr() {
+		return &sprite;
+	}
+
+	void setScale(float xScale, float yScale) {
+		sprite.setScale(xScale, yScale);
 	}
 	
 	void setPosition(float xPos, float yPos) {

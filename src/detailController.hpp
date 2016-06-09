@@ -24,33 +24,19 @@
 #include "IntroDoor.hpp"
 #include <array>
 #include "RenderType.hpp"
+#include "Texturemanager.hpp"
 
 class detailController {
 private:
-	sf::Texture doorTextures[4];
-	sf::Texture rockTextures[2];
-	sf::Texture podTexture;
-	sf::Texture damagedRobotTexture[2];
-	sf::Texture teleporterTexture[2];
-	sf::Texture chestTextures[6];
-	sf::Texture chestGlow;
-	sf::Texture termTexture[2];
-	sf::Texture chestShadow;
-	sf::Texture miscTextures32x26;
-	sf::Texture enemyScraps[1];
-	sf::Texture dasherScraps;
-	sf::Texture lampGlow;
-	sf::Texture lampTextures[3];
-	sf::Texture teleporterGlow;
 	std::vector<Teleporter> teleporters;
 	std::vector<TreasureChest> chests;
 	std::vector<LampLight> lamps;
 	std::vector<Rock> rocks;
 	std::vector<IntroDoor> doors;
 	std::vector<DamagedRobot> damagedRobots;
-	// A vector of general details, for background details that don't need any added functionality
 	std::vector<GeneralDetail> misc32x26;
-
+	TextureManager * pTM;
+	
 public:
 	detailController();
 	void addCrystals(float, float, float, float);
@@ -74,6 +60,7 @@ public:
 	void addWarpImpact(float, float);
 	void killTeleporter();
 	void setWindowSize(float, float);
+	void setTextureManager(TextureManager *);
 };
 
 #endif /* detailController_hpp */

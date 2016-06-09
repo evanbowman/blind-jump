@@ -22,7 +22,7 @@ public:
 	float windowCenterX;
 	float windowCenterY;
 	detailParent();
-	detailParent(float, float, sf::Sprite*, int, float, float);
+	detailParent(float, float, int, float, float);
 	bool getDrawOrder();
 	void setDrawOrder(bool);
 	void setPosition(float, float);

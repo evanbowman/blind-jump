@@ -13,15 +13,16 @@
 #include <stdio.h>
 #include "detailParent.hpp"
 #include "SFML/Graphics.hpp"
+#include "spriteSheet.hpp"
 
 class Rock : public detailParent {
 private:
-	sf::Sprite sprite;
+	SpriteSheet<32, 64> rockSheet;
 	
 public:
 	void update(float, float);
-	Rock(float, float, sf::Sprite*, int, float, float);
-	sf::Sprite* getSprite();
+	Rock(float, float, sf::Texture *, int, float, float);
+	sf::Sprite * getSprite();
 };
 
 #endif /* rock_hpp */

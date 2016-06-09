@@ -11,10 +11,9 @@
 
 #define CHOICES 6
 
-TreasureChest::TreasureChest(float xStart, float yStart, sf::Sprite* sprs, int len, float width, float height, char contents) : detailParent(xStart, yStart, sprs, len, width, height) {
-	for (int i = 0; i < len; i++) {
-		chestSprites[i] = sprs[i];
-	}
+TreasureChest::TreasureChest(float xStart, float yStart, sf::Texture * pChestTextures, sf::Texture * pShadowTexture, int len, float width, float height, char contents) : detailParent(xStart, yStart, len, width, height) {
+	chestSheet.setTexture(pChestTextures);
+	chestShadow.setTexture(*pShadowTexture);
 	isOpen = false;
 	animationIsRunning = false;
 	frameIndex = 0;
@@ -25,14 +24,14 @@ TreasureChest::TreasureChest(float xStart, float yStart, sf::Sprite* sprs, int l
 }
 
 sf::Sprite* TreasureChest::getShadow() {
-	return &chestSprites[6];
+	return &chestShadow;
 }
 
 void TreasureChest::update(float xOffset, float yOffset, char playerSpriteIndex, InputController* input, sf::Time & elapsedTime) {
 	xPos = xOffset + xInit;
 	yPos = yOffset + yInit;
 	
-	chestSprites[6].setPosition(xPos, yPos + 15);
+    chestShadow.setPosition(xPos, yPos + 15);
 	
 	if (!isOpen) {
 		if (input->zPressed() && fabsf(xPos + 8 - windowCenterX / 2) < 12 && fabsf(yPos - windowCenterY / 2) < 10 && playerSpriteIndex == 1) {
@@ -55,8 +54,8 @@ void TreasureChest::update(float xOffset, float yOffset, char playerSpriteIndex,
 }
 
 sf::Sprite* TreasureChest::getSprite() {
-	chestSprites[frameIndex].setPosition(xPos, yPos - 11);
-	return &chestSprites[frameIndex];
+	chestSheet[frameIndex];
+	return chestSheet.getSpritePtr();
 }
 
 float TreasureChest::getZY() {

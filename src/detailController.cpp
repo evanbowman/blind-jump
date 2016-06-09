@@ -11,44 +11,8 @@
 #include <iostream>
 #include <cmath>
 
-#define NUM_ROCK_IMAGES 2
-
-//static const char* const teleporterStrings[] = {"Ready to Warp?", "Try here", "A Trasporter", "This Way"};
-//static const char* const chestStrings[] = {"Left behind", "Discarded", "Forgotten", "Left Behind"};
-//static const char* const robotStrings[] = {"It's Broken", "Broken Down", "Dangerous once", "Dilapidated"};
-
 detailController::detailController() {
-	teleporterTexture[0].loadFromFile(resourcePath() + "teleporter.png");
-	teleporterTexture[1].loadFromFile(resourcePath() + "teleporterShadow.png");
-	for (int i = 0; i < 6; i++) {
-		chestTextures[i].loadFromFile(resourcePath() + "treasureChest.png", sf::IntRect(16 * i, 0, 16, 30));
-	}
-							   
-       	chestShadow.loadFromFile(resourcePath() + "chestShadow.png");
-	miscTextures32x26.loadFromFile(resourcePath() + "warpImpact.png");
-	enemyScraps[0].loadFromFile(resourcePath() + "enemyScraps.png");
-	dasherScraps.loadFromFile(resourcePath() + "dasherDead.png");
-	teleporterGlow.loadFromFile(resourcePath() + "teleporterGlow.png");
-	
-	podTexture.loadFromFile(resourcePath() + "pod.png");
-	
-	for (int i = 0; i < 4; i++) {
-		doorTextures[i].loadFromFile(resourcePath() + "introWall.png", sf::IntRect(0, i * 95, 200, 95));
-	}
-	
-	for (int i = 0; i < 2; i++) {
-		damagedRobotTexture[i].loadFromFile(resourcePath() + "damagedRobotSheet.png", sf::IntRect(i * 40, 0, 40, 43));
-	}
-	
-	for (int i = 0; i < NUM_ROCK_IMAGES; i++) {
-		rockTextures[i].loadFromFile(resourcePath() + "boulderSheet.png", sf::IntRect(i * 32, 0, 32, 64));
-	}
-	
-	lampGlow.loadFromFile(resourcePath() + "lampLight.png");
-	for (int i = 0; i < 3; i++) {
-		lampTextures[i].loadFromFile(resourcePath() + "lamp.png", sf::IntRect(i * 32, 0, 32, 32));
-	}
-	
+	pTM = nullptr;
 }
 
 Coordinate pickLocation(std::vector<Coordinate>& emptyLocations) {
@@ -59,7 +23,10 @@ Coordinate pickLocation(std::vector<Coordinate>& emptyLocations) {
 	emptyLocations[locationSelect] = emptyLocations.back();
 	emptyLocations.pop_back();
 	return c;
-	
+}
+
+void detailController::setTextureManager(TextureManager * pTM) {
+	this->pTM = pTM;
 }
 
 Coordinate pickLocationGrass(std::vector<Coordinate>& emptyLocations, short mapArray[61][61]) {
@@ -111,77 +78,57 @@ Coordinate pickLocation2(std::vector<Coordinate>& emptyLocations) {
 
 void detailController::addWarpImpact(float posX, float posY) {
 	sf::Sprite tempSprite;
-	tempSprite.setTexture(miscTextures32x26);
+	tempSprite.setTexture(*pTM->getTexture(TextureManager::Texture::warpImpact));
 	GeneralDetail d(posX, posY, &tempSprite, 1, 0, 0);
 	misc32x26.push_back(d);
 }
 
 void detailController::addLamplight(float posX, float posY, int i, int j, float width, float height) {
 	sf::Sprite tempSprites[2];
-	tempSprites[0].setTexture(lampTextures[0]);
-	tempSprites[1].setTexture(lampGlow);
+	tempSprites[0].setTexture(*pTM->getTexture(TextureManager::Texture::lamp));
+	tempSprites[1].setTexture(*pTM->getTexture(TextureManager::Texture::lamplight));
 	LampLight lmp((i * 32) + posX, (j * 26) + posY, tempSprites[0], tempSprites[1], 2, width, height);
 	lamps.push_back(lmp);
 }
 
 void detailController::addRock(float posX, float posY, int i, int j) {
-	sf::Sprite tempSprite;
-	tempSprite.setTexture(rockTextures[rand() % NUM_ROCK_IMAGES]);
 	float placementXoffset = 0;
-	if (rand() % 2) {
-		tempSprite.setScale(-1, 1);
-		placementXoffset += 32;
-	}
-	Rock r((i * 32) + posX + placementXoffset, (j * 26) + posY, &tempSprite, 2, 0, 0);
+	Rock r((i * 32) + posX + placementXoffset, (j * 26) + posY, pTM->getTexture(TextureManager::Texture::rock), 2, 0, 0);
 	rocks.push_back(r);
 }
 
 void detailController::addChest(tileController& t, float posX, float posY, float width, float height, char chestContents) {
 	Coordinate c = pickLocation(t.emptyMapLocations);
-	sf::Sprite tempSprites[7];
-	tempSprites[6].setTexture(chestShadow);
-	for (int i = 0; i < 6; i++) {
-		tempSprites[i].setTexture(chestTextures[i]);
-	}
-	float placeOffsetX = 0;
-	placeOffsetX = (rand() % 6) - 3;
-	TreasureChest tr((c.x * 32) + posX + 8 + placeOffsetX, (c.y * 26) + posY - 3, tempSprites, 7, width, height, chestContents);
+    float placeOffsetX = (rand() % 6) - 3;
+	TreasureChest tr((c.x * 32) + posX + 8 + placeOffsetX, (c.y * 26) + posY - 3, pTM->getTexture(TextureManager::Texture::treasureChest), pTM->getTexture(TextureManager::Texture::chestShadow), 7, width, height, chestContents);
 	chests.push_back(tr);
 }
 
 void detailController::addEnemyScrap(float posX, float posY, float width, float height) {
 	sf::Sprite tempSprite;
-	tempSprite.setTexture(enemyScraps[0]);
+	tempSprite.setTexture(*pTM->getTexture(TextureManager::Texture::enemyScrap));
 	GeneralDetail scrap(posX - 6, posY - 2, &tempSprite, 0, width, height);
 	misc32x26.push_back(scrap);
 }
 
+//////
 void detailController::addDamagedRobots(tileController& t, float posX, float posY) {
 	if (rand() % 2) {
 		Coordinate c;
-		bool choice = rand() % 2;
 		float placeOffsetX = 0;
 		sf::Sprite tempSprite;
 		try {
 			c = pickLocationGrass(t.emptyMapLocations, t.mapArray);
-			tempSprite.setTexture(damagedRobotTexture[choice]);
-			placeOffsetX = (rand() % 6) - 3;
-			if (rand() % 2) {
-				tempSprite.setScale(-1, 1);
-				placeOffsetX += 32;
-			}
-			DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
+			DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pTM->getTexture(TextureManager::Texture::damagedRobot), 0, 0, 0);
 			damagedRobots.push_back(dr);
 		} catch(const char* e) {
 			std::cout << e << std::endl;
 		}
-		
 
 		if (rand() % 2) {
 			try {
 				c = pickLocationGrass(t.emptyMapLocations, t.mapArray);
-				tempSprite.setTexture(damagedRobotTexture[!choice]);
-				DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
+	    		DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pTM->getTexture(TextureManager::Texture::damagedRobot), 0, 0, 0);
 				damagedRobots.push_back(dr);
 			} catch(const char* e) {
 				std::cout << e << std::endl;
@@ -191,16 +138,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
 		if (rand() % 2) {
 			try {
 				c = pickLocationGrass(t.emptyMapLocations, t.mapArray);
-				tempSprite.setTexture(damagedRobotTexture[choice]);
-				if (tempSprite.getScale().x == -1) {
-					tempSprite.setScale(1, 1);
-					placeOffsetX -= 32;
-				} else {
-					tempSprite.setScale(-1, 1);
-					placeOffsetX += 32;
-				}
-				
-				DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, &tempSprite, 0, 0, 0);
+				DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pTM->getTexture(TextureManager::Texture::damagedRobot), 0, 0, 0);
 				damagedRobots.push_back(dr);
 			} catch(const char* e) {
 				std::cout << e << std::endl;
@@ -215,25 +153,22 @@ void detailController::addDasherScrap(float posX, float posY, int scale) {
 	}
 	sf::Sprite tempSprite;
 	tempSprite.setScale((float) scale, 1);
-	tempSprite.setTexture(dasherScraps);
+	tempSprite.setTexture(*pTM->getTexture(TextureManager::Texture::dasherDead));
 	tempSprite.setOrigin(14, 8);
 	GeneralDetail dScrap(posX, posY, &tempSprite, 0, 0, 0);
 	misc32x26.push_back(dScrap);
 }
 
+///////
 void detailController::addDoor(float xpos, float ypos, int x, int y, float w, float h) {
-	sf::Sprite tempSprite[4];
-	for (int i = 0; i < 4; i++) {
-		tempSprite[i].setTexture(doorTextures[i]);
-	}
-	IntroDoor d(xpos + x * 32, ypos + y * 26, tempSprite, 0, w, h);
+	IntroDoor d(xpos + x * 32, ypos + y * 26, pTM->getTexture(TextureManager::Texture::introWall), 0, w, h);
 	doors.push_back(d);
 }
 
 void detailController::addPod(float xpos, float ypos, int x, int y) {
 	sf::Sprite tempSprite;
 	tempSprite.setOrigin(0, 30);
-	tempSprite.setTexture(podTexture);
+	tempSprite.setTexture(*pTM->getTexture(TextureManager::Texture::pod));
 	GeneralDetail d(xpos + x * 32, ypos + y * 26, &tempSprite, 0, 0, 0);
 	misc32x26.push_back(d);
 }
@@ -241,15 +176,10 @@ void detailController::addPod(float xpos, float ypos, int x, int y) {
 void detailController::addTeleporter(tileController& t, float posX, float posY, float width, float height) {
 	Coordinate c = t.getTeleporterLoc();
 	sf::Sprite tempSprites[2];
-	tempSprites[0].setTexture(teleporterTexture[0]);
-	tempSprites[1].setTexture(teleporterTexture[1]);
-	// Want the overworld to look organic, so randomly offset the teleporter location
-	//float placeOffsetX = 0;
-	
-	//placeOffsetX = (rand() % 6) - 3;
-	
+	tempSprites[0].setTexture(*pTM->getTexture(TextureManager::Texture::teleporter));
+	tempSprites[1].setTexture(*pTM->getTexture(TextureManager::Texture::teleporterShadow));	
 	sf::Sprite glow;
-	glow.setTexture(teleporterGlow);
+	glow.setTexture(*pTM->getTexture(TextureManager::Texture::teleporterGlow));
 	
 	Teleporter T((c.x * 32) + posX + 2/* + placeOffsetX*/, (c.y * 26) + posY - 4, tempSprites, glow, 2, width, height);
 

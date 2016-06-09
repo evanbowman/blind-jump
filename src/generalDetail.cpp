@@ -8,7 +8,7 @@
 
 #include "generalDetail.hpp"
 
-GeneralDetail::GeneralDetail(float xStart, float yStart, sf::Sprite* spr, int len, float width, float height) : detailParent(xStart, yStart, spr, len, width, height) {
+GeneralDetail::GeneralDetail(float xStart, float yStart, sf::Sprite* spr, int len, float width, float height) : detailParent(xStart, yStart, len, width, height) {
   this->spr = *spr;
 }
 

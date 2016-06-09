@@ -8,7 +8,7 @@
 
 #include "detailParent.hpp"
 
-detailParent::detailParent(float xStart, float yStart, sf::Sprite* sprs, int len, float width, float height) {
+detailParent::detailParent(float xStart, float yStart, int len, float width, float height) {
 	xInit = xStart;
 	yInit = yStart;
 	xPos = xInit;

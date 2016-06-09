@@ -10,7 +10,7 @@ CFLAGS = -O2 -std=c++11 -Wall -Werror
 #LFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 LDFLAGS = -lsfml-window -lsfml-graphics -lsfml-system -lsfml-audio
 EXENAME = BlindJump
-OBJECTS = aStar.o backgroundHandler.o bulletType1.o critter.o damagedRobot.o dasher.o dasherShot.o dashSmoke.o detailController.o detailParent.o drawPixels.o effectsController.o enemyController.o enemyCreationFunctions.o enemyParent.o enemyPlacementFn.o enemyShot.o energyBeam.o explosion32effect.o FireExplosion.o fontController.o generalDetail.o gameMap.o GradientCircle.o gun.o healthEffect.o heavyBot.o initLoot.o initMapVectors.o inputController.o IntroDoor.o lampLight.o main.o mappingFunctions.o player.o playerCollisionFunctions.o Powerup.o ResourcePath.o rock.o scoot.o screenShakeController.o shotPuff.o smallExplosion.o soundController.o teleporter.o teleporterSmoke.o terminal.o textureManager.o  tileController.o treasureChest.o turret.o turretFlashEffect.o turretShot.o userInterface.o wall.o wallinpath.o
+OBJECTS = aStar.o backgroundHandler.o bulletType1.o critter.o damagedRobot.o dasher.o dasherShot.o dashSmoke.o detailController.o detailParent.o drawPixels.o effectsController.o enemyController.o enemyCreationFunctions.o enemyParent.o enemyPlacementFn.o enemyShot.o energyBeam.o explosion32effect.o FireExplosion.o fontController.o generalDetail.o gameMap.o GradientCircle.o gun.o healthEffect.o heavyBot.o initLoot.o initMapVectors.o inputController.o IntroDoor.o lampLight.o main.o mappingFunctions.o player.o playerCollisionFunctions.o Powerup.o ResourcePath.o rock.o scoot.o screenShakeController.o shotPuff.o smallExplosion.o soundController.o teleporter.o teleporterSmoke.o textureManager.o  tileController.o treasureChest.o turret.o turretFlashEffect.o turretShot.o userInterface.o wall.o wallinpath.o
 RSP = ResourcePath.hpp ResourcePath.cpp
 
 all: $(OBJECTS)
@@ -28,7 +28,7 @@ bulletType1.o: bulletType1.cpp bulletType1.hpp
 critter.o: critter.cpp critter.hpp tileController.hpp enemyParent.hpp aStar.hpp
 	$(CC) critter.cpp $(CFLAGS) -c -o critter.o
 
-damagedRobot.o: damagedRobot.cpp damagedRobot.hpp detailParent.hpp
+damagedRobot.o: damagedRobot.cpp damagedRobot.hpp detailParent.hpp spriteSheet.hpp
 	$(CC) damagedRobot.cpp $(CFLAGS) -c -o damagedRobot.o
 
 dasher.o: dasher.cpp dasher.hpp angleFunction.hpp wallinpath.hpp enemyParent.hpp effectsController.hpp
@@ -40,7 +40,7 @@ dasherShot.o: dasherShot.hpp
 dashSmoke.o: dashSmoke.hpp dashSmoke.cpp
 	$(CC) dashSmoke.cpp $(CFLAGS) -c -o dashSmoke.o
 
-detailController.o: detailController.hpp detailController.cpp $(RSP) Teleporter.hpp treasureChest.hpp tileController.hpp coordinate.h generalDetail.hpp lampLight.hpp userInterface.hpp damagedRobot.hpp rock.hpp IntroDoor.hpp RenderType.hpp
+detailController.o: detailController.hpp detailController.cpp $(RSP) Teleporter.hpp treasureChest.hpp tileController.hpp coordinate.h generalDetail.hpp lampLight.hpp userInterface.hpp damagedRobot.hpp rock.hpp IntroDoor.hpp RenderType.hpp textureManager.hpp spriteSheet.hpp
 	$(CC) detailController.cpp $(CFLAGS) -c -o detailController.o
 
 detailParent.o: detailParent.hpp detailParent.cpp
@@ -121,7 +121,7 @@ mappingFunctions.o: mappingFunctions.hpp mappingFunctions.cpp tileController.hpp
 player.o: player.hpp player.cpp $(RSP) playerAnimationFunctions.hpp playerCollisionFunctions.hpp wall.hpp gun.hpp tileController.hpp detailController.hpp soundController.hpp inputController.hpp RenderType.hpp textureManager.hpp spriteSheet.hpp
 	$(CC) player.cpp $(CFLAGS) -c -o player.o
 
-playerCollisionFunctions.o: playerCollisionFunctions.hpp playerCollisionFunctions.cpp wall.hpp treasureChest.hpp terminal.hpp
+playerCollisionFunctions.o: playerCollisionFunctions.hpp playerCollisionFunctions.cpp wall.hpp treasureChest.hpp
 	$(CC) playerCollisionFunctions.cpp $(CFLAGS) -c -o playerCollisionFunctions.o
 
 Powerup.o: Powerup.hpp Powerup.cpp 
@@ -130,7 +130,7 @@ Powerup.o: Powerup.hpp Powerup.cpp
 ResourcePath.o: ResourcePath.cpp ResourcePath.hpp
 	$(CC) ResourcePath.cpp $(CFLAGS) -c -o ResourcePath.o
 
-rock.o: rock.hpp rock.cpp detailParent.hpp
+rock.o: rock.hpp rock.cpp detailParent.hpp spriteSheet.hpp
 	$(CC) rock.cpp $(CFLAGS) -c -o rock.o
 
 scoot.o: scoot.cpp scoot.hpp angleFunction.hpp enemyParent.hpp wall.hpp effectsController.hpp
@@ -148,14 +148,11 @@ smallExplosion.o: smallExplosion.cpp smallExplosion.hpp
 soundController.o: soundController.cpp soundController.hpp $(RSP)
 	$(CC) soundController.cpp $(CFLAGS) -c -o soundController.o
 
-teleporter.o: Teleporter.hpp Teleporter.cpp detailParent.hpp
+teleporter.o: Teleporter.hpp Teleporter.cpp detailParent.hpp spriteSheet.hpp
 	$(CC) Teleporter.cpp $(CFLAGS) -c -o teleporter.o
 
 teleporterSmoke.o: teleporterSmoke.cpp teleporterSmoke.hpp 
 	$(CC) teleporterSmoke.cpp $(CFLAGS) -c -o teleporterSmoke.o
-
-terminal.o: terminal.cpp terminal.hpp detailParent.hpp
-	$(CC) terminal.cpp $(CFLAGS) -c -o terminal.o
 
 textureManager.o: $(RSP) textureManager.cpp textureManager.hpp textureEnum.hpp
 	$(CC) textureManager.cpp $(CFLAGS) -c -o textureManager.o
@@ -163,7 +160,7 @@ textureManager.o: $(RSP) textureManager.cpp textureManager.hpp textureEnum.hpp
 tileController.o: tileController.cpp tileController.hpp $(RSP) mappingFunctions.hpp turret.hpp initMapVectors.hpp drawPixels.hpp wall.hpp enemyController.hpp coordinate.h textureManager.hpp
 	$(CC) tileController.cpp $(CFLAGS) -c -o tileController.o
 
-treasureChest.o: treasureChest.cpp treasureChest.hpp detailParent.hpp
+treasureChest.o: treasureChest.cpp treasureChest.hpp detailParent.hpp spriteSheet.hpp
 	$(CC) treasureChest.cpp $(CFLAGS) -c -o treasureChest.o
 
 turret.o: turret.cpp turret.hpp angleFunction.hpp turret.hpp effectsController.hpp

@@ -8,17 +8,24 @@
 
 #include "rock.hpp"
 
-Rock::Rock(float xStart, float yStart, sf::Sprite* inpSpr, int len, float width, float height) : detailParent(xStart, yStart, inpSpr, len, width, height) {
-	sprite = inpSpr[0];
+Rock::Rock(float xStart, float yStart, sf::Texture * inpTxtr, int len, float width, float height) : detailParent(xStart, yStart, len, width, height) {
+	rockSheet.setTexture(inpTxtr);
+    if (rand() % 2) {
+		rockSheet.setScale(-1, 1);
+	    xInit += 32;
+	}
+
+	if (rand() % 2) {
+		rockSheet[1];
+	} else {
+		rockSheet[0];
+	}
 }
 
 void Rock::update(float xOffset, float yOffset) {
-	// Update the object's position
-	xPos = xOffset + xInit;
-	yPos = yOffset + yInit;
+	rockSheet.setPosition(xOffset + xInit, yOffset + yInit);
 }
 
 sf::Sprite* Rock::getSprite() {
-	sprite.setPosition(xPos, yPos);
-	return &sprite;
+	return rockSheet.getSpritePtr();
 }

@@ -42,6 +42,8 @@ GameMap::GameMap(float windowWidth, float windowHeight, TextureManager * pTM, In
 	worldView.setCenter(windowWidth / 2, windowHeight / 2);
 	hudView.setSize(windowWidth, windowHeight);
 	hudView.setCenter(windowWidth / 2, windowHeight / 2);
+
+	details.setTextureManager(pTM);
 	
 	//Store the inputs for later
 	windowW = windowWidth;

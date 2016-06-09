@@ -9,7 +9,7 @@
 
 #include "Teleporter.hpp"
 
-Teleporter::Teleporter(float xStart, float yStart, sf::Sprite* sprs, sf::Sprite glow, int len, float windowW, float windowH) : detailParent(xStart, yStart, sprs, len, windowW, windowH) {
+Teleporter::Teleporter(float xStart, float yStart, sf::Sprite* sprs, sf::Sprite glow, int len, float windowW, float windowH) : detailParent(xStart, yStart, len, windowW, windowH) {
 	for (int i = 0; i < len; i++) {
 		TeleporterSprites[i] = sprs[i];
 	}

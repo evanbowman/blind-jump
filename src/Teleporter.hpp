@@ -16,7 +16,7 @@
 
 class Teleporter : public detailParent {
 public:
-	Teleporter(float, float, sf::Sprite*, sf::Sprite, int, float, float);
+	Teleporter(float, float, sf::Sprite *, sf::Sprite, int, float, float);
 	sf::Sprite* getShadow();
 	bool smokeReady();
 	sf::Sprite* getSprite();

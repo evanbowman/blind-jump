@@ -8,7 +8,7 @@
 
 #include "lampLight.hpp"
 
-LampLight::LampLight(float xStart, float yStart, sf::Sprite inpSpr, sf::Sprite glowSprite, int len, float width, float height) : detailParent(xStart, yStart, &inpSpr, len, width, height) {
+LampLight::LampLight(float xStart, float yStart, sf::Sprite inpSpr, sf::Sprite glowSprite, int len, float width, float height) : detailParent(xStart, yStart, len, width, height) {
 	this->glowSprite = glowSprite;
 	lampSprite = inpSpr;
 	killflag = false;
@@ -31,10 +31,10 @@ void LampLight::update(float xOffset, float yOffset) {
 	glowSprite.setColor(sf::Color(230 + offset, 230 + offset, 230 + offset, 255));
 }
 
-sf::Sprite* LampLight::getSprite() {
+sf::Sprite * LampLight::getSprite() {
 	return &lampSprite;
 }
 
-sf::Sprite* LampLight::getGlow() {
+sf::Sprite * LampLight::getGlow() {
 	return &glowSprite;
 }

@@ -11,10 +11,8 @@
 #include "screenShakeController.hpp"
 
 
-IntroDoor::IntroDoor(float xStart, float yStart, sf::Sprite* inpSpr, int len, float width, float height) : detailParent(xStart, yStart, inpSpr, len, width / 2, height / 2) {
-	for (int i = 0; i < 4; i++)
-		sprite[i] = inpSpr[i];
-	
+IntroDoor::IntroDoor(float xStart, float yStart, sf::Texture * inpTxtr, int len, float width, float height) : detailParent(xStart, yStart, len, width / 2, height / 2) {
+	doorSheet.setTexture(inpTxtr);
 	frameIndex = 0;
 	frameRate = 3;
 	state = State::dormant;
@@ -51,9 +49,10 @@ void IntroDoor::update(float xOffset, float yOffset, InputController * pInput, S
 	
 	xPos = xOffset + xInit;
 	yPos = yOffset + yInit;
+	doorSheet.setPosition(xPos, yPos);
 }
 
 sf::Sprite * IntroDoor::getSprite() {
-	sprite[frameIndex].setPosition(xPos, yPos);
-	return &sprite[frameIndex];
+	doorSheet[frameIndex];
+	return doorSheet.getSpritePtr();
 }

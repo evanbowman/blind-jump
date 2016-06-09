@@ -13,7 +13,20 @@ enum class Texture {
 			playerLeft,
 			playerRight,
 			playerDash,
-			playerDeath = playerDash + 12,
+			playerDeath,
+			lamp,
+			rock,
+			damagedRobot,
+			pod,
+			treasureChest,
+			dasherDead,
+			teleporter,
+			teleporterShadow,
+			chestShadow,
+			warpImpact,
+			enemyScrap,
+			teleporterGlow,
+			introWall,
 			};
 
 #endif
