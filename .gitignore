@@ -22,3 +22,6 @@ Thumbs.db
 
 # Project executable
 BlindJump
+
+# Mac app release
+*.app
