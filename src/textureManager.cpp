@@ -39,13 +39,22 @@ bool TextureManager::load() {
 	if (!loadTexture("player_shadow.png", Texture::playerShadow, textures))
 		return false;
 
-	if (!loadTextures("playerWalk.png", Texture::playerDown, textures, 26, std::make_pair(32, 32)))
+	if (!loadTexture("playerWalkDown.png", Texture::playerDown, textures))
+		return false;
+
+	if (!loadTexture("playerWalkUp.png", Texture::playerUp, textures))
+		return false;
+
+	if (!loadTexture("playerWalkLeft.png", Texture::playerLeft, textures))
+		return false;
+
+	if (!loadTexture("playerWalkRight.png", Texture::playerRight, textures))
 		return false;
 
 	if (!loadTextures("playerDashsheet.png", Texture::playerDash, textures, 12, std::make_pair(32, 33)))
 		return false;
 
-	if (!loadTextures("player_death_animation.png", Texture::playerDeath, textures, 11, std::make_pair(40, 38)))
+	if (!loadTexture("player_death_animation.png", Texture::playerDeath, textures))
 		return false;
 
 	return true;

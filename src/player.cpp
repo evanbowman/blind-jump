@@ -62,54 +62,48 @@ Player::Player() {
 }
 
 void Player::setTextures(TextureManager * pTM) {
-	int id1 = static_cast<int>(TextureManager::Texture::playerDown);
-	int id2 = static_cast<int>(TextureManager::Texture::playerUp);
-	for (int i = 0; i < 6; i++) {
-		spriteDown[i].setTexture(*pTM->getTexture(id1 + i));
-		spriteUp[i].setTexture(*pTM->getTexture(id2 + i));
-	}
-	
-	id1 = static_cast<int>(TextureManager::Texture::playerLeft);
-	id2 = static_cast<int>(TextureManager::Texture::playerRight);
-	for (int i = 0; i < 7; i++) {
-		spriteLeft[i].setTexture(*pTM->getTexture(id1 + i));
-		spriteRight[i].setTexture(*pTM->getTexture(id2 + i));
-	}
+	deathSheet.setSize(40, 38);
+	deathSheet.setTexture(pTM->getTexture(TextureManager::Texture::playerDeath));
 
-	id1 = static_cast<int>(TextureManager::Texture::playerDash);
-	id2 = static_cast<int>(TextureManager::Texture::playerDeath);
+	walkDown.setSize(32, 32);
+	walkDown.setTexture(pTM->getTexture(TextureManager::Texture::playerDown));
+
+	walkUp.setSize(32, 32);
+	walkUp.setTexture(pTM->getTexture(TextureManager::Texture::playerUp));
+
+	walkLeft.setSize(32, 32);
+	walkLeft.setTexture(pTM->getTexture(TextureManager::Texture::playerLeft));
+
+	walkRight.setSize(32, 32);
+	walkRight.setTexture(pTM->getTexture(TextureManager::Texture::playerRight));
+
+	int id1 = static_cast<int>(TextureManager::Texture::playerDash);
 	for (int i = 0; i < 11; i++) {
 		dashSprites[i].setTexture(*pTM->getTexture(id1 + i));
 		dashSprites[i].setOrigin(0, 1);
-		deathSprites[i].setTexture(*pTM->getTexture(id2 + i));
 	}
 	dashSprites[11].setTexture(*pTM->getTexture(id1 + 11));
 	dashSprites[11].setOrigin(0, 1);
-
+	
 	shadowSprite.setTexture(*pTM->getTexture(TextureManager::Texture::playerShadow));
 }
 
 void Player::setPosition(float X, float Y) {
 	posX = X;
 	posY = Y;
-	int i;
-	for (i = 0; i < 6; i++) {
-		spriteDown[i].setPosition(posX, posY);
-		spriteUp[i].setPosition(posX, posY);
-		spriteLeft[i].setPosition(posX, posY);
-		spriteRight[i].setPosition(posX, posY);
-		deathSprites[i].setPosition(posX - 13, posY - 1);
-	}
-	for (i = 6; i < 11; i++) {
-		deathSprites[i].setPosition(posX - 13, posY - 1);
-	}
-	spriteLeft[6].setPosition(posX, posY);
-	spriteRight[6].setPosition(posX, posY);
+
+	walkDown.setPosition(posX, posY);
+	walkUp.setPosition(posX, posY);
+	walkLeft.setPosition(posX, posY);
+	walkRight.setPosition(posX, posY);
+
 	shadowSprite.setPosition(posX + 7, posY + 24);
 	weapon.setPosition(posX, posY);
 	for (int i = 0; i < 12; i++) {
 		dashSprites[i].setPosition(posX, posY);
 	}
+
+	deathSheet.setPosition(posX - 13, posY - 1);
 }
 
 float Player::getPosX() const {
@@ -643,7 +637,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				if (imageIndex == 4 || imageIndex == 8) {
 					sounds.playEffect(SoundController::Effect::step);
 				}
-				std::get<0>(tPlayer) = spriteDown[verticalAnimationDecoder(imageIndex)];
+				std::get<0>(tPlayer) = walkDown[verticalAnimationDecoder(imageIndex)];
 				gameObjects.push_back(tPlayer);
 				if (weapon.getTimeout(elapsedTime) != 0) {
 					std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
@@ -659,7 +653,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 					sounds.playEffect(SoundController::Effect::step);
 				}
 				weapon.getTimeout(elapsedTime);
-				std::get<0>(tPlayer) = spriteUp[verticalAnimationDecoder(imageIndex)];
+				std::get<0>(tPlayer) = walkUp[verticalAnimationDecoder(imageIndex)];
 				gameObjects.push_back(tPlayer);
 				break;
 				
@@ -674,7 +668,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				if (imageIndex == 1) {
 					sounds.playEffect(SoundController::Effect::step);
 				}
-				std::get<0>(tPlayer) = spriteLeft[horizontalAnimationDecoder(imageIndex)];
+				std::get<0>(tPlayer) = walkLeft[horizontalAnimationDecoder(imageIndex)];
 				gameObjects.push_back(tPlayer);
 				break;
 				
@@ -689,12 +683,12 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				if (imageIndex == 1) {
 					sounds.playEffect(SoundController::Effect::step);
 				}
-				std::get<0>(tPlayer) = spriteRight[horizontalAnimationDecoder(imageIndex)];
+				std::get<0>(tPlayer) = walkRight[horizontalAnimationDecoder(imageIndex)];
 				gameObjects.push_back(tPlayer);
 				break;
 				
 			case 0:
-				std::get<0>(tPlayer) = spriteDown[5];
+				std::get<0>(tPlayer) = walkDown[5];
 				gameObjects.push_back(tPlayer);
 				if (weapon.getTimeout(elapsedTime) != 0) {
 					std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
@@ -704,7 +698,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 				break;
 				
 			case 1:
-				std::get<0>(tPlayer) = spriteUp[5];
+				std::get<0>(tPlayer) = walkUp[5];
 				gameObjects.push_back(tPlayer);
 				weapon.getTimeout(elapsedTime);
 				break;
@@ -715,7 +709,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 					std::get<1>(tGun) = weapon.getYpos() - 1;
 					gameObjects.push_back(tGun);
 				}
-				std::get<0>(tPlayer) = spriteLeft[6];
+				std::get<0>(tPlayer) = walkLeft[6];
 				gameObjects.push_back(tPlayer);
 				break;
 				
@@ -725,7 +719,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 					std::get<1>(tGun) = weapon.getYpos() - 1;
 					gameObjects.push_back(tGun);
 				}
-				std::get<0>(tPlayer) = spriteRight[6];
+				std::get<0>(tPlayer) = walkRight[6];
 				gameObjects.push_back(tPlayer);
 				break;
 				
@@ -737,7 +731,7 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 						imageIndex++;
 					}
 				}
-				std::get<0>(tPlayer) = deathSprites[imageIndex];
+				std::get<0>(tPlayer) = deathSheet[imageIndex];
 				gameObjects.push_back(tPlayer);
 				break;
 		}

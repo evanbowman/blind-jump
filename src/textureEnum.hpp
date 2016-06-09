@@ -9,10 +9,10 @@ enum class Texture {
 			introLevel,
 			playerShadow,
 			playerDown,
-			playerUp = playerDown + 6,
-			playerLeft = playerUp + 6,
-			playerRight = playerLeft + 7,
-			playerDash = playerRight + 7,
+			playerUp,
+			playerLeft,
+			playerRight,
+			playerDash,
 			playerDeath = playerDash + 12,
 			};
 

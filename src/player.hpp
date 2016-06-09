@@ -19,6 +19,7 @@
 #include "inputController.hpp"
 #include "RenderType.hpp"
 #include "textureManager.hpp"
+#include "spriteSheet.hpp"
 
 class Player {
 	
@@ -51,13 +52,15 @@ private:
 	float worldOffsetY;
 
 	sf::Sprite shadowSprite;
-	sf::Sprite spriteUp[6];
-	sf::Sprite spriteDown[6];
-	sf::Sprite spriteRight[7];
-	sf::Sprite spriteLeft[7];
-	sf::Sprite dashSprites[12];
-	sf::Sprite deathSprites[11];
+	SpriteSheet walkDown;
+	SpriteSheet walkUp;
+	SpriteSheet walkLeft;
+	SpriteSheet walkRight;
+	SpriteSheet deathSheet;
 
+	// Transition this to a sheet
+	sf::Sprite dashSprites[12]; 
+	
 	bool deathSeq;
 
 	int32_t animationTimer;
