@@ -23,7 +23,9 @@ Rock::Rock(float xStart, float yStart, sf::Texture * inpTxtr, int len, float wid
 }
 
 void Rock::update(float xOffset, float yOffset) {
-	rockSheet.setPosition(xOffset + xInit, yOffset + yInit);
+	xPos = xOffset + xInit;
+	yPos = yOffset + yInit;
+	rockSheet.setPosition(xPos, yPos);
 }
 
 sf::Sprite* Rock::getSprite() {

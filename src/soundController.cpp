@@ -16,8 +16,8 @@
 SoundController::SoundController() {
 	
 	// Load the soundtrack and play the first song
-	soundtrack[0].openFromFile(resourcePath() + "julia-florida.ogg"); /* Composed by Augustin Barrios Mangore, performed by Edson Lopez */
-	soundtrack[0].setLoop(true);
+	//soundtrack[0].openFromFile(resourcePath() + "julia-florida.ogg"); /* Composed by Augustin Barrios Mangore, performed by Edson Lopez */
+	//soundtrack[0].setLoop(true);
 	//soundtrack[1].openFromFile(resourcePath() + "deep_blue_sea_blues.ogg");
 	//soundtrack[2].openFromFile(resourcePath() + "mister_moon_man.ogg");
 	

@@ -49,7 +49,7 @@ public:
 	void addDamagedTurret(float, float, float, float);
 	void addTeleporter(tileController&, float, float, float, float);
 	void addRock(float, float, int, int);
-  void update(float, float, effectsController& ef, char, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, userInterface&, FontController&, Player&, InputController*, ScreenShakeController * pscr, sf::Time&);
+	void update(float, float, effectsController& ef, char, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, userInterface&, FontController&, Player&, InputController*, ScreenShakeController * pscr, sf::Time&);
 	void addDasherScrap(float, float, int);
 	void draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&, sf::RenderTexture&);
 	void clear();

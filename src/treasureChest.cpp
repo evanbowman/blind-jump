@@ -51,6 +51,8 @@ void TreasureChest::update(float xOffset, float yOffset, char playerSpriteIndex,
 			isOpen = true;
 		}
 	}
+	
+	chestSheet.setPosition(xPos, yPos - 14);
 }
 
 sf::Sprite* TreasureChest::getSprite() {

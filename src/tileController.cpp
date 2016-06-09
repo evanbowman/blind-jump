@@ -14,11 +14,6 @@
 #include <random>
 #include "drawPixels.hpp"
 
-// Define expressions to represent the number values for the tilesets (makes the code easier to follow)
-#define SAND_TILESET 0
-#define DIRT_TILESET 1
-#define GRASS_TILESET 2
-#define METEOR_TILESET 3
 
 void createMapImage(sf::Image* tileImage, short mapArray[61][61], sf::Texture tx[2], sf::Image* grassSet, sf::Image* grassSetEdge) {
 	// Loop through the entire image and create a tilemap for drawing grass

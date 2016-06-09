@@ -49,10 +49,7 @@ effectsController::effectsController() {
 		orbShotTextures[i].loadFromFile(resourcePath() + fileExt7[i]);
 		orbShotSprites[i].setTexture(orbShotTextures[i]);
 	}
-	
-	newItemText.loadFromFile(resourcePath() + "newItemText.png");
-	newItemSpr.setTexture(newItemText);
-	
+		
 	for (int i = 0; i < 9; i++) {
 		fireExplosionTxtr[i].loadFromFile(resourcePath() + "fireExplosionSheet.png", sf::IntRect(i * 58, 0, 58, 51));
 		fireExplosionSpr[i].setTexture(fireExplosionTxtr[i]);
@@ -80,9 +77,6 @@ effectsController::effectsController() {
 		energyBeamTextures[i].loadFromFile(resourcePath() + "beamStart.png", sf::IntRect(i * 64, 0, 64, 32));
 		energyBeamSprites[i].setTexture(energyBeamTextures[i]);
 	}
-	
-	healthRestoredTex.loadFromFile(resourcePath() + "healthRestored.png");
-	healthRestoredSpr.setTexture(healthRestoredTex);
 	
 	bubbleShotTex[0].loadFromFile(resourcePath() + "OrbShot1.png");
 	bubbleShotTex[1].loadFromFile(resourcePath() + "OrbShot2.png");

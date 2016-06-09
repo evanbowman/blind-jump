@@ -79,39 +79,32 @@ Coordinate pickLocation2(std::vector<Coordinate>& emptyLocations) {
 void detailController::addWarpImpact(float posX, float posY) {
 	sf::Sprite tempSprite;
 	tempSprite.setTexture(*pTM->getTexture(TextureManager::Texture::warpImpact));
-	GeneralDetail d(posX, posY, &tempSprite, 1, 0, 0);
-	misc32x26.push_back(d);
+	misc32x26.emplace_back(posX, posY, &tempSprite, 1, 0, 0);
 }
 
 void detailController::addLamplight(float posX, float posY, int i, int j, float width, float height) {
 	sf::Sprite tempSprites[2];
 	tempSprites[0].setTexture(*pTM->getTexture(TextureManager::Texture::lamp));
 	tempSprites[1].setTexture(*pTM->getTexture(TextureManager::Texture::lamplight));
-	LampLight lmp((i * 32) + 16 + posX, (j * 26) + 16 + posY, tempSprites[0], tempSprites[1], 2, width, height);
-	lamps.push_back(lmp);
+	lamps.emplace_back((i * 32) + 16 + posX, (j * 26) + 16 + posY, tempSprites[0], tempSprites[1], 2, width, height);
 }
 
 void detailController::addRock(float posX, float posY, int i, int j) {
-	float placementXoffset = 0;
-	Rock r((i * 32) + posX + placementXoffset, (j * 26) + posY, pTM->getTexture(TextureManager::Texture::rock), 2, 0, 0);
-	rocks.push_back(r);
+	rocks.emplace_back((i * 32) + posX, (j * 26) + posY, pTM->getTexture(TextureManager::Texture::rock), 2, 0, 0);
 }
 
 void detailController::addChest(tileController& t, float posX, float posY, float width, float height, char chestContents) {
 	Coordinate c = pickLocation(t.emptyMapLocations);
     float placeOffsetX = (rand() % 6) - 3;
-	TreasureChest tr((c.x * 32) + posX + 8 + placeOffsetX, (c.y * 26) + posY - 3, pTM->getTexture(TextureManager::Texture::treasureChest), pTM->getTexture(TextureManager::Texture::chestShadow), 7, width, height, chestContents);
-	chests.push_back(tr);
+	chests.emplace_back((c.x * 32) + posX + 8 + placeOffsetX, (c.y * 26) + posY - 3, pTM->getTexture(TextureManager::Texture::treasureChest), pTM->getTexture(TextureManager::Texture::chestShadow), 7, width, height, chestContents);
 }
 
 void detailController::addEnemyScrap(float posX, float posY, float width, float height) {
 	sf::Sprite tempSprite;
 	tempSprite.setTexture(*pTM->getTexture(TextureManager::Texture::enemyScrap));
-	GeneralDetail scrap(posX - 6, posY - 2, &tempSprite, 0, width, height);
-	misc32x26.push_back(scrap);
+	misc32x26.emplace_back(posX - 6, posY - 2, &tempSprite, 0, width, height);
 }
 
-//////
 void detailController::addDamagedRobots(tileController& t, float posX, float posY) {
 	if (rand() % 2) {
 		Coordinate c;
@@ -159,18 +152,15 @@ void detailController::addDasherScrap(float posX, float posY, int scale) {
 	misc32x26.push_back(dScrap);
 }
 
-///////
 void detailController::addDoor(float xpos, float ypos, int x, int y, float w, float h) {
-	IntroDoor d(xpos + x * 32, ypos + y * 26, pTM->getTexture(TextureManager::Texture::introWall), 0, w, h);
-	doors.push_back(d);
+	doors.emplace_back(xpos + x * 32, ypos + y * 26, pTM->getTexture(TextureManager::Texture::introWall), 0, w, h);
 }
 
 void detailController::addPod(float xpos, float ypos, int x, int y) {
 	sf::Sprite tempSprite;
 	tempSprite.setOrigin(0, 30);
 	tempSprite.setTexture(*pTM->getTexture(TextureManager::Texture::pod));
-	GeneralDetail d(xpos + x * 32, ypos + y * 26, &tempSprite, 0, 0, 0);
-	misc32x26.push_back(d);
+	misc32x26.emplace_back(xpos + x * 32, ypos + y * 26, &tempSprite, 0, 0, 0);
 }
 
 void detailController::addTeleporter(tileController& t, float posX, float posY, float width, float height) {
@@ -180,10 +170,7 @@ void detailController::addTeleporter(tileController& t, float posX, float posY, 
 	tempSprites[1].setTexture(*pTM->getTexture(TextureManager::Texture::teleporterShadow));	
 	sf::Sprite glow;
 	glow.setTexture(*pTM->getTexture(TextureManager::Texture::teleporterGlow));
-	
-	Teleporter T((c.x * 32) + posX + 2/* + placeOffsetX*/, (c.y * 26) + posY - 4, tempSprites, glow, 2, width, height);
-
-	teleporters.push_back(T);
+    teleporters.emplace_back((c.x * 32) + posX + 2, (c.y * 26) + posY - 4, tempSprites, glow, 2, width, height);
 }
 
 void detailController::update(float xOffset, float yOffset, effectsController& ef, char PlayerSprIndex, std::vector<sf::Sprite*>* glow1, std::vector<sf::Sprite*>* glow2, userInterface& ui, FontController& fonts, Player& player, InputController* pInput, ScreenShakeController * pscr, sf::Time & elapsedTime) {
@@ -253,59 +240,33 @@ void detailController::killTeleporter() {
 }
 
 void detailController::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> & gameObjects, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> & gameShadows, sf::RenderTexture& window) {
-	std::tuple<sf::Sprite, float, Rendertype, float> tObject, tShadow;
-	std::get<2>(tObject) = Rendertype::shadeDefault;
-	if (!misc32x26.empty()) {
-		for (auto & element : misc32x26) {
-			std::get<0>(tObject) = *element.getSprite();
-			std::get<1>(tObject) = element.getyPos() - 26;
-			gameObjects.push_back(tObject);
-		}
-	}
-	
-	if (!teleporters.empty()) {
-		// These textures are flat and z-ordering doesn't matter, so no need to put too much strain on the sort function (just draw them manually)
+	if (!misc32x26.empty())
+		for (auto & element : misc32x26)
+			gameObjects.emplace_back(*element.getSprite(), element.getyPos() - 26, Rendertype::shadeDefault, 0.f);
+    
+	if (!teleporters.empty())
 		for (auto & element : teleporters) {
 			window.draw(*element.getShadow());
 			window.draw(*element.getSprite());
 		}
-	}
 	
-	if (!doors.empty()) {
-		for (auto & element : doors) {
-			std::get<0>(tObject) = *element.getSprite();
-			std::get<1>(tObject) = element.getyPos() + 52;
-			gameObjects.push_back(tObject);
-		}
-	}
+	if (!doors.empty())
+		for (auto & element : doors)
+			gameObjects.emplace_back(*element.getSprite(), element.getyPos() + 52, Rendertype::shadeDefault, 0.f);
 	
-	if (!rocks.empty()) {
-		for (auto element : rocks) {
-			std::get<0>(tObject) = *element.getSprite();
-			std::get<1>(tObject) = element.getyPos() + 22;
-			gameObjects.push_back(tObject);
-		}
-	}
+	if (!rocks.empty())
+		for (auto & element : rocks)
+			gameObjects.emplace_back(*element.getSprite(), element.getyPos() + 22, Rendertype::shadeDefault, 0.f);
 	
-	if (!damagedRobots.empty()) {
-		for (auto element : damagedRobots) {
-			std::get<0>(tObject) = *element.getSprite();
-			std::get<1>(tObject) = element.getyPos();
-			gameObjects.push_back(tObject);
-		}
-	}
+	if (!damagedRobots.empty())
+		for (auto & element : damagedRobots)
+			gameObjects.emplace_back(*element.getSprite(), element.getyPos(), Rendertype::shadeDefault, 0.f);
 	
-	if (!chests.empty()) {
+	if (!chests.empty())
 		for (auto & element : chests) {
-			// Push back the object
-			std::get<0>(tObject) = *element.getSprite();
-			std::get<1>(tObject) = element.getZY();
-			gameObjects.push_back(tObject);
-			// Push back its shadow
-			std::get<0>(tShadow) = *element.getShadow();
-			gameShadows.push_back(tShadow);
+			gameObjects.emplace_back(*element.getSprite(), element.getZY(), Rendertype::shadeDefault, 0.f);
+			gameShadows.emplace_back(*element.getShadow(), 0, Rendertype::shadeDefault, 0.f);
 		}
-	}
 	
 	if (!lamps.empty()) {
 		for (auto & element : lamps) {

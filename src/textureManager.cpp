@@ -79,7 +79,7 @@ bool TextureManager::load() {
 	if (!loadTexture("warpImpact.png", Texture::warpImpact, textures))
 		return false;
 
-	if (!loadTexture("enemyScraps.png", Texture::warpImpact, textures))
+	if (!loadTexture("enemyScraps.png", Texture::enemyScrap, textures))
 		return false;
 
 	if (!loadTexture("teleporterGlow.png", Texture::teleporterGlow, textures))

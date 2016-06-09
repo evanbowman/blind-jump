@@ -16,9 +16,9 @@
 
 class SoundController {
 private:
-	static constexpr int SOUNDTRACK_LENGTH = 3;
+	// static constexpr int SOUNDTRACK_LENGTH = 3;
 	// Game soundtrack
-	sf::Music soundtrack[SOUNDTRACK_LENGTH];
+	// sf::Music soundtrack[SOUNDTRACK_LENGTH];
 	
 	// Effect sounds
 	std::array<sf::SoundBuffer, 1> laserSounds;
