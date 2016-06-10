@@ -27,6 +27,12 @@ enum class Texture {
 			enemyScrap,
 			teleporterGlow,
 			introWall,
+			powerup,
+			redglow,
+			blueglow,
+			turretShot,
+			orbShot,
+			dasherShot
 			};
 
 #endif

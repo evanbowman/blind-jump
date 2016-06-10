@@ -9,12 +9,10 @@
 #include "dasherShot.hpp"
 
 
-DasherShot::DasherShot(sf::Sprite* sprite, sf::Sprite glow, float x, float y, float dir) {
-	for (int i = 0; i < 2; i++) {
-		sprs[i] = sprite[i];
-		sprs[i].setOrigin(4, 4);
-	}
-	glowSprite = glow;
+DasherShot::DasherShot(sf::Texture * pMainTxtr, sf::Texture * pGlowTxtr, float x, float y, float dir) {
+	spriteSheet.setTexture(pMainTxtr);
+	spriteSheet.setOrigin(4, 4);
+	glowSprite.setTexture(*pGlowTxtr);
 	xPos = 0;
 	yPos = 0;
 	xInit = x;
@@ -46,10 +44,10 @@ void DasherShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 		frameIndex = !frameIndex;
 		timer -= 70;
 	}
+	
 	if (driftSel) {
 		direction += 0.004;
-	}
-	else {
+	} else {
 		direction -= 0.004;
 	}
 	scale *= 0.993;
@@ -57,11 +55,12 @@ void DasherShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 	if (timeout > 750) {
 		killFlag = true;
 	}
+	
+	spriteSheet.setPosition(xPos, yPos);
 }
 
 const sf::Sprite & DasherShot::getSprite() {
-	sprs[frameIndex].setPosition(xPos, yPos);
-	return sprs[frameIndex];
+	return spriteSheet[frameIndex];
 }
 
 void DasherShot::setKillFlag() {

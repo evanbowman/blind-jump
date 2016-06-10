@@ -13,10 +13,11 @@
 #include <stdio.h>
 #include "SFML/Graphics.hpp"
 #include <cmath>
+#include "spriteSheet.hpp"
 
 class Enemyshot {
 private:
-	sf::Sprite sprites[2];
+	SpriteSheet <14, 14> spriteSheet;
 	float xPos;
 	float yPos;
 	float xInit;
@@ -29,14 +30,14 @@ private:
 	sf::Sprite glowSprite;
 	
 public:
-	Enemyshot(sf::Sprite*, sf::Sprite, float, float, float);
+	Enemyshot(sf::Texture *, sf::Texture *, float, float, float);
 	void update(float, float, sf::Time &);
 	const sf::Sprite & getSprite();
 	bool getKillFlag();
 	void setKillFlag();
 	float getXpos();
 	float getYpos();
-	sf::Sprite* getGlow();
+	sf::Sprite * getGlow();
 };
 
 #endif /* enemyShot_hpp */

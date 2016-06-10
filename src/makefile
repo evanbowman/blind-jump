@@ -34,7 +34,7 @@ damagedRobot.o: damagedRobot.cpp damagedRobot.hpp detailParent.hpp spriteSheet.h
 dasher.o: dasher.cpp dasher.hpp angleFunction.hpp wallinpath.hpp enemyParent.hpp effectsController.hpp
 	$(CC) dasher.cpp $(CFLAGS) -c -o dasher.o
 
-dasherShot.o: dasherShot.hpp
+dasherShot.o: dasherShot.hpp spriteSheet.hpp
 	$(CC) dasherShot.cpp $(CFLAGS) -c -o dasherShot.o
 
 dashSmoke.o: dashSmoke.hpp dashSmoke.cpp
@@ -49,7 +49,7 @@ detailParent.o: detailParent.hpp detailParent.cpp
 drawPixels.o: drawPixels.hpp drawPixels.cpp
 	$(CC) drawPixels.cpp -Ofast -std=c++11 -c -o drawPixels.o
 
-effectsController.o: effectsController.cpp effectsController.hpp screenShakeController.hpp turretFlashEffect.hpp bulletType1.hpp shotPuff.hpp turretShot.hpp explosion32effect.hpp teleporterSmoke.hpp enemyShot.hpp dasherShot.hpp healthEffect.hpp fontController.hpp energyBeam.hpp dashSmoke.hpp FireExplosion.hpp smallExplosion.hpp Powerup.hpp RenderType.hpp
+effectsController.o: effectsController.cpp effectsController.hpp screenShakeController.hpp turretFlashEffect.hpp bulletType1.hpp shotPuff.hpp turretShot.hpp explosion32effect.hpp teleporterSmoke.hpp enemyShot.hpp dasherShot.hpp healthEffect.hpp fontController.hpp energyBeam.hpp dashSmoke.hpp FireExplosion.hpp smallExplosion.hpp Powerup.hpp RenderType.hpp textureManager.hpp
 	$(CC) effectsController.cpp $(CFLAGS) -c -o effectsController.o
 
 enemyController.o: enemyController.hpp enemyController.cpp $(RSP) wall.hpp tileController.hpp detailController.hpp screenShakeController.hpp turret.hpp effectsController.hpp scoot.hpp dasher.hpp critter.hpp heavyBot.hpp RenderType.hpp
@@ -124,7 +124,7 @@ player.o: player.hpp player.cpp $(RSP) playerAnimationFunctions.hpp playerCollis
 playerCollisionFunctions.o: playerCollisionFunctions.hpp playerCollisionFunctions.cpp wall.hpp treasureChest.hpp
 	$(CC) playerCollisionFunctions.cpp $(CFLAGS) -c -o playerCollisionFunctions.o
 
-Powerup.o: Powerup.hpp Powerup.cpp 
+Powerup.o: Powerup.hpp Powerup.cpp spriteSheet.hpp
 	$(CC) Powerup.cpp $(CFLAGS) -c -o Powerup.o
 
 ResourcePath.o: ResourcePath.cpp ResourcePath.hpp
@@ -169,7 +169,7 @@ turret.o: turret.cpp turret.hpp angleFunction.hpp turret.hpp effectsController.h
 turretFlashEffect.o: turretFlashEffect.cpp turretFlashEffect.hpp 
 	$(CC) turretFlashEffect.cpp $(CFLAGS) -c -o turretFlashEffect.o
 
-turretShot.o: turretShot.cpp turretShot.hpp
+turretShot.o: turretShot.cpp turretShot.hpp spriteSheet.hpp
 	$(CC) turretShot.cpp $(CFLAGS) -c -o turretShot.o
 
 userInterface.o: userInterface.cpp userInterface.hpp $(RSP) player.hpp fontController.hpp inputController.hpp

@@ -87,6 +87,24 @@ bool TextureManager::load() {
 
 	if (!loadTexture("introWall.png", Texture::introWall, textures))
 		return false; // 200 x 95, four kinds
+
+	if (!loadTexture("powerups.png", Texture::powerup, textures))
+		return false; // 13 x 13, two kinds
+
+	if (!loadTexture("redFloorGlow.png", Texture::redglow, textures))
+		return false;
+
+	if (!loadTexture("blueFloorGlow.png", Texture::blueglow, textures))
+		return false;
+
+	if (!loadTexture("turretShot.png", Texture::turretShot, textures))
+		return false;
+
+	if (!loadTexture("orbShot.png", Texture::orbShot, textures))
+		return false;
+
+	if (!loadTexture("dasherShot.png", Texture::dasherShot, textures))
+		return false;
 	
 	return true;
 }

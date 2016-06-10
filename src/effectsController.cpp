@@ -22,39 +22,20 @@ effectsController::effectsController() {
 	for (int i = 0; i < 2; i++) {
 		bulletTexture[i].loadFromFile(resourcePath() + fileExt2[i]);
 		bulletSprites[i].setTexture(bulletTexture[i]);
-		powerupTxtr[i].loadFromFile(resourcePath() + "powerups.png", sf::IntRect(i * 13, 0, 13, 13));
-		powerupSpr[i].setTexture(powerupTxtr[i]);
-		powerupSpr[i].setOrigin(7, 7);
 	}
-	
-	for (int i = 0; i < 8; i++) {
-		dashSmokeTextures[i].loadFromFile(resourcePath() + "dashSmokeSheet.png", sf::IntRect(i * 64, 0, 64, 32));
-		dashSmokeSprites[i].setTexture(dashSmokeTextures[i]);
-	}
-	
+		
 	bulletGlow[0].loadFromFile(resourcePath() + "whiteFloorGlow.png");
 	bulletSprites[2].setTexture(bulletGlow[0]);
-	redGlowTexture.loadFromFile(resourcePath() + "redFloorGlow.png");
-	redGlowSprite.setTexture(redGlowTexture);
-	redGlowSprite.setOrigin(22.5, 22.5);
-	blueGlowTexture.loadFromFile(resourcePath() + "blueFloorGlow.png");
-	blueGlowSprite.setTexture(blueGlowTexture);
-	blueGlowSprite.setOrigin(22.5, 22.5);
 	
 	const std::string fileExt3[4] = {"poof1.png", "poof2.png", "poof3.png", "poof4.png"};
-	const std::string fileExt7[4] = {"enemyOrbShot1.png", "enemyOrbShot2.png", "enemyOrbShot3.png", "enemyOrbShot4.png"};
 	for (int i = 0; i < 4; i++) {
 		puffTexture[i].loadFromFile(resourcePath() + fileExt3[i]);
 		puffSprites[i].setTexture(puffTexture[i]);
-		orbShotTextures[i].loadFromFile(resourcePath() + fileExt7[i]);
-		orbShotSprites[i].setTexture(orbShotTextures[i]);
 	}
 		
 	for (int i = 0; i < 9; i++) {
 		fireExplosionTxtr[i].loadFromFile(resourcePath() + "fireExplosionSheet.png", sf::IntRect(i * 58, 0, 58, 51));
 		fireExplosionSpr[i].setTexture(fireExplosionTxtr[i]);
-		blueExplosionTxtr[i].loadFromFile(resourcePath() + "blueExplosion.png", sf::IntRect(i * 51, 0, 51, 80));
-		blueExplosionSpr[i].setTexture(blueExplosionTxtr[i]);
 	}
 	
 	fireExplosionGlowTxtr.loadFromFile(resourcePath() + "fireExplosionGlow.png");
@@ -76,27 +57,6 @@ effectsController::effectsController() {
 		exp32Sprites[i].setTexture(exp32Texture[i]);
 		energyBeamTextures[i].loadFromFile(resourcePath() + "beamStart.png", sf::IntRect(i * 64, 0, 64, 32));
 		energyBeamSprites[i].setTexture(energyBeamTextures[i]);
-	}
-	
-	bubbleShotTex[0].loadFromFile(resourcePath() + "OrbShot1.png");
-	bubbleShotTex[1].loadFromFile(resourcePath() + "OrbShot2.png");
-	bubbleShotSpr[0].setTexture(bubbleShotTex[0]);
-	bubbleShotSpr[1].setTexture(bubbleShotTex[1]);
-	
-	for (int i = 0; i < 2; i++) {
-		turretShotText[i].loadFromFile(resourcePath() + "turretShot.png", sf::IntRect(i * 7, 0, 7, 12));
-		turretShotSpr[i].setTexture(turretShotText[i]);
-		turretShotSpr[i].setOrigin(sf::Vector2f(4, 4));
-	}
-	
-	for (int i = 0; i < 5; i++) {
-		healthEffectTextures[i].loadFromFile(resourcePath() + "healthEffect.png", sf::IntRect(24 * i, 0, 24, 16));
-		healthEffectSprites[i].setTexture(healthEffectTextures[i]);
-	}
-	
-	for (int i = 0; i < 2; i++) {
-		dasherShotTextures[i].loadFromFile(resourcePath() + "dasherShot.png", sf::IntRect(i * 22, 0, 22, 22));
-		dasherShotSprites[i].setTexture(dasherShotTextures[i]);
 	}
 }
 
@@ -250,25 +210,25 @@ void effectsController::addTurretFlash(float x, float y) {
 
 //A function for adding a turret shot effect
 void effectsController::addTurretShot(float x, float y, short dir) {
-	turretShots.emplace_back(turretShotSpr, redGlowSprite, x, y, dir);
+	turretShots.emplace_back(pTM->getTexture(TextureManager::Texture::turretShot), pTM->getTexture(TextureManager::Texture::redglow), x, y, dir);
 }
 
 void effectsController::addHearts(float x, float y) {
-	Powerup h(&powerupSpr[0], redGlowSprite, x, y);
+	Powerup h(pTM->getTexture(TextureManager::Texture::powerup), pTM->getTexture(TextureManager::Texture::redglow), x, y, Powerup::Type::heart);
 	hearts.push_back(h);
 }
 
 void effectsController::addCoins(float x, float y) {
-	Powerup c(&powerupSpr[1], blueGlowSprite, x, y);
+	Powerup c(pTM->getTexture(TextureManager::Texture::powerup), pTM->getTexture(TextureManager::Texture::blueglow), x, y, Powerup::Type::coin);
 	coins.push_back(c);
 }
 
 void effectsController::addEnemyShot(float x, float y, short dir) {
-	enemyShots.emplace_back(bubbleShotSpr, redGlowSprite, x, y, dir);
+	enemyShots.emplace_back(pTM->getTexture(TextureManager::Texture::orbShot), pTM->getTexture(TextureManager::Texture::redglow), x, y, dir);
 }
 
 void effectsController::addDasherShot(float x, float y, short dir) {
-	dasherShots.emplace_back(dasherShotSprites, redGlowSprite, x, y, dir);
+	dasherShots.emplace_back(pTM->getTexture(TextureManager::Texture::dasherShot), pTM->getTexture(TextureManager::Texture::redglow), x, y, dir);
 }
 
 // A function for adding puffs
@@ -290,7 +250,7 @@ void effectsController::addEnergyBeam(float x, float y, float dir, float length)
 }
 
 void effectsController::addScootShot(float x, float y, short dir, float playerPosX, float playerPosY) {
-	turretShot t(turretShotSpr, redGlowSprite, x, y, dir);
+	turretShot t(pTM->getTexture(TextureManager::Texture::turretShot), pTM->getTexture(TextureManager::Texture::redglow), x, y, dir);
 	t.speedFactor(2.8);
 	turretShots.push_back(t);
 }
@@ -441,4 +401,8 @@ std::vector<Powerup>* effectsController::getHearts() {
 
 std::vector<Powerup>* effectsController::getCoins() {
 	return &coins;
+}
+
+void effectsController::setTextureManager(TextureManager * pTM) {
+	this->pTM = pTM;
 }

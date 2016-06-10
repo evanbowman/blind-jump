@@ -25,6 +25,8 @@ GameMap::GameMap(float windowWidth, float windowHeight, TextureManager * pTM, In
 	this->pTM = pTM;
 
 	tiles.setTextures(pTM);
+
+	effects.setTextureManager(pTM);
 	
 	player.setTextures(pTM);	
 

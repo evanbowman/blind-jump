@@ -13,15 +13,16 @@
 #include <stdio.h>
 #include "SFML/Graphics.hpp"
 #include <cmath>
+#include "spritesheet.hpp"
 
 class turretShot {
 public:
-	turretShot(sf::Sprite*, sf::Sprite, float, float, float);
+	turretShot(sf::Texture *, sf::Texture *, float, float, float);
 	float xPos;
 	float yPos;
 	float xInit;
 	float yInit;
-	sf::Sprite sprs[2];
+	SpriteSheet<7, 12> spriteSheet;
 	sf::Sprite glowSprite;
 	sf::Sprite * getGlow();
 	const sf::Sprite & getSprite();

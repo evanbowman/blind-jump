@@ -8,17 +8,16 @@
 
 #include "turretShot.hpp"
 
-turretShot::turretShot(sf::Sprite* sprs, sf::Sprite glow, float x, float y, float dir) {
-	this->sprs[0] = sprs[0];
-	this->sprs[1] = sprs[1];
-	glowSprite = glow;
+turretShot::turretShot(sf::Texture * pMainTxtr, sf::Texture * pGlowTxtr, float x, float y, float dir) {
+	spriteSheet.setTexture(pMainTxtr);
+	glowSprite.setTexture(*pGlowTxtr);
 	xPos = 0;
 	yPos = 0;
 	xInit = x;
 	yInit = y;
 	int diff = pow(-1,rand() % 2) + rand() % 6 - 3;
-	this->sprs[0].setRotation(dir + diff);
-	this->sprs[1].setRotation(dir + diff);
+	spriteSheet.setRotation(dir + diff);
+	spriteSheet.setOrigin(4, 4);
 	direction = (dir - 270 + diff) * (3.14 / 180);	 // I added 270 previously to get the sprite to face in the right direction, so subract it
 												//back out and convert back to radians
 	killFlag = false;
@@ -33,8 +32,7 @@ void turretShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 	yInit += scale * 1.5 * (elapsedTime.asMilliseconds() / 17.6) * (sin(direction));
 	xPos = xInit + xOffset;
 	yPos = yInit + yOffset + 11;
-	sprs[0].setPosition(xPos, yPos);
-	sprs[1].setPosition(xPos, yPos);
+	spriteSheet.setPosition(xPos, yPos);
 	glowSprite.setPosition(xPos, yPos + 18);
 	timer += elapsedTime.asMilliseconds();
 	if (timer > 600) {
@@ -47,16 +45,14 @@ void turretShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 		animationTimer -= 50;
 		if (frameIndex == 1) {
 			frameIndex = 0;
-		}
-		
-		else {
+		} else {
 			frameIndex = 1;
 		}
 	}
 }
 
 const sf::Sprite & turretShot::getSprite() {
-	return sprs[frameIndex];
+	return spriteSheet[frameIndex];
 }
 
 sf::Sprite* turretShot::getGlow() {

@@ -12,17 +12,23 @@
 
 #include "SFML/Graphics.hpp"
 #include <cmath>
+#include "spritesheet.hpp"
 
 class Powerup {
 private:
 	float xInit, yInit, xPos, yPos;
-	sf::Sprite spr, glow;
-	bool killFlag;
+	sf::Sprite glow;
+	SpriteSheet<13, 13> powerupSheet;
+	bool killFlag; 
 	// to keep time, for making hearts float up and down
 	int32_t timer;
 	
 public:
-	Powerup(sf::Sprite*, sf::Sprite, float, float);
+	enum class Type {
+		heart, coin
+			};
+	
+	Powerup(sf::Texture *, sf::Texture *, float, float, Type);
 	bool getKillFlag();
 	void setKillFlag(bool);
 	const sf::Sprite & getSprite();

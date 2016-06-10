@@ -29,15 +29,12 @@
 #include "Powerup.hpp"
 #include "ResourcePath.hpp"
 #include "RenderType.hpp"
+#include "textureManager.hpp"
 
 class ScreenShakeController;
 
 class effectsController {
 private:
-	sf::Texture powerupTxtr[2];
-	sf::Sprite powerupSpr[2];
-	sf::Texture blueExplosionTxtr[9];
-	sf::Sprite blueExplosionSpr[9];
 	sf::Sprite smallExplosionSpr[6];
 	sf::Texture smallExplosionTxtr[6];
 	sf::Texture fireExplosionGlowTxtr;
@@ -46,18 +43,10 @@ private:
 	sf::Sprite blueFireGlowSpr;
 	sf::Sprite fireExplosionSpr[9];
 	sf::Texture fireExplosionTxtr[9];
-	sf::Sprite dashSmokeSprites[8];
-	sf::Texture dashSmokeTextures[8];
 	sf::Sprite energyBeamSprites[6];
 	sf::Texture energyBeamTextures[6];
 	sf::Sprite turretFlashSprites[5];
 	sf::Texture turretFlashTextures[5];
-	sf::Sprite redGlowSprite;
-	sf::Texture redGlowTexture;
-	sf::Sprite blueGlowSprite;
-	sf::Texture blueGlowTexture;
-	sf::Sprite orbShotSprites[4];
-	sf::Texture orbShotTextures[4];
 	sf::Sprite bubbleShotSpr[2];
 	sf::Texture bubbleShotTex[2];
 	sf::Sprite bulletSprites[3];
@@ -71,14 +60,7 @@ private:
 	sf::Texture warpEffectTextures[6];
 	sf::Sprite smokeSprites[6];
 	sf::Texture smokeTextures[6];
-	sf::Sprite healthEffectSprites[5];
-	sf::Texture healthEffectTextures[5];
-	sf::Sprite dasherShotSprites[2];
-	sf::Texture dasherShotTextures[2];
-	sf::Texture newItemText;
-	sf::Sprite newItemSpr;
-	sf::Texture healthRestoredTex;
-	sf::Sprite healthRestoredSpr;
+	TextureManager * pTM;
 	std::vector<SmallExplosion> smallExplosions;
 	std::vector<EnergyBeam> energyBeams;
 	std::vector<FireExplosion> fireExplosions;
@@ -89,8 +71,6 @@ private:
 	std::vector<bulletType1> bulletLowerLayer;
 	std::vector<turretShot> turretShots;
 	std::vector<TeleporterSmoke> warpEffects;
-	sf::Texture turretShotText[2];
-	sf::Sprite turretShotSpr[2];
 	std::vector<DasherShot> dasherShots;
 	std::vector<sf::Sprite*> glowSprs;
 	std::vector<sf::Sprite*> glowSprs2;
@@ -136,6 +116,7 @@ public:
 	std::vector<sf::Sprite*>* getGlowSprs2();
 	std::vector<FireExplosion>* getExplosions();
 	void condClearGlowSpr(sf::Sprite*);
+	void setTextureManager(TextureManager * pTM);
 };
 
 #endif /* effectsController_hpp */

@@ -8,18 +8,16 @@
 
 #include "enemyShot.hpp"
 
-Enemyshot::Enemyshot(sf::Sprite* inpsprs, sf::Sprite glow, float x, float y, float dir) {
+Enemyshot::Enemyshot(sf::Texture * pMainTxtr, sf::Texture * pGlowTxtr, float x, float y, float dir) {
 	xPos = 0;
 	yPos = 0;
 	xInit = x;
 	yInit = y;
 	imageIndex = 0;
-	glowSprite = glow;
+	glowSprite.setTexture(*pGlowTxtr);
 	frameTimer = 0;
 	elapsedTime = 0;
-	for (int i = 0; i < 2; i++) {
-		sprites[i] = inpsprs[i];
-	}
+	spriteSheet.setTexture(pMainTxtr);
 	direction = (dir - 270) * (3.14 / 180);
 	killFlag = false;
 }
@@ -51,16 +49,15 @@ void Enemyshot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 	
 	float offset = rand() % 20;
 	glowSprite.setColor(sf::Color(230 + offset, 230 + offset, 230 + offset, 255));
-
+	spriteSheet.setPosition(xPos, yPos);
 }
 
-sf::Sprite* Enemyshot::getGlow() {
+sf::Sprite * Enemyshot::getGlow() {
 	return &glowSprite;
 }
 
 const sf::Sprite & Enemyshot::getSprite() {
-	sprites[imageIndex].setPosition(xPos, yPos);
-	return sprites[imageIndex];
+	return spriteSheet[imageIndex];
 }
 
 bool Enemyshot::getKillFlag() {

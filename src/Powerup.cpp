@@ -10,11 +10,15 @@
 
 #define PI 3.1415926535
 
-Powerup::Powerup(sf::Sprite* inpSpr, sf::Sprite glow, float xInit, float yInit) {
+Powerup::Powerup(sf::Texture * pBodyTxtr, sf::Texture * pGlowTxtr, float xInit, float yInit, Type id) {
 	this->xInit = xInit;
 	this->yInit = yInit;
-	this->glow = glow;
-	spr = *inpSpr;
+	glow.setTexture(*pGlowTxtr);
+	glow.setOrigin(22.5, 22.5);
+	powerupSheet.setTexture(pBodyTxtr);
+	// Square brace overloads provide access, but in doing so also set the working frame
+	powerupSheet[static_cast<int>(id)];
+	powerupSheet.setOrigin(7, 7);
 	timer = 0;
 	killFlag = false;
 }
@@ -28,8 +32,8 @@ void Powerup::update(float xoffset, float yoffset, sf::Time & elapsedTime) {
 const sf::Sprite & Powerup::getSprite() {
 	float offset = (3 * sinf(2 * PI * 0.001 * timer + 180));
 	// Make the sprite float up and down
-	spr.setPosition(xPos, yPos + offset);
-	return spr;
+	powerupSheet.setPosition(xPos, yPos + offset);
+	return powerupSheet.getSprite();
 }
 
 sf::Sprite* Powerup::getGlow() {

@@ -13,15 +13,16 @@
 #include <stdio.h>
 #include "SFML/Graphics.hpp"
 #include <cmath>
+#include "spriteSheet.hpp"
 
 class DasherShot {
 public:
-	DasherShot(sf::Sprite*, sf::Sprite, float, float, float);
+	DasherShot(sf::Texture *, sf::Texture *, float, float, float);
 	float xPos;
 	float yPos;
 	float xInit;
 	float yInit;
-	sf::Sprite sprs[2];
+    SpriteSheet<22, 22> spriteSheet;
 	const sf::Sprite & getSprite();
 	void update(float, float, sf::Time &);
 	char imageIndex;
