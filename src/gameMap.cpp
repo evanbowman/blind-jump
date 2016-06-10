@@ -25,8 +25,6 @@ GameMap::GameMap(float windowWidth, float windowHeight, TextureManager * pTM, In
 	this->pTM = pTM;
 
 	tiles.setTextures(pTM);
-
-	flareCounter = 0;
 	
 	player.setTextures(pTM);	
 
@@ -571,8 +569,6 @@ void GameMap::Reset() {
 	en.clear();
 	teleporterCond = 0;
 	int count;
-
-	flareCounter++;
 	
 	set = tileController::Tileset::intro;
 	
@@ -580,8 +576,7 @@ void GameMap::Reset() {
 		set = tileController::Tileset::intro;
 		objectShadeColor = sf::Color(190, 190, 210, 255);
 	} else {
-		if (flareCounter > (3 + (rand() % 4))) {
-			flareCounter = 0;
+		if (rand() % 2) {
 			set = tileController::Tileset::nova;
 			objectShadeColor = sf::Color(210, 195, 195, 255);
 		} else {

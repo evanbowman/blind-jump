@@ -51,8 +51,6 @@ class GameMap {
 	bool teleporterCond;
     sf::Sprite vignetteShadowSpr;
 	tileController::Tileset set;
-
-	int8_t flareCounter;
 	
 	// Create a GL rectangle primitive for the teleporter effect
 	sf::RectangleShape teleporterBeam;

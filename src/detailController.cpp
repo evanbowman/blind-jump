@@ -40,7 +40,7 @@ Coordinate pickLocationGrass(std::vector<Coordinate>& emptyLocations, short mapA
 		locationSelect = rand() % emptyLocations.size();
 		c = emptyLocations[locationSelect];
 		if (count > 500/*On average there are 300 open spaces on a map*/) {
-			throw "Maximum tries exceeded.";
+			throw "Maximum tries exceeded--grass tile.";
 		}
 	} while (mapArray[c.x][c.y] != 8  && mapArray[c.x][c.y] != 11);
 	// Don't want to place two objects in the same position, so remove coordinate from the vector if used
