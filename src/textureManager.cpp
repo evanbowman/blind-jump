@@ -123,6 +123,9 @@ bool TextureManager::load() {
 
 	if (!loadTexture("bullet.png", Texture::bullet, textures))
 		return false;
+
+	if (!loadTexture("poof.png", Texture::poof, textures))
+		return false;
 	
 	return true;
 }

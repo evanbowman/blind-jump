@@ -8,13 +8,10 @@
 
 #include "shotPuff.hpp"
 
-shotPuff::shotPuff(sf::Sprite sprIn[4], float x, float y, char dir, int p) {
+shotPuff::shotPuff(sf::Texture * pTxtr, float x, float y, char dir, int p) {
 	xPos = x;
 	yPos = y;
-	//Store all of the sprites for later
-	for (int i = 0; i < 4; i++) {
-		sprPuff[i] = sprIn[i];
-	}
+	spriteSheet.setTexture(pTxtr);
 	frameIndex = 0;
 	frameTimer = 0;
 	killFlag = false;
@@ -35,11 +32,11 @@ void shotPuff::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 			killFlag = true;
 		}
 	}
+	spriteSheet.setPosition(xPos, yPos);
 }
 
 const sf::Sprite & shotPuff::getSprite() {
-	sprPuff[frameIndex].setPosition(round(xPos), round(yPos));
-	return sprPuff[frameIndex];
+	return spriteSheet[frameIndex];
 }
 
 bool shotPuff::getKillFlag() {

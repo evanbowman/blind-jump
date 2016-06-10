@@ -13,10 +13,11 @@
 #include <stdio.h>
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include "spriteSheet.hpp"
 
 class shotPuff {
 public:
-	shotPuff(sf::Sprite[4], float, float, char, int);
+	shotPuff(sf::Texture *, float, float, char, int);
 	float xPos;
 	float yPos;
 	float xInit;
@@ -29,8 +30,7 @@ public:
 private:
 	int frameIndex;
 	int32_t frameTimer;
-	sf::Sprite sprPuff[4];
-	sf::Texture sprText[4];
+	SpriteSheet<16, 16> spriteSheet;
 	bool killFlag;
 };
 #endif /* shotPuff_hpp */

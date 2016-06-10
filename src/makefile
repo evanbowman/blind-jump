@@ -139,7 +139,7 @@ scoot.o: scoot.cpp scoot.hpp angleFunction.hpp enemyParent.hpp wall.hpp effectsC
 screenShakeController.o: screenShakeController.cpp screenShakeController.hpp player.hpp
 	$(CC) screenShakeController.cpp $(CFLAGS) -c -o screenShakeController.o
 
-shotPuff.o: shotPuff.cpp shotPuff.hpp 
+shotPuff.o: shotPuff.cpp shotPuff.hpp spriteSheet.hpp
 	$(CC) shotPuff.cpp $(CFLAGS) -c -o shotPuff.o
 
 smallExplosion.o: smallExplosion.cpp smallExplosion.hpp spriteSheet.hpp

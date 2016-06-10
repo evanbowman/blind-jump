@@ -10,13 +10,7 @@
 #include "screenShakeController.hpp"
 
 
-effectsController::effectsController() {	
-	const std::string fileExt3[4] = {"poof1.png", "poof2.png", "poof3.png", "poof4.png"};
-	for (int i = 0; i < 4; i++) {
-		puffTexture[i].loadFromFile(resourcePath() + fileExt3[i]);
-		puffSprites[i].setTexture(puffTexture[i]);
-	}
-	
+effectsController::effectsController() {		
 	const std::string fileExt4[6] = {"exp32_1.png", "exp32_2.png", "exp32_3.png", "exp32_4.png", "exp32_5.png", "exp32_6.png"};
 	const std::string fileExt5[6] = {"teleporterSmoke1.png", "teleporterSmoke2.png", "teleporterSmoke3.png", "teleporterSmoke4.png", "teleporterSmoke5.png", "teleporterSmoke6.png"};
 	const std::string fileExt6[6] = {"Smoke1.png", "Smoke2.png", "Smoke3.png", "Smoke4.png", "Smoke5.png", "Smoke6.png"};
@@ -115,34 +109,13 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
 			if (it->getKillFlag()) {
 				// Don't always want to add in additional effect where it could make the screen look cluttered, so check a condition first
 				if (it->checkCanPoof()) {
-					//Create another effect for bullet death
-					shotPuff p(puffSprites, it->getXpos() - xOffset, it->getYpos() - yOffset, it->getDirection(), 0);
-					//Push it back
-					puffs.push_back(p);
+					addPuff(it->getXpos() - xOffset, it->getYpos());
 				}
 				//Erase the bullet
 				it = bullets.erase(it);
 			}
 			else {
 				//Update the position
-				it->update(xOffset, yOffset);
-				glowSprs.push_back(it->getGlow());
-				++it;
-			}
-		}
-	}
-	
-	//Only attempt to loop through the vector and update or delete elements if the vector is not empty
-	if (!bulletLowerLayer.empty()) {
-		for (std::vector<bulletType1>::iterator it = bulletLowerLayer.begin(); it != bulletLowerLayer.end();) {
-			if (it->getKillFlag()) {
-				if (it->checkCanPoof()) {
-				shotPuff p(puffSprites, it->getXpos() - xOffset, it->getYpos() - yOffset, it->getDirection(), 0);
-				puffs.push_back(p);
-				}
-				it = bulletLowerLayer.erase(it);
-			}
-			else {
 				it->update(xOffset, yOffset);
 				glowSprs.push_back(it->getGlow());
 				++it;
@@ -205,7 +178,7 @@ void effectsController::addDasherShot(float x, float y, short dir) {
 
 // A function for adding puffs
 void effectsController::addPuff(float x, float y) {
-	puffs.emplace_back(puffSprites, x, y, 0, 0);
+	puffs.emplace_back(pTM->getTexture(TextureManager::Texture::poof), x, y, 0, 0);
 }
 
 void effectsController::addFireExplosion(float x, float y) {
