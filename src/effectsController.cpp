@@ -157,9 +157,8 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
 	}
 	
 	updateVectorGlow(smallExplosions, xOffset, yOffset, glowSprs, elapsedTime);
-	updateVector(dodgeEffects, xOffset, yOffset, elapsedTime);
 	updateVectorGlow(hearts, xOffset, yOffset, glowSprs, elapsedTime);
-	//updateVectorGlow(coins, xOffset, yOffset, glowSprs, elapsedTime);
+	
 	if (!coins.empty()) {
 		for (typename std::vector<Powerup>::iterator it = coins.begin(); it != coins.end();) {
 			it->update(xOffset, yOffset, elapsedTime);
@@ -288,10 +287,6 @@ void effectsController::addDasherShot(float x, float y, short dir) {
 	dasherShots.emplace_back(dasherShotSprites, redGlowSprite, x, y, dir);
 }
 
-void effectsController::addDodgeEffect(float x, float y, int dir, int scale) {
-	dodgeEffects.emplace_back(dashSmokeSprites, x, y, dir, scale);
-}
-
 // A function for adding puffs
 void effectsController::addPuff(float x, float y) {
 	puffs.emplace_back(puffSprites, x, y, 0, 0);
@@ -380,12 +375,6 @@ void effectsController::draw(sf::RenderTexture& window, std::vector<std::tuple<s
 		}
 	}
 	
-	if (!dodgeEffects.empty()) {
-		for (auto & element : dodgeEffects) {
-			gameObjects.push_back(std::make_tuple(element.getSprite(), element.getYpos(), Rendertype::shadeDefault, 0.f));
-		}
-	}
-	
 	if (!warpEffects.empty()) {
 		for (auto & element : warpEffects) {
 			if (element.getDrawOrder() == 0) {
@@ -428,7 +417,6 @@ void effectsController::clear() {
 	enemyShots.clear();
 	turretShots.clear();
 	dasherShots.clear();
-	dodgeEffects.clear();
 	energyBeams.clear();
 	smallExplosions.clear();
 	fireExplosions.clear();

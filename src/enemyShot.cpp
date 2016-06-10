@@ -58,7 +58,7 @@ sf::Sprite* Enemyshot::getGlow() {
 	return &glowSprite;
 }
 
-sf::Sprite Enemyshot::getSprite() {
+const sf::Sprite & Enemyshot::getSprite() {
 	sprites[imageIndex].setPosition(xPos, yPos);
 	return sprites[imageIndex];
 }

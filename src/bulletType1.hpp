@@ -27,7 +27,7 @@ private:
 	
 public:
 	bulletType1(sf::Sprite s, sf::Sprite s2, char, float, float);
-	sf::Sprite getSprite();
+	const sf::Sprite & getSprite();
 	sf::Sprite* getGlow();
 	void update(float, float);
 	bool getKillFlag();

@@ -25,7 +25,7 @@ public:
 	Powerup(sf::Sprite*, sf::Sprite, float, float);
 	bool getKillFlag();
 	void setKillFlag(bool);
-	sf::Sprite getSprite();
+	const sf::Sprite & getSprite();
 	sf::Sprite* getGlow();
 	void update(float, float, sf::Time &);
 	float getXpos();

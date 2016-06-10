@@ -31,7 +31,7 @@ private:
 public:
 	Enemyshot(sf::Sprite*, sf::Sprite, float, float, float);
 	void update(float, float, sf::Time &);
-	sf::Sprite getSprite();
+	const sf::Sprite & getSprite();
 	bool getKillFlag();
 	void setKillFlag();
 	float getXpos();

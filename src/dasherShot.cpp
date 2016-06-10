@@ -59,7 +59,7 @@ void DasherShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 	}
 }
 
-sf::Sprite DasherShot::getSprite() {
+const sf::Sprite & DasherShot::getSprite() {
 	sprs[frameIndex].setPosition(xPos, yPos);
 	return sprs[frameIndex];
 }

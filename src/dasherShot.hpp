@@ -22,7 +22,7 @@ public:
 	float xInit;
 	float yInit;
 	sf::Sprite sprs[2];
-	sf::Sprite getSprite();
+	const sf::Sprite & getSprite();
 	void update(float, float, sf::Time &);
 	char imageIndex;
 	float direction;

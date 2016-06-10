@@ -25,7 +25,7 @@ bulletType1::bulletType1(sf::Sprite s, sf::Sprite s2, char dir, float x, float y
 }
 
 //A function to return the bullet sprite
-sf::Sprite bulletType1::getSprite() {
+const sf::Sprite & bulletType1::getSprite() {
 	return bulletSprite[0];
 }
 

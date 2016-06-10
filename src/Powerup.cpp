@@ -25,7 +25,7 @@ void Powerup::update(float xoffset, float yoffset, sf::Time & elapsedTime) {
 	timer += elapsedTime.asMilliseconds();
 }
 
-sf::Sprite Powerup::getSprite() {
+const sf::Sprite & Powerup::getSprite() {
 	float offset = (3 * sinf(2 * PI * 0.001 * timer + 180));
 	// Make the sprite float up and down
 	spr.setPosition(xPos, yPos + offset);

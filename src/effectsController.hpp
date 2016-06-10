@@ -89,7 +89,6 @@ private:
 	std::vector<bulletType1> bulletLowerLayer;
 	std::vector<turretShot> turretShots;
 	std::vector<TeleporterSmoke> warpEffects;
-	std::vector<DashSmoke> dodgeEffects;
 	sf::Texture turretShotText[2];
 	sf::Sprite turretShotSpr[2];
 	std::vector<Explosion32effect> bigExplosions;
@@ -107,7 +106,6 @@ public:
 	void addBullet(bool, char, float, float);
 	void drawLower(sf::RenderTexture&);
 	void clear();
-	void addDodgeEffect(float, float, int, int);
 	void addTurretShot(float, float, short);
 	void addDasherShot(float, float, short);
 	void addScootShot(float, float, short, float, float);
