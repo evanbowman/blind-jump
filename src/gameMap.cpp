@@ -25,6 +25,8 @@ GameMap::GameMap(float windowWidth, float windowHeight, TextureManager * pTM, In
 	this->pTM = pTM;
 
 	tiles.setTextures(pTM);
+
+	flareCounter = 0;
 	
 	player.setTextures(pTM);	
 
@@ -569,40 +571,46 @@ void GameMap::Reset() {
 	en.clear();
 	teleporterCond = 0;
 	int count;
+
+	flareCounter++;
+	
+	set = tileController::Tileset::intro;
 	
 	if (level == 0) {
+		set = tileController::Tileset::intro;
 		objectShadeColor = sf::Color(190, 190, 210, 255);
-	} else if (level > 0 && level <= BOSS_LEVEL_1) {
-		objectShadeColor = sf::Color(190, 190, 210, 255);
-		pFonts->setZoneText(0);
-	} else if (level > BOSS_LEVEL_1) {
-		objectShadeColor = sf::Color(210, 195, 195, 255);
-		pFonts->setZoneText(1);
+	} else {
+		if (flareCounter > (3 + (rand() % 4))) {
+			flareCounter = 0;
+			set = tileController::Tileset::nova;
+			objectShadeColor = sf::Color(210, 195, 195, 255);
+		} else {
+			set = tileController::Tileset::regular;
+			objectShadeColor = sf::Color(190, 190, 210, 255);
+		}
 	}
 	
 	vignetteSprite.setColor(sf::Color(255, 255, 255, 255));
 	
-	// If not on a boss level...
-	if (level != 0) {
+	if (set != tileController::Tileset::intro) {
 		//Now call the mapping function again to generate a new map, and make sure it's large enough
-		count = mappingFunction(tiles.mapArray, level, level < BOSS_LEVEL_1);
+		count = mappingFunction(tiles.mapArray, level, set != tileController::Tileset::nova);
 		while (count < 150) {
-			count = mappingFunction(tiles.mapArray, level, level < BOSS_LEVEL_1);
+			count = mappingFunction(tiles.mapArray, level, set != tileController::Tileset::nova);
 		}
 	} else if (level == 0) {
 	
 	}
 	
 	//Now lets rebuild the map from the new array, using the same function from the tileController class constructor
-	tiles.rebuild(itemArray, level);
+	tiles.rebuild(itemArray, set);
 	// Now let the background handler know what tileset the tilecontroller is using
 	bkg.setBkg(tiles.getWorkingSet());
 	/*Of course, the tile controller needs to know how big the window is so that it can find the center when drawing the tiles (tiles outside the window don't draw, and the player object is in the center of the window--we don't want to draw it inside a wall!)
 	*/
 	tiles.setPosition((windowW / 2) - 16, (windowH / 2));
 	bkg.setPosition((tiles.posX / 2) + 206, tiles.posY / 2);
-	
-	// Perhaps there's a better way to not check the same condition multiple times, without tons of copy-pasting
+
 	if (level != 0) {
 		details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH);
 		
@@ -630,7 +638,7 @@ void GameMap::Reset() {
 		
 		size_t len;
 		Teleporter* pTeleporter = details.getTeleporter();
-		if (level < BOSS_LEVEL_1) {
+		if (set == tileController::Tileset::regular) {
 			// Put rock/pillar detail things on map
 			getRockPositions(tiles.mapArray, rockPositions);
 			for (auto element : rockPositions) {
@@ -664,7 +672,7 @@ void GameMap::Reset() {
 				(*pLamps).pop_back();
 			}
 		}
-	} else if (level == 0) {
+	} else if (set == tileController::Tileset::intro) {
 		details.addLamplight(tiles.posX - 180, tiles.posY + 200, 5, 6, windowW, windowH);
 		details.addLamplight(tiles.posX - 180, tiles.posY + 200, 5, 0, windowW, windowH);
 		details.addLamplight(tiles.posX - 170, tiles.posY + 200, 11, 11, windowW, windowH);

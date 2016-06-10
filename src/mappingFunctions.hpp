@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include "tileController.hpp"
 
-#define BOSS_LEVEL_1 10
+#define TRANSITION_LEVEL_1 7
 
 int mappingFunction(short map[61][61], int level, bool enableGrass);
 

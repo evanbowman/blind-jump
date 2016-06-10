@@ -282,28 +282,32 @@ void tileController::setTextures(TextureManager * pTM) {
 	transitionLvSpr.setTexture(*pTM->getTexture(TextureManager::Texture::introLevel));
 }
 
-void tileController::rebuild(char itemArray[48][3], int level) {
-	// If the vector of map data contains values
-	if (level == 0) {
+void tileController::rebuild(char itemArray[48][3], Tileset set) {
+	switch (set) {
+	case Tileset::intro:
 		workingSet = 0;
 		posX = -72;
 		posY = -476;
 		shadow.setFillColor(sf::Color(188, 188, 198, 255));
-	} else if (level > 0 && level <= BOSS_LEVEL_1) {
-		workingSet = 1;
-		shadow.setFillColor(sf::Color(188, 188, 198, 255));
-		createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet[0], &grassSetEdge[0]);
-		initMapVectors(this, level);
-	} else if (level > BOSS_LEVEL_1) {
+		break;
+
+	case Tileset::nova:
 		workingSet = 2;
 		shadow.setFillColor(sf::Color(215, 194, 194, 255));
 		createMapImage(&tileImg[1], mapArray, mapTexture, &grassSet[1], &grassSetEdge[1]);
-		initMapVectors(this, level);
+		initMapVectors(this);
+		mapSprite1.setTexture(mapTexture[0]);
+		mapSprite2.setTexture(mapTexture[1]);
+		break;
+
+	case Tileset::regular:
+		workingSet = 1;
+		shadow.setFillColor(sf::Color(188, 188, 198, 255));
+		createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet[0], &grassSetEdge[0]);
+		initMapVectors(this);
+		mapSprite1.setTexture(mapTexture[0]);
+		mapSprite2.setTexture(mapTexture[1]);
 	}
-	
-	mapSprite1.setTexture(mapTexture[0]);
-	mapSprite2.setTexture(mapTexture[1]);
-	
 }
 
 unsigned char tileController::getWorkingSet() {

@@ -69,9 +69,9 @@ int initEnemies(GameMap* gm) {
 	// Now it's time to actually place the enemies on the map based on weighted values
 	// Slowly work up to the max number of enemies on the map
 	// Normalized level is for the difficulty curve, so that fewer enemies are placed following a boss battle
-	int divisibility = static_cast<int>(floor(static_cast<float>(currentLevel) / 10.f));
-	int normalizedLevel = (currentLevel < 11) ? currentLevel : currentLevel - 10 * divisibility + pow(divisibility, 1.8);
-	int iters = 1 + pow(normalizedLevel, 1.2);
+	int divisibility = static_cast<int>(floor(static_cast<float>(currentLevel) / 7.f));
+	int normalizedLevel = (currentLevel < 8) ? currentLevel : currentLevel - 7 * divisibility;
+	int iters = divisibility * 2 + pow(normalizedLevel, 1.2);
 	if (iters > 15) {
 		iters = 15;
 	}

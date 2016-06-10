@@ -11,7 +11,7 @@
 #include <cmath>
 #include "tileController.hpp"
 
-void initMapVectors(tileController * pTiles, int level) {
+void initMapVectors(tileController * pTiles) {
 	
 	// First pick points for the hero character and level exit, to make sure not to place any objects on the critical path
 	int playerX, playerY, transporterX, transporterY;
@@ -80,17 +80,8 @@ void initMapVectors(tileController * pTiles, int level) {
 	}
 	// Sort the empty location vector based on coordinate priorities
 	std::sort(pTiles->emptyMapLocations.begin(), pTiles->emptyMapLocations.end(), [](const Coordinate c1, const Coordinate c2) {return c1.priority < c2.priority;});
-	
-	// Put the player as far away from the transporter as possible
-	if (level != 10) {
-		playerX = pTiles->emptyMapLocations.back().x;
-		playerY = pTiles->emptyMapLocations.back().y;
-	}
-	
-	else {
-		playerX = 36;
-		playerY = 31;
-	}
+	playerX = pTiles->emptyMapLocations.back().x;
+	playerY = pTiles->emptyMapLocations.back().y;
 	
 	pTiles->posX = -(32 * playerX);
 	pTiles->posY = -(26 * playerY) - 4;

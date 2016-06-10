@@ -17,6 +17,6 @@
 
 class tileController;
 
-void initMapVectors(tileController *, int);
+void initMapVectors(tileController *);
 
 #endif /* initMapVectors_hpp */
