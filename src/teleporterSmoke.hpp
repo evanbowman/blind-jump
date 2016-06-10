@@ -32,7 +32,7 @@ public:
 	TeleporterSmoke(sf::Sprite inputSprites[6], float, float);
 	// For updating the position with external offset information
 	void update(float, float, sf::Time &);
-	sf::Sprite getSprite();
+	const sf::Sprite & getSprite();
 	// Accessor function to determine whether the animation is done running
 	bool getKillFlag();
 	float getPosX();

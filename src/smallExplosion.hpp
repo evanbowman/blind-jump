@@ -25,10 +25,10 @@ private:
 public:
 	SmallExplosion(sf::Sprite*, sf::Sprite, float, float);
 	void update(float, float, sf::Time &);
-	sf::Sprite getSprite();
+	const sf::Sprite & getSprite();
 	bool getKillFlag();
 	float getYpos();
-	sf::Sprite* getGlow();
+	sf::Sprite * getGlow();
 };
 
 #endif /* smallExplosion_hpp */

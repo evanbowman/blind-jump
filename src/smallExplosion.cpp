@@ -44,11 +44,11 @@ void SmallExplosion::update(float xOffset, float yOffset, sf::Time & elapsedTime
 	glow.setPosition(xPos - 225, yPos - 225);
 }
 
-sf::Sprite* SmallExplosion::getGlow() {
+sf::Sprite * SmallExplosion::getGlow() {
 	return &glow;
 }
 
-sf::Sprite SmallExplosion::getSprite() {
+const sf::Sprite & SmallExplosion::getSprite() {
 	return sprites[frameIndex];
 }
 

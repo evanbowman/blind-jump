@@ -25,11 +25,11 @@ private:
 public:
 	FireExplosion(sf::Sprite*, sf::Sprite, float, float);
 	void update(float, float, sf::Time &);
-	sf::Sprite getSprite();
+	const sf::Sprite & getSprite();
 	bool getKillFlag();
 	float getYpos();
 	float getXpos();
-	sf::Sprite* getGlow();
+	sf::Sprite * getGlow();
 	void setOrigin(int, int);
 	bool isValid();
 	void invalidate();

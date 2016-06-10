@@ -22,7 +22,7 @@ public:
 	float xInit;
 	float yInit;
 	void update(float, float, sf::Time &);
-	sf::Sprite getSprite();
+	const sf::Sprite & getSprite();
 	bool getKillFlag();
 	float getYpos();
 	

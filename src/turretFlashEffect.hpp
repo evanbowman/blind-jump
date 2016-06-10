@@ -29,6 +29,6 @@ public:
 	turretFlashEffect(sf::Sprite sprites[5], float, float);
 	float getYpos();
 	bool getKillFlag();
-	sf::Sprite getSprite();
+	sf::Sprite & getSprite();
 };
 #endif /* turretFlashEffect_hpp */

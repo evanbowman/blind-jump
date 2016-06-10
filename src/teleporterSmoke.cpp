@@ -35,7 +35,7 @@ void TeleporterSmoke::update(float xOffset, float yOffset, sf::Time & elapsedTim
 	frameTimer += elapsedTime.asMilliseconds();
 }
 
-sf::Sprite TeleporterSmoke::getSprite() {
+const sf::Sprite & TeleporterSmoke::getSprite() {
 	// Due to ordering of the controller code, updates to the frame index need
 	// to happen here. This is a special case where the sprite maps to a different
 	// vector depending on its layer. In other instances, 'get...()' member functions

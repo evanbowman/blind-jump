@@ -37,7 +37,7 @@ void shotPuff::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 	}
 }
 
-sf::Sprite shotPuff::getSprite() {
+const sf::Sprite & shotPuff::getSprite() {
 	sprPuff[frameIndex].setPosition(round(xPos), round(yPos));
 	return sprPuff[frameIndex];
 }

@@ -23,7 +23,6 @@ turretShot::turretShot(sf::Sprite* sprs, sf::Sprite glow, float x, float y, floa
 												//back out and convert back to radians
 	killFlag = false;
 	scale = 3.8;
-	trackPlayer = false;
 	frameIndex = 0;
 	timer = 0;
 	animationTimer = 0;
@@ -56,7 +55,7 @@ void turretShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 	}
 }
 
-sf::Sprite turretShot::getSprite() {
+const sf::Sprite & turretShot::getSprite() {
 	return sprs[frameIndex];
 }
 
@@ -82,10 +81,4 @@ float turretShot::getYpos() {
 
 void turretShot::speedFactor(float factor) {
 	scale = factor;
-}
-
-void turretShot::enableTracking(float windowW, float windowH) {
-	trackPlayer = true;
-	playerPosX = windowW;
-	playerPosY = windowH;
 }

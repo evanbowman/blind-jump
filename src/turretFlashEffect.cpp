@@ -45,7 +45,7 @@ void turretFlashEffect::update(float xOffset, float yOffset) {
 }
 
 //A funtion to return the current sprite
-sf::Sprite turretFlashEffect::getSprite() {
+sf::Sprite & turretFlashEffect::getSprite() {
 	flashSprites[imageIndex].setPosition(xPos, yPos);
 	return flashSprites[imageIndex];
 }

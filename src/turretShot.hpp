@@ -23,8 +23,8 @@ public:
 	float yInit;
 	sf::Sprite sprs[2];
 	sf::Sprite glowSprite;
-	sf::Sprite* getGlow();
-	sf::Sprite getSprite();
+	sf::Sprite * getGlow();
+	const sf::Sprite & getSprite();
 	void update(float, float, sf::Time&);
 	float direction;
 	bool killFlag;
@@ -33,15 +33,11 @@ public:
 	float getXpos();
 	float getYpos();
 	void speedFactor(float);
-	void enableTracking(float, float);
-	float playerPosX;
-	float playerPosY;
 	int32_t timer;
 	int32_t animationTimer;
 	
 private:
 	float scale;
-	bool trackPlayer;
 	uint8_t frameIndex;	
 };
 #endif /* turretShot_hpp */

@@ -52,11 +52,11 @@ void FireExplosion::setOrigin(int x, int y) {
 	}
 }
 
-sf::Sprite* FireExplosion::getGlow() {
+sf::Sprite * FireExplosion::getGlow() {
 	return &glow;
 }
 
-sf::Sprite FireExplosion::getSprite() {
+const sf::Sprite & FireExplosion::getSprite() {
 	return sprites[frameIndex];
 }
 
