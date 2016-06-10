@@ -86,7 +86,7 @@ void detailController::addLamplight(float posX, float posY, int i, int j, float 
 	sf::Sprite tempSprites[2];
 	tempSprites[0].setTexture(*pTM->getTexture(TextureManager::Texture::lamp));
 	tempSprites[1].setTexture(*pTM->getTexture(TextureManager::Texture::lamplight));
-	lamps.emplace_back((i * 32) + 16 + posX, (j * 26) + 16 + posY, tempSprites[0], tempSprites[1], 2, width, height);
+	lamps.emplace_back((i * 32) + 16 + posX, (j * 26) + 18 + posY, tempSprites[0], tempSprites[1], 2, width, height);
 }
 
 void detailController::addRock(float posX, float posY, int i, int j) {

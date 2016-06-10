@@ -33,6 +33,13 @@ void TeleporterSmoke::update(float xOffset, float yOffset, sf::Time & elapsedTim
 	// Drift up
 	yInit -= (elapsedTime.asMilliseconds() / 17.6) * 0.6;
 	frameTimer += elapsedTime.asMilliseconds();
+}
+
+sf::Sprite TeleporterSmoke::getSprite() {
+	// Due to ordering of the controller code, updates to the frame index need
+	// to happen here. This is a special case where the sprite maps to a different
+	// vector depending on its layer. In other instances, 'get...()' member functions
+	// should not alter internal datafields for objects.
 	if (frameTimer > 105) {
 		frameTimer -= 105;
 		frameIndex++;
@@ -46,9 +53,6 @@ void TeleporterSmoke::update(float xOffset, float yOffset, sf::Time & elapsedTim
 		}
 	}
 
-}
-
-sf::Sprite TeleporterSmoke::getSprite() {
 	effectSprites[frameIndex].setPosition(xPos, yPos);
 	// Return the desired frame:
 	return effectSprites[frameIndex];
