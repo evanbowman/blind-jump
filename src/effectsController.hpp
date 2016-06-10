@@ -39,14 +39,10 @@ private:
 	sf::Sprite blueFireGlowSpr;
 	sf::Sprite energyBeamSprites[6];
 	sf::Texture energyBeamTextures[6];
-	sf::Sprite bulletSprites[3];
-	sf::Texture bulletTexture[2];
 	sf::Texture exp32Texture[6];
 	sf::Sprite exp32Sprites[6];
 	sf::Sprite warpEffectSprites[6];
 	sf::Texture warpEffectTextures[6];
-	sf::Sprite smokeSprites[6];
-	sf::Texture smokeTextures[6];
 	TextureManager * pTM;
 	std::vector<SmallExplosion> smallExplosions;
 	std::vector<EnergyBeam> energyBeams;
@@ -81,20 +77,14 @@ public:
 	void addSmallExplosion(float, float);
 	void addHearts(float, float);
 	void addCoins(float, float);
-	void addPlayerHealthEffect(float, float, float, float);
-	void addHpRestored(float, float);
-	void addNewItem(float, float);
 	void addPuff(float, float);
 	void addEnergyBeam(float, float, float, float);
 	void addMissile(float, float);
-	void addOrbshotTrail(float, float);
 	void addEnemyShot(float, float, short);
 	void addOrbShot(unsigned char, float, float, float, float);
 	std::vector<bulletType1>& getBulletLayer1();
 	std::vector<bulletType1>& getBulletLayer2();
-	void addSmokeEffect(float, float);
-	// Now accessor functions for the class' private member datafields
-	std::vector<Enemyshot>* getEnemyShots();
+   	std::vector<Enemyshot>* getEnemyShots();
 	std::vector<Powerup>* getHearts();
 	std::vector<Powerup>* getCoins();
 	std::vector<turretShot>* getTurretShots();

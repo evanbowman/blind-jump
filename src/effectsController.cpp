@@ -9,14 +9,10 @@
 #include "effectsController.hpp"
 #include "screenShakeController.hpp"
 
-
 effectsController::effectsController() {		
 	const std::string fileExt4[6] = {"exp32_1.png", "exp32_2.png", "exp32_3.png", "exp32_4.png", "exp32_5.png", "exp32_6.png"};
 	const std::string fileExt5[6] = {"teleporterSmoke1.png", "teleporterSmoke2.png", "teleporterSmoke3.png", "teleporterSmoke4.png", "teleporterSmoke5.png", "teleporterSmoke6.png"};
-	const std::string fileExt6[6] = {"Smoke1.png", "Smoke2.png", "Smoke3.png", "Smoke4.png", "Smoke5.png", "Smoke6.png"};
 	for (int i = 0; i < 6; i++) {
-		smokeTextures[i].loadFromFile(resourcePath() + fileExt6[i]);
-		smokeSprites[i].setTexture(smokeTextures[i]);
 		warpEffectTextures[i].loadFromFile(resourcePath() + fileExt5[i]);
 		warpEffectSprites[i].setTexture(warpEffectTextures[i]);
 		exp32Texture[i].loadFromFile(resourcePath() + fileExt4[i]);
@@ -207,10 +203,6 @@ void effectsController::addBullet(bool select, char sprIndex, float xPos, float 
 
 void effectsController::addWarpEffect(float x, float y) {
 	warpEffects.emplace_back(warpEffectSprites, x, y);
-}
-
-void effectsController::addSmokeEffect(float x, float y) {
-	warpEffects.emplace_back(smokeSprites, x, y);
 }
 
 template <typename T>
