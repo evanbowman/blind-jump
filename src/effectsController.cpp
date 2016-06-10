@@ -229,7 +229,7 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
 			else {
 				it->update(xOffset, yOffset);
 				if (it->isValid()) {
-					addBlueExplosion(it->getX2() - xOffset, it->getY2() - yOffset);
+					//addBlueExplosion(it->getX2() - xOffset, it->getY2() - yOffset);
 					it->invalidate();
 					scrn->shake();
 				}
@@ -262,14 +262,12 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
 
 //A function for adding a turret flash animation
 void effectsController::addTurretFlash(float x, float y) {
-	turretFlashEffect t(turretFlashSprites, x, y);
-	turretFlashes.push_back(t);
+	turretFlashes.emplace_back(turretFlashSprites, x, y);
 }
 
 //A function for adding a turret shot effect
 void effectsController::addTurretShot(float x, float y, short dir) {
-	turretShot t(turretShotSpr, redGlowSprite, x, y, dir);
-	turretShots.push_back(t);
+	turretShots.emplace_back(turretShotSpr, redGlowSprite, x, y, dir);
 }
 
 void effectsController::addHearts(float x, float y) {
@@ -283,57 +281,37 @@ void effectsController::addCoins(float x, float y) {
 }
 
 void effectsController::addEnemyShot(float x, float y, short dir) {
-	Enemyshot e(bubbleShotSpr, redGlowSprite, x, y, dir);
-	enemyShots.push_back(e);
-}
-
-void effectsController::addBlueExplosion(float x, float y) {
-	FireExplosion f(blueExplosionSpr, blueFireGlowSpr, x, y);
-	f.setOrigin(25, 80);
-	fireExplosions.push_back(f);
+	enemyShots.emplace_back(bubbleShotSpr, redGlowSprite, x, y, dir);
 }
 
 void effectsController::addDasherShot(float x, float y, short dir) {
-	DasherShot d(dasherShotSprites, redGlowSprite, x, y, dir);
-	dasherShots.push_back(d);
+	dasherShots.emplace_back(dasherShotSprites, redGlowSprite, x, y, dir);
 }
 
 void effectsController::addDodgeEffect(float x, float y, int dir, int scale) {
-	DashSmoke d(dashSmokeSprites, x, y, dir, scale);
-	dodgeEffects.push_back(d);
+	dodgeEffects.emplace_back(dashSmokeSprites, x, y, dir, scale);
 }
 
 // A function for adding puffs
 void effectsController::addPuff(float x, float y) {
-	shotPuff p(puffSprites, x, y, 0, 0);
-	puffs.push_back(p);
+	puffs.emplace_back(puffSprites, x, y, 0, 0);
 }
 
 void effectsController::addHealthEffect(float x, float y) {
-	HealthEffect h(healthEffectSprites[0], x, y + 8);
-	healthEffects.push_back(h);
+	healthEffects.emplace_back(healthEffectSprites[0], x, y + 8);
 }
 
 void effectsController::addFireExplosion(float x, float y) {
-	FireExplosion f(fireExplosionSpr, fireExplosionGlowSpr, x, y);
-	fireExplosions.push_back(f);
+	fireExplosions.emplace_back(fireExplosionSpr, fireExplosionGlowSpr, x, y);
 }
 
 void effectsController::addSmallExplosion(float x, float y) {
-	SmallExplosion s(smallExplosionSpr, fireExplosionGlowSpr, x, y);
-	smallExplosions.push_back(s);
+	smallExplosions.emplace_back(smallExplosionSpr, fireExplosionGlowSpr, x, y);
 }
-
-
 
 void effectsController::addEnergyBeam(float x, float y, float dir, float length) {
 	EnergyBeam en(x, y, energyBeamSprites, dir, length);
 	energyBeams.push_back(en);
-}
-
-void effectsController::addHpRestored(float x, float y) {
-	HealthEffect h(healthRestoredSpr, x, y);
-	healthEffects.push_back(h);
 }
 
 void effectsController::addScootShot(float x, float y, short dir, float playerPosX, float playerPosY) {
@@ -341,17 +319,6 @@ void effectsController::addScootShot(float x, float y, short dir, float playerPo
 	t.speedFactor(2.8);
 	t.enableTracking(playerPosX, playerPosY);
 	turretShots.push_back(t);
-}
-
-void effectsController::addNewItem(float x, float y) {
-	HealthEffect h(newItemSpr, x - 30, y);
-	healthEffects.push_back(h);
-}
-
-// A function to add the trail sprites that follow enemy orbshots
-void effectsController::addOrbshotTrail(float x, float y) {
-	shotPuff p(orbShotSprites, x, y, 0, 0);
-	puffs.push_back(p);
 }
 
 //A function for adding a bullet
@@ -367,20 +334,15 @@ void effectsController::addBullet(bool select, char sprIndex, float xPos, float 
 }
 
 void effectsController::addWarpEffect(float x, float y) {
-	// Construct a teleporter smoke effect with the desired sprites and position
-	TeleporterSmoke t(warpEffectSprites, x, y);
-	// Push it back to the proper vector
-	warpEffects.push_back(t);
+	warpEffects.emplace_back(warpEffectSprites, x, y);
 }
 
 void effectsController::addSmokeEffect(float x, float y) {
-	TeleporterSmoke t(smokeSprites, x, y);
-	warpEffects.push_back(t);
+	warpEffects.emplace_back(smokeSprites, x, y);
 }
 
 void effectsController::addExplosion(float x, float y) {
-	Explosion32effect e(exp32Sprites, x, y);
-	bigExplosions.push_back(e);
+	bigExplosions.emplace_back(exp32Sprites, x, y);
 }
 
 template <typename T>
