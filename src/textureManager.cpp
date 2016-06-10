@@ -111,6 +111,9 @@ bool TextureManager::load() {
 
 	if (!loadTexture("fireExplosionGlow.png", Texture::fireExplosionGlow, textures))
 		return false;
+
+	if (!loadTexture("smallExplosion.png", Texture::smallExplosion, textures))
+		return false;
 	
 	return true;
 }

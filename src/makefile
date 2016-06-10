@@ -142,7 +142,7 @@ screenShakeController.o: screenShakeController.cpp screenShakeController.hpp pla
 shotPuff.o: shotPuff.cpp shotPuff.hpp 
 	$(CC) shotPuff.cpp $(CFLAGS) -c -o shotPuff.o
 
-smallExplosion.o: smallExplosion.cpp smallExplosion.hpp
+smallExplosion.o: smallExplosion.cpp smallExplosion.hpp spriteSheet.hpp
 	$(CC) smallExplosion.cpp $(CFLAGS) -c -o smallExplosion.o
 
 soundController.o: soundController.cpp soundController.hpp $(RSP)

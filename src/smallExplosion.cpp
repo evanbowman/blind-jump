@@ -8,31 +8,31 @@
 
 #include "smallExplosion.hpp"
 
-SmallExplosion::SmallExplosion(sf::Sprite* sprs, sf::Sprite glow, float x, float y) {
-	for (int i = 0; i < 6; i++) {
-		sprites[i] = sprs[i];
-		sprites[i].setOrigin(18, 18);
-	}
-	this->glow = glow;
-	this->glow.setColor(sf::Color(220, 220, 220));
+SmallExplosion::SmallExplosion(sf::Texture * pMainTxtr, sf::Texture * pGlowTxtr, float x, float y) {
+    spriteSheet.setTexture(pMainTxtr);
+	spriteSheet.setOrigin(18, 18);
+	glow.setTexture(*pGlowTxtr);
+    glow.setColor(sf::Color(220, 220, 220));
 	xInit = x;
 	yInit = y;
 	killFlag = false;
 	frameIndex = 0;
-	frameRate = 5;
+	timer = 0;
 }
 
-void SmallExplosion::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
+void SmallExplosion::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
 	xPos = xInit + xOffset;
 	yPos = yInit + yOffset;
-	if (--frameRate == 0) {
-		frameRate = 5;
+	timer += elapsedTime.asMilliseconds();
+	if (timer > 88) {
+		timer -= 88;
 		frameIndex++;
 		if (frameIndex > 5) {
 			frameIndex = 5;
 			killFlag = true;
 		}
 	}
+	
 	sf::Color c = glow.getColor();
 	if (c.r > 8) {
 		c.r -= 10;
@@ -40,7 +40,7 @@ void SmallExplosion::update(float xOffset, float yOffset, sf::Time & elapsedTime
 		c.b -= 10;
 		glow.setColor(c);
 	}
-	sprites[frameIndex].setPosition(xPos, yPos);
+	spriteSheet.setPosition(xPos, yPos);
 	glow.setPosition(xPos - 225, yPos - 225);
 }
 
@@ -49,7 +49,7 @@ sf::Sprite * SmallExplosion::getGlow() {
 }
 
 const sf::Sprite & SmallExplosion::getSprite() {
-	return sprites[frameIndex];
+	return spriteSheet[frameIndex];
 }
 
 bool SmallExplosion::getKillFlag() {

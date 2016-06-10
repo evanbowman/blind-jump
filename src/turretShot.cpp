@@ -18,6 +18,7 @@ turretShot::turretShot(sf::Texture * pMainTxtr, sf::Texture * pGlowTxtr, float x
 	int diff = pow(-1,rand() % 2) + rand() % 6 - 3;
 	spriteSheet.setRotation(dir + diff);
 	spriteSheet.setOrigin(4, 4);
+	glowSprite.setOrigin(22.5, 22.5);
 	direction = (dir - 270 + diff) * (3.14 / 180);	 // I added 270 previously to get the sprite to face in the right direction, so subract it
 												//back out and convert back to radians
 	killFlag = false;

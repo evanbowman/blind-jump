@@ -37,8 +37,6 @@ effectsController::effectsController() {
 	const std::string fileExt5[6] = {"teleporterSmoke1.png", "teleporterSmoke2.png", "teleporterSmoke3.png", "teleporterSmoke4.png", "teleporterSmoke5.png", "teleporterSmoke6.png"};
 	const std::string fileExt6[6] = {"Smoke1.png", "Smoke2.png", "Smoke3.png", "Smoke4.png", "Smoke5.png", "Smoke6.png"};
 	for (int i = 0; i < 6; i++) {
-		smallExplosionTxtr[i].loadFromFile(resourcePath() + "smallExplosion.png", sf::IntRect(i * 36, 0, 36, 36));
-		smallExplosionSpr[i].setTexture(smallExplosionTxtr[i]);
 		smokeTextures[i].loadFromFile(resourcePath() + fileExt6[i]);
 		smokeSprites[i].setTexture(smokeTextures[i]);
 		warpEffectTextures[i].loadFromFile(resourcePath() + fileExt5[i]);
@@ -231,9 +229,7 @@ void effectsController::addFireExplosion(float x, float y) {
 }
 
 void effectsController::addSmallExplosion(float x, float y) {
-	sf::Sprite fireExplosionGlowSpr;
-	fireExplosionGlowSpr.setTexture(*pTM->getTexture(TextureManager::Texture::fireExplosionGlow)); // Temporary, inefficient, FIX THIS!!!
-	smallExplosions.emplace_back(smallExplosionSpr, fireExplosionGlowSpr, x, y);
+    smallExplosions.emplace_back(pTM->getTexture(TextureManager::Texture::smallExplosion), pTM->getTexture(TextureManager::Texture::fireExplosionGlow), x, y);
 }
 
 void effectsController::addEnergyBeam(float x, float y, float dir, float length) {

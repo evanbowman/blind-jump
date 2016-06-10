@@ -15,6 +15,7 @@ Enemyshot::Enemyshot(sf::Texture * pMainTxtr, sf::Texture * pGlowTxtr, float x, 
 	yInit = y;
 	imageIndex = 0;
 	glowSprite.setTexture(*pGlowTxtr);
+	glowSprite.setOrigin(22.5, 22.5);
 	frameTimer = 0;
 	elapsedTime = 0;
 	spriteSheet.setTexture(pMainTxtr);

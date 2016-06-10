@@ -35,8 +35,6 @@ class ScreenShakeController;
 
 class effectsController {
 private:
-	sf::Sprite smallExplosionSpr[6];
-	sf::Texture smallExplosionTxtr[6];
 	sf::Texture fireExplosionGlowTxtr;
 	sf::Sprite blueFireGlowSpr;
 	sf::Sprite energyBeamSprites[6];
