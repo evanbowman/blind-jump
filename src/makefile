@@ -73,7 +73,7 @@ energyBeam.o: energyBeam.cpp energyBeam.hpp
 explosion32effect.o: explosion32effect.cpp explosion32effect.hpp
 	$(CC) explosion32effect.cpp $(CFLAGS) -c -o explosion32effect.o
 
-FireExplosion.o: FireExplosion.hpp FireExplosion.cpp
+FireExplosion.o: FireExplosion.hpp FireExplosion.cpp spriteSheet.hpp
 	$(CC) FireExplosion.cpp $(CFLAGS) -c -o FireExplosion.o
 
 fontController.o: fontController.cpp fontController.hpp $(RSP)

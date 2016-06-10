@@ -105,6 +105,12 @@ bool TextureManager::load() {
 
 	if (!loadTexture("dasherShot.png", Texture::dasherShot, textures))
 		return false;
+
+	if (!loadTexture("fireExplosionSheet.png", Texture::fireExplosion, textures))
+		return false;
+
+	if (!loadTexture("fireExplosionGlow.png", Texture::fireExplosionGlow, textures))
+		return false;
 	
 	return true;
 }

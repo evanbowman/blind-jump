@@ -32,7 +32,9 @@ enum class Texture {
 			blueglow,
 			turretShot,
 			orbShot,
-			dasherShot
+			dasherShot,
+			fireExplosion,
+			fireExplosionGlow
 			};
 
 #endif

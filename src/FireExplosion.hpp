@@ -11,10 +11,11 @@
 #define FireExplosion_hpp
 
 #include "SFML/Graphics.hpp"
+#include "spriteSheet.hpp"
 
 class FireExplosion {
 private:
-	sf::Sprite sprites[9];
+	SpriteSheet<58, 51> spriteSheet;
 	sf::Sprite glow;
 	float xInit, yInit, xPos, yPos;
 	bool killFlag;
@@ -23,7 +24,7 @@ private:
 	bool valid;
 	
 public:
-	FireExplosion(sf::Sprite*, sf::Sprite, float, float);
+	FireExplosion(sf::Texture *, sf::Texture *, float, float);
 	void update(float, float, sf::Time &);
 	const sf::Sprite & getSprite();
 	bool getKillFlag();

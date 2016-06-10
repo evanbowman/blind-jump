@@ -38,11 +38,7 @@ private:
 	sf::Sprite smallExplosionSpr[6];
 	sf::Texture smallExplosionTxtr[6];
 	sf::Texture fireExplosionGlowTxtr;
-	sf::Sprite fireExplosionGlowSpr;
-	sf::Texture blueFireGlowTxtr;
 	sf::Sprite blueFireGlowSpr;
-	sf::Sprite fireExplosionSpr[9];
-	sf::Texture fireExplosionTxtr[9];
 	sf::Sprite energyBeamSprites[6];
 	sf::Texture energyBeamTextures[6];
 	sf::Sprite turretFlashSprites[5];

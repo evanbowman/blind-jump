@@ -8,13 +8,11 @@
 
 #include "FireExplosion.hpp"
 
-FireExplosion::FireExplosion(sf::Sprite* sprs, sf::Sprite glow, float x, float y) {
-	for (int i = 0; i < 9; i++) {
-		sprites[i] = sprs[i];
-		sprites[i].setOrigin(29, 25);
-	}
-	this->glow = glow;
-	this->glow.setColor(sf::Color(240, 240, 240));
+FireExplosion::FireExplosion(sf::Texture * pMainTxtr, sf::Texture * pGlowTxtr, float x, float y) {
+	spriteSheet.setTexture(pMainTxtr);
+	spriteSheet.setOrigin(29, 25);
+	glow.setTexture(*pGlowTxtr);
+	glow.setColor(sf::Color(240, 240, 240));
 	xInit = x;
 	yInit = y;
 	killFlag = false;
@@ -42,14 +40,8 @@ void FireExplosion::update(float xOffset, float yOffset, sf::Time & elapsedTime)
 		c.b -= 8;
 		glow.setColor(c);
 	}
-	sprites[frameIndex].setPosition(xPos, yPos);
+	spriteSheet.setPosition(xPos, yPos);
 	glow.setPosition(xPos - 225, yPos - 225);
-}
-
-void FireExplosion::setOrigin(int x, int y) {
-	for (int i = 0; i < 9; i++) {
-		sprites[i].setOrigin(x, y);
-	}
 }
 
 sf::Sprite * FireExplosion::getGlow() {
@@ -57,7 +49,7 @@ sf::Sprite * FireExplosion::getGlow() {
 }
 
 const sf::Sprite & FireExplosion::getSprite() {
-	return sprites[frameIndex];
+	return spriteSheet[frameIndex];
 }
 
 bool FireExplosion::getKillFlag() {

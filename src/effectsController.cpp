@@ -32,16 +32,6 @@ effectsController::effectsController() {
 		puffTexture[i].loadFromFile(resourcePath() + fileExt3[i]);
 		puffSprites[i].setTexture(puffTexture[i]);
 	}
-		
-	for (int i = 0; i < 9; i++) {
-		fireExplosionTxtr[i].loadFromFile(resourcePath() + "fireExplosionSheet.png", sf::IntRect(i * 58, 0, 58, 51));
-		fireExplosionSpr[i].setTexture(fireExplosionTxtr[i]);
-	}
-	
-	fireExplosionGlowTxtr.loadFromFile(resourcePath() + "fireExplosionGlow.png");
-	fireExplosionGlowSpr.setTexture(fireExplosionGlowTxtr);
-	blueFireGlowTxtr.loadFromFile(resourcePath() + "blueFireGlow.png");
-	blueFireGlowSpr.setTexture(blueFireGlowTxtr);
 	
 	const std::string fileExt4[6] = {"exp32_1.png", "exp32_2.png", "exp32_3.png", "exp32_4.png", "exp32_5.png", "exp32_6.png"};
 	const std::string fileExt5[6] = {"teleporterSmoke1.png", "teleporterSmoke2.png", "teleporterSmoke3.png", "teleporterSmoke4.png", "teleporterSmoke5.png", "teleporterSmoke6.png"};
@@ -237,10 +227,12 @@ void effectsController::addPuff(float x, float y) {
 }
 
 void effectsController::addFireExplosion(float x, float y) {
-	fireExplosions.emplace_back(fireExplosionSpr, fireExplosionGlowSpr, x, y);
+	fireExplosions.emplace_back(pTM->getTexture(TextureManager::Texture::fireExplosion), pTM->getTexture(TextureManager::Texture::fireExplosionGlow), x, y);
 }
 
 void effectsController::addSmallExplosion(float x, float y) {
+	sf::Sprite fireExplosionGlowSpr;
+	fireExplosionGlowSpr.setTexture(*pTM->getTexture(TextureManager::Texture::fireExplosionGlow)); // Temporary, inefficient, FIX THIS!!!
 	smallExplosions.emplace_back(smallExplosionSpr, fireExplosionGlowSpr, x, y);
 }
 
