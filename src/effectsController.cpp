@@ -171,6 +171,7 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
 			}
 		}
 	}
+	
 	updateVectorGlow(turretShots, xOffset, yOffset, glowSprs, elapsedTime);
 	updateVectorGlow(dasherShots, xOffset, yOffset, glowSprs, elapsedTime);
 	updateVectorGlow(enemyShots, xOffset, yOffset, glowSprs, elapsedTime);
@@ -238,23 +239,6 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
 	}
 	
 	updateVectorGlow(fireExplosions, xOffset, yOffset, glowSprs, elapsedTime);
-	
-	if (!bigExplosions.empty()) {
-		for (std::vector<Explosion32effect>::iterator it = bigExplosions.begin(); it != bigExplosions.end();) {
-			if (it->imFinished == 1) {
-				it = bigExplosions.erase(it);
-			}
-			else {
-				// Throughout the duration of the explosion, throw in some fire effects for good measure
-				if (it->spriteIndex == 1 || it->spriteIndex == 2 || it->spriteIndex == 4) {
-					TeleporterSmoke t(smokeSprites, it->getXpos() - xOffset + 6, it->getYpos() - yOffset + 4);
-					warpEffects.push_back(t);
-				}
-				it->positionUpdateF(xOffset, yOffset);
-				++it;
-			}
-		}
-	}
 	
 	updateVector(warpEffects, xOffset, yOffset, elapsedTime);
 }
@@ -331,10 +315,6 @@ void effectsController::addSmokeEffect(float x, float y) {
 	warpEffects.emplace_back(smokeSprites, x, y);
 }
 
-void effectsController::addExplosion(float x, float y) {
-	bigExplosions.emplace_back(exp32Sprites, x, y);
-}
-
 template <typename T>
 void drawEffect(T& inpVec, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>& gameObjects) {
 	if (!inpVec.empty()) {
@@ -382,8 +362,7 @@ void effectsController::draw(sf::RenderTexture& window, std::vector<std::tuple<s
 			}
 		}
 	}
-	
-	drawEffect(bigExplosions, gameObjects);
+
 	drawEffect(enemyShots, gameObjects);
 }
 
@@ -412,7 +391,6 @@ void effectsController::clear() {
 	turretFlashes.clear();
 	bullets.clear();
 	puffs.clear();
-	bigExplosions.clear();
 	warpEffects.clear();
 	enemyShots.clear();
 	turretShots.clear();

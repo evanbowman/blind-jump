@@ -98,7 +98,7 @@ void HeavyBot::checkBulletCollision(effectsController& ef, FontController& font)
 	
 	if (health == 0) {
 		killFlag = 1;
-		ef.addExplosion(xInit - 16, yInit - 16);
+		ef.addSmallExplosion(xInit - 16, yInit - 16);
 	}
 }
 

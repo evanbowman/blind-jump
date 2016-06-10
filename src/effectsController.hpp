@@ -91,7 +91,6 @@ private:
 	std::vector<TeleporterSmoke> warpEffects;
 	sf::Texture turretShotText[2];
 	sf::Sprite turretShotSpr[2];
-	std::vector<Explosion32effect> bigExplosions;
 	std::vector<DasherShot> dasherShots;
 	std::vector<sf::Sprite*> glowSprs;
 	std::vector<sf::Sprite*> glowSprs2;

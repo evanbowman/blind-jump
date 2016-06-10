@@ -69,7 +69,7 @@ void Critter::checkBulletCollision(effectsController& ef) {
 		} else {
 			ef.addCoins(xInit + 10, yInit);
 		}
-		ef.addExplosion(xInit - 4, yInit - 16);
+		ef.addSmallExplosion(xInit + 8, yInit);
 	}
 }
 
