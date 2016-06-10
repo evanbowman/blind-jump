@@ -13,7 +13,7 @@ DasherShot::DasherShot(sf::Texture * pMainTxtr, sf::Texture * pGlowTxtr, float x
 	spriteSheet.setTexture(pMainTxtr);
 	spriteSheet.setOrigin(4, 4);
 	glowSprite.setTexture(*pGlowTxtr);
-	glowSprite.setOrigin(22.5, 22.5);)
+	glowSprite.setOrigin(22.5, 22.5);
 	xPos = 0;
 	yPos = 0;
 	xInit = x;

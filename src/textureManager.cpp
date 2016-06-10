@@ -114,6 +114,15 @@ bool TextureManager::load() {
 
 	if (!loadTexture("smallExplosion.png", Texture::smallExplosion, textures))
 		return false;
+
+	if (!loadTexture("turretFlash.png", Texture::turretFlash, textures))
+		return false;
+
+	if (!loadTexture("whiteFloorGlow.png", Texture::whiteGlow, textures))
+		return false;
+
+	if (!loadTexture("bullet.png", Texture::bullet, textures))
+		return false;
 	
 	return true;
 }

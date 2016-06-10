@@ -12,23 +12,24 @@
 
 #include <stdio.h>
 #include "SFML/Graphics.hpp"
+#include "spriteSheet.hpp"
 
 class turretFlashEffect {
 private:
+	SpriteSheet<16, 16> spriteSheet;
 	float xPos;
 	float yPos;
 	float xInit;
 	float yInit;
-	sf::Sprite flashSprites[5];
 	sf::Clock clock;
 	bool killFlag;
+	uint8_t imageIndex;
 	
 public:
 	void update(float, float);
-	uint8_t imageIndex;
-	turretFlashEffect(sf::Sprite sprites[5], float, float);
+	turretFlashEffect(sf::Texture *, float, float);
 	float getYpos();
 	bool getKillFlag();
-	sf::Sprite & getSprite();
+	const sf::Sprite & getSprite();
 };
 #endif /* turretFlashEffect_hpp */

@@ -22,7 +22,7 @@ aStar.o: aStar.hpp aStar.cpp
 backgroundHandler.o: backgroundHandler.hpp backgroundHandler.cpp $(RSP)
 	$(CC) backgroundHandler.cpp $(CFLAGS) -c -o backgroundHandler.o
 
-bulletType1.o: bulletType1.cpp bulletType1.hpp
+bulletType1.o: bulletType1.cpp bulletType1.hpp spriteSheet.hpp
 	$(CC) bulletType1.cpp $(CFLAGS) -c -o bulletType1.o
 
 critter.o: critter.cpp critter.hpp tileController.hpp enemyParent.hpp aStar.hpp
@@ -166,7 +166,7 @@ treasureChest.o: treasureChest.cpp treasureChest.hpp detailParent.hpp spriteShee
 turret.o: turret.cpp turret.hpp angleFunction.hpp turret.hpp effectsController.hpp
 	$(CC) turret.cpp $(CFLAGS) -c -o turret.o
 
-turretFlashEffect.o: turretFlashEffect.cpp turretFlashEffect.hpp 
+turretFlashEffect.o: turretFlashEffect.cpp turretFlashEffect.hpp spriteSheet.hpp
 	$(CC) turretFlashEffect.cpp $(CFLAGS) -c -o turretFlashEffect.o
 
 turretShot.o: turretShot.cpp turretShot.hpp spriteSheet.hpp

@@ -10,23 +10,7 @@
 #include "screenShakeController.hpp"
 
 
-effectsController::effectsController() {
-	//Begin by loading all of the effects images (and there are plenty!)
-	const std::string fileExt1[5] = {"turretFlash1.png", "turretFlash2.png", "turretFlash3.png", "turretFlash4.png", "turretFlash5.png"};
-	for (int i = 0; i < 5; i++) {
-		turretFlashTextures[i].loadFromFile(resourcePath() + fileExt1[i]);
-		turretFlashSprites[i].setTexture(turretFlashTextures[i]);
-	}
-	
-	const std::string fileExt2[2] = {"hBullet.png", "vBullet.png"};
-	for (int i = 0; i < 2; i++) {
-		bulletTexture[i].loadFromFile(resourcePath() + fileExt2[i]);
-		bulletSprites[i].setTexture(bulletTexture[i]);
-	}
-		
-	bulletGlow[0].loadFromFile(resourcePath() + "whiteFloorGlow.png");
-	bulletSprites[2].setTexture(bulletGlow[0]);
-	
+effectsController::effectsController() {	
 	const std::string fileExt3[4] = {"poof1.png", "poof2.png", "poof3.png", "poof4.png"};
 	for (int i = 0; i < 4; i++) {
 		puffTexture[i].loadFromFile(resourcePath() + fileExt3[i]);
@@ -193,7 +177,7 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
 
 //A function for adding a turret flash animation
 void effectsController::addTurretFlash(float x, float y) {
-	turretFlashes.emplace_back(turretFlashSprites, x, y);
+	turretFlashes.emplace_back(pTM->getTexture(TextureManager::Texture::turretFlash), x, y);
 }
 
 //A function for adding a turret shot effect
@@ -245,14 +229,7 @@ void effectsController::addScootShot(float x, float y, short dir, float playerPo
 
 //A function for adding a bullet
 void effectsController::addBullet(bool select, char sprIndex, float xPos, float yPos) {
-	if (select) {   //Horizontal case
-		bulletType1 bullet(bulletSprites[0], bulletSprites[2], sprIndex, xPos, yPos);
-		bullets.push_back(bullet);
-	}
-	else {  //Vertical case
-		bulletType1 bullet(bulletSprites[1], bulletSprites[2], sprIndex, xPos, yPos);
-			bullets.push_back(bullet);
-	}
+	bullets.emplace_back(pTM->getTexture(TextureManager::Texture::bullet), pTM->getTexture(TextureManager::Texture::whiteGlow), sprIndex, xPos, yPos);
 }
 
 void effectsController::addWarpEffect(float x, float y) {

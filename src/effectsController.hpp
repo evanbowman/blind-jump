@@ -39,13 +39,10 @@ private:
 	sf::Sprite blueFireGlowSpr;
 	sf::Sprite energyBeamSprites[6];
 	sf::Texture energyBeamTextures[6];
-	sf::Sprite turretFlashSprites[5];
-	sf::Texture turretFlashTextures[5];
 	sf::Sprite bubbleShotSpr[2];
 	sf::Texture bubbleShotTex[2];
 	sf::Sprite bulletSprites[3];
 	sf::Texture bulletTexture[2];
-	sf::Texture bulletGlow[1];
 	sf::Sprite puffSprites[4];
 	sf::Texture puffTexture[4];
 	sf::Texture exp32Texture[6];

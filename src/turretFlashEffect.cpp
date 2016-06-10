@@ -8,11 +8,8 @@
 
 #include "turretFlashEffect.hpp"
 
-turretFlashEffect::turretFlashEffect(sf::Sprite sprites[5], float x, float y) {
-	//Take all of the input sprites and save them for alter
-	for (int i = 0; i < 5; i++) {
-		flashSprites[i] = sprites[i];
-	}
+turretFlashEffect::turretFlashEffect(sf::Texture * pTxtr, float x, float y) {
+	spriteSheet.setTexture(pTxtr);
 	xPos = 0;
 	yPos = 0;
 	xInit = x;
@@ -22,9 +19,7 @@ turretFlashEffect::turretFlashEffect(sf::Sprite sprites[5], float x, float y) {
 	killFlag = false;
 	bool select = rand() % 2;
 	if (select) {
-		for (int i = 0; i < 5; i++) {
-			flashSprites[i].setScale(-1,-1);
-		}
+		spriteSheet.setScale(-1.f, 1.f);
 		yInit += 18;
 		xInit += 17;
 	}
@@ -42,12 +37,12 @@ void turretFlashEffect::update(float xOffset, float yOffset) {
 	}
 	xPos = xInit + xOffset;
 	yPos = yInit + 11 + yOffset;
+	spriteSheet.setPosition(xPos, yPos);
 }
 
 //A funtion to return the current sprite
-sf::Sprite & turretFlashEffect::getSprite() {
-	flashSprites[imageIndex].setPosition(xPos, yPos);
-	return flashSprites[imageIndex];
+const sf::Sprite & turretFlashEffect::getSprite() {
+	return spriteSheet[imageIndex];
 }
 
 float turretFlashEffect::getYpos() {

@@ -12,10 +12,12 @@
 
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
+#include "spriteSheet.hpp"
 
 class bulletType1 {
 private:
-	sf::Sprite bulletSprite[2];
+	SpriteSheet<16, 16> spriteSheet;
+	sf::Sprite glow;
 	char direction;
 	float xPos;
 	float yPos;
@@ -26,7 +28,7 @@ private:
 	sf::Clock clock;
 	
 public:
-	bulletType1(sf::Sprite s, sf::Sprite s2, char, float, float);
+	bulletType1(sf::Texture *, sf::Texture *, char, float, float);
 	const sf::Sprite & getSprite();
 	sf::Sprite* getGlow();
 	void update(float, float);

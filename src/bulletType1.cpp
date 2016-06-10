@@ -10,33 +10,35 @@
 
 #define MOVEMENT_RATE 0.45
 
-bulletType1::bulletType1(sf::Sprite s, sf::Sprite s2, char dir, float x, float y) {
+bulletType1::bulletType1(sf::Texture * pMainTxtr, sf::Texture * pGlowTxtr, char dir, float x, float y) {
 	//Initialize the starting x position to the player's x position
 	xPos = x;
 	yPos = y;
 	xInit = x;
 	yInit = y;
 	direction = dir;
-	bulletSprite[0] = s;
-	bulletSprite[1] = s2;
+	glow.setTexture(*pGlowTxtr);
+	spriteSheet.setTexture(pMainTxtr);
 	killFlag = 0;
 	clock.restart();
 	canPoof = true;
+	if (dir == 0 || dir == 1 || dir == 4 || dir == 5)
+		spriteSheet[1];
+	else
+		spriteSheet[0];
 }
 
 //A function to return the bullet sprite
 const sf::Sprite & bulletType1::getSprite() {
-	return bulletSprite[0];
+	return spriteSheet.getSprite();
 }
 
 sf::Sprite* bulletType1::getGlow() {
-	return &bulletSprite[1];
+	return &glow;
 }
 
 void bulletType1::update(float xOffset, float yOffset) {
 	switch (direction) {
-			//There's a lot of funny addition of numbers here. That's because the end of the gun sprite moves around based on which way the player faces,
-			// so each case needs to set a specific origin for the shot object.
 		case 0:
 			xPos = xInit + xOffset + 6;
 			yPos = yInit + 11 + yOffset + 18 + MOVEMENT_RATE * clock.getElapsedTime().asMilliseconds(); //'20 - duration' term grows with time, thus moving the bullet across the screen
@@ -71,13 +73,13 @@ void bulletType1::update(float xOffset, float yOffset) {
 			break;
 	}
 	//Now that we've done all of that legwork, actually set the sprite's position
-	bulletSprite[0].setPosition(xPos, yPos);
-	bulletSprite[1].setPosition(xPos - 16, yPos - 1);
+	spriteSheet.setPosition(xPos, yPos);
+	glow.setPosition(xPos - 16, yPos - 11);
 	if (clock.getElapsedTime().asMilliseconds() > 200) {
 		killFlag = true;
 	}
 	float offset = rand() % 20;
-	bulletSprite[1].setColor(sf::Color(230 + offset, 230 + offset, 230 + offset, 255));
+	glow.setColor(sf::Color(230 + offset, 230 + offset, 230 + offset, 255));
 }
 
 bool bulletType1::getKillFlag() {
