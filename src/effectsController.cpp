@@ -297,10 +297,6 @@ void effectsController::addPuff(float x, float y) {
 	puffs.emplace_back(puffSprites, x, y, 0, 0);
 }
 
-void effectsController::addHealthEffect(float x, float y) {
-	healthEffects.emplace_back(healthEffectSprites[0], x, y + 8);
-}
-
 void effectsController::addFireExplosion(float x, float y) {
 	fireExplosions.emplace_back(fireExplosionSpr, fireExplosionGlowSpr, x, y);
 }
@@ -401,7 +397,6 @@ void effectsController::draw(sf::RenderTexture& window, std::vector<std::tuple<s
 	
 	drawEffect(bigExplosions, gameObjects);
 	drawEffect(enemyShots, gameObjects);
-	drawEffect(healthEffects, gameObjects);
 }
 
 void effectsController::drawLower(sf::RenderTexture& window) {
@@ -432,7 +427,6 @@ void effectsController::clear() {
 	bigExplosions.clear();
 	warpEffects.clear();
 	enemyShots.clear();
-	healthEffects.clear();
 	turretShots.clear();
 	dasherShots.clear();
 	dodgeEffects.clear();

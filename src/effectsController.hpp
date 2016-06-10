@@ -93,7 +93,6 @@ private:
 	sf::Texture turretShotText[2];
 	sf::Sprite turretShotSpr[2];
 	std::vector<Explosion32effect> bigExplosions;
-	std::vector<HealthEffect> healthEffects;
 	std::vector<DasherShot> dasherShots;
 	std::vector<sf::Sprite*> glowSprs;
 	std::vector<sf::Sprite*> glowSprs2;
@@ -114,9 +113,7 @@ public:
 	void addScootShot(float, float, short, float, float);
 	void addWarpEffect(float, float);
 	void addFireExplosion(float, float);
-	void addBlueExplosion(float, float);
 	void addExplosion(float, float);
-	void addHealthEffect(float, float);
 	void addSmallExplosion(float, float);
 	void addHearts(float, float);
 	void addCoins(float, float);
