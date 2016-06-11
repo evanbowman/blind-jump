@@ -126,6 +126,9 @@ bool TextureManager::load() {
 
 	if (!loadTexture("poof.png", Texture::poof, textures))
 		return false;
+
+	if (!loadTexture("warpEffect.png", Texture::warpEffect, textures))
+		return false;
 	
 	return true;
 }

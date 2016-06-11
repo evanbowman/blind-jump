@@ -151,7 +151,7 @@ soundController.o: soundController.cpp soundController.hpp $(RSP)
 teleporter.o: Teleporter.hpp Teleporter.cpp detailParent.hpp spriteSheet.hpp
 	$(CC) Teleporter.cpp $(CFLAGS) -c -o teleporter.o
 
-teleporterSmoke.o: teleporterSmoke.cpp teleporterSmoke.hpp 
+teleporterSmoke.o: teleporterSmoke.cpp teleporterSmoke.hpp spriteSheet.hpp
 	$(CC) teleporterSmoke.cpp $(CFLAGS) -c -o teleporterSmoke.o
 
 textureManager.o: $(RSP) textureManager.cpp textureManager.hpp textureEnum.hpp

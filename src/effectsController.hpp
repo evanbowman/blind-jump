@@ -35,14 +35,8 @@ class ScreenShakeController;
 
 class effectsController {
 private:
-	sf::Texture fireExplosionGlowTxtr;
-	sf::Sprite blueFireGlowSpr;
 	sf::Sprite energyBeamSprites[6];
 	sf::Texture energyBeamTextures[6];
-	sf::Texture exp32Texture[6];
-	sf::Sprite exp32Sprites[6];
-	sf::Sprite warpEffectSprites[6];
-	sf::Texture warpEffectTextures[6];
 	TextureManager * pTM;
 	std::vector<SmallExplosion> smallExplosions;
 	std::vector<EnergyBeam> energyBeams;

@@ -39,7 +39,8 @@ enum class Texture {
 			turretFlash,
 			whiteGlow,
 			bullet,
-			poof
+			poof,
+			warpEffect
 			};
 
 #endif

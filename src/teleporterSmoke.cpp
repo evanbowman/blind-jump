@@ -10,15 +10,12 @@
 
 #define ANIMATION_LENGTH 6
 
-TeleporterSmoke::TeleporterSmoke(sf::Sprite inputSprites[6], float x, float y) {
+TeleporterSmoke::TeleporterSmoke(sf::Texture * pTxtr, float x, float y) {
 	xPos = x;
 	xInit = x;
 	yPos = y;
 	yInit = y;
-	for (int i = 0; i < 6; i++) {
-		effectSprites[i] = inputSprites[i];
-		effectSprites[i].setColor(sf::Color(255, 255, 255));
-	}
+	spriteSheet.setTexture(pTxtr);
 	// Initialize the current frame of the animation to the first one
 	frameIndex = 0;
 	frameTimer = 0;
@@ -33,6 +30,7 @@ void TeleporterSmoke::update(float xOffset, float yOffset, sf::Time & elapsedTim
 	// Drift up
 	yInit -= (elapsedTime.asMilliseconds() / 17.6) * 0.6;
 	frameTimer += elapsedTime.asMilliseconds();
+	spriteSheet.setPosition(xPos, yPos);
 }
 
 const sf::Sprite & TeleporterSmoke::getSprite() {
@@ -52,10 +50,7 @@ const sf::Sprite & TeleporterSmoke::getSprite() {
 			killFlag = true;
 		}
 	}
-
-	effectSprites[frameIndex].setPosition(xPos, yPos);
-	// Return the desired frame:
-	return effectSprites[frameIndex];
+	return spriteSheet[frameIndex];
 }
 
 bool TeleporterSmoke::getKillFlag() {

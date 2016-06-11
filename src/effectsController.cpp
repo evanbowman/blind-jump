@@ -10,13 +10,7 @@
 #include "screenShakeController.hpp"
 
 effectsController::effectsController() {		
-	const std::string fileExt4[6] = {"exp32_1.png", "exp32_2.png", "exp32_3.png", "exp32_4.png", "exp32_5.png", "exp32_6.png"};
-	const std::string fileExt5[6] = {"teleporterSmoke1.png", "teleporterSmoke2.png", "teleporterSmoke3.png", "teleporterSmoke4.png", "teleporterSmoke5.png", "teleporterSmoke6.png"};
 	for (int i = 0; i < 6; i++) {
-		warpEffectTextures[i].loadFromFile(resourcePath() + fileExt5[i]);
-		warpEffectSprites[i].setTexture(warpEffectTextures[i]);
-		exp32Texture[i].loadFromFile(resourcePath() + fileExt4[i]);
-		exp32Sprites[i].setTexture(exp32Texture[i]);
 		energyBeamTextures[i].loadFromFile(resourcePath() + "beamStart.png", sf::IntRect(i * 64, 0, 64, 32));
 		energyBeamSprites[i].setTexture(energyBeamTextures[i]);
 	}
@@ -105,7 +99,7 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
 			if (it->getKillFlag()) {
 				// Don't always want to add in additional effect where it could make the screen look cluttered, so check a condition first
 				if (it->checkCanPoof()) {
-					addPuff(it->getXpos() - xOffset, it->getYpos());
+					addPuff(it->getXpos() - xOffset, it->getYpos()- yOffset);
 				}
 				//Erase the bullet
 				it = bullets.erase(it);
@@ -202,7 +196,7 @@ void effectsController::addBullet(bool select, char sprIndex, float xPos, float 
 }
 
 void effectsController::addWarpEffect(float x, float y) {
-	warpEffects.emplace_back(warpEffectSprites, x, y);
+	warpEffects.emplace_back(pTM->getTexture(TextureManager::Texture::warpEffect), x, y);
 }
 
 template <typename T>
