@@ -8,47 +8,29 @@
 
 #include "turretFlashEffect.hpp"
 
-turretFlashEffect::turretFlashEffect(sf::Texture * pTxtr, float x, float y) {
+turretFlashEffect::turretFlashEffect(sf::Texture * pTxtr, float x, float y) : Effect(x, y) {
 	spriteSheet.setTexture(pTxtr);
-	xPos = 0;
-	yPos = 0;
-	xInit = x;
-	yInit = y;
-	imageIndex = 0;
-	clock.restart();
-	killFlag = false;
 	bool select = rand() % 2;
 	if (select) {
 		spriteSheet.setScale(-1.f, 1.f);
-		yInit += 18;
 		xInit += 17;
 	}
 }
 
-//Update the position of the image
-void turretFlashEffect::update(float xOffset, float yOffset) {
-	if (clock.getElapsedTime().asMilliseconds() > 40) {
-		imageIndex += 1;
-		if (imageIndex > 4) {
+void turretFlashEffect::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
+	timer += elapsedTime.asMilliseconds();
+	if (timer > 40) {
+		timer -= 40;
+		frameIndex += 1;
+		if (frameIndex > 4) {
 			killFlag = true;
-			imageIndex = 4;
-		}
-		clock.restart();
+			frameIndex = 4;
+		};
 	}
-	xPos = xInit + xOffset;
 	yPos = yInit + 11 + yOffset;
-	spriteSheet.setPosition(xPos, yPos);
+	spriteSheet.setPosition(xInit + xOffset, yPos);
 }
 
-//A funtion to return the current sprite
 const sf::Sprite & turretFlashEffect::getSprite() {
-	return spriteSheet[imageIndex];
-}
-
-float turretFlashEffect::getYpos() {
-	return yPos;
-}
-
-bool turretFlashEffect::getKillFlag() {
-	return killFlag;
+	return spriteSheet[frameIndex];
 }

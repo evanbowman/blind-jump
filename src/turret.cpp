@@ -128,17 +128,9 @@ void turret::updateShots(effectsController& ef, FontController& fonts) {
 				shotCountdown = 8;
 			}
 			else {
-				shotCountdown = 40;
+				shotCountdown = 60;
 				shotsFired = 0;
 			}
-		}
-		if (shotCountdown == 20) {
-			//// Only higher level turrets do this?
-			//ef.addTurretFlash(xInit, yInit);
-			//ef.addEnemyShot(xInit, yInit, angleFunction(xPos + 18, yPos, playerPosX, playerPosY) + 15);
-			//ef.addEnemyShot(xInit, yInit, angleFunction(xPos + 18, yPos, playerPosX, playerPosY) + 35);
-			//ef.addEnemyShot(xInit, yInit, angleFunction(xPos + 18, yPos, playerPosX, playerPosY) - 15);
-			//ef.addEnemyShot(xInit, yInit, angleFunction(xPos + 18, yPos, playerPosX, playerPosY) - 35);
 		}
 		
 	//Check collisions with player's shots, but only if the shot vectors aren't empty

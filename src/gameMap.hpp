@@ -93,7 +93,6 @@ class GameMap {
 	
 	// Create a vector of pairs with enemy index and placement probability for enemy creation
 	std::vector<std::pair<int, int>> enemySelectVec;
-	int idealLvs[4] = {4/*Scoot*/, 5/*Critter Swarms*/, 28/*Dasher*/, 34/*Turrets*/};
 	
 	// Stack of sprites with y-position and height, for z-ordering
 	std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> gameObjects;
@@ -114,7 +113,6 @@ public:
 	void Reset();
 	bool getTeleporterCond();
 	std::vector<std::pair<int, int>>* getEnemySelectVec();
-	int* getIdealLvs();
 	int getLevel();
  
 	

@@ -50,28 +50,7 @@ void updateVectorGlow(std::vector<T>& vec, float xOffset, float yOffset, std::ve
 
 //This function updates the positions of all of the effect objects whenever called
 void effectsController::update(float xOffset, float yOffset, ScreenShakeController* scrn, sf::Time & elapsedTime) {
-	// Begin by clearing out the outdated glow sprites for the effects
-	//glowSprs.clear();
-	//Only attempt to loop through the vector and update or delete elements if the vector is not empty
-	if (!turretFlashes.empty()) {
-		for (auto & element : turretFlashes) {
-			//Update the elements position and decrement it's timeout variable
-			element.update(xOffset, yOffset);
-		}
-		//Loop through based on index...
-		for (auto it = turretFlashes.begin(); it != turretFlashes.end();) {
-			//If the timeout for an element has reached 0
-			if (it->getKillFlag()) {
-				//Erase it from the vector
-				it = turretFlashes.erase(it);
-			}
-			else {
-				//Go to the next element of the vector
-				++it;
-			}
-		}
-	}
-	
+	updateVector(turretFlashes, xOffset, yOffset, elapsedTime);
 	updateVectorGlow(smallExplosions, xOffset, yOffset, glowSprs, elapsedTime);
 	updateVectorGlow(hearts, xOffset, yOffset, glowSprs, elapsedTime);
 	

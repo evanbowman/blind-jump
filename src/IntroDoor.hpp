@@ -23,11 +23,11 @@ class IntroDoor : public detailParent {
 private:
 	SpriteSheet<200, 95> doorSheet;
 	uint8_t frameIndex;
-	char frameRate;
+	int32_t timer;
 	State state;
 	
 public:
-	void update(float, float, InputController * pInput, ScreenShakeController * pscr);
+	void update(float, float, InputController * pInput, ScreenShakeController * pscr, const sf::Time & elapsedTime);
 	IntroDoor(float, float, sf::Texture *, int, float, float);
 	sf::Sprite* getSprite();
 };

@@ -11,10 +11,16 @@
 #include "gameMap.hpp"
 #include "enemyCreationFunctions.hpp"
 #include <cmath>
+#include <array>
 
-int initEnemies(GameMap* gm) {
-	// Store local references to expected frequently accessed
-	int * idealLevels = gm->getIdealLvs();
+int initEnemies(GameMap * gm) {
+	constexpr static std::array<int, 4> targetLevel = {{
+	    4   /*Scoot*/,
+		5   /*Critter*/,
+		20  /*Dasher*/,
+		28  /*Turrets*/
+	}};
+	
 	int currentLevel = gm->getLevel();
 	// Count sum of energy values for all enemies, used in health station cost calculations
 	int count = 0;
@@ -25,23 +31,23 @@ int initEnemies(GameMap* gm) {
 		case 1:
 			// push new enemies to the enemy creation vector
 			scoot.first = 1;
-			scoot.second = abs(currentLevel - idealLevels[0]);
+			scoot.second = abs(currentLevel - targetLevel[0]);
 			pVec->push_back(scoot);
 			critter.first = 1;
-			critter.second = abs(currentLevel - idealLevels[1]);
+			critter.second = abs(currentLevel - targetLevel[1]);
 			pVec->push_back(critter);
 			break;
 			
 			
 		case 2:
 			dasher.first = 2;
-			dasher.second = abs(currentLevel - idealLevels[2]);
+			dasher.second = abs(currentLevel - targetLevel[2]);
 			pVec->push_back(dasher);
 			break;
 			
 		case 4:
 			turret.first = 3;
-			turret.second = abs(currentLevel - idealLevels[3]);
+			turret.second = abs(currentLevel - targetLevel[3]);
 			pVec->push_back(turret);
 			break;
 			
@@ -55,23 +61,21 @@ int initEnemies(GameMap* gm) {
 	int collector = 0;
 	int diff;
 	// Heap allocation for interval array, where the length of each interval represents the weight of each enemy
-	int* intervals = new int[enemyVecLen];
+	int * intervals = new int[enemyVecLen];
 	// First loop through all enemies and update their probability values based on current level
 	for (size_t i = 0; i < enemyVecLen; i++) {
 		// Set the weight to 100 divided by the difference between the current level and the ideal level
 		// Max function to prevent divide by 0
-		diff = (100 + currentLevel) / std::max(abs(currentLevel - idealLevels[i]), 1);
+		diff = (100 + currentLevel) / std::max(abs(currentLevel - targetLevel[i]), 1);
 		(*pVec)[i].second = diff;
 		collector += diff;
 		intervals[i] = collector;
 	}
-	
-	// Now it's time to actually place the enemies on the map based on weighted values
-	// Slowly work up to the max number of enemies on the map
-	// Normalized level is for the difficulty curve, so that fewer enemies are placed following a boss battle
-	int divisibility = static_cast<int>(floor(static_cast<float>(currentLevel) / 7.f));
-	int normalizedLevel = (currentLevel < 8) ? currentLevel : currentLevel - 7 * divisibility;
-	int iters = divisibility * 2 + pow(normalizedLevel, 1.2);
+
+	// int divisibility = static_cast<int>(floor(static_cast<float>(currentLevel) / 7.f));
+	// int normalizedLevel = (currentLevel < 8) ? currentLevel : currentLevel - 7 * divisibility;
+	// int iters = divisibility * 2 + pow(normalizedLevel, 1.2);
+	int iters = pow(currentLevel, 1.1f);
 	if (iters > 15) {
 		iters = 15;
 	}

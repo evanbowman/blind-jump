@@ -22,7 +22,7 @@ turretShot::turretShot(sf::Texture * pMainTxtr, sf::Texture * pGlowTxtr, float x
 	direction = (dir - 270 + diff) * (3.14 / 180);	 // I added 270 previously to get the sprite to face in the right direction, so subract it
 												//back out and convert back to radians
 	killFlag = false;
-	scale = 3.8;
+	scale = 4.4;
 	frameIndex = 0;
 	timer = 0;
 	animationTimer = 0;

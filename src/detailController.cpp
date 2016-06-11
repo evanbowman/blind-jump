@@ -210,29 +210,21 @@ void detailController::update(float xOffset, float yOffset, effectsController& e
 		}
 	}
 	
-	if (!rocks.empty()) {
-		for (auto & element : rocks) {
+	if (!rocks.empty())
+		for (auto & element : rocks)
 			element.update(xOffset, yOffset);
-		}
-	}
 	
-	if (!doors.empty()) {
-		for (auto & element : doors) {
-			element.update(xOffset, yOffset, pInput, pscr);
-		}
-	}
+	if (!doors.empty())
+		for (auto & element : doors)
+			element.update(xOffset, yOffset, pInput, pscr, elapsedTime);
 	
-	if (!misc32x26.empty()) {
-		for (auto & element : misc32x26) {
+	if (!misc32x26.empty())
+		for (auto & element : misc32x26)
 			element.update(xOffset, yOffset);
-		}
-	}
 	
-	if (!damagedRobots.empty()) {
-		for (auto & element : damagedRobots) {
+	if (!damagedRobots.empty())
+		for (auto & element : damagedRobots)
 			element.update(xOffset, yOffset);
-		}
-	}
 }
 
 void detailController::killTeleporter() {

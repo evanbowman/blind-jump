@@ -10,7 +10,7 @@ CFLAGS = -O2 -std=c++11 -Wall -Werror
 #LFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 LDFLAGS = -lsfml-window -lsfml-graphics -lsfml-system -lsfml-audio
 EXENAME = BlindJump
-OBJECTS = aStar.o backgroundHandler.o bulletType1.o critter.o damagedRobot.o dasher.o dasherShot.o dashSmoke.o detailController.o detailParent.o drawPixels.o effectsController.o enemyController.o enemyCreationFunctions.o enemyParent.o enemyPlacementFn.o enemyShot.o energyBeam.o explosion32effect.o FireExplosion.o fontController.o generalDetail.o gameMap.o GradientCircle.o gun.o healthEffect.o heavyBot.o initLoot.o initMapVectors.o inputController.o IntroDoor.o lampLight.o main.o mappingFunctions.o player.o playerCollisionFunctions.o Powerup.o ResourcePath.o rock.o scoot.o screenShakeController.o shotPuff.o smallExplosion.o soundController.o teleporter.o teleporterSmoke.o textureManager.o  tileController.o treasureChest.o turret.o turretFlashEffect.o turretShot.o userInterface.o wall.o wallinpath.o
+OBJECTS = aStar.o backgroundHandler.o bulletType1.o critter.o damagedRobot.o dasher.o dasherShot.o dashSmoke.o detailController.o detailParent.o drawPixels.o effect.o  effectsController.o enemyController.o enemyCreationFunctions.o enemyParent.o enemyPlacementFn.o enemyShot.o energyBeam.o explosion32effect.o FireExplosion.o fontController.o generalDetail.o gameMap.o GradientCircle.o gun.o healthEffect.o heavyBot.o initLoot.o initMapVectors.o inputController.o IntroDoor.o lampLight.o main.o mappingFunctions.o player.o playerCollisionFunctions.o Powerup.o ResourcePath.o rock.o scoot.o screenShakeController.o shotPuff.o smallExplosion.o soundController.o teleporter.o teleporterSmoke.o textureManager.o  tileController.o treasureChest.o turret.o turretFlashEffect.o turretShot.o userInterface.o wall.o wallinpath.o
 RSP = ResourcePath.hpp ResourcePath.cpp
 
 all: $(OBJECTS)
@@ -48,6 +48,9 @@ detailParent.o: detailParent.hpp detailParent.cpp
 
 drawPixels.o: drawPixels.hpp drawPixels.cpp
 	$(CC) drawPixels.cpp -Ofast -std=c++11 -c -o drawPixels.o
+
+effect.o: Effect.cpp Effect.hpp
+	$(CC) Effect.cpp -std=c++11 -O2 -c -o effect.o
 
 effectsController.o: effectsController.cpp effectsController.hpp screenShakeController.hpp turretFlashEffect.hpp bulletType1.hpp shotPuff.hpp turretShot.hpp explosion32effect.hpp teleporterSmoke.hpp enemyShot.hpp dasherShot.hpp healthEffect.hpp fontController.hpp energyBeam.hpp dashSmoke.hpp FireExplosion.hpp smallExplosion.hpp Powerup.hpp RenderType.hpp textureManager.hpp
 	$(CC) effectsController.cpp $(CFLAGS) -c -o effectsController.o
@@ -142,7 +145,7 @@ screenShakeController.o: screenShakeController.cpp screenShakeController.hpp pla
 shotPuff.o: shotPuff.cpp shotPuff.hpp spriteSheet.hpp
 	$(CC) shotPuff.cpp $(CFLAGS) -c -o shotPuff.o
 
-smallExplosion.o: smallExplosion.cpp smallExplosion.hpp spriteSheet.hpp
+smallExplosion.o: smallExplosion.cpp smallExplosion.hpp spriteSheet.hpp Effect.hpp
 	$(CC) smallExplosion.cpp $(CFLAGS) -c -o smallExplosion.o
 
 soundController.o: soundController.cpp soundController.hpp $(RSP)
@@ -166,7 +169,7 @@ treasureChest.o: treasureChest.cpp treasureChest.hpp detailParent.hpp spriteShee
 turret.o: turret.cpp turret.hpp angleFunction.hpp turret.hpp effectsController.hpp
 	$(CC) turret.cpp $(CFLAGS) -c -o turret.o
 
-turretFlashEffect.o: turretFlashEffect.cpp turretFlashEffect.hpp spriteSheet.hpp
+turretFlashEffect.o: turretFlashEffect.cpp turretFlashEffect.hpp spriteSheet.hpp Effect.hpp
 	$(CC) turretFlashEffect.cpp $(CFLAGS) -c -o turretFlashEffect.o
 
 turretShot.o: turretShot.cpp turretShot.hpp spriteSheet.hpp

@@ -712,10 +712,6 @@ std::vector<std::pair<int, int>>* GameMap::getEnemySelectVec() {
 	return &enemySelectVec;
 }
 
-int * GameMap::getIdealLvs() {
-	return idealLvs;
-}
-
 int GameMap::getLevel() {
 	return level;
 }

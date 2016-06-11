@@ -9,28 +9,29 @@
 #include "IntroDoor.hpp"
 #include <cmath>
 #include "screenShakeController.hpp"
-
+#include <iostream>
 
 IntroDoor::IntroDoor(float xStart, float yStart, sf::Texture * inpTxtr, int len, float width, float height) : detailParent(xStart, yStart, len, width / 2, height / 2) {
 	doorSheet.setTexture(inpTxtr);
 	frameIndex = 0;
-	frameRate = 3;
+	timer = 0;
 	state = State::dormant;
 }
 
-void IntroDoor::update(float xOffset, float yOffset, InputController * pInput, ScreenShakeController * pscr) {
+void IntroDoor::update(float xOffset, float yOffset, InputController * pInput, ScreenShakeController * pscr, const sf::Time & elapsedTime) {
 	switch (state) {
 		case State::dormant:
 			// If the player presses the button by the door, go to the opening state
-			if (pInput->zPressed() && fabsf(windowCenterX - (xPos + 130)) < 6 && fabsf(windowCenterY - (yPos + 70)) < 10) {
+			if (pInput->zPressed() && fabsf(windowCenterX - (xOffset + xInit + 130)) < 6 && fabsf(windowCenterY - (yPos + 70)) < 10) {
 				state = State::opening;
 			}
 			break;
 			
 		case State::opening:
-			if (--frameRate == 0) {
+			timer += elapsedTime.asMilliseconds();
+			if (timer > 52) {
+				timer -= 52;
 				frameIndex++;
-				frameRate = 3;
 				if (frameIndex > 3) {
 					frameIndex = 3;
 					state = State::opened;
@@ -42,14 +43,10 @@ void IntroDoor::update(float xOffset, float yOffset, InputController * pInput, S
 		case State::opened:
 			// Does nothing
 			break;
-			
-		default:
-			break;
 	}
-	
-	xPos = xOffset + xInit;
+    
 	yPos = yOffset + yInit;
-	doorSheet.setPosition(xPos, yPos);
+	doorSheet.setPosition(xOffset + xInit, yPos);
 }
 
 sf::Sprite * IntroDoor::getSprite() {
