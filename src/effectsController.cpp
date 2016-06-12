@@ -9,12 +9,7 @@
 #include "effectsController.hpp"
 #include "screenShakeController.hpp"
 
-effectsController::effectsController() {		
-	for (int i = 0; i < 6; i++) {
-		energyBeamTextures[i].loadFromFile(resourcePath() + "beamStart.png", sf::IntRect(i * 64, 0, 64, 32));
-		energyBeamSprites[i].setTexture(energyBeamTextures[i]);
-	}
-}
+effectsController::effectsController() {}
 
 // In the process of shortening the code with template functions
 template<typename T>
@@ -50,35 +45,13 @@ void updateVectorGlow(std::vector<T>& vec, float xOffset, float yOffset, std::ve
 
 //This function updates the positions of all of the effect objects whenever called
 void effectsController::update(float xOffset, float yOffset, ScreenShakeController* scrn, sf::Time & elapsedTime) {
-	updateVector(turretFlashes, xOffset, yOffset, elapsedTime);
-	updateVectorGlow(smallExplosions, xOffset, yOffset, glowSprs, elapsedTime);
-	updateVectorGlow(hearts, xOffset, yOffset, glowSprs, elapsedTime);
-	
-	if (!coins.empty()) {
-		for (typename std::vector<Powerup>::iterator it = coins.begin(); it != coins.end();) {
-			it->update(xOffset, yOffset, elapsedTime);
-			glowSprs.push_back(it->getGlow());
-			if (it->getKillFlag()) {
-				it = coins.erase(it);
-			}
-			else {
-				++it;
-			}
-		}
-	}
-	
-	updateVectorGlow(turretShots, xOffset, yOffset, glowSprs, elapsedTime);
-	updateVectorGlow(dasherShots, xOffset, yOffset, glowSprs, elapsedTime);
-	updateVectorGlow(enemyShots, xOffset, yOffset, glowSprs, elapsedTime);
-	
-	//Only attempt to loop through the vector and update or delete elements if the vector is not empty
 	if (!bullets.empty()) {
 		for (std::vector<bulletType1>::iterator it = bullets.begin(); it != bullets.end();) {
 			//If the duration has reached 0 or the object's kill flag is high
 			if (it->getKillFlag()) {
 				// Don't always want to add in additional effect where it could make the screen look cluttered, so check a condition first
 				if (it->checkCanPoof()) {
-					addPuff(it->getXpos() - xOffset, it->getYpos()- yOffset);
+					addPuff(it->getXpos() - xOffset, it->getYpos() - yOffset);
 				}
 				//Erase the bullet
 				it = bullets.erase(it);
@@ -91,30 +64,17 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
 			}
 		}
 	}
-	
+
+	updateVector(turretFlashes, xOffset, yOffset, elapsedTime);
+	updateVectorGlow(smallExplosions, xOffset, yOffset, glowSprs, elapsedTime);
+	updateVectorGlow(hearts, xOffset, yOffset, glowSprs, elapsedTime);
+	updateVectorGlow(turretShots, xOffset, yOffset, glowSprs, elapsedTime);
+	updateVectorGlow(dasherShots, xOffset, yOffset, glowSprs, elapsedTime);
+	updateVectorGlow(enemyShots, xOffset, yOffset, glowSprs, elapsedTime);
 	updateVector(puffs, xOffset, yOffset, elapsedTime);
-	
-	if (!energyBeams.empty()) {
-		for (auto it = energyBeams.begin(); it != energyBeams.end();) {
-			if (it->getKillFlag()) {
-				it = energyBeams.erase(it);
-			}
-			
-			else {
-				it->update(xOffset, yOffset);
-				if (it->isValid()) {
-					//addBlueExplosion(it->getX2() - xOffset, it->getY2() - yOffset);
-					it->invalidate();
-					scrn->shake();
-				}
-				++it;
-			}
-		}
-	}
-	
 	updateVectorGlow(fireExplosions, xOffset, yOffset, glowSprs, elapsedTime);
-	
 	updateVector(warpEffects, xOffset, yOffset, elapsedTime);
+	updateVectorGlow(coins, xOffset, yOffset, glowSprs, elapsedTime);
 }
 
 //A function for adding a turret flash animation
@@ -147,7 +107,7 @@ void effectsController::addDasherShot(float x, float y, short dir) {
 
 // A function for adding puffs
 void effectsController::addPuff(float x, float y) {
-	puffs.emplace_back(pTM->getTexture(TextureManager::Texture::poof), x, y, 0, 0);
+	puffs.emplace_back(pTM->getTexture(TextureManager::Texture::poof), x, y);
 }
 
 void effectsController::addFireExplosion(float x, float y) {
@@ -156,11 +116,6 @@ void effectsController::addFireExplosion(float x, float y) {
 
 void effectsController::addSmallExplosion(float x, float y) {
     smallExplosions.emplace_back(pTM->getTexture(TextureManager::Texture::smallExplosion), pTM->getTexture(TextureManager::Texture::fireExplosionGlow), x, y);
-}
-
-void effectsController::addEnergyBeam(float x, float y, float dir, float length) {
-	EnergyBeam en(x, y, energyBeamSprites, dir, length);
-	energyBeams.push_back(en);
 }
 
 void effectsController::addScootShot(float x, float y, short dir, float playerPosX, float playerPosY) {
@@ -212,12 +167,6 @@ void effectsController::draw(sf::RenderTexture& window, std::vector<std::tuple<s
 	drawEffect(fireExplosions, gameObjects);
 	drawEffect(smallExplosions, gameObjects);
 	
-	if (!energyBeams.empty()) {
-		for (auto element : energyBeams) {
-			element.draw(window);
-		}
-	}
-	
 	if (!warpEffects.empty()) {
 		for (auto & element : warpEffects) {
 			if (element.getDrawOrder() == 0) {
@@ -258,7 +207,6 @@ void effectsController::clear() {
 	enemyShots.clear();
 	turretShots.clear();
 	dasherShots.clear();
-	energyBeams.clear();
 	smallExplosions.clear();
 	fireExplosions.clear();
 	hearts.clear();

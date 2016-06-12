@@ -53,7 +53,7 @@ Dasher::Dasher(sf::Sprite* sprs) : EnemyParent(sprs) {
 	hspeed = 0;
 	vspeed = 0;
 	blurCountDown = 3;
-	health = 8;
+	health = 5;
 	deathSeq = false;
 	timer = 0;
 }

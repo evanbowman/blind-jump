@@ -14,23 +14,16 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include "spriteSheet.hpp"
+#include "Effect.hpp"
 
-class shotPuff {
-public:
-	shotPuff(sf::Texture *, float, float, char, int);
-	float xPos;
-	float yPos;
-	float xInit;
-	float yInit;
-	void update(float, float, sf::Time &);
-	const sf::Sprite & getSprite();
-	bool getKillFlag();
-	float getYpos();
-	
+class shotPuff : public Effect {
 private:
-	int frameIndex;
-	int32_t frameTimer;
 	SpriteSheet<16, 16> spriteSheet;
-	bool killFlag;
+
+public:
+	shotPuff(sf::Texture *, float, float);
+	virtual void update(float, float, const sf::Time &);
+	virtual const sf::Sprite & getSprite();
+	
 };
 #endif /* shotPuff_hpp */

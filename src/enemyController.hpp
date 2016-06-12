@@ -18,7 +18,6 @@
 #include "scoot.hpp"
 #include "dasher.hpp"
 #include "critter.hpp"
-#include "heavyBot.hpp"
 #include "RenderType.hpp"
 
 class ScreenShakeController;
@@ -27,8 +26,6 @@ class tileController;
 
 class enemyController {
 private:
-	sf::Sprite heavyBotSprites[17];
-	sf::Texture heavyBotTextures[17];
 	sf::Sprite turretSprites[10];
 	sf::Texture turretTextures[10];
 	// A vector to hold turret objects
@@ -46,7 +43,6 @@ private:
 	std::vector<Scoot> scoots;
 	std::vector<Dasher> dashers;
 	std::vector<Critter> critters;
-	std::vector<HeavyBot> heavyBots;
 	float windowW;
 	float windowH;
 	
@@ -54,15 +50,13 @@ public:
 	enemyController();
 	void updateEnemies(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&, float, float, effectsController&, std::vector<wall>, bool, detailController*, tileController*, ScreenShakeController*, FontController&, sf::Time &);
 	void clear();
-	sf::Sprite* getTurretSprites();
-	sf::Sprite* getGuardianSprites();
-	sf::Sprite* getScootSprites();
-	sf::Sprite* getDasherSprites();
-	sf::Sprite* getHeavyBotSprites();
-	sf::Sprite* getChaserSprites();
+	sf::Sprite * getTurretSprites();
+	sf::Sprite * getGuardianSprites();
+	sf::Sprite * getScootSprites();
+	sf::Sprite * getDasherSprites();
+	sf::Sprite * getChaserSprites();
 	void addTurret(turret);
 	void addScoot(Scoot);
-	void addHeavyBot(HeavyBot);
 	void addDasher(Dasher);
 	void addCritter(Critter);
 	void setWindowSize(float, float);

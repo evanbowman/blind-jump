@@ -43,11 +43,6 @@ enemyController::enemyController() {
 		chaserTextures[i].loadFromFile(resourcePath() + "critterSheet.png", sf::IntRect(i * 18, 0, 18, 18));
 		chaserSprites[i].setTexture(chaserTextures[i]);
 	}
-	
-	for (auto i = 0; i < 17; i++) {
-		heavyBotTextures[i].loadFromFile(resourcePath() + "bulkbot.png", sf::IntRect(i * 40, 0, 40, 32));
-		heavyBotSprites[i].setTexture(heavyBotTextures[i]);
-	}
 }
 
 //A function to draw the enemies' current sprites to the screen
@@ -131,40 +126,6 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
 					// If outside the window, update the enemy's position, but don't move it, draw it, check collisions, etc.
 					it->softUpdate(x, y);
 				}
-				
-				++it;
-			}
-		}
-	}
-	
-	if (!heavyBots.empty()) {
-		for (auto it = heavyBots.begin(); it != heavyBots.end();) {
-			if (it->getKillFlag()) {
-				scrn->rumble();
-				it = heavyBots.erase(it);
-			}
-			
-			else {
-				if (enabled) {
-					it->update(x, y, ef, fonts, pTiles, elapsedTime);
-				}
-				// Get the enemy's shadow
-				std::tuple<sf::Sprite, float, Rendertype, float> shadow;
-				std::get<0>(shadow) = *it->getShadow();
-				gameShadows.push_back(shadow);
-				
-				std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
-				std::get<0>(tSpr) = *it->getSprite();
-				std::get<1>(tSpr) = it->getYpos() - 16;
-				// If the enemy should be colored, let the rendering code know to pass it through a fragment shader
-				if (it->colored()) {
-					std::get<2>(tSpr) = Rendertype::shadeWhite;
-					std::get<3>(tSpr) = it->colorAmount;
-				} else {
-					std::get<2>(tSpr) = Rendertype::shadeDefault;
-				}
-				
-				gameObjects.push_back(tSpr);
 				
 				++it;
 			}
@@ -290,7 +251,6 @@ void enemyController::clear() {
 	scoots.clear();
 	dashers.clear();
 	critters.clear();
-	heavyBots.clear();
 }
 
 sf::Sprite* enemyController::getTurretSprites() {
@@ -309,16 +269,8 @@ sf::Sprite* enemyController::getScootSprites() {
 	return scootSprites;
 }
 
-sf::Sprite* enemyController::getHeavyBotSprites() {
-	return heavyBotSprites;
-}
-
 sf::Sprite* enemyController::getDasherSprites() {
 	return dasherSprite;
-}
-
-void enemyController::addHeavyBot(HeavyBot h) {
-	heavyBots.push_back(h);
 }
 
 void enemyController::addTurret(turret t) {

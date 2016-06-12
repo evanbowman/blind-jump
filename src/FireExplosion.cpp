@@ -8,31 +8,25 @@
 
 #include "FireExplosion.hpp"
 
-FireExplosion::FireExplosion(sf::Texture * pMainTxtr, sf::Texture * pGlowTxtr, float x, float y) {
+FireExplosion::FireExplosion(sf::Texture * pMainTxtr, sf::Texture * pGlowTxtr, float x, float y) : Effect(x, y) {
 	spriteSheet.setTexture(pMainTxtr);
 	spriteSheet.setOrigin(29, 25);
 	glow.setTexture(*pGlowTxtr);
 	glow.setColor(sf::Color(240, 240, 240));
-	xInit = x;
-	yInit = y;
-	killFlag = false;
-	frameIndex = 0;
-	animationTimer = 0;
-	valid = true;
 }
 
-void FireExplosion::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
-	xPos = xInit + xOffset;
+void FireExplosion::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
 	yPos = yInit + yOffset;
-	animationTimer += elapsedTime.asMilliseconds();
-	if (animationTimer > 70) {
-		animationTimer -= 70;
+	timer += elapsedTime.asMilliseconds();
+	if (timer > 70) {
+		timer -= 70;
 		frameIndex++;
 		if (frameIndex > 8) {
 			frameIndex = 8;
 			killFlag = true;
 		}
 	}
+	
 	sf::Color c = glow.getColor();
 	if (c.r > 8) {
 		c.r -= 8;
@@ -40,8 +34,9 @@ void FireExplosion::update(float xOffset, float yOffset, sf::Time & elapsedTime)
 		c.b -= 8;
 		glow.setColor(c);
 	}
-	spriteSheet.setPosition(xPos, yPos);
-	glow.setPosition(xPos - 225, yPos - 225);
+	
+	spriteSheet.setPosition(xInit + xOffset, yPos);
+	glow.setPosition(xInit + xOffset - 225, yPos - 225);
 }
 
 sf::Sprite * FireExplosion::getGlow() {
@@ -50,18 +45,6 @@ sf::Sprite * FireExplosion::getGlow() {
 
 const sf::Sprite & FireExplosion::getSprite() {
 	return spriteSheet[frameIndex];
-}
-
-bool FireExplosion::getKillFlag() {
-	return killFlag;
-}
-
-float FireExplosion::getYpos() {
-	return yPos;
-}
-
-float FireExplosion::getXpos() {
-	return xPos;
 }
 
 bool FireExplosion::isValid() {

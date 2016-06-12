@@ -75,7 +75,7 @@ int initEnemies(GameMap * gm) {
 	// int divisibility = static_cast<int>(floor(static_cast<float>(currentLevel) / 7.f));
 	// int normalizedLevel = (currentLevel < 8) ? currentLevel : currentLevel - 7 * divisibility;
 	// int iters = divisibility * 2 + pow(normalizedLevel, 1.2);
-	int iters = pow(currentLevel, 1.1f);
+	int iters = 2 + pow(currentLevel, 1.1f);
 	if (iters > 15) {
 		iters = 15;
 	}

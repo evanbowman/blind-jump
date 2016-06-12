@@ -31,7 +31,7 @@ turret::turret(sf::Sprite spr[10]) {
 	activateTimer = 120;
 	shotCountdown = 40;
 	shotsFired = 0;
-	hp = 10;
+	hp = 6;
 	killFlag = 0;
 	isColored = 0;
 	colorTimer = 0.f;

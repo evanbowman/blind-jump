@@ -16,13 +16,10 @@
 #include "bulletType1.hpp"
 #include "shotPuff.hpp"
 #include "turretShot.hpp"
-#include "explosion32effect.hpp"
 #include "teleporterSmoke.hpp"
 #include "enemyShot.hpp"
 #include "dasherShot.hpp"
-#include "healthEffect.hpp"
 #include "fontController.hpp"
-#include "energyBeam.hpp"
 #include "dashSmoke.hpp"
 #include "FireExplosion.hpp"
 #include "smallExplosion.hpp"
@@ -35,11 +32,8 @@ class ScreenShakeController;
 
 class effectsController {
 private:
-	sf::Sprite energyBeamSprites[6];
-	sf::Texture energyBeamTextures[6];
 	TextureManager * pTM;
 	std::vector<SmallExplosion> smallExplosions;
-	std::vector<EnergyBeam> energyBeams;
 	std::vector<FireExplosion> fireExplosions;
 	std::vector<Enemyshot> enemyShots;
 	std::vector<turretFlashEffect> turretFlashes;
@@ -72,7 +66,6 @@ public:
 	void addHearts(float, float);
 	void addCoins(float, float);
 	void addPuff(float, float);
-	void addEnergyBeam(float, float, float, float);
 	void addMissile(float, float);
 	void addEnemyShot(float, float, short);
 	void addOrbShot(unsigned char, float, float, float, float);

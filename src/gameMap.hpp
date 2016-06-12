@@ -25,7 +25,6 @@
 #include "soundController.hpp"
 #include "initLoot.hpp"
 #include "inputController.hpp"
-#include "GradientCircle.hpp"
 #include "RenderType.hpp"
 #include "textureManager.hpp"
 
@@ -55,7 +54,6 @@ class GameMap {
 	// Create a GL rectangle primitive for the teleporter effect
 	sf::RectangleShape teleporterBeam;
 	sf::RectangleShape entryBeam;
-	GradientCircle gradientCircle;
 	
 	// For the beam to cast a glow to the map
 	sf::Texture beamGlowTxr;

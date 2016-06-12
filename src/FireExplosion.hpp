@@ -12,26 +12,19 @@
 
 #include "SFML/Graphics.hpp"
 #include "spriteSheet.hpp"
+#include "Effect.hpp"
 
-class FireExplosion {
+class FireExplosion : public Effect {
 private:
 	SpriteSheet<58, 51> spriteSheet;
 	sf::Sprite glow;
-	float xInit, yInit, xPos, yPos;
-	bool killFlag;
-	uint8_t frameIndex;
-	int32_t animationTimer;
 	bool valid;
 	
 public:
 	FireExplosion(sf::Texture *, sf::Texture *, float, float);
-	void update(float, float, sf::Time &);
-	const sf::Sprite & getSprite();
-	bool getKillFlag();
-	float getYpos();
-	float getXpos();
+	virtual void update(float, float, const sf::Time &);
+	virtual const sf::Sprite & getSprite();
 	sf::Sprite * getGlow();
-	void setOrigin(int, int);
 	bool isValid();
 	void invalidate();
 };

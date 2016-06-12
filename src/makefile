@@ -10,7 +10,7 @@ CFLAGS = -O2 -std=c++11 -Wall -Werror
 #LFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 LDFLAGS = -lsfml-window -lsfml-graphics -lsfml-system -lsfml-audio
 EXENAME = BlindJump
-OBJECTS = aStar.o backgroundHandler.o bulletType1.o critter.o damagedRobot.o dasher.o dasherShot.o dashSmoke.o detailController.o detailParent.o drawPixels.o effect.o  effectsController.o enemyController.o enemyCreationFunctions.o enemyParent.o enemyPlacementFn.o enemyShot.o energyBeam.o explosion32effect.o FireExplosion.o fontController.o generalDetail.o gameMap.o GradientCircle.o gun.o healthEffect.o heavyBot.o initLoot.o initMapVectors.o inputController.o IntroDoor.o lampLight.o main.o mappingFunctions.o player.o playerCollisionFunctions.o Powerup.o ResourcePath.o rock.o scoot.o screenShakeController.o shotPuff.o smallExplosion.o soundController.o teleporter.o teleporterSmoke.o textureManager.o  tileController.o treasureChest.o turret.o turretFlashEffect.o turretShot.o userInterface.o wall.o wallinpath.o
+OBJECTS = aStar.o backgroundHandler.o bulletType1.o critter.o damagedRobot.o dasher.o dasherShot.o dashSmoke.o detailController.o detailParent.o drawPixels.o effect.o effectsController.o enemyController.o enemyCreationFunctions.o enemyParent.o enemyPlacementFn.o enemyShot.o FireExplosion.o fontController.o generalDetail.o gameMap.o gun.o initLoot.o initMapVectors.o inputController.o IntroDoor.o lampLight.o main.o mappingFunctions.o player.o playerCollisionFunctions.o Powerup.o ResourcePath.o rock.o scoot.o screenShakeController.o shotPuff.o smallExplosion.o soundController.o teleporter.o teleporterSmoke.o textureManager.o  tileController.o treasureChest.o turret.o turretFlashEffect.o turretShot.o userInterface.o wall.o wallinpath.o
 RSP = ResourcePath.hpp ResourcePath.cpp
 
 all: $(OBJECTS)
@@ -52,10 +52,10 @@ drawPixels.o: drawPixels.hpp drawPixels.cpp
 effect.o: Effect.cpp Effect.hpp
 	$(CC) Effect.cpp -std=c++11 -O2 -c -o effect.o
 
-effectsController.o: effectsController.cpp effectsController.hpp screenShakeController.hpp turretFlashEffect.hpp bulletType1.hpp shotPuff.hpp turretShot.hpp explosion32effect.hpp teleporterSmoke.hpp enemyShot.hpp dasherShot.hpp healthEffect.hpp fontController.hpp energyBeam.hpp dashSmoke.hpp FireExplosion.hpp smallExplosion.hpp Powerup.hpp RenderType.hpp textureManager.hpp
+effectsController.o: effectsController.cpp effectsController.hpp screenShakeController.hpp turretFlashEffect.hpp bulletType1.hpp shotPuff.hpp turretShot.hpp  teleporterSmoke.hpp enemyShot.hpp dasherShot.hpp fontController.hpp dashSmoke.hpp FireExplosion.hpp smallExplosion.hpp Powerup.hpp RenderType.hpp textureManager.hpp
 	$(CC) effectsController.cpp $(CFLAGS) -c -o effectsController.o
 
-enemyController.o: enemyController.hpp enemyController.cpp $(RSP) wall.hpp tileController.hpp detailController.hpp screenShakeController.hpp turret.hpp effectsController.hpp scoot.hpp dasher.hpp critter.hpp heavyBot.hpp RenderType.hpp
+enemyController.o: enemyController.hpp enemyController.cpp $(RSP) wall.hpp tileController.hpp detailController.hpp screenShakeController.hpp turret.hpp effectsController.hpp scoot.hpp dasher.hpp critter.hpp RenderType.hpp
 	$(CC) enemyController.cpp $(CFLAGS) -c -o enemyController.o
 
 enemyCreationFunctions.o: enemyCreationFunctions.hpp enemyCreationFunctions.cpp turret.hpp scoot.hpp dasher.hpp enemyController.hpp coordinate.h
@@ -70,35 +70,20 @@ enemyPlacementFn.o: enemyPlacementFn.hpp enemyPlacementFn.cpp gameMap.hpp enemyC
 enemyShot.o: enemyShot.hpp enemyShot.cpp
 	$(CC) enemyShot.cpp $(CFLAGS) -c -o enemyShot.o
 
-energyBeam.o: energyBeam.cpp energyBeam.hpp
-	$(CC) energyBeam.cpp $(CFLAGS) -c -o energyBeam.o
-
-explosion32effect.o: explosion32effect.cpp explosion32effect.hpp
-	$(CC) explosion32effect.cpp $(CFLAGS) -c -o explosion32effect.o
-
-FireExplosion.o: FireExplosion.hpp FireExplosion.cpp spriteSheet.hpp
+FireExplosion.o: FireExplosion.hpp FireExplosion.cpp spriteSheet.hpp Effect.hpp
 	$(CC) FireExplosion.cpp $(CFLAGS) -c -o FireExplosion.o
 
 fontController.o: fontController.cpp fontController.hpp $(RSP)
 	$(CC) fontController.cpp $(CFLAGS) -c -o fontController.o
 
-gameMap.o: gameMap.cpp gameMap.hpp mappingFunctions.hpp initMapVectors.hpp $(RSP) enemyPlacementFn.hpp lightingMap.h pillarPlacement.h enemyCreationFunctions.hpp backgroundHandler.hpp player.hpp effectsController.hpp detailController.hpp tileController.hpp fontController.hpp userInterface.hpp enemyController.hpp screenShakeController.hpp soundController.hpp initLoot.hpp inputController.hpp GradientCircle.hpp RenderType.hpp textureManager.hpp
+gameMap.o: gameMap.cpp gameMap.hpp mappingFunctions.hpp initMapVectors.hpp $(RSP) enemyPlacementFn.hpp lightingMap.h pillarPlacement.h enemyCreationFunctions.hpp backgroundHandler.hpp player.hpp effectsController.hpp detailController.hpp tileController.hpp fontController.hpp userInterface.hpp enemyController.hpp screenShakeController.hpp soundController.hpp initLoot.hpp inputController.hpp RenderType.hpp textureManager.hpp
 	$(CC) gameMap.cpp $(CFLAGS) -c -o gameMap.o
 
 generalDetail.o: generalDetail.hpp generalDetail.cpp detailParent.hpp
 	$(CC) generalDetail.cpp $(CFLAGS) -c -o generalDetail.o
 
-GradientCircle.o: GradientCircle.cpp GradientCircle.hpp
-	$(CC) GradientCircle.cpp $(CFLAGS) -c -o GradientCircle.o
-
 gun.o: gun.cpp gun.hpp $(RSP) bulletType1.hpp bulletType1.hpp shotPuff.hpp effectsController.hpp userInterface.hpp inputController.hpp soundController.hpp
 	$(CC) gun.cpp $(CFLAGS) -c -o gun.o
-
-healthEffect.o: healthEffect.cpp healthEffect.hpp 
-	$(CC) healthEffect.cpp $(CFLAGS) -c -o healthEffect.o
-
-heavyBot.o: heavyBot.hpp heavyBot.cpp tileController.hpp enemyParent.hpp effectsController.hpp fontController.hpp aStar.hpp
-	$(CC) heavyBot.cpp $(CFLAGS) -c -o heavyBot.o
 
 initLoot.o: initLoot.hpp initLoot.cpp 
 	$(CC) initLoot.cpp $(CFLAGS) -c -o initLoot.o
@@ -142,7 +127,7 @@ scoot.o: scoot.cpp scoot.hpp angleFunction.hpp enemyParent.hpp wall.hpp effectsC
 screenShakeController.o: screenShakeController.cpp screenShakeController.hpp player.hpp
 	$(CC) screenShakeController.cpp $(CFLAGS) -c -o screenShakeController.o
 
-shotPuff.o: shotPuff.cpp shotPuff.hpp spriteSheet.hpp
+shotPuff.o: shotPuff.cpp shotPuff.hpp spriteSheet.hpp Effect.hpp
 	$(CC) shotPuff.cpp $(CFLAGS) -c -o shotPuff.o
 
 smallExplosion.o: smallExplosion.cpp smallExplosion.hpp spriteSheet.hpp Effect.hpp
