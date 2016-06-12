@@ -56,19 +56,6 @@ void Scoot::checkBulletCollision(effectsController& ef) {
 			}
 		}
 	}
-	if (!ef.getBulletLayer2().empty()) {
-		for (auto & element : ef.getBulletLayer2()) {
-			if (std::abs(element.getXpos() - (xPos - 6)) < 6 && std::abs(element.getYpos() - (yPos - 6)) < 6 && !isColored) {
-				element.setKillFlag();
-				if (health == 1) {
-					element.disablePuff();
-				}
-				health -= 1;
-				isColored = true;
-				colorAmount = 1.f;
-			}
-		}
-	}
 	
 	if (health == 0) {
 		killFlag = 1;

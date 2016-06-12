@@ -11,7 +11,6 @@
 
 effectsController::effectsController() {}
 
-// In the process of shortening the code with template functions
 template<typename T>
 void updateVector(std::vector<T>& vec, float xOffset, float yOffset, sf::Time & elapsedTime) {
 	if (!vec.empty()) {
@@ -43,7 +42,6 @@ void updateVectorGlow(std::vector<T>& vec, float xOffset, float yOffset, std::ve
 	}
 }
 
-//This function updates the positions of all of the effect objects whenever called
 void effectsController::update(float xOffset, float yOffset, ScreenShakeController* scrn, sf::Time & elapsedTime) {
 	if (!bullets.empty()) {
 		for (std::vector<bulletType1>::iterator it = bullets.begin(); it != bullets.end();) {
@@ -146,15 +144,6 @@ void drawEffect(T& inpVec, std::vector<std::tuple<sf::Sprite, float, Rendertype,
 	}
 }
 
-template <typename T>
-void directDraw(T& inpVec, sf::RenderTexture& window, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>& gameObjects) {
-	if (!inpVec.empty()) {
-		for (auto & element : inpVec) {
-			window.draw(element.getSprite());
-		}
-	}
-}
-
 //Draw the sprites for all of the effect objects
 void effectsController::draw(sf::RenderTexture& window, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>& gameObjects) {
 	drawEffect(hearts, gameObjects);
@@ -179,12 +168,6 @@ void effectsController::draw(sf::RenderTexture& window, std::vector<std::tuple<s
 }
 
 void effectsController::drawLower(sf::RenderTexture& window) {
-	if (!bulletLowerLayer.empty()) {
-		for (auto & element : bulletLowerLayer) {
-			window.draw(element.getSprite());  //Get the sprite, and update based on the overworld offset
-		}
-	}
-	
 	if (!warpEffects.empty()) {
 		for (auto & element : warpEffects) {
 			if (element.getDrawOrder() == 1) {
@@ -199,7 +182,6 @@ std::vector<sf::Sprite*>* effectsController::getGlowSprs() {
 }
 
 void effectsController::clear() {
-	bulletLowerLayer.clear();
 	turretFlashes.clear();
 	bullets.clear();
 	puffs.clear();
@@ -215,10 +197,6 @@ void effectsController::clear() {
 
 std::vector<bulletType1>& effectsController::getBulletLayer1() {
 	return bullets;
-}
-
-std::vector<bulletType1>& effectsController::getBulletLayer2() {
-	return bulletLowerLayer;
 }
 
 std::vector<turretShot>* effectsController::getTurretShots() {

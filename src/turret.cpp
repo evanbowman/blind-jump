@@ -148,21 +148,7 @@ void turret::updateShots(effectsController& ef, FontController& fonts) {
 			}
 		}
 	}
-		
-	if (!ef.getBulletLayer2().empty()) {
-		for (auto & element : ef.getBulletLayer2()) {
-			if (std::abs(element.getXpos() - xPos) < 8 && std::abs(element.getYpos() - (yPos + 6)) < 15) {
-				element.setKillFlag();
-				// Tons of effects in one place is distracting, so don't draw another one if the enemy is about to explode
-				if (hp == 1) {
-					element.disablePuff();
-				}
-				hp -= 1;
-				isColored = true;
-				colorAmount = 1.f;
-			}
-		}
-	}
+	
 	}
 	
 	if (hp == 0) {

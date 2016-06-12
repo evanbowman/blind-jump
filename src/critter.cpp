@@ -46,19 +46,6 @@ void Critter::checkBulletCollision(effectsController& ef) {
 			}
 		}
 	}
-	if (!ef.getBulletLayer2().empty()) {
-		for (auto & element : ef.getBulletLayer2()) {
-			if (std::abs(element.getXpos() - (xPos + 4)) < 8 && std::abs(element.getYpos() - (yPos - 8)) < 8) {
-				element.setKillFlag();
-				if (health == 1) {
-					element.disablePuff();
-				}
-				health -= 1;
-				isColored = true;
-				colorAmount = 1.f;
-			}
-		}
-	}
 	
 	if (health == 0) {
 		killFlag = 1;

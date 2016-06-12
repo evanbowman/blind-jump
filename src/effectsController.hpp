@@ -39,7 +39,6 @@ private:
 	std::vector<turretFlashEffect> turretFlashes;
 	std::vector<bulletType1> bullets;
 	std::vector<shotPuff> puffs;
-	std::vector<bulletType1> bulletLowerLayer;
 	std::vector<turretShot> turretShots;
 	std::vector<TeleporterSmoke> warpEffects;
 	std::vector<DasherShot> dasherShots;
@@ -70,7 +69,6 @@ public:
 	void addEnemyShot(float, float, short);
 	void addOrbShot(unsigned char, float, float, float, float);
 	std::vector<bulletType1>& getBulletLayer1();
-	std::vector<bulletType1>& getBulletLayer2();
    	std::vector<Enemyshot>* getEnemyShots();
 	std::vector<Powerup>* getHearts();
 	std::vector<Powerup>* getCoins();
