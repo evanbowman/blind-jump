@@ -44,7 +44,7 @@ void Scoot::checkBulletCollision(effectsController& ef) {
 	//Check collisions with player's shots, but only if the shot vectors aren't empty
 	if (!ef.getBulletLayer1().empty()) {
 		for (auto & element : ef.getBulletLayer1()) {
-			if (std::abs(element.getXpos() - (xPos - 6)) < 6 && std::abs(element.getYpos() - (yPos - 6)) < 6 && !isColored) {
+			if (std::abs(element.getXpos() - (xPos - 6)) < 6 && std::abs(element.getYpos() - (yPos - 6)) < 6 && !element.getKillFlag()) {
 				element.setKillFlag();		   // Kill the bullet if there's a collision between the bullet and the enemy
 				// Tons of effects in one place is distracting, so don't draw another one if the enemy is about to explode
 				if (health == 1) {

@@ -24,7 +24,7 @@ Critter::Critter(sf::Sprite* sprs, short map[61][61]) : EnemyParent(sprs) {
 	recalc = 4;
 	moveCount = 3;
 	active = true;
-	health = 4;
+	health = 3;
 	frameIndex = rand() % 3;
 	frameRate = 8;
 	awake = false;
@@ -34,7 +34,7 @@ void Critter::checkBulletCollision(effectsController& ef) {
 	//Check collisions with player's shots, but only if the shot vectors aren't empty
 	if (!ef.getBulletLayer1().empty()) {
 		for (auto & element : ef.getBulletLayer1()) {
-			if (std::abs(element.getXpos() - (xPos + 4)) < 8 && std::abs(element.getYpos() - (yPos - 8)) < 8) {
+			if (std::abs(element.getXpos() - (xPos + 4)) < 8 && std::abs(element.getYpos() - (yPos - 8)) < 8 && !element.getKillFlag()) {
 				element.setKillFlag();		   // Kill the bullet if there's a collision between the bullet and the enemy
 				// Tons of effects in one place is distracting, so don't draw another one if the enemy is about to explode
 				if (health == 1) {
