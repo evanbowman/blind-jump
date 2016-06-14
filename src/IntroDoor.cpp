@@ -18,11 +18,16 @@ IntroDoor::IntroDoor(float xStart, float yStart, sf::Texture * inpTxtr, int len,
 	state = State::dormant;
 }
 
-void IntroDoor::update(float xOffset, float yOffset, InputController * pInput, ScreenShakeController * pscr, const sf::Time & elapsedTime) {
+bool checkBulletCollision(float xPos, float yPos, effectsController & ef) {
+	std::vector<bulletType1> bullets = ef.getBulletLayer1();
+	// TODO: check for collisions
+	return false;
+}
+
+void IntroDoor::update(float xOffset, float yOffset, ScreenShakeController * pscr, effectsController & ef, const sf::Time & elapsedTime) {
 	switch (state) {
 		case State::dormant:
-			// If the player presses the button by the door, go to the opening state
-			if (pInput->zPressed() && fabsf(windowCenterX - (xOffset + xInit + 130)) < 6 && fabsf(windowCenterY - (yPos + 70)) < 10) {
+		    if (checkBulletCollision(xPos, yPos, ef)) {
 				state = State::opening;
 			}
 			break;

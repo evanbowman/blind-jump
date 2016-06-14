@@ -8,6 +8,7 @@
 
 #include "detailController.hpp"
 #include "ResourcePath.hpp"
+#include "player.hpp"
 #include <iostream>
 #include <cmath>
 
@@ -173,7 +174,11 @@ void detailController::addTeleporter(tileController& t, float posX, float posY, 
     teleporters.emplace_back((c.x * 32) + posX + 2, (c.y * 26) + posY - 4, tempSprites, glow, 2, width, height);
 }
 
-void detailController::update(float xOffset, float yOffset, effectsController& ef, char PlayerSprIndex, std::vector<sf::Sprite*>* glow1, std::vector<sf::Sprite*>* glow2, userInterface& ui, FontController& fonts, Player& player, InputController* pInput, ScreenShakeController * pscr, sf::Time & elapsedTime) {
+void detailController::update(effectsController & ef, userInterface & ui, FontController & fonts, Player & player, InputController * pInput, ScreenShakeController * pscr, sf::Time & elapsedTime) {
+	float xOffset = player.getWorldOffsetX();
+	float yOffset = player.getWorldOffsetY();
+	std::vector<sf::Sprite *> * glow1 = ef.getGlowSprs();
+	std::vector<sf::Sprite *> * glow2 = ef.getGlowSprs2();
 	if (!teleporters.empty()) {
 		for (auto & element : teleporters) {
 			element.update(xOffset, yOffset, elapsedTime);
@@ -200,7 +205,7 @@ void detailController::update(float xOffset, float yOffset, effectsController& e
 	
 	if (!chests.empty()) {
 		for (size_t i = 0; i < chests.size(); i++) {
-			chests[i].update(xOffset, yOffset, PlayerSprIndex, pInput, elapsedTime);
+			chests[i].update(xOffset, yOffset, player.getSprIndex(), pInput, elapsedTime);
 			// If the user opened a chest, put it's item into the UI menu
 			if (chests[i].getFrameIndex() == 3) {
 				if (chests[i].isValid()) {
@@ -216,7 +221,7 @@ void detailController::update(float xOffset, float yOffset, effectsController& e
 	
 	if (!doors.empty())
 		for (auto & element : doors)
-			element.update(xOffset, yOffset, pInput, pscr, elapsedTime);
+			element.update(xOffset, yOffset, pscr, ef, elapsedTime);
 	
 	if (!misc32x26.empty())
 		for (auto & element : misc32x26)

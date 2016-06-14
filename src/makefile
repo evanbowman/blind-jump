@@ -40,7 +40,7 @@ dasherShot.o: dasherShot.hpp spriteSheet.hpp
 dashSmoke.o: dashSmoke.hpp dashSmoke.cpp
 	$(CC) dashSmoke.cpp $(CFLAGS) -c -o dashSmoke.o
 
-detailController.o: detailController.hpp detailController.cpp $(RSP) Teleporter.hpp treasureChest.hpp tileController.hpp coordinate.h generalDetail.hpp lampLight.hpp userInterface.hpp damagedRobot.hpp rock.hpp IntroDoor.hpp RenderType.hpp textureManager.hpp spriteSheet.hpp
+detailController.o: detailController.hpp detailController.cpp $(RSP) Teleporter.hpp treasureChest.hpp tileController.hpp coordinate.h generalDetail.hpp lampLight.hpp userInterface.hpp damagedRobot.hpp rock.hpp IntroDoor.hpp RenderType.hpp textureManager.hpp spriteSheet.hpp player.hpp
 	$(CC) detailController.cpp $(CFLAGS) -c -o detailController.o
 
 detailParent.o: detailParent.hpp detailParent.cpp

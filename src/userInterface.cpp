@@ -164,12 +164,10 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontContr
 				if (timerAlt < 1400.f) {
 					zoomDegree += 0.000007f;
 					pWorldView->zoom(zoomDegree);
+				} else {
+					timer = 0.f;
+					state = State::deathScreenExit;
 				}
-			}
-			
-			if (z) {
-				timer = 0.f;
-				state = State::deathScreenExit;
 			}
 			break;
 			

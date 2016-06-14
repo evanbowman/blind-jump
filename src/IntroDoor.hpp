@@ -11,25 +11,23 @@
 #define IntroDoor_hpp
 
 #include "detailParent.hpp"
-#include "inputController.hpp"
+#include "effectsController.hpp"
 #include "spriteSheet.hpp"
 
 class ScreenShakeController;
 
 class IntroDoor : public detailParent {
-	
-	enum class State { dormant, opening, opened };
-	
 private:
+	enum class State { dormant, opening, opened };
 	SpriteSheet<200, 95> doorSheet;
 	uint8_t frameIndex;
 	int32_t timer;
 	State state;
 	
 public:
-	void update(float, float, InputController * pInput, ScreenShakeController * pscr, const sf::Time & elapsedTime);
+	void update(float, float, ScreenShakeController * pscr, effectsController & ef, const sf::Time & elapsedTime);
 	IntroDoor(float, float, sf::Texture *, int, float, float);
 	sf::Sprite* getSprite();
 };
 
-#endif /* Pillar_hpp */
+#endif

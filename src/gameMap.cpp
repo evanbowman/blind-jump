@@ -182,7 +182,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
 	tiles.drawTiles(target, effects.getGlowSprs(), effects.getGlowSprs2(), level);
 	effects.getGlowSprs2()->clear();
 	// Update the overworld objects based on the displacement of the player
-	details.update(player.getWorldOffsetX(), player.getWorldOffsetY(), effects, player.getSprIndex(), effects.getGlowSprs(), effects.getGlowSprs2(), UI, *pFonts, player, pInput, &ssc, elapsedTime);
+	details.update(effects, UI, *pFonts, player, pInput, &ssc, elapsedTime);
 	// Draw the details / add them to the game objects vector
 	details.draw(gameObjects, gameShadows, target);
 	// Update the enemy objects in the game based on the player's displacement
