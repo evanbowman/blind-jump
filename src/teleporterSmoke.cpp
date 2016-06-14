@@ -21,13 +21,6 @@ void TeleporterSmoke::update(float xOffset, float yOffset, const sf::Time & elap
 	yInit -= (elapsedTime.asMilliseconds() / 17.6) * 0.6;
 	timer += elapsedTime.asMilliseconds();
 	spriteSheet.setPosition(xInit + xOffset, yPos);
-}
-
-const sf::Sprite & TeleporterSmoke::getSprite() {
-	// Due to ordering of the controller code, updates to the frame index need
-	// to happen here. This is a special case where the sprite maps to a different
-	// vector depending on its layer. In other instances, 'get...()' member functions
-	// should not alter internal datafields for objects.
 	if (timer > 105) {
 		timer -= 105;
 		frameIndex++;
@@ -40,6 +33,9 @@ const sf::Sprite & TeleporterSmoke::getSprite() {
 			killFlag = true;
 		}
 	}
+}
+
+const sf::Sprite & TeleporterSmoke::getSprite() const {
 	return spriteSheet[frameIndex];
 }
 

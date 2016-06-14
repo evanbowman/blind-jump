@@ -42,6 +42,6 @@ sf::Sprite * SmallExplosion::getGlow() {
 	return &glow;
 }
 
-const sf::Sprite & SmallExplosion::getSprite() {
+const sf::Sprite & SmallExplosion::getSprite() const {
 	return spriteSheet[frameIndex];
 }

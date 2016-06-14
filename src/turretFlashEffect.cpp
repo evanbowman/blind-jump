@@ -31,6 +31,6 @@ void turretFlashEffect::update(float xOffset, float yOffset, const sf::Time & el
 	spriteSheet.setPosition(xInit + xOffset, yPos);
 }
 
-const sf::Sprite & turretFlashEffect::getSprite() {
+const sf::Sprite & turretFlashEffect::getSprite() const {
 	return spriteSheet[frameIndex];
 }

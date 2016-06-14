@@ -26,6 +26,6 @@ void shotPuff::update(float xOffset, float yOffset, const sf::Time & elapsedTime
 	spriteSheet.setPosition(xInit + xOffset, yPos);
 }
 
-const sf::Sprite & shotPuff::getSprite() {
+const sf::Sprite & shotPuff::getSprite() const {
 	return spriteSheet[frameIndex];
 }

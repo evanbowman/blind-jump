@@ -18,12 +18,12 @@
 
 class shotPuff : public Effect {
 private:
-	SpriteSheet<16, 16> spriteSheet;
+	mutable SpriteSheet<16, 16> spriteSheet;
 
 public:
 	shotPuff(sf::Texture *, float, float);
-	virtual void update(float, float, const sf::Time &);
-	virtual const sf::Sprite & getSprite();
+	void update(float, float, const sf::Time &) override;
+	const sf::Sprite & getSprite() const override;
 	
 };
 #endif /* shotPuff_hpp */

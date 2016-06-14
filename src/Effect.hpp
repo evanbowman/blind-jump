@@ -14,7 +14,7 @@ protected:
 public:
 	Effect(float, float);
 	virtual void update(float, float, const sf::Time &) = 0;
-	virtual const sf::Sprite & getSprite() = 0;
+	virtual const sf::Sprite & getSprite() const = 0;
 	float getYpos() const;
 	bool getKillFlag() const;
 };

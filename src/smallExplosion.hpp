@@ -17,13 +17,13 @@
 
 class SmallExplosion : public Effect {
 private:
-	SpriteSheet<36, 36> spriteSheet;
+	mutable SpriteSheet<36, 36> spriteSheet;
 	sf::Sprite glow;
 	
 public:
 	SmallExplosion(sf::Texture *, sf::Texture *, float, float);
-	virtual void update(float, float, const sf::Time &);
-	virtual const sf::Sprite & getSprite();
+	void update(float, float, const sf::Time &) override;
+	const sf::Sprite & getSprite() const override;
 	sf::Sprite * getGlow();
 };
 

@@ -17,13 +17,14 @@
 
 class TeleporterSmoke : public Effect {
 private:
-	SpriteSheet<16, 16> spriteSheet;
+	mutable SpriteSheet<16, 16> spriteSheet;
    	char drawOrder;
 	
 public:
    	TeleporterSmoke(sf::Texture *, float, float);
-	virtual void update(float, float, const sf::Time &);
-	virtual const sf::Sprite & getSprite();
+	void update(float, float, const sf::Time &) override;
+	const sf::Sprite & getSprite() const override;
 	char getDrawOrder();
+	void updateAnim(const sf::Time &);
 };
 #endif /* teleporterSmoke_hpp */
