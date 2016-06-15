@@ -9,15 +9,15 @@
 #include "inputController.hpp"
 #include <cmath>
 
-InputController::InputController() {
-	x = false;
-	z = false;
-	c = false;
-	left = false;
-	right = false;
-	up = false;
-	down = false;
-}
+InputController::InputController()
+	: left{false},
+	  right{false},
+	  up{false},
+	  down{false},
+	  x{false},
+	  z{false},
+	  c{false}
+{}
 
 bool InputController::xPressed() const {
 	return x;
@@ -47,30 +47,83 @@ bool InputController::cPressed() const {
 	return c;
 }
 
-void InputController::setLeft(const bool pressed) {
-  left = pressed;
-}
+void InputController::update(sf::RenderWindow & window) {
+	sf::Event event;
+	while (window.pollEvent(event)) {
+		if (event.type == sf::Event::Closed) {
+			window.close();
+		}
 
-void InputController::setRight(const bool pressed) {
-  right = pressed;
-}
+		if (event.type == sf::Event::KeyPressed) {
+			switch(event.key.code) {
+			case sf::Keyboard::Escape:
+				window.close();
+				break;
 
-void InputController::setUp(const bool pressed) {
-  up = pressed;
-}
+			case sf::Keyboard::Left:
+				left = true;
+				break;
 
-void InputController::setDown(const bool pressed) {
-  down = pressed;
-}
+			case sf::Keyboard::Right:
+				right = true;
+				break;
 
-void InputController::setX(const bool pressed) {
-  x = pressed;
-}
+			case sf::Keyboard::Up:
+				up = true;
+				break;
 
-void InputController::setZ(const bool pressed) {
-  z = pressed;
-}
+			case sf::Keyboard::Down:
+				down = true;
+				break;
 
-void InputController::setC(const bool pressed) {
-  c = pressed;
+			case sf::Keyboard::X:
+				x = true;
+				break;
+
+			case sf::Keyboard::Z:
+				z = true;
+				break;
+
+			case sf::Keyboard::C:
+				c = true;
+				break;
+
+			default:
+				break;
+			}
+		} else if (event.type == sf::Event::KeyReleased) {
+			switch(event.key.code) {
+			case sf::Keyboard::Left:
+				left = false;
+				break;
+
+			case sf::Keyboard::Right:
+				right = false;
+				break;
+
+			case sf::Keyboard::Up:
+				up = false;
+				break;
+
+			case sf::Keyboard::Down:
+				down = false;
+				break;
+
+			case sf::Keyboard::X:
+				x = false;
+				break;
+
+			case sf::Keyboard::Z:
+				z = false;
+				break;
+
+			case sf::Keyboard::C:
+				c = false;
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
 }

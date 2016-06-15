@@ -19,7 +19,7 @@
 #include "inputController.hpp"
 #include "textureManager.hpp"
 
-int main(int, char const**) {
+int main(int argc, char * argv[]) {
 	srand(static_cast<unsigned int>(time(0)));
 
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
@@ -70,103 +70,19 @@ int main(int, char const**) {
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
 	
-	// Set the Icon
 	sf::Image icon;
 	if (!icon.loadFromFile(resourcePath() + "icon.png")) {
 		return EXIT_FAILURE;
 	}
 	
-	// Set the game icon
 	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 	
 	sf::Clock gameClock;
 	sf::Time elapsedTime;
-	
-	// Start the game loop
+
 	while (window.isOpen()) {
-		// Process events
-		sf::Event event;
-		while (window.pollEvent(event)) {
-			// Close window: exit
-			if (event.type == sf::Event::Closed) {
-				window.close();
-			}
-
-			// Escape pressed: exit
-			if (event.type == sf::Event::KeyPressed/* && event.key.code == sf::Keyboard::Escape*/) {
-				switch(event.key.code) {
-				case sf::Keyboard::Escape:
-					window.close();
-					break;
-
-				case sf::Keyboard::Left:
-					input.setLeft(true);
-					break;
-
-				case sf::Keyboard::Right:
-					input.setRight(true);
-					break;
-
-				case sf::Keyboard::Up:
-					input.setUp(true);
-					break;
-
-				case sf::Keyboard::Down:
-					input.setDown(true);
-					break;
-
-				case sf::Keyboard::X:
-					input.setX(true);
-					break;
-
-				case sf::Keyboard::Z:
-					input.setZ(true);
-					break;
-
-				case sf::Keyboard::C:
-					input.setC(true);
-					break;
-
-				default:
-					break;
-				}
-			} else if (event.type == sf::Event::KeyReleased) {
-				switch(event.key.code) {
-				case sf::Keyboard::Left:
-					input.setLeft(false);
-					break;
-
-				case sf::Keyboard::Right:
-					input.setRight(false);
-					break;
-
-				case sf::Keyboard::Up:
-					input.setUp(false);
-					break;
-
-				case sf::Keyboard::Down:
-					input.setDown(false);
-					break;
-
-				case sf::Keyboard::X:
-					input.setX(false);
-					break;
-
-				case sf::Keyboard::Z:
-					input.setZ(false);
-					break;
-
-				case sf::Keyboard::C:
-					input.setC(false);
-					break;
-
-				default:
-					break;
-				}
-			}
-		}
+		input.update(window);
 		
-		// Clear screen
 		window.clear();
 
 		window.setView(view);
@@ -177,8 +93,7 @@ int main(int, char const**) {
 		if (Map.getTeleporterCond()) {
 			Map.Reset();
 		}
-		
-		// Update the window
+
 		window.display();
 	}
 

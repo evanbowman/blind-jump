@@ -26,13 +26,7 @@ public:
 	bool xPressed() const;
 	bool zPressed() const;
 	bool cPressed() const;
-	void setLeft(const bool);
-	void setRight(const bool);
-	void setUp(const bool);
-	void setDown(const bool);
-	void setX(const bool);
-	void setZ(const bool);
-	void setC(const bool);
+	void update(sf::RenderWindow &);
 };
 
 #endif /* inputController_hpp */
