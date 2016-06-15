@@ -124,7 +124,7 @@ ResourcePath.o: ResourcePath.cpp ResourcePath.hpp
 rock.o: rock.hpp rock.cpp detailParent.hpp spriteSheet.hpp
 	$(CC) rock.cpp $(CFLAGS) -c -o rock.o
 
-scoot.o: scoot.cpp scoot.hpp angleFunction.hpp enemyParent.hpp wall.hpp effectsController.hpp
+scoot.o: scoot.cpp scoot.hpp angleFunction.hpp enemy.hpp wall.hpp effectsController.hpp
 	$(CC) scoot.cpp $(CFLAGS) -c -o scoot.o
 
 screenShakeController.o: screenShakeController.cpp screenShakeController.hpp player.hpp

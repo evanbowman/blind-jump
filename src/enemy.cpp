@@ -50,7 +50,7 @@ float Enemy::getYinit() const {
 	return yInit;
 }
 
-void Enemy::update(float xOffset, float yOffset) {
+void Enemy::update(float xOffset, float yOffset, const std::vector<wall> & w, effectsController & effects, const sf::Time & elapsedTime) {
 	xPos = xInit + xOffset;
 	yPos = yInit + yOffset;
 }

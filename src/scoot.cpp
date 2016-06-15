@@ -33,7 +33,7 @@ void Scoot::changeDir(float dir) {
 }
 
 void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, effectsController & effects, const sf::Time & elapsedTime) {
-	Enemy::update(xOffset, yOffset);
+	Enemy::update(xOffset, yOffset, w, effects, elapsedTime);
 	Enemy::checkShotCollision(effects, 8.f);
 	Enemy::updateColor(elapsedTime);
 	spriteSheet.setPosition(xPos, yPos);

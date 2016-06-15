@@ -33,8 +33,7 @@ public:
 	Enemy(float, float, float, float);
 	virtual const sf::Sprite & getSprite() const = 0;
 	virtual const sf::Sprite & getShadow() const = 0;
-	void update(float, float);
-	virtual void update(float, float, const std::vector<wall> &, effectsController & ef,  const sf::Time &) = 0;
+	virtual void update(float, float, const std::vector<wall> &, effectsController & ef,  const sf::Time &);
 	bool getKillFlag() const;
 	bool isColored() const;
 	float getXinit() const;

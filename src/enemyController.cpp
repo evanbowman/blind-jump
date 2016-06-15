@@ -101,28 +101,17 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
 					if (enabled) {
 						it->update(x, y, w, ef, elapsedTime);
 					}
-					// Get the enemy's shadow
-					std::tuple<sf::Sprite, float, Rendertype, float> shadow;
-					std::get<0>(shadow) = it->getShadow();
-					gameShadows.push_back(shadow);
-					
-					std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
-					std::get<0>(tSpr) = it->getSprite();
-					std::get<1>(tSpr) = it->getYpos() - 16;
-					// If the enemy should be colored, let the rendering code know to pass it through a fragment shader
-					if (it->isColored()) {
-						std::get<2>(tSpr) = Rendertype::shadeWhite;
-						std::get<3>(tSpr) = it->getColorAmount();
+					gameShadows.emplace_back(it->getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
+				    if (it->isColored()) {
+						gameObjects.emplace_back(it->getSprite(), it->getYpos() - 16, Rendertype::shadeWhite, it->getColorAmount());
 					} else {
-						std::get<2>(tSpr) = Rendertype::shadeDefault;
+						gameObjects.emplace_back(it->getSprite(), it->getYpos() - 16, Rendertype::shadeDefault, 0.f);
 					}
-					
-					gameObjects.push_back(tSpr);
 				}
 				
 				else {
 					// If outside the window, update the enemy's position, but don't move it, draw it, check collisions, etc.
-					it->Enemy::update(x, y);
+					it->Enemy::update(x, y, w, ef, elapsedTime);
 				}
 				
 				++it;
