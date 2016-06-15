@@ -40,7 +40,9 @@ enum class Texture {
 			whiteGlow,
 			bullet,
 			poof,
-			warpEffect
+			warpEffect,
+			scoot,
+			scootShadow
 			};
 
 #endif

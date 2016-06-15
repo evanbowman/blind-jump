@@ -41,6 +41,6 @@ public:
 	float colorAmount;
 	uint8_t health;
 	bool colored();
-	
+
 };
 #endif /* enemyParent_hpp */

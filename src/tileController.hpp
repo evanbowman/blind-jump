@@ -83,6 +83,9 @@ public:
 	void init();
 	// Return the working set of tiles background controller access
 	unsigned char getWorkingSet();
+	const std::vector<Coordinate> * getEmptyLocations() const;
+	float getPosX() const;
+	float getPosY() const;
 	void setWindowSize(float, float);
 	void reset();
 	void setTextures(TextureManager *);

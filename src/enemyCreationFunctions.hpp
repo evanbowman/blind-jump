@@ -16,7 +16,6 @@
 
 void addTurret(short mapArray[61][61], short descriptionArray[61][61], enemyController&, float, float, float, float, std::vector<Coordinate>&);
 void addCritter(short mapArray[61][61], short descriptionArray[61][61], enemyController&, float, float, float, float, std::vector<Coordinate>&, int);
-void addScoot(short mapArray[61][61], short descriptionArray[61][61], enemyController&, float, float, float, float, std::vector<Coordinate>&);
 void addDasher(short mapArray[61][61], short descriptionArray[61][61], enemyController&, float, float, float, float, std::vector<Coordinate>&);
 
 #endif /* enemyCreationFunctions_hpp */

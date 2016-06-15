@@ -23,8 +23,8 @@ public:
 	Critter(sf::Sprite*, short map[61][61]);
 	// A function to update all of the enemy's values
 	void update(float, float, effectsController&, tileController*, sf::Time &);
-	sf::Sprite* getSprite();
-	sf::Sprite* getShadow();
+	sf::Sprite * getSprite();
+	sf::Sprite * getShadow();
 	void softUpdate(float, float);
 	void checkBulletCollision(effectsController& ef);
 	void randDir();

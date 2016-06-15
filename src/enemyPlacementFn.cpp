@@ -102,7 +102,7 @@ int initEnemies(GameMap * gm) {
 		// Now place enemies based on the selected index
 		switch (selectedIndex) {
 			case 0:
-				addScoot(gm->tiles.mapArray, gm->tiles.descriptionArray, gm->en, gm->tiles.posX, gm->tiles.posY, gm->windowW/2, gm->windowH/2, gm->tiles.emptyMapLocations);
+				gm->en.addScoot(&gm->tiles);
 				count += 1;
 				break;
 				

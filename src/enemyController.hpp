@@ -10,7 +10,7 @@
 #ifndef enemyController_hpp
 #define enemyController_hpp
 
-#include <stdio.h>
+#include "textureManager.hpp"
 #include "SFML/Graphics.hpp"
 #include <iostream>
 #include "turret.hpp"
@@ -32,14 +32,13 @@ private:
 	std::vector<turret> turrets;
 	sf::Sprite droneSprites[5];
 	sf::Texture droneTextures[5];
-	sf::Sprite scootSprites[3];
-	sf::Texture scootTexture[3];
 	sf::Texture dasherTexture[6];
 	sf::Sprite dasherSprite[21];
 	sf::Texture dasherDeathSeq[15];
 	sf::Sprite chaserSprites[4];
 	sf::Texture chaserTextures[4];
-	// Vectors to hold enemy objects
+
+	TextureManager * pTM;
 	std::vector<Scoot> scoots;
 	std::vector<Dasher> dashers;
 	std::vector<Critter> critters;
@@ -52,11 +51,11 @@ public:
 	void clear();
 	sf::Sprite * getTurretSprites();
 	sf::Sprite * getGuardianSprites();
-	sf::Sprite * getScootSprites();
-	sf::Sprite * getDasherSprites();
+    sf::Sprite * getDasherSprites();
 	sf::Sprite * getChaserSprites();
+	void linkTextures(TextureManager *);
 	void addTurret(turret);
-	void addScoot(Scoot);
+	void addScoot(tileController *);
 	void addDasher(Dasher);
 	void addCritter(Critter);
 	void setWindowSize(float, float);

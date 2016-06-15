@@ -129,6 +129,12 @@ bool TextureManager::load() {
 
 	if (!loadTexture("warpEffect.png", Texture::warpEffect, textures))
 		return false;
+
+	if (!loadTexture("scootSheet.png", Texture::scoot, textures))
+		return false;
+
+	if (!loadTexture("charger_enemy_shadow.png", Texture::scootShadow, textures))
+		return false;
 	
 	return true;
 }

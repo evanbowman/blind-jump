@@ -18,15 +18,9 @@
 enemyController::enemyController() {
 	//Load all of the textures to apply to the enemies
 	const std::string turretfileExt[10] = {"turret5.png", "turret4.png", "turret3.png", "turret2.png", "turret1.png", "turretShadow5.png", "turretShadow4.png", "turretShadow3.png", "turretShadow2.png", "turretShadow1.png"};
-	const std::string scootFileExt[3] = {"charger_enemy_1.png", "charger_enemy_2.png", "charger_enemy_shadow.png"};
-	// Loop to load all of the turret textures and apply them to sprites
 	for (int i = 0; i < 10; i++) {
 		turretTextures[i].loadFromFile(resourcePath() + turretfileExt[i]);
 		turretSprites[i].setTexture(turretTextures[i]);
-	}
-	for (auto i = 0; i < 3; i++) {
-		scootTexture[i].loadFromFile(resourcePath() + scootFileExt[i]);
-		scootSprites[i].setTexture(scootTexture[i]);
 	}
 	
 	for (auto i = 0; i < 6; i++) {
@@ -43,6 +37,10 @@ enemyController::enemyController() {
 		chaserTextures[i].loadFromFile(resourcePath() + "critterSheet.png", sf::IntRect(i * 18, 0, 18, 18));
 		chaserSprites[i].setTexture(chaserTextures[i]);
 	}
+}
+
+void enemyController::linkTextures(TextureManager * pTM) {
+	this->pTM = pTM;
 }
 
 //A function to draw the enemies' current sprites to the screen
@@ -105,16 +103,16 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
 					}
 					// Get the enemy's shadow
 					std::tuple<sf::Sprite, float, Rendertype, float> shadow;
-					std::get<0>(shadow) = *it->getShadow();
+					std::get<0>(shadow) = it->getShadow();
 					gameShadows.push_back(shadow);
 					
 					std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
-					std::get<0>(tSpr) = *it->getSprite();
+					std::get<0>(tSpr) = it->getSprite();
 					std::get<1>(tSpr) = it->getYpos() - 16;
 					// If the enemy should be colored, let the rendering code know to pass it through a fragment shader
-					if (it->colored()) {
+					if (it->isColored()) {
 						std::get<2>(tSpr) = Rendertype::shadeWhite;
-						std::get<3>(tSpr) = it->colorAmount;
+						std::get<3>(tSpr) = it->getColorAmount();
 					} else {
 						std::get<2>(tSpr) = Rendertype::shadeDefault;
 					}
@@ -124,7 +122,7 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
 				
 				else {
 					// If outside the window, update the enemy's position, but don't move it, draw it, check collisions, etc.
-					it->softUpdate(x, y);
+					it->Enemy::update(x, y);
 				}
 				
 				++it;
@@ -265,10 +263,6 @@ sf::Sprite* enemyController::getGuardianSprites() {
 	return droneSprites;
 }
 
-sf::Sprite* enemyController::getScootSprites() {
-	return scootSprites;
-}
-
 sf::Sprite* enemyController::getDasherSprites() {
 	return dasherSprite;
 }
@@ -277,8 +271,12 @@ void enemyController::addTurret(turret t) {
 	turrets.push_back(t);
 }
 
-void enemyController::addScoot(Scoot s) {
-	scoots.push_back(s);
+void enemyController::addScoot(tileController * pTiles) {
+	auto pCoordVec = pTiles->getEmptyLocations();
+	const int locationSelect = (rand() % 2) ? rand() % (pCoordVec->size() / 2) : rand() & (pCoordVec->size());
+	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
+	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
+	scoots.emplace_back(pTM->getTexture(TextureManager::Texture::scoot), pTM->getTexture(TextureManager::Texture::scootShadow), xInit, yInit, windowW, windowH);
 }
 
 void enemyController::addDasher(Dasher d) {

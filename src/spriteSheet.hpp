@@ -10,6 +10,12 @@ private:
 	sf::Sprite sprite;
 	
 public:
+	SpriteSheet() {}
+
+	SpriteSheet(sf::Texture * pTxtr) {
+		setTexture(pTxtr);
+	}
+	
 	const sf::Sprite & operator[](const std::size_t idx) {
 		sprite.setTextureRect(sf::IntRect(idx * w, 0, w, h));
 		return sprite;

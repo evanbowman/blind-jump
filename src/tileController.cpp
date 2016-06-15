@@ -15,6 +15,18 @@
 #include "drawPixels.hpp"
 
 
+const std::vector<Coordinate> * tileController::getEmptyLocations() const {
+	return &emptyMapLocations;
+}
+
+float tileController::getPosX() const {
+	return posX;
+}
+
+float tileController::getPosY() const {
+	return posY;
+}
+
 void createMapImage(sf::Image* tileImage, short mapArray[61][61], sf::Texture tx[2], sf::Image* grassSet, sf::Image* grassSetEdge) {
 	// Loop through the entire image and create a tilemap for drawing grass
 	short mapTemp[61][61], bitMask[61][61], gratePositions[61][61];

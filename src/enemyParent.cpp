@@ -68,17 +68,17 @@ bool EnemyParent::checkCollisionWall(std::vector<wall> w, float collisionRadius)
 			xInit += 1;
 			return true;
 		}
-			
+
 		if ((xPos + 12 > (element.getPosX()) && (xPos + 12 < (element.getPosX() + element.width))) && (fabs((yPos + 4) - element.getPosY()) <= 16))  {
 			xInit -= 1;
 			return true;
 		}
-			
+
 		if (((yPos - 6 < (element.getPosY() + element.height)) && (yPos - 6 > (element.getPosY()))) && (fabs((xPos) - element.getPosX()) <= 16))  {
 			yInit += 1;
 			return true;
 		}
-			
+
 		if (((yPos + 6 > element.getPosY()) && (yPos + 6 < element.getPosY() + element.height)) && (fabs((xPos) - element.getPosX()) <= 16))  {
 			yInit -= 1;
 			return true;

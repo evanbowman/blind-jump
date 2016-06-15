@@ -31,19 +31,6 @@ void addTurret(short mapArray[61][61], short descriptionArray[61][61], enemyCont
 	en.addTurret(t);
 }
 
-void addScoot(short mapArray[61][61], short descriptionArray[61][61], enemyController& en, float posX, float posY, float windowW, float windowH, std::vector<Coordinate>& emptyLocations) {
-	
-	Scoot s(en.getScootSprites());
-	
-	int locationSelect = (rand() % 2) ? rand() % (emptyLocations.size() / 2 ) : rand() % (emptyLocations.size());
-	Coordinate c = emptyLocations[locationSelect];
-	emptyLocations[locationSelect] = std::move(emptyLocations.back());
-	emptyLocations.pop_back();
-	s.setInitPosition((c.x * 32) + posX + 16, (c.y * 26) + posY - 3);
-	s.setPlayerPos(windowW, windowH);
-	en.addScoot(s);
-}
-
 void addDasher(short mapArray[61][61], short descriptionArray[61][61], enemyController& en, float posX, float posY, float windowW, float windowH, std::vector<Coordinate>& emptyLocations) {
 	
 	Dasher d(en.getDasherSprites());

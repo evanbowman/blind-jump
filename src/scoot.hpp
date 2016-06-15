@@ -10,34 +10,27 @@
 #ifndef scoot_hpp
 #define scoot_hpp
 
-#include <stdio.h>
-#include "enemyParent.hpp"
-#include <vector>
 #include "wall.hpp"
 #include "effectsController.hpp"
+#include "enemy.hpp"
 
-
-class Scoot : public EnemyParent {
+class Scoot : public Enemy {
 public:
-	// This calls the parent constructor, which initializes common values like initial position
-	Scoot(sf::Sprite*);
-	// A function to update all of the enemy's values
-	void update(float, float, std::vector<wall>, effectsController&, sf::Time &);
-	sf::Sprite* getSprite();
-	sf::Sprite* getShadow();
-	void softUpdate(float, float);
-	void checkBulletCollision(effectsController& ef);
-	void randDir();
-	bool colored();
+	Scoot(sf::Texture *, sf::Texture *, float, float, float, float);
+	void update(float, float, const std::vector<wall> &, effectsController & ef, const sf::Time &) override;
+	const sf::Sprite & getSprite() const override;
+	const sf::Sprite & getShadow() const override;
+	void onDeath(effectsController &) override;
 	
 private:
-	sf::Sprite sprites[3];
-	float speedScale;
-	int32_t frameTimer;
-	float hSpeed;
-	float vSpeed;
-	int32_t changeDirTimer;
-	int32_t shotCountdownTimer;
+	enum class State {
+		drift1, drift2, shoot, recoil, changeDir1, changeDir2
+	};
+	mutable SpriteSheet<12, 12> spriteSheet;
+	sf::Sprite shadow;
+	float speedScale, hSpeed, vSpeed;
+	State state;
+	int32_t timer;
 };
 
 #endif /* scoot_hpp */
