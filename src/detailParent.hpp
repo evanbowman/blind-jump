@@ -10,7 +10,6 @@
 #ifndef detailParent_hpp
 #define detailParent_hpp
 
-#include <stdio.h>
 #include "SFML/Graphics.hpp"
 
 class detailParent {

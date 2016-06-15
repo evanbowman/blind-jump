@@ -9,7 +9,6 @@
 #ifndef gun_hpp
 #define gun_hpp
 
-#include <stdio.h>
 #include <SFML/Graphics.hpp>
 #include "bulletType1.hpp"
 #include <vector>

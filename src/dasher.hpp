@@ -10,7 +10,6 @@
 #ifndef dasher_hpp
 #define dasher_hpp
 
-#include <stdio.h>
 #include "enemyParent.hpp"
 #include "effectsController.hpp"
 

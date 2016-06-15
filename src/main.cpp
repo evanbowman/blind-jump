@@ -9,7 +9,6 @@
 
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include "player.hpp"
 #include "backgroundHandler.hpp"
 #include <cmath>

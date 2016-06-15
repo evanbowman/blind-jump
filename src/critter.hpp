@@ -10,7 +10,6 @@
 #ifndef chaser_hpp
 #define chaser_hpp
 
-#include <stdio.h>
 #include "enemyParent.hpp"
 #include "effectsController.hpp"
 #include "aStar.hpp"

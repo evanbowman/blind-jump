@@ -10,7 +10,6 @@
 #ifndef dasherShot_hpp
 #define dasherShot_hpp
 
-#include <stdio.h>
 #include "SFML/Graphics.hpp"
 #include <cmath>
 #include "spriteSheet.hpp"

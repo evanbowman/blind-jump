@@ -10,7 +10,6 @@
 #ifndef turretShot_hpp
 #define turretShot_hpp
 
-#include <stdio.h>
 #include "SFML/Graphics.hpp"
 #include <cmath>
 #include "spritesheet.hpp"

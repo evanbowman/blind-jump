@@ -10,7 +10,6 @@
 #ifndef angleFunction_hpp
 #define angleFunction_hpp
 
-#include <stdio.h>
 #include <cmath>
 
 //A function to calculate the angle between two objects

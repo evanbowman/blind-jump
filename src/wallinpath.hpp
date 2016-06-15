@@ -10,7 +10,6 @@
 #ifndef wallinpath_hpp
 #define wallinpath_hpp
 
-#include <stdio.h>
 #include <vector>
 #include "wall.hpp"
 #include <cmath>

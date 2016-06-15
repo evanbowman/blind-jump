@@ -10,7 +10,6 @@
 #ifndef detailController_hpp
 #define detailController_hpp
 
-#include <stdio.h>
 #include "SFML/Graphics.hpp"
 #include "Teleporter.hpp"
 #include "treasureChest.hpp"

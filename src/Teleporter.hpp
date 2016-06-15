@@ -10,7 +10,6 @@
 #ifndef Teleporter_hpp
 #define Teleporter_hpp
 
-#include <stdio.h>
 #include "detailParent.hpp"
 #include "effectsController.hpp"
 

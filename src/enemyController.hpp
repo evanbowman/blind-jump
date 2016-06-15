@@ -12,7 +12,6 @@
 
 #include "textureManager.hpp"
 #include "SFML/Graphics.hpp"
-#include <iostream>
 #include "turret.hpp"
 #include "effectsController.hpp"
 #include "scoot.hpp"

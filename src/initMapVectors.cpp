@@ -7,7 +7,6 @@
 //
 
 #include "initMapVectors.hpp"
-#include <iostream>
 #include <cmath>
 #include "tileController.hpp"
 

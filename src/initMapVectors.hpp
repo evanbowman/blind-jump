@@ -10,7 +10,6 @@
 #ifndef initMapVectors_hpp
 #define initMapVectors_hpp
 
-#include <stdio.h>
 #include "SFML/Graphics.hpp"
 #include "wall.hpp"
 #include "coordinate.h"

@@ -10,7 +10,6 @@
 #ifndef healthEffect_hpp
 #define healthEffect_hpp
 
-#include <stdio.h>
 #include "SFML/Graphics.hpp"
 
 class HealthEffect {

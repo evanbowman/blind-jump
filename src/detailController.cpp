@@ -9,7 +9,6 @@
 #include "detailController.hpp"
 #include "ResourcePath.hpp"
 #include "player.hpp"
-#include <iostream>
 #include <cmath>
 
 detailController::detailController() {
@@ -116,7 +115,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
 			DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pTM->getTexture(TextureManager::Texture::damagedRobot), 0, 0, 0);
 			damagedRobots.push_back(dr);
 		} catch(const char* e) {
-			std::cout << e << std::endl;
+			//std::cout << e << std::endl;
 		}
 
 		if (rand() % 2) {
@@ -125,7 +124,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
 	    		DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pTM->getTexture(TextureManager::Texture::damagedRobot), 0, 0, 0);
 				damagedRobots.push_back(dr);
 			} catch(const char* e) {
-				std::cout << e << std::endl;
+				//std::cout << e << std::endl;
 			}
 		}
 		
@@ -135,7 +134,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
 				DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pTM->getTexture(TextureManager::Texture::damagedRobot), 0, 0, 0);
 				damagedRobots.push_back(dr);
 			} catch(const char* e) {
-				std::cout << e << std::endl;
+				//std::cout << e << std::endl;
 			}
 		}
 	}

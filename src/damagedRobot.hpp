@@ -10,7 +10,6 @@
 #ifndef damagedRobot_hpp
 #define damagedRobot_hpp
 
-#include <stdio.h>
 #include "detailParent.hpp"
 #include "SFML/Graphics.hpp"
 #include "spriteSheet.hpp"

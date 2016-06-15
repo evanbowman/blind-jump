@@ -10,7 +10,6 @@
 #ifndef enemyCollisionFunctions_hpp
 #define enemyCollisionFunctions_hpp
 
-#include <stdio.h>
 #include "wall.hpp"
 
 // Simple bounding box collision checking

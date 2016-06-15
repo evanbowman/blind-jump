@@ -10,7 +10,6 @@
 #ifndef dashSmoke_hpp
 #define dashSmoke_hpp
 
-#include <stdio.h>
 #include "SFML/Graphics.hpp"
 
 class DashSmoke {

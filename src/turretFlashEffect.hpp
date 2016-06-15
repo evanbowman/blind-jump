@@ -10,7 +10,6 @@
 #ifndef turretFlashEffect_hpp
 #define turretFlashEffect_hpp
 
-#include <stdio.h>
 #include "SFML/Graphics.hpp"
 #include "spriteSheet.hpp"
 #include "Effect.hpp"

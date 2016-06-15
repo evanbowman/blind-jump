@@ -10,7 +10,6 @@
 #ifndef aStar_hpp
 #define aStar_hpp
 
-#include <stdio.h>
 #include <vector>
 
 #define MAP_WIDTH 61

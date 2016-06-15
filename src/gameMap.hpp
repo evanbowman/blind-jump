@@ -10,7 +10,6 @@
 #ifndef gameMap_hpp
 #define gameMap_hpp
 
-#include <stdio.h>
 #include "SFML/Graphics.hpp"
 #include "player.hpp"
 #include "backgroundHandler.hpp"

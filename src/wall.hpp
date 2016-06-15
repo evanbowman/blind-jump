@@ -10,7 +10,6 @@
 #ifndef wall_hpp
 #define wall_hpp
 
-#include <stdio.h>
 class wall {
 private:
 	bool insideWindow;

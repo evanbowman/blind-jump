@@ -10,7 +10,6 @@
 #ifndef backgroundHandler_hpp
 #define backgroundHandler_hpp
 
-#include <stdio.h>
 #include <SFML/Graphics.hpp>
 
 #define STARMAP_SIZE 7

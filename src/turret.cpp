@@ -9,7 +9,6 @@
 #include "turret.hpp"
 #include <cmath>
 #include "angleFunction.hpp"
-#include <iostream>
 
 turret::turret(sf::Sprite spr[10]) {
 	xPos = 0;

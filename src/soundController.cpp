@@ -8,10 +8,8 @@
 
 #include "soundController.hpp"
 #include "ResourcePath.hpp"
-#include <iostream>
 #include <cmath>
 #include "SFML/Graphics.hpp"
-#include <iostream>
 
 SoundController::SoundController() {
 	
@@ -56,7 +54,7 @@ void SoundController::playEffect(SoundController::Effect index) {
 			break;
 			
 		default:
-			std::cerr << "Unexpected effect index in playEffect" << std::endl;
+			//std::cerr << "Unexpected effect index in playEffect" << std::endl;
 			break;
 	}
 }

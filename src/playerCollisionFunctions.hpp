@@ -10,7 +10,6 @@
 #ifndef playerCollisionFunctions_hpp
 #define playerCollisionFunctions_hpp
 
-#include <stdio.h>
 #include "wall.hpp"
 #include "treasureChest.hpp"
 #include <cmath>

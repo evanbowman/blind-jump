@@ -10,7 +10,6 @@
 #ifndef enemyShot_hpp
 #define enemyShot_hpp
 
-#include <stdio.h>
 #include "SFML/Graphics.hpp"
 #include <cmath>
 #include "spriteSheet.hpp"

@@ -10,7 +10,6 @@
 #ifndef player_hpp
 #define player_hpp
 
-#include <stdio.h>
 #include <SFML/Graphics.hpp>
 #include "gun.hpp"
 #include "tileController.hpp"

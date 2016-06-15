@@ -10,7 +10,6 @@
 #ifndef lampLight_hpp
 #define lampLight_hpp
 
-#include <stdio.h>
 #include "detailParent.hpp"
 
 class LampLight : public detailParent {

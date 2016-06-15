@@ -10,7 +10,6 @@
 #ifndef soundController_hpp
 #define soundController_hpp
 
-#include <stdio.h>
 #include "SFML/Audio.hpp"
 #include <array>
 

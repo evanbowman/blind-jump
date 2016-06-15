@@ -10,7 +10,6 @@
 #ifndef smallExplosion_hpp
 #define smallExplosion_hpp
 
-#include <stdio.h>
 #include "SFML/Graphics.hpp"
 #include "spriteSheet.hpp"
 #include "Effect.hpp"

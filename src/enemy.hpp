@@ -10,7 +10,6 @@
 #ifndef enemy_hpp
 #define enemy_hpp
 
-#include <stdio.h>
 #include "SFML/Graphics.hpp"
 #include "wall.hpp"
 #include "effectsController.hpp"

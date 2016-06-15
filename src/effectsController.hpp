@@ -10,7 +10,6 @@
 #ifndef effectsController_hpp
 #define effectsController_hpp
 
-#include <stdio.h>
 #include "SFML/Graphics.hpp"
 #include "turretFlashEffect.hpp"
 #include "bulletType1.hpp"

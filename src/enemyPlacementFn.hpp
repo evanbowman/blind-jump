@@ -10,8 +10,6 @@
 #ifndef enemyPlacementFn_hpp
 #define enemyPlacementFn_hpp
 
-#include <stdio.h>
-
 // Forward declare gamemap to break dependency
 class GameMap;
 

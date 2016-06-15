@@ -11,7 +11,6 @@
 #define bulletType1_hpp
 
 #include <SFML/Graphics.hpp>
-#include <stdio.h>
 #include "spriteSheet.hpp"
 
 class bulletType1 {

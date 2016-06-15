@@ -10,7 +10,6 @@
 #ifndef inputController_hpp
 #define inputController_hpp
 
-#include <stdio.h>
 #include "SFML/Graphics.hpp"
 
 class InputController {

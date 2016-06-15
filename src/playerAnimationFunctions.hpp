@@ -10,8 +10,6 @@
 #ifndef playerAnimationFunctions_hpp
 #define playerAnimationFunctions_hpp
 
-#include <stdio.h>
-
 //Decodes the horizontal movement based on the input (animation sprites are not in sequence, and I reused some of them). It's long, so we dont want this in the player object
 inline uint8_t horizontalAnimationDecoder(uint8_t index) {
 	switch(index) {

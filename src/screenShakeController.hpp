@@ -10,7 +10,6 @@
 #ifndef screenShakeController_hpp
 #define screenShakeController_hpp
 
-#include <stdio.h>
 #include "player.hpp"
 
 class ScreenShakeController {

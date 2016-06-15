@@ -9,7 +9,6 @@
 #include "IntroDoor.hpp"
 #include <cmath>
 #include "screenShakeController.hpp"
-#include <iostream>
 
 IntroDoor::IntroDoor(float xStart, float yStart, sf::Texture * inpTxtr, int len, float width, float height) : detailParent(xStart, yStart, len, width / 2, height / 2) {
 	doorSheet.setTexture(inpTxtr);
@@ -22,7 +21,6 @@ bool checkBulletCollision(float xPos, float yPos, effectsController & ef) {
 	for (auto & element : ef.getBulletLayer1()) {
 		if (std::abs(element.getXpos() - xPos) < 4 && std::abs(element.getYpos() - yPos) < 4) {
 			element.setKillFlag();
-			std::cout << xPos << " " << element.getXpos() << "\n" << yPos << " " << element.getYpos();
 			return true;
 		}
 	}

@@ -14,7 +14,6 @@
 #ifndef fontController_hpp
 #define fontController_hpp
 
-#include <stdio.h>
 #include "SFML/Graphics.hpp"
 #include "ResourcePath.hpp"
 

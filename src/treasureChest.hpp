@@ -10,7 +10,6 @@
 #ifndef treasureChest_hpp
 #define treasureChest_hpp
 
-#include <stdio.h>
 #include "detailParent.hpp"
 #include "inputController.hpp"
 #include "spriteSheet.hpp"

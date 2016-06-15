@@ -10,7 +10,6 @@
 #ifndef mappingFunctions_hpp
 #define mappingFunctions_hpp
 
-#include <stdio.h>
 #include "tileController.hpp"
 
 #define TRANSITION_LEVEL_1 7

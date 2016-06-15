@@ -8,7 +8,6 @@
 
 #include "mappingFunctions.hpp"
 #include "initMapVectors.hpp"
-#include <iostream>
 #include <cmath>
 #include "ResourcePath.hpp"
 #include "enemyPlacementFn.hpp"

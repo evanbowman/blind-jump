@@ -10,7 +10,6 @@
 #ifndef generalDetail_hpp
 #define generalDetail_hpp
 
-#include <stdio.h>
 #include "detailParent.hpp"
 
 class GeneralDetail : public detailParent {

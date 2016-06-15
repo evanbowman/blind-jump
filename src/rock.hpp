@@ -10,7 +10,6 @@
 #ifndef rock_hpp
 #define rock_hpp
 
-#include <stdio.h>
 #include "detailParent.hpp"
 #include "SFML/Graphics.hpp"
 #include "spriteSheet.hpp"

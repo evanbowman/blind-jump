@@ -10,7 +10,6 @@
 #ifndef tileController_hpp
 #define tileController_hpp
 
-#include <stdio.h>
 #include <SFML/Graphics.hpp>
 #include "wall.hpp"
 #include "enemyController.hpp"

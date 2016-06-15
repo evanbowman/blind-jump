@@ -10,7 +10,6 @@
 #ifndef userInterface_hpp
 #define userInterface_hpp
 
-#include <stdio.h>
 #include "SFML/Graphics.hpp"
 #include "fontController.hpp"
 #include "effectsController.hpp"

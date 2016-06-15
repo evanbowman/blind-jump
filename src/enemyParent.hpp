@@ -10,7 +10,6 @@
 #ifndef enemyParent_hpp
 #define enemyParent_hpp
 
-#include <stdio.h>
 #include "SFML/Graphics.hpp"
 #include "wall.hpp"
 
