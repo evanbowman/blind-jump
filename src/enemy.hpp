@@ -24,9 +24,11 @@ protected:
 	float xInit, yInit, playerPosX, playerPosY, xPos, yPos, colorAmount;
 	uint8_t frameIndex, health;
 	uint32_t colorTimer, frameTimer;
-	bool checkWallCollision(std::vector<wall> &, float, float, float);
-	bool wallInPath(std::vector<wall> &, float, float, float);
-
+	bool checkWallCollision(const std::vector<wall> &, float, float, float);
+	bool wallInPath(const std::vector<wall> &, float, float, float);
+	void checkShotCollision(effectsController & ef, float rad);
+	void updateColor(const sf::Time &);
+	
 public:
 	Enemy(float, float, float, float);
 	virtual const sf::Sprite & getSprite() const = 0;

@@ -20,8 +20,8 @@ private:
 public:
 	bool isInsideWindow() const;
 	void setInsideWindow(bool);
-	float getPosX();
-	float getPosY();
+	float getPosX() const;
+	float getPosY() const;
 	float xPosInitial;
 	float yPosInitial;
 	int width;
@@ -30,7 +30,7 @@ public:
 	void setPosition(float, float);
 	void setYinit(float);
 	void setXinit(float);
-	float getXinit();
-	float getYinit();
+	float getXinit() const;
+	float getYinit() const;
 };
 #endif /* wall_hpp */

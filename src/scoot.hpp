@@ -15,22 +15,23 @@
 #include "enemy.hpp"
 
 class Scoot : public Enemy {
-public:
-	Scoot(sf::Texture *, sf::Texture *, float, float, float, float);
-	void update(float, float, const std::vector<wall> &, effectsController & ef, const sf::Time &) override;
-	const sf::Sprite & getSprite() const override;
-	const sf::Sprite & getShadow() const override;
-	void onDeath(effectsController &) override;
-	
 private:
 	enum class State {
-		drift1, drift2, shoot, recoil, changeDir1, changeDir2
+		drift1, drift2, shoot, recoil
 	};
 	mutable SpriteSheet<12, 12> spriteSheet;
 	sf::Sprite shadow;
 	float speedScale, hSpeed, vSpeed;
 	State state;
 	int32_t timer;
+	void changeDir(float);
+
+public:
+	Scoot(sf::Texture *, sf::Texture *, float, float, float, float);
+	void update(float, float, const std::vector<wall> &, effectsController & ef, const sf::Time &) override;
+	const sf::Sprite & getSprite() const override;
+	const sf::Sprite & getShadow() const override;
+	void onDeath(effectsController &) override;
 };
 
 #endif /* scoot_hpp */

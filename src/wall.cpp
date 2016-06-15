@@ -19,11 +19,11 @@ wall::wall() {
 	insideWindow = false;
 }
 
-float wall::getPosY() {
+float wall::getPosY() const {
 	return yPos;
 }
 
-float wall::getPosX() {
+float wall::getPosX() const {
 	return xPos;
 }
 
@@ -40,11 +40,11 @@ void wall::setYinit(float y) {
 	yPosInitial = y;
 }
 
-float wall::getXinit() {
+float wall::getXinit() const {
 	return xPosInitial;
 }
 
-float wall::getYinit() {
+float wall::getYinit() const {
 	return yPosInitial;
 }
 
