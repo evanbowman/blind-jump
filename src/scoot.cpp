@@ -85,7 +85,7 @@ void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, ef
 
 	case State::recoil:
 		timer += elapsedTime.asMilliseconds();
-		speedScale *= 0.99 * (elapsedTime.asMilliseconds() / 17.6);
+		speedScale *= 0.99;
 		if (timer > 400) {
 			timer -= 400;
 			state = State::drift1;

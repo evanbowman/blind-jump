@@ -36,6 +36,7 @@ public:
 	State getState() const;
 	
 private:
+	uint8_t shotCount;
 	State state;
 	mutable SpriteSheet<29, 38> dasherSheet;
 	mutable SpriteSheet<47, 38> deathSheet;

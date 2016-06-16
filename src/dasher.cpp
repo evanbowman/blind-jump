@@ -41,6 +41,7 @@ bool DasherBlur::getKillFlag() {
 
 Dasher::Dasher(sf::Texture * pMain, sf::Texture * pDeath, sf::Texture * pShadow, float _xInit, float _yInit, float _ppx, float _ppy)
 	: Enemy{_xInit, _yInit, _ppx, _ppy},
+	  shotCount{0},
 	  state{State::idle},
 	  dasherSheet{pMain},
 	  deathSheet{pDeath},
@@ -85,7 +86,7 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 
 	dasherSheet.setPosition(xPos + 4, yPos);
 	deathSheet.setPosition(xPos + 4, yPos);
-	shadow.setPosition(xPos + 4, yPos + 2);
+	shadow.setPosition(xPos - 4, yPos + 22);
 
 	timer += elapsedTime.asMilliseconds();
 	
@@ -115,8 +116,9 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 	case State::shooting:
 		facePlayer();
 		frameTimer += elapsedTime.asMilliseconds();
-		if (frameTimer > 80 && timer < 240) {
+		if (frameTimer > 80 && shotCount < 3) {
 			frameTimer -= 80;
+			shotCount++;
 			if (xPos > playerPosX) {
 				effects.addDasherShot(xInit - 12, yInit - 12, angleFunction(xPos + 18, yPos, playerPosX, playerPosY));
 				effects.addTurretFlash(xInit - 12, yInit - 12);
@@ -128,8 +130,9 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 			}
 		}
 
-		if (timer > 280) {
-			timer -= 280;
+		if (timer > 300) {
+			timer -= 300;
+			shotCount = 0;
 			state = State::pause;
 		}
 		break;
@@ -138,6 +141,7 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 		facePlayer();
 		if (timer > 80) {
 			timer -= 80;
+			frameTimer = 0;
 			state = State::shooting;
 			frameIndex = 4;
 		}
