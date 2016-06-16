@@ -166,8 +166,8 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 		break;
 
 	case State::dashing:
-		if (timer > 300) {
-			timer -= 300;
+		if (timer > 250) {
+			timer -= 250;
 			state = State::dashEnd;
 			frameIndex = 1;
 			hSpeed = 0.f;

@@ -36,7 +36,7 @@ void enemyController::linkTextures(TextureManager * pTM) {
 //A function to draw the enemies' current sprites to the screen
 void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>& gameShadows, float x, float y, effectsController& ef, std::vector<wall> w, bool enabled, detailController* dets, tileController* pTiles, ScreenShakeController* scrn, FontController& fonts, sf::Time & elapsedTime) {
 	if (!turrets.empty()) {
-		for (std::vector<turret>::iterator it = turrets.begin(); it != turrets.end();) {
+		for (auto it = turrets.begin(); it != turrets.end();) {
 			if (it->getKillFlag() == 1) {
 				// Add some scrap to the map
 				dets->addEnemyScrap(it->getXinit() + 4, it->getYinit() + 6, 0, 0);
@@ -49,7 +49,7 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
 			}
 		}
 		
-		for (auto & element : turrets) {									   //Use iterators to step through the vector
+		for (auto & element : turrets) {
 			element.setPosition(x + element.getXinit(), y + element.getYinit());		 //Update the enemies' position, x and y are offsets
 			if (element.getXpos() > -64 && element.getXpos() < windowW + 64 && element.getYpos() > -64 && element.getYpos() < windowH + 64) {
 				// Get the enemy's shadow
@@ -77,7 +77,7 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
 	}
 	
 	if (!scoots.empty()) {
-		for (std::vector<Scoot>::iterator it = scoots.begin(); it != scoots.end();) {
+		for (auto it = scoots.begin(); it != scoots.end();) {
 			if (it->getKillFlag()) {
 				// Add some scrap to the map
 				dets->addEnemyScrap(it->getXinit(), it->getYinit(), 0, 0);
@@ -123,7 +123,7 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
 			}
 		}
 		
-		for (std::vector<Critter>::iterator it = critters.begin(); it != critters.end();) {
+		for (auto it = critters.begin(); it != critters.end();) {
 			if (it->getKillFlag()) {
 				// Rumble the screen
 				scrn->rumble();

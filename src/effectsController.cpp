@@ -14,7 +14,7 @@ effectsController::effectsController() {}
 template<typename T>
 void updateVector(std::vector<T>& vec, float xOffset, float yOffset, sf::Time & elapsedTime) {
 	if (!vec.empty()) {
-		for (typename std::vector<T>::iterator it = vec.begin(); it != vec.end();) {
+		for (auto it = vec.begin(); it != vec.end();) {
 			it->update(xOffset, yOffset, elapsedTime);
 			if (it->getKillFlag()) {
 				it = vec.erase(it);
@@ -29,7 +29,7 @@ void updateVector(std::vector<T>& vec, float xOffset, float yOffset, sf::Time & 
 template<typename T>
 void updateVectorGlow(std::vector<T>& vec, float xOffset, float yOffset, std::vector<sf::Sprite*>& glowSprs, sf::Time & elapsedTime) {
 	if (!vec.empty()) {
-		for (typename std::vector<T>::iterator it = vec.begin(); it != vec.end();) {
+		for (auto it = vec.begin(); it != vec.end();) {
 			it->update(xOffset, yOffset, elapsedTime);
 			glowSprs.push_back(it->getGlow());
 			if (it->getKillFlag()) {
@@ -44,7 +44,7 @@ void updateVectorGlow(std::vector<T>& vec, float xOffset, float yOffset, std::ve
 
 void effectsController::update(float xOffset, float yOffset, ScreenShakeController* scrn, sf::Time & elapsedTime) {
 	if (!bullets.empty()) {
-		for (std::vector<bulletType1>::iterator it = bullets.begin(); it != bullets.end();) {
+		for (auto it = bullets.begin(); it != bullets.end();) {
 			//If the duration has reached 0 or the object's kill flag is high
 			if (it->getKillFlag()) {
 				// Don't always want to add in additional effect where it could make the screen look cluttered, so check a condition first
