@@ -23,16 +23,6 @@ enemyController::enemyController() {
 		turretSprites[i].setTexture(turretTextures[i]);
 	}
 	
-	for (auto i = 0; i < 6; i++) {
-		dasherTexture[i].loadFromFile(resourcePath() + "dasherSheet.png", sf::IntRect(i * 29, 0, 29, 38));
-		dasherSprite[i].setTexture(dasherTexture[i]);
-	}
-	
-	for (auto i = 0; i < 15; i++) {
-		dasherDeathSeq[i].loadFromFile(resourcePath() + "dasherDeathSeq.png", sf::IntRect(i * 47, 0, 47, 38));
-		dasherSprite[i + 6].setTexture(dasherDeathSeq[i]);
-	}
-	
 	for (auto i = 0; i < 4; i++) {
 		chaserTextures[i].loadFromFile(resourcePath() + "critterSheet.png", sf::IntRect(i * 18, 0, 18, 18));
 		chaserSprites[i].setTexture(chaserTextures[i]);
@@ -175,58 +165,31 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
 	}
 	
 	if (!dashers.empty()) {
-		for (std::vector<Dasher>::iterator it = dashers.begin(); it != dashers.end();) {
-			if (it->scrapReady()) {
-				// Add some scrap to the map
-				dets->addDasherScrap(it->getXinit() + 14, it->getYinit() + 15, it->getSprite()->getScale().x);
-			}
-			
-			if (it->shakeReady()) {
-				scrn->rumble();
-			}
-			
-			if (it->getKillFlag()) {
+		for (auto it = dashers.begin(); it != dashers.end();) {
+			if (it->getKillFlag())
 				it = dashers.erase(it);
-			}
-			
 			else {
 				if (it->getXpos() > -64 && it->getXpos() < windowW + 64 && it->getYpos() > -64 && it->getYpos() < windowH + 64) {
-					if (enabled) {
-						it->update(x, y, w, ef, elapsedTime);
-					}
-					// Get the enemy's shadow
-					if (!it->dying()) {
-						std::tuple<sf::Sprite, float, Rendertype, float> shadow;
-						std::get<0>(shadow) = *it->getShadow();
-						gameShadows.push_back(shadow);
-					}
+					if (enabled)
+						it->update(x, y, w, ef, elapsedTime);	
 					
-					for (auto & element2 : *it->getBlurEffects()) {
-						std::tuple<sf::Sprite, float, Rendertype, float> t;
-						std::get<0>(t) = *element2.getSprite();
-						std::get<1>(t) = element2.yInit + y;
-						std::get<2>(t) = Rendertype::shadeDefault;
-						gameObjects.push_back(t);
-					}
+					auto state = it->getState();
+					if (state != Dasher::State::dying && state != Dasher::State::dead)
+						gameShadows.emplace_back(it->getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
 					
-					std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
-					std::get<0>(tSpr) = *it->getSprite();
-					std::get<1>(tSpr) = it->getYpos();
+					for (auto & element : *it->getBlurEffects())
+						gameObjects.emplace_back(*element.getSprite(), element.yInit + y, Rendertype::shadeDefault, 0.f);
 					
-					if (it->colored()) {
-						std::get<2>(tSpr) = Rendertype::shadeWhite;
-						std::get<3>(tSpr) = it->colorAmount;
-					} else {
-						std::get<2>(tSpr) = Rendertype::shadeDefault;
-					}
+					if (it->isColored())
+						gameObjects.emplace_back(it->getSprite(), it->getYpos(), Rendertype::shadeWhite, it->getColorAmount());
+					else
+						gameObjects.emplace_back(it->getSprite(), it->getYpos(), Rendertype::shadeDefault, 0.f);
 					
-					gameObjects.push_back(tSpr);
+				} else {
+					// If outside the window, update the enemy's position, but don't move it, draw it, check collisions, etc.
+					it->Enemy::update(x, y, w, ef, elapsedTime);
 				}
 				
-				else {
-					// If outside the window, update the enemy's position, but don't move it, draw it, check collisions, etc.
-					it->softUpdate(x, y);
-				}
 				++it;
 			}
 		}
@@ -234,7 +197,7 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
 }
 
 void enemyController::clear() {
-	turrets.clear();				//For world re-initialization, clear out the vector and start fresh
+	turrets.clear();
 	scoots.clear();
 	dashers.clear();
 	critters.clear();
@@ -248,30 +211,33 @@ sf::Sprite* enemyController::getChaserSprites() {
 	return chaserSprites;
 }
 
-sf::Sprite* enemyController::getGuardianSprites() {
-	return droneSprites;
-}
-
-sf::Sprite* enemyController::getDasherSprites() {
-	return dasherSprite;
-}
-
 void enemyController::addTurret(turret t) {
 	turrets.push_back(t);
 }
 
 void enemyController::addScoot(tileController * pTiles) {
 	auto pCoordVec = pTiles->getEmptyLocations();
-	const int locationSelect = (rand() % 2) ? rand() % (pCoordVec->size() / 2) : rand() & (pCoordVec->size());
+	int locationSelect = (rand() % 2) ? rand() % (pCoordVec->size() / 2) : rand() % (pCoordVec->size());
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-	scoots.emplace_back(pTM->getTexture(TextureManager::Texture::scoot), pTM->getTexture(TextureManager::Texture::scootShadow), xInit, yInit, windowW / 2, windowH / 2);
+	scoots.emplace_back(pTM->getTexture(TextureManager::Texture::scoot),
+						pTM->getTexture(TextureManager::Texture::scootShadow),
+						xInit, yInit, windowW / 2, windowH / 2);
 	(*pCoordVec)[locationSelect] = pCoordVec->back();
 	pCoordVec->pop_back();
 }
 
-void enemyController::addDasher(Dasher d) {
-	dashers.push_back(d);
+void enemyController::addDasher(tileController * pTiles) {
+	auto pCoordVec = pTiles->getEmptyLocations();
+	int locationSelect = (rand() % 2) ? rand() % (pCoordVec->size() / 3) : rand() % (pCoordVec->size() / 2);
+	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
+	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
+	dashers.emplace_back(pTM->getTexture(TextureManager::Texture::dasher),
+						 pTM->getTexture(TextureManager::Texture::dasherDeath),
+						 pTM->getTexture(TextureManager::Texture::playerShadow),
+						 xInit, yInit, windowW / 2, windowH / 2);
+	(*pCoordVec)[locationSelect] = pCoordVec->back();
+	pCoordVec->pop_back();
 }
 
 void enemyController::addCritter(Critter c) {

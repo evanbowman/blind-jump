@@ -9,7 +9,6 @@
 #include "dasher.hpp"
 #include <cmath>
 #include "angleFunction.hpp"
-#include "wallinpath.hpp"
 
 DasherBlur::DasherBlur(sf::Sprite* spr, float xInit, float yInit) {
 	this->spr = *spr;
@@ -40,79 +39,177 @@ bool DasherBlur::getKillFlag() {
 	return killflag;
 }
 
-Dasher::Dasher(sf::Sprite* sprs) : EnemyParent(sprs) {
-	for (int i = 0; i < 21; i++) {
-		this->sprs[i] = sprs[i];
-		this->sprs[i].setOrigin(14, 8);
-	}
-	// Don't want enemies' movements to be synchronized!
-	int offset = rand() % 50 + 100;
-	dashCnt = 150 + offset;
-	isDashing = false;
-	frameIndex = 0;
-	hspeed = 0;
-	vspeed = 0;
-	blurCountDown = 3;
+Dasher::Dasher(sf::Texture * pMain, sf::Texture * pDeath, sf::Texture * pShadow, float _xInit, float _yInit, float _ppx, float _ppy)
+	: Enemy{_xInit, _yInit, _ppx, _ppy},
+	  state{State::idle},
+	  dasherSheet{pMain},
+	  deathSheet{pDeath},
+	  hSpeed{0.f},
+	  vSpeed{0.f},
+	  timer{0}
+{
+	dasherSheet.setOrigin(14, 8);
+	deathSheet.setOrigin(14, 8);
+	shadow.setTexture(*pShadow);
 	health = 5;
-	deathSeq = false;
-	timer = 0;
 }
 
-sf::Sprite* Dasher::getSprite() {
-	return &sprs[frameIndex];
+const sf::Sprite & Dasher::getSprite() const {
+	switch(state) {
+	case State::dying:
+		return deathSheet[frameIndex];
+			
+	case State::dead:
+		return deathSheet[frameIndex];
+
+	default:
+		return dasherSheet[frameIndex];
+	}
 }
 
-void Dasher::checkBulletCollision(effectsController& ef) {
-	if (!deathSeq) {
-		//Check collisions with player's shots, but only if the shot vectors aren't empty
-		if (!ef.getBulletLayer1().empty()) {
-			for (auto & element : ef.getBulletLayer1()) {
-				if (std::abs(element.getXpos() - (xPos - 6)) < 10 && std::abs(element.getYpos() - (yPos)) < 12 && !element.getKillFlag()) {
-					element.setKillFlag();		   // Kill the bullet if there's a collision between the bullet and the enemy
-					// Tons of effects in one place is distracting, so don't draw another one if the enemy is about to explode
-					if (health == 1) {
-						element.disablePuff();
-					}
-					health -= 1;
-					isColored = true;
-					colorAmount = 1.f;
-				}
+const sf::Sprite & Dasher::getShadow() const {
+	return shadow;
+}
+
+void Dasher::facePlayer() {
+	if (xPos > playerPosX)
+		dasherSheet.setScale(1, 1);
+	else
+		dasherSheet.setScale(-1, 1);
+}
+
+void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & walls, effectsController & effects, const sf::Time & elapsedTime) {
+	Enemy::update(xOffset, yOffset, walls, effects, elapsedTime);
+	Enemy::checkShotCollision(effects, 12.f);
+	Enemy::updateColor(elapsedTime);
+
+	dasherSheet.setPosition(xPos + 4, yPos);
+	deathSheet.setPosition(xPos + 4, yPos);
+	shadow.setPosition(xPos + 4, yPos + 2);
+
+	timer += elapsedTime.asMilliseconds();
+	
+	switch(state) {
+	case State::idle:
+		if (timer >= 200) {
+			timer -= 200;
+			const int select = rand() % 2;
+			if (select) {
+				state = State::dashBegin;
+				frameIndex = 1;
+			} else {
+				state = State::shootBegin;
+				frameIndex = 3;
 			}
 		}
-	}
-	
-	if (health == 0 && deathSeq == false) {
-		// Play the character death sequence
-		deathSeq = true;
-		// Set the frame index to the start of the death animation
-		frameIndex = 6;
-		unsigned long int temp = rand() % 4;
-		if (temp == 0) {
-			ef.addHearts(xInit, yInit);
-		} else {
-			ef.addCoins(xInit, yInit);
-		}
-		ef.addSmallExplosion(xInit, yInit);
-		blurEffects.clear();
-	}
-}
+		break;
 
-void Dasher::update(float xOffset, float yOffset, std::vector<wall> walls, effectsController& ef, sf::Time & elapsedTime) {
-	// Update the object's position variables
-	setPosition(xOffset, yOffset);
-	checkBulletCollision(ef);
-	// Update the sprite positions
-	if (isColored) {
-		colorTimer += elapsedTime.asMilliseconds();
-		if (colorTimer > 20.f) {
-			colorTimer -= 20.f;
-			colorAmount -= 0.1f;
+	case State::pause:
+		if (timer >= 200) {
+			timer -= 200;
+			state = State::dashBegin;
+			frameIndex = 1;
+		}
+		break;
+
+	case State::shooting:
+		facePlayer();
+		frameTimer += elapsedTime.asMilliseconds();
+		if (frameTimer > 80 && timer < 240) {
+			frameTimer -= 80;
+			if (xPos > playerPosX) {
+				effects.addDasherShot(xInit - 12, yInit - 12, angleFunction(xPos + 18, yPos, playerPosX, playerPosY));
+				effects.addTurretFlash(xInit - 12, yInit - 12);
+			}
+			
+			else {
+				effects.addDasherShot(xInit + 4, yInit - 12, angleFunction(xPos + 18, yPos, playerPosX, playerPosY));
+				effects.addTurretFlash(xInit + 4, yInit - 12);
+			}
+		}
+
+		if (timer > 280) {
+			timer -= 280;
+			state = State::pause;
+		}
+		break;
+
+	case State::shootBegin:
+		facePlayer();
+		if (timer > 80) {
+			timer -= 80;
+			state = State::shooting;
+			frameIndex = 4;
+		}
+		break;
+
+	case State::dashBegin:
+		facePlayer();
+		if (timer > 352) {
+			timer -= 352;
+			state = State::dashing;
+			frameIndex = 2;
+			float dir{static_cast<float>(rand() % 359)};
+			do {
+				dir += 12;
+			} while (wallInPath(walls, dir, xPos, yPos));
+			hSpeed = 5 * cos(dir);
+			vSpeed = 5 * sin(dir);
+			if (hSpeed > 0) {
+				dasherSheet.setScale(-1, 1);
+				deathSheet.setScale(-1, 1);
+			} else {
+				dasherSheet.setScale(1, 1);
+				dasherSheet.setScale(1, 1);
+			}
+		}
+		break;
+
+	case State::dashing:
+		if (timer > 300) {
+			timer -= 300;
+			state = State::dashEnd;
+			frameIndex = 1;
+			hSpeed = 0.f;
+			vSpeed = 0.f;
 		}
 		
-		if (colorAmount <= 0.f) {
-			isColored = false;
+		if (Enemy::checkWallCollision(walls, 48, xPos, yPos)) {
+			hSpeed *= -1.f;
+			vSpeed *= -1.f;
 		}
+		break;
+
+	case State::dashEnd:
+		if (timer > 150) {
+			timer -= 150;
+			state = State::idle;
+			frameIndex = 0;
+		}
+		break;
+
+	case State::dying:
+		break;
+
+	case State::dead:
+		break;
 	}
+
+	xInit += hSpeed * (elapsedTime.asMilliseconds() / 17.6f);
+	yInit += vSpeed * (elapsedTime.asMilliseconds() / 17.6f);
+}
+
+void Dasher::onDeath(effectsController & effects) {
+	state = State::dying;
+}
+
+Dasher::State Dasher::getState() const {
+	return state;
+}
+
+/*
+void Dasher::update(float xOffset, float yOffset, std::vector<wall> walls, effectsController& ef, sf::Time & elapsedTime) {
+	
 	for (int i = 0; i < 21; i++) {
 		sprs[i].setPosition(xPos + 4, yPos);
 	}
@@ -212,15 +309,6 @@ void Dasher::update(float xOffset, float yOffset, std::vector<wall> walls, effec
 			}
 			
 			else if (dashCnt == 100 || dashCnt == 98 || dashCnt == 96) {
-				if (xPos > playerPosX) {
-					ef.addDasherShot(xInit - 12, yInit - 12, angleFunction(xPos + 18, yPos, playerPosX, playerPosY));
-					ef.addTurretFlash(xInit - 12, yInit - 12);
-				}
-				
-				else {
-					ef.addDasherShot(xInit + 4, yInit - 12, angleFunction(xPos + 18, yPos, playerPosX, playerPosY));
-					ef.addTurretFlash(xInit + 4, yInit - 12);
-				}
 			}
 			
 			else if (dashCnt == 80 || dashCnt == 78 || dashCnt == 76) {
@@ -275,19 +363,6 @@ void Dasher::update(float xOffset, float yOffset, std::vector<wall> walls, effec
 
 			else {
 				// Flip the enemy's sprites according to the direction it will be moving in
-				if (hspeed > 0) {
-					sf::Vector2f scaleVec(-1, 1);
-					for (int i = 0; i < 21; i++) {
-						sprs[i].setScale(scaleVec);
-					}
-				}
-				
-				else {
-					sf::Vector2f scaleVec(1, 1);
-					for (int i = 0; i < 21; i++) {
-						sprs[i].setScale(scaleVec);
-					}
-				}
 			}
 		}
 
@@ -332,31 +407,8 @@ void Dasher::update(float xOffset, float yOffset, std::vector<wall> walls, effec
 		}
 	}
 }
+*/
 
-void Dasher::softUpdate(float xOffset, float yOffset) {
-	setPosition(xOffset, yOffset);
-}
-
-sf::Sprite* Dasher::getShadow() {
-	return &sprs[3];
-}
-
-std::vector<DasherBlur>* Dasher::getBlurEffects() {
+std::vector<DasherBlur> * Dasher::getBlurEffects() {
 	return &blurEffects;
-}
-
-bool Dasher::shakeReady() {
-	return (frameIndex == 6 && timer == 0);
-}
-
-bool Dasher::dying() {
-	return deathSeq;
-}
-
-bool Dasher::scrapReady() {
-	return (frameIndex == 19 && timer == 0);
-}
-
-bool Dasher::colored() {
-	return isColored;
 }

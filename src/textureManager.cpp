@@ -135,6 +135,12 @@ bool TextureManager::load() {
 
 	if (!loadTexture("charger_enemy_shadow.png", Texture::scootShadow, textures))
 		return false;
+
+	if (!loadTexture("dasherSheet.png", Texture::dasher, textures))
+		return false;
+
+	if (!loadTexture("dasherDeathSeq.png", Texture::dasherDeath, textures))
+		return false;
 	
 	return true;
 }

@@ -60,8 +60,7 @@ int initEnemies(GameMap * gm) {
 	// Collect enemy weight terms under a variable and init to 0
 	int collector = 0;
 	int diff;
-	// Heap allocation for interval array, where the length of each interval represents the weight of each enemy
-	int * intervals = new int[enemyVecLen];
+	std::vector<int> intervals(enemyVecLen);
 	// First loop through all enemies and update their probability values based on current level
 	for (size_t i = 0; i < enemyVecLen; i++) {
 		// Set the weight to 100 divided by the difference between the current level and the ideal level
@@ -113,7 +112,7 @@ int initEnemies(GameMap * gm) {
 				
 				
 			case 2:
-				addDasher(gm->tiles.mapArray, gm->tiles.descriptionArray, gm->en, gm->tiles.posX, gm->tiles.posY, gm->windowW/2, gm->windowH/2, gm->tiles.emptyMapLocations);
+				gm->en.addDasher(&gm->tiles);
 				count += 3;
 				break;
 				
@@ -127,10 +126,7 @@ int initEnemies(GameMap * gm) {
 		}
 		
 	}
-	
-	// Free dynamic allocations
-	delete [] intervals;
-	
+
 	// Return the count
 	return count;
 }

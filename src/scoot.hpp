@@ -25,13 +25,13 @@ private:
 	State state;
 	int32_t timer;
 	void changeDir(float);
+	void onDeath(effectsController &) override;
 
 public:
 	Scoot(sf::Texture *, sf::Texture *, float, float, float, float);
 	void update(float, float, const std::vector<wall> &, effectsController & ef, const sf::Time &) override;
 	const sf::Sprite & getSprite() const override;
 	const sf::Sprite & getShadow() const override;
-	void onDeath(effectsController &) override;
 };
 
 #endif /* scoot_hpp */

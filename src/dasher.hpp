@@ -10,13 +10,12 @@
 #ifndef dasher_hpp
 #define dasher_hpp
 
-#include "enemyParent.hpp"
 #include "effectsController.hpp"
+#include "enemy.hpp"
 
-class DasherBlur {
-public:
-	DasherBlur(sf::Sprite*, float, float);
-	sf::Sprite* getSprite();
+struct DasherBlur {
+	DasherBlur(sf::Sprite *, float, float);
+	sf::Sprite * getSprite();
 	bool getKillFlag();
 	float xInit;
 	float yInit;
@@ -24,33 +23,28 @@ public:
 	bool killflag;
 };
 
-class Dasher : public EnemyParent {
+class Dasher : public Enemy {
 public:
-	Dasher(sf::Sprite*);
-	sf::Sprite* getSprite();
-	sf::Sprite* getShadow();
-	void update(float, float, std::vector<wall>, effectsController&, sf::Time &);
-	void softUpdate(float, float);
-	std::vector<DasherBlur>* getBlurEffects();
-	void checkBulletCollision(effectsController&);
-	bool shakeReady();
-	bool dying();
-	bool scrapReady();
-	bool colored();
+	Dasher(sf::Texture *, sf::Texture *, sf::Texture *, float, float, float, float);
+	const sf::Sprite & getSprite() const override;
+	const sf::Sprite & getShadow() const override;
+    void update(float, float, const std::vector<wall> &, effectsController & ef, const sf::Time &) override;
+	std::vector<DasherBlur> * getBlurEffects();
+	enum class State {
+		idle, shooting, dashBegin, dashing, dashEnd, dying, dead, shootBegin, pause
+	};
+	State getState() const;
 	
 private:
-	float health;
-	sf::Sprite sprs[21];
-	unsigned short dashCnt;
-	bool isDashing;
-	unsigned char frameIndex;
+	State state;
+	mutable SpriteSheet<29, 38> dasherSheet;
+	mutable SpriteSheet<47, 38> deathSheet;
+	sf::Sprite shadow;
+	float hSpeed, vSpeed;
 	int32_t timer;
-	float hspeed;
-	float vspeed;
-	unsigned char blurCountDown;
 	std::vector<DasherBlur> blurEffects;
-	bool checkWallCollision(std::vector<wall> , float);
-	bool deathSeq;
+	void onDeath(effectsController &) override;
+	void facePlayer();
 };
 
 #endif /* dasher_hpp */

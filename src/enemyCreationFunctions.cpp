@@ -31,19 +31,6 @@ void addTurret(short mapArray[61][61], short descriptionArray[61][61], enemyCont
 	en.addTurret(t);
 }
 
-void addDasher(short mapArray[61][61], short descriptionArray[61][61], enemyController& en, float posX, float posY, float windowW, float windowH, std::vector<Coordinate>& emptyLocations) {
-	
-	Dasher d(en.getDasherSprites());
-	
-	int locationSelect = (rand() % 2) ? rand() % (emptyLocations.size() / 3 ) : rand() % (emptyLocations.size() / 2);
-	Coordinate c = emptyLocations[locationSelect];
-	emptyLocations[locationSelect] = std::move(emptyLocations.back());
-	emptyLocations.pop_back();
-	d.setInitPosition((c.x * 32) + posX + 16, (c.y * 26) + posY - 3);
-	d.setPlayerPos(windowW, windowH);
-	en.addDasher(d);
-}
-
 void addCritter(short mapArray[61][61], short descriptionArray[61][61], enemyController& en, float posX, float posY, float windowW, float windowH, std::vector<Coordinate>& emptyLocations, int rep) {
 	// Fill a vector with a bunch of chasers
 	std::vector<Critter> critters(rep, Critter(en.getChaserSprites(), mapArray));

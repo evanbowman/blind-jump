@@ -42,7 +42,9 @@ enum class Texture {
 			poof,
 			warpEffect,
 			scoot,
-			scootShadow
+			scootShadow,
+			dasher,
+			dasherDeath
 			};
 
 #endif

@@ -30,7 +30,7 @@ critter.o: critter.cpp critter.hpp tileController.hpp enemyParent.hpp aStar.hpp
 damagedRobot.o: damagedRobot.cpp damagedRobot.hpp detailParent.hpp spriteSheet.hpp
 	$(CC) damagedRobot.cpp $(CFLAGS) -c -o damagedRobot.o
 
-dasher.o: dasher.cpp dasher.hpp angleFunction.hpp wallinpath.hpp enemyParent.hpp effectsController.hpp
+dasher.o: dasher.cpp dasher.hpp angleFunction.hpp  enemy.hpp effectsController.hpp
 	$(CC) dasher.cpp $(CFLAGS) -c -o dasher.o
 
 dasherShot.o: dasherShot.hpp spriteSheet.hpp
@@ -60,7 +60,7 @@ enemy.o: enemy.cpp enemy.hpp effectsController.hpp
 enemyController.o: enemyController.hpp enemyController.cpp $(RSP) wall.hpp tileController.hpp detailController.hpp screenShakeController.hpp turret.hpp effectsController.hpp scoot.hpp dasher.hpp critter.hpp RenderType.hpp
 	$(CC) enemyController.cpp $(CFLAGS) -c -o enemyController.o
 
-enemyCreationFunctions.o: enemyCreationFunctions.hpp enemyCreationFunctions.cpp turret.hpp scoot.hpp dasher.hpp enemyController.hpp coordinate.hpp
+enemyCreationFunctions.o: enemyCreationFunctions.hpp enemyCreationFunctions.cpp turret.hpp scoot.hpp enemyController.hpp coordinate.hpp
 	$(CC) enemyCreationFunctions.cpp $(CFLAGS) -c -o enemyCreationFunctions.o
 
 enemyParent.o: enemyParent.hpp enemyParent.cpp wall.hpp
