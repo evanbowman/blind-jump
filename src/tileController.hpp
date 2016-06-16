@@ -15,7 +15,7 @@
 #include "enemyController.hpp"
 #include <queue>
 #include <stack>
-#include "coordinate.h"
+#include "coordinate.hpp"
 #include "textureManager.hpp"
 
 class tileController {
@@ -82,7 +82,7 @@ public:
 	void init();
 	// Return the working set of tiles background controller access
 	unsigned char getWorkingSet();
-	const std::vector<Coordinate> * getEmptyLocations() const;
+	std::vector<Coordinate> * getEmptyLocations();
 	float getPosX() const;
 	float getPosY() const;
 	void setWindowSize(float, float);

@@ -1,5 +1,5 @@
 //
-//  coordinate.h
+//  coordinate.hpp
 //  Blind Jump
 //
 //  Created by Evan Bowman on 1/21/16.
@@ -7,14 +7,13 @@
 //
 
 #pragma once
-#ifndef coordinate_h
-#define coordinate_h
+#ifndef coordinate_hpp
+#define coordinate_hpp
 
-// A simple structure to hold ordered pairs
 typedef struct _COORDINATE {
 	int x;
 	int y;
 	int priority;
 } Coordinate;
 
-#endif /* coordinate_h */
+#endif /* coordinate_hpp */

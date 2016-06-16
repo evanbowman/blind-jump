@@ -10,7 +10,7 @@
 #define pillarPlacement_h
 
 #include <vector>
-#include "coordinate.h"
+#include "coordinate.hpp"
 #include <cmath>
 
 #define PILLAR_RADIUS 180

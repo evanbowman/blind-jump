@@ -27,6 +27,7 @@ protected:
 	bool wallInPath(const std::vector<wall> &, float, float, float);
 	void checkShotCollision(effectsController & ef, float rad);
 	void updateColor(const sf::Time &);
+	void facePlayer();
 	
 public:
 	Enemy(float, float, float, float);

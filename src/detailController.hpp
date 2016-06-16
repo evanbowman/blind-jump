@@ -14,7 +14,7 @@
 #include "Teleporter.hpp"
 #include "treasureChest.hpp"
 #include "tileController.hpp"
-#include "coordinate.h"
+#include "coordinate.hpp"
 #include "generalDetail.hpp"
 #include "lampLight.hpp"
 #include "userInterface.hpp"

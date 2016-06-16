@@ -10,21 +10,24 @@
 #ifndef wall_hpp
 #define wall_hpp
 
+#include <stdint.h>
+
 class wall {
 private:
-	bool insideWindow;
-	float xPos;
-	float yPos;
+	float xPosInitial, yPosInitial,  xPos, yPos;
 
 public:
-	bool isInsideWindow() const;
-	void setInsideWindow(bool);
 	float getPosX() const;
 	float getPosY() const;
-	float xPosInitial;
-	float yPosInitial;
-	int width;
-	int height;
+	
+	constexpr int8_t getWidth() const {
+		return 32;
+	}
+
+	constexpr int8_t getHeight() const {
+		return 26;
+	}
+
 	wall();
 	void setPosition(float, float);
 	void setYinit(float);

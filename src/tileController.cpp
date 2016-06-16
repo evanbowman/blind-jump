@@ -15,7 +15,7 @@
 #include "drawPixels.hpp"
 
 
-const std::vector<Coordinate> * tileController::getEmptyLocations() const {
+std::vector<Coordinate> * tileController::getEmptyLocations() {
 	return &emptyMapLocations;
 }
 

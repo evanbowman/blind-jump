@@ -10,8 +10,6 @@
 #include <cmath>
 #include "angleFunction.hpp"
 
-#define PI 3.14159265
-
 Scoot::Scoot(sf::Texture * pMainTxtr, sf::Texture * pShadowTxtr, float _xInit, float _yInit, float _playerPosX, float _playerPosY)
 	: Enemy{_xInit, _yInit, _playerPosX, _playerPosY},
 	  spriteSheet{pMainTxtr},
@@ -38,41 +36,64 @@ void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, ef
 	Enemy::updateColor(elapsedTime);
 	spriteSheet.setPosition(xPos, yPos);
 	shadow.setPosition(xPos - 6, yPos + 2);
-    
+
+	// Face the player
+	if (xPos > playerPosX)
+		spriteSheet.setScale(1, 1);
+	else 
+		spriteSheet.setScale(-1, 1);
+	
 	// Enemies behave as state machines
 	switch(state) {
 	case State::drift1:
 		timer += elapsedTime.asMilliseconds();
-		if (timer > 1400) {
-			timer -= 1400;
+		if (timer > 1800) {
+			timer -= 1800;;
 			state = State::drift2;
-			changeDir(static_cast<float>(rand() % 359));
-			state = State::drift2;
+			if (rand() % 2)
+				changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
+			else
+				changeDir(static_cast<float>(rand() % 359));
 		}
 		break;
 
 	case State::drift2:
 		timer += elapsedTime.asMilliseconds();
-		if (timer > 1400) {
-			timer -= 1400;
+		if (timer > 1800) {
+			timer -= 1800;
 			state = State::shoot;
 		}
 		break;
 		
 	case State::shoot:
 		effects.addTurretFlash(xInit - 8, yInit - 12);
-		effects.addScootShot(xInit - 8, yInit - 12, angleFunction(xPos -8, yPos - 8, playerPosX, playerPosY), playerPosX, playerPosY);
-		effects.addScootShot(xInit - 8, yInit - 12, angleFunction(xPos -8, yPos - 8, playerPosX, playerPosY) + 28, playerPosX, playerPosY);
-		effects.addScootShot(xInit - 8, yInit - 12, angleFunction(xPos -8, yPos - 8, playerPosX, playerPosY) - 28, playerPosX, playerPosY);
+		for (float angle = -28.f; angle < 29.f; angle += 28.f)
+			effects.addScootShot(xInit - 8, yInit - 12,
+								 angleFunction(xPos - 8, yPos - 8, playerPosX, playerPosY) + angle,
+								 playerPosX, playerPosY);
 		state = State::recoil;
-		changeDir(angleFunction(xPos -8, yPos - 8, playerPosX, playerPosY));
+		changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
+		hSpeed *= -1;
+		vSpeed *= -1;
+		// Correct for negative values in arctan calculation
+		if (xPos > playerPosX) {
+			hSpeed *= -1;
+			vSpeed *= -1;
+		}
+		speedScale = 2.f;
 		break;
 
 	case State::recoil:
 		timer += elapsedTime.asMilliseconds();
+		speedScale *= 0.99 * (elapsedTime.asMilliseconds() / 17.6);
 		if (timer > 400) {
-			changeDir(static_cast<float>(rand() % 359));
+			timer -= 400;
 			state = State::drift1;
+			speedScale = 0.5f;
+			if (rand() % 2)
+				changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
+			else
+				changeDir(static_cast<float>(rand() % 359));
 		}
 		break;
 	}
@@ -89,12 +110,10 @@ void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, ef
 	frameTimer += elapsedTime.asMilliseconds();
 	if (frameTimer > 87) {
 		frameTimer -= 87;
-		if (frameIndex == 0) {
+		if (frameIndex == 0)
 			frameIndex = 1;
-		}
-		else {
+		else
 			frameIndex = 0;
-		}
 	}
 }
 
@@ -108,11 +127,10 @@ const sf::Sprite & Scoot::getShadow() const {
 
 void Scoot::onDeath(effectsController & effects) {
 	int select{rand() % 5};
-	if (select == 0) {
+	if (select == 0)
 		effects.addHearts(xInit, yInit);
-	} else {
+	else
 		effects.addCoins(xInit, yInit);
-	}
 	effects.addFireExplosion(xInit, yInit - 2);
 	return;
 }

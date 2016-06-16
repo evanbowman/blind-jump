@@ -12,7 +12,7 @@
 
 #include "SFML/Graphics.hpp"
 #include "wall.hpp"
-#include "coordinate.h"
+#include "coordinate.hpp"
 
 class tileController;
 

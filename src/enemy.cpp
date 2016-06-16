@@ -57,19 +57,19 @@ void Enemy::update(float xOffset, float yOffset, const std::vector<wall> & w, ef
 
 bool Enemy::checkWallCollision(const std::vector<wall> & w, float collisionRadius, float xPos, float yPos) {
 	for (auto & element : w) {
-		if ((xPos + 6 < (element.getPosX() + element.width) && (xPos + 6 > (element.getPosX()))) && (fabs((yPos + 16) - element.getPosY()) <= 13))  {
+		if ((xPos + 6 < (element.getPosX() + element.getWidth()) && (xPos + 6 > (element.getPosX()))) && (fabs((yPos + 16) - element.getPosY()) <= 13))  {
 			return true;
 		}
 		
-		if ((xPos + 24 > (element.getPosX()) && (xPos + 24 < (element.getPosX() + element.width))) && (fabs((yPos + 16) - element.getPosY()) <= 13))  {
+		if ((xPos + 24 > (element.getPosX()) && (xPos + 24 < (element.getPosX() + element.getWidth()))) && (fabs((yPos + 16) - element.getPosY()) <= 13))  {
 			return true;
 		}
 		
-		if (((yPos + 22 < (element.getPosY() + element.height)) && (yPos + 22 > (element.getPosY()))) && (fabs((xPos) - element.getPosX()) <= 16))  {
+		if (((yPos + 22 < (element.getPosY() + element.getHeight())) && (yPos + 22 > (element.getPosY()))) && (fabs((xPos) - element.getPosX()) <= 16))  {
 			return true;
 		}
 		
-		if (((yPos + 36 > element.getPosY()) && (yPos + 36 < element.getPosY() + element.height)) && (fabs((xPos) - element.getPosX()) <= 16))  {
+		if (((yPos + 36 > element.getPosY()) && (yPos + 36 < element.getPosY() + element.getHeight())) && (fabs((xPos) - element.getPosX()) <= 16))  {
 			return true;
 		}
 	}

@@ -16,7 +16,7 @@
 #define lightingmap_h
 
 #include <vector>
-#include "coordinate.h"
+#include "coordinate.hpp"
 #include <cmath>
 
 #define CIRC_RADIUS 200
