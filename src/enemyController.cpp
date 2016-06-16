@@ -84,9 +84,7 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
 				// Rumble the screen
 				scrn->rumble();
 				it = scoots.erase(it);
-			}
-			
-			else {
+			} else {
 				if (it->getXpos() > -64 && it->getXpos() < windowW + 64 && it->getYpos() > -64 && it->getYpos() < windowH + 64) {
 					if (enabled) {
 						it->update(x, y, w, ef, elapsedTime);

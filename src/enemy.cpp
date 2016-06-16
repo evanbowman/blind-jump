@@ -104,7 +104,6 @@ void Enemy::checkShotCollision(effectsController & effects, float rad) {
 	}
 
 	if (health == 0) {
-		killFlag = true;
 		onDeath(effects);
 	}
 }

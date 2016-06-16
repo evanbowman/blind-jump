@@ -67,7 +67,7 @@ void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, ef
 		
 	case State::shoot:
 		effects.addTurretFlash(xInit - 8, yInit - 12);
-		for (float angle = -28.f; angle < 29.f; angle += 28.f)
+		for (float angle = -10.f; angle < 11.f; angle += 10.f)
 			effects.addScootShot(xInit - 8, yInit - 12,
 								 angleFunction(xPos - 8, yPos - 8, playerPosX, playerPosY) + angle,
 								 playerPosX, playerPosY);
@@ -132,5 +132,6 @@ void Scoot::onDeath(effectsController & effects) {
 	else
 		effects.addCoins(xInit, yInit);
 	effects.addFireExplosion(xInit, yInit - 2);
+	killFlag = true;
 	return;
 }

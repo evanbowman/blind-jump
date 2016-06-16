@@ -13,26 +13,27 @@
 #include "effectsController.hpp"
 #include "enemy.hpp"
 
-struct DasherBlur {
-	DasherBlur(sf::Sprite *, float, float);
-	sf::Sprite * getSprite();
-	bool getKillFlag();
-	float xInit;
-	float yInit;
-	sf::Sprite spr;
-	bool killflag;
-};
-
 class Dasher : public Enemy {
-public:
+public:	
+	struct Blur {
+		Blur(sf::Sprite *, float, float);
+		sf::Sprite * getSprite();
+		void update(const sf::Time &, float, float);
+		bool getKillFlag();
+		int32_t timer;
+		float xInit;
+		float yInit;
+		sf::Sprite spr;
+		bool killflag;
+	};
+	enum class State {
+		idle, shooting, dashBegin, dashing, dashEnd, dying, dead, shootBegin, pause
+	};
 	Dasher(sf::Texture *, sf::Texture *, sf::Texture *, float, float, float, float);
 	const sf::Sprite & getSprite() const override;
 	const sf::Sprite & getShadow() const override;
     void update(float, float, const std::vector<wall> &, effectsController & ef, const sf::Time &) override;
-	std::vector<DasherBlur> * getBlurEffects();
-	enum class State {
-		idle, shooting, dashBegin, dashing, dashEnd, dying, dead, shootBegin, pause
-	};
+	std::vector<Dasher::Blur> * getBlurEffects();
 	State getState() const;
 	
 private:
@@ -43,7 +44,7 @@ private:
 	sf::Sprite shadow;
 	float hSpeed, vSpeed;
 	int32_t timer;
-	std::vector<DasherBlur> blurEffects;
+	std::vector<Dasher::Blur> blurEffects;
 	void onDeath(effectsController &) override;
 	void facePlayer();
 };
