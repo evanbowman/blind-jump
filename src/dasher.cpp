@@ -246,6 +246,8 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 
 void Dasher::onDeath(effectsController & effects) {
 	state = State::dying;
+	hSpeed = 0;
+	vSpeed = 0;
 	frameIndex = 0;
 	unsigned long int temp = rand() % 4;
 	if (temp == 0)
