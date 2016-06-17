@@ -12,8 +12,8 @@ private:
 public:
 	SpriteSheet() {}
 
-	SpriteSheet(sf::Texture * pTxtr) {
-		setTexture(pTxtr);
+	SpriteSheet(const sf::Texture & txtr) {
+		setTexture(txtr);
 	}
 	
 	const sf::Sprite & operator[](const std::size_t idx) {
@@ -45,8 +45,8 @@ public:
 		sprite.setPosition(xPos, yPos);
 	}
 	
-	void setTexture(const sf::Texture * pTexture) {
-		sprite.setTexture(*pTexture);
+	void setTexture(const sf::Texture & texture) {
+		sprite.setTexture(texture);
 	}
 
 	void setOrigin(const int16_t xCenter, const int16_t yCenter) {

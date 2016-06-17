@@ -10,8 +10,8 @@
 
 #define ANIMATION_LENGTH 6
 
-TeleporterSmoke::TeleporterSmoke(sf::Texture * pTxtr, float x, float y) : Effect(x, y) {
-	spriteSheet.setTexture(pTxtr);
+TeleporterSmoke::TeleporterSmoke(const sf::Texture & txtr, float x, float y) : Effect(x, y) {
+	spriteSheet.setTexture(txtr);
 	drawOrder = 0;
 }
 

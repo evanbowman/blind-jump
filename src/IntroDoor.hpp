@@ -26,7 +26,7 @@ private:
 	
 public:
 	void update(float, float, ScreenShakeController * pscr, effectsController & ef, const sf::Time & elapsedTime);
-	IntroDoor(float, float, sf::Texture *, int, float, float);
+	IntroDoor(float, float, const sf::Texture &, int, float, float);
 	sf::Sprite* getSprite();
 };
 

@@ -16,7 +16,7 @@
 
 class DamagedRobot : public detailParent {
 public:
-	DamagedRobot(float, float, sf::Texture *, int, float, float);
+	DamagedRobot(float, float, const sf::Texture &, int, float, float);
 	void update(float, float);
 	sf::Sprite * getSprite();
 	

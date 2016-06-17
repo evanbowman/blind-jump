@@ -28,7 +28,7 @@ public:
 		heart, coin
 			};
 	
-	Powerup(sf::Texture *, sf::Texture *, float, float, Type);
+	Powerup(const sf::Texture &, const sf::Texture &, float, float, Type);
 	bool getKillFlag();
 	void setKillFlag(bool);
 	const sf::Sprite & getSprite();

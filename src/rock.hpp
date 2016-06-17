@@ -20,7 +20,7 @@ private:
 	
 public:
 	void update(float, float);
-	Rock(float, float, sf::Texture *, int, float, float);
+	Rock(float, float, const sf::Texture &, int, float, float);
 	sf::Sprite * getSprite();
 };
 

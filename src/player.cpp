@@ -71,7 +71,7 @@ void Player::setTextures(TextureManager * pTM) {
 	dashSheet.setTexture(pTM->getTexture(TextureManager::Texture::playerDash));
 	dashSheet.setOrigin(0, 1);
 	
-	shadowSprite.setTexture(*pTM->getTexture(TextureManager::Texture::playerShadow));
+	shadowSprite.setTexture(pTM->getTexture(TextureManager::Texture::playerShadow));
 }
 
 void Player::setPosition(float X, float Y) {

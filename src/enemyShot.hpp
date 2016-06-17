@@ -29,7 +29,7 @@ private:
 	sf::Sprite glowSprite;
 	
 public:
-	Enemyshot(sf::Texture *, sf::Texture *, float, float, float);
+	Enemyshot(const sf::Texture &, const sf::Texture &, float, float, float);
 	void update(float, float, sf::Time &);
 	const sf::Sprite & getSprite();
 	bool getKillFlag();

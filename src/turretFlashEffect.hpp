@@ -19,7 +19,7 @@ private:
 	mutable SpriteSheet<16, 16> spriteSheet;
 	
 public:
-	turretFlashEffect(sf::Texture *, float, float);
+	turretFlashEffect(const sf::Texture &, float, float);
 	void update(float, float, const sf::Time &) override;
 	const sf::Sprite & getSprite() const override;
 };

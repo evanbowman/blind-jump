@@ -11,9 +11,9 @@
 
 #define CHOICES 6
 
-TreasureChest::TreasureChest(float xStart, float yStart, sf::Texture * pChestTextures, sf::Texture * pShadowTexture, int len, float width, float height, char contents) : detailParent(xStart, yStart, len, width, height) {
-	chestSheet.setTexture(pChestTextures);
-	chestShadow.setTexture(*pShadowTexture);
+TreasureChest::TreasureChest(float xStart, float yStart, const sf::Texture & chestTextures, const sf::Texture & shadowTexture, int len, float width, float height, char contents) : detailParent(xStart, yStart, len, width, height) {
+	chestSheet.setTexture(chestTextures);
+	chestShadow.setTexture(shadowTexture);
 	isOpen = false;
 	animationIsRunning = false;
 	frameIndex = 0;

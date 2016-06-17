@@ -14,12 +14,12 @@ public:
 
 	bool load();
 	
-	sf::Texture * getTexture(TextureManager::Texture);
+	const sf::Texture & getTexture(TextureManager::Texture) const;
 
-	sf::Texture * getTexture(int);
+	const sf::Texture & getTexture(int) const;
 	
 private:
-	std::map<int, sf::Texture> textures;
+	mutable std::map<int, sf::Texture> textures;
 };
 
 #endif

@@ -16,7 +16,7 @@
 
 class turretShot {
 public:
-	turretShot(sf::Texture *, sf::Texture *, float, float, float);
+	turretShot(const sf::Texture &, const sf::Texture &, float, float, float);
 	float xPos;
 	float yPos;
 	float xInit;

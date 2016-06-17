@@ -10,15 +10,15 @@
 #include <cmath>
 #include "angleFunction.hpp"
 
-Scoot::Scoot(sf::Texture * pMainTxtr, sf::Texture * pShadowTxtr, float _xInit, float _yInit, float _playerPosX, float _playerPosY)
+Scoot::Scoot(const sf::Texture & mainTxtr, const sf::Texture & shadowTxtr, float _xInit, float _yInit, float _playerPosX, float _playerPosY)
 	: Enemy{_xInit, _yInit, _playerPosX, _playerPosY},
-	  spriteSheet{pMainTxtr},
+	  spriteSheet{mainTxtr},
 	  speedScale{0.5f},
 	  state{State::drift1},
 	  timer{rand() % 250}
 {
 	spriteSheet.setOrigin(6, 6);
-	shadow.setTexture(*pShadowTxtr);
+	shadow.setTexture(shadowTxtr);
 	float dir = rand() % 359;
 	hSpeed = cos(dir) * 0.5;
 	vSpeed = sin(dir) * 0.5;

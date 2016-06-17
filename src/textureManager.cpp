@@ -145,10 +145,10 @@ bool TextureManager::load() {
 	return true;
 }
 
-sf::Texture * TextureManager::getTexture(Texture id) {
-	return &textures[static_cast<int>(id)];
+const sf::Texture & TextureManager::getTexture(Texture id) const {
+	return textures[static_cast<int>(id)];
 }
 
-sf::Texture * TextureManager::getTexture(int id) {
-	return &textures[id];
+const sf::Texture & TextureManager::getTexture(int id) const {
+	return textures[id];
 }

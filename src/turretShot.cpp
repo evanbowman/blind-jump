@@ -8,9 +8,9 @@
 
 #include "turretShot.hpp"
 
-turretShot::turretShot(sf::Texture * pMainTxtr, sf::Texture * pGlowTxtr, float x, float y, float dir) {
-	spriteSheet.setTexture(pMainTxtr);
-	glowSprite.setTexture(*pGlowTxtr);
+turretShot::turretShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, float x, float y, float dir) {
+	spriteSheet.setTexture(mainTxtr);
+	glowSprite.setTexture(glowTxtr);
 	xPos = 0;
 	yPos = 0;
 	xInit = x;

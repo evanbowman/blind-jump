@@ -8,7 +8,7 @@
 
 #include "rock.hpp"
 
-Rock::Rock(float xStart, float yStart, sf::Texture * inpTxtr, int len, float width, float height) : detailParent(xStart, yStart, len, width, height) {
+Rock::Rock(float xStart, float yStart, const sf::Texture & inpTxtr, int len, float width, float height) : detailParent(xStart, yStart, len, width, height) {
 	rockSheet.setTexture(inpTxtr);
     if (rand() % 2) {
 		rockSheet.setScale(-1, 1);

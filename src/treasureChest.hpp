@@ -16,7 +16,7 @@
 
 class TreasureChest : public detailParent {
 public:
-	TreasureChest(float, float, sf::Texture *, sf::Texture *, int, float, float, char);
+	TreasureChest(float, float, const sf::Texture &, const sf::Texture &, int, float, float, char);
 	sf::Sprite* getShadow();
 	sf::Sprite* getSprite();
 	void update(float, float, char, InputController*, sf::Time&);

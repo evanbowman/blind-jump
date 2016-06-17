@@ -8,8 +8,8 @@
 
 #include "turretFlashEffect.hpp"
 
-turretFlashEffect::turretFlashEffect(sf::Texture * pTxtr, float x, float y) : Effect(x, y) {
-	spriteSheet.setTexture(pTxtr);
+turretFlashEffect::turretFlashEffect(const sf::Texture & txtr, float x, float y) : Effect(x, y) {
+	spriteSheet.setTexture(txtr);
 	bool select = rand() % 2;
 	if (select) {
 		spriteSheet.setScale(-1.f, 1.f);

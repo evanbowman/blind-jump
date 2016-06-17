@@ -10,7 +10,7 @@
 #include <cmath>
 #include "screenShakeController.hpp"
 
-IntroDoor::IntroDoor(float xStart, float yStart, sf::Texture * inpTxtr, int len, float width, float height) : detailParent(xStart, yStart, len, width / 2, height / 2) {
+IntroDoor::IntroDoor(float xStart, float yStart, const sf::Texture & inpTxtr, int len, float width, float height) : detailParent(xStart, yStart, len, width / 2, height / 2) {
 	doorSheet.setTexture(inpTxtr);
 	frameIndex = 0;
 	timer = 0;

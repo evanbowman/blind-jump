@@ -78,14 +78,14 @@ Coordinate pickLocation2(std::vector<Coordinate>& emptyLocations) {
 
 void detailController::addWarpImpact(float posX, float posY) {
 	sf::Sprite tempSprite;
-	tempSprite.setTexture(*pTM->getTexture(TextureManager::Texture::warpImpact));
+	tempSprite.setTexture(pTM->getTexture(TextureManager::Texture::warpImpact));
 	misc32x26.emplace_back(posX, posY, &tempSprite, 1, 0, 0);
 }
 
 void detailController::addLamplight(float posX, float posY, int i, int j, float width, float height) {
 	sf::Sprite tempSprites[2];
-	tempSprites[0].setTexture(*pTM->getTexture(TextureManager::Texture::lamp));
-	tempSprites[1].setTexture(*pTM->getTexture(TextureManager::Texture::lamplight));
+	tempSprites[0].setTexture(pTM->getTexture(TextureManager::Texture::lamp));
+	tempSprites[1].setTexture(pTM->getTexture(TextureManager::Texture::lamplight));
 	lamps.emplace_back((i * 32) + 16 + posX, (j * 26) + 18 + posY, tempSprites[0], tempSprites[1], 2, width, height);
 }
 
@@ -101,7 +101,7 @@ void detailController::addChest(tileController& t, float posX, float posY, float
 
 void detailController::addEnemyScrap(float posX, float posY, float width, float height) {
 	sf::Sprite tempSprite;
-	tempSprite.setTexture(*pTM->getTexture(TextureManager::Texture::enemyScrap));
+	tempSprite.setTexture(pTM->getTexture(TextureManager::Texture::enemyScrap));
 	misc32x26.emplace_back(posX - 6, posY - 2, &tempSprite, 0, width, height);
 }
 
@@ -146,7 +146,7 @@ void detailController::addDasherScrap(float posX, float posY, int scale) {
 	}
 	sf::Sprite tempSprite;
 	tempSprite.setScale((float) scale, 1);
-	tempSprite.setTexture(*pTM->getTexture(TextureManager::Texture::dasherDead));
+	tempSprite.setTexture(pTM->getTexture(TextureManager::Texture::dasherDead));
 	tempSprite.setOrigin(14, 8);
 	GeneralDetail dScrap(posX, posY, &tempSprite, 0, 0, 0);
 	misc32x26.push_back(dScrap);
@@ -159,17 +159,17 @@ void detailController::addDoor(float xpos, float ypos, int x, int y, float w, fl
 void detailController::addPod(float xpos, float ypos, int x, int y) {
 	sf::Sprite tempSprite;
 	tempSprite.setOrigin(0, 30);
-	tempSprite.setTexture(*pTM->getTexture(TextureManager::Texture::pod));
+	tempSprite.setTexture(pTM->getTexture(TextureManager::Texture::pod));
 	misc32x26.emplace_back(xpos + x * 32, ypos + y * 26, &tempSprite, 0, 0, 0);
 }
 
 void detailController::addTeleporter(tileController& t, float posX, float posY, float width, float height) {
 	Coordinate c = t.getTeleporterLoc();
 	sf::Sprite tempSprites[2];
-	tempSprites[0].setTexture(*pTM->getTexture(TextureManager::Texture::teleporter));
-	tempSprites[1].setTexture(*pTM->getTexture(TextureManager::Texture::teleporterShadow));	
+	tempSprites[0].setTexture(pTM->getTexture(TextureManager::Texture::teleporter));
+	tempSprites[1].setTexture(pTM->getTexture(TextureManager::Texture::teleporterShadow));	
 	sf::Sprite glow;
-	glow.setTexture(*pTM->getTexture(TextureManager::Texture::teleporterGlow));
+	glow.setTexture(pTM->getTexture(TextureManager::Texture::teleporterGlow));
     teleporters.emplace_back((c.x * 32) + posX + 2, (c.y * 26) + posY - 4, tempSprites, glow, 2, width, height);
 }
 

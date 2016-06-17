@@ -9,10 +9,10 @@
 #include "dasherShot.hpp"
 
 
-DasherShot::DasherShot(sf::Texture * pMainTxtr, sf::Texture * pGlowTxtr, float x, float y, float dir) {
-	spriteSheet.setTexture(pMainTxtr);
+DasherShot::DasherShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, float x, float y, float dir) {
+	spriteSheet.setTexture(mainTxtr);
 	spriteSheet.setOrigin(4, 4);
-	glowSprite.setTexture(*pGlowTxtr);
+	glowSprite.setTexture(glowTxtr);
 	glowSprite.setOrigin(22.5, 22.5);
 	xPos = 0;
 	yPos = 0;

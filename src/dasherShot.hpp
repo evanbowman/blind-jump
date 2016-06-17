@@ -16,7 +16,7 @@
 
 class DasherShot {
 public:
-	DasherShot(sf::Texture *, sf::Texture *, float, float, float);
+	DasherShot(const sf::Texture &, const sf::Texture &, float, float, float);
 	float xPos;
 	float yPos;
 	float xInit;

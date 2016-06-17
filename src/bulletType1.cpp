@@ -10,15 +10,15 @@
 
 #define MOVEMENT_RATE 0.45
 
-bulletType1::bulletType1(sf::Texture * pMainTxtr, sf::Texture * pGlowTxtr, char dir, float x, float y) {
+bulletType1::bulletType1(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, char dir, float x, float y) {
 	//Initialize the starting x position to the player's x position
 	xPos = x;
 	yPos = y;
 	xInit = x;
 	yInit = y;
 	direction = dir;
-	glow.setTexture(*pGlowTxtr);
-	spriteSheet.setTexture(pMainTxtr);
+	glow.setTexture(glowTxtr);
+	spriteSheet.setTexture(mainTxtr);
 	killFlag = 0;
 	clock.restart();
 	canPoof = true;

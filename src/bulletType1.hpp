@@ -27,7 +27,7 @@ private:
 	sf::Clock clock;
 	
 public:
-	bulletType1(sf::Texture *, sf::Texture *, char, float, float);
+	bulletType1(const sf::Texture &, const sf::Texture &, char, float, float);
 	const sf::Sprite & getSprite();
 	sf::Sprite* getGlow();
 	void update(float, float);

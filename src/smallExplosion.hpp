@@ -20,7 +20,7 @@ private:
 	sf::Sprite glow;
 	
 public:
-	SmallExplosion(sf::Texture *, sf::Texture *, float, float);
+	SmallExplosion(const sf::Texture &, const sf::Texture &, float, float);
 	void update(float, float, const sf::Time &) override;
 	const sf::Sprite & getSprite() const override;
 	sf::Sprite * getGlow();

@@ -8,10 +8,10 @@
 
 #include "FireExplosion.hpp"
 
-FireExplosion::FireExplosion(sf::Texture * pMainTxtr, sf::Texture * pGlowTxtr, float x, float y) : Effect(x, y) {
-	spriteSheet.setTexture(pMainTxtr);
+FireExplosion::FireExplosion(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, float x, float y) : Effect(x, y) {
+	spriteSheet.setTexture(mainTxtr);
 	spriteSheet.setOrigin(29, 25);
-	glow.setTexture(*pGlowTxtr);
+	glow.setTexture(glowTxtr);
 	glow.setColor(sf::Color(240, 240, 240));
 }
 

@@ -8,17 +8,17 @@
 
 #include "enemyShot.hpp"
 
-Enemyshot::Enemyshot(sf::Texture * pMainTxtr, sf::Texture * pGlowTxtr, float x, float y, float dir) {
+Enemyshot::Enemyshot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, float x, float y, float dir) {
 	xPos = 0;
 	yPos = 0;
 	xInit = x;
 	yInit = y;
 	imageIndex = 0;
-	glowSprite.setTexture(*pGlowTxtr);
+	glowSprite.setTexture(glowTxtr);
 	glowSprite.setOrigin(22.5, 22.5);
 	frameTimer = 0;
 	elapsedTime = 0;
-	spriteSheet.setTexture(pMainTxtr);
+	spriteSheet.setTexture(mainTxtr);
 	direction = (dir - 270) * (3.14 / 180);
 	killFlag = false;
 }

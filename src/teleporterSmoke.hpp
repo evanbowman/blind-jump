@@ -20,7 +20,7 @@ private:
    	char drawOrder;
 	
 public:
-   	TeleporterSmoke(sf::Texture *, float, float);
+   	TeleporterSmoke(const sf::Texture &, float, float);
 	void update(float, float, const sf::Time &) override;
 	const sf::Sprite & getSprite() const override;
 	char getDrawOrder();

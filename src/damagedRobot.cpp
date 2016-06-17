@@ -8,7 +8,7 @@
 
 #include "damagedRobot.hpp"
 
-DamagedRobot::DamagedRobot(float xStart, float yStart, sf::Texture * inpTxtr, int len, float width, float height) : detailParent(xStart, yStart, len, width, height) {
+DamagedRobot::DamagedRobot(float xStart, float yStart, const sf::Texture & inpTxtr, int len, float width, float height) : detailParent(xStart, yStart, len, width, height) {
 	robotSheet.setTexture(inpTxtr);
 	robotSheet[rand() % 2];
 	// TODO: flip the sprite for more variety

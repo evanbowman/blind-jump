@@ -28,7 +28,7 @@ private:
 	void onDeath(effectsController &) override;
 
 public:
-	Scoot(sf::Texture *, sf::Texture *, float, float, float, float);
+	Scoot(const sf::Texture &, const sf::Texture &, float, float, float, float);
 	void update(float, float, const std::vector<wall> &, effectsController & ef, const sf::Time &) override;
 	const sf::Sprite & getSprite() const override;
 	const sf::Sprite & getShadow() const override;

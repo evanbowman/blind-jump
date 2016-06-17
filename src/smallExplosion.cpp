@@ -8,10 +8,10 @@
 
 #include "smallExplosion.hpp"
 
-SmallExplosion::SmallExplosion(sf::Texture * pMainTxtr, sf::Texture * pGlowTxtr, float x, float y) : Effect(x, y) {
-    spriteSheet.setTexture(pMainTxtr);
+SmallExplosion::SmallExplosion(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, float x, float y) : Effect(x, y) {
+    spriteSheet.setTexture(mainTxtr);
 	spriteSheet.setOrigin(18, 18);
-	glow.setTexture(*pGlowTxtr);
+	glow.setTexture(glowTxtr);
     glow.setColor(sf::Color(220, 220, 220));
 }
 

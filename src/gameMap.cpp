@@ -95,9 +95,9 @@ GameMap::GameMap(float windowWidth, float windowHeight, TextureManager * pTM, In
 	// Each object that isn't an effect or passed through a shader gets darkened according to the ambient conditions of the current tileset
 	objectShadeColor = sf::Color(190, 190, 210, 255);
 	
-	vignetteSprite.setTexture(*pTM->getTexture(TextureManager::Texture::vignette));
+	vignetteSprite.setTexture(pTM->getTexture(TextureManager::Texture::vignette));
 	vignetteSprite.setScale(windowWidth/450, windowHeight/450);
-	vignetteShadowSpr.setTexture(*pTM->getTexture(TextureManager::Texture::vignetteShadow));
+	vignetteShadowSpr.setTexture(pTM->getTexture(TextureManager::Texture::vignetteShadow));
 	vignetteShadowSpr.setScale(windowWidth / 450, windowHeight / 450);
 	vignetteShadowSpr.setColor(sf::Color(255,255,255,100));
 	

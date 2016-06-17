@@ -10,12 +10,12 @@
 
 #define PI 3.1415926535
 
-Powerup::Powerup(sf::Texture * pBodyTxtr, sf::Texture * pGlowTxtr, float xInit, float yInit, Type id) {
+Powerup::Powerup(const sf::Texture & bodyTxtr, const sf::Texture & glowTxtr, float xInit, float yInit, Type id) {
 	this->xInit = xInit;
 	this->yInit = yInit;
-	glow.setTexture(*pGlowTxtr);
+	glow.setTexture(glowTxtr);
 	glow.setOrigin(22.5, 22.5);
-	powerupSheet.setTexture(pBodyTxtr);
+	powerupSheet.setTexture(bodyTxtr);
 	// Square brace overloads provide access, but in doing so also set the working frame
 	powerupSheet[static_cast<int>(id)];
 	powerupSheet.setOrigin(7, 7);

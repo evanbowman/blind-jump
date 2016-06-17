@@ -8,8 +8,8 @@
 
 #include "shotPuff.hpp"
 
-shotPuff::shotPuff(sf::Texture * pTxtr, float x, float y) : Effect(x, y) {
-	spriteSheet.setTexture(pTxtr);
+shotPuff::shotPuff(const sf::Texture & txtr, float x, float y) : Effect(x, y) {
+	spriteSheet.setTexture(txtr);
 }
 
 void shotPuff::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {

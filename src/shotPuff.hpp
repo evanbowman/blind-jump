@@ -20,7 +20,7 @@ private:
 	mutable SpriteSheet<16, 16> spriteSheet;
 
 public:
-	shotPuff(sf::Texture *, float, float);
+	shotPuff(const sf::Texture &, float, float);
 	void update(float, float, const sf::Time &) override;
 	const sf::Sprite & getSprite() const override;
 	

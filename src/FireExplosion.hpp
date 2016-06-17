@@ -21,7 +21,7 @@ private:
 	bool valid;
 	
 public:
-	FireExplosion(sf::Texture *, sf::Texture *, float, float);
+	FireExplosion(const sf::Texture &, const sf::Texture &, float, float);
 	void update(float, float, const sf::Time &) override;
 	const sf::Sprite & getSprite() const override;
 	sf::Sprite * getGlow();
