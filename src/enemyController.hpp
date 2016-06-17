@@ -25,12 +25,11 @@ class tileController;
 
 class enemyController {
 private:
+	using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
 	sf::Sprite turretSprites[10];
 	sf::Texture turretTextures[10];
 	// A vector to hold turret objects
 	std::vector<turret> turrets;
-	sf::Sprite droneSprites[5];
-	sf::Texture droneTextures[5];
 	sf::Sprite chaserSprites[4];
 	sf::Texture chaserTextures[4];
 
@@ -43,10 +42,9 @@ private:
 	
 public:
 	enemyController();
-	void updateEnemies(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&, float, float, effectsController&, std::vector<wall>, bool, detailController*, tileController*, ScreenShakeController*, FontController&, sf::Time &);
+	void updateEnemies(drawableVec &, drawableVec &, float, float, effectsController&, std::vector<wall>, bool, detailController*, tileController*, ScreenShakeController*, FontController&, sf::Time &);
 	void clear();
 	sf::Sprite * getTurretSprites();
-	sf::Sprite * getGuardianSprites();
 	sf::Sprite * getChaserSprites();
 	void linkTextures(TextureManager *);
 	void addTurret(turret);

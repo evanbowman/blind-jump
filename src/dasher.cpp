@@ -17,7 +17,7 @@ Dasher::Blur::Blur(sf::Sprite * spr, float xInit, float yInit) {
 	killflag = false;
 	timer = 0;
 	sf::Color c = this->spr.getColor();
-	c.a -= 90;
+	c.a -= 120;
 	c.r -= 30;
 	c.g -= 30;
 	c.b -= 10;
@@ -34,8 +34,8 @@ void Dasher::Blur::update(const sf::Time & elapsedTime, float xOffset, float yOf
 	if (timer > 18) {
 		timer = 0;
 		sf::Color c = spr.getColor();
-		if (c.a > 60) {
-			c.a -= 60;
+		if (c.a > 30) {
+			c.a -= 30;
 			spr.setColor(c);
 		} else
 			killflag = true;
@@ -156,13 +156,21 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 		break;
 
 	case State::dashBegin:
+    begin:
 		facePlayer();
 		if (timer > 352) {
 			timer -= 352;
 			state = State::dashing;
 			frameIndex = 2;
+			uint8_t tries{0};
 			float dir{static_cast<float>(rand() % 359)};
 			do {
+				tries++;
+				if (tries > 254) {
+					state = State::shootBegin;
+					frameIndex = 3;
+				    goto begin;
+				}
 				dir += 12;
 			} while (wallInPath(walls, dir, xPos, yPos));
 			hSpeed = 5 * cos(dir);
@@ -254,4 +262,8 @@ Dasher::State Dasher::getState() const {
 
 std::vector<Dasher::Blur> * Dasher::getBlurEffects() {
 	return &blurEffects;
+}
+
+const sf::Vector2f & Dasher::getScale() const {
+	return deathSheet.getScale();
 }

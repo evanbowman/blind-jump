@@ -928,6 +928,7 @@ void Player::reset() {
 	health = 4;
 	spriteIndex = 0;
 	canhurt = true;
+	weapon.setTimeout(0);
 }
 
 void Player::fillHealth(char health) {

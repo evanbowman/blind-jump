@@ -67,9 +67,8 @@ void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, ef
 		
 	case State::shoot:
 		effects.addTurretFlash(xInit - 8, yInit - 12);
-		for (float angle = -10.f; angle < 11.f; angle += 10.f)
-			effects.addScootShot(xInit - 8, yInit - 12,
-								 angleFunction(xPos - 8, yPos - 8, playerPosX, playerPosY) + angle,
+		effects.addScootShot(xInit - 8, yInit - 12,
+								 angleFunction(xPos - 8, yPos - 8, playerPosX, playerPosY),
 								 playerPosX, playerPosY);
 		state = State::recoil;
 		changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));

@@ -17,6 +17,7 @@
 #include "ResourcePath.hpp"
 #include "inputController.hpp"
 #include "textureManager.hpp"
+#include <iostream>
 
 int main(int argc, char * argv[]) {
 	srand(static_cast<unsigned int>(time(0)));
@@ -44,6 +45,8 @@ int main(int argc, char * argv[]) {
 		while (fabs(aspectRatio - windowAspect) > 0.005f);
 	}
 
+	std::cout << windowWidth << " " << windowHeight;
+	
 	TextureManager TM;
 	if(!TM.load()) {
 		return EXIT_FAILURE;

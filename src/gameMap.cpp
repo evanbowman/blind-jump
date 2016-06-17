@@ -593,7 +593,7 @@ void GameMap::Reset() {
 	if (set != tileController::Tileset::intro) {
 		//Now call the mapping function again to generate a new map, and make sure it's large enough
 		count = mappingFunction(tiles.mapArray, level, set != tileController::Tileset::nova);
-		while (count < 150) {
+			while (count < std::min(150, 50 + 10 * level )) {
 			count = mappingFunction(tiles.mapArray, level, set != tileController::Tileset::nova);
 		}
 	} else if (level == 0) {

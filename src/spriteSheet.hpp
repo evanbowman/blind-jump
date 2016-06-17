@@ -21,6 +21,10 @@ public:
 		return sprite;
 	}
 
+	const sf::Vector2f & getScale() const {
+		return sprite.getScale();
+	}
+	
 	sf::Sprite * getSpritePtr() {
 		return &sprite;
 	}

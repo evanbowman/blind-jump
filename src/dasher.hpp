@@ -35,6 +35,7 @@ public:
     void update(float, float, const std::vector<wall> &, effectsController & ef, const sf::Time &) override;
 	std::vector<Dasher::Blur> * getBlurEffects();
 	State getState() const;
+	const sf::Vector2f & getScale() const;
 	
 private:
 	uint8_t shotCount;

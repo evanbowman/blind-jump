@@ -34,7 +34,7 @@ void enemyController::linkTextures(TextureManager * pTM) {
 }
 
 //A function to draw the enemies' current sprites to the screen
-void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>& gameShadows, float x, float y, effectsController& ef, std::vector<wall> w, bool enabled, detailController* dets, tileController* pTiles, ScreenShakeController* scrn, FontController& fonts, sf::Time & elapsedTime) {
+void enemyController::updateEnemies(drawableVec & gameObjects, drawableVec & gameShadows, float x, float y, effectsController& ef, std::vector<wall> w, bool enabled, detailController* dets, tileController* pTiles, ScreenShakeController* scrn, FontController& fonts, sf::Time & elapsedTime) {
 	if (!turrets.empty()) {
 		for (auto it = turrets.begin(); it != turrets.end();) {
 			if (it->getKillFlag() == 1) {
@@ -164,8 +164,10 @@ void enemyController::updateEnemies(std::vector<std::tuple<sf::Sprite, float, Re
 	
 	if (!dashers.empty()) {
 		for (auto it = dashers.begin(); it != dashers.end();) {
-			if (it->getKillFlag())
+			if (it->getKillFlag()) {
+				dets->addDasherScrap(it->getXinit(), it->getYinit(), it->getScale().x);
 				it = dashers.erase(it);
+			}
 			else {
 				if (it->getXpos() > -64 && it->getXpos() < windowW + 64 && it->getYpos() > -64 && it->getYpos() < windowH + 64) {
 					if (enabled)
