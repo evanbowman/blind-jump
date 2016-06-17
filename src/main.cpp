@@ -70,7 +70,7 @@ int main(int argc, char * argv[]) {
 	sf::RenderWindow window(sf::VideoMode(desktop.width, desktop.height), "Blind Jump", sf::Style::Fullscreen, settings);
 	window.setMouseCursorVisible(false);
 	window.setVerticalSyncEnabled(true);
-	window.setFramerateLimit(60);
+	window.setFramerateLimit(120);
 	
 	sf::Image icon;
 	if (!icon.loadFromFile(resourcePath() + "icon.png")) {
