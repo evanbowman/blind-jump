@@ -25,8 +25,11 @@
 #include "RenderType.hpp"
 #include "Texturemanager.hpp"
 
+class GameMap;
+
 class detailController {
 private:
+	using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
 	std::vector<Teleporter> teleporters;
 	std::vector<TreasureChest> chests;
 	std::vector<LampLight> lamps;
@@ -35,9 +38,10 @@ private:
 	std::vector<DamagedRobot> damagedRobots;
 	std::vector<GeneralDetail> misc32x26;
 	TextureManager * pTM;
+	float windowW, windowH;
 	
 public:
-	detailController();
+	detailController(float, float, TextureManager *);
 	void addCrystals(float, float, float, float);
 	void addDoor(float, float, int, int, float, float);
 	void addPod(float, float, int, int);
@@ -48,18 +52,17 @@ public:
 	void addDamagedTurret(float, float, float, float);
 	void addTeleporter(tileController&, float, float, float, float);
 	void addRock(float, float, int, int);
-	void update(effectsController& ef, userInterface&, FontController&, Player&, InputController*, ScreenShakeController * pscr, sf::Time&);
+	void update(GameMap *, sf::Time &);
 	void addDasherScrap(float, float, int);
-	void draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&, sf::RenderTexture&);
+	void draw(drawableVec &, drawableVec &, sf::RenderTexture &);
 	void clear();
-	std::vector<TreasureChest> getChests();
-	Teleporter* getTeleporter();
-	std::vector<LampLight>* getLamps();
-	std::vector<Rock>* getRocks();
+	std::vector<TreasureChest> & getChests();
+	Teleporter * getTeleporter();
+	std::vector<LampLight> * getLamps();
+	std::vector<Rock> * getRocks();
 	void addWarpImpact(float, float);
 	void killTeleporter();
 	void setWindowSize(float, float);
-	void setTextureManager(TextureManager *);
 };
 
 #endif /* detailController_hpp */

@@ -12,19 +12,21 @@
 
 #include "detailParent.hpp"
 
-class LampLight : public detailParent {
+class LampLight : public Detail {
 public:
-	LampLight(float, float, sf::Sprite, sf::Sprite, int, float, float);
-	sf::Sprite* getSprite();
-	sf::Sprite* getGlow();
-	void update(float, float);
+	LampLight(float, float, sf::Sprite &, sf::Sprite &);
+	const sf::Sprite & getSprite() const override;
+	sf::Sprite * getGlow();
+	void update(float, float, const sf::Time &) override;
 	bool getKillFlag();
 	void setKillFlag(bool);
+	float getXpos();
 	
 private:
 	sf::Sprite lampSprite;
 	sf::Sprite glowSprite;
 	bool killflag;
+	float xPos;
 	
 };
 

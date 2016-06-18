@@ -27,7 +27,7 @@
 #include "wall.hpp"
 #include <tuple>
 
-Player::Player() {
+Player::Player(TextureManager * pTM) {
 	health = 4;
 	imageIndex = 0;
 	spriteIndex = 0;
@@ -59,9 +59,6 @@ Player::Player() {
 	colorTimer = 0.f;
 	hurtCounter = 30;
 	canhurt = true;
-}
-
-void Player::setTextures(TextureManager * pTM) {
 	deathSheet.setTexture(pTM->getTexture(TextureManager::Texture::playerDeath));
 	walkDown.setTexture(pTM->getTexture(TextureManager::Texture::playerDown));
 	walkUp.setTexture(pTM->getTexture(TextureManager::Texture::playerUp));

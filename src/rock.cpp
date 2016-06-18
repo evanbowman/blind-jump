@@ -8,7 +8,9 @@
 
 #include "rock.hpp"
 
-Rock::Rock(float xStart, float yStart, const sf::Texture & inpTxtr, int len, float width, float height) : detailParent(xStart, yStart, len, width, height) {
+Rock::Rock(float _xInit, float _yInit, const sf::Texture & inpTxtr)
+	: Detail{_xInit, _yInit}
+{
 	rockSheet.setTexture(inpTxtr);
     if (rand() % 2) {
 		rockSheet.setScale(-1, 1);
@@ -22,12 +24,16 @@ Rock::Rock(float xStart, float yStart, const sf::Texture & inpTxtr, int len, flo
 	}
 }
 
-void Rock::update(float xOffset, float yOffset) {
+void Rock::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
 	xPos = xOffset + xInit;
 	yPos = yOffset + yInit;
 	rockSheet.setPosition(xPos, yPos);
 }
 
-sf::Sprite* Rock::getSprite() {
-	return rockSheet.getSpritePtr();
+const sf::Sprite & Rock::getSprite() const {
+	return rockSheet.getSprite();
+}
+
+float Rock::getXpos() const {
+	return xPos;
 }

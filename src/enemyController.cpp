@@ -15,7 +15,9 @@
 #include "screenShakeController.hpp"
 
 
-enemyController::enemyController() {
+enemyController::enemyController(TextureManager * _pTM)
+	: pTM{_pTM}
+{
 	//Load all of the textures to apply to the enemies
 	const std::string turretfileExt[10] = {"turret5.png", "turret4.png", "turret3.png", "turret2.png", "turret1.png", "turretShadow5.png", "turretShadow4.png", "turretShadow3.png", "turretShadow2.png", "turretShadow1.png"};
 	for (int i = 0; i < 10; i++) {
@@ -29,11 +31,6 @@ enemyController::enemyController() {
 	}
 }
 
-void enemyController::linkTextures(TextureManager * pTM) {
-	this->pTM = pTM;
-}
-
-//A function to draw the enemies' current sprites to the screen
 void enemyController::updateEnemies(drawableVec & gameObjects, drawableVec & gameShadows, float x, float y, effectsController& ef, std::vector<wall> w, bool enabled, detailController* dets, tileController* pTiles, ScreenShakeController* scrn, FontController& fonts, sf::Time & elapsedTime) {
 	if (!turrets.empty()) {
 		for (auto it = turrets.begin(); it != turrets.end();) {

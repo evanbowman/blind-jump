@@ -9,70 +9,61 @@
 #include "treasureChest.hpp"
 #include <cmath>
 
-#define CHOICES 6
-
-TreasureChest::TreasureChest(float xStart, float yStart, const sf::Texture & chestTextures, const sf::Texture & shadowTexture, int len, float width, float height, char contents) : detailParent(xStart, yStart, len, width, height) {
-	chestSheet.setTexture(chestTextures);
+TreasureChest::TreasureChest(float _xInit, float _yInit, const sf::Texture & chestTextures, const sf::Texture & shadowTexture, char _item)
+	: Detail{_xInit, _yInit},
+	  state{State::closed},
+	  item{_item},
+	  animationTimer{0},
+	  frameIndex{0},
+	  chestSheet{chestTextures}
+{
 	chestShadow.setTexture(shadowTexture);
-	isOpen = false;
-	animationIsRunning = false;
-	frameIndex = 0;
-	// Place the input contents in the chest
-	item = contents;
-	valid = true;
-	animationTimer = 0;
 }
 
-sf::Sprite* TreasureChest::getShadow() {
-	return &chestShadow;
+const sf::Sprite & TreasureChest::getShadow() const {
+	return chestShadow;
 }
 
-void TreasureChest::update(float xOffset, float yOffset, char playerSpriteIndex, InputController* input, sf::Time & elapsedTime) {
-	xPos = xOffset + xInit;
-	yPos = yOffset + yInit;
-	
-    chestShadow.setPosition(xPos, yPos + 15);
-	
-	if (!isOpen) {
-		if (input->zPressed() && fabsf(xPos + 8 - windowCenterX / 2) < 12 && fabsf(yPos - windowCenterY / 2) < 10 && playerSpriteIndex == 1) {
-			animationIsRunning = true;
-		}
-	}
-	
-	if (animationIsRunning) {
+const sf::Sprite & TreasureChest::getSprite() const {
+	return chestSheet[frameIndex];
+}
+
+void TreasureChest::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
+	yPos = yInit + yOffset;
+	xPos = xInit + xOffset;
+	chestSheet.setPosition(xPos, yPos - 16);
+	chestShadow.setPosition(xPos, yPos + 16);
+
+	switch (state) {
+	case State::opening:
 		animationTimer += elapsedTime.asMilliseconds();
 		if (animationTimer > 50) {
 			animationTimer -= 50;
 			frameIndex++;
+			if (frameIndex > 5) {
+				frameIndex = 4;
+				state = State::ready;
+			}
 		}
-		if (frameIndex > 5) {
-			frameIndex = 4;
-			animationIsRunning = false;
-			isOpen = true;
-		}
+		break;
+
+	default:
+		break;
 	}
-	
-	chestSheet.setPosition(xPos, yPos - 14);
 }
 
-sf::Sprite* TreasureChest::getSprite() {
-	chestSheet[frameIndex];
-	return chestSheet.getSpritePtr();
-}
-
-float TreasureChest::getZY() {
-	return yPos - 12;
-}
-
-char TreasureChest::getFrameIndex() {
-	return frameIndex;
-}
-
-bool TreasureChest::isValid() {
-	return valid;
-}
-
-char TreasureChest::getItem() {
-	valid = false;
+char TreasureChest::getItem() const {
 	return item;
+}
+
+TreasureChest::State TreasureChest::getState() const {
+	return state;
+}
+
+float TreasureChest::getXpos() {
+	return xPos;
+}
+
+void TreasureChest::setState(const TreasureChest::State _state) {
+	state = _state;
 }

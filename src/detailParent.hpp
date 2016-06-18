@@ -12,26 +12,15 @@
 
 #include "SFML/Graphics.hpp"
 
-class detailParent {
+class Detail {
+protected:
+	float xInit, yInit, yPos;
+
 public:
-	float xInit;
-	float yInit;
-	float xPos;
-	float yPos;
-	float windowCenterX;
-	float windowCenterY;
-	detailParent();
-	detailParent(float, float, int, float, float);
-	bool getDrawOrder();
-	void setDrawOrder(bool);
-	void setPosition(float, float);
-	void setInitPosition(float, float);
-	float getxPos();
-	float getyPos();
-	float getxInit();
-	float getyInit();
-	float getWindowCenterX();
-	float getWindowCenterY();
+	Detail(float, float);
+	virtual const sf::Sprite & getSprite() const = 0;
+	virtual void update(float, float, const sf::Time &) = 0;
+	virtual float getYpos();
 };
 
 #endif /* detailParent_hpp */

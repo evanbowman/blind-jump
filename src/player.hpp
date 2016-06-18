@@ -20,8 +20,7 @@
 #include "textureManager.hpp"
 #include "spriteSheet.hpp"
 
-class Player {
-	
+class Player {	
 	enum class State {
 		deactivated,
 		nominal,
@@ -115,16 +114,13 @@ public:
         void drawController(InputController*, effectsController& ef, sf::Time &);
 	void draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&, tileController&, effectsController&, detailController&, SoundController&, userInterface&, InputController*, sf::RenderTexture&, FontController&, sf::Time&);
 	//Construct a default player object
-	Player();
+	Player(TextureManager *);
 	//More functions for setting the current position
 	void setPosition(float, float);
 	bool isActive();
 	void activate();
 	void deActivate();
-	void deActivateFaceUp();
-
-	void setTextures(TextureManager *);
-	
+	void deActivateFaceUp();	
 	// When the player is hit shake the screen. Would pass in reference to the screen shake controller but that would create a circular dependency
 	bool scrShakeState;
 	char getHealth() const;

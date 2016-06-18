@@ -22,6 +22,9 @@ int initEnemies(GameMap * gm) {
 	}};
 	
 	int currentLevel = gm->getLevel();
+	enemyController & enemies = gm->getEnemyController();
+	tileController & tiles = gm->getTileController();
+
 	// Count sum of energy values for all enemies, used in health station cost calculations
 	int count = 0;
 	std::vector<std::pair<int, int>>* pVec = gm->getEnemySelectVec();
@@ -101,23 +104,23 @@ int initEnemies(GameMap * gm) {
 		// Now place enemies based on the selected index
 		switch (selectedIndex) {
 			case 0:
-				gm->en.addScoot(&gm->tiles);
+				enemies.addScoot(&tiles);
 				count += 1;
 				break;
 				
 			case 1:
-				addCritter(gm->tiles.mapArray, gm->tiles.descriptionArray, gm->en, gm->tiles.posX, gm->tiles.posY, gm->windowW, gm->windowH, gm->tiles.emptyMapLocations, 1);
+				addCritter(tiles.mapArray, tiles.descriptionArray, enemies, tiles.posX, tiles.posY, gm->windowW, gm->windowH, tiles.emptyMapLocations, 1);
 				count += 2;
 				break;
 				
 				
 			case 2:
-				gm->en.addDasher(&gm->tiles);
+				enemies.addDasher(&tiles);
 				count += 3;
 				break;
 				
 			case 3:
-				addTurret(gm->tiles.mapArray, gm->tiles.descriptionArray, gm->en, gm->tiles.posX, gm->tiles.posY, gm->windowW, gm->windowH, gm->tiles.emptyMapLocations);
+				addTurret(tiles.mapArray, tiles.descriptionArray, enemies, tiles.posX, tiles.posY, gm->windowW, gm->windowH, tiles.emptyMapLocations);
 				count += 8;
 				break;
 				

@@ -14,14 +14,14 @@
 #include "SFML/Graphics.hpp"
 #include "spriteSheet.hpp"
 
-class DamagedRobot : public detailParent {
+class DamagedRobot : public Detail {
 public:
-	DamagedRobot(float, float, const sf::Texture &, int, float, float);
-	void update(float, float);
-	sf::Sprite * getSprite();
+	DamagedRobot(float, float, const sf::Texture &);
+	void update(float, float, const sf::Time &) override;
+	const sf::Sprite & getSprite() const override;
 	
 private:
-	SpriteSheet<40, 43> robotSheet;
+	mutable SpriteSheet<40, 43> robotSheet;
 	
 };
 

@@ -13,19 +13,21 @@
 #include "detailParent.hpp"
 #include "effectsController.hpp"
 
-class Teleporter : public detailParent {
+class Teleporter : public Detail {
 public:
-	Teleporter(float, float, sf::Sprite *, sf::Sprite, int, float, float);
-	sf::Sprite* getShadow();
+	Teleporter(float, float, sf::Sprite *, sf::Sprite *);
+	const sf::Sprite & getShadow() const;
+	const sf::Sprite & getSprite() const override;
 	bool smokeReady();
-	sf::Sprite* getSprite();
-	void update(float, float, sf::Time &);
-	sf::Sprite glowSprite;
-	sf::Sprite* getGlow();
+	void update(float, float, const sf::Time &) override;
+	sf::Sprite * getGlow();
+	float getXpos();
 	
 private:
+	mutable sf::Sprite glowSprite;
 	int32_t smokeTimer;
-	sf::Sprite TeleporterSprites[2];
+	mutable sf::Sprite TeleporterSprites[2];
+	float xPos;
 };
 
 #endif /* mapTower_hpp */

@@ -16,18 +16,19 @@
 
 class ScreenShakeController;
 
-class IntroDoor : public detailParent {
+class IntroDoor : public Detail {
 private:
 	enum class State { dormant, opening, opened };
-	SpriteSheet<200, 95> doorSheet;
+	mutable SpriteSheet<200, 95> doorSheet;
 	uint8_t frameIndex;
 	int32_t timer;
 	State state;
 	
 public:
-	void update(float, float, ScreenShakeController * pscr, effectsController & ef, const sf::Time & elapsedTime);
-	IntroDoor(float, float, const sf::Texture &, int, float, float);
-	sf::Sprite* getSprite();
+	void _update(float, float, ScreenShakeController * pscr, effectsController & ef, const sf::Time & elapsedTime);
+	void update(float, float, const sf::Time &) override;
+	IntroDoor(float, float, const sf::Texture &);
+	const sf::Sprite & getSprite() const override;
 };
 
 #endif

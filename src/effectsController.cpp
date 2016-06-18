@@ -9,7 +9,9 @@
 #include "effectsController.hpp"
 #include "screenShakeController.hpp"
 
-effectsController::effectsController() {}
+effectsController::effectsController(TextureManager * _pTM)
+	: pTM{_pTM}
+{}
 
 template<typename T>
 void updateVector(std::vector<T>& vec, float xOffset, float yOffset, sf::Time & elapsedTime) {
@@ -230,8 +232,4 @@ std::vector<Powerup>* effectsController::getHearts() {
 
 std::vector<Powerup>* effectsController::getCoins() {
 	return &coins;
-}
-
-void effectsController::setTextureManager(TextureManager * pTM) {
-	this->pTM = pTM;
 }

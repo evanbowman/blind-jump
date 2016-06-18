@@ -14,14 +14,16 @@
 #include "SFML/Graphics.hpp"
 #include "spriteSheet.hpp"
 
-class Rock : public detailParent {
+class Rock : public Detail {
 private:
-	SpriteSheet<32, 64> rockSheet;
+	mutable SpriteSheet<32, 64> rockSheet;
+	float xPos;
 	
 public:
-	void update(float, float);
-	Rock(float, float, const sf::Texture &, int, float, float);
-	sf::Sprite * getSprite();
+	void update(float, float, const sf::Time &) override;
+	Rock(float, float, const sf::Texture &);
+	const sf::Sprite & getSprite() const override;
+	float getXpos() const;
 };
 
 #endif /* rock_hpp */

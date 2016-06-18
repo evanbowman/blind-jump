@@ -44,22 +44,22 @@ inline void checkCollisionWall(std::vector<wall> walls, bool& CollisionDown, boo
 inline void checkCollisionChest (std::vector<TreasureChest> chests, bool& CollisionDown, bool& CollisionUp, bool& CollisionRight, bool& CollisionLeft, float posY, float posX) {
 	bool foundCollision[4] = {0, 0, 0, 0};
 	for (size_t i = 0; i < chests.size(); i++) {
-		if ((posX + 6 < (chests[i].getxPos() + 16) && (posX + 6 > (chests[i].getxPos()))) && (fabs((posY + 16) - chests[i].getyPos()) <= 8) && foundCollision[0] == 0)  {
+		if ((posX + 6 < (chests[i].getXpos() + 16) && (posX + 6 > (chests[i].getXpos()))) && (fabs((posY + 16) - chests[i].getYpos()) <= 8) && foundCollision[0] == 0)  {
 			CollisionLeft =  1;
 			foundCollision[0] = 1;
 		}
 		
-		if ((posX + 24 > (chests[i].getxPos()) && (posX + 24 < (chests[i].getxPos() + 16))) && (fabs((posY + 16) - chests[i].getyPos()) <= 8) && foundCollision[1] == 0)  {
+		if ((posX + 24 > (chests[i].getXpos()) && (posX + 24 < (chests[i].getXpos() + 16))) && (fabs((posY + 16) - chests[i].getYpos()) <= 8) && foundCollision[1] == 0)  {
 			CollisionRight =  1;
 			foundCollision[1] = 1;
 		}
 		
-		if (((posY + 22 < (chests[i].getyPos() + 16)) && (posY + 22 > (chests[i].getyPos()))) && (fabs((posX) - chests[i].getxPos() + 6) <= 12) && foundCollision[2] == 0)  {
+		if (((posY + 22 < (chests[i].getYpos() + 16)) && (posY + 22 > (chests[i].getYpos()))) && (fabs((posX) - chests[i].getXpos() + 6) <= 12) && foundCollision[2] == 0)  {
 			CollisionUp =  1;
 			foundCollision[2] = 1;
 		}
 		
-		if (((posY + 36 > chests[i].getyPos()) && (posY + 36 < chests[i].getyPos() + 16)) && (fabs((posX) - chests[i].getxPos() + 6) <= 12) && foundCollision[3] == 0)  {
+		if (((posY + 36 > chests[i].getYpos()) && (posY + 36 < chests[i].getYpos() + 16)) && (fabs((posX) - chests[i].getXpos() + 6) <= 12) && foundCollision[3] == 0)  {
 			CollisionDown =  1;
 			foundCollision[3] = 1;
 		}

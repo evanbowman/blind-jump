@@ -10,12 +10,13 @@
 #include <cmath>
 #include "screenShakeController.hpp"
 
-IntroDoor::IntroDoor(float xStart, float yStart, const sf::Texture & inpTxtr, int len, float width, float height) : detailParent(xStart, yStart, len, width / 2, height / 2) {
-	doorSheet.setTexture(inpTxtr);
-	frameIndex = 0;
-	timer = 0;
-	state = State::dormant;
-}
+IntroDoor::IntroDoor(float _xInit, float _yInit, const sf::Texture & inpTxtr)
+	: Detail{_xInit, _yInit},
+	  doorSheet{inpTxtr},
+	  frameIndex{0},
+	  timer{0},
+	  state{State::dormant}
+{}
 
 bool checkBulletCollision(float xPos, float yPos, effectsController & ef) {
 	for (auto & element : ef.getBulletLayer1()) {
@@ -27,7 +28,7 @@ bool checkBulletCollision(float xPos, float yPos, effectsController & ef) {
 	return false;
 }
 
-void IntroDoor::update(float xOffset, float yOffset, ScreenShakeController * pscr, effectsController & ef, const sf::Time & elapsedTime) {
+void IntroDoor::_update(float xOffset, float yOffset, ScreenShakeController * pscr, effectsController & ef, const sf::Time & elapsedTime) {
 	switch (state) {
 		case State::dormant:
 		    if (checkBulletCollision(xOffset + xInit + 124, yPos + 62, ef)) {
@@ -57,7 +58,8 @@ void IntroDoor::update(float xOffset, float yOffset, ScreenShakeController * psc
 	doorSheet.setPosition(xOffset + xInit, yPos);
 }
 
-sf::Sprite * IntroDoor::getSprite() {
-	doorSheet[frameIndex];
-	return doorSheet.getSpritePtr();
+const sf::Sprite & IntroDoor::getSprite() const {
+	return doorSheet[frameIndex];
 }
+
+void IntroDoor::update(float, float, const sf::Time &) {}

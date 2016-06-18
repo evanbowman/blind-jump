@@ -34,7 +34,7 @@ public:
 	sf::Image redSet;
 	sf::Image redSetFlowers;
 
-	tileController();
+	tileController(TextureManager *);
 	void drawTiles(sf::RenderTexture&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, int level);
 	void drawTiles(sf::RenderTexture&);
 	void drawMiniMap(sf::RenderTexture&);
@@ -87,7 +87,6 @@ public:
 	float getPosY() const;
 	void setWindowSize(float, float);
 	void reset();
-	void setTextures(TextureManager *);
 };
 
 #endif /* tileController_hpp */

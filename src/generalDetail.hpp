@@ -12,11 +12,11 @@
 
 #include "detailParent.hpp"
 
-class GeneralDetail : public detailParent {
+class GeneralDetail : public Detail {
 public:
-	GeneralDetail(float, float, sf::Sprite*, int, float, float);
-	sf::Sprite* getSprite();
-	void update(float, float);
+	GeneralDetail(float, float, sf::Sprite &);
+	const sf::Sprite & getSprite() const override;
+	void update(float, float, const sf::Time & elapsedTime) override;
 	
 private:
 	sf::Sprite spr;

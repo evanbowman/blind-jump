@@ -8,17 +8,17 @@
 
 #include "generalDetail.hpp"
 
-GeneralDetail::GeneralDetail(float xStart, float yStart, sf::Sprite* spr, int len, float width, float height) : detailParent(xStart, yStart, len, width, height) {
-  this->spr = *spr;
+GeneralDetail::GeneralDetail(float _xInit, float _yInit, sf::Sprite & _spr)
+	: Detail{_xInit, _yInit}
+{
+	spr = _spr;
 }
 
-void GeneralDetail::update(float xOffset, float yOffset) {
-  xPos = xOffset + xInit;
+void GeneralDetail::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
   yPos = yOffset + yInit;
-  spr.setPosition(xPos - 3, yPos);
+  spr.setPosition(xInit + xOffset - 3, yPos);
 }
 
-sf::Sprite* GeneralDetail::getSprite() {
-  return &spr;
+const sf::Sprite & GeneralDetail::getSprite() const {
+	return spr;
 }
-

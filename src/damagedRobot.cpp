@@ -8,19 +8,17 @@
 
 #include "damagedRobot.hpp"
 
-DamagedRobot::DamagedRobot(float xStart, float yStart, const sf::Texture & inpTxtr, int len, float width, float height) : detailParent(xStart, yStart, len, width, height) {
-	robotSheet.setTexture(inpTxtr);
+DamagedRobot::DamagedRobot(float _xInit, float _yInit, const sf::Texture & inpTxtr)
+	: Detail{_xInit, _yInit}, robotSheet{inpTxtr}
+{
 	robotSheet[rand() % 2];
-	// TODO: flip the sprite for more variety
 }
 
-void DamagedRobot::update(float xOffset, float yOffset) {
-	// Update the object's position
-	xPos = xOffset + xInit;
+void DamagedRobot::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
 	yPos = yOffset + yInit;
-	robotSheet.setPosition(xPos, yPos);
+	robotSheet.setPosition(xInit + xOffset, yPos);
 }
 
-sf::Sprite* DamagedRobot::getSprite() {
-	return robotSheet.getSpritePtr();
+const sf::Sprite & DamagedRobot::getSprite() const {
+	return robotSheet.getSprite();
 }

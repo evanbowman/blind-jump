@@ -17,40 +17,32 @@
 #include "enemyCreationFunctions.hpp"
 #include "gameMap.hpp"
 
-GameMap::GameMap(float windowWidth, float windowHeight, TextureManager * pTM, InputController* input, FontController* pFonts) {
+GameMap::GameMap(float _windowW, float _windowH, TextureManager * _pTM, InputController * _pInput, FontController * pFonts)
+	: details{_windowW, _windowH, _pTM},
+	  pTM{_pTM},
+	  pInput{_pInput},
+	  player{_pTM},
+	  tiles{_pTM},
+	  effects{_pTM},
+	  en{_pTM},
+	  level{0},
+	  windowW{_windowW},
+	  windowH{_windowH}
+{
 	//Make the background controller draw concenteric with the center of the view
 	bkg.setPosition((tiles.posX / 2) + 226, tiles.posY / 2);
 
-	this->pTM = pTM;
-
-	tiles.setTextures(pTM);
-
-	en.linkTextures(pTM);
-	
-	effects.setTextureManager(pTM);
-	
-	player.setTextures(pTM);	
-
 	// Set the size of the target render texture so that they'll fill the screen
-	target.create(windowWidth, windowHeight);
-	secondPass.create(windowWidth, windowHeight);
+	target.create(windowW, windowH);
+	secondPass.create(windowW, windowH);
 	secondPass.setSmooth(true);
-	thirdPass.create(windowWidth, windowHeight);
+	thirdPass.create(windowW, windowH);
 	thirdPass.setSmooth(true);
 	
-	// Store a pointer to the input controller in main()
-	pInput = input;
-	
-	worldView.setSize(windowWidth, windowHeight);
-	worldView.setCenter(windowWidth / 2, windowHeight / 2);
-	hudView.setSize(windowWidth, windowHeight);
-	hudView.setCenter(windowWidth / 2, windowHeight / 2);
-
-	details.setTextureManager(pTM);
-	
-	//Store the inputs for later
-	windowW = windowWidth;
-	windowH = windowHeight;
+	worldView.setSize(windowW, windowH);
+	worldView.setCenter(windowW / 2, windowH / 2);
+	hudView.setSize(windowW, windowH);
+	hudView.setCenter(windowW / 2, windowH / 2);
 	
 	// Now call a function to procedurally distribute items
 	initLoot(itemArray);
@@ -62,7 +54,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, TextureManager * pTM, In
 	bkg.giveWindowSize(windowW, windowH);
 	
 	// Tell the UI where the center of the window is
-	UI.setup(windowW / 2, windowH/ 2, &worldView);
+	UI.setup(windowW / 2, windowH / 2, &worldView);
 	
 	// Store the pointer to the font controller in main()
 	this->pFonts = pFonts;
@@ -79,11 +71,11 @@ GameMap::GameMap(float windowWidth, float windowHeight, TextureManager * pTM, In
 	level = 0;
 	
 	// Set up the lighting map
-	lightingMap.create(windowWidth, windowHeight);
+	lightingMap.create(windowW, windowH);
 	shadowShape.setFillColor(sf::Color(190, 190, 210, 255));
 	sf::Vector2f v;
-	v.x = windowWidth;
-	v.y = windowHeight;
+	v.x = windowW;
+	v.y = windowH;
 	shadowShape.setSize(v);
 	
 	transitioning = false;
@@ -96,23 +88,23 @@ GameMap::GameMap(float windowWidth, float windowHeight, TextureManager * pTM, In
 	objectShadeColor = sf::Color(190, 190, 210, 255);
 	
 	vignetteSprite.setTexture(pTM->getTexture(TextureManager::Texture::vignette));
-	vignetteSprite.setScale(windowWidth/450, windowHeight/450);
+	vignetteSprite.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setTexture(pTM->getTexture(TextureManager::Texture::vignetteShadow));
-	vignetteShadowSpr.setScale(windowWidth / 450, windowHeight / 450);
+	vignetteShadowSpr.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setColor(sf::Color(255,255,255,100));
 	
 	//Put the player in the center of the view
-	player.setPosition(windowWidth / 2 - 16, windowHeight / 2);
+	player.setPosition(windowW / 2 - 16, windowH / 2);
 	
 	//Let the tile controller know where player is
-	tiles.setPosition((windowWidth / 2) - 16, (windowHeight / 2));
-	tiles.setWindowSize(windowWidth, windowHeight);
+	tiles.setPosition((windowW / 2) - 16, (windowH / 2));
+	tiles.setWindowSize(windowW, windowH);
 	
 	/*  Completely non-general code only used by the intro level */
-	details.addLamplight(tiles.posX - 180, tiles.posY + 200, 5, 6, windowWidth, windowHeight);
-	details.addLamplight(tiles.posX - 180, tiles.posY + 200, 5, 0, windowWidth, windowHeight);
-	details.addLamplight(tiles.posX - 170, tiles.posY + 200, 11, 11, windowWidth, windowHeight);
-	details.addLamplight(tiles.posX - 180, tiles.posY + 200, 10, -9, windowWidth, windowHeight);
+	details.addLamplight(tiles.posX - 180, tiles.posY + 200, 5, 6, windowW, windowH);
+	details.addLamplight(tiles.posX - 180, tiles.posY + 200, 5, 0, windowW, windowH);
+	details.addLamplight(tiles.posX - 170, tiles.posY + 200, 11, 11, windowW, windowH);
+	details.addLamplight(tiles.posX - 180, tiles.posY + 200, 10, -9, windowW, windowH);
 	details.addDoor(tiles.posX - 192, tiles.posY + 301, 6, 0, windowW, windowH);
 	details.addPod(tiles.posX, tiles.posY + 33, 3, 17);
 	tiles.teleporterLocation.x = 8;
@@ -124,7 +116,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, TextureManager * pTM, In
 		tiles.walls.push_back(w);
 	}
 	
-	en.setWindowSize(windowWidth, windowHeight);
+	en.setWindowSize(windowW, windowH);
 	
 	//Initialize the fonts
 	pFonts->setWaypointText(level);
@@ -133,13 +125,13 @@ GameMap::GameMap(float windowWidth, float windowHeight, TextureManager * pTM, In
 	
 	// initialize the rectangle shape for the teleporter beam effect
 	sf::Vector2f v1(2, 1);
-	teleporterBeam.setPosition(windowWidth/2 - 1.5, windowHeight/2 + 36);
+	teleporterBeam.setPosition(windowW / 2 - 1.5, windowH / 2 + 36);
 	teleporterBeam.setSize(v1);
 	teleporterBeam.setFillColor(sf::Color(114, 255, 229, 6));
 
 	// Initialize the rectangle shape for the teleporter entry beam
 	sf::Vector2f v2(4, 8);
-	entryBeam.setPosition(windowW/2 - 2, -68);
+	entryBeam.setPosition(windowW / 2 - 2, -68);
 	entryBeam.setSize(v2);
 	entryBeam.setFillColor(sf::Color(104, 255, 229, 180));
 	
@@ -152,7 +144,7 @@ GameMap::GameMap(float windowWidth, float windowHeight, TextureManager * pTM, In
 	sndCtrl.playMusic(0);
 	beamGlowTxr.loadFromFile(resourcePath() + "teleporterBeamGlow.png");
 	beamGlowSpr.setTexture(beamGlowTxr);
-	beamGlowSpr.setPosition(windowWidth / 2 - 200, windowHeight / 2 - 200 + 30);
+	beamGlowSpr.setPosition(windowW / 2 - 200, windowH / 2 - 200 + 30);
 	beamGlowSpr.setColor(sf::Color(0, 0, 0, 255));
 	
 	transitionShape.setSize(sf::Vector2f(windowW, windowH));
@@ -174,16 +166,16 @@ GameMap::GameMap(float windowWidth, float windowHeight, TextureManager * pTM, In
 void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
 	target.clear(sf::Color::Transparent);
 	// Start by getting the displacement that the player has moved, in order to update the position of all of the tiles and game objects
-	xOffset = player.getWorldOffsetX();
-	yOffset = player.getWorldOffsetY();
-	// Draw the images
+	float xOffset = player.getWorldOffsetX();
+	float yOffset = player.getWorldOffsetY();
+
 	bkg.setOffset(xOffset, yOffset);
 	bkg.drawBackground(target);
 	tiles.setOffset(xOffset, yOffset);
 	tiles.drawTiles(target, effects.getGlowSprs(), effects.getGlowSprs2(), level);
 	effects.getGlowSprs2()->clear();
 	// Update the overworld objects based on the displacement of the player
-	details.update(effects, UI, *pFonts, player, pInput, &ssc, elapsedTime);
+	details.update(this, elapsedTime);
 	// Draw the details / add them to the game objects vector
 	details.draw(gameObjects, gameShadows, target);
 	// Update the enemy objects in the game based on the player's displacement
@@ -441,11 +433,11 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
 	}
 	
 	// Check if the player is close to a teleporter. If so, go to the next level
-	if ((std::abs(player.getPosX() - details.getTeleporter()->getxPos()) < 10 && std::abs(player.getPosY() - details.getTeleporter()->getyPos() + 12) < 8) /*&& player.isActive()*/) {
+	if ((std::abs(player.getPosX() - details.getTeleporter()->getXpos()) < 10 && std::abs(player.getPosY() - details.getTeleporter()->getYpos() + 12) < 8) /*&& player.isActive()*/) {
 		// Center the player over the teleporter for the duration of the teleport animation (ie center the world under the player)
 		if (!animationBegin) {
-			player.setWorldOffsetX(xOffset + (player.getPosX() - details.getTeleporter()->getxPos()) + 2);
-			player.setWorldOffsetY(yOffset + (player.getPosY() - details.getTeleporter()->getyPos()) + 16);
+			player.setWorldOffsetX(xOffset + (player.getPosX() - details.getTeleporter()->getXpos()) + 2);
+			player.setWorldOffsetY(yOffset + (player.getPosY() - details.getTeleporter()->getYpos()) + 16);
 			beamExpanding = true;
 			animationBegin = true;
 			// Force all captions closed
@@ -504,8 +496,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
 				
 			}
 		}
-		
-		// Draw captions to the window
+
 		if (!UI.isVisible()) {
 			pFonts->update(window, xOffset, yOffset);
 			window.setView(worldView);
@@ -646,7 +637,7 @@ void GameMap::Reset() {
 			// Delete rocks close to the teleporter
 			std::vector<Rock>* pRocks = details.getRocks();
 			for (auto it = pRocks->begin(); it != pRocks->end();) {
-				if (fabsf(it->getxPos() - pTeleporter->getxPos()) < 80 && fabsf(it->getyPos() - pTeleporter->getyPos()) < 80) {
+				if (fabsf(it->getXpos() - pTeleporter->getXpos()) < 80 && fabsf(it->getYpos() - pTeleporter->getYpos()) < 80) {
 					it = pRocks->erase(it);
 				} else {
 					++it;
@@ -663,9 +654,9 @@ void GameMap::Reset() {
 		lightPositions.clear();
 		
 		// Delete lamps near the teleporter (light blending is additive, it would be too bright if they were close together)
-		std::vector<LampLight>* pLamps = details.getLamps();
+		std::vector<LampLight> * pLamps = details.getLamps();
 		for (size_t i = 0; i < details.getLamps()->size(); i++) {
-			if (fabsf((*pLamps)[i].getxPos() - pTeleporter->xPos) < 90 && fabsf((*pLamps)[i].getyPos() - pTeleporter->yPos) < 90) {
+			if (fabsf((*pLamps)[i].getXpos() - pTeleporter->getXpos()) < 90 && fabsf((*pLamps)[i].getYpos() - pTeleporter->getYpos()) < 90) {
 				(*pLamps)[i] = (*pLamps).back();
 				(*pLamps).pop_back();
 			}
@@ -697,12 +688,40 @@ void GameMap::Reset() {
 		transitionIn = true;
 }
 
-Player GameMap::getPlayer() {
+detailController & GameMap::getDetails() {
+	return details;
+}
+
+enemyController & GameMap::getEnemyController() {
+	return en;
+}
+
+tileController & GameMap::getTileController() {
+	return tiles;
+}
+
+Player & GameMap::getPlayer() {
 	return player;
 }
 
-detailController GameMap::getDetails() {
-	return details;
+effectsController & GameMap::getEffects() {
+	return effects;
+}
+
+InputController * GameMap::getPInput() {
+	return pInput;
+}
+
+ScreenShakeController * GameMap::getPSSC() {
+	return &ssc;
+}
+
+userInterface & GameMap::getUI() {
+	return UI;
+}
+
+FontController * GameMap::getPFonts() {
+	return pFonts;
 }
 
 bool GameMap::getTeleporterCond() {
@@ -716,3 +735,4 @@ std::vector<std::pair<int, int>>* GameMap::getEnemySelectVec() {
 int GameMap::getLevel() {
 	return level;
 }
+

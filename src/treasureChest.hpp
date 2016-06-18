@@ -14,26 +14,27 @@
 #include "inputController.hpp"
 #include "spriteSheet.hpp"
 
-class TreasureChest : public detailParent {
+class TreasureChest : public Detail {
 public:
-	TreasureChest(float, float, const sf::Texture &, const sf::Texture &, int, float, float, char);
-	sf::Sprite* getShadow();
-	sf::Sprite* getSprite();
-	void update(float, float, char, InputController*, sf::Time&);
-	float getZY();
-	char getFrameIndex();
-	bool isValid();
-	char getItem();
+	enum class State {
+		closed, opening, ready, complete
+	};
+	TreasureChest(float, float, const sf::Texture &, const sf::Texture &, char);
+	const sf::Sprite & getShadow() const;
+	const sf::Sprite & getSprite() const override;
+	void update(float, float, const sf::Time &) override;
+	float getXpos();
+	State getState() const;
+	void setState(const State);
+	char getItem() const;
 	
 private:
-	bool animationIsRunning;
+	State state;
+	char item;
 	int32_t animationTimer;
 	uint8_t frameIndex;
-	// Boolean to keep track of opened or closed
-	bool isOpen;
-	char item;
-	bool valid;
-	SpriteSheet<16, 32> chestSheet;
-	sf::Sprite chestShadow;
+	mutable SpriteSheet<16, 32> chestSheet;
+	mutable sf::Sprite chestShadow;
+	float xPos;
 };
 #endif /* treasureChest_hpp */

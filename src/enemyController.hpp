@@ -41,12 +41,11 @@ private:
 	float windowH;
 	
 public:
-	enemyController();
+	enemyController(TextureManager *);
 	void updateEnemies(drawableVec &, drawableVec &, float, float, effectsController&, std::vector<wall>, bool, detailController*, tileController*, ScreenShakeController*, FontController&, sf::Time &);
 	void clear();
 	sf::Sprite * getTurretSprites();
 	sf::Sprite * getChaserSprites();
-	void linkTextures(TextureManager *);
 	void addTurret(turret);
 	void addScoot(tileController *);
 	void addDasher(tileController *);
