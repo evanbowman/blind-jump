@@ -32,7 +32,7 @@ void TreasureChest::update(float xOffset, float yOffset, const sf::Time & elapse
 	yPos = yInit + yOffset;
 	xPos = xInit + xOffset;
 	chestSheet.setPosition(xPos, yPos - 16);
-	chestShadow.setPosition(xPos, yPos + 16);
+	chestShadow.setPosition(xPos, yPos + 12);
 
 	switch (state) {
 	case State::opening:
