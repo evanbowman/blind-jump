@@ -85,13 +85,15 @@ private:
 	// Dodge direction and mode variables
 	bool dodging;
 	State state;
-	int dodgeTimer;
+	int32_t dodgeTimer, blurTimer;
 	char dodgeDir;
 	
 	float colorAmount;
 	
 	bool gotHeart, gotCoin;
 	int32_t colorTimer;
+
+	std::vector<Dasher::Blur> blurs;
 	
 	//Include a function for setting the animation frame index
 	void setImageIndex(char);
@@ -111,7 +113,7 @@ public:
 	//Functions for getting the current position of the player object
 	float getPosX() const;
 	float getPosY() const;
-        void drawController(InputController*, effectsController& ef, sf::Time &);
+	void drawController(InputController*, effectsController& ef, sf::Time &);
 	void draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&, tileController&, effectsController&, detailController&, SoundController&, userInterface&, InputController*, sf::RenderTexture&, FontController&, sf::Time&);
 	//Construct a default player object
 	Player(TextureManager *);

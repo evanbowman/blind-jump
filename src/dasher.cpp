@@ -68,7 +68,7 @@ const sf::Sprite & Dasher::getSprite() const {
 		return deathSheet[frameIndex];
 			
 	case State::dead:
-		return deathSheet[frameIndex];
+		return deathSheet[14];
 
 	default:
 		return dasherSheet[frameIndex];
@@ -219,13 +219,12 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 		if (frameTimer > 53) {
 			frameTimer -= 53;
 			frameIndex++;
-			if (frameIndex > 20)
+			if (frameIndex > 14)
 				state = State::dead;
 		}
 		break;
 
 	case State::dead:
-		killFlag = true;
 		break;
 	}
 

@@ -6,17 +6,17 @@
 //  Copyright © 2015 Evan Bowman. All rights reserved.
 //
 /*
- Take note of the sprite indeces:
- 0: Face down
- 1: Face up
- 2: Face left
- 3: Face right
- 4: Walk down
- 5: Walk up
- 6: Walk left
- 7: Walk right
- 8: Death
- */
+  Take note of the sprite indeces:
+  0: Face down
+  1: Face up
+  2: Face left
+  3: Face right
+  4: Walk down
+  5: Walk up
+  6: Walk left
+  7: Walk right
+  8: Death
+*/
 //The code in this section looks long, but it's mostly importing textures and repeated condition checking that cannot easily be looped.
 
 #include "player.hpp"
@@ -27,7 +27,9 @@
 #include "wall.hpp"
 #include <tuple>
 
-Player::Player(TextureManager * pTM) {
+Player::Player(TextureManager * pTM)
+	: blurTimer{0}
+{
 	health = 4;
 	imageIndex = 0;
 	spriteIndex = 0;
@@ -99,16 +101,16 @@ float Player::getPosY() const {
 //The following code gets repeated several times, so I gave it its own function
 inline void compareSpriteIndex(char& spriteIndex) {
 	switch (spriteIndex) {
-		case 4: spriteIndex = 0;
-			break;
-		case 5: spriteIndex = 1;
-			break;
-		case 6: spriteIndex = 2;
-			break;
-		case 7: spriteIndex = 3;
-			break;
-		default: //spriteIndex = 0;
-			break;
+	case 4: spriteIndex = 0;
+		break;
+	case 5: spriteIndex = 1;
+		break;
+	case 6: spriteIndex = 2;
+		break;
+	case 7: spriteIndex = 3;
+		break;
+	default: //spriteIndex = 0;
+		break;
 	}
 }
 
@@ -243,7 +245,7 @@ void Player::drawController(InputController* pInput, effectsController& ef, sf::
 			//Regardless of which direction key(s) active, the player needs to face the direction it was facing when x was pressed
 			if (spriteIndex == 0 || spriteIndex == 4) {
 				if (down) {
-				        updateWorldOffset(spriteIndex, animationTimer, CollisionDown, 4, worldOffsetY, -slowSpeed);
+					updateWorldOffset(spriteIndex, animationTimer, CollisionDown, 4, worldOffsetY, -slowSpeed);
 				}
 				
 				if (up) {
@@ -319,72 +321,75 @@ void Player::drawController(InputController* pInput, effectsController& ef, sf::
 		}
 		
 		if (state == Player::State::prepdash) {
-			if (--dodgeTimer == 0) {
-				dodgeTimer = 5;
+			dodgeTimer += elapsedTime.asMilliseconds();
+			if (dodgeTimer > 53) {
+				dodgeTimer -= 53;
 				state = Player::State::dashing;
 			}
 			if (left && !CollisionLeft) {
-				worldOffsetX += 1;
+				worldOffsetX += 1 * (elapsedTime.asMilliseconds() / 17.6);
 			}
 			if (right && !CollisionRight) {
-				worldOffsetX -= 1;
+				worldOffsetX -= 1 * (elapsedTime.asMilliseconds() / 17.6);
 			}
 			if (up && !CollisionUp) {
-				worldOffsetY += 1;
+				worldOffsetY += 1 * (elapsedTime.asMilliseconds() / 17.6);
 			}
 			if (down && !CollisionDown) {
-				worldOffsetY -= 1;
+				worldOffsetY -= 1 * (elapsedTime.asMilliseconds() / 17.6);
 			}
 		}
 		
 		else if (state == Player::State::dashing) {
-			if (--dodgeTimer == 0) {
+			dodgeTimer += elapsedTime.asMilliseconds();
+			if (dodgeTimer > 88) {
 				state = Player::State::cooldown;
-				dodgeTimer = 12;
+				dodgeTimer -= 88;
 			}
 			if (left && !CollisionLeft) {
 				if (up || down)
-					worldOffsetX += 5;
+					worldOffsetX += 5 * (elapsedTime.asMilliseconds() / 17.6);
 				else
-					worldOffsetX += 7;
+					worldOffsetX += 7 * (elapsedTime.asMilliseconds() / 17.6);
 			}
 			if (right && !CollisionRight) {
 				if (up || down)
-					worldOffsetX -= 5;
+					worldOffsetX -= 5 * (elapsedTime.asMilliseconds() / 17.6);
 				else
-					worldOffsetX -= 7;
+					worldOffsetX -= 7 * (elapsedTime.asMilliseconds() / 17.6);
 			}
 			if (up && !CollisionUp) {
 				if (left || right)
-					worldOffsetY += 5;
+					worldOffsetY += 5 * (elapsedTime.asMilliseconds() / 17.6);
 				else
-					worldOffsetY += 7;
+					worldOffsetY += 7 * (elapsedTime.asMilliseconds() / 17.6);
 			}
 			if (down && !CollisionDown) {
 				if (left || right)
-					worldOffsetY -= 5;
+					worldOffsetY -= 5 * (elapsedTime.asMilliseconds() / 17.6);
 				else
-					worldOffsetY -= 7;
+					worldOffsetY -= 7 * (elapsedTime.asMilliseconds() / 17.6);
 			}
 		}
 		
 		else if (state == Player::State::cooldown) {
-			if (--dodgeTimer == 0) {
-				dodgeTimer = 3;
+			dodgeTimer += elapsedTime.asMilliseconds();
+			if (dodgeTimer > 211) {
+				dodgeTimer -= 211;
 				state = Player::State::nominal;
 				imageIndex = 4;
 			}
 			if (left && !CollisionLeft) {
-				worldOffsetX += 1;
+				worldOffsetX += 1 * (elapsedTime.asMilliseconds() / 17.6);
 			}
 			if (right && !CollisionRight) {
-				worldOffsetX -= 1;
+				worldOffsetX -= 1 * (elapsedTime.asMilliseconds() / 17.6);
 			}
 			if (up && !CollisionUp) {
-				worldOffsetY += 1;
+				worldOffsetY += 1 * (elapsedTime.asMilliseconds() / 17.6);
 			}
 			if (down && !CollisionDown) {
-				worldOffsetY -= 1;
+				worldOffsetY -= 1 * (elapsedTime.asMilliseconds() / 17.6);
 			}
 		}
 		
@@ -612,113 +617,112 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 	}
 	
 	if (state == Player::State::nominal) {
-	        switch (spriteIndex) {
-	        	case 4:
-			        animationTimer += elapsedTime.asMilliseconds();
-			        updateVAnimCount(animationTimer, imageIndex, pInput->xPressed());
-				if (imageIndex == 4 || imageIndex == 8) {
-					sounds.playEffect(SoundController::Effect::step);
-				}
-				std::get<0>(tPlayer) = walkDown[verticalAnimationDecoder(imageIndex)];
-				gameObjects.push_back(tPlayer);
-				if (weapon.getTimeout(elapsedTime) != 0) {
-					std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
-					std::get<1>(tGun) = weapon.getYpos() + 2;
-					gameObjects.push_back(tGun);
-				}
-				break;
+		switch (spriteIndex) {
+		case 4:
+			animationTimer += elapsedTime.asMilliseconds();
+			updateVAnimCount(animationTimer, imageIndex, pInput->xPressed());
+			if (imageIndex == 4 || imageIndex == 8) {
+				sounds.playEffect(SoundController::Effect::step);
+			}
+			std::get<0>(tPlayer) = walkDown[verticalAnimationDecoder(imageIndex)];
+			gameObjects.push_back(tPlayer);
+			if (weapon.getTimeout(elapsedTime) != 0) {
+				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
+				std::get<1>(tGun) = weapon.getYpos() + 2;
+				gameObjects.push_back(tGun);
+			}
+			break;
 				
-			case 5:
-			        animationTimer += elapsedTime.asMilliseconds();
-				updateVAnimCount(animationTimer, imageIndex, pInput->xPressed());
-				if (imageIndex == 4 || imageIndex == 8) {
-					sounds.playEffect(SoundController::Effect::step);
-				}
-				weapon.getTimeout(elapsedTime);
-				std::get<0>(tPlayer) = walkUp[verticalAnimationDecoder(imageIndex)];
-				gameObjects.push_back(tPlayer);
-				break;
+		case 5:
+			animationTimer += elapsedTime.asMilliseconds();
+			updateVAnimCount(animationTimer, imageIndex, pInput->xPressed());
+			if (imageIndex == 4 || imageIndex == 8) {
+				sounds.playEffect(SoundController::Effect::step);
+			}
+			weapon.getTimeout(elapsedTime);
+			std::get<0>(tPlayer) = walkUp[verticalAnimationDecoder(imageIndex)];
+			gameObjects.push_back(tPlayer);
+			break;
 				
-			case 6:
-			        animationTimer += elapsedTime.asMilliseconds();
-				if (weapon.getTimeout(elapsedTime) != 0) {
-					std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
-					std::get<1>(tGun) = weapon.getYpos() - 1;
-					gameObjects.push_back(tGun);
-				}
-				updateHAnimCount(animationTimer, imageIndex, pInput->xPressed());
-				if (imageIndex == 1) {
-					sounds.playEffect(SoundController::Effect::step);
-				}
-				std::get<0>(tPlayer) = walkLeft[horizontalAnimationDecoder(imageIndex)];
-				gameObjects.push_back(tPlayer);
-				break;
+		case 6:
+			animationTimer += elapsedTime.asMilliseconds();
+			if (weapon.getTimeout(elapsedTime) != 0) {
+				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
+				std::get<1>(tGun) = weapon.getYpos() - 1;
+				gameObjects.push_back(tGun);
+			}
+			updateHAnimCount(animationTimer, imageIndex, pInput->xPressed());
+			if (imageIndex == 1) {
+				sounds.playEffect(SoundController::Effect::step);
+			}
+			std::get<0>(tPlayer) = walkLeft[horizontalAnimationDecoder(imageIndex)];
+			gameObjects.push_back(tPlayer);
+			break;
 				
-			case 7:
-			        animationTimer += elapsedTime.asMilliseconds();
-				if (weapon.getTimeout(elapsedTime) != 0) {
-					std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
-					std::get<1>(tGun) = weapon.getYpos() - 1;
-					gameObjects.push_back(tGun);
-				}
-				updateHAnimCount(animationTimer, imageIndex, pInput->xPressed());
-				if (imageIndex == 1) {
-					sounds.playEffect(SoundController::Effect::step);
-				}
-				std::get<0>(tPlayer) = walkRight[horizontalAnimationDecoder(imageIndex)];
-				gameObjects.push_back(tPlayer);
-				break;
+		case 7:
+			animationTimer += elapsedTime.asMilliseconds();
+			if (weapon.getTimeout(elapsedTime) != 0) {
+				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
+				std::get<1>(tGun) = weapon.getYpos() - 1;
+				gameObjects.push_back(tGun);
+			}
+			updateHAnimCount(animationTimer, imageIndex, pInput->xPressed());
+			if (imageIndex == 1) {
+				sounds.playEffect(SoundController::Effect::step);
+			}
+			std::get<0>(tPlayer) = walkRight[horizontalAnimationDecoder(imageIndex)];
+			gameObjects.push_back(tPlayer);
+			break;
 				
-			case 0:
-				std::get<0>(tPlayer) = walkDown[5];
-				gameObjects.push_back(tPlayer);
-				if (weapon.getTimeout(elapsedTime) != 0) {
-					std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
-					std::get<1>(tGun) = weapon.getYpos() + 2;
-					gameObjects.push_back(tGun);
-				}
-				break;
+		case 0:
+			std::get<0>(tPlayer) = walkDown[5];
+			gameObjects.push_back(tPlayer);
+			if (weapon.getTimeout(elapsedTime) != 0) {
+				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
+				std::get<1>(tGun) = weapon.getYpos() + 2;
+				gameObjects.push_back(tGun);
+			}
+			break;
 				
-			case 1:
-				std::get<0>(tPlayer) = walkUp[5];
-				gameObjects.push_back(tPlayer);
-				weapon.getTimeout(elapsedTime);
-				break;
+		case 1:
+			std::get<0>(tPlayer) = walkUp[5];
+			gameObjects.push_back(tPlayer);
+			weapon.getTimeout(elapsedTime);
+			break;
 				
-			case 2:
-				if (weapon.getTimeout(elapsedTime) != 0) {
-					std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
-					std::get<1>(tGun) = weapon.getYpos() - 1;
-					gameObjects.push_back(tGun);
-				}
-				std::get<0>(tPlayer) = walkLeft[6];
-				gameObjects.push_back(tPlayer);
-				break;
+		case 2:
+			if (weapon.getTimeout(elapsedTime) != 0) {
+				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
+				std::get<1>(tGun) = weapon.getYpos() - 1;
+				gameObjects.push_back(tGun);
+			}
+			std::get<0>(tPlayer) = walkLeft[6];
+			gameObjects.push_back(tPlayer);
+			break;
 				
-			case 3:
-				if (weapon.getTimeout(elapsedTime) != 0) {
-					std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
-					std::get<1>(tGun) = weapon.getYpos() - 1;
-					gameObjects.push_back(tGun);
-				}
-				std::get<0>(tPlayer) = walkRight[6];
-				gameObjects.push_back(tPlayer);
-				break;
+		case 3:
+			if (weapon.getTimeout(elapsedTime) != 0) {
+				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
+				std::get<1>(tGun) = weapon.getYpos() - 1;
+				gameObjects.push_back(tGun);
+			}
+			std::get<0>(tPlayer) = walkRight[6];
+			gameObjects.push_back(tPlayer);
+			break;
 				
-			case 8:
-			        animationTimer += elapsedTime.asMilliseconds();
-				if (animationTimer >= 70.4) {
-				        animationTimer -= 70.4;
-					if (imageIndex < 9) {
-						imageIndex++;
-					}
+		case 8:
+			animationTimer += elapsedTime.asMilliseconds();
+			if (animationTimer >= 70.4) {
+				animationTimer -= 70.4;
+				if (imageIndex < 9) {
+					imageIndex++;
 				}
-				std::get<0>(tPlayer) = deathSheet[imageIndex];
-				gameObjects.push_back(tPlayer);
-				break;
+			}
+			std::get<0>(tPlayer) = deathSheet[imageIndex];
+			gameObjects.push_back(tPlayer);
+			break;
 		}
-	}
-	else if (state == Player::State::prepdash) {
+	} else if (state == Player::State::prepdash) {
 		if ((rightPrevious || upPrevious || downPrevious) && spriteIndex == 6) {
 			if (weapon.getTimeout(elapsedTime) != 0 && rightPrevious) {
 				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
@@ -855,6 +859,26 @@ void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&
 			else if (rightPrevious) {
 				std::get<0>(tPlayer) = dashSheet[11];
 				gameObjects.push_back(tPlayer);
+			}
+		}
+
+		if (state == State::dashing) {
+			blurTimer += elapsedTime.asMilliseconds();
+			if (blurTimer > 20) {
+				blurTimer = 0;
+				blurs.emplace_back(&std::get<0>(gameObjects.back()), posX - worldOffsetX, posY - worldOffsetY);
+			}
+		}
+	}
+
+	if (!blurs.empty()) {
+		for (auto it = blurs.begin(); it != blurs.end();) {
+			if (it->getKillFlag())
+				it = blurs.erase(it);
+			else {
+				it->update(elapsedTime, worldOffsetX, worldOffsetY);
+				gameObjects.emplace_back(*it->getSprite(), it->yInit, Rendertype::shadeDefault, 0.f);
+				++it;
 			}
 		}
 	}

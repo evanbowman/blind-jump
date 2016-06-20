@@ -160,34 +160,26 @@ void enemyController::updateEnemies(drawableVec & gameObjects, drawableVec & gam
 	}
 	
 	if (!dashers.empty()) {
-		for (auto it = dashers.begin(); it != dashers.end();) {
-			if (it->getKillFlag()) {
-				dets->addDasherScrap(it->getXinit(), it->getYinit(), it->getScale().x);
-				it = dashers.erase(it);
-			}
-			else {
-				if (it->getXpos() > -64 && it->getXpos() < windowW + 64 && it->getYpos() > -64 && it->getYpos() < windowH + 64) {
-					if (enabled)
-						it->update(x, y, w, ef, elapsedTime);	
+		for (auto & element : dashers) {
+			if (element.getXpos() > -64 && element.getXpos() < windowW + 64 && element.getYpos() > -64 && element.getYpos() < windowH + 64) {
+				if (enabled)
+					element.update(x, y, w, ef, elapsedTime);	
 					
-					auto state = it->getState();
-					if (state != Dasher::State::dying && state != Dasher::State::dead)
-						gameShadows.emplace_back(it->getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
+				auto state = element.getState();
+				if (state != Dasher::State::dying && state != Dasher::State::dead)
+					gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
 					
-					for (auto & element : *it->getBlurEffects())
-						gameObjects.emplace_back(*element.getSprite(), element.yInit + y, Rendertype::shadeDefault, 0.f);
+				for (auto & blur : *element.getBlurEffects())
+					gameObjects.emplace_back(*blur.getSprite(), blur.yInit + y, Rendertype::shadeDefault, 0.f);
 					
-					if (it->isColored())
-						gameObjects.emplace_back(it->getSprite(), it->getYpos(), Rendertype::shadeWhite, it->getColorAmount());
-					else
-						gameObjects.emplace_back(it->getSprite(), it->getYpos(), Rendertype::shadeDefault, 0.f);
+				if (element.isColored())
+					gameObjects.emplace_back(element.getSprite(), element.getYpos(), Rendertype::shadeWhite, element.getColorAmount());
+				else
+					gameObjects.emplace_back(element.getSprite(), element.getYpos(), Rendertype::shadeDefault, 0.f);
 					
-				} else {
-					// If outside the window, update the enemy's position, but don't move it, draw it, check collisions, etc.
-					it->Enemy::update(x, y, w, ef, elapsedTime);
-				}
-				
-				++it;
+			} else {
+				// If outside the window, update the enemy's position, but don't move it, draw it, check collisions, etc.
+				element.Enemy::update(x, y, w, ef, elapsedTime);
 			}
 		}
 	}
