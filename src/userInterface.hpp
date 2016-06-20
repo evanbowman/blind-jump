@@ -39,9 +39,6 @@ class userInterface {
 public:
 	userInterface();
 	void drawMenu(sf::RenderWindow&, Player*, FontController&, effectsController&, float, float, InputController*, sf::Time&);
-	// Declare selection circles to go around the object
-	sf::Texture txtShadowTexture;
-	sf::Sprite txtShadowSprite;
 	void setup(float, float, sf::View *);
 	sf::Texture itemTextures[3][3];
 	void addItem(char, effectsController&, float, float, FontController&, Player&);

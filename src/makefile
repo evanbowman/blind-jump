@@ -24,7 +24,7 @@ backgroundHandler.o: backgroundHandler.hpp backgroundHandler.cpp $(RSP)
 bulletType1.o: bulletType1.cpp bulletType1.hpp spriteSheet.hpp
 	$(CC) bulletType1.cpp $(CFLAGS) -c -o bulletType1.o
 
-critter.o: critter.cpp critter.hpp tileController.hpp enemyParent.hpp aStar.hpp
+critter.o: critter.cpp critter.hpp tileController.hpp enemyParent.hpp aStar.hpp spriteSheet.hpp
 	$(CC) critter.cpp $(CFLAGS) -c -o critter.o
 
 damagedRobot.o: damagedRobot.cpp damagedRobot.hpp detailParent.hpp spriteSheet.hpp

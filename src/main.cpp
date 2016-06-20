@@ -44,8 +44,6 @@ int main(int argc, char * argv[]) {
 		}
 		while (fabs(aspectRatio - windowAspect) > 0.005f);
 	}
-
-	std::cout << windowWidth << " " << windowHeight;
 	
 	TextureManager TM;
 	if(!TM.load()) {
@@ -70,7 +68,7 @@ int main(int argc, char * argv[]) {
 	sf::RenderWindow window(sf::VideoMode(desktop.width, desktop.height), "Blind Jump", sf::Style::Fullscreen, settings);
 	window.setMouseCursorVisible(false);
 	window.setVerticalSyncEnabled(true);
-	//window.setFramerateLimit(15);
+	window.setFramerateLimit(60);
 	
 	sf::Image icon;
 	if (!icon.loadFromFile(resourcePath() + "icon.png")) {

@@ -15,6 +15,5 @@
 #include "coordinate.hpp"
 
 void addTurret(short mapArray[61][61], short descriptionArray[61][61], enemyController&, float, float, float, float, std::vector<Coordinate>&);
-void addCritter(short mapArray[61][61], short descriptionArray[61][61], enemyController&, float, float, float, float, std::vector<Coordinate>&, int);
 
 #endif /* enemyCreationFunctions_hpp */

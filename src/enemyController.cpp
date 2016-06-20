@@ -24,11 +24,6 @@ enemyController::enemyController(TextureManager * _pTM)
 		turretTextures[i].loadFromFile(resourcePath() + turretfileExt[i]);
 		turretSprites[i].setTexture(turretTextures[i]);
 	}
-	
-	for (auto i = 0; i < 4; i++) {
-		chaserTextures[i].loadFromFile(resourcePath() + "critterSheet.png", sf::IntRect(i * 18, 0, 18, 18));
-		chaserSprites[i].setTexture(chaserTextures[i]);
-	}
 }
 
 void enemyController::updateEnemies(drawableVec & gameObjects, drawableVec & gameShadows, float x, float y, effectsController& ef, std::vector<wall> w, bool enabled, detailController* dets, tileController* pTiles, ScreenShakeController* scrn, FontController& fonts, sf::Time & elapsedTime) {
@@ -128,22 +123,22 @@ void enemyController::updateEnemies(drawableVec & gameObjects, drawableVec & gam
 			else {
 				//if (it->getXpos() > -64 && it->getXpos() < windowW + 64 && it->getYpos() > -64 && it->getYpos() < windowH + 64) {
 					if (enabled) {
-						it->update(x, y, ef, pTiles, elapsedTime);
+						it->update(x, y, w, ef, elapsedTime);
 					} else {
-						it->updatePlayerDead();
+						it->Enemy::update(x, y, w, ef, elapsedTime);
 					}
 					// Get the enemy's shadow
 					std::tuple<sf::Sprite, float, Rendertype, float> shadow;
-					std::get<0>(shadow) = *it->getShadow();
+					std::get<0>(shadow) = it->getShadow();
 					gameShadows.push_back(shadow);
 					
 					std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
-					std::get<0>(tSpr) = *it->getSprite();
+					std::get<0>(tSpr) = it->getSprite();
 					std::get<1>(tSpr) = it->getYpos() - 16;
 					// If the enemy should be colored, let the rendering code know to pass it through a fragment shader
-					if (it->colored()) {
+					if (it->isColored()) {
 						std::get<2>(tSpr) = Rendertype::shadeWhite;
-						std::get<3>(tSpr) = it->colorAmount;
+						std::get<3>(tSpr) = it->getColorAmount();
 					} else {
 						std::get<2>(tSpr) = Rendertype::shadeDefault;
 					}
@@ -227,8 +222,16 @@ void enemyController::addDasher(tileController * pTiles) {
 	pCoordVec->pop_back();
 }
 
-void enemyController::addCritter(Critter c) {
-	critters.push_back(c);
+void enemyController::addCritter(tileController * pTiles) {
+	auto pCoordVec = pTiles->getEmptyLocations();
+	int locationSelect = rand() % pCoordVec->size();
+	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
+	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
+	critters.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects),
+						  pTiles->mapArray, xInit, yInit,
+						  windowW / 2, windowH / 2, pTiles->posX, pTiles->posY);
+	(*pCoordVec)[locationSelect] = pCoordVec->back();
+	pCoordVec->pop_back();
 }
 
 void enemyController::setWindowSize(float windowW, float windowH) {

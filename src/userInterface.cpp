@@ -38,8 +38,6 @@ userInterface::userInterface() {
 		rowIndices[i] = 0;
 	}
 	
-	txtShadowTexture.loadFromFile(resourcePath() + "overworldTextShadow.png");
-	txtShadowSprite.setTexture(txtShadowTexture);
 	selectorShadowTexture.loadFromFile(resourcePath() + "itemSelectorVignette.png");
 	selectorShadowSprite.setTexture(selectorShadowTexture);
 	deathSeq = false;
@@ -224,10 +222,6 @@ void userInterface::setup(float x, float y, sf::View * pWorldView) {
 	yPos = y + 16;
 	sf::Vector2f v1(x * 2 / 3, y * 1.6);
 	
-	// Set the size of the shadow gradient to draw when displaying text
-	txtShadowSprite.setScale((2 * x) / 450, (2 * y) / 450);
-	txtShadowSprite.setColor(sf::Color(255, 255, 255, 4));
-
 	for (auto & element : textToDisplay) {
 		element.setColor(sf::Color(255, 255, 255, 1));
 	}

@@ -109,7 +109,7 @@ int initEnemies(GameMap * gm) {
 				break;
 				
 			case 1:
-				addCritter(tiles.mapArray, tiles.descriptionArray, enemies, tiles.posX, tiles.posY, gm->windowW, gm->windowH, tiles.emptyMapLocations, 1);
+				//enemies.addCritter(&tiles);
 				count += 2;
 				break;
 				

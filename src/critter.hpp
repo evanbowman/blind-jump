@@ -10,43 +10,39 @@
 #ifndef chaser_hpp
 #define chaser_hpp
 
-#include "enemyParent.hpp"
+#include "enemy.hpp"
 #include "effectsController.hpp"
 #include "aStar.hpp"
+#include "spriteSheet.hpp"
 
 class tileController;
 
-class Critter : public EnemyParent {
+class Critter : public Enemy {
 public:
-	// This calls the parent constructor, which initializes common values like initial position
-	Critter(sf::Sprite*, short map[61][61]);
-	// A function to update all of the enemy's values
-	void update(float, float, effectsController&, tileController*, sf::Time &);
-	sf::Sprite * getSprite();
-	sf::Sprite * getShadow();
-	void softUpdate(float, float);
-	void checkBulletCollision(effectsController& ef);
-	void randDir();
+	Critter(const sf::Texture &, short map[61][61], float, float, float, float, float, float);
+	void update(float, float, const std::vector<wall> &, effectsController & ef, const sf::Time &) override;
+	const sf::Sprite & getSprite() const override;
+	const sf::Sprite & getShadow() const override;
 	void activate();
 	void deActivate();
 	bool isActive();
-	uint8_t frameIndex;
-	char frameRate;
 	void updatePlayerDead();
 	
 private:
-	float health;
-	float currentDir, chargeDir;
+	void onDeath(effectsController &) override;
+	float health, tilePosX, tilePosY;
+	float currentDir;
 	float jumpTargetx, jumpTargety;
-	void newPath(tileController*);
-	sf::Sprite sprites[4];
+	void newPath(tileController *);
+	mutable SpriteSheet<0, 57, 18, 18> spriteSheet;
+	sf::Sprite shadow;
 	aStrCoordinate previous;
 	bool awake;
 	// The current path of enemy to the player
 	std::vector<aStrCoordinate> path;
 	// Next positon to move to
-	bool active, attacking;
-	int moveCounter, recalc, moveCount, dashCount;
+	bool active;
+	int recalc;
 	// Store a pointer to the game map
 	short (*map)[61]; //*** I know this is a nasty solution, perhaps there's a better way to not store it locally...
 };

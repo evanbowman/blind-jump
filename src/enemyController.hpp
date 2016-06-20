@@ -49,7 +49,7 @@ public:
 	void addTurret(turret);
 	void addScoot(tileController *);
 	void addDasher(tileController *);
-	void addCritter(Critter);
+	void addCritter(tileController *);
 	void setWindowSize(float, float);
 };
 #endif /* enemyController_hpp */

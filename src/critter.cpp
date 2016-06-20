@@ -11,73 +11,34 @@
 #include "math.h"
 #include <cmath>
 
-Critter::Critter(sf::Sprite* sprs, short map[61][61]) : EnemyParent(sprs) {
-	// Give this object a pointer to the game map
-	this->map = map;
-	for (auto i = 0; i < 4; i++) {
-		sprites[i] = sprs[i];
-		// Set the sprite's origin to the center of the texture
-		sprites[i].setOrigin(9, 9);
-	}
-	
-	moveCounter = 2;
-	recalc = 4;
-	moveCount = 3;
-	active = true;
-	health = 3;
-	frameIndex = rand() % 3;
-	frameRate = 8;
-	awake = false;
-}
-
-void Critter::checkBulletCollision(effectsController& ef) {
-	//Check collisions with player's shots, but only if the shot vectors aren't empty
-	if (!ef.getBulletLayer1().empty()) {
-		for (auto & element : ef.getBulletLayer1()) {
-			if (std::abs(element.getXpos() - (xPos + 4)) < 8 && std::abs(element.getYpos() - (yPos - 8)) < 8 && !element.getKillFlag()) {
-				element.setKillFlag();		   // Kill the bullet if there's a collision between the bullet and the enemy
-				// Tons of effects in one place is distracting, so don't draw another one if the enemy is about to explode
-				if (health == 1) {
-					element.disablePuff();
-				}
-				health -= 1;
-				isColored = true;
-				colorAmount = 1.f;
-			}
-		}
-	}
-	
-	if (health == 0) {
-		killFlag = 1;
-		// With some random chance, add a heart item to the map
-		unsigned long int temp = rand() % 5;
-		if (temp == 0) {
-			ef.addHearts(xInit + 10, yInit);
-		} else {
-			ef.addCoins(xInit + 10, yInit);
-		}
-		ef.addSmallExplosion(xInit + 8, yInit);
-	}
+Critter::Critter(const sf::Texture & txtr, short _map[61][61], float _xInit, float _yInit, float _playerPosX, float _playerPosY, float _tilePosX, float _tilePosY) :
+	Enemy{_xInit, _yInit, _playerPosX, _playerPosY},
+	health{3},
+	tilePosX{_tilePosX},
+	tilePosY{_tilePosY},
+	currentDir{0.f},
+	jumpTargetx{0.f},
+	jumpTargety{0.f},
+	spriteSheet{txtr},
+	awake{false},
+	active{true},
+	recalc{4},
+	map{_map}
+{
+	spriteSheet.setOrigin(9, 9);
+	shadow.setOrigin(9, 9);
+	shadow.setTexture(txtr);
+	shadow.setTextureRect(sf::IntRect(54, 57, 18, 18));
 }
 
 void Critter::updatePlayerDead() {
 	frameIndex = 0;
 }
 
-void Critter::update(float xOffset, float yOffset, effectsController &effects, tileController* pTiles, sf::Time & elapsedTime) {
-	setPosition(xOffset, yOffset);
-	checkBulletCollision(effects);
-	if (isColored) {
-		colorTimer += elapsedTime.asMilliseconds();
-		if (colorTimer > 20.f) {
-			colorTimer -= 20.f;
-			colorAmount -= 0.1f;
-		}
-		
-		if (colorAmount <= 0.f) {
-			isColored = false;
-		}
-	}
+void Critter::update(float xOffset, float yOffset, const std::vector<wall> & walls, effectsController & effects, const sf::Time & elapsedTime) {
+	Enemy::update(xOffset, yOffset, walls, effects, elapsedTime);
+	Enemy::checkShotCollision(effects, 8);
+	Enemy::updateColor(elapsedTime);
 	
 	if (awake) {
 		float speed;
@@ -93,39 +54,40 @@ void Critter::update(float xOffset, float yOffset, effectsController &effects, t
 			recalc = 8;
 			
 			aStrCoordinate origin, target;
-			origin.x = (xPos - pTiles->posX - xOffset) / 32;
-			origin.y = (yPos - pTiles->posY - yOffset) / 26;
-			target.x = (pTiles->posX - playerPosX / 2 + xOffset) / -32;
-			target.y = (pTiles->posY - playerPosY / 2 - 26 + yOffset) / -26;
+			origin.x = (xPos - tilePosX - xOffset) / 32;
+			origin.y = (yPos - tilePosY - yOffset) / 26;
+			target.x = (tilePosX - playerPosX / 2 + xOffset) / -32;
+			target.y = (tilePosY - playerPosY / 2 - 26 + yOffset) / -26;
 			if (map[target.x][target.y] == 3 || map[target.x][target.y] == 4 || map[target.x][target.y] == 5 || map[target.x][target.y] == 11 || map[target.x][target.y] == 8) {
 				path = astar_path(target, origin, map);
 				previous = path.back();
 				path.pop_back();
-				xInit = ((xPos - pTiles->posX - xOffset) / 32) * 32 + pTiles->posX;
-				yInit = ((yPos - pTiles->posY - yOffset) / 26) * 26 + pTiles->posY;
+				xInit = ((xPos - tilePosX - xOffset) / 32) * 32 + tilePosX;
+				yInit = ((yPos - tilePosY - yOffset) / 26) * 26 + tilePosY;
 				// Calculate the direction to move in, based on the coordinate of the previous location and the coordinate of the next location
-				currentDir = atan2(yInit - (((path.back().y * 26) + 4 + pTiles->posY)), xInit - (((path.back().x * 32) + 4 + pTiles->posX)));
+				currentDir = atan2(yInit - (((path.back().y * 26) + 4 + tilePosY)), xInit - (((path.back().x * 32) + 4 + tilePosX)));
 			}
 		}
 		
 		// If the path is not empty
 		else {
 			// Add each component of the direction vector to the enemy's position datafields
-			xInit -= speed * cos(currentDir);
-			yInit -= speed * sin(currentDir);
+			xInit -= speed * cos(currentDir) * (elapsedTime.asMilliseconds() / 17.6);
+			yInit -= speed * sin(currentDir) * (elapsedTime.asMilliseconds() / 17.6);
 			// If the enemy is sufficiently close to the target point, pop it and work on the next one
-			if (fabs(xInit - (((path.back().x * 32) + 4 + pTiles->posX))) < 8 && fabs(yInit - (((path.back().y * 26) + 4 + pTiles->posY))) < 8) {
+			if (fabs(xInit - (((path.back().x * 32) + 4 + tilePosX))) < 8 && fabs(yInit - (((path.back().y * 26) + 4 + tilePosY))) < 8) {
 				recalc--;
 				previous = path.back();
 				path.pop_back();
 				// Calculate the direction to move in
-				currentDir = atan2(yInit - (((path.back().y * 26) + 4 + pTiles->posY)), xInit - (((path.back().x * 32) + 4 + pTiles->posX)));
+				currentDir = atan2(yInit - (((path.back().y * 26) + 4 + tilePosY)), xInit - (((path.back().x * 32) + 4 + tilePosX)));
 			}
 		}
 		
 		// Process the animation
-		if (--frameRate == 0) {
-			frameRate = 8;
+		frameTimer += elapsedTime.asMilliseconds();
+		if (frameTimer > 140) {
+			frameTimer -= 140;
 			frameIndex++;
 			if (frameIndex > 2) {
 				frameIndex = 0;
@@ -134,14 +96,11 @@ void Critter::update(float xOffset, float yOffset, effectsController &effects, t
 		
 		// Flip the sprite to face the player
 		if (xPos > playerPosX / 2) {
-			sf::Vector2f scaleVec(1, 1);
-			sprites[frameIndex].setScale(scaleVec);
-			sprites[3].setScale(scaleVec);
-		}
-		else {
-			sf::Vector2f scaleVec(-1, 1);
-			sprites[frameIndex].setScale(scaleVec);
-			sprites[3].setScale(scaleVec);
+			spriteSheet.setScale(1.f, 1.f);
+			shadow.setScale(1.f, 1.f);
+		} else {
+			spriteSheet.setScale(-1.f, 1.f);
+			shadow.setScale(-1.f, 1.f);
 		}
 	}
 	
@@ -149,17 +108,17 @@ void Critter::update(float xOffset, float yOffset, effectsController &effects, t
 		if (fabsf(playerPosX / 2 - xPos) < 300 && fabsf(playerPosY / 2 - yPos) < 300)
 			awake = true;
 	}
+
+	shadow.setPosition(xPos + 12, yPos + 1);
+	spriteSheet.setPosition(xPos + 12, yPos);
 }
 
-sf::Sprite* Critter::getShadow() {
-	sprites[3].setPosition(xPos + 12, yPos + 1);
-	return &sprites[3];
+const sf::Sprite & Critter::getShadow() const {
+	return shadow;
 }
 
-sf::Sprite* Critter::getSprite() {
-	// Update the position of the current sprite (rounding is important, otherwise movement will be shaky)
-	sprites[frameIndex].setPosition(xPos + 12, yPos);
-	return &sprites[frameIndex];
+const sf::Sprite & Critter::getSprite() const {
+	return spriteSheet[frameIndex];
 }
 
 void Critter::activate() {
@@ -172,4 +131,16 @@ void Critter::deActivate() {
 
 bool Critter::isActive() {
 	return active;
+}
+
+void Critter::onDeath(effectsController & effects) {
+	killFlag = 1;
+	// With some random chance, add a heart item to the map
+	unsigned long int temp = rand() % 5;
+	if (temp == 0) {
+		effects.addHearts(xInit + 10, yInit);
+	} else {
+		effects.addCoins(xInit + 10, yInit);
+	}
+	effects.addSmallExplosion(xInit + 8, yInit);
 }
