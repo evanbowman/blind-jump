@@ -21,7 +21,7 @@ public:
 	float yPos;
 	float xInit;
 	float yInit;
-	SpriteSheet<9, 16> spriteSheet;
+	SpriteSheet<26, 75, 9, 16> spriteSheet;
 	sf::Sprite glowSprite;
 	sf::Sprite * getGlow();
 	const sf::Sprite & getSprite();

@@ -16,7 +16,7 @@
 
 class TeleporterSmoke : public Effect {
 private:
-	mutable SpriteSheet<16, 16> spriteSheet;
+	mutable SpriteSheet<592, 108, 16, 16> spriteSheet;
    	char drawOrder;
 	
 public:

@@ -19,7 +19,7 @@ public:
 	enum class State {
 		closed, opening, ready, complete
 	};
-	TreasureChest(float, float, const sf::Texture &, const sf::Texture &, char);
+	TreasureChest(float, float, const sf::Texture &, char);
 	const sf::Sprite & getShadow() const;
 	const sf::Sprite & getSprite() const override;
 	void update(float, float, const sf::Time &) override;
@@ -33,7 +33,7 @@ private:
 	char item;
 	int32_t animationTimer;
 	uint8_t frameIndex;
-	mutable SpriteSheet<16, 32> chestSheet;
+	mutable SpriteSheet<656, 76, 16, 32> chestSheet;
 	mutable sf::Sprite chestShadow;
 	float xPos;
 };

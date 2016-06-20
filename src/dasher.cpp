@@ -46,19 +46,20 @@ bool Dasher::Blur::getKillFlag() {
 	return killflag;
 }
 
-Dasher::Dasher(const sf::Texture & mainTxtr, const sf::Texture & deathTxtr, const sf::Texture & shadowTxtr, float _xInit, float _yInit, float _ppx, float _ppy)
+Dasher::Dasher(const sf::Texture & mainTxtr, float _xInit, float _yInit, float _ppx, float _ppy)
 	: Enemy{_xInit, _yInit, _ppx, _ppy},
 	  shotCount{0},
 	  state{State::idle},
 	  dasherSheet{mainTxtr},
-	  deathSheet{deathTxtr},
+	  deathSheet{mainTxtr},
 	  hSpeed{0.f},
 	  vSpeed{0.f},
 	  timer{0}
 {
 	dasherSheet.setOrigin(14, 8);
 	deathSheet.setOrigin(14, 8);
-	shadow.setTexture(shadowTxtr);
+	shadow.setTexture(mainTxtr);
+	shadow.setTextureRect(sf::IntRect(0, 100, 18, 16));
 	health = 5;
 }
 

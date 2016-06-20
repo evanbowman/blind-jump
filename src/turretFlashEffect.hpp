@@ -16,7 +16,7 @@
 
 class turretFlashEffect : public Effect {
 private:
-	mutable SpriteSheet<16, 16> spriteSheet;
+	mutable SpriteSheet<0, 116, 16, 16> spriteSheet;
 	
 public:
 	turretFlashEffect(const sf::Texture &, float, float);

@@ -29,7 +29,7 @@ public:
 	enum class State {
 		idle, shooting, dashBegin, dashing, dashEnd, dying, dead, shootBegin, pause
 	};
-	Dasher(const sf::Texture &, const sf::Texture &, const sf::Texture &, float, float, float, float);
+	Dasher(const sf::Texture &, float, float, float, float);
 	const sf::Sprite & getSprite() const override;
 	const sf::Sprite & getShadow() const override;
     void update(float, float, const std::vector<wall> &, effectsController & ef, const sf::Time &) override;
@@ -40,8 +40,8 @@ public:
 private:
 	uint8_t shotCount;
 	State state;
-	mutable SpriteSheet<29, 38> dasherSheet;
-	mutable SpriteSheet<47, 38> deathSheet;
+	mutable SpriteSheet<648, 38, 29, 38> dasherSheet;
+	mutable SpriteSheet<80, 0, 47, 38> deathSheet;
 	sf::Sprite shadow;
 	float hSpeed, vSpeed;
 	int32_t timer;

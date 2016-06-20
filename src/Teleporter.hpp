@@ -15,7 +15,7 @@
 
 class Teleporter : public Detail {
 public:
-	Teleporter(float, float, sf::Sprite *, sf::Sprite *);
+	Teleporter(float, float, const sf::Texture &, sf::Sprite *);
 	const sf::Sprite & getShadow() const;
 	const sf::Sprite & getSprite() const override;
 	bool smokeReady();

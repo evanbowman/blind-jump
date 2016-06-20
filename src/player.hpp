@@ -50,12 +50,12 @@ private:
 	float worldOffsetY;
 
 	sf::Sprite shadowSprite;
-	SpriteSheet<32, 32> walkDown;
-	SpriteSheet<32, 32> walkUp;
-	SpriteSheet<32, 32> walkLeft;
-	SpriteSheet<32, 32> walkRight;
-	SpriteSheet<40, 38> deathSheet;
-	SpriteSheet<32, 33> dashSheet;
+	SpriteSheet<400, 108, 32, 32> walkDown;
+	SpriteSheet<208, 108, 32, 32> walkUp;
+	SpriteSheet<208, 76, 32, 32> walkLeft;
+	SpriteSheet<432, 76, 32, 32> walkRight;
+	SpriteSheet<208, 38, 40, 38> deathSheet;
+	SpriteSheet<208, 140, 32, 33> dashSheet;
 	
 	bool deathSeq;
 

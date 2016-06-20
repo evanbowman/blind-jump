@@ -15,7 +15,7 @@
 
 class bulletType1 {
 private:
-	SpriteSheet<16, 16> spriteSheet;
+	SpriteSheet<0, 0, 16, 16> spriteSheet;
 	sf::Sprite glow;
 	char direction;
 	float xPos;

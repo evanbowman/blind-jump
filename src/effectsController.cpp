@@ -79,7 +79,7 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
 
 //A function for adding a turret flash animation
 void effectsController::addTurretFlash(float x, float y) {
-	turretFlashes.emplace_back(pTM->getTexture(TextureManager::Texture::turretFlash), x, y);
+	turretFlashes.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects), x, y);
 }
 
 //A function for adding a turret shot effect
@@ -88,12 +88,12 @@ void effectsController::addTurretShot(float x, float y, short dir) {
 }
 
 void effectsController::addHearts(float x, float y) {
-	Powerup h(pTM->getTexture(TextureManager::Texture::powerup), pTM->getTexture(TextureManager::Texture::redglow), x, y, Powerup::Type::heart);
+	Powerup h(pTM->getTexture(TextureManager::Texture::gameObjects), pTM->getTexture(TextureManager::Texture::redglow), x, y, Powerup::Type::heart);
 	hearts.push_back(h);
 }
 
 void effectsController::addCoins(float x, float y) {
-	Powerup c(pTM->getTexture(TextureManager::Texture::powerup), pTM->getTexture(TextureManager::Texture::blueglow), x, y, Powerup::Type::coin);
+	Powerup c(pTM->getTexture(TextureManager::Texture::gameObjects), pTM->getTexture(TextureManager::Texture::blueglow), x, y, Powerup::Type::coin);
 	coins.push_back(c);
 }
 
@@ -107,11 +107,11 @@ void effectsController::addDasherShot(float x, float y, short dir) {
 
 // A function for adding puffs
 void effectsController::addPuff(float x, float y) {
-	puffs.emplace_back(pTM->getTexture(TextureManager::Texture::poof), x, y);
+	puffs.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects), x, y);
 }
 
 void effectsController::addFireExplosion(float x, float y) {
-	fireExplosions.emplace_back(pTM->getTexture(TextureManager::Texture::fireExplosion), pTM->getTexture(TextureManager::Texture::fireExplosionGlow), x, y);
+	fireExplosions.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects), pTM->getTexture(TextureManager::Texture::fireExplosionGlow), x, y);
 }
 
 void effectsController::addSmallExplosion(float x, float y) {
@@ -119,7 +119,7 @@ void effectsController::addSmallExplosion(float x, float y) {
 }
 
 void effectsController::addScootShot(float x, float y, short dir, float playerPosX, float playerPosY) {
-	turretShot t(pTM->getTexture(TextureManager::Texture::turretShot), pTM->getTexture(TextureManager::Texture::redglow), x, y, dir);
+	turretShot t(pTM->getTexture(TextureManager::Texture::gameObjects), pTM->getTexture(TextureManager::Texture::redglow), x, y, dir);
 	t.speedFactor(2.8);
 	turretShots.push_back(t);
 }
@@ -130,7 +130,7 @@ void effectsController::addBullet(bool select, char sprIndex, float xPos, float 
 }
 
 void effectsController::addWarpEffect(float x, float y) {
-	warpEffects.emplace_back(pTM->getTexture(TextureManager::Texture::warpEffect), x, y);
+	warpEffects.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects), x, y);
 }
 
 template <typename T>

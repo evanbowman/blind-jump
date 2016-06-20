@@ -89,13 +89,13 @@ void detailController::addLamplight(float posX, float posY, int i, int j, float 
 }
 
 void detailController::addRock(float posX, float posY, int i, int j) {
-	rocks.emplace_back((i * 32) + posX, (j * 26) + posY, pTM->getTexture(TextureManager::Texture::rock));
+	rocks.emplace_back((i * 32) + posX, (j * 26) + posY, pTM->getTexture(TextureManager::Texture::gameObjects));
 }
 
 void detailController::addChest(tileController& t, float posX, float posY, float width, float height, char chestContents) {
 	Coordinate c = pickLocation(t.emptyMapLocations);
     float placeOffsetX = (rand() % 6) - 3;
-	chests.emplace_back((c.x * 32) + posX + 8 + placeOffsetX, (c.y * 26) + posY - 3, pTM->getTexture(TextureManager::Texture::treasureChest), pTM->getTexture(TextureManager::Texture::chestShadow), chestContents);
+	chests.emplace_back((c.x * 32) + posX + 8 + placeOffsetX, (c.y * 26) + posY - 3, pTM->getTexture(TextureManager::Texture::gameObjects), chestContents);
 }
 
 void detailController::addEnemyScrap(float posX, float posY, float width, float height) {
@@ -164,12 +164,9 @@ void detailController::addPod(float xpos, float ypos, int x, int y) {
 
 void detailController::addTeleporter(tileController& t, float posX, float posY, float width, float height) {
 	Coordinate c = t.getTeleporterLoc();
-	sf::Sprite tempSprites[2];
-	tempSprites[0].setTexture(pTM->getTexture(TextureManager::Texture::teleporter));
-	tempSprites[1].setTexture(pTM->getTexture(TextureManager::Texture::teleporterShadow));	
-	sf::Sprite glow;
+   	sf::Sprite glow;
 	glow.setTexture(pTM->getTexture(TextureManager::Texture::teleporterGlow));
-    teleporters.emplace_back((c.x * 32) + posX + 2, (c.y * 26) + posY - 4, tempSprites, &glow);
+    teleporters.emplace_back((c.x * 32) + posX + 2, (c.y * 26) + posY - 4, pTM->getTexture(TextureManager::Texture::gameObjects), &glow);
 }
 
 void detailController::update(GameMap * pGM, sf::Time & elapsedTime) {

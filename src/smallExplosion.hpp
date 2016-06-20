@@ -16,7 +16,7 @@
 
 class SmallExplosion : public Effect {
 private:
-	mutable SpriteSheet<36, 36> spriteSheet;
+	mutable SpriteSheet<0, 0, 36, 36> spriteSheet;
 	sf::Sprite glow;
 	
 public:

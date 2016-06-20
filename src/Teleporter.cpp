@@ -9,14 +9,16 @@
 
 #include "Teleporter.hpp"
 
-Teleporter::Teleporter(float _xInit, float _yInit, sf::Sprite * pSprs, sf::Sprite * pGlow)
+Teleporter::Teleporter(float _xInit, float _yInit, const sf::Texture & mainTxtr, sf::Sprite * pGlow)
 	: Detail{_xInit, _yInit},
 	  smokeTimer{0}
 {
 	for (int i = 0; i < 2; i++)
-		TeleporterSprites[i] = pSprs[i];
+		TeleporterSprites[i].setTexture(mainTxtr);
 	glowSprite = *pGlow;
 	glowSprite.setOrigin(200, 200);
+	TeleporterSprites[0].setTextureRect(sf::IntRect(752, 76, 34, 29));
+	TeleporterSprites[1].setTextureRect(sf::IntRect(174, 195, 34, 29));
 }
 
 const sf::Sprite & Teleporter::getShadow() const {

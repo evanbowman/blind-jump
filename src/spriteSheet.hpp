@@ -4,7 +4,7 @@
 
 #include "SFML/Graphics.hpp"
 
-template <uint16_t w, uint16_t h>
+template <uint16_t x, uint16_t y, uint16_t w, uint16_t h>
 class SpriteSheet {
 private:
 	sf::Sprite sprite;
@@ -17,7 +17,7 @@ public:
 	}
 	
 	const sf::Sprite & operator[](const std::size_t idx) {
-		sprite.setTextureRect(sf::IntRect(idx * w, 0, w, h));
+		sprite.setTextureRect(sf::IntRect(x + idx * w, y, w, h));
 		return sprite;
 	}
 

@@ -18,7 +18,7 @@ class Powerup {
 private:
 	float xInit, yInit, xPos, yPos;
 	sf::Sprite glow;
-	SpriteSheet<13, 13> powerupSheet;
+	SpriteSheet<0, 75, 13, 13> powerupSheet;
 	bool killFlag; 
 	// to keep time, for making hearts float up and down
 	int32_t timer;

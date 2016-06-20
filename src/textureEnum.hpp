@@ -5,6 +5,7 @@
 enum class Texture {
 		vignette,
 			vignetteShadow,
+			gameObjects,
 			lamplight,
 			introLevel,
 			playerShadow,

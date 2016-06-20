@@ -21,7 +21,7 @@ public:
 	float yPos;
 	float xInit;
 	float yInit;
-    SpriteSheet<22, 22> spriteSheet;
+    SpriteSheet<0, 0, 22, 22> spriteSheet;
 	const sf::Sprite & getSprite();
 	void update(float, float, sf::Time &);
 	char imageIndex;

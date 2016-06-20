@@ -16,7 +16,7 @@
 
 class Rock : public Detail {
 private:
-	mutable SpriteSheet<32, 64> rockSheet;
+	mutable SpriteSheet<80, 38, 32, 64> rockSheet;
 	float xPos;
 	
 public:

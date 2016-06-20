@@ -9,15 +9,16 @@
 #include "treasureChest.hpp"
 #include <cmath>
 
-TreasureChest::TreasureChest(float _xInit, float _yInit, const sf::Texture & chestTextures, const sf::Texture & shadowTexture, char _item)
+TreasureChest::TreasureChest(float _xInit, float _yInit, const sf::Texture & mainTxtr, char _item)
 	: Detail{_xInit, _yInit},
 	  state{State::closed},
 	  item{_item},
 	  animationTimer{0},
 	  frameIndex{0},
-	  chestSheet{chestTextures}
+	  chestSheet{mainTxtr}
 {
-	chestShadow.setTexture(shadowTexture);
+	chestShadow.setTexture(mainTxtr);
+	chestShadow.setTextureRect(sf::IntRect(18, 107, 16, 8));
 }
 
 const sf::Sprite & TreasureChest::getShadow() const {

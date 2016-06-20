@@ -61,16 +61,17 @@ Player::Player(TextureManager * pTM)
 	colorTimer = 0.f;
 	hurtCounter = 30;
 	canhurt = true;
-	deathSheet.setTexture(pTM->getTexture(TextureManager::Texture::playerDeath));
-	walkDown.setTexture(pTM->getTexture(TextureManager::Texture::playerDown));
-	walkUp.setTexture(pTM->getTexture(TextureManager::Texture::playerUp));
-	walkLeft.setTexture(pTM->getTexture(TextureManager::Texture::playerLeft));
-	walkRight.setTexture(pTM->getTexture(TextureManager::Texture::playerRight));
+	deathSheet.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
+	walkDown.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
+	walkUp.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
+	walkLeft.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
+	walkRight.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
 
-	dashSheet.setTexture(pTM->getTexture(TextureManager::Texture::playerDash));
+	dashSheet.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
 	dashSheet.setOrigin(0, 1);
 	
-	shadowSprite.setTexture(pTM->getTexture(TextureManager::Texture::playerShadow));
+	shadowSprite.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
+	shadowSprite.setTextureRect(sf::IntRect(0, 100, 18, 16));
 }
 
 void Player::setPosition(float X, float Y) {

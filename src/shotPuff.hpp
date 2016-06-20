@@ -17,7 +17,7 @@
 
 class shotPuff : public Effect {
 private:
-	mutable SpriteSheet<16, 16> spriteSheet;
+	mutable SpriteSheet<88, 145, 16, 16> spriteSheet;
 
 public:
 	shotPuff(const sf::Texture &, float, float);
