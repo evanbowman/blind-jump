@@ -209,7 +209,7 @@ void enemyController::addScoot(tileController * pTiles) {
 	int locationSelect = (rand() % 2) ? rand() % (pCoordVec->size() / 2) : rand() % (pCoordVec->size());
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-	scoots.emplace_back(pTM->getTexture(TextureManager::Texture::scoot),
+	scoots.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects),
 						pTM->getTexture(TextureManager::Texture::scootShadow),
 						xInit, yInit, windowW / 2, windowH / 2);
 	(*pCoordVec)[locationSelect] = pCoordVec->back();

@@ -38,6 +38,7 @@ private:
 	tileController tiles;
 	effectsController effects;
    	enemyController en;
+	FontController * pFonts;
    	int level;
 	
 	sf::Sprite vignetteSprite;
@@ -72,7 +73,6 @@ private:
 	sf::RectangleShape shadowShape;
 	
 	sf::RenderTexture target, secondPass, thirdPass;
-	FontController * pFonts;
 	
 	// Locations to place lights
 	std::vector<Coordinate> lightPositions;
@@ -90,7 +90,7 @@ private:
 	// Create a vector of pairs with enemy index and placement probability for enemy creation
 	std::vector<std::pair<int, int>> enemySelectVec;
 	
-	// Stack of sprites with y-position and height, for z-ordering
+	// Vector of sprites with y-position and height, for z-ordering
 	std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> gameObjects;
 	std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> gameShadows;
 	ScreenShakeController ssc;

@@ -17,7 +17,7 @@
 #include "enemyCreationFunctions.hpp"
 #include "gameMap.hpp"
 
-GameMap::GameMap(float _windowW, float _windowH, TextureManager * _pTM, InputController * _pInput, FontController * pFonts)
+GameMap::GameMap(float _windowW, float _windowH, TextureManager * _pTM, InputController * _pInput, FontController * _pFonts)
 	: details{_windowW, _windowH, _pTM},
 	  pTM{_pTM},
 	  pInput{_pInput},
@@ -25,9 +25,11 @@ GameMap::GameMap(float _windowW, float _windowH, TextureManager * _pTM, InputCon
 	  tiles{_pTM},
 	  effects{_pTM},
 	  en{_pTM},
+	  pFonts{_pFonts},
 	  level{0},
+	  teleporterCond{false},
 	  windowW{_windowW},
-	  windowH{_windowH}
+	  windowH{_windowH}  
 {
 	//Make the background controller draw concenteric with the center of the view
 	bkg.setPosition((tiles.posX / 2) + 226, tiles.posY / 2);
@@ -47,17 +49,11 @@ GameMap::GameMap(float _windowW, float _windowH, TextureManager * _pTM, InputCon
 	// Now call a function to procedurally distribute items
 	initLoot(itemArray);
 	
-	// Initial teleporter condition to 0, meaning the player is not standing on a teleporter
-	teleporterCond = 0;
-	
 	// Tell the background controller how big the window is so it doesn't draw out of bounds
 	bkg.giveWindowSize(windowW, windowH);
 	
 	// Tell the UI where the center of the window is
 	UI.setup(windowW / 2, windowH / 2, &worldView);
-	
-	// Store the pointer to the font controller in main()
-	this->pFonts = pFonts;
 	
 	// Set up the shaders
 	colorShader.loadFromFile(resourcePath() + "color.frag", sf::Shader::Fragment);
@@ -66,9 +62,6 @@ GameMap::GameMap(float _windowW, float _windowH, TextureManager * _pTM, InputCon
 	blurShader.setParameter("texture", sf::Shader::CurrentTexture);
 	desaturateShader.loadFromFile(resourcePath() + "desaturate.frag", sf::Shader::Fragment);
 	desaturateShader.setParameter("texture", sf::Shader::CurrentTexture);
-
-	//Initialize the starting level to 0
-	level = 0;
 	
 	// Set up the lighting map
 	lightingMap.create(windowW, windowH);

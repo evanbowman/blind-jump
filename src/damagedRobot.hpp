@@ -21,7 +21,7 @@ public:
 	const sf::Sprite & getSprite() const override;
 	
 private:
-	mutable SpriteSheet<0, 0, 40, 43> robotSheet;
+	mutable SpriteSheet<88, 102, 40, 43> robotSheet;
 	
 };
 

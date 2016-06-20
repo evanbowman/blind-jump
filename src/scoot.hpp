@@ -19,7 +19,7 @@ private:
 	enum class State {
 		drift1, drift2, shoot, recoil
 	};
-	mutable SpriteSheet<0, 0, 12, 12> spriteSheet;
+	mutable SpriteSheet<88, 161, 12, 12> spriteSheet;
 	sf::Sprite shadow;
 	float speedScale, hSpeed, vSpeed;
 	State state;

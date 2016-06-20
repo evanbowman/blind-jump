@@ -111,7 +111,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
 		sf::Sprite tempSprite;
 		try {
 			c = pickLocationGrass(t.emptyMapLocations, t.mapArray);
-			DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pTM->getTexture(TextureManager::Texture::damagedRobot));
+			DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pTM->getTexture(TextureManager::Texture::gameObjects));
 			damagedRobots.push_back(dr);
 		} catch(const char* e) {
 			//std::cout << e << std::endl;
@@ -120,7 +120,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
 		if (rand() % 2) {
 			try {
 				c = pickLocationGrass(t.emptyMapLocations, t.mapArray);
-	    		DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pTM->getTexture(TextureManager::Texture::damagedRobot));
+	    		DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pTM->getTexture(TextureManager::Texture::gameObjects));
 				damagedRobots.push_back(dr);
 			} catch(const char* e) {
 				//std::cout << e << std::endl;
@@ -130,7 +130,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
 		if (rand() % 2) {
 			try {
 				c = pickLocationGrass(t.emptyMapLocations, t.mapArray);
-				DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pTM->getTexture(TextureManager::Texture::damagedRobot));
+				DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pTM->getTexture(TextureManager::Texture::gameObjects));
 				damagedRobots.push_back(dr);
 			} catch(const char* e) {
 				//std::cout << e << std::endl;

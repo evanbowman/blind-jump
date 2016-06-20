@@ -34,9 +34,6 @@ bool TextureManager::load() {
 	if (!loadTexture("lamp.png", Texture::lamp, textures))
 		return false;
 
-	if (!loadTexture("damagedRobotSheet.png", Texture::damagedRobot, textures))
-		return false; // 40 x 43, two kinds
-
 	if (!loadTexture("pod.png", Texture::pod, textures))
 		return false;
 
@@ -70,19 +67,10 @@ bool TextureManager::load() {
 	if (!loadTexture("smallExplosion.png", Texture::smallExplosion, textures))
 		return false;
 
-	if (!loadTexture("turretFlash.png", Texture::turretFlash, textures))
-		return false;
-
 	if (!loadTexture("whiteFloorGlow.png", Texture::whiteGlow, textures))
 		return false;
 
 	if (!loadTexture("bullet.png", Texture::bullet, textures))
-		return false;
-
-	if (!loadTexture("warpEffect.png", Texture::warpEffect, textures))
-		return false;
-
-	if (!loadTexture("scootSheet.png", Texture::scoot, textures))
 		return false;
 
 	if (!loadTexture("charger_enemy_shadow.png", Texture::scootShadow, textures))

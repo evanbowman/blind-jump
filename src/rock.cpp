@@ -17,11 +17,7 @@ Rock::Rock(float _xInit, float _yInit, const sf::Texture & inpTxtr)
 	    xInit += 32;
 	}
 
-	if (rand() % 2) {
-		rockSheet[1];
-	} else {
-		rockSheet[0];
-	}
+	rockSheet[rand() % 4];
 }
 
 void Rock::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
