@@ -11,11 +11,8 @@
 #include "math.h"
 #include <cmath>
 
-Critter::Critter(const sf::Texture & txtr, short _map[61][61], float _xInit, float _yInit, float _playerPosX, float _playerPosY, float _tilePosX, float _tilePosY) :
+Critter::Critter(const sf::Texture & txtr, short _map[61][61], float _xInit, float _yInit, float _playerPosX, float _playerPosY) :
 	Enemy{_xInit, _yInit, _playerPosX, _playerPosY},
-	health{3},
-	tilePosX{_tilePosX},
-	tilePosY{_tilePosY},
 	currentDir{0.f},
 	jumpTargetx{0.f},
 	jumpTargety{0.f},
@@ -25,6 +22,7 @@ Critter::Critter(const sf::Texture & txtr, short _map[61][61], float _xInit, flo
 	recalc{4},
 	map{_map}
 {
+	health = 3;
 	spriteSheet.setOrigin(9, 9);
 	shadow.setOrigin(9, 9);
 	shadow.setTexture(txtr);
@@ -35,10 +33,17 @@ void Critter::updatePlayerDead() {
 	frameIndex = 0;
 }
 
-void Critter::update(float xOffset, float yOffset, const std::vector<wall> & walls, effectsController & effects, const sf::Time & elapsedTime) {
-	Enemy::update(xOffset, yOffset, walls, effects, elapsedTime);
-	Enemy::checkShotCollision(effects, 8);
+void Critter::update(float, float, const std::vector<wall> &, effectsController &, const sf::Time &) {}
+
+void Critter::critterUpdate(float xOffset, float yOffset, effectsController & effects, const sf::Time & elapsedTime, tileController * pTiles) {
+	xPos = xInit + xOffset + 6;
+	yPos = yInit + yOffset;
+	Enemy::checkShotCollision(effects, 12.f);
+	xPos -= 6; // Currently off-centered, this is just temporary work-around
 	Enemy::updateColor(elapsedTime);
+
+	float tilePosX = pTiles->posX;
+	float tilePosY = pTiles->posY;
 	
 	if (awake) {
 		float speed;
@@ -56,8 +61,8 @@ void Critter::update(float xOffset, float yOffset, const std::vector<wall> & wal
 			aStrCoordinate origin, target;
 			origin.x = (xPos - tilePosX - xOffset) / 32;
 			origin.y = (yPos - tilePosY - yOffset) / 26;
-			target.x = (tilePosX - playerPosX / 2 + xOffset) / -32;
-			target.y = (tilePosY - playerPosY / 2 - 26 + yOffset) / -26;
+			target.x = (tilePosX - playerPosX + xOffset) / -32;
+			target.y = (tilePosY - playerPosY - 26 + yOffset) / -26;
 			if (map[target.x][target.y] == 3 || map[target.x][target.y] == 4 || map[target.x][target.y] == 5 || map[target.x][target.y] == 11 || map[target.x][target.y] == 8) {
 				path = astar_path(target, origin, map);
 				previous = path.back();
@@ -95,7 +100,7 @@ void Critter::update(float xOffset, float yOffset, const std::vector<wall> & wal
 		}
 		
 		// Flip the sprite to face the player
-		if (xPos > playerPosX / 2) {
+		if (xPos > playerPosX) {
 			spriteSheet.setScale(1.f, 1.f);
 			shadow.setScale(1.f, 1.f);
 		} else {
@@ -105,7 +110,7 @@ void Critter::update(float xOffset, float yOffset, const std::vector<wall> & wal
 	}
 	
 	else {
-		if (fabsf(playerPosX / 2 - xPos) < 300 && fabsf(playerPosY / 2 - yPos) < 300)
+		if (fabsf(playerPosX - xPos) < 300 && fabsf(playerPosY - yPos) < 300)
 			awake = true;
 	}
 
@@ -134,7 +139,6 @@ bool Critter::isActive() {
 }
 
 void Critter::onDeath(effectsController & effects) {
-	killFlag = 1;
 	// With some random chance, add a heart item to the map
 	unsigned long int temp = rand() % 5;
 	if (temp == 0) {
@@ -143,4 +147,5 @@ void Critter::onDeath(effectsController & effects) {
 		effects.addCoins(xInit + 10, yInit);
 	}
 	effects.addSmallExplosion(xInit + 8, yInit);
+	killFlag = true;
 }

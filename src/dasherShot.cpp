@@ -11,7 +11,7 @@
 
 DasherShot::DasherShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, float x, float y, float dir) {
 	spriteSheet.setTexture(mainTxtr);
-	spriteSheet.setOrigin(4, 4);
+	spriteSheet.setOrigin(6, 6);
 	glowSprite.setTexture(glowTxtr);
 	glowSprite.setOrigin(22.5, 22.5);
 	xPos = 0;

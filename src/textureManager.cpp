@@ -28,9 +28,6 @@ bool TextureManager::load() {
 	if (!loadTexture("introLevel.png", Texture::introLevel, textures))
 		return false;
 
-	if (!loadTexture("lampLight.png", Texture::lamplight, textures))
-		return false;
-
 	if (!loadTexture("lamp.png", Texture::lamp, textures))
 		return false;
 
@@ -58,13 +55,7 @@ bool TextureManager::load() {
 	if (!loadTexture("orbShot.png", Texture::orbShot, textures))
 		return false;
 
-	if (!loadTexture("dasherShot.png", Texture::dasherShot, textures))
-		return false;
-
 	if (!loadTexture("fireExplosionGlow.png", Texture::fireExplosionGlow, textures))
-		return false;
-
-	if (!loadTexture("smallExplosion.png", Texture::smallExplosion, textures))
 		return false;
 
 	if (!loadTexture("whiteFloorGlow.png", Texture::whiteGlow, textures))

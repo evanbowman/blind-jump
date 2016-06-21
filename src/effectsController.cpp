@@ -102,7 +102,7 @@ void effectsController::addEnemyShot(float x, float y, short dir) {
 }
 
 void effectsController::addDasherShot(float x, float y, short dir) {
-	dasherShots.emplace_back(pTM->getTexture(TextureManager::Texture::dasherShot), pTM->getTexture(TextureManager::Texture::redglow), x, y, dir);
+	dasherShots.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects), pTM->getTexture(TextureManager::Texture::redglow), x, y, dir);
 }
 
 // A function for adding puffs
@@ -115,7 +115,7 @@ void effectsController::addFireExplosion(float x, float y) {
 }
 
 void effectsController::addSmallExplosion(float x, float y) {
-    smallExplosions.emplace_back(pTM->getTexture(TextureManager::Texture::smallExplosion), pTM->getTexture(TextureManager::Texture::fireExplosionGlow), x, y);
+    smallExplosions.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects), pTM->getTexture(TextureManager::Texture::fireExplosionGlow), x, y);
 }
 
 void effectsController::addScootShot(float x, float y, short dir, float playerPosX, float playerPosY) {

@@ -123,7 +123,7 @@ void enemyController::updateEnemies(drawableVec & gameObjects, drawableVec & gam
 			else {
 				//if (it->getXpos() > -64 && it->getXpos() < windowW + 64 && it->getYpos() > -64 && it->getYpos() < windowH + 64) {
 					if (enabled) {
-						it->update(x, y, w, ef, elapsedTime);
+						it->critterUpdate(x, y, ef, elapsedTime, pTiles);
 					} else {
 						it->Enemy::update(x, y, w, ef, elapsedTime);
 					}
@@ -229,7 +229,7 @@ void enemyController::addCritter(tileController * pTiles) {
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
 	critters.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects),
 						  pTiles->mapArray, xInit, yInit,
-						  windowW / 2, windowH / 2, pTiles->posX, pTiles->posY);
+						  windowW / 2, windowH / 2);
 	(*pCoordVec)[locationSelect] = pCoordVec->back();
 	pCoordVec->pop_back();
 }

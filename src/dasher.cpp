@@ -90,7 +90,7 @@ void Dasher::facePlayer() {
 void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & walls, effectsController & effects, const sf::Time & elapsedTime) {
 	Enemy::update(xOffset, yOffset, walls, effects, elapsedTime);
 	if (health > 0)
-		Enemy::checkShotCollision(effects, 12.f);
+		Enemy::checkShotCollision(effects, 14.f);
 	Enemy::updateColor(elapsedTime);
 
 	dasherSheet.setPosition(xPos + 4, yPos);
@@ -129,13 +129,13 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 			frameTimer -= 80;
 			shotCount++;
 			if (xPos > playerPosX) {
-				effects.addDasherShot(xInit - 12, yInit - 12, angleFunction(xPos + 18, yPos, playerPosX, playerPosY));
-				effects.addTurretFlash(xInit - 12, yInit - 12);
+				effects.addDasherShot(xInit - 12, yInit, angleFunction(xPos, yPos, playerPosX, playerPosY));
+				effects.addTurretFlash(xInit - 12, yInit);
 			}
 			
 			else {
-				effects.addDasherShot(xInit + 4, yInit - 12, angleFunction(xPos + 18, yPos, playerPosX, playerPosY));
-				effects.addTurretFlash(xInit + 4, yInit - 12);
+				effects.addDasherShot(xInit + 4, yInit, angleFunction(xPos, yPos, playerPosX, playerPosY));
+				effects.addTurretFlash(xInit + 4, yInit);
 			}
 		}
 
