@@ -77,15 +77,15 @@ Coordinate pickLocation2(std::vector<Coordinate>& emptyLocations) {
 
 void detailController::addWarpImpact(float posX, float posY) {
 	sf::Sprite tempSprite;
-	tempSprite.setTexture(pTM->getTexture(TextureManager::Texture::warpImpact));
+	tempSprite.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
+	tempSprite.setTextureRect(sf::IntRect(128, 161, 32, 26));
 	misc32x26.emplace_back(posX, posY, tempSprite);
 }
 
 void detailController::addLamplight(float posX, float posY, int i, int j, float width, float height) {
-	sf::Sprite tempSprites[2];
-	tempSprites[0].setTexture(pTM->getTexture(TextureManager::Texture::lamp));
-	tempSprites[1].setTexture(pTM->getTexture(TextureManager::Texture::lamplight));
-	lamps.emplace_back((i * 32) + 16 + posX, (j * 26) + 18 + posY, tempSprites[0], tempSprites[1]);
+	sf::Sprite glow;
+	glow.setTexture(pTM->getTexture(TextureManager::Texture::lamplight));
+	lamps.emplace_back((i * 32) + 16 + posX, (j * 26) + 18 + posY, pTM->getTexture(TextureManager::Texture::gameObjects), glow);
 }
 
 void detailController::addRock(float posX, float posY, int i, int j) {
@@ -100,7 +100,8 @@ void detailController::addChest(tileController& t, float posX, float posY, float
 
 void detailController::addEnemyScrap(float posX, float posY, float width, float height) {
 	sf::Sprite tempSprite;
-	tempSprite.setTexture(pTM->getTexture(TextureManager::Texture::enemyScrap));
+	tempSprite.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
+	tempSprite.setTextureRect(sf::IntRect(112, 161, 16, 15));
 	misc32x26.emplace_back(posX - 6, posY - 2, tempSprite);
 }
 
@@ -158,7 +159,8 @@ void detailController::addDoor(float xpos, float ypos, int x, int y, float w, fl
 void detailController::addPod(float xpos, float ypos, int x, int y) {
 	sf::Sprite tempSprite;
 	tempSprite.setOrigin(0, 30);
-	tempSprite.setTexture(pTM->getTexture(TextureManager::Texture::pod));
+	tempSprite.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
+	tempSprite.setTextureRect(sf::IntRect(164, 145, 44, 50));
 	misc32x26.emplace_back(xpos + x * 32, ypos + y * 26, tempSprite);
 }
 

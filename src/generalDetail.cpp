@@ -8,8 +8,8 @@
 
 #include "generalDetail.hpp"
 
-GeneralDetail::GeneralDetail(float _xInit, float _yInit, sf::Sprite & _spr)
-	: Detail{_xInit, _yInit}
+GeneralDetail::GeneralDetail(float _xInit, float _yInit, sf::Sprite & _spr):
+	Detail{_xInit, _yInit}
 {
 	spr = _spr;
 }

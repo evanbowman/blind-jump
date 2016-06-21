@@ -28,18 +28,6 @@ bool TextureManager::load() {
 	if (!loadTexture("introLevel.png", Texture::introLevel, textures))
 		return false;
 
-	if (!loadTexture("lamp.png", Texture::lamp, textures))
-		return false;
-
-	if (!loadTexture("pod.png", Texture::pod, textures))
-		return false;
-
-	if (!loadTexture("warpImpact.png", Texture::warpImpact, textures))
-		return false;
-
-	if (!loadTexture("enemyScraps.png", Texture::enemyScrap, textures))
-		return false;
-
 	if (!loadTexture("teleporterGlow.png", Texture::teleporterGlow, textures))
 		return false;
 
@@ -52,9 +40,6 @@ bool TextureManager::load() {
 	if (!loadTexture("blueFloorGlow.png", Texture::blueglow, textures))
 		return false;
 	
-	if (!loadTexture("orbShot.png", Texture::orbShot, textures))
-		return false;
-
 	if (!loadTexture("fireExplosionGlow.png", Texture::fireExplosionGlow, textures))
 		return false;
 

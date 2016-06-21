@@ -8,12 +8,13 @@
 
 #include "lampLight.hpp"
 
-LampLight::LampLight(float _xInit, float _yInit, sf::Sprite & inpSpr, sf::Sprite & glwSpr)
+LampLight::LampLight(float _xInit, float _yInit, const sf::Texture & txtr, sf::Sprite & glwSpr)
 	: Detail{_xInit, _yInit},
 	  killflag{false}
 {
 	glowSprite = glwSpr;
-	lampSprite = inpSpr;
+	lampSprite.setTexture(txtr);
+	lampSprite.setTextureRect(sf::IntRect(40, 91, 10, 9));
 }
 
 void LampLight::setKillFlag(bool cond) {

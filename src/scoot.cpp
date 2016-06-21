@@ -127,9 +127,9 @@ const sf::Sprite & Scoot::getShadow() const {
 void Scoot::onDeath(effectsController & effects) {
 	int select{rand() % 5};
 	if (select == 0)
-		effects.addHearts(xInit, yInit);
+		effects.addHearts(xInit, yInit + 4);
 	else
-		effects.addCoins(xInit, yInit);
+		effects.addCoins(xInit, yInit + 4);
 	effects.addFireExplosion(xInit, yInit - 2);
 	killFlag = true;
 	return;

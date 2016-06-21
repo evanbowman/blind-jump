@@ -8,6 +8,7 @@
 
 #include "inputController.hpp"
 #include <cmath>
+#include <iostream>
 
 InputController::InputController()
 	: left{false},

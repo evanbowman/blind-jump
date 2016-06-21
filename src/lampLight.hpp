@@ -14,7 +14,7 @@
 
 class LampLight : public Detail {
 public:
-	LampLight(float, float, sf::Sprite &, sf::Sprite &);
+	LampLight(float, float, const sf::Texture &, sf::Sprite &);
 	const sf::Sprite & getSprite() const override;
 	sf::Sprite * getGlow();
 	void update(float, float, const sf::Time &) override;

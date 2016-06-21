@@ -16,7 +16,7 @@
 
 class Enemyshot {
 private:
-	SpriteSheet<0, 0, 14, 14> spriteSheet;
+	SpriteSheet<50, 91, 14, 14> spriteSheet;
 	float xPos;
 	float yPos;
 	float xInit;

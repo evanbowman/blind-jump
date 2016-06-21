@@ -16,7 +16,7 @@
 
 class FireExplosion : public Effect {
 private:
-	mutable SpriteSheet<208, 174, 58, 51> spriteSheet;
+	mutable SpriteSheet<208, 173, 58, 51> spriteSheet;
 	sf::Sprite glow;
 	bool valid;
 	

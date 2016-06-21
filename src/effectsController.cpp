@@ -98,7 +98,7 @@ void effectsController::addCoins(float x, float y) {
 }
 
 void effectsController::addEnemyShot(float x, float y, short dir) {
-	enemyShots.emplace_back(pTM->getTexture(TextureManager::Texture::orbShot), pTM->getTexture(TextureManager::Texture::redglow), x, y, dir);
+	enemyShots.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects), pTM->getTexture(TextureManager::Texture::redglow), x, y, dir);
 }
 
 void effectsController::addDasherShot(float x, float y, short dir) {
