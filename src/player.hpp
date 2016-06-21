@@ -17,7 +17,7 @@
 #include "soundController.hpp"
 #include "inputController.hpp"
 #include "RenderType.hpp"
-#include "textureManager.hpp"
+#include "resourceHandler.hpp"
 #include "spriteSheet.hpp"
 
 class Player {	
@@ -116,7 +116,7 @@ public:
 	void drawController(InputController*, effectsController& ef, sf::Time &);
 	void draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&, tileController&, effectsController&, detailController&, SoundController&, userInterface&, InputController*, sf::RenderTexture&, FontController&, sf::Time&);
 	//Construct a default player object
-	Player(TextureManager *);
+	Player(ResourceHandler *);
 	//More functions for setting the current position
 	void setPosition(float, float);
 	bool isActive();

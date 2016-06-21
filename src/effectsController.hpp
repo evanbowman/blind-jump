@@ -25,13 +25,13 @@
 #include "Powerup.hpp"
 #include "ResourcePath.hpp"
 #include "RenderType.hpp"
-#include "textureManager.hpp"
+#include "resourceHandler.hpp"
 
 class ScreenShakeController;
 
 class effectsController {
 private:
-	TextureManager * pTM;
+	ResourceHandler * pRH;
 	std::vector<turretFlashEffect> turretFlashes;
 	std::vector<SmallExplosion> smallExplosions;
 	std::vector<FireExplosion> fireExplosions;
@@ -47,7 +47,7 @@ private:
 	std::vector<Powerup> coins;
 	
 public:
-	effectsController(TextureManager *);
+	effectsController(ResourceHandler *);
 	void draw(sf::RenderTexture&, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>&);
 	void update(float, float, ScreenShakeController *, sf::Time &);
 

@@ -16,7 +16,7 @@
 #include "gameMap.hpp"
 #include "ResourcePath.hpp"
 #include "inputController.hpp"
-#include "textureManager.hpp"
+#include "resourceHandler.hpp"
 #include <iostream>
 
 int main(int argc, char * argv[]) {
@@ -27,6 +27,7 @@ int main(int argc, char * argv[]) {
 	float aspectRatio = static_cast<float>(desktop.width) / static_cast<float>(desktop.height);
 	float windowWidth = 450.f;
 	float windowHeight = 450.f;
+
 	if (aspectRatio > 1.f) {
 		float windowAspect;
 		do {
@@ -45,7 +46,7 @@ int main(int argc, char * argv[]) {
 		while (fabs(aspectRatio - windowAspect) > 0.005f);
 	}
 	
-	TextureManager TM;
+	ResourceHandler TM;
 	if(!TM.load()) {
 		return EXIT_FAILURE;
 	}
@@ -88,11 +89,11 @@ int main(int argc, char * argv[]) {
 		window.setView(view);
 		
 		elapsedTime = gameClock.restart();
-		Map.update(window, elapsedTime);
+		if (input.isFocused())
+			Map.update(window, elapsedTime);
 		
-		if (Map.getTeleporterCond()) {
+		if (Map.getTeleporterCond())
 			Map.Reset();
-		}
 
 		window.display();
 	}

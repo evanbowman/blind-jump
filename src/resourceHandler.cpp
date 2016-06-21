@@ -1,3 +1,7 @@
+//
+//  Created by Evan Bowman 2016
+//
+
 #include "resourceHandler.hpp"
 #include <utility>
 
@@ -44,9 +48,6 @@ bool ResourceHandler::load() {
 		return false;
 
 	if (!loadTexture("whiteFloorGlow.png", Texture::whiteGlow, textures))
-		return false;
-
-	if (!loadTexture("bullet.png", Texture::bullet, textures))
 		return false;
 
 	if (!loadTexture("charger_enemy_shadow.png", Texture::scootShadow, textures))

@@ -174,7 +174,7 @@ void createMapImage(sf::Image* tileImage, short mapArray[61][61], sf::Texture tx
 	//tileMapEdge.saveToFile("TEST_MAP_EDGE.png");
 }
 
-tileController::tileController(TextureManager * pTM) {
+tileController::tileController(ResourceHandler * pRH) {
 	//Set the random seed and initialize the offset for drawing tiles to 0.
 	//Offsets move the background, givig the illusion that the stationary player is walking
 	xOffset = 0;
@@ -185,8 +185,8 @@ tileController::tileController(TextureManager * pTM) {
 	windowH = 0;
 	windowW = 0;
 
-	lmplght.setTexture(pTM->getTexture(TextureManager::Texture::lamplight));
-	transitionLvSpr.setTexture(pTM->getTexture(TextureManager::Texture::introLevel));
+	lmplght.setTexture(pRH->getTexture(ResourceHandler::Texture::lamplight));
+	transitionLvSpr.setTexture(pRH->getTexture(ResourceHandler::Texture::introLevel));
 	
 	tileImg[0].loadFromFile(resourcePath() + "soilTileset.png");
 	tileImg[1].loadFromFile(resourcePath() + "aquaTileset.png");

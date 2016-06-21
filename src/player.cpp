@@ -27,7 +27,7 @@
 #include "wall.hpp"
 #include <tuple>
 
-Player::Player(TextureManager * pTM)
+Player::Player(ResourceHandler * pRH)
 	: blurTimer{0}
 {
 	health = 4;
@@ -61,16 +61,16 @@ Player::Player(TextureManager * pTM)
 	colorTimer = 0.f;
 	hurtCounter = 30;
 	canhurt = true;
-	deathSheet.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
-	walkDown.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
-	walkUp.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
-	walkLeft.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
-	walkRight.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
+	deathSheet.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
+	walkDown.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
+	walkUp.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
+	walkLeft.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
+	walkRight.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
 
-	dashSheet.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
+	dashSheet.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
 	dashSheet.setOrigin(0, 1);
 	
-	shadowSprite.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
+	shadowSprite.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
 	shadowSprite.setTextureRect(sf::IntRect(0, 100, 18, 16));
 }
 

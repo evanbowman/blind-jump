@@ -17,8 +17,13 @@ InputController::InputController()
 	  down{false},
 	  x{false},
 	  z{false},
-	  c{false}
+	  c{false},
+	  focused{true}
 {}
+
+bool InputController::isFocused() const {
+	return focused;
+}
 
 bool InputController::xPressed() const {
 	return x;
@@ -125,6 +130,10 @@ void InputController::update(sf::RenderWindow & window) {
 			default:
 				break;
 			}
+		} else if (event.type == sf::Event::GainedFocus) {
+			focused = true;
+		} else if (event.type == sf::Event::LostFocus) {
+			focused = false;
 		}
 	}
 }

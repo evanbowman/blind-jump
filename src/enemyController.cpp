@@ -15,8 +15,8 @@
 #include "screenShakeController.hpp"
 
 
-enemyController::enemyController(TextureManager * _pTM)
-	: pTM{_pTM}
+enemyController::enemyController(ResourceHandler * _pRH)
+	: pRH{_pRH}
 {
 	//Load all of the textures to apply to the enemies
 	const std::string turretfileExt[10] = {"turret5.png", "turret4.png", "turret3.png", "turret2.png", "turret1.png", "turretShadow5.png", "turretShadow4.png", "turretShadow3.png", "turretShadow2.png", "turretShadow1.png"};
@@ -121,33 +121,29 @@ void enemyController::updateEnemies(drawableVec & gameObjects, drawableVec & gam
 			}
 			
 			else {
-				//if (it->getXpos() > -64 && it->getXpos() < windowW + 64 && it->getYpos() > -64 && it->getYpos() < windowH + 64) {
-					if (enabled) {
-						it->critterUpdate(x, y, ef, elapsedTime, pTiles);
-					} else {
-						it->Enemy::update(x, y, w, ef, elapsedTime);
-					}
-					// Get the enemy's shadow
-					std::tuple<sf::Sprite, float, Rendertype, float> shadow;
-					std::get<0>(shadow) = it->getShadow();
-					gameShadows.push_back(shadow);
+
+				if (enabled) {
+					it->critterUpdate(x, y, ef, elapsedTime, pTiles);
+				} else {
+					it->Enemy::update(x, y, w, ef, elapsedTime);
+				}
+
+				gameShadows.emplace_back(it->getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
 					
-					std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
-					std::get<0>(tSpr) = it->getSprite();
-					std::get<1>(tSpr) = it->getYpos() - 16;
-					// If the enemy should be colored, let the rendering code know to pass it through a fragment shader
-					if (it->isColored()) {
-						std::get<2>(tSpr) = Rendertype::shadeWhite;
-						std::get<3>(tSpr) = it->getColorAmount();
-					} else {
-						std::get<2>(tSpr) = Rendertype::shadeDefault;
-					}
-					
-					gameObjects.push_back(tSpr);
-				
+				std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
+				std::get<0>(tSpr) = it->getSprite();
+				std::get<1>(tSpr) = it->getYpos() - 16;
+				// If the enemy should be colored, let the rendering code know to pass it through a fragment shader
+				if (it->isColored()) {
+					gameObjects.emplace_back(it->getSprite(), it->getYpos() - 16, Rendertype::shadeWhite, it->getColorAmount());
+				} else {
+					gameObjects.emplace_back(it->getSprite(), it->getYpos() - 16, Rendertype::shadeDefault, 0.f);
+			   }
+			    
 				++it;
 			}
 		}
+		
 		// Now we have to reactivate all of the objects. Perhaps there is a smarter way than this brute force approach...
 		for (auto & element : critters) {
 			element.activate();
@@ -191,10 +187,6 @@ sf::Sprite* enemyController::getTurretSprites() {
 	return turretSprites;
 }
 
-sf::Sprite* enemyController::getChaserSprites() {
-	return chaserSprites;
-}
-
 void enemyController::addTurret(turret t) {
 	turrets.push_back(t);
 }
@@ -204,8 +196,8 @@ void enemyController::addScoot(tileController * pTiles) {
 	int locationSelect = (rand() % 2) ? rand() % (pCoordVec->size() / 2) : rand() % (pCoordVec->size());
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-	scoots.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects),
-						pTM->getTexture(TextureManager::Texture::scootShadow),
+	scoots.emplace_back(pRH->getTexture(ResourceHandler::Texture::gameObjects),
+						pRH->getTexture(ResourceHandler::Texture::scootShadow),
 						xInit, yInit, windowW / 2, windowH / 2);
 	(*pCoordVec)[locationSelect] = pCoordVec->back();
 	pCoordVec->pop_back();
@@ -216,7 +208,7 @@ void enemyController::addDasher(tileController * pTiles) {
 	int locationSelect = (rand() % 2) ? rand() % (pCoordVec->size() / 3) : rand() % (pCoordVec->size() / 2);
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-	dashers.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects),
+	dashers.emplace_back(pRH->getTexture(ResourceHandler::Texture::gameObjects),
 						 xInit, yInit, windowW / 2, windowH / 2);
 	(*pCoordVec)[locationSelect] = pCoordVec->back();
 	pCoordVec->pop_back();
@@ -227,7 +219,7 @@ void enemyController::addCritter(tileController * pTiles) {
 	int locationSelect = rand() % pCoordVec->size();
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-	critters.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects),
+	critters.emplace_back(pRH->getTexture(ResourceHandler::Texture::gameObjects),
 						  pTiles->mapArray, xInit, yInit,
 						  windowW / 2, windowH / 2);
 	(*pCoordVec)[locationSelect] = pCoordVec->back();

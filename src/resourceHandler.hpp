@@ -1,3 +1,7 @@
+//
+//  Created by Evan Bowman 2016
+//
+
 #pragma once
 #ifndef TEXTUREMANAGER_HPP
 #define TEXTUREMANAGER_HPP
@@ -6,15 +10,15 @@
 #include <map>
 #include "ResourcePath.hpp"
 
-class TextureManager {	
+class ResourceHandler {	
 public:	
 	#include "textureEnum.hpp"
 	
-	TextureManager();
+	ResourceHandler();
 
 	bool load();
 	
-	const sf::Texture & getTexture(TextureManager::Texture) const;
+	const sf::Texture & getTexture(ResourceHandler::Texture) const;
 
 	const sf::Texture & getTexture(int) const;
 	

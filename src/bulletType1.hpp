@@ -15,7 +15,7 @@
 
 class bulletType1 {
 private:
-	SpriteSheet<0, 0, 16, 16> spriteSheet;
+	SpriteSheet<44, 75, 16, 16> spriteSheet;
 	sf::Sprite glow;
 	char direction;
 	float xPos;
@@ -29,7 +29,7 @@ private:
 public:
 	bulletType1(const sf::Texture &, const sf::Texture &, char, float, float);
 	const sf::Sprite & getSprite();
-	sf::Sprite* getGlow();
+	sf::Sprite * getGlow();
 	void update(float, float);
 	bool getKillFlag();
 	void setKillFlag();

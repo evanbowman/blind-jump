@@ -25,12 +25,12 @@
 #include "initLoot.hpp"
 #include "inputController.hpp"
 #include "RenderType.hpp"
-#include "textureManager.hpp"
+#include "resourceHandler.hpp"
 
 class GameMap {
 private:
 	detailController details;
-	TextureManager * pTM;
+	ResourceHandler * pRH;
 	InputController * pInput;
 	Player player;
 	userInterface UI;
@@ -99,7 +99,7 @@ private:
 	short int transitionDelay;
 	
 public:
-	GameMap(float, float, TextureManager *, InputController *, FontController *);
+	GameMap(float, float, ResourceHandler *, InputController *, FontController *);
 	//Pass in the render window and draw sprites to it
 	void update(sf::RenderWindow&, sf::Time&);
 	// The opening map does not follow the procedural generation approach, have a separate function for this

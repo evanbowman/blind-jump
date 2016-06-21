@@ -16,7 +16,7 @@
 #include <queue>
 #include <stack>
 #include "coordinate.hpp"
-#include "textureManager.hpp"
+#include "resourceHandler.hpp"
 
 class tileController {
 public:
@@ -34,7 +34,7 @@ public:
 	sf::Image redSet;
 	sf::Image redSetFlowers;
 
-	tileController(TextureManager *);
+	tileController(ResourceHandler *);
 	void drawTiles(sf::RenderTexture&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, int level);
 	void drawTiles(sf::RenderTexture&);
 	void drawMiniMap(sf::RenderTexture&);

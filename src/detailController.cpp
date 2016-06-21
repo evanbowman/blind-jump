@@ -12,8 +12,8 @@
 #include <cmath>
 #include "gameMap.hpp"
 
-detailController::detailController(float _windowW, float _windowH, TextureManager * _pTM)
-	: pTM{_pTM},
+detailController::detailController(float _windowW, float _windowH, ResourceHandler * _pRH)
+	: pRH{_pRH},
 	  windowW{_windowW},
 	  windowH{_windowH}
 {}
@@ -77,30 +77,30 @@ Coordinate pickLocation2(std::vector<Coordinate>& emptyLocations) {
 
 void detailController::addWarpImpact(float posX, float posY) {
 	sf::Sprite tempSprite;
-	tempSprite.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
+	tempSprite.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
 	tempSprite.setTextureRect(sf::IntRect(128, 161, 32, 26));
 	misc32x26.emplace_back(posX, posY, tempSprite);
 }
 
 void detailController::addLamplight(float posX, float posY, int i, int j, float width, float height) {
 	sf::Sprite glow;
-	glow.setTexture(pTM->getTexture(TextureManager::Texture::lamplight));
-	lamps.emplace_back((i * 32) + 16 + posX, (j * 26) + 18 + posY, pTM->getTexture(TextureManager::Texture::gameObjects), glow);
+	glow.setTexture(pRH->getTexture(ResourceHandler::Texture::lamplight));
+	lamps.emplace_back((i * 32) + 16 + posX, (j * 26) + 18 + posY, pRH->getTexture(ResourceHandler::Texture::gameObjects), glow);
 }
 
 void detailController::addRock(float posX, float posY, int i, int j) {
-	rocks.emplace_back((i * 32) + posX, (j * 26) + posY, pTM->getTexture(TextureManager::Texture::gameObjects));
+	rocks.emplace_back((i * 32) + posX, (j * 26) + posY, pRH->getTexture(ResourceHandler::Texture::gameObjects));
 }
 
 void detailController::addChest(tileController& t, float posX, float posY, float width, float height, char chestContents) {
 	Coordinate c = pickLocation(t.emptyMapLocations);
     float placeOffsetX = (rand() % 6) - 3;
-	chests.emplace_back((c.x * 32) + posX + 8 + placeOffsetX, (c.y * 26) + posY - 3, pTM->getTexture(TextureManager::Texture::gameObjects), chestContents);
+	chests.emplace_back((c.x * 32) + posX + 8 + placeOffsetX, (c.y * 26) + posY - 3, pRH->getTexture(ResourceHandler::Texture::gameObjects), chestContents);
 }
 
 void detailController::addEnemyScrap(float posX, float posY, float width, float height) {
 	sf::Sprite tempSprite;
-	tempSprite.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
+	tempSprite.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
 	tempSprite.setTextureRect(sf::IntRect(112, 161, 16, 15));
 	misc32x26.emplace_back(posX - 6, posY - 2, tempSprite);
 }
@@ -112,7 +112,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
 		sf::Sprite tempSprite;
 		try {
 			c = pickLocationGrass(t.emptyMapLocations, t.mapArray);
-			DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pTM->getTexture(TextureManager::Texture::gameObjects));
+			DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pRH->getTexture(ResourceHandler::Texture::gameObjects));
 			damagedRobots.push_back(dr);
 		} catch(const char* e) {
 			//std::cout << e << std::endl;
@@ -121,7 +121,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
 		if (rand() % 2) {
 			try {
 				c = pickLocationGrass(t.emptyMapLocations, t.mapArray);
-	    		DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pTM->getTexture(TextureManager::Texture::gameObjects));
+	    		DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pRH->getTexture(ResourceHandler::Texture::gameObjects));
 				damagedRobots.push_back(dr);
 			} catch(const char* e) {
 				//std::cout << e << std::endl;
@@ -131,7 +131,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
 		if (rand() % 2) {
 			try {
 				c = pickLocationGrass(t.emptyMapLocations, t.mapArray);
-				DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pTM->getTexture(TextureManager::Texture::gameObjects));
+				DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pRH->getTexture(ResourceHandler::Texture::gameObjects));
 				damagedRobots.push_back(dr);
 			} catch(const char* e) {
 				//std::cout << e << std::endl;
@@ -146,20 +146,20 @@ void detailController::addDasherScrap(float posX, float posY, int scale) {
 	}
 	sf::Sprite tempSprite;
 	tempSprite.setScale((float) scale, 1);
-	tempSprite.setTexture(pTM->getTexture(TextureManager::Texture::dasherDead));
+	tempSprite.setTexture(pRH->getTexture(ResourceHandler::Texture::dasherDead));
 	tempSprite.setOrigin(14, 8);
 	GeneralDetail dScrap(posX, posY, tempSprite);
 	misc32x26.push_back(dScrap);
 }
 
 void detailController::addDoor(float xpos, float ypos, int x, int y, float w, float h) {
-	doors.emplace_back(xpos + x * 32, ypos + y * 26, pTM->getTexture(TextureManager::Texture::introWall));
+	doors.emplace_back(xpos + x * 32, ypos + y * 26, pRH->getTexture(ResourceHandler::Texture::introWall));
 }
 
 void detailController::addPod(float xpos, float ypos, int x, int y) {
 	sf::Sprite tempSprite;
 	tempSprite.setOrigin(0, 30);
-	tempSprite.setTexture(pTM->getTexture(TextureManager::Texture::gameObjects));
+	tempSprite.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
 	tempSprite.setTextureRect(sf::IntRect(164, 145, 44, 50));
 	misc32x26.emplace_back(xpos + x * 32, ypos + y * 26, tempSprite);
 }
@@ -167,8 +167,8 @@ void detailController::addPod(float xpos, float ypos, int x, int y) {
 void detailController::addTeleporter(tileController& t, float posX, float posY, float width, float height) {
 	Coordinate c = t.getTeleporterLoc();
    	sf::Sprite glow;
-	glow.setTexture(pTM->getTexture(TextureManager::Texture::teleporterGlow));
-    teleporters.emplace_back((c.x * 32) + posX + 2, (c.y * 26) + posY - 4, pTM->getTexture(TextureManager::Texture::gameObjects), &glow);
+	glow.setTexture(pRH->getTexture(ResourceHandler::Texture::teleporterGlow));
+    teleporters.emplace_back((c.x * 32) + posX + 2, (c.y * 26) + posY - 4, pRH->getTexture(ResourceHandler::Texture::gameObjects), &glow);
 }
 
 void detailController::update(GameMap * pGM, sf::Time & elapsedTime) {
@@ -212,7 +212,7 @@ void detailController::update(GameMap * pGM, sf::Time & elapsedTime) {
 	if (!chests.empty()) {
 		for (auto & element : chests) {
 			element.update(xOffset, yOffset, elapsedTime);
-			if (pInput->zPressed() && element.getState() == TreasureChest::State::closed) {
+			if (pInput->zPressed() && element.getState() == TreasureChest::State::closed && std::abs(windowW / 2 - element.getXpos()) < 20 && std::abs(windowH / 2 - element.getYpos()) < 20) {
 				element.setState(TreasureChest::State::opening);
 			} else if (element.getState() == TreasureChest::State::ready) {
 				element.setState(TreasureChest::State::complete);

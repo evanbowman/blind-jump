@@ -23,7 +23,7 @@
 #include "IntroDoor.hpp"
 #include <array>
 #include "RenderType.hpp"
-#include "Texturemanager.hpp"
+#include "resourceHandler.hpp"
 
 class GameMap;
 
@@ -37,11 +37,11 @@ private:
 	std::vector<IntroDoor> doors;
 	std::vector<DamagedRobot> damagedRobots;
 	std::vector<GeneralDetail> misc32x26;
-	TextureManager * pTM;
+	ResourceHandler * pRH;
 	float windowW, windowH;
 	
 public:
-	detailController(float, float, TextureManager *);
+	detailController(float, float, ResourceHandler *);
 	void addCrystals(float, float, float, float);
 	void addDoor(float, float, int, int, float, float);
 	void addPod(float, float, int, int);

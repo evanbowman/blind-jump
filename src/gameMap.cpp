@@ -17,14 +17,14 @@
 #include "enemyCreationFunctions.hpp"
 #include "gameMap.hpp"
 
-GameMap::GameMap(float _windowW, float _windowH, TextureManager * _pTM, InputController * _pInput, FontController * _pFonts)
-	: details{_windowW, _windowH, _pTM},
-	  pTM{_pTM},
+GameMap::GameMap(float _windowW, float _windowH, ResourceHandler * _pRH, InputController * _pInput, FontController * _pFonts)
+	: details{_windowW, _windowH, _pRH},
+	  pRH{_pRH},
 	  pInput{_pInput},
-	  player{_pTM},
-	  tiles{_pTM},
-	  effects{_pTM},
-	  en{_pTM},
+	  player{_pRH},
+	  tiles{_pRH},
+	  effects{_pRH},
+	  en{_pRH},
 	  pFonts{_pFonts},
 	  level{0},
 	  teleporterCond{false},
@@ -80,9 +80,9 @@ GameMap::GameMap(float _windowW, float _windowH, TextureManager * _pTM, InputCon
 	// Each object that isn't an effect or passed through a shader gets darkened according to the ambient conditions of the current tileset
 	objectShadeColor = sf::Color(190, 190, 210, 255);
 	
-	vignetteSprite.setTexture(pTM->getTexture(TextureManager::Texture::vignette));
+	vignetteSprite.setTexture(pRH->getTexture(ResourceHandler::Texture::vignette));
 	vignetteSprite.setScale(windowW / 450, windowH / 450);
-	vignetteShadowSpr.setTexture(pTM->getTexture(TextureManager::Texture::vignetteShadow));
+	vignetteShadowSpr.setTexture(pRH->getTexture(ResourceHandler::Texture::vignetteShadow));
 	vignetteShadowSpr.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setColor(sf::Color(255,255,255,100));
 	

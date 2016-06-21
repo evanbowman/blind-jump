@@ -10,7 +10,7 @@
 #ifndef enemyController_hpp
 #define enemyController_hpp
 
-#include "textureManager.hpp"
+#include "resourceHandler.hpp"
 #include "SFML/Graphics.hpp"
 #include "turret.hpp"
 #include "effectsController.hpp"
@@ -33,7 +33,7 @@ private:
 	sf::Sprite chaserSprites[4];
 	sf::Texture chaserTextures[4];
 
-	TextureManager * pTM;
+	ResourceHandler * pRH;
 	std::vector<Scoot> scoots;
 	std::vector<Dasher> dashers;
 	std::vector<Critter> critters;
@@ -41,7 +41,7 @@ private:
 	float windowH;
 	
 public:
-	enemyController(TextureManager *);
+	enemyController(ResourceHandler *);
 	void updateEnemies(drawableVec &, drawableVec &, float, float, effectsController&, std::vector<wall>, bool, detailController*, tileController*, ScreenShakeController*, FontController&, sf::Time &);
 	void clear();
 	sf::Sprite * getTurretSprites();

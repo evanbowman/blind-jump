@@ -9,8 +9,8 @@
 #include "effectsController.hpp"
 #include "screenShakeController.hpp"
 
-effectsController::effectsController(TextureManager * _pTM)
-	: pTM{_pTM}
+effectsController::effectsController(ResourceHandler * _pRH)
+	: pRH{_pRH}
 {}
 
 template<typename T>
@@ -79,58 +79,58 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
 
 //A function for adding a turret flash animation
 void effectsController::addTurretFlash(float x, float y) {
-	turretFlashes.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects), x, y);
+	turretFlashes.emplace_back(pRH->getTexture(ResourceHandler::Texture::gameObjects), x, y);
 }
 
 //A function for adding a turret shot effect
 void effectsController::addTurretShot(float x, float y, short dir) {
-	turretShots.emplace_back(pTM->getTexture(TextureManager::Texture::turretShot), pTM->getTexture(TextureManager::Texture::redglow), x, y, dir);
+	turretShots.emplace_back(pRH->getTexture(ResourceHandler::Texture::turretShot), pRH->getTexture(ResourceHandler::Texture::redglow), x, y, dir);
 }
 
 void effectsController::addHearts(float x, float y) {
-	Powerup h(pTM->getTexture(TextureManager::Texture::gameObjects), pTM->getTexture(TextureManager::Texture::redglow), x, y, Powerup::Type::heart);
+	Powerup h(pRH->getTexture(ResourceHandler::Texture::gameObjects), pRH->getTexture(ResourceHandler::Texture::redglow), x, y, Powerup::Type::heart);
 	hearts.push_back(h);
 }
 
 void effectsController::addCoins(float x, float y) {
-	Powerup c(pTM->getTexture(TextureManager::Texture::gameObjects), pTM->getTexture(TextureManager::Texture::blueglow), x, y, Powerup::Type::coin);
+	Powerup c(pRH->getTexture(ResourceHandler::Texture::gameObjects), pRH->getTexture(ResourceHandler::Texture::blueglow), x, y, Powerup::Type::coin);
 	coins.push_back(c);
 }
 
 void effectsController::addEnemyShot(float x, float y, short dir) {
-	enemyShots.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects), pTM->getTexture(TextureManager::Texture::redglow), x, y, dir);
+	enemyShots.emplace_back(pRH->getTexture(ResourceHandler::Texture::gameObjects), pRH->getTexture(ResourceHandler::Texture::redglow), x, y, dir);
 }
 
 void effectsController::addDasherShot(float x, float y, short dir) {
-	dasherShots.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects), pTM->getTexture(TextureManager::Texture::redglow), x, y, dir);
+	dasherShots.emplace_back(pRH->getTexture(ResourceHandler::Texture::gameObjects), pRH->getTexture(ResourceHandler::Texture::redglow), x, y, dir);
 }
 
 // A function for adding puffs
 void effectsController::addPuff(float x, float y) {
-	puffs.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects), x, y);
+	puffs.emplace_back(pRH->getTexture(ResourceHandler::Texture::gameObjects), x, y);
 }
 
 void effectsController::addFireExplosion(float x, float y) {
-	fireExplosions.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects), pTM->getTexture(TextureManager::Texture::fireExplosionGlow), x, y);
+	fireExplosions.emplace_back(pRH->getTexture(ResourceHandler::Texture::gameObjects), pRH->getTexture(ResourceHandler::Texture::fireExplosionGlow), x, y);
 }
 
 void effectsController::addSmallExplosion(float x, float y) {
-    smallExplosions.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects), pTM->getTexture(TextureManager::Texture::fireExplosionGlow), x, y);
+    smallExplosions.emplace_back(pRH->getTexture(ResourceHandler::Texture::gameObjects), pRH->getTexture(ResourceHandler::Texture::fireExplosionGlow), x, y);
 }
 
 void effectsController::addScootShot(float x, float y, short dir, float playerPosX, float playerPosY) {
-	turretShot t(pTM->getTexture(TextureManager::Texture::gameObjects), pTM->getTexture(TextureManager::Texture::redglow), x, y, dir);
+	turretShot t(pRH->getTexture(ResourceHandler::Texture::gameObjects), pRH->getTexture(ResourceHandler::Texture::redglow), x, y, dir);
 	t.speedFactor(2.8);
 	turretShots.push_back(t);
 }
 
 //A function for adding a bullet
 void effectsController::addBullet(bool select, char sprIndex, float xPos, float yPos) {
-	bullets.emplace_back(pTM->getTexture(TextureManager::Texture::bullet), pTM->getTexture(TextureManager::Texture::whiteGlow), sprIndex, xPos, yPos);
+	bullets.emplace_back(pRH->getTexture(ResourceHandler::Texture::gameObjects), pRH->getTexture(ResourceHandler::Texture::whiteGlow), sprIndex, xPos, yPos);
 }
 
 void effectsController::addWarpEffect(float x, float y) {
-	warpEffects.emplace_back(pTM->getTexture(TextureManager::Texture::gameObjects), x, y);
+	warpEffects.emplace_back(pRH->getTexture(ResourceHandler::Texture::gameObjects), x, y);
 }
 
 template <typename T>
