@@ -22,25 +22,10 @@
 // the screen or fade in at a rate that I think looks good
 class Player;
 
-class userInterface {
-	
-	enum class State {
-		opening,
-		open,
-		closing,
-		closed,
-		deathScreenEntry,
-		deathScreen,
-		deathScreenExit,
-		statsScreen,
-		complete
-	};
-	
+class userInterface {	
 public:
-	userInterface();
+	userInterface(float, float);
 	void drawMenu(sf::RenderWindow&, Player*, FontController&, effectsController&, float, float, InputController*, sf::Time&);
-	void setup(float, float, sf::View *);
-	sf::Texture itemTextures[3][3];
 	void addItem(char, effectsController&, float, float, FontController&, Player&);
 	
 	uint8_t selectedColumn;
@@ -58,45 +43,38 @@ public:
 	// Function to reset the ui controller
 	void reset();
 	void setEnemyValueCount(int);
-	
-	bool isOpen();
-	
+
 	bool blurEnabled();
 	bool desaturateEnabled();
-	
-	// Accessor for blur amount
 	float getBlurAmount();
+
+	void setView(sf::View *);
 	
 private:
+	enum class State {
+		closed,
+		deathScreenEntry,
+		deathScreen,
+		deathScreenExit,
+		statsScreen,
+		complete
+	};
 	State state;
 	float xPos, yPos;
-	bool visible;
-	std::array<sf::Sprite, 3> gunSprites;
-	float weaponDispOffset;
-        
-	int enemyValueCount;
 	
-    int32_t timer, timerAlt;
+	int32_t timer, timerAlt;
+
+	float textAlpha;
 	
 	float zoomDegree;
 	
-	// The amount of blur to use when opening the items menu
-	float blurAmount;
+	float blurAmount, desaturateAmount;
+
+	sf::View * pWorldView, cachedView;
 	
-	sf::View * pWorldView;
-	sf::View cachedView;
-	
-	float desaturateAmount;
-	float textAlpha;
-	bool keyPressed;
-	
-	bool deathSeq, deathSeqComplete;
-		
 	sf::Texture selectorShadowTexture;
 	sf::Sprite selectorShadowSprite;
 	
 	std::vector<sf::Sprite> textToDisplay;
-	// Store the amount the text moves during the entry animation to reset it to the original value
-	float textDisplacement;
 };
 #endif /* userInterface_hpp */

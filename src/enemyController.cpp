@@ -26,13 +26,10 @@ enemyController::enemyController(ResourceHandler * _pRH)
 	}
 }
 
-void enemyController::updateEnemies(drawableVec & gameObjects, drawableVec & gameShadows, float x, float y, effectsController& ef, std::vector<wall> w, bool enabled, detailController* dets, tileController* pTiles, ScreenShakeController* scrn, FontController& fonts, sf::Time & elapsedTime) {
+void enemyController::update(drawableVec & gameObjects, drawableVec & gameShadows, float x, float y, effectsController& ef, std::vector<wall> w, bool enabled, tileController* pTiles, ScreenShakeController* scrn, FontController& fonts, sf::Time & elapsedTime) {
 	if (!turrets.empty()) {
 		for (auto it = turrets.begin(); it != turrets.end();) {
 			if (it->getKillFlag() == 1) {
-				// Add some scrap to the map
-				dets->addEnemyScrap(it->getXinit() + 4, it->getYinit() + 6, 0, 0);
-				// Rumble the screen
 				scrn->rumble();
 				it = turrets.erase(it);
 			}
@@ -71,9 +68,6 @@ void enemyController::updateEnemies(drawableVec & gameObjects, drawableVec & gam
 	if (!scoots.empty()) {
 		for (auto it = scoots.begin(); it != scoots.end();) {
 			if (it->getKillFlag()) {
-				// Add some scrap to the map
-				dets->addEnemyScrap(it->getXinit(), it->getYinit(), 0, 0);
-				// Rumble the screen
 				scrn->rumble();
 				it = scoots.erase(it);
 			} else {
@@ -157,17 +151,19 @@ void enemyController::updateEnemies(drawableVec & gameObjects, drawableVec & gam
 					element.update(x, y, w, ef, elapsedTime);	
 					
 				auto state = element.getState();
-				if (state != Dasher::State::dying && state != Dasher::State::dead)
+				if (state != Dasher::State::dying && state != Dasher::State::dead) {
 					gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
-					
-				for (auto & blur : *element.getBlurEffects())
+				}
+				
+				for (auto & blur : *element.getBlurEffects()) {
 					gameObjects.emplace_back(*blur.getSprite(), blur.yInit + y, Rendertype::shadeDefault, 0.f);
+				}
 					
-				if (element.isColored())
+				if (element.isColored()) {
 					gameObjects.emplace_back(element.getSprite(), element.getYpos(), Rendertype::shadeWhite, element.getColorAmount());
-				else
+				} else {
 					gameObjects.emplace_back(element.getSprite(), element.getYpos(), Rendertype::shadeDefault, 0.f);
-					
+				}	
 			} else {
 				// If outside the window, update the enemy's position, but don't move it, draw it, check collisions, etc.
 				element.Enemy::update(x, y, w, ef, elapsedTime);
@@ -183,7 +179,7 @@ void enemyController::clear() {
 	critters.clear();
 }
 
-sf::Sprite* enemyController::getTurretSprites() {
+sf::Sprite * enemyController::getTurretSprites() {
 	return turretSprites;
 }
 

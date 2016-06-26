@@ -36,10 +36,10 @@ void Critter::updatePlayerDead() {
 void Critter::update(float, float, const std::vector<wall> &, effectsController &, const sf::Time &) {}
 
 void Critter::critterUpdate(float xOffset, float yOffset, effectsController & effects, const sf::Time & elapsedTime, tileController * pTiles) {
-	xPos = xInit + xOffset + 6;
+	xPos = xInit + xOffset + 12;
 	yPos = yInit + yOffset;
-	Enemy::checkShotCollision(effects, 12.f);
-	xPos -= 6; // Currently off-centered, this is just temporary work-around
+	Enemy::checkShotCollision(effects, 8.f);
+	xPos -= 12; // Currently off-centered, this is just temporary work-around
 	Enemy::updateColor(elapsedTime);
 
 	float tilePosX = pTiles->posX;

@@ -139,19 +139,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
 		}
 	}
 }
-
-void detailController::addDasherScrap(float posX, float posY, int scale) {
-	if (scale == -1) {
-		posX += -14;
-	}
-	sf::Sprite tempSprite;
-	tempSprite.setScale((float) scale, 1);
-	tempSprite.setTexture(pRH->getTexture(ResourceHandler::Texture::dasherDead));
-	tempSprite.setOrigin(14, 8);
-	GeneralDetail dScrap(posX, posY, tempSprite);
-	misc32x26.push_back(dScrap);
-}
-
+ 
 void detailController::addDoor(float xpos, float ypos, int x, int y, float w, float h) {
 	doors.emplace_back(xpos + x * 32, ypos + y * 26, pRH->getTexture(ResourceHandler::Texture::introWall));
 }

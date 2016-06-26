@@ -9,7 +9,7 @@ CC = clang++
 CFLAGS = -O2 -std=c++14 -Wall -Werror
 LDFLAGS = -lsfml-window -lsfml-graphics -lsfml-system -lsfml-audio
 EXENAME = BlindJump
-OBJECTS = aStar.o backgroundHandler.o bulletType1.o critter.o damagedRobot.o dasher.o dasherShot.o dashSmoke.o detailController.o detailParent.o drawPixels.o effect.o effectsController.o enemy.o enemyController.o enemyCreationFunctions.o enemyParent.o enemyPlacementFn.o enemyShot.o FireExplosion.o fontController.o generalDetail.o gameMap.o gun.o initLoot.o initMapVectors.o inputController.o IntroDoor.o lampLight.o main.o mappingFunctions.o player.o playerCollisionFunctions.o Powerup.o ResourcePath.o rock.o scoot.o screenShakeController.o shotPuff.o smallExplosion.o soundController.o teleporter.o teleporterSmoke.o resourceHandler.o  tileController.o treasureChest.o turret.o turretFlashEffect.o turretShot.o userInterface.o wall.o wallinpath.o
+OBJECTS = aStar.o backgroundHandler.o bulletType1.o critter.o damagedRobot.o dasher.o dasherShot.o dashSmoke.o detailController.o detailParent.o drawPixels.o effect.o effectsController.o enemy.o enemyController.o enemyCreationFunctions.o enemyParent.o enemyPlacementFn.o enemyShot.o FireExplosion.o fontController.o generalDetail.o gameMap.o gun.o initLoot.o initMapVectors.o inputController.o IntroDoor.o lampLight.o main.o mappingFunctions.o player.o playerCollisionFunctions.o Powerup.o ResourcePath.o rock.o scoot.o screenShakeController.o shotPuff.o smallExplosion.o soundController.o teleporter.o teleporterSmoke.o resourceHandler.o  tileController.o treasureChest.o turret.o turretFlashEffect.o turretShot.o userInterface.o wall.o
 RSP = ResourcePath.hpp ResourcePath.cpp
 
 all: $(OBJECTS)
@@ -167,9 +167,6 @@ userInterface.o: userInterface.cpp userInterface.hpp $(RSP) player.hpp fontContr
 
 wall.o: wall.cpp wall.hpp
 	$(CC) wall.cpp $(CFLAGS) -c -o wall.o
-
-wallinpath.o: wallinpath.cpp wallinpath.hpp wall.hpp
-	$(CC) wallinpath.cpp $(CFLAGS) -c -o wallinpath.o
 
 clean:
 	rm *.o

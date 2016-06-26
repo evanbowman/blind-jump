@@ -53,7 +53,6 @@ public:
 	void addTeleporter(tileController&, float, float, float, float);
 	void addRock(float, float, int, int);
 	void update(GameMap *, sf::Time &);
-	void addDasherScrap(float, float, int);
 	void draw(drawableVec &, drawableVec &, sf::RenderTexture &);
 	void clear();
 	std::vector<TreasureChest> & getChests();

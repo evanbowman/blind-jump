@@ -480,7 +480,6 @@ inline void updateHAnimCount(int32_t& animationTimer, uint8_t& imageIndex, bool 
 	}
 }
 
-// Define a function to check for collisions with enemy shots
 template<typename T>
 bool checkShotCollision(std::vector<T>* shotVec, double playerXpos, double playerYpos) {
 	// If the vector is not empty

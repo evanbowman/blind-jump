@@ -84,7 +84,7 @@ void effectsController::addTurretFlash(float x, float y) {
 
 //A function for adding a turret shot effect
 void effectsController::addTurretShot(float x, float y, short dir) {
-	turretShots.emplace_back(pRH->getTexture(ResourceHandler::Texture::turretShot), pRH->getTexture(ResourceHandler::Texture::redglow), x, y, dir);
+	turretShots.emplace_back(pRH->getTexture(ResourceHandler::Texture::gameObjects), pRH->getTexture(ResourceHandler::Texture::redglow), x, y, dir);
 }
 
 void effectsController::addHearts(float x, float y) {

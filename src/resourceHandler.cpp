@@ -3,7 +3,6 @@
 //
 
 #include "resourceHandler.hpp"
-#include <utility>
 
 ResourceHandler::ResourceHandler() {}
 
@@ -36,7 +35,7 @@ bool ResourceHandler::load() {
 		return false;
 
 	if (!loadTexture("introWall.png", Texture::introWall, textures))
-		return false; // 200 x 95, four kinds
+		return false;
 
 	if (!loadTexture("redFloorGlow.png", Texture::redglow, textures))
 		return false;

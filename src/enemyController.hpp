@@ -28,12 +28,11 @@ private:
 	using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
 	sf::Sprite turretSprites[10];
 	sf::Texture turretTextures[10];
-	// A vector to hold turret objects
-	std::vector<turret> turrets;
 	sf::Sprite chaserSprites[4];
 	sf::Texture chaserTextures[4];
 
 	ResourceHandler * pRH;
+	std::vector<turret> turrets;
 	std::vector<Scoot> scoots;
 	std::vector<Dasher> dashers;
 	std::vector<Critter> critters;
@@ -42,7 +41,7 @@ private:
 	
 public:
 	enemyController(ResourceHandler *);
-	void updateEnemies(drawableVec &, drawableVec &, float, float, effectsController&, std::vector<wall>, bool, detailController*, tileController*, ScreenShakeController*, FontController&, sf::Time &);
+	void update(drawableVec &, drawableVec &, float, float, effectsController&, std::vector<wall>, bool, tileController*, ScreenShakeController*, FontController&, sf::Time &);
 	void clear();
 	sf::Sprite * getTurretSprites();
 	sf::Sprite * getChaserSprites();

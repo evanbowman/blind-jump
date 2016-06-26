@@ -22,6 +22,7 @@ GameMap::GameMap(float _windowW, float _windowH, ResourceHandler * _pRH, InputCo
 	  pRH{_pRH},
 	  pInput{_pInput},
 	  player{_pRH},
+	  UI{_windowW / 2, _windowH / 2},
 	  tiles{_pRH},
 	  effects{_pRH},
 	  en{_pRH},
@@ -52,8 +53,7 @@ GameMap::GameMap(float _windowW, float _windowH, ResourceHandler * _pRH, InputCo
 	// Tell the background controller how big the window is so it doesn't draw out of bounds
 	bkg.giveWindowSize(windowW, windowH);
 	
-	// Tell the UI where the center of the window is
-	UI.setup(windowW / 2, windowH / 2, &worldView);
+	UI.setView(&worldView);
 	
 	// Set up the shaders
 	colorShader.loadFromFile(resourcePath() + "color.frag", sf::Shader::Fragment);
@@ -172,7 +172,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
 	// Draw the details / add them to the game objects vector
 	details.draw(gameObjects, gameShadows, target);
 	// Update the enemy objects in the game based on the player's displacement
-	en.updateEnemies(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effects, tiles.walls, player.isdead(), &details, &tiles, &ssc, *pFonts, elapsedTime);
+	en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effects, tiles.walls, player.isdead(), &tiles, &ssc, *pFonts, elapsedTime);
 	// Draw the lower layer of the effects, that is the ones that should show up behind the player sprite
 	effects.drawLower(target);
 	
@@ -490,10 +490,8 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
 			}
 		}
 
-		if (!UI.isVisible()) {
-			pFonts->update(window, xOffset, yOffset);
-			window.setView(worldView);
-		}
+		pFonts->update(window, xOffset, yOffset);
+		window.setView(worldView);
 		
 		if (transitioning) {
 			if (level == 0) {
@@ -544,10 +542,9 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
 }
 
 void GameMap::Reset() {
-	//Increment the current level
 	level += 1;
 	pFonts->setWaypointText(level);
-	//Clear all the vectors before re-initializing them, we don't want objects from the previous map showing up again!
+	//Clear all the vectors before re-initializing them, we don't want objects from the previous map showing up again
 	tiles.clear();
 	effects.clear();
 	details.clear();
@@ -577,7 +574,7 @@ void GameMap::Reset() {
 	if (set != tileController::Tileset::intro) {
 		//Now call the mapping function again to generate a new map, and make sure it's large enough
 		count = mappingFunction(tiles.mapArray, level, set != tileController::Tileset::nova);
-			while (count < std::min(150, 50 + 10 * level )) {
+			while (count < 150) {
 			count = mappingFunction(tiles.mapArray, level, set != tileController::Tileset::nova);
 		}
 	} else if (level == 0) {
@@ -596,15 +593,12 @@ void GameMap::Reset() {
 	if (level != 0) {
 		details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH);
 		
-		// Now initialize enemies for the map based on level, and store sum of their exp values in a variable
-		count = initEnemies(this);
+		initEnemies(this);
 		
 		// Add broken down robots to the map (if correct tileset for it
 		if (level < 10) {
 			details.addDamagedRobots(tiles, tiles.posX, tiles.posY);
 		}
-		// Tell the UI controller what that variable is
-		UI.setEnemyValueCount(count);
 		
 		// Place a weapon chest is needed
 		if (itemArray[level][0] != 0) {
