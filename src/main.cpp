@@ -20,7 +20,7 @@
 #include <iostream>
 
 int main(int argc, char * argv[]) {
-	srand(static_cast<unsigned int>(time(0)));
+	srand(static_cast<unsigned int>(time(0))); // Not necessary since time(0), but compiling with Wall and Werror
 
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 	
@@ -85,7 +85,7 @@ int main(int argc, char * argv[]) {
 		input.update(window);
 		
 		window.clear();
-
+		
 		window.setView(view);
 		
 		elapsedTime = gameClock.restart();
