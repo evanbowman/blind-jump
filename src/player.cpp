@@ -5,19 +5,6 @@
 //  Created by Evan Bowman on 10/9/15.
 //  Copyright © 2015 Evan Bowman. All rights reserved.
 //
-/*
-  Take note of the sprite indeces:
-  0: Face down
-  1: Face up
-  2: Face left
-  3: Face right
-  4: Walk down
-  5: Walk up
-  6: Walk left
-  7: Walk right
-  8: Death
-*/
-//The code in this section looks long, but it's mostly importing textures and repeated condition checking that cannot easily be looped.
 
 #include "player.hpp"
 #include "ResourcePath.hpp"
@@ -26,458 +13,63 @@
 #include "playerCollisionFunctions.hpp"
 #include "wall.hpp"
 #include <tuple>
+#include "gameMap.hpp"
 
-Player::Player(ResourceHandler * pRH)
-	: blurTimer{0}
+Player::Player(ResourceHandler * pTM, float _xPos, float _yPos)
+	: health{4},
+	  xPos{_xPos},
+	  yPos{_yPos},
+	  worldOffsetX{0.f},
+	  worldOffsetY{0.f},
+	  frameIndex{5},
+	  sheetIndex{Sheet::stillDown},
+	  lSpeed{0},
+	  rSpeed{0},
+	  uSpeed{0},
+	  dSpeed{0},
+	  animationTimer{0},
+	  invulnerableCounter{0},
+	  invulnerable{false},
+	  state{Player::State::nominal},
+	  colorAmount{0.f},
+	  colorTimer{0},
+	  renderType{Rendertype::shadeDefault},
+	  upPrevious{false},
+	  downPrevious{false},
+	  leftPrevious{false},
+	  rightPrevious{false}
 {
-	health = 4;
-	imageIndex = 0;
-	spriteIndex = 0;
-	posX = 0;
-	posY = 0;
-	active = 1;
-	visible = true;
-	speed = 2.2;
-	worldOffsetX = 0;
-	worldOffsetY = 0;
-	animationTimer = 0;
-	leftPrevious = false;
-	rightPrevious = false;
-	upPrevious = false;
-	downPrevious = false;
-	weapon.setPosition(posX, posY);
-	CollisionLeft = 0;
-	CollisionRight = 0;
-	colorAmount = 0.f;
-	slowSpeed = 1.5;
-	previousCheckOffsetX = 0;
-	previousCheckOffsetY = 0;
-	scrShakeState = 0;
-	dodging = false;
-	dodgeTimer = 4;
-	state = Player::State::nominal;
-	gotHeart = false;
-	gotCoin = false;
-	colorTimer = 0.f;
-	hurtCounter = 30;
-	canhurt = true;
-	deathSheet.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
-	walkDown.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
-	walkUp.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
-	walkLeft.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
-	walkRight.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
-
-	dashSheet.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
+	weapon.setPosition(xPos, yPos);
+	scrShakeState = false;
+	deathSheet.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
+	walkDown.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
+	walkUp.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
+	walkLeft.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
+	walkRight.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
+	walkDown.setPosition(xPos, yPos);
+	walkUp.setPosition(xPos, yPos);
+	walkLeft.setPosition(xPos, yPos);
+	walkRight.setPosition(xPos, yPos);
+	shadowSprite.setPosition(xPos + 7, yPos + 24);
+	dashSheet.setPosition(xPos, yPos);
+	deathSheet.setPosition(xPos - 13, yPos - 1);
+	dashSheet.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
 	dashSheet.setOrigin(0, 1);
-	
-	shadowSprite.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
+	shadowSprite.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
 	shadowSprite.setTextureRect(sf::IntRect(0, 100, 18, 16));
 }
 
-void Player::setPosition(float X, float Y) {
-	posX = X;
-	posY = Y;
-
-	walkDown.setPosition(posX, posY);
-	walkUp.setPosition(posX, posY);
-	walkLeft.setPosition(posX, posY);
-	walkRight.setPosition(posX, posY);
-
-	shadowSprite.setPosition(posX + 7, posY + 24);
-	weapon.setPosition(posX, posY);
-
-	dashSheet.setPosition(posX, posY);
-	
-	deathSheet.setPosition(posX - 13, posY - 1);
+void Player::setPosition(float _xPos, float _yPos) {
+	xPos = _xPos;
+	yPos = _yPos;
 }
 
-float Player::getPosX() const {
-	return posX;
+float Player::getXpos() const {
+	return xPos;
 }
 
-float Player::getPosY() const {
-	return posY;
-}
-
-//The following code gets repeated several times, so I gave it its own function
-inline void compareSpriteIndex(char& spriteIndex) {
-	switch (spriteIndex) {
-	case 4: spriteIndex = 0;
-		break;
-	case 5: spriteIndex = 1;
-		break;
-	case 6: spriteIndex = 2;
-		break;
-	case 7: spriteIndex = 3;
-		break;
-	default: //spriteIndex = 0;
-		break;
-	}
-}
-
-//This function updates the player's sprite index, resets the animation counter, and if the collision state is low, adjusts the world offset to move the player
-inline void updateWorldOffset(char& spriteIndex, int32_t& animationTimer, bool collisionState, char externalNum, float& offset, float speed) {
-	if (spriteIndex != externalNum) {
-		spriteIndex = externalNum;
-		animationTimer = 0;
-	}
-	if (collisionState == 0) {
-		offset += speed;
-	}
-}
-
-//Sets imageIndex and spriteIndex based on keyboard button presses, and also controls movement
-//Add conditions for collisions later
-void Player::drawController(InputController* pInput, effectsController& ef, sf::Time & elapsedTime) {
-	
-	// If the player has no health and the death sequence isn't running, start it
-	if (health == 0 && !deathSeq) {
-		deathSeq = true;
-		state = Player::State::nominal;
-		spriteIndex = 8;
-		imageIndex = 0;
-		animationTimer = 0;
-	}
-	bool left, right, up, down, x, z;
-	
-	z = pInput->zPressed();
-	x = pInput->xPressed();
-	// If the player isn't in dodge mode, get left, right, etc from the input controller
-	if (state == Player::State::nominal) {
-		left = pInput->leftPressed();
-		right = pInput->rightPressed();
-		up = pInput->upPressed();
-		down = pInput->downPressed();
-	}
-	// If the player is dodging, continue in the same direction regardless of button press, simply retrieve the stored state from the previous button press
-	else {
-		left = leftPrevious;
-		right = rightPrevious;
-		up = upPrevious;
-		down = downPrevious;
-	}
-	
-	if (active && !deathSeq) {
-		if (!x && state == Player::State::nominal) {	  //Holding the x key strafes the player and changes the animation, so account for that condition
-			if (up) {
-				if (!down && !left && !right && spriteIndex != 5)  {
-					spriteIndex = 5;
-					//imageIndex = 0;
-					animationTimer = 0;
-				}
-				
-				if (CollisionUp == 0) {
-					if (left || right) {
-						worldOffsetY += speed * 0.85;
-					}
-					
-					else {
-						worldOffsetY += speed;
-					}
-				}
-			}
-			
-			if (down) {
-				if (!up && !left && !right && spriteIndex != 4) {
-					spriteIndex = 4;
-					//imageIndex = 0;
-					animationTimer = 0;
-				}
-				if (CollisionDown == 0) {
-					if (right || left) {
-						worldOffsetY -= speed * 0.85;
-					}
-					
-					else {
-						worldOffsetY -= speed;
-					}
-				}
-			}
-			
-			if (right) {
-				if (!left && !down && !up && spriteIndex != 7) {
-					spriteIndex = 7;
-					if (imageIndex > 5) {
-						imageIndex = 0;
-					}
-					animationTimer = 0;
-				}
-				if (CollisionRight == 0) {
-					if (up || down) {
-						worldOffsetX -= speed * 0.85;
-					}
-					
-					else {
-						worldOffsetX -= speed;
-					}
-				}
-			}
-			
-			if (left) {
-				if (!right && !up && !down && spriteIndex != 6) {
-					spriteIndex = 6;
-					if (imageIndex > 5) {
-						imageIndex = 0;
-					}
-					animationTimer = 6;
-				}
-				if (CollisionLeft == 0) {
-					if (up || down) {
-						worldOffsetX += speed * 0.85;
-					}
-					
-					else {
-						worldOffsetX += speed;
-					}
-				}
-			}
-		}
-		
-		else if (x && state == Player::State::nominal) {
-			//The user is holding the x key, so set the gun timeout to max value
-			if (weapon.getTimeout(elapsedTime) == 0) {
-				weapon.setTimeout(1760);
-			} else if (weapon.getTimeout(elapsedTime) < 1671) {
-				weapon.setTimeout(1671);
-			}
-			
-			// Now we want the player to stay facing the same direction and strafe while the user holds the x key, which requires a lot more condition checking
-			
-			//Regardless of which direction key(s) active, the player needs to face the direction it was facing when x was pressed
-			if (spriteIndex == 0 || spriteIndex == 4) {
-				if (down) {
-					updateWorldOffset(spriteIndex, animationTimer, CollisionDown, 4, worldOffsetY, -slowSpeed);
-				}
-				
-				if (up) {
-					updateWorldOffset(spriteIndex, animationTimer, CollisionUp, 4, worldOffsetY, slowSpeed);
-				}
-				
-				if (left) {
-					updateWorldOffset(spriteIndex, animationTimer, CollisionLeft, 4, worldOffsetX, slowSpeed);
-				}
-				
-				if (right) {
-					updateWorldOffset(spriteIndex, animationTimer, CollisionRight, 4, worldOffsetX, -slowSpeed);
-				}
-			}
-			if (spriteIndex == 1 || spriteIndex == 5) {
-				if (down) {
-					updateWorldOffset(spriteIndex, animationTimer, CollisionDown, 5, worldOffsetY, -slowSpeed);
-				}
-				
-				if (up) {
-					updateWorldOffset(spriteIndex, animationTimer, CollisionUp, 5, worldOffsetY, slowSpeed);
-				}
-				
-				if (left) {
-					updateWorldOffset(spriteIndex, animationTimer, CollisionLeft, 5, worldOffsetX, slowSpeed);
-				}
-				
-				if (right) {
-					updateWorldOffset(spriteIndex, animationTimer, CollisionRight, 5, worldOffsetX, -slowSpeed);
-				}
-			}
-			if (spriteIndex == 2 || spriteIndex == 6) {
-				if (down) {
-					updateWorldOffset(spriteIndex, animationTimer, CollisionDown, 6, worldOffsetY, -slowSpeed);
-				}
-				
-				if (up) {
-				        
-					updateWorldOffset(spriteIndex, animationTimer, CollisionUp, 6, worldOffsetY, slowSpeed);
-				}
-				
-				if (left) {
-					updateWorldOffset(spriteIndex, animationTimer, CollisionLeft, 6, worldOffsetX, slowSpeed);
-				}
-				
-				if (right) {
-					updateWorldOffset(spriteIndex, animationTimer, CollisionRight, 6, worldOffsetX, -slowSpeed);
-				}
-			}
-			if (spriteIndex == 3 || spriteIndex == 7) {
-				if (down) {
-					updateWorldOffset(spriteIndex, animationTimer, CollisionDown, 7, worldOffsetY, -slowSpeed);
-				}
-				
-				if (up) {
-					updateWorldOffset(spriteIndex, animationTimer, CollisionUp, 7, worldOffsetY, slowSpeed);
-				}
-				
-				if (left) {
-					updateWorldOffset(spriteIndex, animationTimer, CollisionLeft, 7, worldOffsetX, slowSpeed);
-				}
-				
-				if (right) {
-					updateWorldOffset(spriteIndex, animationTimer, CollisionRight, 7, worldOffsetX, -slowSpeed);
-				}
-			}
-			
-			if (pInput->zPressed() && z != zprevious) {
-				if (((spriteIndex == 6 && !left) || (spriteIndex == 7 && !right) || (spriteIndex == 4 && !down) || (spriteIndex == 5  && !up))) {
-					state = Player::State::prepdash;
-				}
-			}
-		}
-		
-		if (state == Player::State::prepdash) {
-			dodgeTimer += elapsedTime.asMilliseconds();
-			if (dodgeTimer > 53) {
-				dodgeTimer -= 53;
-				state = Player::State::dashing;
-			}
-			if (left && !CollisionLeft) {
-				worldOffsetX += 1 * (elapsedTime.asMilliseconds() / 17.6);
-			}
-			if (right && !CollisionRight) {
-				worldOffsetX -= 1 * (elapsedTime.asMilliseconds() / 17.6);
-			}
-			if (up && !CollisionUp) {
-				worldOffsetY += 1 * (elapsedTime.asMilliseconds() / 17.6);
-			}
-			if (down && !CollisionDown) {
-				worldOffsetY -= 1 * (elapsedTime.asMilliseconds() / 17.6);
-			}
-		}
-		
-		else if (state == Player::State::dashing) {
-			dodgeTimer += elapsedTime.asMilliseconds();
-			if (dodgeTimer > 88) {
-				state = Player::State::cooldown;
-				dodgeTimer -= 88;
-			}
-			if (left && !CollisionLeft) {
-				if (up || down)
-					worldOffsetX += 5 * (elapsedTime.asMilliseconds() / 17.6);
-				else
-					worldOffsetX += 7 * (elapsedTime.asMilliseconds() / 17.6);
-			}
-			if (right && !CollisionRight) {
-				if (up || down)
-					worldOffsetX -= 5 * (elapsedTime.asMilliseconds() / 17.6);
-				else
-					worldOffsetX -= 7 * (elapsedTime.asMilliseconds() / 17.6);
-			}
-			if (up && !CollisionUp) {
-				if (left || right)
-					worldOffsetY += 5 * (elapsedTime.asMilliseconds() / 17.6);
-				else
-					worldOffsetY += 7 * (elapsedTime.asMilliseconds() / 17.6);
-			}
-			if (down && !CollisionDown) {
-				if (left || right)
-					worldOffsetY -= 5 * (elapsedTime.asMilliseconds() / 17.6);
-				else
-					worldOffsetY -= 7 * (elapsedTime.asMilliseconds() / 17.6);
-			}
-		}
-		
-		else if (state == Player::State::cooldown) {
-			dodgeTimer += elapsedTime.asMilliseconds();
-			if (dodgeTimer > 211) {
-				dodgeTimer -= 211;
-				state = Player::State::nominal;
-				imageIndex = 4;
-			}
-			if (left && !CollisionLeft) {
-				worldOffsetX += 1 * (elapsedTime.asMilliseconds() / 17.6);
-			}
-			if (right && !CollisionRight) {
-				worldOffsetX -= 1 * (elapsedTime.asMilliseconds() / 17.6);
-			}
-			if (up && !CollisionUp) {
-				worldOffsetY += 1 * (elapsedTime.asMilliseconds() / 17.6);
-			}
-			if (down && !CollisionDown) {
-				worldOffsetY -= 1 * (elapsedTime.asMilliseconds() / 17.6);
-			}
-		}
-		
-		//Code making the player stand still after key releases
-		if (!left && leftPrevious == 1) {
-			if (!left && !right && !up && !down) {
-				if (!x) {
-					spriteIndex = 2;
-					imageIndex = 0;
-				}
-				else if (x) {
-					compareSpriteIndex(spriteIndex);
-				}
-			}
-		}
-		
-		if (!right && rightPrevious == 1) {
-			if (!left && !right && !up && !down) {
-				if (!x) {
-					spriteIndex = 3;
-					imageIndex = 0;
-				}
-				else if (x) {
-					compareSpriteIndex(spriteIndex);
-				}
-			}
-		}
-		
-		if (!up && upPrevious == 1) {
-			if (!left && !right && !up && !down) {
-				if (!x) {
-					spriteIndex = 1;
-					imageIndex = 0;
-				}
-				else if (x) {
-					compareSpriteIndex(spriteIndex);
-				}
-			}
-		}
-		
-		if (!down && downPrevious == 1) {
-			if (!left && !right && !up && !down) {
-				if (!x) {
-					spriteIndex = 0;
-					imageIndex = 0;
-				}
-				else if (x) {
-					compareSpriteIndex(spriteIndex);
-				}
-			}
-		}
-		
-	}
-	
-	// Keep track of the previous key presses to the character can stop moving after a key release
-	leftPrevious = left;
-	rightPrevious = right;
-	upPrevious = up;
-	downPrevious = down;
-	zprevious = z;
-}
-
-//This part of the code was getting called repeatedly, so I'll let the compiler do the copy-pasting for me
-inline void updateVAnimCount(int32_t& animationTimer, uint8_t& imageIndex, bool x) {
-	//We don't want to go through a 10 frame animation 6 times a second, only go to the next frame when the animation counter reaches 0
-	if (animationTimer > 105.6) {
-		if (imageIndex < 10) {
-			imageIndex += 1;
-		}
-		if (imageIndex == 10) {
-			imageIndex = 0;
-		}
-		animationTimer -= 105.6;
-	}
-}
-
-inline void updateHAnimCount(int32_t& animationTimer, uint8_t& imageIndex, bool x) {
-	//We don't want to go through a 10 frame animation 6 times a second, only go to the next frame when the animation counter reaches 0
-	if (animationTimer > 105.6) {
-		if (imageIndex < 10) {
-			imageIndex += 1;
-		}
-		if (imageIndex == 6) {
-			imageIndex = 0;
-		}
-		animationTimer -= 105.6;
-	}
+float Player::getYpos() const {
+	return yPos;
 }
 
 template<typename T>
@@ -497,405 +89,249 @@ bool checkShotCollision(std::vector<T>* shotVec, double playerXpos, double playe
 	return false;
 }
 
-//Returns the current sprite based on the values of imageIndex and spriteIndex
-void Player::draw(std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>& gameObjects, std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>& gameShadows, tileController& tiles, effectsController& ef, detailController& details, SoundController& sounds, userInterface& UI, InputController* pInput, sf::RenderTexture& window, FontController& fonts, sf::Time& elapsedTime) {
-	checkCollision(tiles, details);//, details);
-	drawController(pInput, ef, elapsedTime);
-	std::tuple<sf::Sprite, float, Rendertype, float> tPlayer, tGun, tShadow;
+void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
+	InputController * pInput   {pGM->getPInput()};
+	tileController & tiles     {pGM->getTileController()};
+	detailController & details {pGM->getDetails()};
+	bool x     {pInput->xPressed()};
+	bool up    {pInput->upPressed()};
+	bool down  {pInput->downPressed()};
+	bool left  {pInput->leftPressed()};
+	bool right {pInput->rightPressed()};
+	bool collisionLeft  {false};
+	bool collisionRight {false};
+    bool collisionUp    {false};
+	bool collisionDown  {false};
+
+	checkCollisionWall(tiles.walls, collisionDown, collisionUp, collisionRight, collisionLeft, yPos, xPos);
+	checkCollisionChest(details.getChests(), collisionDown, collisionUp, collisionRight, collisionLeft, yPos, xPos);
 	
-	std::get<1>(tPlayer) = posY;
-	
-	speed = 2.2 * (elapsedTime.asMilliseconds() / 17.6);
-	slowSpeed = 1.5 * (elapsedTime.asMilliseconds() / 17.6);
-	
-	// If the death sequence isn't running, draw the player's shadow
-	if (!deathSeq) {
-		std::get<0>(tShadow) = shadowSprite;
-		gameShadows.push_back(tShadow);
-	}
-	// Allow the player's weapon to push created instances to the effects controller
-	weapon.updateShotVector(spriteIndex, ef, worldOffsetX, worldOffsetY, UI, pInput, sounds, static_cast<int>(state), elapsedTime); // I didn't want to have to resolve another circular dependency, hence the cast
-	scrShakeState = false;
-	
-	// First check for collisions with enemy shot objects, as long as the death sequence isn't running
-	if (checkShotCollision(ef.getEnemyShots(), posX, posY) && !deathSeq && canhurt) {
-		// Decrement health
-		health--;
-		fonts.resetHPText();
-		scrShakeState = true;
-		canhurt = false;
-		colorAmount = 1.f;
-	}
-	
-	if (checkShotCollision(ef.getTurretShots(), posX, posY) && !deathSeq && canhurt) {
-		health--;
-		fonts.resetHPText();
-		scrShakeState = true;
-		canhurt = false;
-		colorAmount = 1.f;
-	}
-	
-	if (checkShotCollision(ef.getDasherShots(), posX - 8, posY - 8) && !deathSeq && canhurt) {
-		health--;
-		fonts.resetHPText();
-		scrShakeState = true;
-		canhurt = false;
-		colorAmount = 1.f;
-	}
-	
-	// Don't bother doing all this if health is empty!
-	std::vector<Powerup>* pHearts = ef.getHearts();
-	for (auto & element : *pHearts) {
-		if (fabsf(posX + 16 - element.getXpos()) < 8 && fabsf(posY + 4 - element.getYpos()) < 8) {
-			if (health < fonts.getMaxHealth()) {
-				health = fmin(fonts.getMaxHealth(), health + 1);
-				element.setKillFlag(true);
-				gotHeart = true;
-				colorAmount = 1.f;
-				// Display the UI element for health text
-			}
-			fonts.resetHPText();
-		}
-	}
-	
-	std::vector<Powerup>* pCoins = ef.getCoins();
-	for (auto & element : *pCoins) {
-		if (fabsf(posX + 16 - element.getXpos()) < 8 && fabsf(posY + 4 - element.getYpos()) < 8) {
-			element.setKillFlag(true);
-			gotCoin = true;
-			gotHeart = false;
-			colorAmount = 1.f;
-			fonts.updateScore(1);
-			fonts.resetSCText();
-		}
-	}
-	
-	if (gotHeart) {
-		std::get<2>(tPlayer) = Rendertype::shadeCrimson;
-		std::get<2>(tGun) = Rendertype::shadeCrimson;
-		colorTimer += elapsedTime.asMilliseconds();
-		if (colorTimer > 20.f) {
-			colorTimer -= 20.f;
-			colorAmount -= 0.05f;
-		}
-		if (colorAmount <= 0.f) {
-			gotHeart = false;
-		}
-		std::get<3>(tPlayer) = colorAmount;
-		std::get<3>(tGun) = colorAmount;
-	} else if (gotCoin) {
-		std::get<2>(tPlayer) = Rendertype::shadeNeon;
-		std::get<2>(tGun) = Rendertype::shadeNeon;
-		colorTimer += elapsedTime.asMilliseconds();
-		if (colorTimer > 20.f) {
-			colorTimer -= 20.f;
-			colorAmount -= 0.05f;
-		}
-		if (colorAmount <= 0.f) {
-			gotCoin = false;
-		}
-		std::get<3>(tPlayer) = colorAmount;
-		std::get<3>(tGun) = colorAmount;
-	} else if (!canhurt) {
-		std::get<2>(tPlayer) = Rendertype::shadeRed;
-		std::get<2>(tGun) = Rendertype::shadeRed;
-		colorTimer += elapsedTime.asMilliseconds();
-		if (colorTimer > 20.f) {
-			colorTimer -= 20.f;
-			colorAmount -= 0.05f;
-		}
-		if (colorAmount <= 0.f) {
-			canhurt = !canhurt;
-		}
-		std::get<3>(tPlayer) = colorAmount;
-		std::get<3>(tGun) = colorAmount;
-	}
-	
-	if (health < 0) {
-		state = Player::State::nominal;
-		health = 0;
-	}
-	
-	if (state == Player::State::nominal) {
-		switch (spriteIndex) {
-		case 4:
-			animationTimer += elapsedTime.asMilliseconds();
-			updateVAnimCount(animationTimer, imageIndex, pInput->xPressed());
-			if (imageIndex == 4 || imageIndex == 8) {
-				sounds.playEffect(SoundController::Effect::step);
-			}
-			std::get<0>(tPlayer) = walkDown[verticalAnimationDecoder(imageIndex)];
-			gameObjects.push_back(tPlayer);
-			if (weapon.getTimeout(elapsedTime) != 0) {
-				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
-				std::get<1>(tGun) = weapon.getYpos() + 2;
-				gameObjects.push_back(tGun);
-			}
-			break;
-				
-		case 5:
-			animationTimer += elapsedTime.asMilliseconds();
-			updateVAnimCount(animationTimer, imageIndex, pInput->xPressed());
-			if (imageIndex == 4 || imageIndex == 8) {
-				sounds.playEffect(SoundController::Effect::step);
-			}
-			weapon.getTimeout(elapsedTime);
-			std::get<0>(tPlayer) = walkUp[verticalAnimationDecoder(imageIndex)];
-			gameObjects.push_back(tPlayer);
-			break;
-				
-		case 6:
-			animationTimer += elapsedTime.asMilliseconds();
-			if (weapon.getTimeout(elapsedTime) != 0) {
-				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
-				std::get<1>(tGun) = weapon.getYpos() - 1;
-				gameObjects.push_back(tGun);
-			}
-			updateHAnimCount(animationTimer, imageIndex, pInput->xPressed());
-			if (imageIndex == 1) {
-				sounds.playEffect(SoundController::Effect::step);
-			}
-			std::get<0>(tPlayer) = walkLeft[horizontalAnimationDecoder(imageIndex)];
-			gameObjects.push_back(tPlayer);
-			break;
-				
-		case 7:
-			animationTimer += elapsedTime.asMilliseconds();
-			if (weapon.getTimeout(elapsedTime) != 0) {
-				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
-				std::get<1>(tGun) = weapon.getYpos() - 1;
-				gameObjects.push_back(tGun);
-			}
-			updateHAnimCount(animationTimer, imageIndex, pInput->xPressed());
-			if (imageIndex == 1) {
-				sounds.playEffect(SoundController::Effect::step);
-			}
-			std::get<0>(tPlayer) = walkRight[horizontalAnimationDecoder(imageIndex)];
-			gameObjects.push_back(tPlayer);
-			break;
-				
-		case 0:
-			std::get<0>(tPlayer) = walkDown[5];
-			gameObjects.push_back(tPlayer);
-			if (weapon.getTimeout(elapsedTime) != 0) {
-				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
-				std::get<1>(tGun) = weapon.getYpos() + 2;
-				gameObjects.push_back(tGun);
-			}
-			break;
-				
-		case 1:
-			std::get<0>(tPlayer) = walkUp[5];
-			gameObjects.push_back(tPlayer);
-			weapon.getTimeout(elapsedTime);
-			break;
-				
-		case 2:
-			if (weapon.getTimeout(elapsedTime) != 0) {
-				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
-				std::get<1>(tGun) = weapon.getYpos() - 1;
-				gameObjects.push_back(tGun);
-			}
-			std::get<0>(tPlayer) = walkLeft[6];
-			gameObjects.push_back(tPlayer);
-			break;
-				
-		case 3:
-			if (weapon.getTimeout(elapsedTime) != 0) {
-				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
-				std::get<1>(tGun) = weapon.getYpos() - 1;
-				gameObjects.push_back(tGun);
-			}
-			std::get<0>(tPlayer) = walkRight[6];
-			gameObjects.push_back(tPlayer);
-			break;
-				
-		case 8:
-			animationTimer += elapsedTime.asMilliseconds();
-			if (animationTimer >= 70.4) {
-				animationTimer -= 70.4;
-				if (imageIndex < 9) {
-					imageIndex++;
+	switch (state) {
+	case State::deactivated:
+		sheetIndex = Sheet::walkDown;
+		frameIndex = 5;
+		lSpeed = 0.f;
+		rSpeed = 0.f;
+		uSpeed = 0.f;
+		dSpeed = 0.f;
+		break;
+
+	case State::nominal:
+		if (!x) {
+			if (up) {
+				if (!down && !left && !right && sheetIndex != Sheet::walkUp)  {
+					sheetIndex = Sheet::walkUp;
 				}
-			}
-			std::get<0>(tPlayer) = deathSheet[imageIndex];
-			gameObjects.push_back(tPlayer);
-			break;
-		}
-	} else if (state == Player::State::prepdash) {
-		if ((rightPrevious || upPrevious || downPrevious) && spriteIndex == 6) {
-			if (weapon.getTimeout(elapsedTime) != 0 && rightPrevious) {
-				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
-				std::get<1>(tGun) = weapon.getYpos() - 1;
-				gameObjects.push_back(tGun);
-			}
-			std::get<0>(tPlayer) = dashSheet[0];
-			gameObjects.push_back(tPlayer);
-		}
-		else if ((leftPrevious || upPrevious || downPrevious) && spriteIndex == 7) {
-			if (weapon.getTimeout(elapsedTime) != 0 && rightPrevious) {
-				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
-				std::get<1>(tGun) = weapon.getYpos() - 1;
-				gameObjects.push_back(tGun);
-			}
-			std::get<0>(tPlayer) = dashSheet[2];
-			gameObjects.push_back(tPlayer);
-		}
-		else if (spriteIndex == 4) {
-			if (weapon.getTimeout(elapsedTime) != 0) {
-				sf::Sprite tempSpr = *weapon.getSprite(spriteIndex);
-				tempSpr.setPosition(tempSpr.getPosition().x, tempSpr.getPosition().y - 1);
-				std::get<0>(tGun) = tempSpr;
-				std::get<1>(tGun) = weapon.getYpos() + 3;
-				gameObjects.push_back(tGun);
-			}
-			std::get<0>(tPlayer) = dashSheet[6];
-			gameObjects.push_back(tPlayer);
-		}
-		else if (spriteIndex == 5) {
-			std::get<0>(tPlayer) = dashSheet[8];
-			gameObjects.push_back(tPlayer);
-		}
-	}
-	
-	else if (state == Player::State::dashing || state == Player::State::cooldown) {
-		if (rightPrevious && spriteIndex == 6) {
-			if (weapon.getTimeout(elapsedTime) != 0) {
-				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
-				std::get<1>(tGun) = weapon.getYpos() - 1;
-				gameObjects.push_back(tGun);
-			}
-			std::get<0>(tPlayer) = dashSheet[1];
-			gameObjects.push_back(tPlayer);
-		}
-		else if (leftPrevious && spriteIndex == 7) {
-			if (weapon.getTimeout(elapsedTime) != 0) {
-				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
-				std::get<1>(tGun) = weapon.getYpos() - 1;
-				gameObjects.push_back(tGun);
-			}
-			std::get<0>(tPlayer) = dashSheet[3];
-			gameObjects.push_back(tPlayer);
-		}
-		else if (upPrevious && spriteIndex == 6) {
-			if (weapon.getTimeout(elapsedTime) != 0) {
-				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
-				std::get<1>(tGun) = weapon.getYpos() - 1;
-				gameObjects.push_back(tGun);
-			}
-			std::get<0>(tPlayer) = dashSheet[4];
-			gameObjects.push_back(tPlayer);
-		}
-		
-		else if (downPrevious && spriteIndex == 6) {
-			std::get<0>(tPlayer) = dashSheet[11];
-			gameObjects.push_back(tPlayer);
-		}
-		
-		else if (downPrevious && spriteIndex == 7) {
-			std::get<0>(tPlayer) = dashSheet[10];
-			gameObjects.push_back(tPlayer);
-		}
-		
-		else if (upPrevious && spriteIndex == 7) {
-			if (weapon.getTimeout(elapsedTime) != 0) {
-				std::get<0>(tGun) = *weapon.getSprite(spriteIndex);
-				std::get<1>(tGun) = weapon.getYpos() - 1;
-				gameObjects.push_back(tGun);
-			}
-			std::get<0>(tPlayer) = dashSheet[5];
-			gameObjects.push_back(tPlayer);
-		}
-		
-		else if (spriteIndex == 4) {
-			if (upPrevious) {
-				if (weapon.getTimeout(elapsedTime) != 0) {
-					sf::Sprite tempSpr = *weapon.getSprite(spriteIndex);
-					tempSpr.setPosition(tempSpr.getPosition().x, tempSpr.getPosition().y - 1);
-					std::get<0>(tGun) = tempSpr;
-					std::get<1>(tGun) = weapon.getYpos() + 2;
-					gameObjects.push_back(tGun);
+			
+				if (collisionUp == 0) {
+					if (left || right) {
+						uSpeed = 1.87f;
+					} else {
+						uSpeed = 2.20f;
+					}
 				}
-				std::get<0>(tPlayer) = dashSheet[7];
-				gameObjects.push_back(tPlayer);
+			} else {
+				uSpeed = 0.f;
 			}
 			
-			else if (leftPrevious) {
-				if (weapon.getTimeout(elapsedTime) != 0) {
-					sf::Sprite tempSpr = *weapon.getSprite(spriteIndex);
-					tempSpr.setPosition(tempSpr.getPosition().x, tempSpr.getPosition().y - 1);
-					std::get<0>(tGun) = tempSpr;
-					std::get<1>(tGun) = weapon.getYpos() + 2;
-					gameObjects.push_back(tGun);
+			if (down) {
+				if (!up && !left && !right && sheetIndex != Sheet::walkDown) {
+					sheetIndex = Sheet::walkDown;
 				}
-				std::get<0>(tPlayer) = dashSheet[5];
-				gameObjects.push_back(tPlayer);
-			}
-			
-			else if (rightPrevious) {
-				if (weapon.getTimeout(elapsedTime) != 0) {
-					sf::Sprite tempSpr = *weapon.getSprite(spriteIndex);
-					tempSpr.setPosition(tempSpr.getPosition().x, tempSpr.getPosition().y - 1);
-					std::get<0>(tGun) = tempSpr;
-					std::get<1>(tGun) = weapon.getYpos() + 2;
-					gameObjects.push_back(tGun);
+
+				if (collisionDown == 0) {
+					if (right || left) {
+						dSpeed = 1.87f;
+					} else {
+						dSpeed = 2.20f;
+					}
 				}
-				std::get<0>(tPlayer) = dashSheet[4];
-				gameObjects.push_back(tPlayer);
-			}
-		}
-		
-		else if (spriteIndex == 5) {
-			if (downPrevious) {
-				std::get<0>(tPlayer) = dashSheet[9];
-				gameObjects.push_back(tPlayer);
+			} else {
+				dSpeed = 0.f;
 			}
 			
-			else if (leftPrevious) {
-				std::get<0>(tPlayer) = dashSheet[10];
-				gameObjects.push_back(tPlayer);
+			if (right) {
+				if (!left && !down && !up && sheetIndex != Sheet::walkRight) {
+					sheetIndex = Sheet::walkRight;
+					if (frameIndex > 5) {
+						frameIndex = 0;
+					}
+				}
+
+				if (collisionRight == 0) {
+					if (up || down) {
+						rSpeed = 1.87f;
+					} else {
+						rSpeed = 2.20f;
+					}
+				}
+			} else {
+				rSpeed = 0.f;
 			}
 			
-			else if (rightPrevious) {
-				std::get<0>(tPlayer) = dashSheet[11];
-				gameObjects.push_back(tPlayer);
+			if (left) {
+				if (!right && !up && !down && sheetIndex != Sheet::walkLeft) {
+					sheetIndex = Sheet::walkLeft;
+					if (frameIndex > 5) {
+						frameIndex = 0;
+					}
+				}
+
+				if (collisionLeft == 0) {
+					if (up || down) {
+						lSpeed = 1.87f;
+					} else {
+						lSpeed = 2.20f;
+					}
+				}
+			} else {
+				lSpeed = 0.f;
 			}
 		}
 
-		if (state == State::dashing) {
-			blurTimer += elapsedTime.asMilliseconds();
-			if (blurTimer > 20) {
-				blurTimer = 0;
-				blurs.emplace_back(&std::get<0>(gameObjects.back()), posX - worldOffsetX, posY - worldOffsetY);
+		if (!left && leftPrevious) {
+			if (!left && !right && !up && !down) {
+				if (!x) {
+					sheetIndex = Sheet::stillLeft;
+					frameIndex = 5;
+				} // else if (x) {
+				// 	compareSpriteIndex(sheetIndex);
+				// }
 			}
 		}
+		
+		if (!right && rightPrevious) {
+			if (!left && !right && !up && !down) {
+				if (!x) {
+					sheetIndex = Sheet::stillRight;
+					frameIndex = 5;
+				} // else if (x) {
+				// 	compareSpriteIndex(sheetIndex);
+				// }
+			}
+		}
+		
+		if (!up && upPrevious) {
+			if (!left && !right && !up && !down) {
+				if (!x) {
+					sheetIndex = Sheet::stillUp;
+					frameIndex = 6;
+				} // else if (x) {
+				// 	compareSpriteIndex(sheetIndex);
+				// }
+			}
+		}
+		
+		if (!down && downPrevious) {
+			if (!left && !right && !up && !down) {
+				if (!x) {
+					sheetIndex = Sheet::stillDown;
+					frameIndex = 6;
+				} // else if (x) {
+				// 	compareSpriteIndex(sheetIndex);
+				// }
+			}
+		}
+		break;
+
+	case State::dashing:
+		break;
+
+	case State::cooldown:
+		break;
+
+	case State::dead:
+		break;
+
+	case State::prepdash:
+		break;
 	}
 
-	if (!blurs.empty()) {
-		for (auto it = blurs.begin(); it != blurs.end();) {
-			if (it->getKillFlag())
-				it = blurs.erase(it);
-			else {
-				it->update(elapsedTime, worldOffsetX, worldOffsetY);
-				gameObjects.emplace_back(*it->getSprite(), it->yInit, Rendertype::shadeDefault, 0.f);
-				++it;
-			}
+	colorTimer = 0;
+	
+	worldOffsetX += lSpeed + -rSpeed * (elapsedTime.asMilliseconds() / 17.6);
+	worldOffsetY += uSpeed + -dSpeed * (elapsedTime.asMilliseconds() / 17.6);
+	
+	upPrevious = up;
+	downPrevious = down;
+	leftPrevious = left;
+	rightPrevious = right;
+}
+
+void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf::Time & elapsedTime) {
+	if (visible) {
+		switch (sheetIndex) {
+		case Sheet::stillDown:
+			gameObjects.emplace_back(walkDown[5], yPos, renderType, colorAmount);
+			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
+			break;
+
+		case Sheet::stillUp:
+			gameObjects.emplace_back(walkUp[5], yPos, renderType, colorAmount);
+			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
+			break;
+
+		case Sheet::stillLeft:
+			gameObjects.emplace_back(walkLeft[6], yPos, renderType, colorAmount);
+			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
+			break;
+
+		case Sheet::stillRight:
+			gameObjects.emplace_back(walkRight[6], yPos, renderType, colorAmount);
+			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
+			break;
+			
+		case Sheet::walkDown:
+		    updateAnimation(downPrevious, elapsedTime, 9, 100);
+			gameObjects.emplace_back(walkDown[verticalAnimationDecoder(frameIndex)], yPos, renderType, colorAmount);
+			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
+			break;
+
+		case Sheet::walkUp:
+			updateAnimation(upPrevious, elapsedTime, 9, 100);
+			gameObjects.emplace_back(walkUp[verticalAnimationDecoder(frameIndex)], yPos, renderType, colorAmount);
+			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
+			break;
+
+		case Sheet::walkLeft:
+			updateAnimation(leftPrevious, elapsedTime, 5, 100);
+			gameObjects.emplace_back(walkLeft[frameIndex], yPos, renderType, colorAmount);
+			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
+			break;
+
+		case Sheet::walkRight:
+			updateAnimation(rightPrevious, elapsedTime, 5, 100);
+			gameObjects.emplace_back(walkRight[frameIndex], yPos, renderType, colorAmount);
+			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
+			break;
+
+		case Sheet::deathSheet:
+			gameObjects.emplace_back(deathSheet[frameIndex], yPos, renderType, colorAmount);
+			break;
+
+		case Sheet::dashSheet:
+			gameObjects.emplace_back(dashSheet[frameIndex], yPos, renderType, colorAmount);
+			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
+			break;
 		}
 	}
 }
 
-void Player::checkCollision(tileController& tiles, detailController& details) {
-	// Re-initialize each of the collision variables each time to check the conditions again
-	CollisionLeft = 0;
-	CollisionRight = 0;
-	CollisionUp = 0;
-	CollisionDown = 0;
-	
-	checkCollisionWall(tiles.walls, CollisionDown, CollisionUp, CollisionRight, CollisionLeft, posY, posX);
-	checkCollisionChest(details.getChests(), CollisionDown, CollisionUp, CollisionRight, CollisionLeft, posY, posX);
+void Player::updateAnimation(bool key, const sf::Time & elapsedTime, uint8_t maxIndex, uint8_t count) {
+	if (key) {
+		animationTimer += elapsedTime.asMilliseconds();
+		if (animationTimer > count) {
+			frameIndex++;
+			animationTimer -= count;
+			if (frameIndex > maxIndex)
+				frameIndex = 0;
+		}
+	} else {
+		frameIndex = maxIndex + 1;
+	}
 }
 
-float Player::getWorldOffsetX() const {			  // Accessor function to get the player's offset position relative to the overworld
+float Player::getWorldOffsetX() const {
 	return worldOffsetX;
 }
 
@@ -911,44 +347,28 @@ void Player::setWorldOffsetY(float y) {
 	worldOffsetY = y;
 }
 
-bool Player::isActive() {
-	return active;
-}
-
-void Player::activate() {
-	active = 1;
-}
-
-void Player::deActivate() {
-	active = 0;
-	spriteIndex = 0;
-}
-
-void Player::deActivateFaceUp() {
-	active = false;
-	spriteIndex = 1;
-}
-
 char Player::getSprIndex() const {
-	return spriteIndex;
+	return static_cast<int>(sheetIndex);
+}
+
+void Player::setState(State _state) {
+	state = _state;
+}
+
+Player::State Player::getState() const {
+	return state;
 }
 
 char Player::getHealth() const {
 	return health;
 }
 
-bool Player::isdead() {
-	return !deathSeq;
-}
-
 void Player::reset() {
-	// Reinitialize player values to base values
-	canhurt = 0;
-	hurtCounter = 15;
-	deathSeq = false;
+	state = State::nominal;
+	invulnerable = false;
+	invulnerableCounter = 0;
 	health = 4;
-	spriteIndex = 0;
-	canhurt = true;
+	sheetIndex = Sheet::walkDown;
 	weapon.setTimeout(0);
 }
 

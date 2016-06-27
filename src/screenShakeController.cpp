@@ -15,7 +15,7 @@ ScreenShakeController::ScreenShakeController() {
 	shakeMode = 0;
 }
 
-void ScreenShakeController::update(Player &p) {
+void ScreenShakeController::update(Player & p) {
 	if (!active) {
 		return;
 	}
@@ -24,7 +24,7 @@ void ScreenShakeController::update(Player &p) {
 			case 0:
 				if (--updateCounter == 0) {
 					updateCounter = 4;
-					p.setPosition(p.getPosX(), p.getPosY() + shakeArray[shakeIndex]);
+					p.setPosition(p.getXpos(), p.getYpos() + shakeArray[shakeIndex]);
 					p.setWorldOffsetY(p.getWorldOffsetY() + shakeArray[shakeIndex]);
 					shakeIndex++;
 				}
@@ -38,7 +38,7 @@ void ScreenShakeController::update(Player &p) {
 			case 1:
 				if (--updateCounter == 0) {
 					updateCounter = 4;
-					p.setPosition(p.getPosX(), p.getPosY() + shakeArray2[shakeIndex]);
+					p.setPosition(p.getXpos(), p.getYpos() + shakeArray2[shakeIndex]);
 					p.setWorldOffsetY(p.getWorldOffsetY() + shakeArray2[shakeIndex]);
 					shakeIndex++;
 				}

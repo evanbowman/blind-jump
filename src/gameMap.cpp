@@ -21,7 +21,7 @@ GameMap::GameMap(float _windowW, float _windowH, ResourceHandler * _pRH, InputCo
 	: details{_windowW, _windowH, _pRH},
 	  pRH{_pRH},
 	  pInput{_pInput},
-	  player{_pRH},
+	  player{_pRH, _windowW / 2, _windowH / 2},
 	  UI{_windowW / 2, _windowH / 2},
 	  tiles{_pRH},
 	  effects{_pRH},
@@ -85,9 +85,6 @@ GameMap::GameMap(float _windowW, float _windowH, ResourceHandler * _pRH, InputCo
 	vignetteShadowSpr.setTexture(pRH->getTexture(ResourceHandler::Texture::vignetteShadow));
 	vignetteShadowSpr.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setColor(sf::Color(255,255,255,100));
-	
-	//Put the player in the center of the view
-	player.setPosition(windowW / 2 - 16, windowH / 2);
 	
 	//Let the tile controller know where player is
 	tiles.setPosition((windowW / 2) - 16, (windowH / 2));
@@ -172,13 +169,14 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
 	// Draw the details / add them to the game objects vector
 	details.draw(gameObjects, gameShadows, target);
 	// Update the enemy objects in the game based on the player's displacement
-	en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effects, tiles.walls, player.isdead(), &tiles, &ssc, *pFonts, elapsedTime);
+	en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effects, tiles.walls, player.getState() == Player::State::dead, &tiles, &ssc, *pFonts, elapsedTime);
 	// Draw the lower layer of the effects, that is the ones that should show up behind the player sprite
 	effects.drawLower(target);
 	
 	if (player.visible) {
 		// Draw the player to the window, as long as the object is visible
-		player.draw(gameObjects, gameShadows, tiles, effects, details, sndCtrl, UI, pInput, target, *pFonts, elapsedTime);
+		player.update(this, elapsedTime);
+		player.draw(gameObjects, gameShadows, elapsedTime);
 	}
 	
 	// If player was hit rumble the screen.
@@ -308,7 +306,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
 		window.draw(sf::Sprite(target.getTexture()));
 	}
 	
-	if (!player.isdead()) {
+	if (player.getState() == Player::State::dead) {
 		//if (!UI.desaturateEnabled())
 		UI.dispDeathSeq();
 		// If the death sequence is complete and the UI controller is finished playing its animation
@@ -372,7 +370,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
 			// Add a warp impack detail to the overworld where the player landed
 			details.addWarpImpact(windowW / 2 - 12, windowH / 2 + 18);
 		} else {
-			player.deActivate();
+			player.setState(Player::State::deactivated);
 		}
 		// Get the current color of the beam shape, in order to decrement its alpha value
 		sf::Color c1 = entryBeam.getFillColor();
@@ -404,7 +402,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
 			entryBeam.setSize(v2);
 			entryBeam.setFillColor(sf::Color(104, 255, 229, 180));
 			// Reactivate the player now that the beam animation has finished
-			player.activate();
+			player.setState(Player::State::nominal);
 		}
 	}
 	
@@ -426,16 +424,15 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
 	}
 	
 	// Check if the player is close to a teleporter. If so, go to the next level
-	if ((std::abs(player.getPosX() - details.getTeleporter()->getXpos()) < 10 && std::abs(player.getPosY() - details.getTeleporter()->getYpos() + 12) < 8) /*&& player.isActive()*/) {
+	if ((std::abs(player.getXpos() - details.getTeleporter()->getXpos()) < 10 && std::abs(player.getYpos() - details.getTeleporter()->getYpos() + 12) < 8) /*&& player.isActive()*/) {
 		// Center the player over the teleporter for the duration of the teleport animation (ie center the world under the player)
 		if (!animationBegin) {
-			player.setWorldOffsetX(xOffset + (player.getPosX() - details.getTeleporter()->getXpos()) + 2);
-			player.setWorldOffsetY(yOffset + (player.getPosY() - details.getTeleporter()->getYpos()) + 16);
+			player.setWorldOffsetX(xOffset + (player.getXpos() - details.getTeleporter()->getXpos()) + 2);
+			player.setWorldOffsetY(yOffset + (player.getXpos() - details.getTeleporter()->getYpos()) + 16);
 			beamExpanding = true;
 			animationBegin = true;
-			// Force all captions closed
 		}
-		player.deActivate();
+		player.setState(Player::State::deactivated);
 		// Cast the beam's glow to the overworld
 		if (!transitioning) {
 			window.draw(teleporterBeam);
