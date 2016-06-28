@@ -17,7 +17,7 @@
 
 Player::Player(ResourceHandler * pTM, float _xPos, float _yPos)
 	: health{4},
-	  xPos{_xPos},
+	  xPos{_xPos - 17}, // Magic number that puts the player in the direct center of the screen. Hmmm why does it work...
 	  yPos{_yPos},
 	  worldOffsetX{0.f},
 	  worldOffsetY{0.f},
@@ -74,41 +74,85 @@ float Player::getYpos() const {
 
 template<typename T>
 bool checkShotCollision(std::vector<T>* shotVec, double playerXpos, double playerYpos) {
-	// If the vector is not empty
-	if (!shotVec->empty()) {
-		// Loop through the vector and check whether the enemy shot objects are close to the player
-		for (auto & element : *shotVec) {
-			if (std::abs(playerXpos + 16 - element.getXpos()) < 10 && std::abs(playerYpos + 16 - element.getYpos()) < 10) {
-				// Set a flag within the element that tells its controller to remove it from its vector
-				element.setKillFlag();
-				return true;
-			}
+	for (auto & element : *shotVec) {
+		if (std::abs(playerXpos + 16 - element.getXpos()) < 10 && std::abs(playerYpos + 16 - element.getYpos()) < 10) {
+			element.setKillFlag();
+			return true;
 		}
 	}
-	// Nothing hit the player, so return false
 	return false;
 }
 
-void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
-	InputController * pInput   {pGM->getPInput()};
-	tileController & tiles     {pGM->getTileController()};
-	detailController & details {pGM->getDetails()};
-	bool x     {pInput->xPressed()};
-	bool up    {pInput->upPressed()};
-	bool down  {pInput->downPressed()};
-	bool left  {pInput->leftPressed()};
-	bool right {pInput->rightPressed()};
-	bool collisionLeft  {false};
-	bool collisionRight {false};
-    bool collisionUp    {false};
-	bool collisionDown  {false};
+inline void compareSheetIndex(Player::Sheet & sheetIndex) {
+	switch (sheetIndex) {
+	case Player::Sheet::walkDown: sheetIndex = Player::Sheet::stillDown;
+		break;
+	case Player::Sheet::walkUp: sheetIndex = Player::Sheet::stillUp;
+		break;
+	case Player::Sheet::walkLeft: sheetIndex = Player::Sheet::stillLeft;
+		break;
+	case Player::Sheet::walkRight: sheetIndex = Player::Sheet::stillRight;
+		break;
+	default:
+		break;
+	}
+}
 
+template <Player::Sheet S>
+void regKeyResponse(bool key1, bool key2, bool key3, bool key4, Player::Sheet & sheetIndex, float & speed, bool collision) {
+	if (key1) {
+		if (!key2 && !key3 && !key4 && sheetIndex != S) {
+			sheetIndex = S;
+		}
+
+		if (!collision) {
+			if (key3 || key4) {
+				speed = 1.87f;
+			} else {
+				speed = 2.20f;
+			}
+		} else {
+			speed = 0.f;
+		}
+	} else {
+		speed = 0.f;
+	}
+}
+
+template <Player::Sheet S, uint8_t maxIndx>
+void onKeyReleased(bool key1, bool key2, bool key3, bool key4, bool keyprev, bool x, Player::Sheet & shIndex, uint8_t & frmIndex) {
+	if (!key1 && keyprev) {
+		if (!key2 && !key3 && !key4) {
+			if (!x) {
+				shIndex = S;
+				frmIndex = maxIndx;
+			} else {
+				compareSheetIndex(shIndex);
+			}
+		}
+	}
+}
+
+void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
+	InputController * pInput {pGM->getPInput()};
+	tileController & tiles {pGM->getTileController()};
+	detailController & details {pGM->getDetails()};
+	bool x {pInput->xPressed()};
+	bool up {pInput->upPressed()};
+	bool down {pInput->downPressed()};
+	bool left {pInput->leftPressed()};
+	bool right {pInput->rightPressed()};
+    bool collisionUp {false};
+	bool collisionDown {false};
+	bool collisionLeft {false};
+	bool collisionRight {false};
+	
 	checkCollisionWall(tiles.walls, collisionDown, collisionUp, collisionRight, collisionLeft, yPos, xPos);
 	checkCollisionChest(details.getChests(), collisionDown, collisionUp, collisionRight, collisionLeft, yPos, xPos);
 	
 	switch (state) {
 	case State::deactivated:
-		sheetIndex = Sheet::walkDown;
+		sheetIndex = Sheet::stillDown;
 		frameIndex = 5;
 		lSpeed = 0.f;
 		rSpeed = 0.f;
@@ -118,120 +162,20 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 
 	case State::nominal:
 		if (!x) {
-			if (up) {
-				if (!down && !left && !right && sheetIndex != Sheet::walkUp)  {
-					sheetIndex = Sheet::walkUp;
-				}
-			
-				if (collisionUp == 0) {
-					if (left || right) {
-						uSpeed = 1.87f;
-					} else {
-						uSpeed = 2.20f;
-					}
-				}
-			} else {
-				uSpeed = 0.f;
-			}
-			
-			if (down) {
-				if (!up && !left && !right && sheetIndex != Sheet::walkDown) {
-					sheetIndex = Sheet::walkDown;
-				}
-
-				if (collisionDown == 0) {
-					if (right || left) {
-						dSpeed = 1.87f;
-					} else {
-						dSpeed = 2.20f;
-					}
-				}
-			} else {
-				dSpeed = 0.f;
-			}
-			
-			if (right) {
-				if (!left && !down && !up && sheetIndex != Sheet::walkRight) {
-					sheetIndex = Sheet::walkRight;
-					if (frameIndex > 5) {
-						frameIndex = 0;
-					}
-				}
-
-				if (collisionRight == 0) {
-					if (up || down) {
-						rSpeed = 1.87f;
-					} else {
-						rSpeed = 2.20f;
-					}
-				}
-			} else {
-				rSpeed = 0.f;
-			}
-			
-			if (left) {
-				if (!right && !up && !down && sheetIndex != Sheet::walkLeft) {
-					sheetIndex = Sheet::walkLeft;
-					if (frameIndex > 5) {
-						frameIndex = 0;
-					}
-				}
-
-				if (collisionLeft == 0) {
-					if (up || down) {
-						lSpeed = 1.87f;
-					} else {
-						lSpeed = 2.20f;
-					}
-				}
-			} else {
-				lSpeed = 0.f;
-			}
+			regKeyResponse<Sheet::walkUp>(up, down, left, right, sheetIndex, uSpeed, collisionUp);
+			regKeyResponse<Sheet::walkDown>(down, up, left, right, sheetIndex, dSpeed, collisionDown);
+			regKeyResponse<Sheet::walkLeft>(left, right, down, up, sheetIndex, lSpeed, collisionLeft);
+			regKeyResponse<Sheet::walkRight>(right, left, down, up, sheetIndex, rSpeed, collisionRight);
+		} else {
+			//
+			//
+			//
+			//
 		}
-
-		if (!left && leftPrevious) {
-			if (!left && !right && !up && !down) {
-				if (!x) {
-					sheetIndex = Sheet::stillLeft;
-					frameIndex = 5;
-				} // else if (x) {
-				// 	compareSpriteIndex(sheetIndex);
-				// }
-			}
-		}
-		
-		if (!right && rightPrevious) {
-			if (!left && !right && !up && !down) {
-				if (!x) {
-					sheetIndex = Sheet::stillRight;
-					frameIndex = 5;
-				} // else if (x) {
-				// 	compareSpriteIndex(sheetIndex);
-				// }
-			}
-		}
-		
-		if (!up && upPrevious) {
-			if (!left && !right && !up && !down) {
-				if (!x) {
-					sheetIndex = Sheet::stillUp;
-					frameIndex = 6;
-				} // else if (x) {
-				// 	compareSpriteIndex(sheetIndex);
-				// }
-			}
-		}
-		
-		if (!down && downPrevious) {
-			if (!left && !right && !up && !down) {
-				if (!x) {
-					sheetIndex = Sheet::stillDown;
-					frameIndex = 6;
-				} // else if (x) {
-				// 	compareSpriteIndex(sheetIndex);
-				// }
-			}
-		}
+		onKeyReleased<Player::Sheet::stillLeft, 5>(left, right, up, down, leftPrevious, x, sheetIndex, frameIndex);
+		onKeyReleased<Player::Sheet::stillRight, 5>(right, left, up, down, rightPrevious, x, sheetIndex, frameIndex);
+		onKeyReleased<Player::Sheet::stillUp, 4>(up, left, right, down, upPrevious, x, sheetIndex, frameIndex);
+		onKeyReleased<Player::Sheet::stillDown, 4>(down, left, right, up, downPrevious, x, sheetIndex, frameIndex);
 		break;
 
 	case State::dashing:
@@ -249,8 +193,8 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 
 	colorTimer = 0;
 	
-	worldOffsetX += lSpeed + -rSpeed * (elapsedTime.asMilliseconds() / 17.6);
-	worldOffsetY += uSpeed + -dSpeed * (elapsedTime.asMilliseconds() / 17.6);
+	worldOffsetX += (lSpeed + -rSpeed) * (elapsedTime.asMilliseconds() / 17.6);
+	worldOffsetY += (uSpeed + -dSpeed) * (elapsedTime.asMilliseconds() / 17.6);
 	
 	upPrevious = up;
 	downPrevious = down;
@@ -322,9 +266,10 @@ void Player::updateAnimation(bool key, const sf::Time & elapsedTime, uint8_t max
 		animationTimer += elapsedTime.asMilliseconds();
 		if (animationTimer > count) {
 			frameIndex++;
-			animationTimer -= count;
-			if (frameIndex > maxIndex)
-				frameIndex = 0;
+			animationTimer -= count; 
+		}
+		if (frameIndex > maxIndex) {
+			frameIndex = 0;
 		}
 	} else {
 		frameIndex = maxIndex + 1;

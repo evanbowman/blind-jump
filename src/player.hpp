@@ -25,6 +25,7 @@ class GameMap;
 class Player {
 	using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
 	public:
+	enum class Sheet { walkDown, walkUp, walkLeft, walkRight, deathSheet, dashSheet, stillDown, stillUp, stillLeft, stillRight };
 	enum class State {
 		deactivated,
 		nominal,
@@ -60,7 +61,6 @@ class Player {
 	void fillHealth(char);
 
 private:
-	enum class Sheet { walkDown, walkUp, walkLeft, walkRight, deathSheet, dashSheet, stillDown, stillUp, stillLeft, stillRight };
 	uint8_t health;
 	void updateAnimation(bool, const sf::Time &, uint8_t, uint8_t);
 	float xPos, yPos, worldOffsetX, worldOffsetY;

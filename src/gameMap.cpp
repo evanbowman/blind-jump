@@ -153,7 +153,7 @@ GameMap::GameMap(float _windowW, float _windowH, ResourceHandler * _pRH, InputCo
 	}
 }
 
-void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
+void GameMap::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	target.clear(sf::Color::Transparent);
 	// Start by getting the displacement that the player has moved, in order to update the position of all of the tiles and game objects
 	float xOffset = player.getWorldOffsetX();
@@ -169,7 +169,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
 	// Draw the details / add them to the game objects vector
 	details.draw(gameObjects, gameShadows, target);
 	// Update the enemy objects in the game based on the player's displacement
-	en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effects, tiles.walls, player.getState() == Player::State::dead, &tiles, &ssc, *pFonts, elapsedTime);
+	en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effects, tiles.walls, player.getState() != Player::State::dead, &tiles, &ssc, *pFonts, elapsedTime);
 	// Draw the lower layer of the effects, that is the ones that should show up behind the player sprite
 	effects.drawLower(target);
 	
@@ -188,7 +188,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
 	// Update the positions of all the effect objects
 	effects.update(player.getWorldOffsetX(), player.getWorldOffsetY(), &ssc, elapsedTime);
 	
-	// Draw shadows to the window
+	// Draw shadows to the target
 	if (!gameShadows.empty()) {
 		for (auto & element : gameShadows) {
 			target.draw(std::get<0>(element));
@@ -197,7 +197,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
 	gameShadows.clear();
 	
 	// Sort the game object based on y-position (performance for this is fine, only sorts objects inside the window, on the ordr of 10 in most cases)
-	std::sort(gameObjects.begin(), gameObjects.end(), [](const std::tuple<sf::Sprite, float, Rendertype, float> arg1, const std::tuple<sf::Sprite, float, Rendertype, float> arg2) {
+	std::sort(gameObjects.begin(), gameObjects.end(), [](const std::tuple<sf::Sprite, float, Rendertype, float> & arg1, const std::tuple<sf::Sprite, float, Rendertype, float> & arg2) {
 		return (std::get<1>(arg1) < std::get<1>(arg2));
 	});
 	
@@ -428,7 +428,7 @@ void GameMap::update(sf::RenderWindow& window, sf::Time& elapsedTime) {
 		// Center the player over the teleporter for the duration of the teleport animation (ie center the world under the player)
 		if (!animationBegin) {
 			player.setWorldOffsetX(xOffset + (player.getXpos() - details.getTeleporter()->getXpos()) + 2);
-			player.setWorldOffsetY(yOffset + (player.getXpos() - details.getTeleporter()->getYpos()) + 16);
+			player.setWorldOffsetY(yOffset + (player.getYpos() - details.getTeleporter()->getYpos()) + 16);
 			beamExpanding = true;
 			animationBegin = true;
 		}
