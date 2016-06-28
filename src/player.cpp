@@ -104,12 +104,29 @@ void regKeyResponse(bool key1, bool key2, bool key3, bool key4, Player::Sheet & 
 		if (!key2 && !key3 && !key4 && sheetIndex != S) {
 			sheetIndex = S;
 		}
-
 		if (!collision) {
 			if (key3 || key4) {
-				speed = 1.87f;
+				speed = 1.70f;
 			} else {
 				speed = 2.20f;
+			}
+		} else {
+			speed = 0.f;
+		}
+	} else {
+		speed = 0.f;
+	}
+}
+
+template <Player::Sheet S>
+void altKeyResponse(bool key1, bool key2, bool key3, Player::Sheet & sheetIndex, bool collision, float & speed) {
+	if (key1) {
+		sheetIndex = S;
+		if (!collision) {
+			if (key2 || key3) {
+				speed = 1.40f;
+			} else {
+				speed = 1.80f;
 			}
 		} else {
 			speed = 0.f;
@@ -167,10 +184,30 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 			regKeyResponse<Sheet::walkLeft>(left, right, down, up, sheetIndex, lSpeed, collisionLeft);
 			regKeyResponse<Sheet::walkRight>(right, left, down, up, sheetIndex, rSpeed, collisionRight);
 		} else {
-			//
-			//
-			//
-			//
+			if (sheetIndex == Sheet::walkUp || sheetIndex == Sheet::stillUp) {
+				altKeyResponse<Sheet::walkUp>(up, left, right, sheetIndex, collisionUp, uSpeed);
+				altKeyResponse<Sheet::walkUp>(down, left, right, sheetIndex, collisionDown, dSpeed);
+				altKeyResponse<Sheet::walkUp>(left, up, down, sheetIndex, collisionLeft, lSpeed);
+				altKeyResponse<Sheet::walkUp>(right, up, down, sheetIndex, collisionRight, rSpeed);
+			}
+			if (sheetIndex == Sheet::walkDown || sheetIndex == Sheet::stillDown) {
+				altKeyResponse<Sheet::walkDown>(up, left, right, sheetIndex, collisionUp, uSpeed);
+				altKeyResponse<Sheet::walkDown>(down, left, right, sheetIndex, collisionDown, dSpeed);
+				altKeyResponse<Sheet::walkDown>(left, up, down, sheetIndex, collisionLeft, lSpeed);
+				altKeyResponse<Sheet::walkDown>(right, up, down, sheetIndex, collisionRight, rSpeed);
+			}
+			if (sheetIndex == Sheet::walkRight || sheetIndex == Sheet::stillRight) {
+				altKeyResponse<Sheet::walkRight>(up, left, right, sheetIndex, collisionUp, uSpeed);
+				altKeyResponse<Sheet::walkRight>(down, left, right, sheetIndex, collisionDown, dSpeed);
+				altKeyResponse<Sheet::walkRight>(left, up, down, sheetIndex, collisionLeft, lSpeed);
+				altKeyResponse<Sheet::walkRight>(right, up, down, sheetIndex, collisionRight, rSpeed);
+			}
+			if (sheetIndex == Sheet::walkLeft || sheetIndex == Sheet::stillLeft) {
+				altKeyResponse<Sheet::walkLeft>(up, left, right, sheetIndex, collisionUp, uSpeed);
+				altKeyResponse<Sheet::walkLeft>(down, left, right, sheetIndex, collisionDown, dSpeed);
+				altKeyResponse<Sheet::walkLeft>(left, up, down, sheetIndex, collisionLeft, lSpeed);
+				altKeyResponse<Sheet::walkLeft>(right, up, down, sheetIndex, collisionRight, rSpeed);
+			}
 		}
 		onKeyReleased<Player::Sheet::stillLeft, 5>(left, right, up, down, leftPrevious, x, sheetIndex, frameIndex);
 		onKeyReleased<Player::Sheet::stillRight, 5>(right, left, up, down, rightPrevious, x, sheetIndex, frameIndex);
@@ -191,7 +228,7 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 		break;
 	}
 
-	colorTimer = 0;
+	colorTimer = 0; // TODO: This is for -Wall -Wnounused, but does need to be correctly set!
 	
 	worldOffsetX += (lSpeed + -rSpeed) * (elapsedTime.asMilliseconds() / 17.6);
 	worldOffsetY += (uSpeed + -dSpeed) * (elapsedTime.asMilliseconds() / 17.6);
@@ -226,25 +263,25 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf
 			break;
 			
 		case Sheet::walkDown:
-		    updateAnimation(downPrevious, elapsedTime, 9, 100);
+		    updateAnimation(elapsedTime, 9, 100);
 			gameObjects.emplace_back(walkDown[verticalAnimationDecoder(frameIndex)], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			break;
 
 		case Sheet::walkUp:
-			updateAnimation(upPrevious, elapsedTime, 9, 100);
+			updateAnimation(elapsedTime, 9, 100);
 			gameObjects.emplace_back(walkUp[verticalAnimationDecoder(frameIndex)], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			break;
 
 		case Sheet::walkLeft:
-			updateAnimation(leftPrevious, elapsedTime, 5, 100);
+			updateAnimation(elapsedTime, 5, 100);
 			gameObjects.emplace_back(walkLeft[frameIndex], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			break;
 
 		case Sheet::walkRight:
-			updateAnimation(rightPrevious, elapsedTime, 5, 100);
+			updateAnimation(elapsedTime, 5, 100);
 			gameObjects.emplace_back(walkRight[frameIndex], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			break;
@@ -261,18 +298,14 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf
 	}
 }
 
-void Player::updateAnimation(bool key, const sf::Time & elapsedTime, uint8_t maxIndex, uint8_t count) {
-	if (key) {
-		animationTimer += elapsedTime.asMilliseconds();
-		if (animationTimer > count) {
-			frameIndex++;
-			animationTimer -= count; 
-		}
-		if (frameIndex > maxIndex) {
-			frameIndex = 0;
-		}
-	} else {
-		frameIndex = maxIndex + 1;
+void Player::updateAnimation(const sf::Time & elapsedTime, uint8_t maxIndex, uint8_t count) {
+	animationTimer += elapsedTime.asMilliseconds();
+	if (animationTimer > count) {
+		frameIndex++;
+		animationTimer -= count; 
+	}
+	if (frameIndex > maxIndex) {
+		frameIndex = 0;
 	}
 }
 

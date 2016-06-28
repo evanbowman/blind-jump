@@ -130,12 +130,12 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 			shotCount++;
 			if (xPos > playerPosX) {
 				effects.addDasherShot(xInit - 12, yInit, angleFunction(xPos, yPos, playerPosX, playerPosY));
-				effects.addTurretFlash(xInit - 12, yInit);
+				effects.addTurretFlash(xInit - 14, yInit - 4);
 			}
 			
 			else {
 				effects.addDasherShot(xInit + 4, yInit, angleFunction(xPos, yPos, playerPosX, playerPosY));
-				effects.addTurretFlash(xInit + 4, yInit);
+				effects.addTurretFlash(xInit + 6, yInit - 4);
 			}
 		}
 

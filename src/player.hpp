@@ -62,7 +62,7 @@ class Player {
 
 private:
 	uint8_t health;
-	void updateAnimation(bool, const sf::Time &, uint8_t, uint8_t);
+	void updateAnimation(const sf::Time &, uint8_t, uint8_t);
 	float xPos, yPos, worldOffsetX, worldOffsetY;
 	uint8_t frameIndex;
 	Sheet sheetIndex;
