@@ -37,12 +37,12 @@ public:
 	gun();
 	void setTimeout(int);
 	void setPosition(float, float);
-        int getTimeout(sf::Time &);
+    int getTimeout(sf::Time &);
 	//Define a function to return the gun sprite to the player object for drawing
 	//The returned sprite depends on which way the player is facing
 	sf::Sprite* getSprite(char);
 	//Update the positions of all of the shot objects
-        void updateShotVector(char, effectsController& ef, float, float, userInterface&, InputController*, SoundController&, int, sf::Time &);
+    void updateShotVector(char, effectsController& ef, float, float, userInterface&, InputController*, SoundController&, int, sf::Time &);
 	float getXpos();
 	float getYpos();
 };

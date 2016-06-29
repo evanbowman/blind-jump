@@ -591,12 +591,7 @@ void GameMap::Reset() {
 		details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH);
 		
 		initEnemies(this);
-		
-		// Add broken down robots to the map (if correct tileset for it
-		if (level < 10) {
-			details.addDamagedRobots(tiles, tiles.posX, tiles.posY);
-		}
-		
+				
 		// Place a weapon chest is needed
 		if (itemArray[level][0] != 0) {
 			details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][0]);
@@ -638,13 +633,13 @@ void GameMap::Reset() {
 		lightPositions.clear();
 		
 		// Delete lamps near the teleporter (light blending is additive, it would be too bright if they were close together)
-		std::vector<LampLight> * pLamps = details.getLamps();
-		for (size_t i = 0; i < details.getLamps()->size(); i++) {
-			if (fabsf((*pLamps)[i].getXpos() - pTeleporter->getXpos()) < 90 && fabsf((*pLamps)[i].getYpos() - pTeleporter->getYpos()) < 90) {
-				(*pLamps)[i] = (*pLamps).back();
-				(*pLamps).pop_back();
-			}
-		}
+		// std::vector<LampLight> * pLamps = details.getLamps();
+		// for (size_t i = 0; i < details.getLamps()->size(); i++) {
+		// 	if (fabsf((*pLamps)[i].getXpos() - pTeleporter->getXpos()) < 90 && fabsf((*pLamps)[i].getYpos() - pTeleporter->getYpos()) < 90) {
+		// 		(*pLamps)[i] = (*pLamps).back();
+		// 		(*pLamps).pop_back();
+		// 	}
+		// }
 	} else if (set == tileController::Tileset::intro) {
 		details.addLamplight(tiles.posX - 180, tiles.posY + 200, 5, 6, windowW, windowH);
 		details.addLamplight(tiles.posX - 180, tiles.posY + 200, 5, 0, windowW, windowH);

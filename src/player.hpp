@@ -11,7 +11,6 @@
 #define player_hpp
 
 #include <SFML/Graphics.hpp>
-#include "gun.hpp"
 #include "tileController.hpp"
 #include "detailController.hpp"
 #include "soundController.hpp"
@@ -72,6 +71,11 @@ class Player {
 	void fillHealth(char);
 
 private:
+	struct weapon {
+		// SpriteSheet<...> gunSpr;
+		uint32_t timeout, bulletTimer;
+		uint8_t frameIndex;
+	};
 	std::vector<Dasher::Blur> blurs; // I could have designed this better...
 	uint8_t health;
 	void updateAnimation(const sf::Time &, uint8_t, uint8_t);
@@ -88,7 +92,6 @@ private:
 	SpriteSheet<208, 140, 32, 33> dashSheet;
 	int32_t animationTimer, dashTimer, invulnerableCounter;
 	bool invulnerable;
-    gun weapon;
 	State state;
 	float colorAmount;
 	int32_t colorTimer;
@@ -99,6 +102,5 @@ private:
 	bool rightPrevious;
 	bool zPrevious;
 };
-
 
 #endif

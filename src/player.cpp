@@ -41,7 +41,6 @@ Player::Player(ResourceHandler * pTM, float _xPos, float _yPos)
 	  leftPrevious{false},
 	  rightPrevious{false}
 {
-	weapon.setPosition(xPos, yPos);
 	scrShakeState = false;
 	deathSheet.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
 	walkDown.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
@@ -191,6 +190,10 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 		rSpeed = 0.f;
 		uSpeed = 0.f;
 		dSpeed = 0.f;
+		upPrevious = false;
+		downPrevious = false;
+		leftPrevious = false;
+		rightPrevious = false;
 		break;
 
 	case State::nominal:
@@ -291,18 +294,18 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 				break;
 
 			case 0:
-				if (rSpeed >= 0.f) {
+				if (rSpeed > 0.f) {
 					frameIndex = 1;
 				} else {
-					// TODO
+					frameIndex = 12;
 				}
 				break;
 
 			case 2:
-				if (lSpeed >= 0.f) {
+				if (lSpeed > 0.f) {
 					frameIndex = 3;
 				} else {
-					// TODO
+				    frameIndex = 13;
 				}
 				break;
 				
@@ -330,7 +333,7 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 		setSpeed<1>(upPrevious, leftPrevious, rightPrevious, collisionUp, uSpeed);
 		setSpeed<1>(downPrevious, leftPrevious, rightPrevious, collisionDown, dSpeed);
 		dashTimer += elapsedTime.asMilliseconds();
-		if (dashTimer > 210) {
+		if (dashTimer > 160) {
 			dashTimer = 0;
 			state = State::nominal;
 			sheetIndex = cachedSheet;
@@ -474,7 +477,6 @@ void Player::reset() {
 	invulnerableCounter = 0;
 	health = 4;
 	sheetIndex = Sheet::walkDown;
-	weapon.setTimeout(0);
 }
 
 void Player::fillHealth(char health) {
