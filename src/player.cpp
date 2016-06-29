@@ -23,11 +23,13 @@ Player::Player(ResourceHandler * pTM, float _xPos, float _yPos)
 	  worldOffsetY{0.f},
 	  frameIndex{5},
 	  sheetIndex{Sheet::stillDown},
+	  cachedSheet{Sheet::stillDown},
 	  lSpeed{0},
 	  rSpeed{0},
 	  uSpeed{0},
 	  dSpeed{0},
 	  animationTimer{0},
+	  dashTimer{0},
 	  invulnerableCounter{0},
 	  invulnerable{false},
 	  state{Player::State::nominal},
@@ -150,11 +152,25 @@ void onKeyReleased(bool key1, bool key2, bool key3, bool key4, bool keyprev, boo
 	}
 }
 
+template<int spd>
+void setSpeed(bool key1, bool key2, bool key3, bool collision, float & speed) {
+	if (key1 && !collision) {
+		if (key2 || key3) {
+			speed = spd * 0.8;
+		} else {
+			speed = spd;
+		}
+	} else {
+		speed = 0;
+	}
+}
+
 void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 	InputController * pInput {pGM->getPInput()};
 	tileController & tiles {pGM->getTileController()};
 	detailController & details {pGM->getDetails()};
 	bool x {pInput->xPressed()};
+	bool z {pInput->zPressed()};
 	bool up {pInput->upPressed()};
 	bool down {pInput->downPressed()};
 	bool left {pInput->leftPressed()};
@@ -213,30 +229,122 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 		onKeyReleased<Player::Sheet::stillRight, 5>(right, left, up, down, rightPrevious, x, sheetIndex, frameIndex);
 		onKeyReleased<Player::Sheet::stillUp, 4>(up, left, right, down, upPrevious, x, sheetIndex, frameIndex);
 		onKeyReleased<Player::Sheet::stillDown, 4>(down, left, right, up, downPrevious, x, sheetIndex, frameIndex);
-		break;
-
-	case State::dashing:
-		break;
-
-	case State::cooldown:
-		break;
-
-	case State::dead:
+		
+		if (z && !zPrevious && (left || right || up || down)) {
+			state = State::prepdash;
+			if (sheetIndex == Sheet::stillDown || sheetIndex == Sheet::walkDown) {
+				frameIndex = 6;
+			} else if (sheetIndex == Sheet::stillUp || sheetIndex == Sheet::walkUp) {
+				frameIndex = 8;
+			} else if (sheetIndex == Sheet::stillLeft || sheetIndex == Sheet::walkLeft) {
+				frameIndex = 0;
+			} else if (sheetIndex == Sheet::stillRight || sheetIndex == Sheet::walkRight) {
+				frameIndex = 2;
+			}
+			cachedSheet = sheetIndex; // So we know what to go back to after dash
+			sheetIndex = Sheet::dashSheet;
+ 		}
+		
+		zPrevious = z;
+		upPrevious = up;
+		downPrevious = down;
+		leftPrevious = left;
+		rightPrevious = right;	
 		break;
 
 	case State::prepdash:
+		setSpeed<1>(left, up, down, collisionLeft, lSpeed);
+		setSpeed<1>(right, up, down, collisionRight, rSpeed);
+		setSpeed<1>(up, left, right, collisionUp, uSpeed);
+		setSpeed<1>(down, left, right, collisionDown, dSpeed);
+		dashTimer += elapsedTime.asMilliseconds();
+		if (dashTimer > 60) {
+			dashTimer = 0;
+			state = State::dashing;
+			switch (frameIndex) {
+			case 6:
+				if (uSpeed >= 0.f) { // Sidestep
+					if (lSpeed > 0.f) {
+						frameIndex = 5;
+					} else if (rSpeed > 0.f) {
+						frameIndex = 4;
+					} else {
+						frameIndex = 7;
+					}
+				} else { // Forward dash
+					// TODO
+				}
+				break;
+
+			case 8:
+				if (dSpeed >= 0.f) {
+					if (lSpeed > 0.f) {
+						frameIndex = 10;
+					} else if (rSpeed > 0.f) {
+						frameIndex = 11;
+					} else {
+						frameIndex = 9;
+					}
+				} else {
+					// TODO
+				}
+				break;
+
+			case 0:
+				if (rSpeed >= 0.f) {
+					frameIndex = 1;
+				} else {
+					// TODO
+				}
+				break;
+
+			case 2:
+				if (lSpeed >= 0.f) {
+					frameIndex = 3;
+				} else {
+					// TODO
+				}
+				break;
+				
+			default:
+				break;
+			}
+	    }
+		break;
+		
+	case State::dashing:
+		setSpeed<7>(leftPrevious, upPrevious, downPrevious, collisionLeft, lSpeed);
+		setSpeed<7>(rightPrevious, upPrevious, downPrevious, collisionRight, rSpeed);
+		setSpeed<7>(upPrevious, leftPrevious, rightPrevious, collisionUp, uSpeed);
+		setSpeed<7>(downPrevious, leftPrevious, rightPrevious, collisionDown, dSpeed);
+		dashTimer += elapsedTime.asMilliseconds();
+		if (dashTimer > 88) {
+			dashTimer = 0;
+			state = State::cooldown;
+		}
+		break;
+		
+	case State::cooldown:
+		setSpeed<1>(leftPrevious, upPrevious, downPrevious, collisionLeft, lSpeed);
+		setSpeed<1>(rightPrevious, upPrevious, downPrevious, collisionRight, rSpeed);
+		setSpeed<1>(upPrevious, leftPrevious, rightPrevious, collisionUp, uSpeed);
+		setSpeed<1>(downPrevious, leftPrevious, rightPrevious, collisionDown, dSpeed);
+		dashTimer += elapsedTime.asMilliseconds();
+		if (dashTimer > 210) {
+			dashTimer = 0;
+			state = State::nominal;
+			sheetIndex = cachedSheet;
+		}
+		break;
+		
+	case State::dead:
 		break;
 	}
-
+	
 	colorTimer = 0; // TODO: This is for -Wall -Wnounused, but does need to be correctly set!
 	
 	worldOffsetX += (lSpeed + -rSpeed) * (elapsedTime.asMilliseconds() / 17.6);
 	worldOffsetY += (uSpeed + -dSpeed) * (elapsedTime.asMilliseconds() / 17.6);
-	
-	upPrevious = up;
-	downPrevious = down;
-	leftPrevious = left;
-	rightPrevious = right;
 }
 
 void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf::Time & elapsedTime) {
@@ -273,27 +381,46 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf
 			gameObjects.emplace_back(walkUp[verticalAnimationDecoder(frameIndex)], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			break;
-
+			
 		case Sheet::walkLeft:
 			updateAnimation(elapsedTime, 5, 100);
 			gameObjects.emplace_back(walkLeft[frameIndex], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			break;
-
+			
 		case Sheet::walkRight:
 			updateAnimation(elapsedTime, 5, 100);
 			gameObjects.emplace_back(walkRight[frameIndex], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			break;
-
+			
 		case Sheet::deathSheet:
 			gameObjects.emplace_back(deathSheet[frameIndex], yPos, renderType, colorAmount);
 			break;
-
+			
 		case Sheet::dashSheet:
 			gameObjects.emplace_back(dashSheet[frameIndex], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
+			animationTimer += elapsedTime.asMilliseconds();
+			if (state == Player::State::dashing) {
+				if (animationTimer > 20) {
+					animationTimer = 0;
+					blurs.emplace_back(&std::get<0>(gameObjects.back()), xPos - worldOffsetX, yPos - worldOffsetY);
+				}
+			}
 			break;
+		}
+	}
+
+	if (!blurs.empty()) {
+		for (auto it = blurs.begin(); it != blurs.end();) {
+			if (it->getKillFlag())
+				it = blurs.erase(it);
+			else {
+				it->update(elapsedTime, worldOffsetX, worldOffsetY);
+				gameObjects.emplace_back(*it->getSprite(), it->yInit, Rendertype::shadeDefault, 0.f);
+				++it;
+			}
 		}
 	}
 }

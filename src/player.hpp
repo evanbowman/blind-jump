@@ -25,7 +25,18 @@ class GameMap;
 class Player {
 	using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
 	public:
-	enum class Sheet { walkDown, walkUp, walkLeft, walkRight, deathSheet, dashSheet, stillDown, stillUp, stillLeft, stillRight };
+	enum class Sheet {
+		walkDown,
+		walkUp,
+		walkLeft,
+		walkRight,
+		deathSheet,
+		dashSheet,
+		stillDown,
+		stillUp,
+		stillLeft,
+		stillRight
+	};
 	enum class State {
 		deactivated,
 		nominal,
@@ -61,11 +72,12 @@ class Player {
 	void fillHealth(char);
 
 private:
+	std::vector<Dasher::Blur> blurs; // I could have designed this better...
 	uint8_t health;
 	void updateAnimation(const sf::Time &, uint8_t, uint8_t);
 	float xPos, yPos, worldOffsetX, worldOffsetY;
 	uint8_t frameIndex;
-	Sheet sheetIndex;
+	Sheet sheetIndex, cachedSheet;
 	float lSpeed, rSpeed, uSpeed, dSpeed;
 	sf::Sprite shadowSprite;
 	SpriteSheet<400, 108, 32, 32> walkDown;
@@ -74,7 +86,7 @@ private:
 	SpriteSheet<432, 76, 32, 32> walkRight;
 	SpriteSheet<208, 38, 40, 38> deathSheet;
 	SpriteSheet<208, 140, 32, 33> dashSheet;
-	int32_t animationTimer, invulnerableCounter;
+	int32_t animationTimer, dashTimer, invulnerableCounter;
 	bool invulnerable;
     gun weapon;
 	State state;
@@ -85,6 +97,7 @@ private:
 	bool downPrevious;
 	bool leftPrevious;
 	bool rightPrevious;
+	bool zPrevious;
 };
 
 
