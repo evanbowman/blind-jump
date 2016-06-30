@@ -266,7 +266,7 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 			state = State::dashing;
 			switch (frameIndex) {
 			case 6:
-				if (uSpeed >= 0.f) { // Sidestep
+				if (uSpeed > 0.f || (uSpeed == 0.f && dSpeed == 0.f)) { // Sidestep
 					if (lSpeed > 0.f) {
 						frameIndex = 5;
 					} else if (rSpeed > 0.f) {
@@ -275,7 +275,7 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 						frameIndex = 7;
 					}
 				} else { // Forward dash
-					// TODO
+					frameIndex = 14;
 				}
 				break;
 
@@ -296,6 +296,8 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 			case 0:
 				if (rSpeed > 0.f) {
 					frameIndex = 1;
+				} else if (lSpeed == 0.f) {
+					frameIndex = 1;
 				} else {
 					frameIndex = 12;
 				}
@@ -303,6 +305,8 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 
 			case 2:
 				if (lSpeed > 0.f) {
+					frameIndex = 3;
+				} else if (rSpeed == 0.f) {
 					frameIndex = 3;
 				} else {
 				    frameIndex = 13;
@@ -333,7 +337,7 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 		setSpeed<1>(upPrevious, leftPrevious, rightPrevious, collisionUp, uSpeed);
 		setSpeed<1>(downPrevious, leftPrevious, rightPrevious, collisionDown, dSpeed);
 		dashTimer += elapsedTime.asMilliseconds();
-		if (dashTimer > 160) {
+		if (dashTimer > 220) {
 			dashTimer = 0;
 			state = State::nominal;
 			sheetIndex = cachedSheet;
