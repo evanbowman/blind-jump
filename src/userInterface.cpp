@@ -8,7 +8,6 @@
 
 #include "userInterface.hpp"
 #include <cmath>
-#include "ResourcePath.hpp"
 #include "player.hpp"
 
 userInterface::userInterface(float _xPos, float _yPos) :

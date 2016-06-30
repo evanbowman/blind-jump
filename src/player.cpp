@@ -7,7 +7,6 @@
 //
 
 #include "player.hpp"
-#include "ResourcePath.hpp"
 #include "playerAnimationFunctions.hpp"
 #include <cmath>
 #include "playerCollisionFunctions.hpp"
@@ -15,8 +14,11 @@
 #include <tuple>
 #include "gameMap.hpp"
 
+void updateGun(const sf::Time &, const bool, Player::Weapon &, effectsController &);
+
 Player::Player(ResourceHandler * pTM, float _xPos, float _yPos)
-	: health{4},
+	: gun{},
+	  health{4},
 	  xPos{_xPos - 17}, // Magic number that puts the player in the direct center of the screen. Hmmm why does it work...
 	  yPos{_yPos},
 	  worldOffsetX{0.f},
@@ -168,6 +170,7 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 	InputController * pInput {pGM->getPInput()};
 	tileController & tiles {pGM->getTileController()};
 	detailController & details {pGM->getDetails()};
+	effectsController & effects {pGM->getEffects()};
 	bool x {pInput->xPressed()};
 	bool z {pInput->zPressed()};
 	bool up {pInput->upPressed()};
@@ -197,6 +200,7 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 		break;
 
 	case State::nominal:
+		updateGun(elapsedTime, x, gun, effects);
 		if (!x) {
 			regKeyResponse<Sheet::walkUp>(up, down, left, right, sheetIndex, uSpeed, collisionUp);
 			regKeyResponse<Sheet::walkDown>(down, up, left, right, sheetIndex, dSpeed, collisionDown);
@@ -280,7 +284,7 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 				break;
 
 			case 8:
-				if (dSpeed >= 0.f) {
+				if (dSpeed > 0.f || (uSpeed == 0.f && dSpeed == 0.f)) {
 					if (lSpeed > 0.f) {
 						frameIndex = 10;
 					} else if (rSpeed > 0.f) {
@@ -289,7 +293,7 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 						frameIndex = 9;
 					}
 				} else {
-					// TODO
+					frameIndex = 15;
 				}
 				break;
 
@@ -356,8 +360,19 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 
 void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf::Time & elapsedTime) {
 	if (visible) {
+		auto gunIndexOffset = [](int32_t timeout) {
+			if (timeout < 1707 && timeout > 44) {
+				return 1;
+			} else {
+				return 0;
+			}
+		};
 		switch (sheetIndex) {
 		case Sheet::stillDown:
+			if (gun.timeout > 0) {
+				gameObjects.emplace_back(gun.gunSpr[4 + gunIndexOffset(gun.timeout)],
+										 gun.gunSpr.getYpos(), renderType, colorAmount);
+			}
 			gameObjects.emplace_back(walkDown[5], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			break;
@@ -485,4 +500,19 @@ void Player::reset() {
 
 void Player::fillHealth(char health) {
 	this->health = health;
+}
+
+void updateGun(const sf::Time & elapsedTime, const bool x, Player::Weapon & gun, effectsController & effects) {
+	gun.timeout -= elapsedTime.asMilliseconds();
+	if (gun.timeout <= 0) {
+		gun.timeout = 0;
+	}
+	
+	if (x) {
+		if (gun.timeout == 0) {
+			gun.timeout = 1760;
+		} else if (gun.timeout < 1671) {
+			gun.timeout = 1671;
+		}
+	}
 }

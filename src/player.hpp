@@ -22,8 +22,8 @@
 class GameMap;
 
 class Player {
+public:
 	using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
-	public:
 	enum class Sheet {
 		walkDown,
 		walkUp,
@@ -43,6 +43,11 @@ class Player {
 		cooldown,
 		dead,
 		prepdash
+	};
+	struct Weapon {
+		SpriteSheet<687, 106, 11, 10> gunSpr;
+		int32_t timeout, bulletTimer;
+		uint8_t frameIndex;
 	};
 	Player(ResourceHandler *, float, float);
 	float getWorldOffsetX() const;
@@ -71,11 +76,7 @@ class Player {
 	void fillHealth(char);
 
 private:
-	struct weapon {
-		// SpriteSheet<...> gunSpr;
-		uint32_t timeout, bulletTimer;
-		uint8_t frameIndex;
-	};
+	Weapon gun;
 	std::vector<Dasher::Blur> blurs; // I could have designed this better...
 	uint8_t health;
 	void updateAnimation(const sf::Time &, uint8_t, uint8_t);

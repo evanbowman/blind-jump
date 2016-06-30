@@ -23,9 +23,8 @@
 #include "FireExplosion.hpp"
 #include "smallExplosion.hpp"
 #include "Powerup.hpp"
-#include "ResourcePath.hpp"
+#include "ResourceHandler.hpp"
 #include "RenderType.hpp"
-#include "resourceHandler.hpp"
 
 class ScreenShakeController;
 

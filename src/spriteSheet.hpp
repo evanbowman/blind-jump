@@ -20,7 +20,7 @@ public:
 		sprite.setTextureRect(sf::IntRect(x + idx * w, y, w, h));
 		return sprite;
 	}
-
+	
 	const sf::Vector2f & getScale() const {
 		return sprite.getScale();
 	}
@@ -28,11 +28,11 @@ public:
 	sf::Sprite * getSpritePtr() {
 		return &sprite;
 	}
-
+	
 	const sf::Sprite & getSprite() {
 		return sprite;
 	}
-
+	
 	void setRotation(float degrees) {
 		sprite.setRotation(degrees);
 	}
@@ -45,10 +45,14 @@ public:
 		sprite.setPosition(xPos, yPos);
 	}
 	
+	float getYpos() const {
+		return sprite.getPosition().y;
+	}
+	
 	void setTexture(const sf::Texture & texture) {
 		sprite.setTexture(texture);
 	}
-
+	
 	void setOrigin(const int16_t xCenter, const int16_t yCenter) {
 		sprite.setOrigin(xCenter, yCenter);
 	}

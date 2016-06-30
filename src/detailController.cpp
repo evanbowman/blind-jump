@@ -7,7 +7,6 @@
 //
 
 #include "detailController.hpp"
-#include "ResourcePath.hpp"
 #include "player.hpp"
 #include <cmath>
 #include "gameMap.hpp"
