@@ -168,5 +168,5 @@ wall.o: wall.cpp wall.hpp
 clean:
 	rm *.o
 
-MacOs:
-	bash packageScriptMac BlindJump BlindJump
+MacOS: all packageScriptMac.sh
+	bash packageScriptMac.sh $(EXENAME) BlindJump
