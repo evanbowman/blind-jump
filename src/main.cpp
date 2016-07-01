@@ -46,8 +46,8 @@ int main(int argc, char * argv[]) {
 		while (fabs(aspectRatio - windowAspect) > 0.005f);
 	}
 	
-	ResourceHandler TM;
-	if(!TM.load()) {
+	ResourceHandler RH;
+	if(!RH.load()) {
 		return EXIT_FAILURE;
 	}
 	
@@ -57,10 +57,10 @@ int main(int argc, char * argv[]) {
 	// Don't want the fonts to be scaled and blurry, so define another view for drawing them
 	sf::View fontView(sf::FloatRect(0, 0, desktop.width, desktop.height));
 	sf::View view(sf::FloatRect(0, 0, windowWidth, windowHeight));
-	FontController fonts(fontView, windowWidth / 2, windowHeight / 2);
+	FontController fonts(fontView, windowWidth / 2, windowHeight / 2, &RH);
 	
 	//Initialize the map
-	GameMap Map(windowWidth, windowHeight, &TM, &input, &fonts);
+	GameMap Map(windowWidth, windowHeight, &RH, &input, &fonts);
 	
 	// Set up the window context settings
 	sf::ContextSettings settings;
@@ -72,7 +72,7 @@ int main(int argc, char * argv[]) {
 	window.setFramerateLimit(80);
 	
 	sf::Image icon;
-	if (!icon.loadFromFile(resourcePath() + "icon.png")) {
+	if (!icon.loadFromFile(resourcePath() + "gameIcon.png")) {
 		return EXIT_FAILURE;
 	}
 	

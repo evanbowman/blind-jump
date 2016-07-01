@@ -8,6 +8,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <map>
+#include <utility>
+#include <array>
 #include "ResourcePath.hpp"
 
 class ResourceHandler {	
@@ -31,18 +33,21 @@ public:
 		blur,
 		desaturate
 	};
-
-	ResourceHandler();
-
+	enum class Font {
+		cornerstone
+	};
+    
 	bool load();
 	
 	const sf::Texture & getTexture(ResourceHandler::Texture) const;
-
 	const sf::Texture & getTexture(int) const;
+	const sf::Font & getFont(ResourceHandler::Font) const;
+	sf::Shader & getShader(ResourceHandler::Shader) const;
 	
 private:
 	mutable std::map<int, sf::Texture> textures;
-	mutable std::map<int, sf::Shader> shaders;
+	mutable std::array<sf::Shader, 3> shaders;
+	mutable std::array<sf::Font, 1> fonts;
 };
 
 #endif

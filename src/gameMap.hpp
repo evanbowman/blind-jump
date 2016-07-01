@@ -64,8 +64,6 @@ private:
 	bool dispEntryBeam;
 	bool transitionIn;
 	
-	sf::Shader colorShader, blurShader, desaturateShader;
-	
 	sf::View worldView, hudView;
 	
 	// RenderTexture and shapes for lighting effects

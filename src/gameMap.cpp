@@ -47,21 +47,13 @@ GameMap::GameMap(float _windowW, float _windowH, ResourceHandler * _pRH, InputCo
 	hudView.setSize(windowW, windowH);
 	hudView.setCenter(windowW / 2, windowH / 2);
 	
-	// Now call a function to procedurally distribute items
+	// Call a function to procedurally distribute items
 	initLoot(itemArray);
 	
 	// Tell the background controller how big the window is so it doesn't draw out of bounds
 	bkg.giveWindowSize(windowW, windowH);
 	
 	UI.setView(&worldView);
-	
-	// Set up the shaders
-	colorShader.loadFromFile(resourcePath() + "color.frag", sf::Shader::Fragment);
-	colorShader.setParameter("texture", sf::Shader::CurrentTexture);
-	blurShader.loadFromFile(resourcePath() + "blur.frag", sf::Shader::Fragment);
-	blurShader.setParameter("texture", sf::Shader::CurrentTexture);
-	desaturateShader.loadFromFile(resourcePath() + "desaturate.frag", sf::Shader::Fragment);
-	desaturateShader.setParameter("texture", sf::Shader::CurrentTexture);
 	
 	// Set up the lighting map
 	lightingMap.create(windowW, windowH);
@@ -211,6 +203,7 @@ void GameMap::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	//
 	/*-----------------------------------------------------------------------------------*/
 	if (!gameObjects.empty()) {
+		sf::Shader & colorShader = pRH->getShader(ResourceHandler::Shader::color);
 		for (auto & element : gameObjects) {
 			switch (std::get<2>(element)) {
 				case Rendertype::shadeDefault:
@@ -259,10 +252,9 @@ void GameMap::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	}
 	
 	lightingMap.display();
-	sf::Sprite sprite(lightingMap.getTexture());
-	target.draw(sprite);
+	target.draw(sf::Sprite(lightingMap.getTexture()));
 	
-	// Now clear out the vectors for the next round of drawing
+	// Clear out the vectors for the next round of drawing
 	gameObjects.clear();
 	effects.draw(target, gameObjects);
 	bkg.drawForeground(target);
@@ -276,6 +268,8 @@ void GameMap::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	//
 	/*-----------------------------------------------------------------------------------*/
 	if (UI.blurEnabled() && UI.desaturateEnabled()) {
+		sf::Shader & blurShader = pRH->getShader(ResourceHandler::Shader::blur);
+		sf::Shader & desaturateShader = pRH->getShader(ResourceHandler::Shader::desaturate);
 		secondPass.clear(sf::Color::Transparent);
 		thirdPass.clear(sf::Color::Transparent);
 		sf::Vector2u textureSize = target.getSize();
@@ -290,6 +284,7 @@ void GameMap::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		desaturateShader.setParameter("amount", UI.getDesaturateAmount());
 		window.draw(sf::Sprite(thirdPass.getTexture()), &desaturateShader);
 	} else if (UI.blurEnabled() && !UI.desaturateEnabled()) {
+		sf::Shader & blurShader = pRH->getShader(ResourceHandler::Shader::blur);
 		secondPass.clear(sf::Color::Transparent);
 		sf::Vector2u textureSize = target.getSize();
 		// Get the blur amount from the UI controller
@@ -300,6 +295,7 @@ void GameMap::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
 		window.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
 	} else if (!UI.blurEnabled() && UI.getDesaturateAmount()) {
+		sf::Shader & desaturateShader = pRH->getShader(ResourceHandler::Shader::desaturate);
 		desaturateShader.setParameter("amount", UI.getDesaturateAmount());
 		window.draw(sf::Sprite(target.getTexture()), &desaturateShader);
 	} else {

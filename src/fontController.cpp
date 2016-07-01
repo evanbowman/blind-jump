@@ -14,15 +14,12 @@
 #define SCORE_TEXT_FADE_SECONDS 3
 #define WAYPOINT_TEXT_FADE_SECONDS 3
 
-FontController::FontController(sf::View fontView, float x, float y) {
+FontController::FontController(sf::View fontView, float x, float y, ResourceHandler * pRH) {
 	// Store the view to use when drawing fonts
 	this->fontView = fontView;
 	
 	windowCenterX = x;
 	windowCenterY = y;
-
-	// Load all of the game fonts into memory
-	cornerstone.loadFromFile(resourcePath() + "Cornerstone.ttf");
 	
 	health = 4;
 	maxHealth = 4;
@@ -64,6 +61,8 @@ FontController::FontController(sf::View fontView, float x, float y) {
 	coin.setPointCount(20);
 	coin.setRadius(0.018f * scale);
 	coin.setOrigin(coin.getLocalBounds().width / 2, coin.getLocalBounds().height / 2);
+
+	const sf::Font & cornerstone = pRH->getFont(ResourceHandler::Font::cornerstone);
 	
 	// Set the waypoint text
 	waypointText.setFont(cornerstone);

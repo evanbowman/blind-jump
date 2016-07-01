@@ -15,14 +15,12 @@
 #define fontController_hpp
 
 #include "SFML/Graphics.hpp"
-#include "ResourcePath.hpp"
+#include "resourceHandler.hpp"
 
 class FontController {
 private:
 	sf::Texture texture;
 	sf::View fontView;
-	// The fonts to be used by the font controller
-	sf::Font cornerstone;
 	sf::Text waypointText, titleText, credit, deathText, scoreText, continueText, healthNumText;
 	char health;
 	char maxHealth;
@@ -33,7 +31,7 @@ private:
 	sf::CircleShape coin;
 	
 public:
-	FontController(sf::View, float, float);
+	FontController(sf::View, float, float, ResourceHandler *);
 	void update(sf::RenderWindow&, float, float);
 	void setWaypointText(int);
 	void setZoneText(char);
@@ -45,7 +43,7 @@ public:
 	char getMaxHealth() const;
 	sf::Text * getTitle();
 	sf::Text * getDeathText();
-        void reset();
+	void reset();
 	void resetWPText();
 	void resetHPText();
 	void resetSCText();
