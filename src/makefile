@@ -141,7 +141,7 @@ teleporter.o: Teleporter.hpp Teleporter.cpp detailParent.hpp spriteSheet.hpp
 teleporterSmoke.o: teleporterSmoke.cpp teleporterSmoke.hpp spriteSheet.hpp Effect.hpp
 	$(CC) teleporterSmoke.cpp $(CPPFLAGS) -c -o teleporterSmoke.o
 
-resourceHandler.o: $(RSP) resourceHandler.cpp resourceHandler.hpp textureEnum.hpp
+resourceHandler.o: $(RSP) resourceHandler.cpp resourceHandler.hpp
 	$(CC) resourceHandler.cpp $(CPPFLAGS) -c -o resourceHandler.o
 
 tileController.o: tileController.cpp tileController.hpp $(RSP) mappingFunctions.hpp turret.hpp initMapVectors.hpp drawPixels.hpp wall.hpp enemyController.hpp coordinate.hpp resourceHandler.hpp

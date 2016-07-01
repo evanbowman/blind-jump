@@ -12,8 +12,26 @@
 
 class ResourceHandler {	
 public:	
-	#include "textureEnum.hpp"
-	
+    enum class Texture {
+		gameObjects,
+		vignette,
+		vignetteShadow,
+		lamplight,
+		introLevel,
+		teleporterGlow,
+		introWall,
+		redglow,
+		blueglow,
+		fireExplosionGlow,
+		whiteGlow,
+		scootShadow
+	};
+	enum class Shader {
+		color,
+		blur,
+		desaturate
+	};
+
 	ResourceHandler();
 
 	bool load();
@@ -24,6 +42,7 @@ public:
 	
 private:
 	mutable std::map<int, sf::Texture> textures;
+	mutable std::map<int, sf::Shader> shaders;
 };
 
 #endif
