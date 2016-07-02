@@ -172,57 +172,51 @@ void detailController::update(GameMap * pGM, sf::Time & elapsedTime) {
 	std::vector<sf::Sprite *> * glow1 = ef.getGlowSprs();
 	std::vector<sf::Sprite *> * glow2 = ef.getGlowSprs2();
 
-	if (!teleporters.empty()) {
-		for (auto & element : teleporters) {
-			element.update(xOffset, yOffset, elapsedTime);
-			if (element.smokeReady()) {
-				ef.addWarpEffect(element.getXpos() - xOffset + 4 + (rand() % 6), element.getYpos() - yOffset + 2);
-			}
+	for (auto & element : teleporters) {
+		element.update(xOffset, yOffset, elapsedTime);
+		if (element.smokeReady()) {
+			ef.addWarpEffect(element.getXpos() - xOffset + 4 + (rand() % 6), element.getYpos() - yOffset + 2);
+		}
+		glow1->push_back(element.getGlow());
+		glow2->push_back(element.getGlow());
+	}
+	
+	for (auto & element : lamps) {
+		element.update(xOffset, yOffset, elapsedTime);
+		// Push the light effects back
+		float xPos = element.getXpos();
+		float yPos = element.getYpos();
+		if (xPos < windowW + 150 && xPos > -150 && yPos < windowH + 150 && yPos > -150) {
 			glow1->push_back(element.getGlow());
 			glow2->push_back(element.getGlow());
 		}
 	}
 	
-	if (!lamps.empty()) {
-		for (auto & element : lamps) {
-			element.update(xOffset, yOffset, elapsedTime);
-			// Push the light effects back
-			float xPos = element.getXpos();
-			float yPos = element.getYpos();
-			if (xPos < windowW + 150 && xPos > -150 && yPos < windowH + 150 && yPos > -150) {
-				glow1->push_back(element.getGlow());
-				glow2->push_back(element.getGlow());
-			}
+	for (auto & element : chests) {
+		element.update(xOffset, yOffset, elapsedTime);
+		if (pInput->zPressed() && element.getState() == TreasureChest::State::closed && std::abs(windowW / 2 - element.getXpos()) < 20 && std::abs(windowH / 2 - element.getYpos()) < 20) {
+			element.setState(TreasureChest::State::opening);
+		} else if (element.getState() == TreasureChest::State::ready) {
+			element.setState(TreasureChest::State::complete);
+			ui.addItem(element.getItem(), ef, element.getXpos() - xOffset, element.Detail::getYpos() - yOffset, *pFonts, player);
 		}
 	}
 	
-	if (!chests.empty()) {
-		for (auto & element : chests) {
-			element.update(xOffset, yOffset, elapsedTime);
-			if (pInput->zPressed() && element.getState() == TreasureChest::State::closed && std::abs(windowW / 2 - element.getXpos()) < 20 && std::abs(windowH / 2 - element.getYpos()) < 20) {
-				element.setState(TreasureChest::State::opening);
-			} else if (element.getState() == TreasureChest::State::ready) {
-				element.setState(TreasureChest::State::complete);
-				ui.addItem(element.getItem(), ef, element.getXpos() - xOffset, element.Detail::getYpos() - yOffset, *pFonts, player);
-			}
-		}
+	for (auto & element : rocks) {
+		element.update(xOffset, yOffset, elapsedTime);
 	}
-	
-	if (!rocks.empty())
-		for (auto & element : rocks)
-			element.update(xOffset, yOffset, elapsedTime);
-	
-	if (!doors.empty())
-		for (auto & element : doors)
-			element._update(xOffset, yOffset, pscr, ef, elapsedTime); // Workaround, fix needed
-	
-	if (!misc32x26.empty())
-		for (auto & element : misc32x26)
-			element.update(xOffset, yOffset, elapsedTime);
-	
-	if (!damagedRobots.empty())
-		for (auto & element : damagedRobots)
-			element.update(xOffset, yOffset, elapsedTime);
+		
+	for (auto & element : doors) {
+		element._update(xOffset, yOffset, pscr, ef, elapsedTime); // Workaround, fix needed
+	}
+		
+	for (auto & element : misc32x26) {
+		element.update(xOffset, yOffset, elapsedTime);
+	}
+
+	for (auto & element : damagedRobots) {
+		element.update(xOffset, yOffset, elapsedTime);
+	}
 }
 
 void detailController::killTeleporter() {

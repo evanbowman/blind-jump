@@ -45,9 +45,8 @@ public:
 		prepdash
 	};
 	struct Weapon {
-		SpriteSheet<687, 106, 11, 10> gunSpr;
+		SpriteSheet<688, 106, 11, 10> gunSpr;
 		int32_t timeout, bulletTimer;
-		uint8_t frameIndex;
 	};
 	Player(ResourceHandler *, float, float);
 	float getWorldOffsetX() const;

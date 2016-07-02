@@ -58,7 +58,7 @@ public:
 	void addEnemyShot(float, float, short);
 	void addSmallExplosion(float, float);
 	void addFireExplosion(float, float);
-	void drawLower(sf::RenderTexture&);
+	void drawLower(sf::RenderTexture &);
 	void addTurretFlash(float, float);
 	void addWarpEffect(float, float);
 	void addExplosion(float, float);
@@ -67,15 +67,15 @@ public:
 	void addCoins(float, float);
 	void addPuff(float, float);
 	void clear();
-	std::vector<bulletType1>& getBulletLayer1();
-   	std::vector<Enemyshot>* getEnemyShots();
-	std::vector<Powerup>* getHearts();
-	std::vector<Powerup>* getCoins();
-	std::vector<turretShot>* getTurretShots();
-	std::vector<DasherShot>* getDasherShots();
+	std::vector<bulletType1> & getBulletLayer1();
+   	std::vector<Enemyshot> & getEnemyShots();
+	std::vector<Powerup> & getHearts();
+	std::vector<Powerup> & getCoins();
+	std::vector<turretShot> & getTurretShots();
+	std::vector<DasherShot> & getDasherShots();
 	std::vector<sf::Sprite*>* getGlowSprs();
 	std::vector<sf::Sprite*>* getGlowSprs2();
-	std::vector<FireExplosion>* getExplosions();
+	std::vector<FireExplosion> & getExplosions();
 	void condClearGlowSpr(sf::Sprite*);
 };
 

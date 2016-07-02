@@ -60,6 +60,8 @@ Player::Player(ResourceHandler * pTM, float _xPos, float _yPos)
 	dashSheet.setOrigin(0, 1);
 	shadowSprite.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
 	shadowSprite.setTextureRect(sf::IntRect(0, 100, 18, 16));
+	gun.gunSpr.setPosition(xPos, yPos);
+	gun.gunSpr.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
 }
 
 void Player::setPosition(float _xPos, float _yPos) {
@@ -260,6 +262,9 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 		break;
 
 	case State::prepdash:
+		if (gun.timeout != 0) {
+			gun.timeout = 40; // Display the alternate gun sprite when dashing
+		}
 		setSpeed<1>(left, up, down, collisionLeft, lSpeed);
 		setSpeed<1>(right, up, down, collisionRight, rSpeed);
 		setSpeed<1>(up, left, right, collisionUp, uSpeed);
@@ -370,6 +375,7 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf
 		switch (sheetIndex) {
 		case Sheet::stillDown:
 			if (gun.timeout > 0) {
+				gun.gunSpr.setPosition(xPos + 12, yPos + 15);
 				gameObjects.emplace_back(gun.gunSpr[4 + gunIndexOffset(gun.timeout)],
 										 gun.gunSpr.getYpos(), renderType, colorAmount);
 			}
@@ -383,17 +389,32 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf
 			break;
 
 		case Sheet::stillLeft:
+			if (gun.timeout > 0) {
+				gun.gunSpr.setPosition(xPos + 2, yPos + 13);
+				gameObjects.emplace_back(gun.gunSpr[2 + gunIndexOffset(gun.timeout)],
+										 gun.gunSpr.getYpos() - 14, renderType, colorAmount);
+			}
 			gameObjects.emplace_back(walkLeft[6], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			break;
 
 		case Sheet::stillRight:
+			if (gun.timeout > 0) {
+				gun.gunSpr.setPosition(xPos + 19, yPos + 13);
+				gameObjects.emplace_back(gun.gunSpr[gunIndexOffset(gun.timeout)],
+										 gun.gunSpr.getYpos() - 14, renderType, colorAmount);
+			}
 			gameObjects.emplace_back(walkRight[6], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			break;
 			
 		case Sheet::walkDown:
-		    updateAnimation(elapsedTime, 9, 100);
+			if (gun.timeout > 0) {
+				gun.gunSpr.setPosition(xPos + 12, yPos + 15);
+				gameObjects.emplace_back(gun.gunSpr[4 + gunIndexOffset(gun.timeout)],
+										 gun.gunSpr.getYpos(), renderType, colorAmount);
+			}
+			updateAnimation(elapsedTime, 9, 100);
 			gameObjects.emplace_back(walkDown[verticalAnimationDecoder(frameIndex)], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			break;
@@ -405,12 +426,22 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf
 			break;
 			
 		case Sheet::walkLeft:
+		    if (gun.timeout > 0) {
+				gun.gunSpr.setPosition(xPos + 2, yPos + 13);
+				gameObjects.emplace_back(gun.gunSpr[2 + gunIndexOffset(gun.timeout)],
+										 gun.gunSpr.getYpos() - 14, renderType, colorAmount);
+			}
 			updateAnimation(elapsedTime, 5, 100);
 			gameObjects.emplace_back(walkLeft[frameIndex], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			break;
 			
 		case Sheet::walkRight:
+			if (gun.timeout > 0) {
+				gun.gunSpr.setPosition(xPos + 19, yPos + 13);
+				gameObjects.emplace_back(gun.gunSpr[gunIndexOffset(gun.timeout)],
+										 gun.gunSpr.getYpos() - 14, renderType, colorAmount);
+			}
 			updateAnimation(elapsedTime, 5, 100);
 			gameObjects.emplace_back(walkRight[frameIndex], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
@@ -421,6 +452,10 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf
 			break;
 			
 		case Sheet::dashSheet:
+			if (gun.timeout > 0 && state == Player::State::prepdash) {
+				gameObjects.emplace_back(gun.gunSpr[gunIndexOffset(gun.timeout)],
+										 gun.gunSpr.getYpos(), renderType, colorAmount);
+			}
 			gameObjects.emplace_back(dashSheet[frameIndex], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			animationTimer += elapsedTime.asMilliseconds();

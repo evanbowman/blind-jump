@@ -197,20 +197,20 @@ void effectsController::clear() {
 	coins.clear();
 }
 
-std::vector<bulletType1>& effectsController::getBulletLayer1() {
+std::vector<bulletType1> & effectsController::getBulletLayer1() {
 	return bullets;
 }
 
-std::vector<turretShot>* effectsController::getTurretShots() {
-	return &turretShots;
+std::vector<turretShot> & effectsController::getTurretShots() {
+	return turretShots;
 }
 
-std::vector<Enemyshot>* effectsController::getEnemyShots() {
-	return &enemyShots;
+std::vector<Enemyshot> & effectsController::getEnemyShots() {
+	return enemyShots;
 }
 
-std::vector<DasherShot>* effectsController::getDasherShots() {
-	return &dasherShots;
+std::vector<DasherShot> & effectsController::getDasherShots() {
+	return dasherShots;
 }
 
 void effectsController::condClearGlowSpr(sf::Sprite * inpSpr) {
@@ -218,18 +218,18 @@ void effectsController::condClearGlowSpr(sf::Sprite * inpSpr) {
 	glowSprs.push_back(inpSpr);
 }
 
-std::vector<FireExplosion>* effectsController::getExplosions() {
-	return &fireExplosions;
+std::vector<FireExplosion> & effectsController::getExplosions() {
+	return fireExplosions;
 }
 
 std::vector<sf::Sprite*>* effectsController::getGlowSprs2() {
 	return &glowSprs2;
 }
 
-std::vector<Powerup>* effectsController::getHearts() {
-	return &hearts;
+std::vector<Powerup> & effectsController::getHearts() {
+	return hearts;
 }
 
-std::vector<Powerup>* effectsController::getCoins() {
-	return &coins;
+std::vector<Powerup> & effectsController::getCoins() {
+	return coins;
 }
