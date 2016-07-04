@@ -25,16 +25,16 @@ class Player {
 public:
 	using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
 	enum class Sheet {
+		stillDown,
+		stillUp,
+		stillLeft,
+		stillRight,
 		walkDown,
 		walkUp,
 		walkLeft,
 		walkRight,
 		deathSheet,
 		dashSheet,
-		stillDown,
-		stillUp,
-		stillLeft,
-		stillRight
 	};
 	enum class State {
 		deactivated,
@@ -75,6 +75,7 @@ public:
 	void fillHealth(char);
 
 private:
+	void updateGun(const sf::Time &, const bool, effectsController &, float, float);
 	Weapon gun;
 	std::vector<Dasher::Blur> blurs; // I could have designed this better...
 	uint8_t health;

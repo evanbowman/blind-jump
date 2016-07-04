@@ -1,3 +1,4 @@
+
 //
 //  player.cpp
 //  BlindJump
@@ -13,8 +14,6 @@
 #include "wall.hpp"
 #include <tuple>
 #include "gameMap.hpp"
-
-void updateGun(const sf::Time &, const bool, Player::Weapon &, effectsController &);
 
 Player::Player(ResourceHandler * pTM, float _xPos, float _yPos)
 	: gun{},
@@ -202,7 +201,7 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 		break;
 
 	case State::nominal:
-		updateGun(elapsedTime, x, gun, effects);
+		updateGun(elapsedTime, x, effects, worldOffsetX, worldOffsetY);
 		if (!x) {
 			regKeyResponse<Sheet::walkUp>(up, down, left, right, sheetIndex, uSpeed, collisionUp);
 			regKeyResponse<Sheet::walkDown>(down, up, left, right, sheetIndex, dSpeed, collisionDown);
@@ -452,10 +451,6 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf
 			break;
 			
 		case Sheet::dashSheet:
-			if (gun.timeout > 0 && state == Player::State::prepdash) {
-				gameObjects.emplace_back(gun.gunSpr[gunIndexOffset(gun.timeout)],
-										 gun.gunSpr.getYpos(), renderType, colorAmount);
-			}
 			gameObjects.emplace_back(dashSheet[frameIndex], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			animationTimer += elapsedTime.asMilliseconds();
@@ -537,17 +532,32 @@ void Player::fillHealth(char health) {
 	this->health = health;
 }
 
-void updateGun(const sf::Time & elapsedTime, const bool x, Player::Weapon & gun, effectsController & effects) {
+void Player::updateGun(const sf::Time & elapsedTime, const bool x, effectsController & effects, float xOffset, float yOffset) {
 	gun.timeout -= elapsedTime.asMilliseconds();
+	if (gun.bulletTimer != 0) {
+		gun.bulletTimer -= elapsedTime.asMilliseconds();
+		if (gun.bulletTimer < 0) {
+			gun.bulletTimer = 0;
+		}
+	}
 	if (gun.timeout <= 0) {
 		gun.timeout = 0;
 	}
-	
 	if (x) {
 		if (gun.timeout == 0) {
 			gun.timeout = 1760;
 		} else if (gun.timeout < 1671) {
 			gun.timeout = 1671;
+			if (gun.bulletTimer == 0) {
+				if (sheetIndex == Sheet::stillDown || sheetIndex == Sheet::walkDown) {
+					effects.addBullet(0, static_cast<int>(sheetIndex), xPos - xOffset, yPos - yOffset - 10);
+				} else if (sheetIndex == Sheet::stillUp || sheetIndex == Sheet::walkUp) {
+					effects.addBullet(0, static_cast<int>(sheetIndex), xPos - xOffset + 3, yPos - yOffset - 14);
+				} else {
+					effects.addBullet(1, static_cast<int>(sheetIndex), xPos - xOffset, yPos - yOffset - 10);
+				}
+				gun.bulletTimer = 400;
+			}
 		}
 	}
 }
