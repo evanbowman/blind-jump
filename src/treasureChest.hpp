@@ -33,7 +33,7 @@ private:
 	char item;
 	int32_t animationTimer;
 	uint8_t frameIndex;
-	mutable SpriteSheet<656, 76, 16, 32> chestSheet;
+	mutable SpriteSheet<656, 76, 16, 30> chestSheet;
 	mutable sf::Sprite chestShadow;
 	float xPos;
 };

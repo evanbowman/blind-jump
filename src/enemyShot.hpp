@@ -13,10 +13,24 @@
 #include "SFML/Graphics.hpp"
 #include <cmath>
 #include "spriteSheet.hpp"
+#include "hitBox.hpp"
 
 class Enemyshot {
+public:
+	using HBox = HitBox<14, 14, 0, 0>;
+	Enemyshot(const sf::Texture &, const sf::Texture &, float, float, float);
+	void update(float, float, sf::Time &);
+	const sf::Sprite & getSprite();
+    const HBox & getHitBox() const;
+	bool getKillFlag();
+	void setKillFlag();
+	float getXpos();
+	float getYpos();
+	sf::Sprite * getGlow();
+	
 private:
 	SpriteSheet<50, 91, 14, 14> spriteSheet;
+	HBox hitBox;
 	float xPos;
 	float yPos;
 	float xInit;
@@ -28,15 +42,6 @@ private:
 	bool killFlag;
 	sf::Sprite glowSprite;
 	
-public:
-	Enemyshot(const sf::Texture &, const sf::Texture &, float, float, float);
-	void update(float, float, sf::Time &);
-	const sf::Sprite & getSprite();
-	bool getKillFlag();
-	void setKillFlag();
-	float getXpos();
-	float getYpos();
-	sf::Sprite * getGlow();
 };
 
 #endif /* enemyShot_hpp */

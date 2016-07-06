@@ -29,11 +29,6 @@ void userInterface::setView(sf::View * pView) {
 }
 
 void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontController& f, effectsController& ef, float xOffset, float yOffset, InputController* pInput, sf::Time& elapsed) {
-	// bool c = pInput->cPressed();
-	// bool left = pInput->leftPressed();
-	// bool right = pInput->rightPressed();
-	// bool up = pInput->upPressed();
-	// bool down = pInput->downPressed();
 	bool z = pInput->zPressed();
 	
 	switch (state) {

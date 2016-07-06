@@ -1,6 +1,6 @@
 # arg2 is the app name, arg1 is the exe name
 if [ $# == 2 ]; then
-    rm -rf ../prod/$2.app/Contents/MacOS
+    rm -rf ../prod/$2.app
 
     mkdir -p ../prod/$2.app/Contents/MacOS
     printf "\nCreated parent package directory"

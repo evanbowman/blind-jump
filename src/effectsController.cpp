@@ -36,8 +36,7 @@ void updateVectorGlow(std::vector<T>& vec, float xOffset, float yOffset, std::ve
 			glowSprs.push_back(it->getGlow());
 			if (it->getKillFlag()) {
 				it = vec.erase(it);
-			}
-			else {
+			} else {
 				++it;
 			}
 		}
@@ -55,8 +54,7 @@ void effectsController::update(float xOffset, float yOffset, ScreenShakeControll
 				}
 				//Erase the bullet
 				it = bullets.erase(it);
-			}
-			else {
+			} else {
 				//Update the position
 				it->update(xOffset, yOffset);
 				glowSprs.push_back(it->getGlow());

@@ -16,7 +16,8 @@
 #include "gameMap.hpp"
 
 Player::Player(ResourceHandler * pTM, float _xPos, float _yPos)
-	: gun{},
+	: hitBox{&xPos, &yPos},
+	  gun{},
 	  health{4},
 	  xPos{_xPos - 17}, // Magic number that puts the player in the direct center of the screen. Hmmm why does it work...
 	  yPos{_yPos},
@@ -66,6 +67,13 @@ Player::Player(ResourceHandler * pTM, float _xPos, float _yPos)
 void Player::setPosition(float _xPos, float _yPos) {
 	xPos = _xPos;
 	yPos = _yPos;
+	walkDown.setPosition(xPos, yPos);
+	walkUp.setPosition(xPos, yPos);
+	walkLeft.setPosition(xPos, yPos);
+	walkRight.setPosition(xPos, yPos);
+	deathSheet.setPosition(xPos - 13, yPos - 1);
+	dashSheet.setPosition(xPos, yPos);
+	shadowSprite.setPosition(xPos + 7, yPos + 24);
 }
 
 float Player::getXpos() const {
@@ -74,17 +82,6 @@ float Player::getXpos() const {
 
 float Player::getYpos() const {
 	return yPos;
-}
-
-template<typename T>
-bool checkShotCollision(std::vector<T>* shotVec, double playerXpos, double playerYpos) {
-	for (auto & element : *shotVec) {
-		if (std::abs(playerXpos + 16 - element.getXpos()) < 10 && std::abs(playerYpos + 16 - element.getYpos()) < 10) {
-			element.setKillFlag();
-			return true;
-		}
-	}
-	return false;
 }
 
 inline void compareSheetIndex(Player::Sheet & sheetIndex) {
@@ -172,6 +169,7 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 	tileController & tiles {pGM->getTileController()};
 	detailController & details {pGM->getDetails()};
 	effectsController & effects {pGM->getEffects()};
+	FontController * pFonts {pGM->getPFonts()};
 	bool x {pInput->xPressed()};
 	bool z {pInput->zPressed()};
 	bool up {pInput->upPressed()};
@@ -357,6 +355,13 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 	}
 	
 	colorTimer = 0; // TODO: This is for -Wall -Wnounused, but does need to be correctly set!
+
+	checkShotCollisions(effects, pFonts);
+	if (health <= 0 && state != Player::State::dead) {
+		state = Player::State::dead;
+		sheetIndex = Player::Sheet::deathSheet;
+		frameIndex = 0;
+	}
 	
 	worldOffsetX += (lSpeed + -rSpeed) * (elapsedTime.asMilliseconds() / 17.6);
 	worldOffsetY += (uSpeed + -dSpeed) * (elapsedTime.asMilliseconds() / 17.6);
@@ -447,6 +452,13 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf
 			break;
 			
 		case Sheet::deathSheet:
+			if (frameIndex < 10) {
+				animationTimer += elapsedTime.asMilliseconds();
+				if (animationTimer > 80) {
+					animationTimer = 0;
+					++frameIndex;
+				}
+			}
 			gameObjects.emplace_back(deathSheet[frameIndex], yPos, renderType, colorAmount);
 			break;
 			
@@ -504,10 +516,6 @@ void Player::setWorldOffsetY(float y) {
 	worldOffsetY = y;
 }
 
-char Player::getSprIndex() const {
-	return static_cast<int>(sheetIndex);
-}
-
 void Player::setState(State _state) {
 	state = _state;
 }
@@ -516,7 +524,7 @@ Player::State Player::getState() const {
 	return state;
 }
 
-char Player::getHealth() const {
+Player::Health Player::getHealth() const {
 	return health;
 }
 
@@ -528,8 +536,8 @@ void Player::reset() {
 	sheetIndex = Sheet::walkDown;
 }
 
-void Player::fillHealth(char health) {
-	this->health = health;
+void Player::setHealth(Health value) {
+	health = value;
 }
 
 void Player::updateGun(const sf::Time & elapsedTime, const bool x, effectsController & effects, float xOffset, float yOffset) {
@@ -560,4 +568,18 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool x, effectsContro
 			}
 		}
 	}
+}
+
+void Player::checkShotCollisions(effectsController & effects, FontController * pFonts) {
+    for (auto & element : effects.getEnemyShots()) {
+		if (overlapping<Player::HBox, Enemyshot::HBox>(hitBox, element.getHitBox())) {
+			pFonts->resetHPText();
+			--health;
+			element.setKillFlag();
+		}
+	}
+}
+
+const HitBox<16, 32, 8, 0> & Player::getHitBox() const {
+	return hitBox;
 }

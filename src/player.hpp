@@ -18,12 +18,15 @@
 #include "RenderType.hpp"
 #include "resourceHandler.hpp"
 #include "spriteSheet.hpp"
+#include "hitBox.hpp"
 
 class GameMap;
 
 class Player {
 public:
 	using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
+	using Health = int8_t;
+	using HBox = HitBox<16, 32, 8, 0>;
 	enum class Sheet {
 		stillDown,
 		stillUp,
@@ -49,36 +52,31 @@ public:
 		int32_t timeout, bulletTimer;
 	};
 	Player(ResourceHandler *, float, float);
-	float getWorldOffsetX() const;
+	float getWorldOffsetX() const; // The distance the player has moved
 	float getWorldOffsetY() const;
 	void setWorldOffsetX(float);
 	void setWorldOffsetY(float);
-	float getXpos() const;
+	float getXpos() const; // The player's absolute position in the window
 	float getYpos() const;
-	
 	void draw(drawableVec &, drawableVec &, const sf::Time &);
 	void update(GameMap *, const sf::Time &);
-	
 	void setState(State);
 	State getState() const;
-	
 	void setPosition(float, float);
-	
 	bool scrShakeState;
-	char getHealth() const;
-	char getSprIndex() const;
-	
-	bool visible = true;
-	
+	Health getHealth() const;
+	bool visible = true;	
 	void reset();
-	
-	void fillHealth(char);
+	void setHealth(Health);
+	const HBox & getHitBox() const;
 
 private:
+	HBox hitBox;
 	void updateGun(const sf::Time &, const bool, effectsController &, float, float);
 	Weapon gun;
+	void checkShotCollisions(effectsController &, FontController *);
 	std::vector<Dasher::Blur> blurs; // I could have designed this better...
-	uint8_t health;
+	int8_t health;
 	void updateAnimation(const sf::Time &, uint8_t, uint8_t);
 	float xPos, yPos, worldOffsetX, worldOffsetY;
 	uint8_t frameIndex;

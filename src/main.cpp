@@ -89,11 +89,13 @@ int main(int argc, char * argv[]) {
 		window.setView(view);
 		
 		elapsedTime = gameClock.restart();
-		if (input.isFocused())
+		if (input.isFocused()) {
 			Map.update(window, elapsedTime);
+		}
 		
-		if (Map.getTeleporterCond())
+		if (Map.getTeleporterCond()) {
 			Map.Reset();
+		}
 
 		window.display();
 	}

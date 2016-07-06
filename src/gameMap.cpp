@@ -303,29 +303,28 @@ void GameMap::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	}
 	
 	if (player.getState() == Player::State::dead) {
-		//if (!UI.desaturateEnabled())
-		UI.dispDeathSeq();
-		// If the death sequence is complete and the UI controller is finished playing its animation
-		if (UI.isComplete()) {
-			// Reset the UI controller
-			UI.reset();
-			// Reset the player
-			player.reset();
-			// Reset the map
-			level = -1;
-			initLoot(itemArray);
-			enemySelectVec.clear();
-			Reset();
-			pFonts->reset();
-			transitionDelay = 320;
-			// Set the max health back to 3
-			pFonts->updateMaxHealth(4);
-			pFonts->setWaypointText(level);
-			dispEntryBeam = false;
-		}
-		UI.drawMenu(window, &player, *pFonts, effects, xOffset, yOffset, pInput, elapsedTime);
-	}
-	else {
+		// //if (!UI.desaturateEnabled())
+		// UI.dispDeathSeq();
+		// // If the death sequence is complete and the UI controller is finished playing its animation
+		// if (UI.isComplete()) {
+		// 	// Reset the UI controller
+		// 	UI.reset();
+		// 	// Reset the player
+		// 	player.reset();
+		// 	// Reset the map
+		// 	level = -1;
+		// 	initLoot(itemArray);
+		// 	enemySelectVec.clear();
+		// 	Reset();
+		// 	pFonts->reset();
+		// 	transitionDelay = 320;
+		// 	// Set the max health back to 3
+		// 	pFonts->updateMaxHealth(4);
+		// 	pFonts->setWaypointText(level);
+		// 	dispEntryBeam = false;
+		// }
+		// UI.drawMenu(window, &player, *pFonts, effects, xOffset, yOffset, pInput, elapsedTime);
+	} else {
 		if (level != 0) {
 			UI.drawMenu(window, &player, *pFonts, effects, xOffset, yOffset, pInput, elapsedTime);
 			// Pass the player's health to the font controller

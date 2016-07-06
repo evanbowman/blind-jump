@@ -18,8 +18,7 @@ ScreenShakeController::ScreenShakeController() {
 void ScreenShakeController::update(Player & p) {
 	if (!active) {
 		return;
-	}
-	else {
+	} else {
 		switch (shakeMode) {
 			case 0:
 				if (--updateCounter == 0) {
