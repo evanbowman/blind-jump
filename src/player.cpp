@@ -26,10 +26,10 @@ Player::Player(ResourceHandler * pTM, float _xPos, float _yPos)
 	  frameIndex{5},
 	  sheetIndex{Sheet::stillDown},
 	  cachedSheet{Sheet::stillDown},
-	  lSpeed{0},
-	  rSpeed{0},
-	  uSpeed{0},
-	  dSpeed{0},
+	  lSpeed{0.f},
+	  rSpeed{0.f},
+	  uSpeed{0.f},
+	  dSpeed{0.f},
 	  animationTimer{0},
 	  dashTimer{0},
 	  invulnerableCounter{0},
@@ -570,14 +570,19 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool x, effectsContro
 	}
 }
 
-void Player::checkShotCollisions(effectsController & effects, FontController * pFonts) {
-    for (auto & element : effects.getEnemyShots()) {
-		if (overlapping<Player::HBox, Enemyshot::HBox>(hitBox, element.getHitBox())) {
+template<typename T>
+void checkShotCollision(std::vector<T> & shots, Player & player, FontController * pFonts) {
+	for (auto & element : shots) {
+		if (overlapping<Player::HBox, typename T::HBox>(player.getHitBox(), element.getHitBox())) {
 			pFonts->resetHPText();
-			--health;
 			element.setKillFlag();
+			player.setHealth(player.getHealth() - 1);
 		}
 	}
+}
+
+void Player::checkShotCollisions(effectsController & effects, FontController * pFonts) {
+    checkShotCollision<Enemyshot>(effects.getEnemyShots(), *this, pFonts);
 }
 
 const HitBox<16, 32, 8, 0> & Player::getHitBox() const {

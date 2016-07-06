@@ -76,7 +76,7 @@ private:
 	Weapon gun;
 	void checkShotCollisions(effectsController &, FontController *);
 	std::vector<Dasher::Blur> blurs; // I could have designed this better...
-	int8_t health;
+	Health health;
 	void updateAnimation(const sf::Time &, uint8_t, uint8_t);
 	float xPos, yPos, worldOffsetX, worldOffsetY;
 	uint8_t frameIndex;

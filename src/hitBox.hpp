@@ -2,9 +2,10 @@
 
 template <uint8_t w, uint8_t h, uint8_t xOff, uint8_t yOff>
 class HitBox {
+	static_assert(w > 0 && h > 0, "Zero is not a valid Hitbox side length parameter");
 	float * pXPos, * pYPos;
 	
-public:	
+public:
 	explicit HitBox(float * _pXPos, float * _pYPos) :
 		pXPos{_pXPos},
 		pYPos{_pYPos}
