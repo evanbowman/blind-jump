@@ -4,7 +4,7 @@ template <uint8_t w, uint8_t h, uint8_t xOff, uint8_t yOff>
 class HitBox {
 	float * pXPos, * pYPos;
 	
-public:
+public:	
 	explicit HitBox(float * _pXPos, float * _pYPos) :
 		pXPos{_pXPos},
 		pYPos{_pYPos}

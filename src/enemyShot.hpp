@@ -29,8 +29,8 @@ public:
 	sf::Sprite * getGlow();
 	
 private:
-	SpriteSheet<50, 91, 14, 14> spriteSheet;
 	HBox hitBox;
+	SpriteSheet<50, 91, 14, 14> spriteSheet;
 	float xPos;
 	float yPos;
 	float xInit;
