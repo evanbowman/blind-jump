@@ -15,9 +15,9 @@
 #include "pillarPlacement.h"
 #include "math.h"
 #include "enemyCreationFunctions.hpp"
-#include "gameMap.hpp"
+#include "scene.hpp"
 
-GameMap::GameMap(float _windowW, float _windowH, ResourceHandler * _pRH, InputController * _pInput, FontController * _pFonts)
+Scene::Scene(float _windowW, float _windowH, ResourceHandler * _pRH, InputController * _pInput, FontController * _pFonts)
 	: details{_windowW, _windowH, _pRH},
 	  pRH{_pRH},
 	  pInput{_pInput},
@@ -145,7 +145,7 @@ GameMap::GameMap(float _windowW, float _windowH, ResourceHandler * _pRH, InputCo
 	}
 }
 
-void GameMap::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
+void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	target.clear(sf::Color::Transparent);
 	// Start by getting the displacement that the player has moved, in order to update the position of all of the tiles and game objects
 	float xOffset = player.getWorldOffsetX();
@@ -533,7 +533,7 @@ void GameMap::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	}
 }
 
-void GameMap::Reset() {
+void Scene::Reset() {
 	level += 1;
 	pFonts->setWaypointText(level);
 	//Clear all the vectors before re-initializing them, we don't want objects from the previous map showing up again
@@ -662,51 +662,51 @@ void GameMap::Reset() {
 		transitionIn = true;
 }
 
-detailController & GameMap::getDetails() {
+detailController & Scene::getDetails() {
 	return details;
 }
 
-enemyController & GameMap::getEnemyController() {
+enemyController & Scene::getEnemyController() {
 	return en;
 }
 
-tileController & GameMap::getTileController() {
+tileController & Scene::getTileController() {
 	return tiles;
 }
 
-Player & GameMap::getPlayer() {
+Player & Scene::getPlayer() {
 	return player;
 }
 
-effectsController & GameMap::getEffects() {
+effectsController & Scene::getEffects() {
 	return effects;
 }
 
-InputController * GameMap::getPInput() {
+InputController * Scene::getPInput() {
 	return pInput;
 }
 
-ScreenShakeController * GameMap::getPSSC() {
+ScreenShakeController * Scene::getPSSC() {
 	return &ssc;
 }
 
-userInterface & GameMap::getUI() {
+userInterface & Scene::getUI() {
 	return UI;
 }
 
-FontController * GameMap::getPFonts() {
+FontController * Scene::getPFonts() {
 	return pFonts;
 }
 
-bool GameMap::getTeleporterCond() {
+bool Scene::getTeleporterCond() {
 	return teleporterCond;
 }
 
-std::vector<std::pair<int, int>>* GameMap::getEnemySelectVec() {
+std::vector<std::pair<int, int>>* Scene::getEnemySelectVec() {
 	return &enemySelectVec;
 }
 
-int GameMap::getLevel() {
+int Scene::getLevel() {
 	return level;
 }
 

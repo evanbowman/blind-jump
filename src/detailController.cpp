@@ -9,7 +9,7 @@
 #include "detailController.hpp"
 #include "player.hpp"
 #include <cmath>
-#include "gameMap.hpp"
+#include "scene.hpp"
 
 detailController::detailController(float _windowW, float _windowH, ResourceHandler * _pRH)
 	: pRH{_pRH},
@@ -158,7 +158,7 @@ void detailController::addTeleporter(tileController& t, float posX, float posY, 
     teleporters.emplace_back((c.x * 32) + posX + 2, (c.y * 26) + posY - 4, pRH->getTexture(ResourceHandler::Texture::gameObjects), &glow);
 }
 
-void detailController::update(GameMap * pGM, sf::Time & elapsedTime) {
+void detailController::update(Scene * pGM, sf::Time & elapsedTime) {
 	Player & player = pGM->getPlayer();
 	FontController * pFonts = pGM->getPFonts();
 	InputController * pInput = pGM->getPInput();

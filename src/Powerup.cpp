@@ -26,11 +26,12 @@ Powerup::Powerup(const sf::Texture & bodyTxtr, const sf::Texture & glowTxtr, flo
 void Powerup::update(float xoffset, float yoffset, sf::Time & elapsedTime) {
 	xPos = xInit + xoffset;
 	yPos = yInit + yoffset;
+	hitBox.setPosition(xPos, yPos);
 	timer += elapsedTime.asMilliseconds();
 }
 
 const sf::Sprite & Powerup::getSprite() {
-	float offset = (3 * sinf(2 * PI * 0.001 * timer + 180));
+	const float offset = (3 * sinf(2 * PI * 0.001 * timer + 180));
 	// Make the sprite float up and down
 	powerupSheet.setPosition(xPos, yPos + offset);
 	return powerupSheet.getSprite();
@@ -45,8 +46,8 @@ bool Powerup::getKillFlag() {
 	return killFlag;
 }
 
-void Powerup::setKillFlag(bool killFlag) {
-	this->killFlag = killFlag;
+void Powerup::setKillFlag() {
+    killFlag = true;
 }
 
 float Powerup::getXpos() {
@@ -55,4 +56,8 @@ float Powerup::getXpos() {
 
 float Powerup::getYpos() {
 	return yPos - 16;
+}
+
+const Powerup::HBox & Powerup::getHitBox() const {
+	return hitBox;
 }

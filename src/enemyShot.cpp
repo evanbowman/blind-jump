@@ -8,9 +8,7 @@
 
 #include "enemyShot.hpp"
 
-Enemyshot::Enemyshot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, float x, float y, float dir) :
-	hitBox{&xPos, &yPos}
-{
+Enemyshot::Enemyshot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, float x, float y, float dir) {
 	xPos = 0;
 	yPos = 0;
 	xInit = x;
@@ -31,6 +29,8 @@ void Enemyshot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 	xPos = xInit + xOffset;
 	yPos = yInit + yOffset + 11;
 
+	hitBox.setPosition(xPos, yPos);
+	
 	glowSprite.setPosition(xPos, yPos + 18);
 	
 	this->elapsedTime += elapsedTime.asMilliseconds();

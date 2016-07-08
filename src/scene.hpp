@@ -27,7 +27,7 @@
 #include "RenderType.hpp"
 #include "resourceHandler.hpp"
 
-class GameMap {
+class Scene {
 private:
 	detailController details;
 	ResourceHandler * pRH;
@@ -97,7 +97,7 @@ private:
 	short int transitionDelay;
 	
 public:
-	GameMap(float, float, ResourceHandler *, InputController *, FontController *);
+	Scene(float, float, ResourceHandler *, InputController *, FontController *);
 	//Pass in the render window and draw sprites to it
 	void update(sf::RenderWindow&, sf::Time&);
 	// The opening map does not follow the procedural generation approach, have a separate function for this

@@ -11,8 +11,8 @@
 #define enemyPlacementFn_hpp
 
 // Forward declare gamemap to break dependency
-class GameMap;
+class Scene;
 
-int initEnemies(GameMap*);
+int initEnemies(Scene*);
 
 #endif /* enemyPlacementFn_hpp */

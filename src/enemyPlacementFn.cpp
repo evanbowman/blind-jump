@@ -8,12 +8,12 @@
 
 #include <stdio.h>
 #include "enemyPlacementFn.hpp"
-#include "gameMap.hpp"
+#include "scene.hpp"
 #include "enemyCreationFunctions.hpp"
 #include <cmath>
 #include <array>
 
-int initEnemies(GameMap * gm) {
+int initEnemies(Scene * gm) {
 	constexpr static std::array<int, 4> targetLevel = {{
 	    4   /*Scoot*/,
 		5   /*Critter*/,

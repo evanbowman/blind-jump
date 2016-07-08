@@ -25,7 +25,7 @@
 #include "RenderType.hpp"
 #include "resourceHandler.hpp"
 
-class GameMap;
+class Scene;
 
 class detailController {
 private:
@@ -52,7 +52,7 @@ public:
 	void addDamagedTurret(float, float, float, float);
 	void addTeleporter(tileController&, float, float, float, float);
 	void addRock(float, float, int, int);
-	void update(GameMap *, sf::Time &);
+	void update(Scene *, sf::Time &);
 	void draw(drawableVec &, drawableVec &, sf::RenderTexture &);
 	void clear();
 	std::vector<TreasureChest> & getChests();

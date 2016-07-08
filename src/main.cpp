@@ -13,18 +13,18 @@
 #include "backgroundHandler.hpp"
 #include <cmath>
 #include <SFML/Window.hpp>
-#include "gameMap.hpp"
+#include "scene.hpp"
 #include "ResourcePath.hpp"
 #include "inputController.hpp"
 #include "resourceHandler.hpp"
 #include <iostream>
 
 int main(int argc, char * argv[]) {
-	srand(static_cast<unsigned int>(time(0))); // Not necessary since time(0), but compiling with Wall and Werror
+	srand(static_cast<unsigned int>(time(0)));
 
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 	
-	float aspectRatio = static_cast<float>(desktop.width) / static_cast<float>(desktop.height);
+	float aspectRatio = static_cast<float>(sf::VideoMode::getDesktopMode().width) / static_cast<float>(sf::VideoMode::getDesktopMode().height);
 	float windowWidth = 450.f;
 	float windowHeight = 450.f;
 
@@ -60,7 +60,7 @@ int main(int argc, char * argv[]) {
 	FontController fonts(fontView, windowWidth / 2, windowHeight / 2, &RH);
 	
 	//Initialize the map
-	GameMap Map(windowWidth, windowHeight, &RH, &input, &fonts);
+	Scene Map(windowWidth, windowHeight, &RH, &input, &fonts);
 	
 	// Set up the window context settings
 	sf::ContextSettings settings;

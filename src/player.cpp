@@ -13,11 +13,10 @@
 #include "playerCollisionFunctions.hpp"
 #include "wall.hpp"
 #include <tuple>
-#include "gameMap.hpp"
+#include "scene.hpp"
 
 Player::Player(ResourceHandler * pTM, float _xPos, float _yPos)
-	: hitBox{&xPos, &yPos},
-	  gun{},
+	: gun{},
 	  health{4},
 	  xPos{_xPos - 17}, // Magic number that puts the player in the direct center of the screen. Hmmm why does it work...
 	  yPos{_yPos},
@@ -67,6 +66,7 @@ Player::Player(ResourceHandler * pTM, float _xPos, float _yPos)
 void Player::setPosition(float _xPos, float _yPos) {
 	xPos = _xPos;
 	yPos = _yPos;
+	hitBox.setPosition(xPos, yPos);
 	walkDown.setPosition(xPos, yPos);
 	walkUp.setPosition(xPos, yPos);
 	walkLeft.setPosition(xPos, yPos);
@@ -164,7 +164,7 @@ void setSpeed(bool key1, bool key2, bool key3, bool collision, float & speed) {
 	}
 }
 
-void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
+void Player::update(Scene * pGM, const sf::Time & elapsedTime) {
 	InputController * pInput {pGM->getPInput()};
 	tileController & tiles {pGM->getTileController()};
 	detailController & details {pGM->getDetails()};
@@ -260,7 +260,7 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 
 	case State::prepdash:
 		if (gun.timeout != 0) {
-			gun.timeout = 40; // Display the alternate gun sprite when dashing
+			gun.timeout = 40;
 		}
 		setSpeed<1>(left, up, down, collisionLeft, lSpeed);
 		setSpeed<1>(right, up, down, collisionRight, rSpeed);
@@ -354,9 +354,9 @@ void Player::update(GameMap * pGM, const sf::Time & elapsedTime) {
 		break;
 	}
 	
-	colorTimer = 0; // TODO: This is for -Wall -Wnounused, but does need to be correctly set!
+	updateColor(elapsedTime);
 
-	checkShotCollisions(effects, pFonts);
+	checkEffectCollisions(effects, pFonts);
 	if (health <= 0 && state != Player::State::dead) {
 		state = Player::State::dead;
 		sheetIndex = Player::Sheet::deathSheet;
@@ -571,20 +571,55 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool x, effectsContro
 }
 
 template<typename T>
-void checkShotCollision(std::vector<T> & shots, Player & player, FontController * pFonts) {
-	for (auto & element : shots) {
+bool checkEffectCollision(std::vector<T> & vec, Player & player) {
+	for (auto & element : vec) {
 		if (overlapping<Player::HBox, typename T::HBox>(player.getHitBox(), element.getHitBox())) {
-			pFonts->resetHPText();
 			element.setKillFlag();
-			player.setHealth(player.getHealth() - 1);
+			return true;
+		}
+	}
+	return false;
+}
+
+void Player::checkEffectCollisions(effectsController & effects, FontController * pFonts) {
+    if (checkEffectCollision<Enemyshot>(effects.getEnemyShots(), *this)) {
+		pFonts->resetHPText();
+		--health;
+		renderType = Rendertype::shadeRed;
+		colorAmount = 1.f;
+		colorTimer = 0;
+	}
+
+	if (checkEffectCollision<Powerup>(effects.getCoins(), *this)) {
+		pFonts->updateScore(1);
+		pFonts->resetSCText();
+		renderType = Rendertype::shadeNeon;
+		colorAmount = 1.f;
+		colorTimer = 0;
+	}
+
+	if (health < pFonts->getMaxHealth()) {
+		if (checkEffectCollision<Powerup>(effects.getHearts(), *this)) {
+			health = fmin(pFonts->getMaxHealth(), health + 1);
+			renderType = Rendertype::shadeCrimson;
+			colorAmount = 1.f;
+			colorTimer = 0;
 		}
 	}
 }
 
-void Player::checkShotCollisions(effectsController & effects, FontController * pFonts) {
-    checkShotCollision<Enemyshot>(effects.getEnemyShots(), *this, pFonts);
+const Player::HBox & Player::getHitBox() const {
+	return hitBox;
 }
 
-const HitBox<16, 32, 8, 0> & Player::getHitBox() const {
-	return hitBox;
+void Player::updateColor(const sf::Time & elapsedTime) {
+	if (colorAmount > 0.f) {
+		colorTimer += elapsedTime.asMilliseconds();
+		if (colorTimer > 40) {
+			colorTimer -= 40;
+			colorAmount -= 0.1f;
+		}
+	} else {
+		renderType = Rendertype::shadeDefault;
+	}
 }

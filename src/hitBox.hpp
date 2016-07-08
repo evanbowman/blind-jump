@@ -3,13 +3,15 @@
 template <uint8_t w, uint8_t h, uint8_t xOff, uint8_t yOff>
 class HitBox {
 	static_assert(w > 0 && h > 0, "Zero is not a valid Hitbox side length parameter");
-	float * pXPos, * pYPos;
+	float xPos, yPos;
 	
 public:
-	explicit HitBox(float * _pXPos, float * _pYPos) :
-		pXPos{_pXPos},
-		pYPos{_pYPos}
-	{}
+	HitBox() : xPos{0.f}, yPos{0.f} {}
+
+	void setPosition(float _xPos, float _yPos) {
+		xPos = _xPos;
+		yPos = _yPos;
+	}
 	
 	constexpr uint8_t getWidth() const {
 		return w;
@@ -20,11 +22,11 @@ public:
 	}
 	
 	float getXPos() const {
-		return *pXPos + xOff;
+		return xPos + xOff;
 	}
 	
 	float getYPos() const {
-		return *pYPos + yOff;
+		return yPos + yOff;
 	}
 };
 

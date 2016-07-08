@@ -20,13 +20,13 @@
 #include "spriteSheet.hpp"
 #include "hitBox.hpp"
 
-class GameMap;
+class Scene;
 
 class Player {
 public:
 	using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
 	using Health = int8_t;
-	using HBox = HitBox<16, 32, 8, 0>;
+	using HBox = HitBox<8, 16, 16, 8>;
 	enum class Sheet {
 		stillDown,
 		stillUp,
@@ -59,7 +59,7 @@ public:
 	float getXpos() const; // The player's absolute position in the window
 	float getYpos() const;
 	void draw(drawableVec &, drawableVec &, const sf::Time &);
-	void update(GameMap *, const sf::Time &);
+	void update(Scene *, const sf::Time &);
 	void setState(State);
 	State getState() const;
 	void setPosition(float, float);
@@ -67,6 +67,7 @@ public:
 	Health getHealth() const;
 	bool visible = true;	
 	void reset();
+	void updateColor(const sf::Time &);
 	void setHealth(Health);
 	const HBox & getHitBox() const;
 
@@ -74,7 +75,7 @@ private:
 	HBox hitBox;
 	void updateGun(const sf::Time &, const bool, effectsController &, float, float);
 	Weapon gun;
-	void checkShotCollisions(effectsController &, FontController *);
+	void checkEffectCollisions(effectsController &, FontController *);
 	std::vector<Dasher::Blur> blurs; // I could have designed this better...
 	Health health;
 	void updateAnimation(const sf::Time &, uint8_t, uint8_t);
