@@ -25,8 +25,21 @@
 #include "Powerup.hpp"
 #include "ResourceHandler.hpp"
 #include "RenderType.hpp"
+#include "Framework/framework.hpp"
 
 class ScreenShakeController;
+
+using EffectGroup = Framework::Group<turretFlashEffect,
+										  SmallExplosion,
+										  FireExplosion,
+										  TeleporterSmoke,
+										  turretShot,
+										  DasherShot,
+										  Enemyshot,
+										  bulletType1,
+										  shotPuff,
+										  Powerup,
+										  Powerup>;
 
 class effectsController {
 private:

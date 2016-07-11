@@ -224,38 +224,34 @@ void detailController::killTeleporter() {
 }
 
 void detailController::draw(drawableVec & gameObjects, drawableVec & gameShadows, sf::RenderTexture & window) {
-	if (!misc32x26.empty())
-		for (auto & element : misc32x26)
-			gameObjects.emplace_back(element.getSprite(), element.getYpos() - 26, Rendertype::shadeDefault, 0.f);
-    
-	if (!teleporters.empty())
-		for (auto & element : teleporters) {
-			window.draw(element.getShadow());
-			window.draw(element.getSprite());
-		}
+	for (auto & element : misc32x26) {
+		gameObjects.emplace_back(element.getSprite(), element.getYpos() - 26, Rendertype::shadeDefault, 0.f);
+	}
+			
+	for (auto & element : teleporters) {
+		window.draw(element.getShadow());
+		window.draw(element.getSprite());
+	}
 	
-	if (!doors.empty())
-		for (auto & element : doors)
-			gameObjects.emplace_back(element.getSprite(), element.getYpos() + 52, Rendertype::shadeDefault, 0.f);
+	for (auto & element : doors) {
+		gameObjects.emplace_back(element.getSprite(), element.getYpos() + 52, Rendertype::shadeDefault, 0.f);
+	}
 	
-	if (!rocks.empty())
-		for (auto & element : rocks)
-			gameObjects.emplace_back(element.getSprite(), element.getYpos() + 22, Rendertype::shadeDefault, 0.f);
+	for (auto & element : rocks) {
+		gameObjects.emplace_back(element.getSprite(), element.getYpos() + 22, Rendertype::shadeDefault, 0.f);
+	}
 	
-	if (!damagedRobots.empty())
-		for (auto & element : damagedRobots)
-			gameObjects.emplace_back(element.getSprite(), element.getYpos(), Rendertype::shadeDefault, 0.f);
+	for (auto & element : damagedRobots) {
+		gameObjects.emplace_back(element.getSprite(), element.getYpos(), Rendertype::shadeDefault, 0.f);
+	}
+
+	for (auto & element : chests) {
+		gameObjects.emplace_back(element.getSprite(), element.getYpos() - 12, Rendertype::shadeDefault, 0.f);
+		gameShadows.emplace_back(element.getShadow(), 0, Rendertype::shadeDefault, 0.f);
+	}
 	
-	if (!chests.empty())
-		for (auto & element : chests) {
-			gameObjects.emplace_back(element.getSprite(), element.getYpos() - 12, Rendertype::shadeDefault, 0.f);
-			gameShadows.emplace_back(element.getShadow(), 0, Rendertype::shadeDefault, 0.f);
-		}
-	
-	if (!lamps.empty()) {
-		for (auto & element : lamps) {
-			window.draw(element.getSprite());
-		}
+	for (auto & element : lamps) {
+		window.draw(element.getSprite());
 	}
 }
 

@@ -13,6 +13,7 @@
 #include "SFML/Graphics.hpp"
 #include "spriteSheet.hpp"
 #include "Effect.hpp"
+#include "framework.hpp"
 
 class turretFlashEffect : public Effect {
 private:
