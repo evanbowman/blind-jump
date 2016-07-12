@@ -17,15 +17,13 @@
 #include "enemyCreationFunctions.hpp"
 #include "scene.hpp"
 
-Scene::Scene(float _windowW, float _windowH, ResourceHandler * _pRH, InputController * _pInput, FontController * _pFonts)
-	: details{_windowW, _windowH, _pRH},
-	  pRH{_pRH},
+Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontController * _pFonts)
+	: details{_windowW, _windowH},
 	  pInput{_pInput},
-	  player{_pRH, _windowW / 2, _windowH / 2},
+	  player{_windowW / 2, _windowH / 2},
 	  UI{_windowW / 2, _windowH / 2},
-	  tiles{_pRH},
-	  effects{_pRH},
-	  en{_pRH},
+	  tiles{}, // TODO: remove default constructible members
+	  en{},
 	  pFonts{_pFonts},
 	  level{0},
 	  teleporterCond{false},
@@ -72,9 +70,9 @@ Scene::Scene(float _windowW, float _windowH, ResourceHandler * _pRH, InputContro
 	// Each object that isn't an effect or passed through a shader gets darkened according to the ambient conditions of the current tileset
 	objectShadeColor = sf::Color(190, 190, 210, 255);
 	
-	vignetteSprite.setTexture(pRH->getTexture(ResourceHandler::Texture::vignette));
+	vignetteSprite.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::vignette));
 	vignetteSprite.setScale(windowW / 450, windowH / 450);
-	vignetteShadowSpr.setTexture(pRH->getTexture(ResourceHandler::Texture::vignetteShadow));
+	vignetteShadowSpr.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::vignetteShadow));
 	vignetteShadowSpr.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setColor(sf::Color(255,255,255,100));
 	
@@ -154,16 +152,16 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	bkg.setOffset(xOffset, yOffset);
 	bkg.drawBackground(target);
 	tiles.setOffset(xOffset, yOffset);
-	tiles.drawTiles(target, effects.getGlowSprs(), effects.getGlowSprs2(), level);
-	effects.getGlowSprs2()->clear();
+	tiles.drawTiles(target, &glowSprs1, &glowSprs2, level);
+	glowSprs2.clear();
 	// Update the overworld objects based on the displacement of the player
-	details.update(this, elapsedTime);
+	details.update(this, elapsedTime, &glowSprs1, &glowSprs2);
 	// Draw the details / add them to the game objects vector
 	details.draw(gameObjects, gameShadows, target);
 	// Update the enemy objects in the game based on the player's displacement
-	en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effects, tiles.walls, player.getState() != Player::State::dead, &tiles, &ssc, *pFonts, elapsedTime);
-	// Draw the lower layer of the effects, that is the ones that should show up behind the player sprite
-	effects.drawLower(target);
+	en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effectGroup, tiles.walls, player.getState() != Player::State::dead, &tiles, &ssc, *pFonts, elapsedTime);
+	// // Draw the lower layer of the effects, that is the ones that should show up behind the player sprite
+	// effects.drawLower(target);
 	
 	if (player.visible) {
 		// Draw the player to the window, as long as the object is visible
@@ -175,10 +173,12 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	if (player.scrShakeState) {
 		ssc.rumble();
 	}
-	
-	effects.getGlowSprs()->clear();
+
+	glowSprs1.clear();
 	// Update the positions of all the effect objects
-	effects.update(player.getWorldOffsetX(), player.getWorldOffsetY(), &ssc, elapsedTime);
+	float tempXOff{player.getWorldOffsetX()};
+	float tempYOff{player.getWorldOffsetY()};
+	effectGroup.update(tempXOff, tempYOff, elapsedTime);
 	
 	// Draw shadows to the target
 	if (!gameShadows.empty()) {
@@ -203,7 +203,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	//
 	/*-----------------------------------------------------------------------------------*/
 	if (!gameObjects.empty()) {
-		sf::Shader & colorShader = pRH->getShader(ResourceHandler::Shader::color);
+		sf::Shader & colorShader = globalResourceHandler.getShader(ResourceHandler::Shader::color);
 		for (auto & element : gameObjects) {
 			switch (std::get<2>(element)) {
 				case Rendertype::shadeDefault:
@@ -244,7 +244,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	
 	sf::Color blendAmount(185, 185, 185, 255);
 	sf::Sprite tempSprite;
-	for (auto element : *effects.getGlowSprs2()) {
+	for (auto element : glowSprs2) {
 		tempSprite = *element;
 		tempSprite.setColor(blendAmount);
 		tempSprite.setPosition(tempSprite.getPosition().x, tempSprite.getPosition().y - 12);
@@ -256,7 +256,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	
 	// Clear out the vectors for the next round of drawing
 	gameObjects.clear();
-	effects.draw(target, gameObjects);
+	//effects.draw(target, gameObjects);
 	bkg.drawForeground(target);
 	target.draw(vignetteSprite, sf::BlendMultiply);
 	target.draw(vignetteShadowSpr);
@@ -268,8 +268,8 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	//
 	/*-----------------------------------------------------------------------------------*/
 	if (UI.blurEnabled() && UI.desaturateEnabled()) {
-		sf::Shader & blurShader = pRH->getShader(ResourceHandler::Shader::blur);
-		sf::Shader & desaturateShader = pRH->getShader(ResourceHandler::Shader::desaturate);
+		sf::Shader & blurShader = globalResourceHandler.getShader(ResourceHandler::Shader::blur);
+		sf::Shader & desaturateShader = globalResourceHandler.getShader(ResourceHandler::Shader::desaturate);
 		secondPass.clear(sf::Color::Transparent);
 		thirdPass.clear(sf::Color::Transparent);
 		sf::Vector2u textureSize = target.getSize();
@@ -284,7 +284,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		desaturateShader.setParameter("amount", UI.getDesaturateAmount());
 		window.draw(sf::Sprite(thirdPass.getTexture()), &desaturateShader);
 	} else if (UI.blurEnabled() && !UI.desaturateEnabled()) {
-		sf::Shader & blurShader = pRH->getShader(ResourceHandler::Shader::blur);
+		sf::Shader & blurShader = globalResourceHandler.getShader(ResourceHandler::Shader::blur);
 		secondPass.clear(sf::Color::Transparent);
 		sf::Vector2u textureSize = target.getSize();
 		// Get the blur amount from the UI controller
@@ -295,7 +295,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
 		window.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
 	} else if (!UI.blurEnabled() && UI.getDesaturateAmount()) {
-		sf::Shader & desaturateShader = pRH->getShader(ResourceHandler::Shader::desaturate);
+		sf::Shader & desaturateShader = globalResourceHandler.getShader(ResourceHandler::Shader::desaturate);
 		desaturateShader.setParameter("amount", UI.getDesaturateAmount());
 		window.draw(sf::Sprite(target.getTexture()), &desaturateShader);
 	} else {
@@ -326,7 +326,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		// UI.drawMenu(window, &player, *pFonts, effects, xOffset, yOffset, pInput, elapsedTime);
 	} else {
 		if (level != 0) {
-			UI.drawMenu(window, &player, *pFonts, effects, xOffset, yOffset, pInput, elapsedTime);
+			UI.drawMenu(window, &player, *pFonts, effectGroup, xOffset, yOffset, pInput, elapsedTime);
 			// Pass the player's health to the font controller
 			pFonts->updateHealth(player.getHealth());
 			// Draw all of the game text to the window
@@ -340,8 +340,8 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	
 	if (dispEntryBeam) {
 		// Cast the beam's glow to the overworld
-		effects.getGlowSprs()->push_back(&beamGlowSpr);
-		effects.getGlowSprs2()->push_back(&beamGlowSpr);
+		glowSprs1.push_back(&beamGlowSpr);
+		glowSprs2.push_back(&beamGlowSpr);
 
 		// Get the current size of the beam shape
 		sf::Vector2f v2 = entryBeam.getSize();
@@ -361,9 +361,9 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 			ssc.shake();
 			v2.y = 518;
 			// Add a warp smoke effect when the player appears, purely aesthetic
-			effects.addWarpEffect(windowW / 2 - 8, windowH / 2 + 16);
+			/// TODO: effects.addWarpEffect(windowW / 2 - 8, windowH / 2 + 16);
 			// Add a warp impack detail to the overworld where the player landed
-			details.addWarpImpact(windowW / 2 - 12, windowH / 2 + 18);
+			/// TODO: details.addWarpImpact(windowW / 2 - 12, windowH / 2 + 18);
 		} else {
 			player.setState(Player::State::deactivated);
 		}
@@ -431,8 +431,8 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		// Cast the beam's glow to the overworld
 		if (!transitioning) {
 			window.draw(teleporterBeam);
-			effects.getGlowSprs()->push_back(&beamGlowSpr);
-			effects.getGlowSprs2()->push_back(&beamGlowSpr);
+			glowSprs1.push_back(&beamGlowSpr);
+			glowSprs2.push_back(&beamGlowSpr);
 		}
 		sf::Color beamColor = teleporterBeam.getFillColor();
 		sf::Vector2f v1 = teleporterBeam.getSize();
@@ -538,7 +538,7 @@ void Scene::Reset() {
 	pFonts->setWaypointText(level);
 	//Clear all the vectors before re-initializing them, we don't want objects from the previous map showing up again
 	tiles.clear();
-	effects.clear();
+	effectGroup.clear();
 	details.clear();
 	player.setWorldOffsetX(0);
 	player.setWorldOffsetY(0);
@@ -596,8 +596,8 @@ void Scene::Reset() {
 			details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][1]);
 		}
 		
-		effects.getGlowSprs()->clear();
-		effects.getGlowSprs2()->clear();
+		glowSprs1.clear();
+		glowSprs2.clear();
 		
 		size_t len;
 		Teleporter* pTeleporter = details.getTeleporter();
@@ -678,8 +678,8 @@ Player & Scene::getPlayer() {
 	return player;
 }
 
-effectsController & Scene::getEffects() {
-	return effects;
+EffectGroup & Scene::getEffects() {
+	return effectGroup;
 }
 
 InputController * Scene::getPInput() {

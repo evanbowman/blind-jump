@@ -18,17 +18,17 @@ IntroDoor::IntroDoor(float _xInit, float _yInit, const sf::Texture & inpTxtr)
 	  state{State::dormant}
 {}
 
-bool checkBulletCollision(float xPos, float yPos, effectsController & ef) {
-	for (auto & element : ef.getBulletLayer1()) {
-		if (std::abs(element.getXpos() - xPos) < 4 && std::abs(element.getYpos() - yPos) < 4) {
-			element.setKillFlag();
-			return true;
-		}
-	}
+bool checkBulletCollision(float xPos, float yPos, EffectGroup & ef) {
+	// for (auto & element : ef.getBulletLayer1()) {
+	// 	if (std::abs(element.getXpos() - xPos) < 4 && std::abs(element.getYpos() - yPos) < 4) {
+	// 		element.setKillFlag();
+	// 		return true;
+	// 	}
+	// }
 	return false;
 }
 
-void IntroDoor::_update(float xOffset, float yOffset, ScreenShakeController * pscr, effectsController & ef, const sf::Time & elapsedTime) {
+void IntroDoor::_update(float xOffset, float yOffset, ScreenShakeController * pscr, EffectGroup & ef, const sf::Time & elapsedTime) {
 	switch (state) {
 		case State::dormant:
 		    if (checkBulletCollision(xOffset + xInit + 124, yPos + 62, ef)) {

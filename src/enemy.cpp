@@ -50,7 +50,7 @@ float Enemy::getYinit() const {
 	return yInit;
 }
 
-void Enemy::update(float xOffset, float yOffset, const std::vector<wall> & w, effectsController & effects, const sf::Time & elapsedTime) {
+void Enemy::update(float xOffset, float yOffset, const std::vector<wall> & w, EffectGroup & effects, const sf::Time & elapsedTime) {
 	xPos = xInit + xOffset;
 	yPos = yInit + yOffset;
 }
@@ -86,22 +86,22 @@ bool Enemy::wallInPath(const std::vector<wall> & w, float dir, float xPos, float
 	return false;
 }
 
-void Enemy::checkShotCollision(effectsController & effects, float rad) {
-	if (!effects.getBulletLayer1().empty()) {
-		for (auto & element : effects.getBulletLayer1()) {
-			if (std::abs(element.getXpos() - (xPos - 6)) < rad
-				&& std::abs(element.getYpos() - (yPos - 6)) < rad
-				&& !element.getKillFlag()) {
-				if (health == 1) {
-					element.disablePuff();
-				}
-				element.setKillFlag();
-				health -= 1;
-				colored = true;
-				colorAmount = 1.f;
-			}
-		}
-	}
+void Enemy::checkShotCollision(EffectGroup & effects, float rad) {
+	// if (!effects.getBulletLayer1().empty()) {
+	// 	for (auto & element : effects.getBulletLayer1()) {
+	// 		if (std::abs(element.getXpos() - (xPos - 6)) < rad
+	// 			&& std::abs(element.getYpos() - (yPos - 6)) < rad
+	// 			&& !element.getKillFlag()) {
+	// 			if (health == 1) {
+	// 				element.disablePuff();
+	// 			}
+	// 			element.setKillFlag();
+	// 			health -= 1;
+	// 			colored = true;
+	// 			colorAmount = 1.f;
+	// 		}
+	// 	}
+	// }
 
 	if (health == 0) {
 		onDeath(effects);

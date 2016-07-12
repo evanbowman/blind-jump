@@ -11,9 +11,8 @@
 #include <cmath>
 #include "scene.hpp"
 
-detailController::detailController(float _windowW, float _windowH, ResourceHandler * _pRH)
-	: pRH{_pRH},
-	  windowW{_windowW},
+detailController::detailController(float _windowW, float _windowH)
+	: windowW{_windowW},
 	  windowH{_windowH}
 {}
 
@@ -76,30 +75,30 @@ Coordinate pickLocation2(std::vector<Coordinate>& emptyLocations) {
 
 void detailController::addWarpImpact(float posX, float posY) {
 	sf::Sprite tempSprite;
-	tempSprite.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
+	tempSprite.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
 	tempSprite.setTextureRect(sf::IntRect(128, 161, 32, 26));
 	misc32x26.emplace_back(posX, posY, tempSprite);
 }
 
 void detailController::addLamplight(float posX, float posY, int i, int j, float width, float height) {
 	sf::Sprite glow;
-	glow.setTexture(pRH->getTexture(ResourceHandler::Texture::lamplight));
-	lamps.emplace_back((i * 32) + 16 + posX, (j * 26) + 18 + posY, pRH->getTexture(ResourceHandler::Texture::gameObjects), glow);
+	glow.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
+	lamps.emplace_back((i * 32) + 16 + posX, (j * 26) + 18 + posY, globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), glow);
 }
 
 void detailController::addRock(float posX, float posY, int i, int j) {
-	rocks.emplace_back((i * 32) + posX, (j * 26) + posY, pRH->getTexture(ResourceHandler::Texture::gameObjects));
+	rocks.emplace_back((i * 32) + posX, (j * 26) + posY, globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
 }
 
 void detailController::addChest(tileController& t, float posX, float posY, float width, float height, char chestContents) {
 	Coordinate c = pickLocation(t.emptyMapLocations);
     float placeOffsetX = (rand() % 6) - 3;
-	chests.emplace_back((c.x * 32) + posX + 8 + placeOffsetX, (c.y * 26) + posY - 3, pRH->getTexture(ResourceHandler::Texture::gameObjects), chestContents);
+	chests.emplace_back((c.x * 32) + posX + 8 + placeOffsetX, (c.y * 26) + posY - 3, globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), chestContents);
 }
 
 void detailController::addEnemyScrap(float posX, float posY, float width, float height) {
 	sf::Sprite tempSprite;
-	tempSprite.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
+	tempSprite.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
 	tempSprite.setTextureRect(sf::IntRect(112, 161, 16, 15));
 	misc32x26.emplace_back(posX - 6, posY - 2, tempSprite);
 }
@@ -111,7 +110,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
 		sf::Sprite tempSprite;
 		try {
 			c = pickLocationGrass(t.emptyMapLocations, t.mapArray);
-			DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pRH->getTexture(ResourceHandler::Texture::gameObjects));
+			DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
 			damagedRobots.push_back(dr);
 		} catch(const char* e) {
 			//std::cout << e << std::endl;
@@ -120,7 +119,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
 		if (rand() % 2) {
 			try {
 				c = pickLocationGrass(t.emptyMapLocations, t.mapArray);
-	    		DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pRH->getTexture(ResourceHandler::Texture::gameObjects));
+	    		DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
 				damagedRobots.push_back(dr);
 			} catch(const char* e) {
 				//std::cout << e << std::endl;
@@ -130,7 +129,7 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
 		if (rand() % 2) {
 			try {
 				c = pickLocationGrass(t.emptyMapLocations, t.mapArray);
-				DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, pRH->getTexture(ResourceHandler::Texture::gameObjects));
+				DamagedRobot dr((c.x * 32) + posX + placeOffsetX - 20, (c.y * 26) + posY - 20, globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
 				damagedRobots.push_back(dr);
 			} catch(const char* e) {
 				//std::cout << e << std::endl;
@@ -140,13 +139,13 @@ void detailController::addDamagedRobots(tileController& t, float posX, float pos
 }
  
 void detailController::addDoor(float xpos, float ypos, int x, int y, float w, float h) {
-	doors.emplace_back(xpos + x * 32, ypos + y * 26, pRH->getTexture(ResourceHandler::Texture::introWall));
+	doors.emplace_back(xpos + x * 32, ypos + y * 26, globalResourceHandler.getTexture(ResourceHandler::Texture::introWall));
 }
 
 void detailController::addPod(float xpos, float ypos, int x, int y) {
 	sf::Sprite tempSprite;
 	tempSprite.setOrigin(0, 30);
-	tempSprite.setTexture(pRH->getTexture(ResourceHandler::Texture::gameObjects));
+	tempSprite.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
 	tempSprite.setTextureRect(sf::IntRect(164, 145, 44, 50));
 	misc32x26.emplace_back(xpos + x * 32, ypos + y * 26, tempSprite);
 }
@@ -154,28 +153,28 @@ void detailController::addPod(float xpos, float ypos, int x, int y) {
 void detailController::addTeleporter(tileController& t, float posX, float posY, float width, float height) {
 	Coordinate c = t.getTeleporterLoc();
    	sf::Sprite glow;
-	glow.setTexture(pRH->getTexture(ResourceHandler::Texture::teleporterGlow));
-    teleporters.emplace_back((c.x * 32) + posX + 2, (c.y * 26) + posY - 4, pRH->getTexture(ResourceHandler::Texture::gameObjects), &glow);
+	glow.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::teleporterGlow));
+    teleporters.emplace_back((c.x * 32) + posX + 2, (c.y * 26) + posY - 4, globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), &glow);
 }
 
-void detailController::update(Scene * pGM, sf::Time & elapsedTime) {
+void detailController::update(Scene * pGM, sf::Time & elapsedTime, std::vector<sf::Sprite *> * glow1, std::vector<sf::Sprite *> * glow2) {
 	Player & player = pGM->getPlayer();
 	FontController * pFonts = pGM->getPFonts();
 	InputController * pInput = pGM->getPInput();
-	effectsController & ef = pGM->getEffects();
+	EffectGroup & ef = pGM->getEffects();
 	userInterface & ui = pGM->getUI();
 	ScreenShakeController * pscr = pGM->getPSSC();
 
 	float xOffset = player.getWorldOffsetX();
 	float yOffset = player.getWorldOffsetY();
 
-	std::vector<sf::Sprite *> * glow1 = ef.getGlowSprs();
-	std::vector<sf::Sprite *> * glow2 = ef.getGlowSprs2();
+	//std::vector<sf::Sprite *> * glow1 = ef.getGlowSprs();
+	//std::vector<sf::Sprite *> * glow2 = ef.getGlowSprs2();
 
 	for (auto & element : teleporters) {
 		element.update(xOffset, yOffset, elapsedTime);
 		if (element.smokeReady()) {
-			ef.addWarpEffect(element.getXpos() - xOffset + 4 + (rand() % 6), element.getYpos() - yOffset + 2);
+			//ef.addWarpEffect(element.getXpos() - xOffset + 4 + (rand() % 6), element.getYpos() - yOffset + 2);
 		}
 		glow1->push_back(element.getGlow());
 		glow2->push_back(element.getGlow());

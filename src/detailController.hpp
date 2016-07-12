@@ -37,11 +37,10 @@ private:
 	std::vector<IntroDoor> doors;
 	std::vector<DamagedRobot> damagedRobots;
 	std::vector<GeneralDetail> misc32x26;
-	ResourceHandler * pRH;
 	float windowW, windowH;
 	
 public:
-	detailController(float, float, ResourceHandler *);
+	detailController(float, float);
 	void addCrystals(float, float, float, float);
 	void addDoor(float, float, int, int, float, float);
 	void addPod(float, float, int, int);
@@ -52,7 +51,7 @@ public:
 	void addDamagedTurret(float, float, float, float);
 	void addTeleporter(tileController&, float, float, float, float);
 	void addRock(float, float, int, int);
-	void update(Scene *, sf::Time &);
+	void update(Scene *, sf::Time &, std::vector<sf::Sprite *> *, std::vector<sf::Sprite *> *);
 	void draw(drawableVec &, drawableVec &, sf::RenderTexture &);
 	void clear();
 	std::vector<TreasureChest> & getChests();

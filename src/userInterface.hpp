@@ -25,8 +25,8 @@ class Player;
 class userInterface {	
 public:
 	userInterface(float, float);
-	void drawMenu(sf::RenderWindow&, Player*, FontController&, effectsController&, float, float, InputController*, sf::Time&);
-	void addItem(char, effectsController&, float, float, FontController&, Player&);
+	void drawMenu(sf::RenderWindow&, Player*, FontController&, EffectGroup&, float, float, InputController*, sf::Time&);
+	void addItem(char, EffectGroup&, float, float, FontController&, Player&);
 	
 	uint8_t selectedColumn;
 	std::array<unsigned char, 3> rowIndices;

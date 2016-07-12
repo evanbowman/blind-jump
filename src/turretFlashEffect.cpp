@@ -23,14 +23,14 @@ void turretFlashEffect::update(float xOffset, float yOffset, const sf::Time & el
 		timer -= 40;
 		frameIndex += 1;
 		if (frameIndex > 4) {
-			killFlag = true;
+			setKillFlag();
 			frameIndex = 4;
 		};
 	}
-	yPos = yInit + 11 + yOffset;
-	spriteSheet.setPosition(xInit + xOffset, yPos);
+	setPosition(xInit + xOffset, yInit + yOffset);
+	spriteSheet.setPosition(position.x, position.y);
 }
 
-const sf::Sprite & turretFlashEffect::getSprite() const {
+const Sprite & turretFlashEffect::getSprite() const {
 	return spriteSheet[frameIndex];
 }

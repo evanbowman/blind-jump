@@ -21,8 +21,8 @@ private:
 	
 public:
 	SmallExplosion(const sf::Texture &, const sf::Texture &, float, float);
-	void update(float, float, const sf::Time &) override;
-	const sf::Sprite & getSprite() const override;
+	void update(float, float, const sf::Time &);
+	const Sprite & getSprite() const;
 	sf::Sprite * getGlow();
 };
 

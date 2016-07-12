@@ -28,7 +28,7 @@ void userInterface::setView(sf::View * pView) {
 	cachedView = *pView;
 }
 
-void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontController& f, effectsController& ef, float xOffset, float yOffset, InputController* pInput, sf::Time& elapsed) {
+void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontController& f, EffectGroup& ef, float xOffset, float yOffset, InputController* pInput, sf::Time& elapsed) {
 	bool z = pInput->zPressed();
 	
 	switch (state) {
@@ -102,7 +102,7 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontContr
 	}
 }
 
-void userInterface::addItem(char newItem, effectsController& ef, float xStart, float yStart, FontController& fonts, Player& player) {
+void userInterface::addItem(char newItem, EffectGroup & ef, float xStart, float yStart, FontController& fonts, Player& player) {
 	if (newItem == 90) {
 		fonts.updateMaxHealth(fonts.getMaxHealth() + 1);
 	} else {

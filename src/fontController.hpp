@@ -31,7 +31,7 @@ private:
 	sf::CircleShape coin;
 	
 public:
-	FontController(sf::View, float, float, ResourceHandler *);
+	FontController(sf::View, float, float);
 	void update(sf::RenderWindow&, float, float);
 	void setWaypointText(int);
 	void setZoneText(char);

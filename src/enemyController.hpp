@@ -30,18 +30,18 @@ private:
 	sf::Texture turretTextures[10];
 	sf::Sprite chaserSprites[4];
 	sf::Texture chaserTextures[4];
-
-	ResourceHandler * pRH;
+	
 	std::vector<turret> turrets;
 	std::vector<Scoot> scoots;
 	std::vector<Dasher> dashers;
 	std::vector<Critter> critters;
+	
 	float windowW;
 	float windowH;
 	
 public:
-	enemyController(ResourceHandler *);
-	void update(drawableVec &, drawableVec &, float, float, effectsController&, std::vector<wall>, bool, tileController*, ScreenShakeController*, FontController&, sf::Time &);
+	enemyController();
+	void update(drawableVec &, drawableVec &, float, float, EffectGroup &, std::vector<wall>, bool, tileController*, ScreenShakeController*, FontController&, sf::Time &);
 	void clear();
 	sf::Sprite * getTurretSprites();
 	sf::Sprite * getChaserSprites();

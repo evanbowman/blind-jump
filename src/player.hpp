@@ -51,7 +51,7 @@ public:
 		SpriteSheet<688, 106, 11, 10> gunSpr;
 		int32_t timeout, bulletTimer;
 	};
-	Player(ResourceHandler *, float, float);
+	Player(float, float);
 	float getWorldOffsetX() const; // The distance the player has moved
 	float getWorldOffsetY() const;
 	void setWorldOffsetX(float);
@@ -73,9 +73,9 @@ public:
 
 private:
 	HBox hitBox;
-	void updateGun(const sf::Time &, const bool, effectsController &, float, float);
+	void updateGun(const sf::Time &, const bool, EffectGroup &, float, float);
 	Weapon gun;
-	void checkEffectCollisions(effectsController &, FontController *);
+	void checkEffectCollisions(EffectGroup &, FontController *);
 	std::vector<Dasher::Blur> blurs; // I could have designed this better...
 	Health health;
 	void updateAnimation(const sf::Time &, uint8_t, uint8_t);

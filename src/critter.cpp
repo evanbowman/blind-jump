@@ -33,9 +33,9 @@ void Critter::updatePlayerDead() {
 	frameIndex = 0;
 }
 
-void Critter::update(float, float, const std::vector<wall> &, effectsController &, const sf::Time &) {}
+void Critter::update(float, float, const std::vector<wall> &, EffectGroup &, const sf::Time &) {}
 
-void Critter::critterUpdate(float xOffset, float yOffset, effectsController & effects, const sf::Time & elapsedTime, tileController * pTiles) {
+void Critter::critterUpdate(float xOffset, float yOffset, EffectGroup & effects, const sf::Time & elapsedTime, tileController * pTiles) {
 	xPos = xInit + xOffset + 12;
 	yPos = yInit + yOffset;
 	Enemy::checkShotCollision(effects, 8.f);
@@ -138,14 +138,14 @@ bool Critter::isActive() {
 	return active;
 }
 
-void Critter::onDeath(effectsController & effects) {
+void Critter::onDeath(EffectGroup & effects) {
 	// With some random chance, add a heart item to the map
 	unsigned long int temp = rand() % 5;
 	if (temp == 0) {
-		effects.addHearts(xInit + 10, yInit);
+		//effects.addHearts(xInit + 10, yInit);
 	} else {
-		effects.addCoins(xInit + 10, yInit);
+		//effects.addCoins(xInit + 10, yInit);
 	}
-	effects.addSmallExplosion(xInit + 8, yInit);
+	//effects.addSmallExplosion(xInit + 8, yInit);
 	killFlag = true;
 }

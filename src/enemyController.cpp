@@ -15,8 +15,7 @@
 #include "screenShakeController.hpp"
 
 
-enemyController::enemyController(ResourceHandler * _pRH)
-	: pRH{_pRH}
+enemyController::enemyController()
 {
 	//Load all of the textures to apply to the enemies
 	const std::string turretfileExt[10] = {"turret5.png", "turret4.png", "turret3.png", "turret2.png", "turret1.png", "turretShadow5.png", "turretShadow4.png", "turretShadow3.png", "turretShadow2.png", "turretShadow1.png"};
@@ -26,7 +25,7 @@ enemyController::enemyController(ResourceHandler * _pRH)
 	}
 }
 
-void enemyController::update(drawableVec & gameObjects, drawableVec & gameShadows, float x, float y, effectsController& ef, std::vector<wall> w, bool enabled, tileController* pTiles, ScreenShakeController* scrn, FontController& fonts, sf::Time & elapsedTime) {
+void enemyController::update(drawableVec & gameObjects, drawableVec & gameShadows, float x, float y, EffectGroup & ef, std::vector<wall> w, bool enabled, tileController* pTiles, ScreenShakeController* scrn, FontController& fonts, sf::Time & elapsedTime) {
 	if (!turrets.empty()) {
 		for (auto it = turrets.begin(); it != turrets.end();) {
 			if (it->getKillFlag() == 1) {
@@ -192,8 +191,8 @@ void enemyController::addScoot(tileController * pTiles) {
 	int locationSelect = (rand() % 2) ? rand() % (pCoordVec->size() / 2) : rand() % (pCoordVec->size());
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-	scoots.emplace_back(pRH->getTexture(ResourceHandler::Texture::gameObjects),
-						pRH->getTexture(ResourceHandler::Texture::scootShadow),
+	scoots.emplace_back(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+						globalResourceHandler.getTexture(ResourceHandler::Texture::scootShadow),
 						xInit, yInit, windowW / 2, windowH / 2);
 	(*pCoordVec)[locationSelect] = pCoordVec->back();
 	pCoordVec->pop_back();
@@ -204,7 +203,7 @@ void enemyController::addDasher(tileController * pTiles) {
 	int locationSelect = (rand() % 2) ? rand() % (pCoordVec->size() / 3) : rand() % (pCoordVec->size() / 2);
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-	dashers.emplace_back(pRH->getTexture(ResourceHandler::Texture::gameObjects),
+	dashers.emplace_back(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 						 xInit, yInit, windowW / 2, windowH / 2);
 	(*pCoordVec)[locationSelect] = pCoordVec->back();
 	pCoordVec->pop_back();
@@ -215,7 +214,7 @@ void enemyController::addCritter(tileController * pTiles) {
 	int locationSelect = rand() % pCoordVec->size();
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-	critters.emplace_back(pRH->getTexture(ResourceHandler::Texture::gameObjects),
+	critters.emplace_back(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 						  pTiles->mapArray, xInit, yInit,
 						  windowW / 2, windowH / 2);
 	(*pCoordVec)[locationSelect] = pCoordVec->back();

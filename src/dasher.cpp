@@ -87,7 +87,7 @@ void Dasher::facePlayer() {
 		dasherSheet.setScale(-1, 1);
 }
 
-void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & walls, effectsController & effects, const sf::Time & elapsedTime) {
+void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & walls, EffectGroup & effects, const sf::Time & elapsedTime) {
 	Enemy::update(xOffset, yOffset, walls, effects, elapsedTime);
 	if (health > 0)
 		Enemy::checkShotCollision(effects, 14.f);
@@ -129,13 +129,13 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 			frameTimer -= 80;
 			shotCount++;
 			if (xPos > playerPosX) {
-				effects.addDasherShot(xInit - 12, yInit, angleFunction(xPos, yPos, playerPosX, playerPosY));
-				effects.addTurretFlash(xInit - 14, yInit - 4);
+				// effects.addDasherShot(xInit - 12, yInit, angleFunction(xPos, yPos, playerPosX, playerPosY));
+				// effects.addTurretFlash(xInit - 14, yInit - 4);
 			}
 			
 			else {
-				effects.addDasherShot(xInit + 4, yInit, angleFunction(xPos, yPos, playerPosX, playerPosY));
-				effects.addTurretFlash(xInit + 6, yInit - 4);
+				// effects.addDasherShot(xInit + 4, yInit, angleFunction(xPos, yPos, playerPosX, playerPosY));
+				// effects.addTurretFlash(xInit + 6, yInit - 4);
 			}
 		}
 
@@ -244,17 +244,18 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 	yInit += vSpeed * (elapsedTime.asMilliseconds() / 17.6f);
 }
 
-void Dasher::onDeath(effectsController & effects) {
+void Dasher::onDeath(EffectGroup & effects) {
 	state = State::dying;
 	hSpeed = 0;
 	vSpeed = 0;
 	frameIndex = 0;
 	unsigned long int temp = rand() % 4;
-	if (temp == 0)
-		effects.addHearts(xInit, yInit);
-	else
-		effects.addCoins(xInit, yInit);
-	effects.addSmallExplosion(xInit, yInit);
+	if (temp == 0) {
+		//effects.addHearts(xInit, yInit);
+	} else {
+		//effects.addCoins(xInit, yInit);
+	}
+	//effects.addSmallExplosion(xInit, yInit);
 	blurEffects.clear();
 }
 

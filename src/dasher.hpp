@@ -32,7 +32,7 @@ public:
 	Dasher(const sf::Texture &, float, float, float, float);
 	const sf::Sprite & getSprite() const override;
 	const sf::Sprite & getShadow() const override;
-    void update(float, float, const std::vector<wall> &, effectsController & ef, const sf::Time &) override;
+    void update(float, float, const std::vector<wall> &, EffectGroup & ef, const sf::Time &) override;
 	std::vector<Dasher::Blur> * getBlurEffects();
 	State getState() const;
 	const sf::Vector2f & getScale() const;
@@ -46,7 +46,7 @@ private:
 	float hSpeed, vSpeed;
 	int32_t timer;
 	std::vector<Dasher::Blur> blurEffects;
-	void onDeath(effectsController &) override;
+	void onDeath(EffectGroup &) override;
 	void facePlayer();
 };
 

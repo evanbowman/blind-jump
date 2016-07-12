@@ -3,9 +3,10 @@
 #include <utility>
 #include <vector>
 #include <queue>
+#include <SFML/Graphics.hpp>
 #include "utilities.hpp"
 
-using Sprite = int;
+using Sprite = sf::Sprite;
 
 namespace Framework {
 	struct Point {
@@ -18,38 +19,33 @@ namespace Framework {
 		}
 	};
 	
-	template<typename T>
 	class Object {
+	protected:
 		Point position{};
 		bool killFlag = false;
 		bool visible = false;
 	public:
-		const Sprite & getSprite() {
-			return static_cast<T*>(this)->getSpriteImpl();
-		}
-		template<typename ...Ts>
-		void update(Ts & ...args) {
-			static_cast<T*>(this)->updateImpl(args...);
-		}
-		void setPosition(Point _position) {
+		Object(float x, float y) : position{Point{x, y}} {}
+		inline void setPosition(Point _position) {
 			position = _position;
 		}
-		void setPosition(float x, float y) {
-			position = Point{x, y};
+		inline void setPosition(float x, float y) {
+			position.x = x;
+			position.y = y;
 		}
-		const Point & getPosition() const {
+		inline const Point & getPosition() const {
 			return position;
 		}
-		bool getKillFlag() {
+		inline bool getKillFlag() {
 			return killFlag;
 		}
-		void setKillFlag(bool _killFlag) {
+		inline void setKillFlag(bool _killFlag = true) {
 			killFlag = _killFlag;
 		}
-		bool isVisible() {
+		inline bool isVisible() {
 			return visible;
 		}
-		void setVisibility(bool _visible) {
+		inline void setVisibility(bool _visible) {
 			visible = _visible;
 		}
 	};

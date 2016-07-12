@@ -13,8 +13,8 @@ shotPuff::shotPuff(const sf::Texture & txtr, float x, float y) : Effect(x, y) {
 }
 
 void shotPuff::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
-	yPos = yInit + yOffset;
 	timer += elapsedTime.asMilliseconds();
+	setPosition(xInit + xOffset, yInit + yOffset);
 	if (timer > 50) {
 		timer -= 50;
 		frameIndex += 1;
@@ -23,7 +23,7 @@ void shotPuff::update(float xOffset, float yOffset, const sf::Time & elapsedTime
 			killFlag = true;
 		}
 	}
-	spriteSheet.setPosition(xInit + xOffset, yPos);
+	spriteSheet.setPosition(position.x, position.y);
 }
 
 const sf::Sprite & shotPuff::getSprite() const {

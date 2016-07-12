@@ -3,20 +3,16 @@
 #define EFFECT_HPP
 
 #include "SFML/Graphics.hpp"
+#include "Framework/framework.hpp"
 
-class Effect {
+class Effect : public Framework::Object {
 protected:
-	float xInit, yInit, yPos;
 	int16_t timer;
-	bool killFlag;
 	uint8_t frameIndex;
+	float xInit, yInit;
 
 public:
-	Effect(float, float);
-	virtual void update(float, float, const sf::Time &) = 0;
-	virtual const sf::Sprite & getSprite() const = 0;
-	float getYpos() const;
-	bool getKillFlag() const;
+	Effect(float x, float y) : Object{x, y}, timer{0}, frameIndex{0}, xInit{0}, yInit{0} {}
 };
 
 #endif

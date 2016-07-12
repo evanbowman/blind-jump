@@ -18,15 +18,12 @@ class FireExplosion : public Effect {
 private:
 	mutable SpriteSheet<208, 173, 58, 51> spriteSheet;
 	sf::Sprite glow;
-	bool valid;
 	
 public:
 	FireExplosion(const sf::Texture &, const sf::Texture &, float, float);
-	void update(float, float, const sf::Time &) override;
-	const sf::Sprite & getSprite() const override;
+	void update(float, float, const sf::Time &);
+	const sf::Sprite & getSprite() const;
 	sf::Sprite * getGlow();
-	bool isValid();
-	void invalidate();
 };
 
 #endif /* FireExplosion_hpp */

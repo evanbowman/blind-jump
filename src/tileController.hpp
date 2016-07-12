@@ -22,7 +22,7 @@ class tileController {
 public:
 	enum class Tileset {
 		intro, regular, nova
-			};
+	};
 
 	sf::Sprite lmplght;
 
@@ -34,7 +34,7 @@ public:
 	sf::Image redSet;
 	sf::Image redSetFlowers;
 
-	tileController(ResourceHandler *);
+	tileController();
 	void drawTiles(sf::RenderTexture&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, int level);
 	void drawTiles(sf::RenderTexture&);
 	void drawMiniMap(sf::RenderTexture&);

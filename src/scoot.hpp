@@ -13,6 +13,8 @@
 #include "wall.hpp"
 #include "effectsController.hpp"
 #include "enemy.hpp"
+#include "resourceHandler.hpp"
+#include "RenderType.hpp"
 
 class Scoot : public Enemy {
 private:
@@ -25,11 +27,11 @@ private:
 	State state;
 	int32_t timer;
 	void changeDir(float);
-	void onDeath(effectsController &) override;
+	void onDeath(EffectGroup &) override;
 
 public:
 	Scoot(const sf::Texture &, const sf::Texture &, float, float, float, float);
-	void update(float, float, const std::vector<wall> &, effectsController & ef, const sf::Time &) override;
+	void update(float, float, const std::vector<wall> &, EffectGroup & ef, const sf::Time &) override;
 	const sf::Sprite & getSprite() const override;
 	const sf::Sprite & getShadow() const override;
 };

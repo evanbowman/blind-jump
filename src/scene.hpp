@@ -30,13 +30,12 @@
 class Scene {
 private:
 	detailController details;
-	ResourceHandler * pRH;
 	InputController * pInput;
 	Player player;
 	userInterface UI;
 	SoundController sndCtrl;
 	tileController tiles;
-	effectsController effects;
+	EffectGroup effectGroup;
    	enemyController en;
 	FontController * pFonts;
    	int level;
@@ -49,6 +48,8 @@ private:
 	bool teleporterCond;
     sf::Sprite vignetteShadowSpr;
 	tileController::Tileset set;
+
+	std::vector<sf::Sprite *> glowSprs1, glowSprs2;
 	
 	// Create a GL rectangle primitive for the teleporter effect
 	sf::RectangleShape teleporterBeam;
@@ -97,7 +98,7 @@ private:
 	short int transitionDelay;
 	
 public:
-	Scene(float, float, ResourceHandler *, InputController *, FontController *);
+	Scene(float, float, InputController *, FontController *);
 	//Pass in the render window and draw sprites to it
 	void update(sf::RenderWindow&, sf::Time&);
 	// The opening map does not follow the procedural generation approach, have a separate function for this
@@ -111,7 +112,7 @@ public:
 	enemyController & getEnemyController();
 	tileController & getTileController();
 	Player & getPlayer();
-	effectsController & getEffects();
+	EffectGroup & getEffects();
 	InputController * getPInput();
 	ScreenShakeController * getPSSC();
 	userInterface & getUI();

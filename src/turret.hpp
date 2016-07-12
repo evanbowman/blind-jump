@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include "SFML/Graphics.hpp"
 #include "turret.hpp"
+#include "fontController.hpp"
 #include "effectsController.hpp"
 
 class turret {
@@ -47,7 +48,7 @@ public:
 	void setPosition(double, double);
 	sf::Sprite* getShadow();
 	sf::Sprite* getSprite(sf::Time &);
-	void updateShots(effectsController&, FontController&);
+	void updateShots(EffectGroup &, FontController&);
 	double getXinit();
 	double getYinit();
 	bool getKillFlag();

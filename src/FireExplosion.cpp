@@ -16,7 +16,7 @@ FireExplosion::FireExplosion(const sf::Texture & mainTxtr, const sf::Texture & g
 }
 
 void FireExplosion::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
-	yPos = yInit + yOffset;
+	setPosition(xInit + xOffset, yInit + yOffset);
 	timer += elapsedTime.asMilliseconds();
 	if (timer > 70) {
 		timer -= 70;
@@ -35,22 +35,14 @@ void FireExplosion::update(float xOffset, float yOffset, const sf::Time & elapse
 		glow.setColor(c);
 	}
 	
-	spriteSheet.setPosition(xInit + xOffset, yPos);
-	glow.setPosition(xInit + xOffset - 225, yPos - 225);
+	spriteSheet.setPosition(position.x, position.y);
+	glow.setPosition(position.x - 225, position.y - 225);
 }
 
-sf::Sprite * FireExplosion::getGlow() {
+Sprite * FireExplosion::getGlow() {
 	return &glow;
 }
 
-const sf::Sprite & FireExplosion::getSprite() const {
+const Sprite & FireExplosion::getSprite() const {
 	return spriteSheet[frameIndex];
-}
-
-bool FireExplosion::isValid() {
-	return valid;
-}
-
-void FireExplosion::invalidate() {
-	valid = false;
 }

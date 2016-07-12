@@ -8,11 +8,11 @@
 
 #include "Powerup.hpp"
 
-#define PI 3.1415926535
+const static float PI{3.1415926535};
 
-Powerup::Powerup(const sf::Texture & bodyTxtr, const sf::Texture & glowTxtr, float xInit, float yInit, Type id) {
-	this->xInit = xInit;
-	this->yInit = yInit;
+Powerup::Powerup(const sf::Texture & bodyTxtr, const sf::Texture & glowTxtr, float xInit, float yInit, Type id) :
+	Effect(xInit, yInit)
+{
 	glow.setTexture(glowTxtr);
 	glow.setOrigin(22.5, 22.5);
 	powerupSheet.setTexture(bodyTxtr);
@@ -23,39 +23,22 @@ Powerup::Powerup(const sf::Texture & bodyTxtr, const sf::Texture & glowTxtr, flo
 	killFlag = false;
 }
 
-void Powerup::update(float xoffset, float yoffset, sf::Time & elapsedTime) {
-	xPos = xInit + xoffset;
-	yPos = yInit + yoffset;
-	hitBox.setPosition(xPos, yPos);
+void Powerup::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
+	setPosition(xInit + xOffset, yInit + yOffset);
+	hitBox.setPosition(position.x, position.y);
 	timer += elapsedTime.asMilliseconds();
 }
 
 const sf::Sprite & Powerup::getSprite() {
 	const float offset = (3 * sinf(2 * PI * 0.001 * timer + 180));
 	// Make the sprite float up and down
-	powerupSheet.setPosition(xPos, yPos + offset);
+	powerupSheet.setPosition(position.x, position.y + offset);
 	return powerupSheet.getSprite();
 }
 
-sf::Sprite* Powerup::getGlow() {
-	glow.setPosition(xPos, yPos + 10);
+sf::Sprite * Powerup::getGlow() {
+	glow.setPosition(position.x, position.y + 10);
 	return &glow;
-}
-
-bool Powerup::getKillFlag() {
-	return killFlag;
-}
-
-void Powerup::setKillFlag() {
-    killFlag = true;
-}
-
-float Powerup::getXpos() {
-	return xPos;
-}
-
-float Powerup::getYpos() {
-	return yPos - 16;
 }
 
 const Powerup::HBox & Powerup::getHitBox() const {

@@ -19,6 +19,9 @@
 #include "resourceHandler.hpp"
 #include <iostream>
 
+// Many classes need to access the resource handler, and its accessors return only const references
+ResourceHandler globalResourceHandler;
+
 int main(int argc, char * argv[]) {
 	srand(static_cast<unsigned int>(time(0)));
 
@@ -46,8 +49,7 @@ int main(int argc, char * argv[]) {
 		while (fabs(aspectRatio - windowAspect) > 0.005f);
 	}
 	
-	ResourceHandler RH;
-	if(!RH.load()) {
+	if(!globalResourceHandler.load()) {
 		return EXIT_FAILURE;
 	}
 	
@@ -57,10 +59,10 @@ int main(int argc, char * argv[]) {
 	// Don't want the fonts to be scaled and blurry, so define another view for drawing them
 	sf::View fontView(sf::FloatRect(0, 0, desktop.width, desktop.height));
 	sf::View view(sf::FloatRect(0, 0, windowWidth, windowHeight));
-	FontController fonts(fontView, windowWidth / 2, windowHeight / 2, &RH);
+	FontController fonts(fontView, windowWidth / 2, windowHeight / 2);
 	
 	//Initialize the map
-	Scene Map(windowWidth, windowHeight, &RH, &input, &fonts);
+	Scene Map(windowWidth, windowHeight, &input, &fonts);
 	
 	// Set up the window context settings
 	sf::ContextSettings settings;

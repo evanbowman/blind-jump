@@ -15,7 +15,7 @@
 #include <tuple>
 #include "scene.hpp"
 
-Player::Player(ResourceHandler * pTM, float _xPos, float _yPos)
+Player::Player(float _xPos, float _yPos)
 	: gun{},
 	  health{4},
 	  xPos{_xPos - 17}, // Magic number that puts the player in the direct center of the screen. Hmmm why does it work...
@@ -43,11 +43,11 @@ Player::Player(ResourceHandler * pTM, float _xPos, float _yPos)
 	  rightPrevious{false}
 {
 	scrShakeState = false;
-	deathSheet.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
-	walkDown.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
-	walkUp.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
-	walkLeft.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
-	walkRight.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
+	deathSheet.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
+	walkDown.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
+	walkUp.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
+	walkLeft.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
+	walkRight.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
 	walkDown.setPosition(xPos, yPos);
 	walkUp.setPosition(xPos, yPos);
 	walkLeft.setPosition(xPos, yPos);
@@ -55,12 +55,12 @@ Player::Player(ResourceHandler * pTM, float _xPos, float _yPos)
 	shadowSprite.setPosition(xPos + 7, yPos + 24);
 	dashSheet.setPosition(xPos, yPos);
 	deathSheet.setPosition(xPos - 13, yPos - 1);
-	dashSheet.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
+	dashSheet.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
 	dashSheet.setOrigin(0, 1);
-	shadowSprite.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
+	shadowSprite.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
 	shadowSprite.setTextureRect(sf::IntRect(0, 100, 18, 16));
 	gun.gunSpr.setPosition(xPos, yPos);
-	gun.gunSpr.setTexture(pTM->getTexture(ResourceHandler::Texture::gameObjects));
+	gun.gunSpr.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
 }
 
 void Player::setPosition(float _xPos, float _yPos) {
@@ -168,7 +168,7 @@ void Player::update(Scene * pGM, const sf::Time & elapsedTime) {
 	InputController * pInput {pGM->getPInput()};
 	tileController & tiles {pGM->getTileController()};
 	detailController & details {pGM->getDetails()};
-	effectsController & effects {pGM->getEffects()};
+	EffectGroup & effects {pGM->getEffects()};
 	FontController * pFonts {pGM->getPFonts()};
 	bool x {pInput->xPressed()};
 	bool z {pInput->zPressed()};
@@ -540,7 +540,7 @@ void Player::setHealth(Health value) {
 	health = value;
 }
 
-void Player::updateGun(const sf::Time & elapsedTime, const bool x, effectsController & effects, float xOffset, float yOffset) {
+void Player::updateGun(const sf::Time & elapsedTime, const bool x, EffectGroup & effects, float xOffset, float yOffset) {
 	gun.timeout -= elapsedTime.asMilliseconds();
 	if (gun.bulletTimer != 0) {
 		gun.bulletTimer -= elapsedTime.asMilliseconds();
@@ -558,11 +558,11 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool x, effectsContro
 			gun.timeout = 1671;
 			if (gun.bulletTimer == 0) {
 				if (sheetIndex == Sheet::stillDown || sheetIndex == Sheet::walkDown) {
-					effects.addBullet(0, static_cast<int>(sheetIndex), xPos - xOffset, yPos - yOffset - 10);
+					//effects.addBullet(0, static_cast<int>(sheetIndex), xPos - xOffset, yPos - yOffset - 10);
 				} else if (sheetIndex == Sheet::stillUp || sheetIndex == Sheet::walkUp) {
-					effects.addBullet(0, static_cast<int>(sheetIndex), xPos - xOffset + 3, yPos - yOffset - 14);
+					//effects.addBullet(0, static_cast<int>(sheetIndex), xPos - xOffset + 3, yPos - yOffset - 14);
 				} else {
-					effects.addBullet(1, static_cast<int>(sheetIndex), xPos - xOffset, yPos - yOffset - 10);
+					//effects.addBullet(1, static_cast<int>(sheetIndex), xPos - xOffset, yPos - yOffset - 10);
 				}
 				gun.bulletTimer = 400;
 			}
@@ -581,31 +581,31 @@ bool checkEffectCollision(std::vector<T> & vec, Player & player) {
 	return false;
 }
 
-void Player::checkEffectCollisions(effectsController & effects, FontController * pFonts) {
-    if (checkEffectCollision<Enemyshot>(effects.getEnemyShots(), *this)) {
-		pFonts->resetHPText();
-		--health;
-		renderType = Rendertype::shadeRed;
-		colorAmount = 1.f;
-		colorTimer = 0;
-	}
+void Player::checkEffectCollisions(EffectGroup & effects, FontController * pFonts) {
+    // if (checkEffectCollision<Enemyshot>(effects.getEnemyShots(), *this)) {
+	// 	pFonts->resetHPText();
+	// 	--health;
+	// 	renderType = Rendertype::shadeRed;
+	// 	colorAmount = 1.f;
+	// 	colorTimer = 0;
+	// }
 
-	if (checkEffectCollision<Powerup>(effects.getCoins(), *this)) {
-		pFonts->updateScore(1);
-		pFonts->resetSCText();
-		renderType = Rendertype::shadeNeon;
-		colorAmount = 1.f;
-		colorTimer = 0;
-	}
+	// if (checkEffectCollision<Powerup>(effects.getCoins(), *this)) {
+	// 	pFonts->updateScore(1);
+	// 	pFonts->resetSCText();
+	// 	renderType = Rendertype::shadeNeon;
+	// 	colorAmount = 1.f;
+	// 	colorTimer = 0;
+	// }
 
-	if (health < pFonts->getMaxHealth()) {
-		if (checkEffectCollision<Powerup>(effects.getHearts(), *this)) {
-			health = fmin(pFonts->getMaxHealth(), health + 1);
-			renderType = Rendertype::shadeCrimson;
-			colorAmount = 1.f;
-			colorTimer = 0;
-		}
-	}
+	// if (health < pFonts->getMaxHealth()) {
+	// 	if (checkEffectCollision<Powerup>(effects.getHearts(), *this)) {
+	// 		health = fmin(pFonts->getMaxHealth(), health + 1);
+	// 		renderType = Rendertype::shadeCrimson;
+	// 		colorAmount = 1.f;
+	// 		colorTimer = 0;
+	// 	}
+	// }
 }
 
 const Player::HBox & Player::getHitBox() const {

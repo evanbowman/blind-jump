@@ -25,7 +25,7 @@ private:
 	State state;
 	
 public:
-	void _update(float, float, ScreenShakeController * pscr, effectsController & ef, const sf::Time & elapsedTime);
+	void _update(float, float, ScreenShakeController * pscr, EffectGroup & ef, const sf::Time & elapsedTime);
 	void update(float, float, const sf::Time &) override;
 	IntroDoor(float, float, const sf::Texture &);
 	const sf::Sprite & getSprite() const override;

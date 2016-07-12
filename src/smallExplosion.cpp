@@ -16,7 +16,7 @@ SmallExplosion::SmallExplosion(const sf::Texture & mainTxtr, const sf::Texture &
 }
 
 void SmallExplosion::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
-	yPos = yInit + yOffset;
+	setPosition(xInit + xOffset, yInit + yOffset);
 	timer += elapsedTime.asMilliseconds();
 	if (timer > 60) {
 		timer -= 60;
@@ -34,8 +34,8 @@ void SmallExplosion::update(float xOffset, float yOffset, const sf::Time & elaps
 		c.b -= 10;
 		glow.setColor(c);
 	}
-	spriteSheet.setPosition(xInit + xOffset, yPos);
-	glow.setPosition(xInit + xOffset - 225, yPos - 225);
+	spriteSheet.setPosition(position.x, position.y);
+	glow.setPosition(position.x - 225, position.y - 225);
 }
 
 sf::Sprite * SmallExplosion::getGlow() {

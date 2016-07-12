@@ -111,15 +111,15 @@ sf::Sprite* turret::getShadow() {
 	return &turretSprites[imageIndex + 5];
 }
 
-void turret::updateShots(effectsController& ef, FontController& fonts) {
+void turret::updateShots(EffectGroup & ef, FontController & fonts) {
 	//If the turret is open...
 	if (imageIndex == 4) {
 		//And the shot coundown timer has decremented far enough
 		if (--shotCountdown == 0) {
 			//Add a shot flash effect to the effects controller
-			ef.addTurretFlash(xInit, yInit);
+			//// ef.addTurretFlash(xInit, yInit);
 			//Create a shot object with an angle equal to the angle between the player and the turret
-			ef.addEnemyShot(xInit, yInit, angleFunction(xPos + 18, yPos, playerPosX, playerPosY));
+			//// ef.addEnemyShot(xInit, yInit, angleFunction(xPos + 18, yPos, playerPosX, playerPosY));
 			//Increment the number of shots fired
 			shotsFired++;
 			//Reset the countdown timer
@@ -133,31 +133,31 @@ void turret::updateShots(effectsController& ef, FontController& fonts) {
 		}
 		
 	//Check collisions with player's shots, but only if the shot vectors aren't empty
-	if (!ef.getBulletLayer1().empty()) {
-		for (auto & element : ef.getBulletLayer1()) {
-			if (std::abs(element.getXpos() - xPos) < 8 && std::abs(element.getYpos() - (yPos + 6)) < 15 && !element.getKillFlag()) {
-				element.setKillFlag();		   // Kill the bullet if there's a collision between the bullet and the enemy
-				// Tons of effects in one place is distracting, so don't draw another one if the enemy is about to explode
-				if (hp == 1) {
-					element.disablePuff();
-				}
-				hp -= 1;
-				isColored = true;
-				colorAmount = 1.f;
-			}
-		}
-	}
+	// 	if (!ef.getBulletLayer1().empty()) {
+	// 		for (auto & element : ef.getBulletLayer1()) {
+	// 			if (std::abs(element.getXpos() - xPos) < 8 && std::abs(element.getYpos() - (yPos + 6)) < 15 && !element.getKillFlag()) {
+	// 				element.setKillFlag();		   // Kill the bullet if there's a collision between the bullet and the enemy
+	// 				// Tons of effects in one place is distracting, so don't draw another one if the enemy is about to explode
+	// 				if (hp == 1) {
+	// 					element.disablePuff();
+	// 				}
+	// 				hp -= 1;
+	// 				isColored = true;
+	// 				colorAmount = 1.f;
+	// 			}
+	// 		}
+	// 	}
 	
 	}
 	
 	if (hp == 0) {
 		killFlag = 1;
 		if ((rand() % 4) == 0) {
-			ef.addHearts(xInit + 4, yInit + 4);
+			// ef.addHearts(xInit + 4, yInit + 4);
 		} else {
-			ef.addCoins(xInit + 4, yInit + 4);
+			// ef.addCoins(xInit + 4, yInit + 4);
 		}
-		ef.addFireExplosion(xInit + 6, yInit + 10);
+		// ef.addFireExplosion(xInit + 6, yInit + 10);
 	}
 }
 

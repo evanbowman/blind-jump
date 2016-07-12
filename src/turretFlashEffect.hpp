@@ -13,7 +13,6 @@
 #include "SFML/Graphics.hpp"
 #include "spriteSheet.hpp"
 #include "Effect.hpp"
-#include "framework.hpp"
 
 class turretFlashEffect : public Effect {
 private:
@@ -21,8 +20,8 @@ private:
 	
 public:
 	turretFlashEffect(const sf::Texture &, float, float);
-	void update(float, float, const sf::Time &) override;
-	const sf::Sprite & getSprite() const override;
+	void update(float, float, const sf::Time &);
+	const Sprite & getSprite() const;
 };
 
 #endif /* turretFlashEffect_hpp */

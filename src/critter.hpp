@@ -20,8 +20,8 @@ class tileController;
 class Critter : public Enemy {
 public:
 	Critter(const sf::Texture &, short map[61][61], float, float, float, float);
-	void update(float, float, const std::vector<wall> &, effectsController & ef, const sf::Time &) override;
-	void critterUpdate(float, float, effectsController & ef, const sf::Time &, tileController * pTiles);
+	void update(float, float, const std::vector<wall> &, EffectGroup & ef, const sf::Time &) override;
+	void critterUpdate(float, float, EffectGroup & ef, const sf::Time &, tileController * pTiles);
 	const sf::Sprite & getSprite() const override;
 	const sf::Sprite & getShadow() const override;
 	void activate();
@@ -30,7 +30,7 @@ public:
 	void updatePlayerDead();
 	
 private:
-	void onDeath(effectsController &) override;
+	void onDeath(EffectGroup &) override;
     float currentDir;
 	float jumpTargetx, jumpTargety;
 	void newPath(tileController *);

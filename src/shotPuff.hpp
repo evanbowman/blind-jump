@@ -21,8 +21,7 @@ private:
 
 public:
 	shotPuff(const sf::Texture &, float, float);
-	void update(float, float, const sf::Time &) override;
-	const sf::Sprite & getSprite() const override;
-	
+	void update(float, float, const sf::Time &);
+	const Sprite & getSprite() const;
 };
 #endif /* shotPuff_hpp */

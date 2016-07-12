@@ -30,7 +30,7 @@ void Scoot::changeDir(float dir) {
 	vSpeed = std::sin(dir);	
 }
 
-void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, effectsController & effects, const sf::Time & elapsedTime) {
+void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, EffectGroup & effects, const sf::Time & elapsedTime) {
 	Enemy::update(xOffset, yOffset, w, effects, elapsedTime);
 	Enemy::checkShotCollision(effects, 8.f);
 	Enemy::updateColor(elapsedTime);
@@ -66,10 +66,10 @@ void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, ef
 		break;
 		
 	case State::shoot:
-		effects.addTurretFlash(xInit - 8, yInit - 12);
-		effects.addScootShot(xInit - 8, yInit - 12,
-								 angleFunction(xPos - 8, yPos - 8, playerPosX, playerPosY),
-								 playerPosX, playerPosY);
+		effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xInit - 8, yInit - 12);
+		// effects.addScootShot(xInit - 8, yInit - 12,
+		// 						 angleFunction(xPos - 8, yPos - 8, playerPosX, playerPosY),
+		// 						 playerPosX, playerPosY);
 		state = State::recoil;
 		changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
 		hSpeed *= -1;
@@ -124,13 +124,20 @@ const sf::Sprite & Scoot::getShadow() const {
 	return shadow;
 }
 
-void Scoot::onDeath(effectsController & effects) {
+void Scoot::onDeath(EffectGroup & effects) {
 	int select{rand() % 5};
-	if (select == 0)
-		effects.addHearts(xInit, yInit + 4);
-	else
-		effects.addCoins(xInit, yInit + 4);
-	effects.addFireExplosion(xInit, yInit - 2);
+	if (select == 0) {
+		effects.add<4>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
+					   xInit, yInit + 4, Powerup::Type::Heart);
+	} else {
+		effects.add<5>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::blueglow),
+					   xInit, yInit + 4, Powerup::Type::Heart);
+	}
+	effects.add<2>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+				   globalResourceHandler.getTexture(ResourceHandler::Texture::fireExplosionGlow),
+				   xInit, yInit -2);
 	killFlag = true;
 	return;
 }
