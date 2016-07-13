@@ -11,10 +11,11 @@
 #define turret_hpp
 
 #include <stdio.h>
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include "turret.hpp"
 #include "fontController.hpp"
 #include "effectsController.hpp"
+#include "resourceHandler.hpp"
 
 class turret {
 private:

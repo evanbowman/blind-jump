@@ -1,10 +1,4 @@
-//
-//  enemyController.hpp
-//  Blind Jump
-//
 //  Created by Evan Bowman on 10/18/15.
-//  Copyright © 2015 Evan Bowman. All rights reserved.
-//
 
 #pragma once
 #ifndef enemyController_hpp
@@ -28,8 +22,6 @@ private:
 	using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
 	sf::Sprite turretSprites[10];
 	sf::Texture turretTextures[10];
-	sf::Sprite chaserSprites[4];
-	sf::Texture chaserTextures[4];
 	
 	std::vector<turret> turrets;
 	std::vector<Scoot> scoots;

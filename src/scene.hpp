@@ -1,10 +1,4 @@
-//
-//  mapInit.hpp
-//  Blind Jump
-//
 //  Created by Evan Bowman on 10/15/15.
-//  Copyright © 2015 Evan Bowman. All rights reserved.
-//
 
 #pragma once
 #ifndef gameMap_hpp

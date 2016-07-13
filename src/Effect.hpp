@@ -12,7 +12,7 @@ protected:
 	float xInit, yInit;
 
 public:
-	Effect(float x, float y) : Object{x, y}, timer{0}, frameIndex{0}, xInit{0}, yInit{0} {}
+	Effect(float x, float y) : Object{0, 0}, timer{0}, frameIndex{0}, xInit{x}, yInit{y} {}
 };
 
 #endif

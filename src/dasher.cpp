@@ -129,13 +129,15 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 			frameTimer -= 80;
 			shotCount++;
 			if (xPos > playerPosX) {
-				// effects.addDasherShot(xInit - 12, yInit, angleFunction(xPos, yPos, playerPosX, playerPosY));
-				// effects.addTurretFlash(xInit - 14, yInit - 4);
-			}
-			
-			else {
-				// effects.addDasherShot(xInit + 4, yInit, angleFunction(xPos, yPos, playerPosX, playerPosY));
-				// effects.addTurretFlash(xInit + 6, yInit - 4);
+				effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xInit - 14, yInit + 2);
+				effects.add<7>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+							   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
+							   xInit - 12, yInit, angleFunction(xPos, yPos, playerPosX, playerPosY));
+			} else {
+				effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xInit + 6, yInit + 2);
+				effects.add<7>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+							   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
+							   xInit + 4, yInit, angleFunction(xPos, yPos, playerPosX, playerPosY));
 			}
 		}
 
@@ -251,11 +253,17 @@ void Dasher::onDeath(EffectGroup & effects) {
 	frameIndex = 0;
 	unsigned long int temp = rand() % 4;
 	if (temp == 0) {
-		//effects.addHearts(xInit, yInit);
+	    effects.add<4>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
+					   xInit, yInit + 4, Powerup::Type::Heart);
 	} else {
-		//effects.addCoins(xInit, yInit);
+	    effects.add<5>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::blueglow),
+					   xInit, yInit + 4, Powerup::Type::Heart);
 	}
-	//effects.addSmallExplosion(xInit, yInit);
+    effects.add<2>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+				   globalResourceHandler.getTexture(ResourceHandler::Texture::fireExplosionGlow),
+				   xInit, yInit - 2);
 	blurEffects.clear();
 }
 

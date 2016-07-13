@@ -12,6 +12,7 @@
 
 #include "effectsController.hpp"
 #include "enemy.hpp"
+#include "resourceHandler.hpp"
 
 class Dasher : public Enemy {
 public:	

@@ -1,10 +1,4 @@
-//
-//  mapInit.cpp
-//  Blind Jump
-//
 //  Created by Evan Bowman on 10/15/15.
-//  Copyright © 2015 Evan Bowman. All rights reserved.
-//
 
 #include "mappingFunctions.hpp"
 #include "initMapVectors.hpp"
@@ -175,10 +169,10 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	}
 
 	glowSprs1.clear();
-	// Update the positions of all the effect objects
 	float tempXOff{player.getWorldOffsetX()};
 	float tempYOff{player.getWorldOffsetY()};
 	effectGroup.update(tempXOff, tempYOff, elapsedTime);
+	drawGroup(effectGroup, gameObjects, glowSprs1);
 	
 	// Draw shadows to the target
 	if (!gameShadows.empty()) {
@@ -196,12 +190,10 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	lightingMap.clear(sf::Color::Transparent);
 	
 	window.setView(worldView);
-	
-	/*-----------------------------------------------------------------------------------*/
-	//
-	//  OBJECT LEVEL SHADING
-	//
-	/*-----------------------------------------------------------------------------------*/
+
+	//===========================================================//
+	// Object shading                                            //
+	//===========================================================//
 	if (!gameObjects.empty()) {
 		sf::Shader & colorShader = globalResourceHandler.getShader(ResourceHandler::Shader::color);
 		for (auto & element : gameObjects) {
@@ -256,17 +248,14 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	
 	// Clear out the vectors for the next round of drawing
 	gameObjects.clear();
-	//effects.draw(target, gameObjects);
 	bkg.drawForeground(target);
 	target.draw(vignetteSprite, sf::BlendMultiply);
 	target.draw(vignetteShadowSpr);
 	target.display();
 	
-	/*-----------------------------------------------------------------------------------*/
-	//
-	//  POST PROCESSING EFFECTS
-	//
-	/*-----------------------------------------------------------------------------------*/
+	//===========================================================//
+	// Post Processing Effects                                   //
+	//===========================================================//
 	if (UI.blurEnabled() && UI.desaturateEnabled()) {
 		sf::Shader & blurShader = globalResourceHandler.getShader(ResourceHandler::Shader::blur);
 		sf::Shader & desaturateShader = globalResourceHandler.getShader(ResourceHandler::Shader::desaturate);

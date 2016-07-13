@@ -1,10 +1,4 @@
-//
-//  enemyController.cpp
-//  Blind Jump
-//
 //  Created by Evan Bowman on 10/18/15.
-//  Copyright © 2015 Evan Bowman. All rights reserved.
-//
 
 #include "enemyController.hpp"
 #include "ResourcePath.hpp"

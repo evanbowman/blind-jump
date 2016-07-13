@@ -1,10 +1,4 @@
-//
-//  detailController.hpp
-//  Blind Jump
-//
 //  Created by Evan Bowman on 10/29/15.
-//  Copyright © 2015 Evan Bowman. All rights reserved.
-//
 
 #pragma once
 #ifndef detailController_hpp

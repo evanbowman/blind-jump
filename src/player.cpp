@@ -582,7 +582,7 @@ bool checkEffectCollision(std::vector<T> & vec, Player & player) {
 }
 
 void Player::checkEffectCollisions(EffectGroup & effects, FontController * pFonts) {
-    // if (checkEffectCollision<Enemyshot>(effects.getEnemyShots(), *this)) {
+    // if (checkEffectCollision<EnemyShot>(effects.getEnemyShots(), *this)) {
 	// 	pFonts->resetHPText();
 	// 	--health;
 	// 	renderType = Rendertype::shadeRed;

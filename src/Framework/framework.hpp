@@ -1,3 +1,4 @@
+// Created by Evan Bowman on 7/5/16
 
 #pragma once
 #include <utility>
@@ -9,6 +10,10 @@
 using Sprite = sf::Sprite;
 
 namespace Framework {
+	//===========================================================//
+	// Framework::Point simply encapsulates x,y coordinates and  //
+	// provides a few overloads where meaningful.                //
+	//===========================================================//
 	struct Point {
 		float x, y;
 		inline bool operator==(const Point & other) {
@@ -19,6 +24,12 @@ namespace Framework {
 		}
 	};
 	
+	//===========================================================//
+	// Framework::Object implements a lot of the boilerplate     //
+	// code needed to put it in a group. Classes derived from    //
+	// Object only need to implement their own version of the    //
+	// update() function to be compatible with Framework::Group  //
+	//===========================================================//
 	class Object {
 	protected:
 		Point position{};
@@ -49,7 +60,14 @@ namespace Framework {
 			visible = _visible;
 		}
 	};
-	
+
+	//===========================================================//
+	// A group consists of a collection of classes derived from  //
+	// Framework::Object that update with the same parameters.   //
+	// The class template is variadic, so you can pass any       //
+	// number of arguments to its update function, as long as    //
+	// they match each type in the container.                    //
+	//===========================================================//
 	template<typename ...Ts>
 	class Group {
 		template<std::size_t indx>
@@ -96,17 +114,6 @@ namespace Framework {
 						}
 					}
 				});
-		}
-		auto getSprites() {
-			std::vector<std::reference_wrapper<const Sprite>> sprites;
-			utilities::for_each(contents, [&](auto & vec) {
-					for (auto & element : vec) {
-						if (element.isVisible()) {
-							sprites.emplace_back(element.getSprite());
-						}
-					}
-				});
-			return sprites;
 		}
 	};
 }

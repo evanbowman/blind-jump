@@ -1,11 +1,4 @@
-
-//
-//  main.cpp
-//  BlindJump
-//
 //  Created by Evan Bowman on 10/9/15.
-//  Copyright © 2015 Evan Bowman. All rights reserved.
-//
 
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>

@@ -107,19 +107,21 @@ void turret::setPosition(double x, double y) {
 }
 
 //Returns the turret's shadow sprite
-sf::Sprite* turret::getShadow() {
+sf::Sprite * turret::getShadow() {
 	return &turretSprites[imageIndex + 5];
 }
 
-void turret::updateShots(EffectGroup & ef, FontController & fonts) {
+void turret::updateShots(EffectGroup & effects, FontController & fonts) {
 	//If the turret is open...
 	if (imageIndex == 4) {
 		//And the shot coundown timer has decremented far enough
 		if (--shotCountdown == 0) {
 			//Add a shot flash effect to the effects controller
-			//// ef.addTurretFlash(xInit, yInit);
+			effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xInit, yInit);
 			//Create a shot object with an angle equal to the angle between the player and the turret
-			//// ef.addEnemyShot(xInit, yInit, angleFunction(xPos + 18, yPos, playerPosX, playerPosY));
+			effects.add<6>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+						   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
+						   xInit, yInit, angleFunction(xPos + 18, yPos, playerPosX, playerPosY));
 			//Increment the number of shots fired
 			shotsFired++;
 			//Reset the countdown timer
@@ -151,13 +153,19 @@ void turret::updateShots(EffectGroup & ef, FontController & fonts) {
 	}
 	
 	if (hp == 0) {
-		killFlag = 1;
+		killFlag = true;
 		if ((rand() % 4) == 0) {
-			// ef.addHearts(xInit + 4, yInit + 4);
+			effects.add<4>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
+					   xInit, yInit + 4, Powerup::Type::Heart);
 		} else {
-			// ef.addCoins(xInit + 4, yInit + 4);
+		    effects.add<5>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::blueglow),
+					   xInit, yInit + 4, Powerup::Type::Heart);
 		}
-		// ef.addFireExplosion(xInit + 6, yInit + 10);
+		effects.add<2>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+				   globalResourceHandler.getTexture(ResourceHandler::Texture::fireExplosionGlow),
+				   xInit, yInit -2);
 	}
 }
 

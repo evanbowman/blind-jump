@@ -67,9 +67,9 @@ void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, Ef
 		
 	case State::shoot:
 		effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xInit - 8, yInit - 12);
-		// effects.addScootShot(xInit - 8, yInit - 12,
-		// 						 angleFunction(xPos - 8, yPos - 8, playerPosX, playerPosY),
-		// 						 playerPosX, playerPosY);
+		effects.add<8>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
+					   xInit - 8, yInit - 12, angleFunction(xPos - 8, yPos - 8, playerPosX, playerPosY));
 		state = State::recoil;
 		changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
 		hSpeed *= -1;
@@ -137,7 +137,7 @@ void Scoot::onDeath(EffectGroup & effects) {
 	}
 	effects.add<2>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::fireExplosionGlow),
-				   xInit, yInit -2);
+				   xInit, yInit - 2);
 	killFlag = true;
 	return;
 }
