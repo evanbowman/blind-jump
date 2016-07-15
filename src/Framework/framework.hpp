@@ -3,6 +3,7 @@
 #pragma once
 #include <utility>
 #include <vector>
+#include <cmath>
 #include <queue>
 #include <SFML/Graphics.hpp>
 #include "utilities.hpp"
@@ -23,6 +24,14 @@ namespace Framework {
 			return x != other.x || y != other.y;
 		}
 	};
+
+	//===========================================================//
+	// Returns the degrees in radians of the line formed by two  //
+	// instances of Framework::Point                             //
+	//===========================================================//
+	inline float angle(const Point & p1, const Point & p2) {
+		return std::atan2(p1.y - p2.y, p1.x - p2.x);
+	}
 	
 	//===========================================================//
 	// Framework::Object implements a lot of the boilerplate     //

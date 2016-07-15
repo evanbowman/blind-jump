@@ -15,12 +15,12 @@
 #include "spriteSheet.hpp"
 #include "Effect.hpp"
 
-class shotPuff : public Effect {
+class ShotPuff : public Effect {
 private:
 	mutable SpriteSheet<88, 145, 16, 16> spriteSheet;
 
 public:
-	shotPuff(const sf::Texture &, float, float);
+	ShotPuff(const sf::Texture &, float, float);
 	void update(float, float, const sf::Time &);
 	const Sprite & getSprite() const;
 };

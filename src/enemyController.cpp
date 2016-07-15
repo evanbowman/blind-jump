@@ -176,7 +176,7 @@ sf::Sprite * enemyController::getTurretSprites() {
 	return turretSprites;
 }
 
-void enemyController::addTurret(turret t) {
+void enemyController::addTurret(Turret t) {
 	turrets.push_back(t);
 }
 

@@ -23,7 +23,7 @@ private:
 	sf::Sprite turretSprites[10];
 	sf::Texture turretTextures[10];
 	
-	std::vector<turret> turrets;
+	std::vector<Turret> turrets;
 	std::vector<Scoot> scoots;
 	std::vector<Dasher> dashers;
 	std::vector<Critter> critters;
@@ -37,7 +37,7 @@ public:
 	void clear();
 	sf::Sprite * getTurretSprites();
 	sf::Sprite * getChaserSprites();
-	void addTurret(turret);
+	void addTurret(Turret);
 	void addScoot(tileController *);
 	void addDasher(tileController *);
 	void addCritter(tileController *);

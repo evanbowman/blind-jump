@@ -14,12 +14,12 @@
 #include "spriteSheet.hpp"
 #include "Effect.hpp"
 
-class turretFlashEffect : public Effect {
+class TurretFlashEffect : public Effect {
 private:
 	mutable SpriteSheet<0, 116, 16, 16> spriteSheet;
 	
 public:
-	turretFlashEffect(const sf::Texture &, float, float);
+	TurretFlashEffect(const sf::Texture &, float, float);
 	void update(float, float, const sf::Time &);
 	const Sprite & getSprite() const;
 };

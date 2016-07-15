@@ -10,7 +10,7 @@
 #include <cmath>
 #include "angleFunction.hpp"
 
-turret::turret(sf::Sprite spr[10]) {
+Turret::Turret(sf::Sprite spr[10]) {
 	xPos = 0;
 	yPos = 0;
 	xInit = 0;
@@ -38,7 +38,7 @@ turret::turret(sf::Sprite spr[10]) {
 }
 
 //Returns the turret's sprite based on its animation sequence
-sf::Sprite* turret::getSprite(sf::Time & elapsedTime) {
+sf::Sprite* Turret::getSprite(sf::Time & elapsedTime) {
 	if (isColored) {
 		colorTimer += elapsedTime.asMilliseconds();
 		if (colorTimer > 20.f) {
@@ -90,7 +90,7 @@ sf::Sprite* turret::getSprite(sf::Time & elapsedTime) {
 }
 
 //Fairly self-explanitory, updates the position of the turret when called
-void turret::setPosition(double x, double y) {
+void Turret::setPosition(double x, double y) {
 	xPos = x;
 	yPos = y;
 	xOffset = x - xInit;
@@ -107,11 +107,11 @@ void turret::setPosition(double x, double y) {
 }
 
 //Returns the turret's shadow sprite
-sf::Sprite * turret::getShadow() {
+sf::Sprite * Turret::getShadow() {
 	return &turretSprites[imageIndex + 5];
 }
 
-void turret::updateShots(EffectGroup & effects, FontController & fonts) {
+void Turret::updateShots(EffectGroup & effects, FontController & fonts) {
 	//If the turret is open...
 	if (imageIndex == 4) {
 		//And the shot coundown timer has decremented far enough
@@ -169,44 +169,44 @@ void turret::updateShots(EffectGroup & effects, FontController & fonts) {
 	}
 }
 
-bool turret::getKillFlag() {
+bool Turret::getKillFlag() {
 	return killFlag;
 }
 
-double turret::getXinit() {
+double Turret::getXinit() {
 	return xInit;
 }
 
-double turret::getYinit() {
+double Turret::getYinit() {
 	return yInit;
 }
 
-void turret::setInitPosition(double x, double y) {
+void Turret::setInitPosition(double x, double y) {
 	xInit = x;
 	yInit = y;
 }
 
-double turret::getPlayerPosX() {
+double Turret::getPlayerPosX() {
 	return playerPosX;
 }
 
-double turret::getPlayerPosY() {
+double Turret::getPlayerPosY() {
 	return playerPosY;
 }
 
-void turret::setPlayerPos(double x, double y) {
+void Turret::setPlayerPos(double x, double y) {
 	playerPosX = x / 2;
 	playerPosY = y / 2;
 }
 
-double turret::getXpos() {
+double Turret::getXpos() {
 	return xPos;
 }
 
-double turret::getYpos() {
+double Turret::getYpos() {
 	return yPos;
 }
 
-bool turret::colored() {
+bool Turret::colored() {
 	return isColored;
 }

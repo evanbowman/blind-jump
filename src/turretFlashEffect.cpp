@@ -8,7 +8,7 @@
 
 #include "turretFlashEffect.hpp"
 
-turretFlashEffect::turretFlashEffect(const sf::Texture & txtr, float x, float y) : Effect(x, y) {
+TurretFlashEffect::TurretFlashEffect(const sf::Texture & txtr, float x, float y) : Effect(x, y) {
 	spriteSheet.setTexture(txtr);
 	bool select = rand() % 2;
 	if (select) {
@@ -17,7 +17,7 @@ turretFlashEffect::turretFlashEffect(const sf::Texture & txtr, float x, float y)
 	}
 }
 
-void turretFlashEffect::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
+void TurretFlashEffect::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
 	timer += elapsedTime.asMilliseconds();
 	if (timer > 40) {
 		timer -= 40;
@@ -31,6 +31,6 @@ void turretFlashEffect::update(float xOffset, float yOffset, const sf::Time & el
 	spriteSheet.setPosition(position.x, position.y);
 }
 
-const Sprite & turretFlashEffect::getSprite() const {
+const Sprite & TurretFlashEffect::getSprite() const {
 	return spriteSheet[frameIndex];
 }

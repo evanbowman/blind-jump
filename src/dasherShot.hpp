@@ -14,9 +14,11 @@
 #include <cmath>
 #include "spriteSheet.hpp"
 #include "Effect.hpp"
+#include "hitBox.hpp"
 
 class DasherShot : public Effect {
 public:
+	using HBox = HitBox<12, 12, -6, -6>;
 	DasherShot(const sf::Texture &, const sf::Texture &, float, float, float);
 	SpriteSheet<0, 88, 12, 12> spriteSheet;
 	const sf::Sprite & getSprite();
@@ -25,10 +27,12 @@ public:
 	void speedFactor(float);
 	bool driftSel;
 	sf::Sprite * getGlow();
+	const HBox & getHitBox() const;
 	
 private:
 	int32_t timeout;
 	float scale;
+	HBox hitBox;
 	sf::Sprite glowSprite;
 };
 

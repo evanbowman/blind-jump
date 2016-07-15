@@ -351,6 +351,10 @@ void Player::update(Scene * pGM, const sf::Time & elapsedTime) {
 		break;
 		
 	case State::dead:
+		lSpeed = 0.f;
+		rSpeed = 0.f;
+		uSpeed = 0.f;
+		dSpeed = 0.f;
 		break;
 	}
 	
@@ -381,7 +385,7 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf
 			if (gun.timeout > 0) {
 				gun.gunSpr.setPosition(xPos + 12, yPos + 15);
 				gameObjects.emplace_back(gun.gunSpr[4 + gunIndexOffset(gun.timeout)],
-										 gun.gunSpr.getYpos(), renderType, colorAmount);
+										 gun.gunSpr.getYpos() - 14, renderType, colorAmount);
 			}
 			gameObjects.emplace_back(walkDown[5], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
@@ -416,7 +420,7 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf
 			if (gun.timeout > 0) {
 				gun.gunSpr.setPosition(xPos + 12, yPos + 15);
 				gameObjects.emplace_back(gun.gunSpr[4 + gunIndexOffset(gun.timeout)],
-										 gun.gunSpr.getYpos(), renderType, colorAmount);
+										 gun.gunSpr.getYpos() - 14, renderType, colorAmount);
 			}
 			updateAnimation(elapsedTime, 9, 100);
 			gameObjects.emplace_back(walkDown[verticalAnimationDecoder(frameIndex)], yPos, renderType, colorAmount);
@@ -454,7 +458,7 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf
 		case Sheet::deathSheet:
 			if (frameIndex < 10) {
 				animationTimer += elapsedTime.asMilliseconds();
-				if (animationTimer > 80) {
+				if (animationTimer > 60) {
 					animationTimer = 0;
 					++frameIndex;
 				}
@@ -557,55 +561,47 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool x, EffectGroup &
 		} else if (gun.timeout < 1671) {
 			gun.timeout = 1671;
 			if (gun.bulletTimer == 0) {
-				if (sheetIndex == Sheet::stillDown || sheetIndex == Sheet::walkDown) {
-					//effects.addBullet(0, static_cast<int>(sheetIndex), xPos - xOffset, yPos - yOffset - 10);
-				} else if (sheetIndex == Sheet::stillUp || sheetIndex == Sheet::walkUp) {
-					//effects.addBullet(0, static_cast<int>(sheetIndex), xPos - xOffset + 3, yPos - yOffset - 14);
-				} else {
-					//effects.addBullet(1, static_cast<int>(sheetIndex), xPos - xOffset, yPos - yOffset - 10);
-				}
+				effects.add<9>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), globalResourceHandler.getTexture(ResourceHandler::Texture::whiteGlow), static_cast<int>(sheetIndex), xPos - xOffset, yPos - yOffset);
 				gun.bulletTimer = 400;
 			}
 		}
 	}
 }
 
-template<typename T>
-bool checkEffectCollision(std::vector<T> & vec, Player & player) {
-	for (auto & element : vec) {
-		if (overlapping<Player::HBox, typename T::HBox>(player.getHitBox(), element.getHitBox())) {
+template<std::size_t indx, typename F >
+void checkEffectCollision(EffectGroup & effects, Player & player, const F & policy) {
+	for (auto & element : effects.get<indx>()) {
+		if (overlapping(player.getHitBox(), element.getHitBox())) {
 			element.setKillFlag();
-			return true;
+			policy();
 		}
 	}
-	return false;
 }
 
 void Player::checkEffectCollisions(EffectGroup & effects, FontController * pFonts) {
-    // if (checkEffectCollision<EnemyShot>(effects.getEnemyShots(), *this)) {
-	// 	pFonts->resetHPText();
-	// 	--health;
-	// 	renderType = Rendertype::shadeRed;
-	// 	colorAmount = 1.f;
-	// 	colorTimer = 0;
-	// }
-
-	// if (checkEffectCollision<Powerup>(effects.getCoins(), *this)) {
-	// 	pFonts->updateScore(1);
-	// 	pFonts->resetSCText();
-	// 	renderType = Rendertype::shadeNeon;
-	// 	colorAmount = 1.f;
-	// 	colorTimer = 0;
-	// }
-
-	// if (health < pFonts->getMaxHealth()) {
-	// 	if (checkEffectCollision<Powerup>(effects.getHearts(), *this)) {
-	// 		health = fmin(pFonts->getMaxHealth(), health + 1);
-	// 		renderType = Rendertype::shadeCrimson;
-	// 		colorAmount = 1.f;
-	// 		colorTimer = 0;
-	// 	}
-	// }
+	auto hitPolicy = [&]() {
+		pFonts->resetHPText();
+		--health;
+		renderType = Rendertype::shadeRed;
+		colorAmount = 1.f;
+		colorTimer = 0;
+	};
+	checkEffectCollision<8>(effects, *this, hitPolicy);
+	checkEffectCollision<7>(effects, *this, hitPolicy);
+	checkEffectCollision<6>(effects, *this, hitPolicy);
+	checkEffectCollision<4>(effects, *this, [&]() {
+			pFonts->updateScore(1);
+			pFonts->resetSCText();
+			renderType = Rendertype::shadeNeon;
+			colorAmount = 1.f;
+			colorTimer = 0;
+		});
+	checkEffectCollision<5>(effects, *this, [&]() {
+			health = fmin(pFonts->getMaxHealth(), health + 1);
+			renderType = Rendertype::shadeCrimson;
+			colorAmount = 1.f;
+			colorTimer = 0;
+		});
 }
 
 const Player::HBox & Player::getHitBox() const {

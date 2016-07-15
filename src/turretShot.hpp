@@ -10,24 +10,27 @@
 #ifndef turretShot_hpp
 #define turretShot_hpp
 
-#include "SFML/Graphics.hpp"
 #include <cmath>
 #include "spritesheet.hpp"
 #include "Effect.hpp"
+#include "hitBox.hpp"
 
 class TurretShot : public Effect {
 public:
+	using HBox = HitBox<10, 10, -5, -5>;
+	const HBox & getHitBox() const;
 	TurretShot(const sf::Texture &, const sf::Texture &, float, float, float);
-	SpriteSheet<26, 75, 9, 16> spriteSheet;
-	sf::Sprite glowSprite;
 	sf::Sprite * getGlow();
 	const sf::Sprite & getSprite();
 	void update(float, float, sf::Time&);
-	float direction;
 	void speedFactor(float);
 	int32_t animationTimer;
 	
 private:
+	SpriteSheet<26, 75, 9, 16> spriteSheet;
+	HBox hitBox;
+	sf::Sprite glowSprite;
+	float direction;
 	float scale;
 	uint8_t frameIndex;	
 };

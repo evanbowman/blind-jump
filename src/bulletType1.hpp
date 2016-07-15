@@ -12,30 +12,23 @@
 
 #include <SFML/Graphics.hpp>
 #include "spriteSheet.hpp"
+#include "Effect.hpp"
 
-class bulletType1 {
+class PlayerShot : public Effect {
 private:
 	SpriteSheet<44, 75, 16, 16> spriteSheet;
+	SpriteSheet<88, 145, 16, 16> puffSheet;
 	sf::Sprite glow;
 	char direction;
-	float xPos;
-	float yPos;
-	float xInit;
-	float yInit;
-	bool killFlag;
 	bool canPoof;
-	sf::Clock clock;
+	enum class State { travelling, poof };
+	State state;
 	
 public:
-	bulletType1(const sf::Texture &, const sf::Texture &, char, float, float);
+	PlayerShot(const sf::Texture &, const sf::Texture &, char, float, float);
 	const sf::Sprite & getSprite();
 	sf::Sprite * getGlow();
-	void update(float, float);
-	bool getKillFlag();
-	void setKillFlag();
-	void setPosition(float, float);
-	float getXpos();
-	float getYpos();
+	void update(float, float, const sf::Time &);
 	char getDirection();
 	bool checkCanPoof();
 	void disablePuff();

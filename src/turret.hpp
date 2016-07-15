@@ -17,7 +17,7 @@
 #include "effectsController.hpp"
 #include "resourceHandler.hpp"
 
-class turret {
+class Turret {
 private:
 	double xPos;
 	double yPos;
@@ -45,7 +45,7 @@ private:
 	float colorAmount;
 	
 public:
-	turret(sf::Sprite spr[10]);
+	Turret(sf::Sprite spr[10]);
 	void setPosition(double, double);
 	sf::Sprite* getShadow();
 	sf::Sprite* getSprite(sf::Time &);

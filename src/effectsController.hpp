@@ -18,15 +18,17 @@
 #include "dasherShot.hpp"
 #include "turretShot.hpp"
 
-using EffectGroup = Framework::Group<turretFlashEffect,
-									 SmallExplosion,
-									 FireExplosion,
-									 shotPuff,
-									 Powerup,
-									 Powerup,
-									 EnemyShot,
-									 DasherShot,
-									 TurretShot>;
+using EffectGroup = Framework::Group<TurretFlashEffect, // - 0
+									 SmallExplosion, // ---- 1
+									 FireExplosion, // ----- 2
+									 ShotPuff, // ---------- 3 
+									 Powerup, // ----------- 4
+									 Powerup, // ----------- 5
+									 EnemyShot, // --------- 6
+									 DasherShot, // -------- 7
+									 TurretShot, // -------- 8
+									 PlayerShot>; // ------- 9
+	
 
 using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
 
@@ -46,7 +48,7 @@ void drawVecGlow(EffectGroup & eg, drawableVec & vec, std::vector<Sprite *> & gl
 }
 
 inline void drawGroup(EffectGroup & eg, drawableVec & vec, std::vector<Sprite *> & glowSprs) {
-	drawVec<0, 11>(eg, vec); // Could this be expanded recursively with templates?
+	drawVec<0, 11>(eg, vec);
 	drawVec<3>(eg, vec);
 	drawVecGlow<1>(eg, vec, glowSprs);
 	drawVecGlow<2>(eg, vec, glowSprs);
@@ -55,6 +57,7 @@ inline void drawGroup(EffectGroup & eg, drawableVec & vec, std::vector<Sprite *>
 	drawVecGlow<6, 11>(eg, vec, glowSprs);
 	drawVecGlow<7, 11>(eg, vec, glowSprs);
 	drawVecGlow<8, 11>(eg, vec, glowSprs);
+	drawVecGlow<9>(eg, vec, glowSprs);
 }
 
 #endif /* effectsController_hpp */

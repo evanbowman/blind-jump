@@ -1,6 +1,6 @@
 #pragma once
 
-template <uint8_t w, uint8_t h, uint8_t xOff, uint8_t yOff>
+template <int16_t w, int16_t h, int16_t xOff, int16_t yOff>
 class HitBox {
 	static_assert(w > 0 && h > 0, "Zero is not a valid Hitbox side length parameter");
 	float xPos, yPos;
@@ -13,11 +13,11 @@ public:
 		yPos = _yPos;
 	}
 	
-	constexpr uint8_t getWidth() const {
+	constexpr uint16_t getWidth() const {
 		return w;
 	}
 	
-	constexpr uint8_t getHeight() const {
+	constexpr uint16_t getHeight() const {
 		return h;
 	}
 	

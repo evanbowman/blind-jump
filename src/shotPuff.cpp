@@ -8,11 +8,11 @@
 
 #include "shotPuff.hpp"
 
-shotPuff::shotPuff(const sf::Texture & txtr, float x, float y) : Effect(x, y) {
+ShotPuff::ShotPuff(const sf::Texture & txtr, float x, float y) : Effect(x, y) {
 	spriteSheet.setTexture(txtr);
 }
 
-void shotPuff::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
+void ShotPuff::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
 	timer += elapsedTime.asMilliseconds();
 	setPosition(xInit + xOffset, yInit + yOffset);
 	if (timer > 50) {
@@ -26,6 +26,6 @@ void shotPuff::update(float xOffset, float yOffset, const sf::Time & elapsedTime
 	spriteSheet.setPosition(position.x, position.y);
 }
 
-const sf::Sprite & shotPuff::getSprite() const {
+const sf::Sprite & ShotPuff::getSprite() const {
 	return spriteSheet[frameIndex];
 }

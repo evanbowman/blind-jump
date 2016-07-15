@@ -26,6 +26,7 @@ void TurretShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 	xInit += scale * 1.5 * (elapsedTime.asMilliseconds() / 17.6) * (cos(direction));
 	yInit += scale * 1.5 * (elapsedTime.asMilliseconds() / 17.6) * (sin(direction));
 	setPosition(xInit + xOffset, yInit + yOffset);
+	hitBox.setPosition(position.x, position.y);
 	spriteSheet.setPosition(position.x, position.y);
 	glowSprite.setPosition(position.x, position.y + 18);
 	timer += elapsedTime.asMilliseconds();
@@ -39,6 +40,10 @@ void TurretShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 		animationTimer -= 50;
 		frameIndex ^= 0x01; // Toggle between the two frames
 	}
+}
+
+const TurretShot::HBox & TurretShot::getHitBox() const {
+	return hitBox;
 }
 
 const sf::Sprite & TurretShot::getSprite() {

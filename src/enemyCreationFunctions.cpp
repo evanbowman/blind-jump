@@ -15,7 +15,7 @@
 void addTurret(short mapArray[61][61], short descriptionArray[61][61], enemyController& en, float posX, float posY, float windowW, float windowH, std::vector<Coordinate>& emptyLocations) {
 	
 	//Construct a turret with all its sprites
-	turret t(en.getTurretSprites());
+	Turret t(en.getTurretSprites());
 	
 	// Randomly pick an available empty location
 	int locationSelect = (rand() % 2) ? rand() % (emptyLocations.size() / 2 ) : rand() % (emptyLocations.size());

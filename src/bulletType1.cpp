@@ -8,109 +8,106 @@
 
 #include "bulletType1.hpp"
 
-#define MOVEMENT_RATE 0.45
-
-bulletType1::bulletType1(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, char dir, float x, float y) {
-	//Initialize the starting x position to the player's x position
-	xPos = x;
-	yPos = y;
-	xInit = x;
-	yInit = y;
-	direction = dir;
-	glow.setTexture(glowTxtr);
+PlayerShot::PlayerShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, char dir, float x, float y) :
+	Effect{x, y},
+	direction{dir},
+	canPoof{true},
+	state{State::travelling}
+{
 	spriteSheet.setTexture(mainTxtr);
-	killFlag = 0;
-	clock.restart();
+	puffSheet.setTexture(mainTxtr);
+	glow.setTexture(glowTxtr);
 	canPoof = true;
-	if (dir == 0 || dir == 1 || dir == 4 || dir == 5)
+	if (dir == 0 || dir == 1 || dir == 4 || dir == 5) {
 		spriteSheet[1];
-	else
+	} else {
 		spriteSheet[0];
+	}
 }
 
-//A function to return the bullet sprite
-const sf::Sprite & bulletType1::getSprite() {
-	return spriteSheet.getSprite();
+const sf::Sprite & PlayerShot::getSprite() {
+	switch (state) {
+	case State::travelling:
+		return spriteSheet.getSprite();
+		break;
+
+	case State::poof:
+		return puffSheet[frameIndex];
+		break;
+	}
 }
 
-sf::Sprite* bulletType1::getGlow() {
+sf::Sprite * PlayerShot::getGlow() {
 	return &glow;
 }
 
-void bulletType1::update(float xOffset, float yOffset) {
-	switch (direction) {
-		case 0:
-			xPos = xInit + xOffset + 6;
-			yPos = yInit + 11 + yOffset + 18 + MOVEMENT_RATE * clock.getElapsedTime().asMilliseconds(); //'20 - duration' term grows with time, thus moving the bullet across the screen
-			break;
-		case 1:
-			xPos = xInit + xOffset + 6;
-			yPos = yInit + 11 + yOffset - MOVEMENT_RATE * clock.getElapsedTime().asMilliseconds();
-			break;
-		case 2:
-			xPos = xInit + xOffset - 13 - MOVEMENT_RATE * clock.getElapsedTime().asMilliseconds();
-			yPos = yInit + 11 + yOffset + 8;
-			break;
-		case 3:
-			xPos = xInit + xOffset + 29 + MOVEMENT_RATE * clock.getElapsedTime().asMilliseconds();
-			yPos = yInit + 11 + yOffset + 8;
-			break;
-		case 4:
-			xPos = xInit + xOffset + 6;
-			yPos = yInit + 11 + yOffset + 18 + MOVEMENT_RATE * clock.getElapsedTime().asMilliseconds();
-			break;
-		case 5:
-			xPos = xInit + xOffset + 6;
-			yPos = yInit + 11 + yOffset - MOVEMENT_RATE * clock.getElapsedTime().asMilliseconds();
-			break;
-		case 6:
-			xPos = xInit + xOffset - 13 - MOVEMENT_RATE * clock.getElapsedTime().asMilliseconds();
-			yPos = yInit + 11 + yOffset + 8;
-			break;
-		case 7:
-			xPos = xInit + xOffset + 29 + MOVEMENT_RATE * clock.getElapsedTime().asMilliseconds();
-			yPos = yInit + 11 + yOffset + 8;
-			break;
+void PlayerShot::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
+	const static float movementRate = 0.45;
+	timer += elapsedTime.asMilliseconds();
+	switch (state) {
+	case State::travelling:
+		if (direction == 0 || direction == 4) {
+			yInit += movementRate * elapsedTime.asMilliseconds();
+			setPosition(xInit + xOffset + 6, yInit + 12 + yOffset);	
+		} else if (direction == 1 || direction == 5) {
+			yInit -= movementRate * elapsedTime.asMilliseconds();
+			setPosition(xInit + xOffset + 6, yInit  + yOffset);	
+		} else if (direction == 2 || direction == 6) {
+			xInit -= movementRate * elapsedTime.asMilliseconds();
+			setPosition(xInit + xOffset - 5, yInit + 8 + yOffset);	
+		} else if (direction == 3 || direction == 7) {
+			xInit += movementRate * elapsedTime.asMilliseconds();
+			setPosition(xInit + xOffset + 22, yInit + 8 + yOffset);	
+		}
+		spriteSheet.setPosition(position.x, position.y);
+		glow.setPosition(position.x - 16, position.y - 11);
+		if (timer > 200) {
+			if (canPoof) {
+				state = State::poof;
+				timer = 0;
+				puffSheet.setPosition(position.x, position.y);
+			} else {
+				setKillFlag();
+			}
+		}
+		break;
+
+	case State::poof:
+		if (direction == 0 || direction == 4) {
+			setPosition(xInit + xOffset + 6, yInit + 12 + yOffset);	
+		} else if (direction == 1 || direction == 5) {
+			setPosition(xInit + xOffset + 6, yInit  + yOffset);	
+		} else if (direction == 2 || direction == 6) {
+			setPosition(xInit + xOffset - 5, yInit + 8 + yOffset);	
+		} else if (direction == 3 || direction == 7) {
+			setPosition(xInit + xOffset + 22, yInit + 8 + yOffset);	
+		}
+		if (timer > 50) {
+			timer -= 50;
+			++frameIndex;
+			sf::Color color = glow.getColor();
+			color.r -= 50;
+			color.g -= 50;
+			color.b -= 50;
+			glow.setColor(color);
+			if (frameIndex == 4) {
+				frameIndex = 3;
+				setKillFlag();
+			}
+		}
+		puffSheet.setPosition(position.x, position.y);
+		break;
 	}
-	//Now that we've done all of that legwork, actually set the sprite's position
-	spriteSheet.setPosition(xPos, yPos);
-	glow.setPosition(xPos - 16, yPos - 11);
-	if (clock.getElapsedTime().asMilliseconds() > 200) {
-		killFlag = true;
-	}
-	float offset = rand() % 20;
-	glow.setColor(sf::Color(230 + offset, 230 + offset, 230 + offset, 255));
 }
 
-bool bulletType1::getKillFlag() {
-	return killFlag;
-}
-
-void bulletType1::setKillFlag() {
-	killFlag = 1;
-}
-
-void bulletType1::setPosition(float x, float y) {
-	xPos = x;
-	yPos = y;
-}
-
-float bulletType1::getXpos() {
-	return xPos;
-}
-
-float bulletType1::getYpos() {
-	return yPos;
-}
-
-char bulletType1::getDirection() {
+char PlayerShot::getDirection() {
 	return direction;
 }
 
-bool bulletType1::checkCanPoof() {
+bool PlayerShot::checkCanPoof() {
 	return canPoof;
 }
 
-void bulletType1::disablePuff() {
+void PlayerShot::disablePuff() {
 	canPoof = false;
 }

@@ -154,10 +154,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	details.draw(gameObjects, gameShadows, target);
 	// Update the enemy objects in the game based on the player's displacement
 	en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effectGroup, tiles.walls, player.getState() != Player::State::dead, &tiles, &ssc, *pFonts, elapsedTime);
-	// // Draw the lower layer of the effects, that is the ones that should show up behind the player sprite
-	// effects.drawLower(target);
-	
-	if (player.visible) {
+    if (player.visible) {
 		// Draw the player to the window, as long as the object is visible
 		player.update(this, elapsedTime);
 		player.draw(gameObjects, gameShadows, elapsedTime);
@@ -169,9 +166,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	}
 
 	glowSprs1.clear();
-	float tempXOff{player.getWorldOffsetX()};
-	float tempYOff{player.getWorldOffsetY()};
-	effectGroup.update(tempXOff, tempYOff, elapsedTime);
+	effectGroup.update(xOffset, yOffset, elapsedTime);
 	drawGroup(effectGroup, gameObjects, glowSprs1);
 	
 	// Draw shadows to the target
