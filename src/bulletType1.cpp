@@ -44,6 +44,7 @@ sf::Sprite * PlayerShot::getGlow() {
 void PlayerShot::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
 	const static float movementRate = 0.45;
 	timer += elapsedTime.asMilliseconds();
+	hitBox.setPosition(position);
 	switch (state) {
 	case State::travelling:
 		if (direction == 0 || direction == 4) {
@@ -110,4 +111,8 @@ bool PlayerShot::checkCanPoof() {
 
 void PlayerShot::disablePuff() {
 	canPoof = false;
+}
+
+const PlayerShot::HBox & PlayerShot::getHitBox() const {
+	return hitBox;
 }

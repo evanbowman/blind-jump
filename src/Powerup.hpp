@@ -13,13 +13,12 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include "spritesheet.hpp"
-#include "hitBox.hpp"
 #include "Effect.hpp"
 
 class Powerup : public Effect {
 public:
 	enum class Type { Heart, Coin };
-	using HBox = HitBox<13, 13, 0, 0>;
+	using HBox = Framework::HitBox<13, 13, 0, 0>;
 	Powerup(const sf::Texture &, const sf::Texture &, float, float, Type);
 	const sf::Sprite & getSprite();
 	const HBox & getHitBox() const;

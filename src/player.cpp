@@ -66,7 +66,7 @@ Player::Player(float _xPos, float _yPos)
 void Player::setPosition(float _xPos, float _yPos) {
 	xPos = _xPos;
 	yPos = _yPos;
-	hitBox.setPosition(xPos, yPos);
+	hitBox.setPosition({xPos, yPos});
 	walkDown.setPosition(xPos, yPos);
 	walkUp.setPosition(xPos, yPos);
 	walkLeft.setPosition(xPos, yPos);
@@ -571,7 +571,7 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool x, EffectGroup &
 template<std::size_t indx, typename F >
 void checkEffectCollision(EffectGroup & effects, Player & player, const F & policy) {
 	for (auto & element : effects.get<indx>()) {
-		if (overlapping(player.getHitBox(), element.getHitBox())) {
+		if (player.getHitBox().overlapping(element.getHitBox())) {
 			element.setKillFlag();
 			policy();
 		}

@@ -18,7 +18,6 @@
 #include "RenderType.hpp"
 #include "resourceHandler.hpp"
 #include "spriteSheet.hpp"
-#include "hitBox.hpp"
 
 class Scene;
 
@@ -26,7 +25,7 @@ class Player {
 public:
 	using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
 	using Health = int8_t;
-	using HBox = HitBox<8, 16, 16, 8>;
+	using HBox = Framework::HitBox<8, 16, 16, 8>;
 	enum class Sheet {
 		stillDown,
 		stillUp,

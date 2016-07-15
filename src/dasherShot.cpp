@@ -26,7 +26,7 @@ void DasherShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 	xInit += scale * (elapsedTime.asMilliseconds() / 17.6) * (cos(direction));		 // Note: timeout starts at 60, so 60 - timout grows linearly with time
 	yInit += scale * (elapsedTime.asMilliseconds() / 17.6) * (sin(direction));
 	setPosition(xInit + xOffset, yInit + yOffset + 11);
-	hitBox.setPosition(position.x, position.y);
+	hitBox.setPosition(position);
 	glowSprite.setPosition(position.x, position.y + 18);
 	timer += elapsedTime.asMilliseconds();
 	timeout += elapsedTime.asMilliseconds();

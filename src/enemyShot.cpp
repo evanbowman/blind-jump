@@ -23,7 +23,7 @@ void EnemyShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 	yInit += 4.4 * (elapsedTime.asMilliseconds() / 17.6) * (sin(direction));
 	setPosition(xInit + xOffset, yInit + yOffset);
 
-	hitBox.setPosition(position.x, position.y);
+	hitBox.setPosition(position);
 	glowSprite.setPosition(position.x, position.y + 18);
 	
 	timer += elapsedTime.asMilliseconds();

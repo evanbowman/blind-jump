@@ -15,16 +15,8 @@
 #include "Effect.hpp"
 
 class PlayerShot : public Effect {
-private:
-	SpriteSheet<44, 75, 16, 16> spriteSheet;
-	SpriteSheet<88, 145, 16, 16> puffSheet;
-	sf::Sprite glow;
-	char direction;
-	bool canPoof;
-	enum class State { travelling, poof };
-	State state;
-	
 public:
+	using HBox = Framework::HitBox<8, 8, 4, 4>;
 	PlayerShot(const sf::Texture &, const sf::Texture &, char, float, float);
 	const sf::Sprite & getSprite();
 	sf::Sprite * getGlow();
@@ -32,6 +24,17 @@ public:
 	char getDirection();
 	bool checkCanPoof();
 	void disablePuff();
+	const HBox & getHitBox() const;
+
+private:
+	HBox hitBox;
+	SpriteSheet<44, 75, 16, 16> spriteSheet; // This could easily be a plain sprite, but the memory usage would be the same
+	SpriteSheet<88, 145, 16, 16> puffSheet;
+	sf::Sprite glow;
+	char direction;
+	bool canPoof;
+	enum class State { travelling, poof };
+	State state;
 };
 
 #endif /* bulletType1_hpp */

@@ -14,11 +14,10 @@
 #include <cmath>
 #include "spriteSheet.hpp"
 #include "Effect.hpp"
-#include "hitBox.hpp"
 
 class DasherShot : public Effect {
 public:
-	using HBox = HitBox<12, 12, -6, -6>;
+	using HBox = Framework::HitBox<12, 12, -6, -6>;
 	DasherShot(const sf::Texture &, const sf::Texture &, float, float, float);
 	SpriteSheet<0, 88, 12, 12> spriteSheet;
 	const sf::Sprite & getSprite();

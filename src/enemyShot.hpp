@@ -13,12 +13,11 @@
 #include "SFML/Graphics.hpp"
 #include <cmath>
 #include "spriteSheet.hpp"
-#include "hitBox.hpp"
 #include "Effect.hpp"
 
 class EnemyShot : public Effect {
 public:
-	using HBox = HitBox<14, 14, 0, 0>;
+	using HBox = Framework::HitBox<14, 14, 0, 0>;
 	EnemyShot(const sf::Texture &, const sf::Texture &, float, float, float);
 	void update(float, float, sf::Time &);
 	const sf::Sprite & getSprite();

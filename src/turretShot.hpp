@@ -13,11 +13,10 @@
 #include <cmath>
 #include "spritesheet.hpp"
 #include "Effect.hpp"
-#include "hitBox.hpp"
 
 class TurretShot : public Effect {
 public:
-	using HBox = HitBox<10, 10, -5, -5>;
+	using HBox = Framework::HitBox<10, 10, -5, -5>;
 	const HBox & getHitBox() const;
 	TurretShot(const sf::Texture &, const sf::Texture &, float, float, float);
 	sf::Sprite * getGlow();
@@ -31,7 +30,6 @@ private:
 	HBox hitBox;
 	sf::Sprite glowSprite;
 	float direction;
-	float scale;
-	uint8_t frameIndex;	
+	float scale;	
 };
 #endif /* TurretShot_hpp */

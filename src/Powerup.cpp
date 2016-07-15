@@ -25,7 +25,7 @@ Powerup::Powerup(const sf::Texture & bodyTxtr, const sf::Texture & glowTxtr, flo
 
 void Powerup::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 	setPosition(xInit + xOffset, yInit + yOffset);
-	hitBox.setPosition(position.x, position.y);
+	hitBox.setPosition(position);
 	timer += elapsedTime.asMilliseconds();
 }
 
