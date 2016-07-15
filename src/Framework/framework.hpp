@@ -24,7 +24,7 @@ namespace Framework {
 			return x != other.x || y != other.y;
 		}
 	};
-
+	
 	//===========================================================//
 	// Returns the degrees in radians of the line formed by two  //
 	// instances of Framework::Point                             //
@@ -72,40 +72,36 @@ namespace Framework {
 
 	//===========================================================//
 	// A simple collision rectangle, with member function for    //
-	// checking overlap with other collision rectangles          //
+	// checking overlap with other collision rectangles. w and h //
+	// represent width and height, xOff and yOff denote the      //
+	// offset between the box's upper left corner and its        //
+	// position.                                                 //
 	//===========================================================//
 	template<int16_t w, int16_t h, int16_t xOff = 0, int16_t yOff = 0>
 	class HitBox {
 		static_assert(w > 0 && h > 0, "Zero and negative values are not valid Hitbox side length parameters");
 		Point position{};
-	
-	public:
+    public:
 		void setPosition(const Point & _position) {
 			position.x = _position.x;
 			position.y = _position.y;
 		}
-
-		const Point & getPosition() const {
+	    const Point & getPosition() const {
 			return position;
 		}
-	
-		constexpr uint16_t getWidth() const {
+	    constexpr uint16_t getWidth() const {
 			return w;
 		}
-	
-		constexpr uint16_t getHeight() const {
+	    constexpr uint16_t getHeight() const {
 			return h;
 		}
-	
-		float getXPos() const {
+	    float getXPos() const {
 			return position.x + xOff;
 		}
-	
-		float getYPos() const {
+	    float getYPos() const {
 			return position.y + yOff;
 		}
-
-		template<typename T>
+	    template<typename T>
 		bool overlapping(const T & other) const {
 			if (this->getXPos() < (other.getXPos() + other.getWidth()) &&
 				(this->getXPos() + w) > other.getXPos() &&
@@ -116,13 +112,16 @@ namespace Framework {
 			return false;
 		}
 	};
-
+	
 	//===========================================================//
 	// A group consists of a collection of classes derived from  //
 	// Framework::Object that update with the same parameters.   //
 	// The class template is variadic, so you can pass any       //
 	// number of arguments to its update function, as long as    //
-	// they match each type in the container.                    //
+	// they match the arguments for the function definition of   //
+	// update() in each contained type. All arguments passed to  //
+	// update() are by references for efficiency purposes, so    //
+	// the arguments must be lvalues.                            //
 	//===========================================================//
 	template<typename ...Ts>
 	class Group {
@@ -150,8 +149,8 @@ namespace Framework {
 		}
 		void clear() {
 			utilities::for_each(contents, [&](auto & vec) {
-					vec.clear();
-				});
+				vec.clear();
+			});
 		}
 		template<std::size_t indx>
 		auto & get() {
@@ -161,15 +160,15 @@ namespace Framework {
 		template<typename ...Args>
 		void update(Args & ...args) {
 			utilities::for_each(contents, [&](auto & vec) {
-					for (auto it = vec.begin(); it != vec.end();) {
-						if (it->getKillFlag()) {
-							it = vec.erase(it);
-						} else {
-							it->update(args...);
-							++it;
-						}
+				for (auto it = vec.begin(); it != vec.end();) {
+					if (it->getKillFlag()) {
+						it = vec.erase(it);
+					} else {
+						it->update(args...);
+						++it;
 					}
-				});
+				}
+			});
 		}
 	};
 }

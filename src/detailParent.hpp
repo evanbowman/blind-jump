@@ -10,17 +10,15 @@
 #ifndef detailParent_hpp
 #define detailParent_hpp
 
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
+#include "Framework/framework.hpp"
 
-class Detail {
+class Detail : public Framework::Object {
 protected:
-	float xInit, yInit, yPos;
+    float xInit, yInit;
 
 public:
-	Detail(float, float);
-	virtual const sf::Sprite & getSprite() const = 0;
-	virtual void update(float, float, const sf::Time &) = 0;
-	virtual float getYpos();
+	Detail(float _xInit, float _yInit) : Object{0, 0}, xInit{_xInit}, yInit{_yInit} {}
 };
 
 #endif /* detailParent_hpp */

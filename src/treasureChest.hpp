@@ -21,9 +21,8 @@ public:
 	};
 	TreasureChest(float, float, const sf::Texture &, char);
 	const sf::Sprite & getShadow() const;
-	const sf::Sprite & getSprite() const override;
-	void update(float, float, const sf::Time &) override;
-	float getXpos();
+	const sf::Sprite & getSprite() const;
+	void update(float, float, const sf::Time &);
 	State getState() const;
 	void setState(const State);
 	char getItem() const;
@@ -35,6 +34,5 @@ private:
 	uint8_t frameIndex;
 	mutable SpriteSheet<656, 76, 16, 30> chestSheet;
 	mutable sf::Sprite chestShadow;
-	float xPos;
 };
 #endif /* treasureChest_hpp */

@@ -14,20 +14,14 @@
 
 class LampLight : public Detail {
 public:
-	LampLight(float, float, const sf::Texture &, sf::Sprite &);
-	const sf::Sprite & getSprite() const override;
+	LampLight(float, float, const sf::Texture &, const sf::Texture &);
+	const sf::Sprite & getSprite() const;
 	sf::Sprite * getGlow();
-	void update(float, float, const sf::Time &) override;
-	bool getKillFlag();
-	void setKillFlag(bool);
-	float getXpos();
+	void update(float, float, const sf::Time &);
 	
 private:
 	sf::Sprite lampSprite;
 	sf::Sprite glowSprite;
-	bool killflag;
-	float xPos;
-	
 };
 
 #endif /* lampLight_hpp */

@@ -21,14 +21,13 @@ private:
 	enum class State { dormant, opening, opened };
 	mutable SpriteSheet<0, 0, 200, 95> doorSheet;
 	uint8_t frameIndex;
-	int32_t timer;
-	State state;
+	// int32_t timer;
+	// State state;
 	
 public:
-	void _update(float, float, ScreenShakeController * pscr, EffectGroup & ef, const sf::Time & elapsedTime);
-	void update(float, float, const sf::Time &) override;
+	void update(float, float, const sf::Time &);
 	IntroDoor(float, float, const sf::Texture &);
-	const sf::Sprite & getSprite() const override;
+	const sf::Sprite & getSprite() const;
 };
 
 #endif

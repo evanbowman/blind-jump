@@ -11,9 +11,16 @@
 #include "enemyCreationFunctions.hpp"
 #include "scene.hpp"
 
+Coordinate pickLocation(std::vector<Coordinate>& emptyLocations) {
+	int locationSelect = rand() % emptyLocations.size();
+	Coordinate c = emptyLocations[locationSelect];
+	emptyLocations[locationSelect] = emptyLocations.back();
+	emptyLocations.pop_back();
+	return c;
+}
+
 Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontController * _pFonts)
-	: details{_windowW, _windowH},
-	  pInput{_pInput},
+	: pInput{_pInput},
 	  player{_windowW / 2, _windowH / 2},
 	  UI{_windowW / 2, _windowH / 2},
 	  tiles{}, // TODO: remove default constructible members
@@ -24,9 +31,6 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	  windowW{_windowW},
 	  windowH{_windowH}  
 {
-	//Make the background controller draw concenteric with the center of the view
-	bkg.setPosition((tiles.posX / 2) + 226, tiles.posY / 2);
-
 	// Set the size of the target render texture so that they'll fill the screen
 	target.create(windowW, windowH);
 	secondPass.create(windowW, windowH);
@@ -39,10 +43,10 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	hudView.setSize(windowW, windowH);
 	hudView.setCenter(windowW / 2, windowH / 2);
 	
-	// Call a function to procedurally distribute items
+	// TODO: Call a function to procedurally distribute items
 	initLoot(itemArray);
 	
-	// Tell the background controller how big the window is so it doesn't draw out of bounds
+	// TODO: Tell the background controller how big the window is so it doesn't draw out of bounds
 	bkg.giveWindowSize(windowW, windowH);
 	
 	UI.setView(&worldView);
@@ -75,12 +79,22 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	tiles.setWindowSize(windowW, windowH);
 	
 	/*  Completely non-general code only used by the intro level */
-	details.addLamplight(tiles.posX - 180, tiles.posY + 200, 5, 6, windowW, windowH);
-	details.addLamplight(tiles.posX - 180, tiles.posY + 200, 5, 0, windowW, windowH);
-	details.addLamplight(tiles.posX - 170, tiles.posY + 200, 11, 11, windowW, windowH);
-	details.addLamplight(tiles.posX - 180, tiles.posY + 200, 10, -9, windowW, windowH);
-	details.addDoor(tiles.posX - 192, tiles.posY + 301, 6, 0, windowW, windowH);
-	details.addPod(tiles.posX, tiles.posY + 33, 3, 17);
+	details.add<2>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (6 * 26),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
+	details.add<2>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (0 * 26),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
+	details.add<2>(tiles.posX - 180 + 16 + (11 * 32), tiles.posY + 200 - 3 + (11 * 26),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
+	details.add<2>(tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 200 - 3 + (-9 * 26),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
+	details.add<4>(tiles.posX - 192 + 6 * 32, tiles.posY + 301,
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::introWall));
+	details.add<6>(tiles.posX + 3 * 32, tiles.posY + 33 + 17 * 26,
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
 	tiles.teleporterLocation.x = 8;
 	tiles.teleporterLocation.y = -7;
 	for (auto it = global_levelZeroWalls.begin(); it != global_levelZeroWalls.end(); ++it) {
@@ -92,10 +106,11 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	
 	en.setWindowSize(windowW, windowH);
 	
-	//Initialize the fonts
 	pFonts->setWaypointText(level);
-	
-	details.addTeleporter(tiles, tiles.posX - 178, tiles.posY + 284, windowW, windowH);
+
+	details.add<0>(tiles.posX - 178 + 8 * 32, tiles.posY + 284 + -7 * 26,
+				   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+				   globalResourceHandler.getTexture(ResourceHandler::Texture::teleporterGlow));
 	
 	// initialize the rectangle shape for the teleporter beam effect
 	sf::Vector2f v1(2, 1);
@@ -128,12 +143,16 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	
 	// Place a weapon chest if needed
 	if (itemArray[level][0] != 0) {
-		details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][0]);
+		Coordinate c = pickLocation(tiles.emptyMapLocations);
+		details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), itemArray[level][0]);
 	}
 	
 	// place life capsule chests
 	if (itemArray[level][1] == 90) {
-		details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][1]);
+		Coordinate c = pickLocation(tiles.emptyMapLocations);
+		details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), itemArray[level][1]);
 	}
 }
 
@@ -148,11 +167,9 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	tiles.setOffset(xOffset, yOffset);
 	tiles.drawTiles(target, &glowSprs1, &glowSprs2, level);
 	glowSprs2.clear();
-	// Update the overworld objects based on the displacement of the player
-	details.update(this, elapsedTime, &glowSprs1, &glowSprs2);
-	// Draw the details / add them to the game objects vector
-	details.draw(gameObjects, gameShadows, target);
-	// Update the enemy objects in the game based on the player's displacement
+	details.update(xOffset, yOffset, elapsedTime);
+	// TODO: details.draw(gameObjects, gameShadows, target);
+	// TODO: clean up enemyController::update()...
 	en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effectGroup, tiles.walls, player.getState() != Player::State::dead, &tiles, &ssc, *pFonts, elapsedTime);
     if (player.visible) {
 		// Draw the player to the window, as long as the object is visible
@@ -401,13 +418,15 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 			transitionDelay = 65;
 		}
 	}
-	
+
+	float teleporterX = details.get<0>().back().getPosition().x;
+	float teleporterY = details.get<0>().back().getPosition().y;
 	// Check if the player is close to a teleporter. If so, go to the next level
-	if ((std::abs(player.getXpos() - details.getTeleporter()->getXpos()) < 10 && std::abs(player.getYpos() - details.getTeleporter()->getYpos() + 12) < 8) /*&& player.isActive()*/) {
+	if ((std::abs(player.getXpos() - teleporterX) < 10 && std::abs(player.getYpos() - teleporterY + 12) < 8) /*&& player.isActive()*/) {
 		// Center the player over the teleporter for the duration of the teleport animation (ie center the world under the player)
 		if (!animationBegin) {
-			player.setWorldOffsetX(xOffset + (player.getXpos() - details.getTeleporter()->getXpos()) + 2);
-			player.setWorldOffsetY(yOffset + (player.getYpos() - details.getTeleporter()->getYpos()) + 16);
+			player.setWorldOffsetX(xOffset + (player.getXpos() - teleporterX) + 2);
+			player.setWorldOffsetY(yOffset + (player.getYpos() - teleporterY) + 16);
 			beamExpanding = true;
 			animationBegin = true;
 		}
@@ -561,42 +580,48 @@ void Scene::Reset() {
 	tiles.rebuild(itemArray, set);
 	// Now let the background handler know what tileset the tilecontroller is using
 	bkg.setBkg(tiles.getWorkingSet());
-	/*Of course, the tile controller needs to know how big the window is so that it can find the center when drawing the tiles (tiles outside the window don't draw, and the player object is in the center of the window--we don't want to draw it inside a wall!)
-	*/
 	tiles.setPosition((windowW / 2) - 16, (windowH / 2));
 	bkg.setPosition((tiles.posX / 2) + 206, tiles.posY / 2);
 
 	if (level != 0) {
-		details.addTeleporter(tiles, tiles.posX, tiles.posY, windowW, windowH);
+		details.add<0>(tiles.posX - 178 + tiles.teleporterLocation.x * 32, tiles.posY + 284 + tiles.teleporterLocation.y * 26,
+				   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+				   globalResourceHandler.getTexture(ResourceHandler::Texture::teleporterGlow));
 		
 		initEnemies(this);
-				
-		// Place a weapon chest is needed
+
+		// TODO: this isn't very flexible...
+		// Place a weapon chest if needed
 		if (itemArray[level][0] != 0) {
-			details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][0]);
+			Coordinate c = pickLocation(tiles.emptyMapLocations);
+			details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
+						   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), itemArray[level][0]);
 		}
+	
 		// place life capsule chests
 		if (itemArray[level][1] == 90) {
-			details.addChest(tiles, tiles.posX, tiles.posY, windowW, windowH, itemArray[level][1]);
+			Coordinate c = pickLocation(tiles.emptyMapLocations);
+			details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
+						   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), itemArray[level][1]);
 		}
 		
 		glowSprs1.clear();
 		glowSprs2.clear();
 		
-		size_t len;
-		Teleporter* pTeleporter = details.getTeleporter();
+		Teleporter & teleporter = details.get<0>().back();
 		if (set == tileController::Tileset::regular) {
 			// Put rock/pillar detail things on map
 			getRockPositions(tiles.mapArray, rockPositions);
 			for (auto element : rockPositions) {
-				details.addRock(tiles.posX, tiles.posY - 35, element.x, element.y);
+				details.add<3>(tiles.posX + 32 * element.x, tiles.posY + 26 * element.y,
+							   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
 			}
 			rockPositions.clear();
 			// Delete rocks close to the teleporter
-			std::vector<Rock>* pRocks = details.getRocks();
-			for (auto it = pRocks->begin(); it != pRocks->end();) {
-				if (fabsf(it->getXpos() - pTeleporter->getXpos()) < 80 && fabsf(it->getYpos() - pTeleporter->getYpos()) < 80) {
-					it = pRocks->erase(it);
+			std::vector<Rock> & rocks = details.get<3>();
+			for (auto it = rocks.begin(); it != rocks.end();) {
+				if (fabsf(it->getPosition().x - teleporter.getPosition().x) < 80 && fabsf(it->getPosition().y - teleporter.getPosition().y) < 80) {
+					it = rocks.erase(it);
 				} else {
 					++it;
 				}
@@ -605,30 +630,35 @@ void Scene::Reset() {
 		
 		// Put light sources on the map
 		getLightingPositions(tiles.mapArray, lightPositions);
-		len = lightPositions.size();
+		size_t len = lightPositions.size();
 		for (size_t i = 0; i < len; i++) {
-			details.addLamplight(tiles.posX - 2, tiles.posY - 16, lightPositions[i].x, lightPositions[i].y, windowW, windowH);
+			details.add<2>(tiles.posX - 180 + 16 + (lightPositions[i].x * 32), tiles.posY + 200 - 3 + (lightPositions[i].y * 26),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
 		}
 		lightPositions.clear();
-		
-		// Delete lamps near the teleporter (light blending is additive, it would be too bright if they were close together)
-		// std::vector<LampLight> * pLamps = details.getLamps();
-		// for (size_t i = 0; i < details.getLamps()->size(); i++) {
-		// 	if (fabsf((*pLamps)[i].getXpos() - pTeleporter->getXpos()) < 90 && fabsf((*pLamps)[i].getYpos() - pTeleporter->getYpos()) < 90) {
-		// 		(*pLamps)[i] = (*pLamps).back();
-		// 		(*pLamps).pop_back();
-		// 	}
-		// }
 	} else if (set == tileController::Tileset::intro) {
-		details.addLamplight(tiles.posX - 180, tiles.posY + 200, 5, 6, windowW, windowH);
-		details.addLamplight(tiles.posX - 180, tiles.posY + 200, 5, 0, windowW, windowH);
-		details.addLamplight(tiles.posX - 170, tiles.posY + 200, 11, 11, windowW, windowH);
-		details.addLamplight(tiles.posX - 180, tiles.posY + 200, 10, -9, windowW, windowH);
-		details.addDoor(tiles.posX - 192, tiles.posY + 301, 6, 0, windowW, windowH);
-		details.addPod(tiles.posX, tiles.posY + 33, 3, 17);
+		details.add<2>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (6 * 26),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
+		details.add<2>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (0 * 26),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
+		details.add<2>(tiles.posX - 180 + 16 + (11 * 32), tiles.posY + 200 - 3 + (11 * 26),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
+		details.add<2>(tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 200 - 3 + (-9 * 26),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
+		details.add<4>(tiles.posX - 192 + 6 * 32, tiles.posY + 301,
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::introWall));
+		details.add<6>(tiles.posX + 3 * 32, tiles.posY + 33 + 17 * 26,
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
 		tiles.teleporterLocation.x = 8;
 		tiles.teleporterLocation.y = -7;
-		details.addTeleporter(tiles, tiles.posX - 178, tiles.posY + 284, windowW, windowH);
+		details.add<0>(tiles.posX - 178 + 8 * 32, tiles.posY + 284 + -7 * 26,
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::teleporterGlow));
 		for (auto it = global_levelZeroWalls.begin(); it != global_levelZeroWalls.end(); ++it) {
 			wall w;
 			w.setXinit(it->first);
@@ -642,11 +672,12 @@ void Scene::Reset() {
 	teleporterBeam.setPosition(windowW/2 - 1, windowH/2 + 36);
 	teleporterBeam.setSize(v1);
 	teleporterBeam.setFillColor(sf::Color(104, 255, 229, 6));
-	if (level != 0)
+	if (level != 0) {
 		transitionIn = true;
+	}
 }
 
-detailController & Scene::getDetails() {
+DetailGroup & Scene::getDetails() {
 	return details;
 }
 

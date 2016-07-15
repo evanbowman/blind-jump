@@ -23,13 +23,13 @@
 
 class Scene {
 private:
-	detailController details;
 	InputController * pInput;
 	Player player;
 	userInterface UI;
 	SoundController sndCtrl;
 	tileController tiles;
 	EffectGroup effectGroup;
+	DetailGroup details;
    	enemyController en;
 	FontController * pFonts;
    	int level;
@@ -102,7 +102,7 @@ public:
 	std::vector<std::pair<int, int>>* getEnemySelectVec();
 	int getLevel();
 
-	detailController & getDetails();
+	DetailGroup & getDetails();
 	enemyController & getEnemyController();
 	tileController & getTileController();
 	Player & getPlayer();

@@ -167,7 +167,7 @@ void setSpeed(bool key1, bool key2, bool key3, bool collision, float & speed) {
 void Player::update(Scene * pGM, const sf::Time & elapsedTime) {
 	InputController * pInput {pGM->getPInput()};
 	tileController & tiles {pGM->getTileController()};
-	detailController & details {pGM->getDetails()};
+	DetailGroup & details {pGM->getDetails()};
 	EffectGroup & effects {pGM->getEffects()};
 	FontController * pFonts {pGM->getPFonts()};
 	bool x {pInput->xPressed()};
@@ -182,7 +182,7 @@ void Player::update(Scene * pGM, const sf::Time & elapsedTime) {
 	bool collisionRight {false};
 	
 	checkCollisionWall(tiles.walls, collisionDown, collisionUp, collisionRight, collisionLeft, yPos, xPos);
-	checkCollisionChest(details.getChests(), collisionDown, collisionUp, collisionRight, collisionLeft, yPos, xPos);
+	checkCollisionChest(details.get<1>(), collisionDown, collisionUp, collisionRight, collisionLeft, yPos, xPos);
 	
 	switch (state) {
 	case State::deactivated:

@@ -17,13 +17,11 @@
 class Rock : public Detail {
 private:
 	mutable SpriteSheet<80, 38, 32, 64> rockSheet;
-	float xPos;
 	
 public:
-	void update(float, float, const sf::Time &) override;
+	void update(float, float, const sf::Time &);
 	Rock(float, float, const sf::Texture &);
-	const sf::Sprite & getSprite() const override;
-	float getXpos() const;
+	const sf::Sprite & getSprite() const;
 };
 
 #endif /* rock_hpp */

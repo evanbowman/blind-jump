@@ -14,9 +14,9 @@
 
 class GeneralDetail : public Detail {
 public:
-	GeneralDetail(float, float, sf::Sprite &);
-	const sf::Sprite & getSprite() const override;
-	void update(float, float, const sf::Time & elapsedTime) override;
+	GeneralDetail(float, float, const sf::Texture &);
+	const sf::Sprite & getSprite() const;
+	void update(float, float, const sf::Time & elapsedTime);
 	
 private:
 	sf::Sprite spr;

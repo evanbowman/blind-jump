@@ -11,12 +11,12 @@
 DamagedRobot::DamagedRobot(float _xInit, float _yInit, const sf::Texture & inpTxtr)
 	: Detail{_xInit, _yInit}, robotSheet{inpTxtr}
 {
-	robotSheet[rand() % 2];
+	robotSheet[rand() % 2]; // Randomly pick one of the textures...
 }
 
 void DamagedRobot::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
-	yPos = yOffset + yInit;
-	robotSheet.setPosition(xInit + xOffset, yPos);
+	setPosition(xInit + xOffset, yInit + yOffset);
+	robotSheet.setPosition(position.x, position.y);
 }
 
 const sf::Sprite & DamagedRobot::getSprite() const {

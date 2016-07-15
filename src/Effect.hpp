@@ -2,7 +2,7 @@
 #ifndef EFFECT_HPP
 #define EFFECT_HPP
 
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include "Framework/framework.hpp"
 
 class Effect : public Framework::Object {
@@ -12,7 +12,7 @@ protected:
 	float xInit, yInit;
 
 public:
-	Effect(float x, float y) : Object{0, 0}, timer{0}, frameIndex{0}, xInit{x}, yInit{y} {}
+	Effect(float _xInit, float _yInit) : Object{0, 0}, timer{0}, frameIndex{0}, xInit{_xInit}, yInit{_yInit} {}
 };
 
 #endif

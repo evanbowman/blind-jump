@@ -16,20 +16,14 @@ Rock::Rock(float _xInit, float _yInit, const sf::Texture & inpTxtr)
 		rockSheet.setScale(-1, 1);
 	    xInit += 32;
 	}
-
 	rockSheet[rand() % 4];
 }
 
 void Rock::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
-	xPos = xOffset + xInit;
-	yPos = yOffset + yInit;
-	rockSheet.setPosition(xPos, yPos);
+	setPosition(xInit + xOffset, yInit + yOffset);
+	rockSheet.setPosition(position.x, position.y);
 }
 
 const sf::Sprite & Rock::getSprite() const {
 	return rockSheet.getSprite();
-}
-
-float Rock::getXpos() const {
-	return xPos;
 }

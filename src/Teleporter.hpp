@@ -15,19 +15,17 @@
 
 class Teleporter : public Detail {
 public:
-	Teleporter(float, float, const sf::Texture &, sf::Sprite *);
+	Teleporter(float, float, const sf::Texture &, const sf::Texture &);
 	const sf::Sprite & getShadow() const;
-	const sf::Sprite & getSprite() const override;
+	const sf::Sprite & getSprite() const;
 	bool smokeReady();
-	void update(float, float, const sf::Time &) override;
+	void update(float, float, const sf::Time &);
 	sf::Sprite * getGlow();
-	float getXpos();
 	
 private:
 	mutable sf::Sprite glowSprite;
-	int32_t smokeTimer;
 	mutable sf::Sprite TeleporterSprites[2];
-	float xPos;
+	int32_t smokeTimer;
 };
 
 #endif /* mapTower_hpp */

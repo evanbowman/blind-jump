@@ -17,12 +17,11 @@
 class DamagedRobot : public Detail {
 public:
 	DamagedRobot(float, float, const sf::Texture &);
-	void update(float, float, const sf::Time &) override;
-	const sf::Sprite & getSprite() const override;
+	void update(float, float, const sf::Time &);
+	const sf::Sprite & getSprite() const;
 	
 private:
 	mutable SpriteSheet<88, 102, 40, 43> robotSheet;
-	
 };
 
 #endif /* damagedRobot_hpp */

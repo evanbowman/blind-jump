@@ -30,10 +30,9 @@ const sf::Sprite & TreasureChest::getSprite() const {
 }
 
 void TreasureChest::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
-	yPos = yInit + yOffset;
-	xPos = xInit + xOffset;
-	chestSheet.setPosition(xPos, yPos - 16);
-	chestShadow.setPosition(xPos, yPos + 12);
+	setPosition(xInit + xOffset, yInit + yOffset);
+	chestSheet.setPosition(position.x, position.y - 16);
+	chestShadow.setPosition(position.x, position.y + 12);
 
 	switch (state) {
 	case State::opening:
@@ -59,10 +58,6 @@ char TreasureChest::getItem() const {
 
 TreasureChest::State TreasureChest::getState() const {
 	return state;
-}
-
-float TreasureChest::getXpos() {
-	return xPos;
 }
 
 void TreasureChest::setState(const TreasureChest::State _state) {
