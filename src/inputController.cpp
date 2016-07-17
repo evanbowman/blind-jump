@@ -18,11 +18,16 @@ InputController::InputController()
 	  x{false},
 	  z{false},
 	  c{false},
-	  focused{true}
+	  focused{true},
+	  escape{false}
 {}
 
 bool InputController::isFocused() const {
 	return focused;
+}
+
+bool InputController::escapePressed() const {
+	return escape;
 }
 
 bool InputController::xPressed() const {
@@ -58,12 +63,10 @@ void InputController::update(sf::RenderWindow & window) {
 	while (window.pollEvent(event)) {
 		if (event.type == sf::Event::Closed) {
 			window.close();
-		}
-
-		if (event.type == sf::Event::KeyPressed) {
+		} else if (event.type == sf::Event::KeyPressed) {
 			switch(event.key.code) {
 			case sf::Keyboard::Escape:
-				window.close();
+			    escape = true;
 				break;
 
 			case sf::Keyboard::Left:
@@ -99,6 +102,10 @@ void InputController::update(sf::RenderWindow & window) {
 			}
 		} else if (event.type == sf::Event::KeyReleased) {
 			switch(event.key.code) {
+			case sf::Keyboard::Escape:
+				escape = false;
+				break;
+				
 			case sf::Keyboard::Left:
 				left = false;
 				break;
@@ -134,6 +141,12 @@ void InputController::update(sf::RenderWindow & window) {
 			focused = true;
 		} else if (event.type == sf::Event::LostFocus) {
 			focused = false;
+		} else if (event.type == sf::Event::JoystickButtonPressed) {
+			// TODO
+		} else if (event.type == sf::Event::JoystickButtonReleased) {
+			// TODO
+		} else if (event.type == sf::Event::JoystickMoved) {
+			// TODO
 		}
 	}
 }

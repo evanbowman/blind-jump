@@ -16,31 +16,24 @@
 #include "inputController.hpp"
 #include <array>
 
-// This part of the code is so tied to the aesthetic appearance of the game,
-// making it difficult to describe. If there is a constant and you can't tell
-// where it came from, it't purpose is that it makes an effect move across
-// the screen or fade in at a rate that I think looks good
 class Player;
 
-class userInterface {	
+class UserInterface {	
 public:
-	userInterface(float, float);
-	void drawMenu(sf::RenderWindow&, Player*, FontController&, EffectGroup&, float, float, InputController*, sf::Time&);
-	void addItem(char, EffectGroup&, float, float, FontController&, Player&);
+	UserInterface(float, float);
+	void update(sf::RenderWindow &, Player &, FontController &, InputController *, const sf::Time &);
+	void addItem(char, EffectGroup &, float, float, FontController &, Player &);
 	
-	uint8_t selectedColumn;
-	std::array<unsigned char, 3> rowIndices;
-	
-	// Function to display the death sequence
 	void dispDeathSeq();
 	bool isComplete();
 	bool canHeal;
+
+	bool isOpen() const;
 	
 	float getDesaturateAmount();
 	
 	bool isVisible();
 	
-	// Function to reset the ui controller
 	void reset();
 	void setEnemyValueCount(int);
 
@@ -57,7 +50,10 @@ private:
 		deathScreen,
 		deathScreenExit,
 		statsScreen,
-		complete
+		complete,
+		menuScreenEntry,
+		menuScreenExit,
+		menuScreen
 	};
 	State state;
 	float xPos, yPos;
@@ -65,8 +61,6 @@ private:
 	int32_t timer, timerAlt;
 
 	float textAlpha;
-	
-	float zoomDegree;
 	
 	float blurAmount, desaturateAmount;
 

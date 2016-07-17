@@ -532,12 +532,17 @@ Player::Health Player::getHealth() const {
 	return health;
 }
 
+void Player::activate() {
+	state = State::nominal;
+	sheetIndex = Sheet::stillDown;
+}
+
 void Player::reset() {
 	state = State::nominal;
 	invulnerable = false;
 	invulnerableCounter = 0;
 	health = 4;
-	sheetIndex = Sheet::walkDown;
+	sheetIndex = Sheet::stillDown;
 }
 
 void Player::setHealth(Health value) {

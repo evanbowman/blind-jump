@@ -14,11 +14,12 @@
 
 class InputController {
 private:
-	bool left, right, up, down, x, z, c, focused;
+	bool left, right, up, down, x, z, c, focused, escape;
 	
 public:
 	InputController();
 	bool isFocused() const;
+	bool escapePressed() const;
 	bool leftPressed() const;
 	bool rightPressed() const;
 	bool upPressed() const;

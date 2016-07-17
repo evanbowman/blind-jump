@@ -55,6 +55,7 @@ public:
 	float getWorldOffsetY() const;
 	void setWorldOffsetX(float);
 	void setWorldOffsetY(float);
+	void activate();
 	float getXpos() const; // The player's absolute position in the window
 	float getYpos() const;
 	void draw(drawableVec &, drawableVec &, const sf::Time &);

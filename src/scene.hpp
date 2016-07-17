@@ -24,7 +24,7 @@ class Scene {
 private:
 	InputController * pInput;
 	Player player;
-	userInterface UI;
+	UserInterface UI;
 	SoundController sndCtrl;
 	tileController tiles;
 	EffectGroup effectGroup;
@@ -102,7 +102,7 @@ public:
 	EffectGroup & getEffects();
 	InputController * getPInput();
 	ScreenShakeController * getPSSC();
-	userInterface & getUI();
+	UserInterface & getUI();
 	FontController * getPFonts();
 	
 	// Store the window width and window height for map resets

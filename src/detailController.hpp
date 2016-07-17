@@ -50,7 +50,7 @@ void drawVecShadowed(DetailGroup & dg, drawableVec & gameObjects, drawableVec & 
 
 inline void drawGroup(DetailGroup & dg, drawableVec & gameObjects, drawableVec & gameShadows, glowVec & glowSprs1, glowVec & glowSprs2, sf::RenderTexture & target) {
 	drawVecShadowed<1, -8>(dg, gameObjects, gameShadows);
-	drawVec<3, 26>(dg, gameObjects);
+	drawVec<3, 24>(dg, gameObjects);
 	drawVec<4, 60>(dg, gameObjects);
 	drawVec<5>(dg, gameObjects);
 	drawVec<6>(dg, gameObjects);

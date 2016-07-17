@@ -113,7 +113,7 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	en.setWindowSize(windowW, windowH);
 	
 	pFonts->setWaypointText(level);
-
+	
 	details.add<0>(tiles.posX - 178 + 8 * 32, tiles.posY + 284 + -7 * 26,
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::teleporterGlow));
@@ -159,7 +159,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	details.update(xOffset, yOffset, elapsedTime);
 	drawGroup(details, gameObjects, gameShadows, glowSprs1, glowSprs2, target);
 	// TODO: clean up enemyController::update()...
-	en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effectGroup, tiles.walls, player.getState() != Player::State::dead, &tiles, &ssc, *pFonts, elapsedTime);
+	en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, &ssc, *pFonts, elapsedTime);
     if (player.visible) {
 		// Draw the player to the window, as long as the object is visible
 		player.update(this, elapsedTime);
@@ -306,7 +306,10 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	drawHBox(en.getDashers(), window);
 	drawHBox(en.getTurrets(), window);
 	#endif
-	
+
+	//===========================================================//
+	// UI effects & fonts                                        //
+	//===========================================================//
 	if (player.getState() == Player::State::dead) {
 		//if (!UI.desaturateEnabled())
 		UI.dispDeathSeq();
@@ -327,21 +330,22 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 			pFonts->setWaypointText(level);
 			dispEntryBeam = false;
 		}
-		UI.drawMenu(window, &player, *pFonts, effectGroup, xOffset, yOffset, pInput, elapsedTime);
+		UI.update(window, player, *pFonts, pInput, elapsedTime);
 	} else {
-		if (level != 0) {
-			UI.drawMenu(window, &player, *pFonts, effectGroup, xOffset, yOffset, pInput, elapsedTime);
-			// Pass the player's health to the font controller
-			pFonts->updateHealth(player.getHealth());
-			// Draw all of the game text to the window
-			pFonts->print(window);
+		if (!transitioning && !dispEntryBeam && !transitionIn) {
+			UI.update(window, player, *pFonts, pInput, elapsedTime);
 		}
+		pFonts->updateHealth(player.getHealth());
+		pFonts->print(window);
 	}
 	// Update the screen shake controller
 	ssc.update(player);
 	
 	window.setView(worldView);
-	
+
+	//===========================================================//
+	// Scene transitions                                         //
+	//===========================================================//
 	if (dispEntryBeam) {
 		// Cast the beam's glow to the overworld
 		glowSprs1.push_back(&beamGlowSpr);
@@ -633,7 +637,7 @@ void Scene::Reset() {
 		details.add<2>(tiles.posX - 180 + 16 + (11 * 32), tiles.posY + 200 - 3 + (11 * 26),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
-		details.add<2>(tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 200 - 3 + (-9 * 26),
+		details.add<2>(tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 200 + 8 + (-9 * 26),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
 		details.add<4>(tiles.posX - 192 + 6 * 32, tiles.posY + 301,
@@ -693,7 +697,7 @@ ScreenShakeController * Scene::getPSSC() {
 	return &ssc;
 }
 
-userInterface & Scene::getUI() {
+UserInterface & Scene::getUI() {
 	return UI;
 }
 

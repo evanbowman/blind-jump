@@ -100,7 +100,7 @@ void FontController::reset() {
 }
 
 void FontController::setWaypointText(int level) {
-        heart.setPosition(fontView.getSize().x - heart.getLocalBounds().width / 2, heart.getLocalBounds().height / 1.8);
+	heart.setPosition(fontView.getSize().x - heart.getLocalBounds().width / 2, heart.getLocalBounds().height / 1.8);
 	//coin.setPosition(fontView.getSize().x - coin.getLocalBounds().width, heart.getPosition().y + coin.getLocalBounds().height);
 	coin.setPosition(heart.getPosition().x, heart.getPosition().y + coin.getLocalBounds().height * 1.25);
 	coin.setFillColor(sf::Color(255, 255, 255, 0));
@@ -114,23 +114,10 @@ void FontController::setWaypointText(int level) {
 	// Reset the color, it will fade out
 	waypointText.setColor(sf::Color::White);
 	scoreText.setColor(sf::Color(255, 255, 255, 4));
-	wpTextDisplayTimer.restart();
-	healthDisplayTimer.restart();
-	scoreDisplayTimer.restart();
-}
-
-void FontController::setZoneText(char zone) {
-	switch (zone) {
-		case 0:
-			//zoneTextSpr.setTexture(zoneTextTxtr[0]);
-			break;
-			
-		case 1:
-			//zoneTextSpr.setTexture(zoneTextTxtr[1]);
-			break;
-			
-		default:
-			break;
+	if (level != 0) {
+		wpTextDisplayTimer.restart();
+		healthDisplayTimer.restart();
+		scoreDisplayTimer.restart();
 	}
 }
 
@@ -138,7 +125,7 @@ int FontController::getScore() {
 	return score;
 }
 
-void FontController::print(sf::RenderWindow& window) {
+void FontController::print(sf::RenderWindow & window) {
 	// Set the correct view, so not to blur the fonts
 	window.setView(fontView);
 	// Slowly fade out the  waypoint text
