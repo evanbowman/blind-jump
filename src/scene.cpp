@@ -134,13 +134,6 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	transitionShape.setFillColor(sf::Color(0, 0, 0, 0));
 	
 	vignetteSprite.setColor(sf::Color(255, 255, 255));
-
-	// 50 / 50 : place an item chest
-	if (rand() % 2) {
-		Coordinate c = pickLocation(tiles.emptyMapLocations);
-		details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), 1);
-	}
 }
 
 #ifdef DEBUG
