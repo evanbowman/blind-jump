@@ -92,9 +92,7 @@ int initEnemies(Scene * gm) {
 					selectedIndex = 0;
 					break;
 				}
-			}
-			
-			else {
+			} else {
 				if (select < intervals[i]) {
 					selectedIndex = static_cast<int>(i);
 					break;

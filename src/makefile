@@ -227,7 +227,7 @@ depend:
 ./enemyPlacementFn.o: lampLight.hpp userInterface.hpp damagedRobot.hpp
 ./enemyPlacementFn.o: rock.hpp IntroDoor.hpp soundController.hpp
 ./enemyPlacementFn.o: backgroundHandler.hpp screenShakeController.hpp
-./enemyPlacementFn.o: initLoot.hpp enemyCreationFunctions.hpp
+./enemyPlacementFn.o: enemyCreationFunctions.hpp
 ./soundController.o: soundController.hpp ResourcePath.hpp
 ./resourceHandler.o: resourceHandler.hpp ResourcePath.hpp
 ./inputController.o: inputController.hpp
@@ -472,7 +472,6 @@ depend:
 ./IntroDoor.o: soundController.hpp
 ./shotPuff.o: shotPuff.hpp spriteSheet.hpp Effect.hpp Framework/framework.hpp
 ./shotPuff.o: Framework/utilities.hpp
-./initLoot.o: initLoot.hpp
 ./critter.o: critter.hpp enemy.hpp wall.hpp /usr/include/stdint.h
 ./critter.o: /usr/include/sys/_types/_int8_t.h
 ./critter.o: /usr/include/sys/_types/_int16_t.h
@@ -557,7 +556,7 @@ depend:
 ./player.o: lampLight.hpp userInterface.hpp damagedRobot.hpp rock.hpp
 ./player.o: IntroDoor.hpp soundController.hpp playerAnimationFunctions.hpp
 ./player.o: playerCollisionFunctions.hpp scene.hpp backgroundHandler.hpp
-./player.o: screenShakeController.hpp initLoot.hpp
+./player.o: screenShakeController.hpp
 ./dasher.o: dasher.hpp effectsController.hpp turretFlashEffect.hpp
 ./dasher.o: spriteSheet.hpp Effect.hpp Framework/framework.hpp
 ./dasher.o: Framework/utilities.hpp bulletType1.hpp shotPuff.hpp
@@ -633,7 +632,7 @@ depend:
 ./scene.o: treasureChest.hpp inputController.hpp generalDetail.hpp
 ./scene.o: lampLight.hpp userInterface.hpp damagedRobot.hpp rock.hpp
 ./scene.o: IntroDoor.hpp soundController.hpp backgroundHandler.hpp
-./scene.o: screenShakeController.hpp initLoot.hpp
+./scene.o: screenShakeController.hpp
 ./enemy.o: enemy.hpp wall.hpp /usr/include/stdint.h
 ./enemy.o: /usr/include/sys/_types/_int8_t.h
 ./enemy.o: /usr/include/sys/_types/_int16_t.h
@@ -701,4 +700,4 @@ depend:
 ./main.o: treasureChest.hpp inputController.hpp generalDetail.hpp
 ./main.o: lampLight.hpp userInterface.hpp damagedRobot.hpp rock.hpp
 ./main.o: IntroDoor.hpp soundController.hpp backgroundHandler.hpp scene.hpp
-./main.o: screenShakeController.hpp initLoot.hpp
+./main.o: screenShakeController.hpp

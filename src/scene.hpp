@@ -16,7 +16,6 @@
 #include "SFML/Audio.hpp"
 #include "screenShakeController.hpp"
 #include "soundController.hpp"
-#include "initLoot.hpp"
 #include "inputController.hpp"
 #include "RenderType.hpp"
 #include "resourceHandler.hpp"
@@ -35,10 +34,7 @@ private:
    	int level;
 	
 	sf::Sprite vignetteSprite;
-	char itemArray[48][3];
 	backgroundHandler bkg;	
-	sf::Texture blurred;
-	sf::Sprite finalSprite;
 	bool teleporterCond;
     sf::Sprite vignetteShadowSpr;
 	tileController::Tileset set;

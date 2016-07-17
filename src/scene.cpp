@@ -64,9 +64,6 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	hudView.setSize(windowW, windowH);
 	hudView.setCenter(windowW / 2, windowH / 2);
 	
-	// TODO: Call a function to procedurally distribute items
-	initLoot(itemArray);
-	
 	// TODO: Tell the background controller how big the window is so it doesn't draw out of bounds
 	bkg.giveWindowSize(windowW, windowH);
 	
@@ -137,19 +134,12 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	transitionShape.setFillColor(sf::Color(0, 0, 0, 0));
 	
 	vignetteSprite.setColor(sf::Color(255, 255, 255));
-	
-	// Place a weapon chest if needed
-	if (itemArray[level][0] != 0) {
+
+	// 50 / 50 : place an item chest
+	if (rand() % 2) {
 		Coordinate c = pickLocation(tiles.emptyMapLocations);
 		details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), itemArray[level][0]);
-	}
-	
-	// place life capsule chests
-	if (itemArray[level][1] == 90) {
-		Coordinate c = pickLocation(tiles.emptyMapLocations);
-		details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), itemArray[level][1]);
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), 1);
 	}
 }
 
@@ -165,8 +155,8 @@ void drawHBox(std::vector<T> & vec, sf::RenderWindow & target) {
 void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	target.clear(sf::Color::Transparent);
 	// Start by getting the displacement that the player has moved, in order to update the position of all of the tiles and game objects
-	float xOffset = player.getWorldOffsetX();
-	float yOffset = player.getWorldOffsetY();
+	float xOffset{player.getWorldOffsetX()};
+	float yOffset{player.getWorldOffsetY()};
 	
 	bkg.setOffset(xOffset, yOffset);
 	bkg.drawBackground(target);
@@ -187,14 +177,6 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	if (player.scrShakeState) {
 		ssc.rumble();
 	}
-
-	// In debug mode draw visual hitboxes
-	#ifdef DEBUG
-	drawHBox(effectGroup.get<6>(), window);
-	drawHBox(effectGroup.get<7>(), window);
-	drawHBox(effectGroup.get<8>(), window);
-	drawHBox(effectGroup.get<9>(), window);
-	#endif
 	
 	glowSprs1.clear();
 	effectGroup.update(xOffset, yOffset, elapsedTime);
@@ -333,27 +315,26 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	#endif
 	
 	if (player.getState() == Player::State::dead) {
-		// //if (!UI.desaturateEnabled())
-		// UI.dispDeathSeq();
-		// // If the death sequence is complete and the UI controller is finished playing its animation
-		// if (UI.isComplete()) {
-		// 	// Reset the UI controller
-		// 	UI.reset();
-		// 	// Reset the player
-		// 	player.reset();
-		// 	// Reset the map
-		// 	level = -1;
-		// 	initLoot(itemArray);
-		// 	enemySelectVec.clear();
-		// 	Reset();
-		// 	pFonts->reset();
-		// 	transitionDelay = 320;
-		// 	// Set the max health back to 3
-		// 	pFonts->updateMaxHealth(4);
-		// 	pFonts->setWaypointText(level);
-		// 	dispEntryBeam = false;
-		// }
-		// UI.drawMenu(window, &player, *pFonts, effectGroup, xOffset, yOffset, pInput, elapsedTime);
+		//if (!UI.desaturateEnabled())
+		UI.dispDeathSeq();
+		// If the death sequence is complete and the UI controller is finished playing its animation
+		if (UI.isComplete()) {
+			// Reset the UI controller
+			UI.reset();
+			// Reset the player
+			player.reset();
+			// Reset the map
+			level = -1;
+			enemySelectVec.clear();
+			Reset();
+			pFonts->reset();
+			transitionDelay = 320;
+			// Set the max health back to 3
+			pFonts->updateMaxHealth(4);
+			pFonts->setWaypointText(level);
+			dispEntryBeam = false;
+		}
+		UI.drawMenu(window, &player, *pFonts, effectGroup, xOffset, yOffset, pInput, elapsedTime);
 	} else {
 		if (level != 0) {
 			UI.drawMenu(window, &player, *pFonts, effectGroup, xOffset, yOffset, pInput, elapsedTime);
@@ -598,7 +579,7 @@ void Scene::Reset() {
 		}
 	}
 	
-	tiles.rebuild(itemArray, set);
+	tiles.rebuild(set);
 	bkg.setBkg(tiles.getWorkingSet());
 	tiles.setPosition((windowW / 2) - 16, (windowH / 2));
 	bkg.setPosition((tiles.posX / 2) + 206, tiles.posY / 2);
@@ -610,20 +591,12 @@ void Scene::Reset() {
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::teleporterGlow));
 		
 		initEnemies(this);
-
-		// TODO: this isn't very flexible...
-		// Place a weapon chest if needed
-		if (itemArray[level][0] != 0) {
-			Coordinate c = pickLocation(tiles.emptyMapLocations);
-			details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
-						   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), itemArray[level][0]);
-		}
 	
-		// place life capsule chests
-		if (itemArray[level][1] == 90) {
+		// 50 / 50 : place an item chest
+		if (rand() % 2) {
 			Coordinate c = pickLocation(tiles.emptyMapLocations);
 			details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
-						   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), itemArray[level][1]);
+						   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), 0);
 		}
 		
 		glowSprs1.clear();

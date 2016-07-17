@@ -27,7 +27,7 @@ float tileController::getPosY() const {
 	return posY;
 }
 
-void createMapImage(sf::Image* tileImage, short mapArray[61][61], sf::Texture tx[2], sf::Image* grassSet, sf::Image* grassSetEdge) {
+void createMapImage(sf::Image * tileImage, short mapArray[61][61], sf::Texture tx[2], sf::Image* grassSet, sf::Image* grassSetEdge) {
 	// Loop through the entire image and create a tilemap for drawing grass
 	short mapTemp[61][61], bitMask[61][61], gratePositions[61][61];
 	// Begin by initializing the whole map to zero
@@ -175,7 +175,6 @@ void createMapImage(sf::Image* tileImage, short mapArray[61][61], sf::Texture tx
 }
 
 tileController::tileController() {
-	//Set the random seed and initialize the offset for drawing tiles to 0.
 	//Offsets move the background, givig the illusion that the stationary player is walking
 	xOffset = 0;
 	yOffset = 0;
@@ -202,12 +201,6 @@ tileController::tileController() {
 		count = mappingFunction(mapArray, 0, true);
 	}
 	
-	char itemArray[48][3];
-	for (int i = 0; i < 48; i++) {
-		for (int j = 0; j < 3; j++) {
-			itemArray[i][j] = 0;
-		}
-	}
 	createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet[0], &grassSetEdge[0]);
 
 	createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet[0], &grassSetEdge[0]);
@@ -227,14 +220,15 @@ void tileController::drawTiles(sf::RenderTexture& window, std::vector<sf::Sprite
 	transitionLvSpr.setPosition(posX + xOffset, posY + yOffset);
 	mapSprite1.setPosition(posX + xOffset, posY + yOffset);
 	mapSprite2.setPosition(posX + xOffset, posY + yOffset);
-
+	
 	// Clear out the RenderTexture
 	rt.clear(sf::Color::Transparent);
 	// Draw the map sprite to the texture
-	if (level != 0)
+	if (level != 0) {
 		rt.draw(mapSprite1);
-	else
+	} else {
 		rt.draw(transitionLvSpr);
+	}
 	// Draw a shadow over everything
 	rt.draw(shadow, sf::BlendMultiply);
 	// Draw glow sprites
@@ -248,8 +242,9 @@ void tileController::drawTiles(sf::RenderTexture& window, std::vector<sf::Sprite
 	rt.display();
 	
 	re.clear(sf::Color::Transparent);
-	if (level != 0)
+	if (level != 0) {
 		re.draw(mapSprite2);
+	}
 	re.draw(shadow, sf::BlendMultiply);
 	
 	re.display();
@@ -292,7 +287,7 @@ void tileController::clear() {
 	edgeLocations.clear();
 }
 
-void tileController::rebuild(char itemArray[48][3], Tileset set) {
+void tileController::rebuild(Tileset set) {
 	switch (set) {
 	case Tileset::intro:
 		workingSet = 0;

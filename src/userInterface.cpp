@@ -40,8 +40,8 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontContr
 			if (timer > 20.f) {
 				timer -= 20.f;
 				desaturateAmount += 0.01f;
-				zoomDegree += 0.000007f;
-				pWorldView->zoom(zoomDegree);
+				// zoomDegree += 0.000007f;
+				// pWorldView->zoom(zoomDegree);
 			}
 			
 			if (desaturateAmount > 0.65f) {
@@ -60,8 +60,8 @@ void userInterface::drawMenu(sf::RenderWindow& window, Player* player, FontContr
 			if (timer > 20.f) {
 				timer -= 20.f;
 				if (timerAlt < 1400.f) {
-					zoomDegree += 0.000007f;
-					pWorldView->zoom(zoomDegree);
+					// zoomDegree += 0.000007f;
+					// pWorldView->zoom(zoomDegree);
 				} else {
 					timer = 0.f;
 					state = State::deathScreenExit;

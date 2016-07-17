@@ -77,7 +77,7 @@ public:
 	// Draw a different overworld based on choice of current working set of tiles
 	unsigned char workingSet;
 	// A function to rebuild map vectors
-	void rebuild(char itemArray[48][3], Tileset);
+	void rebuild(Tileset);
 	// Initial build is a flat plane
 	void init();
 	// Return the working set of tiles background controller access
