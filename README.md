@@ -4,7 +4,7 @@ Blind Jump is a procedurally generated space adventure game that I've been worki
 
 ## Reading the Code
 
-I began this project as a way of learning C++ syntax, so some older parts of the code suffer from bad design. I have gone back and rewritten large portions of the code, but at this point I do not plan on rewriting badly designed parts of game unless there would be an obvious performance benefit. Generally speaking, the code is fast, and is usually capable of pushing out more frames than most monitors can display. If I were to go back and rewrite all the bad parts, I'd never finish adding new stuff!
+I began this project as a way of learning C++ syntax, so some older parts of the code suffer from bad design. I have gone back and rewritten large portions of the code, but at this point I do not plan on rewriting badly designed parts of game unless there would be an obvious performance benefit. Generally speaking, the code is fast, and is usually capable of pushing out more frames than most monitors can display. If I were to go back and rewrite everything, I'd never finish adding new stuff!
 
 ## Installation
 
