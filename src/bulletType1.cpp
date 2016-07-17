@@ -41,6 +41,15 @@ sf::Sprite * PlayerShot::getGlow() {
 	return &glow;
 }
 
+void PlayerShot::poof() {
+	if (canPoof) {
+		canPoof = false;
+		state = State::poof;
+		timer = 0;
+		puffSheet.setPosition(position.x, position.y);
+	}
+}
+
 void PlayerShot::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
 	const static float movementRate = 0.45;
 	timer += elapsedTime.asMilliseconds();
@@ -64,6 +73,7 @@ void PlayerShot::update(float xOffset, float yOffset, const sf::Time & elapsedTi
 		glow.setPosition(position.x - 16, position.y - 11);
 		if (timer > 200) {
 			if (canPoof) {
+				canPoof = false;
 				state = State::poof;
 				timer = 0;
 				puffSheet.setPosition(position.x, position.y);

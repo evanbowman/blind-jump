@@ -16,13 +16,14 @@
 
 class PlayerShot : public Effect {
 public:
-	using HBox = Framework::HitBox<8, 8, 4, 4>;
+	using HBox = Framework::HitBox<12, 12, 2, 2>;
 	PlayerShot(const sf::Texture &, const sf::Texture &, char, float, float);
 	const sf::Sprite & getSprite();
 	sf::Sprite * getGlow();
 	void update(float, float, const sf::Time &);
 	char getDirection();
 	bool checkCanPoof();
+	void poof();
 	void disablePuff();
 	const HBox & getHitBox() const;
 

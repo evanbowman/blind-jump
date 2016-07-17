@@ -31,13 +31,34 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	  windowW{_windowW},
 	  windowH{_windowH}  
 {
-	// Set the size of the target render texture so that they'll fill the screen
+	//===========================================================//
+	// Set up post processing effect textures and shapes         //
+	//===========================================================//
 	target.create(windowW, windowH);
 	secondPass.create(windowW, windowH);
 	secondPass.setSmooth(true);
 	thirdPass.create(windowW, windowH);
 	thirdPass.setSmooth(true);
+    lightingMap.create(windowW, windowH);
+	shadowShape.setFillColor(sf::Color(190, 190, 210, 255));
+	shadowShape.setSize(sf::Vector2f(windowW, windowH));
+	vignetteSprite.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::vignette));
+	vignetteSprite.setScale(windowW / 450, windowH / 450);
+	vignetteShadowSpr.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::vignetteShadow));
+	vignetteShadowSpr.setScale(windowW / 450, windowH / 450);
+	vignetteShadowSpr.setColor(sf::Color(255,255,255,100));
+	sf::Vector2f v1(2, 1);
+	teleporterBeam.setPosition(windowW / 2 - 1.5, windowH / 2 + 36);
+	teleporterBeam.setSize(v1);
+	teleporterBeam.setFillColor(sf::Color(114, 255, 229, 6));
+	sf::Vector2f v2(4, 8);
+	entryBeam.setPosition(windowW / 2 - 2, -68);
+	entryBeam.setSize(v2);
+	entryBeam.setFillColor(sf::Color(104, 255, 229, 180));
 	
+	//===========================================================//
+	// Set the views                                             //
+	//===========================================================//
 	worldView.setSize(windowW, windowH);
 	worldView.setCenter(windowW / 2, windowH / 2);
 	hudView.setSize(windowW, windowH);
@@ -51,14 +72,6 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	
 	UI.setView(&worldView);
 	
-	// Set up the lighting map
-	lightingMap.create(windowW, windowH);
-	shadowShape.setFillColor(sf::Color(190, 190, 210, 255));
-	sf::Vector2f v;
-	v.x = windowW;
-	v.y = windowH;
-	shadowShape.setSize(v);
-	
 	transitioning = false;
 	transitionDelay = 320;
 	
@@ -68,17 +81,11 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	// Each object that isn't an effect or passed through a shader gets darkened according to the ambient conditions of the current tileset
 	objectShadeColor = sf::Color(190, 190, 210, 255);
 	
-	vignetteSprite.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::vignette));
-	vignetteSprite.setScale(windowW / 450, windowH / 450);
-	vignetteShadowSpr.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::vignetteShadow));
-	vignetteShadowSpr.setScale(windowW / 450, windowH / 450);
-	vignetteShadowSpr.setColor(sf::Color(255,255,255,100));
-	
 	//Let the tile controller know where player is
 	tiles.setPosition((windowW / 2) - 16, (windowH / 2));
 	tiles.setWindowSize(windowW, windowH);
 	
-	/*  Completely non-general code only used by the intro level */
+	// Completely non-general code only used by the intro level
 	details.add<2>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (6 * 26),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
@@ -88,13 +95,15 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	details.add<2>(tiles.posX - 180 + 16 + (11 * 32), tiles.posY + 200 - 3 + (11 * 26),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
-	details.add<2>(tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 200 - 3 + (-9 * 26),
+	details.add<2>(tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 200 + 8 + (-9 * 26),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
 	details.add<4>(tiles.posX - 192 + 6 * 32, tiles.posY + 301,
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::introWall));
-	details.add<6>(tiles.posX + 3 * 32, tiles.posY + 33 + 17 * 26,
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
+	sf::Sprite podSpr;
+	podSpr.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
+	podSpr.setTextureRect(sf::IntRect(164, 145, 44, 50));
+	details.add<6>(tiles.posX + 3 * 32, tiles.posY + 4 + 17 * 26, podSpr);;
 	tiles.teleporterLocation.x = 8;
 	tiles.teleporterLocation.y = -7;
 	for (auto it = global_levelZeroWalls.begin(); it != global_levelZeroWalls.end(); ++it) {
@@ -111,18 +120,6 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	details.add<0>(tiles.posX - 178 + 8 * 32, tiles.posY + 284 + -7 * 26,
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::teleporterGlow));
-	
-	// initialize the rectangle shape for the teleporter beam effect
-	sf::Vector2f v1(2, 1);
-	teleporterBeam.setPosition(windowW / 2 - 1.5, windowH / 2 + 36);
-	teleporterBeam.setSize(v1);
-	teleporterBeam.setFillColor(sf::Color(114, 255, 229, 6));
-
-	// Initialize the rectangle shape for the teleporter entry beam
-	sf::Vector2f v2(4, 8);
-	entryBeam.setPosition(windowW / 2 - 2, -68);
-	entryBeam.setSize(v2);
-	entryBeam.setFillColor(sf::Color(104, 255, 229, 180));
 	
 	bkg.setBkg(0);
 	
@@ -156,19 +153,28 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	}
 }
 
+#ifdef DEBUG
+template<typename T>
+void drawHBox(std::vector<T> & vec, sf::RenderWindow & target) {
+	for (auto & element : vec) {
+		target.draw(element.getHitBox().getDrawableRect());
+	}
+}
+#endif
+
 void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	target.clear(sf::Color::Transparent);
 	// Start by getting the displacement that the player has moved, in order to update the position of all of the tiles and game objects
 	float xOffset = player.getWorldOffsetX();
 	float yOffset = player.getWorldOffsetY();
-
+	
 	bkg.setOffset(xOffset, yOffset);
 	bkg.drawBackground(target);
 	tiles.setOffset(xOffset, yOffset);
 	tiles.drawTiles(target, &glowSprs1, &glowSprs2, level);
 	glowSprs2.clear();
 	details.update(xOffset, yOffset, elapsedTime);
-	// TODO: details.draw(gameObjects, gameShadows, target);
+	drawGroup(details, gameObjects, gameShadows, glowSprs1, glowSprs2, target);
 	// TODO: clean up enemyController::update()...
 	en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effectGroup, tiles.walls, player.getState() != Player::State::dead, &tiles, &ssc, *pFonts, elapsedTime);
     if (player.visible) {
@@ -182,6 +188,14 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		ssc.rumble();
 	}
 
+	// In debug mode draw visual hitboxes
+	#ifdef DEBUG
+	drawHBox(effectGroup.get<6>(), window);
+	drawHBox(effectGroup.get<7>(), window);
+	drawHBox(effectGroup.get<8>(), window);
+	drawHBox(effectGroup.get<9>(), window);
+	#endif
+	
 	glowSprs1.clear();
 	effectGroup.update(xOffset, yOffset, elapsedTime);
 	drawGroup(effectGroup, gameObjects, glowSprs1);
@@ -302,6 +316,21 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	} else {
 		window.draw(sf::Sprite(target.getTexture()));
 	}
+
+	// In debug mode draw visual hitboxes
+	#ifdef DEBUG
+	drawHBox(effectGroup.get<4>(), window);
+	drawHBox(effectGroup.get<5>(), window);
+	drawHBox(effectGroup.get<6>(), window);
+	drawHBox(effectGroup.get<7>(), window);
+	drawHBox(effectGroup.get<8>(), window);
+	drawHBox(effectGroup.get<9>(), window);
+	window.draw(player.getHitBox().getDrawableRect());
+	drawHBox(en.getCritters(), window);
+	drawHBox(en.getScoots(), window);
+	drawHBox(en.getDashers(), window);
+	drawHBox(en.getTurrets(), window);
+	#endif
 	
 	if (player.getState() == Player::State::dead) {
 		// //if (!UI.desaturateEnabled())
@@ -324,7 +353,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		// 	pFonts->setWaypointText(level);
 		// 	dispEntryBeam = false;
 		// }
-		// UI.drawMenu(window, &player, *pFonts, effects, xOffset, yOffset, pInput, elapsedTime);
+		// UI.drawMenu(window, &player, *pFonts, effectGroup, xOffset, yOffset, pInput, elapsedTime);
 	} else {
 		if (level != 0) {
 			UI.drawMenu(window, &player, *pFonts, effectGroup, xOffset, yOffset, pInput, elapsedTime);
@@ -479,9 +508,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 			teleporterBeam.setSize(v1);
 			if (v1.x < 0.5) {
 				transitioning = true;
-				//teleporterCond = true;
 				beamGlowSpr.setColor(sf::Color(0, 0, 0, 255));
-				
 			}
 		}
 
@@ -529,7 +556,6 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 					transitioning = false;
 					transitionDelay = 30;
 					teleporterCond = true;
-					//transitionShape.setFillColor(sf::Color(255, 255, 255, 255));
 				}
 			}
 		}
@@ -539,7 +565,6 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 void Scene::Reset() {
 	level += 1;
 	pFonts->setWaypointText(level);
-	//Clear all the vectors before re-initializing them, we don't want objects from the previous map showing up again
 	tiles.clear();
 	effectGroup.clear();
 	details.clear();
@@ -547,7 +572,6 @@ void Scene::Reset() {
 	player.setWorldOffsetY(0);
 	en.clear();
 	teleporterCond = 0;
-	int count;
 	
 	set = tileController::Tileset::intro;
 	
@@ -555,36 +579,33 @@ void Scene::Reset() {
 		set = tileController::Tileset::intro;
 		objectShadeColor = sf::Color(190, 190, 210, 255);
 	} else {
-		if (rand() % 2) {
-			set = tileController::Tileset::nova;
-			objectShadeColor = sf::Color(210, 195, 195, 255);
-		} else {
+	    // /if (rand() % 2) {
+		// 	set = tileController::Tileset::nova;
+		// 	objectShadeColor = sf::Color(210, 195, 195, 255);
+		// } else {
 			set = tileController::Tileset::regular;
 			objectShadeColor = sf::Color(190, 190, 210, 255);
-		}
+		// }
 	}
 	
 	vignetteSprite.setColor(sf::Color(255, 255, 255, 255));
 	
 	if (set != tileController::Tileset::intro) {
 		//Now call the mapping function again to generate a new map, and make sure it's large enough
-		count = mappingFunction(tiles.mapArray, level, set != tileController::Tileset::nova);
+		int count = mappingFunction(tiles.mapArray, level, set != tileController::Tileset::nova);
 			while (count < 150) {
 			count = mappingFunction(tiles.mapArray, level, set != tileController::Tileset::nova);
 		}
-	} else if (level == 0) {
-	
 	}
 	
-	//Now lets rebuild the map from the new array, using the same function from the tileController class constructor
 	tiles.rebuild(itemArray, set);
-	// Now let the background handler know what tileset the tilecontroller is using
 	bkg.setBkg(tiles.getWorkingSet());
 	tiles.setPosition((windowW / 2) - 16, (windowH / 2));
 	bkg.setPosition((tiles.posX / 2) + 206, tiles.posY / 2);
 
 	if (level != 0) {
-		details.add<0>(tiles.posX - 178 + tiles.teleporterLocation.x * 32, tiles.posY + 284 + tiles.teleporterLocation.y * 26,
+		Coordinate c = tiles.getTeleporterLoc();
+		details.add<0>(tiles.posX + c.x * 32 + 2, tiles.posY + c.y * 26 - 4,
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::teleporterGlow));
 		
@@ -608,31 +629,30 @@ void Scene::Reset() {
 		glowSprs1.clear();
 		glowSprs2.clear();
 		
-		Teleporter & teleporter = details.get<0>().back();
 		if (set == tileController::Tileset::regular) {
 			// Put rock/pillar detail things on map
 			getRockPositions(tiles.mapArray, rockPositions);
 			for (auto element : rockPositions) {
-				details.add<3>(tiles.posX + 32 * element.x, tiles.posY + 26 * element.y,
+				details.add<3>(tiles.posX + 32 * element.x, tiles.posY + 26 * element.y - 35,
 							   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
 			}
 			rockPositions.clear();
-			// Delete rocks close to the teleporter
-			std::vector<Rock> & rocks = details.get<3>();
-			for (auto it = rocks.begin(); it != rocks.end();) {
-				if (fabsf(it->getPosition().x - teleporter.getPosition().x) < 80 && fabsf(it->getPosition().y - teleporter.getPosition().y) < 80) {
-					it = rocks.erase(it);
-				} else {
-					++it;
-				}
-			}
+			// // TODO: Delete rocks close to the teleporter
+			// std::vector<Rock> & rocks = details.get<3>();
+			// for (auto it = rocks.begin(); it != rocks.end();) {
+			// 	if (fabsf(it->getPosition().x - teleporter.getPosition().x) < 80 && fabsf(it->getPosition().y - teleporter.getPosition().y) < 80) {
+			// 		it = rocks.erase(it);
+			// 	} else {
+			// 		++it;
+			// 	}
+			// }
 		}
 		
 		// Put light sources on the map
 		getLightingPositions(tiles.mapArray, lightPositions);
 		size_t len = lightPositions.size();
 		for (size_t i = 0; i < len; i++) {
-			details.add<2>(tiles.posX - 180 + 16 + (lightPositions[i].x * 32), tiles.posY + 200 - 3 + (lightPositions[i].y * 26),
+			details.add<2>(tiles.posX + 16 + (lightPositions[i].x * 32), tiles.posY - 3 + (lightPositions[i].y * 26),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
 		}
@@ -652,8 +672,10 @@ void Scene::Reset() {
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
 		details.add<4>(tiles.posX - 192 + 6 * 32, tiles.posY + 301,
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::introWall));
-		details.add<6>(tiles.posX + 3 * 32, tiles.posY + 33 + 17 * 26,
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
+		sf::Sprite podSpr;
+		podSpr.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
+		podSpr.setTextureRect(sf::IntRect(164, 145, 44, 50));
+		details.add<6>(tiles.posX + 3 * 32, tiles.posY + 4 + 17 * 26, podSpr);;
 		tiles.teleporterLocation.x = 8;
 		tiles.teleporterLocation.y = -7;
 		details.add<0>(tiles.posX - 178 + 8 * 32, tiles.posY + 284 + -7 * 26,

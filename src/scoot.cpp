@@ -25,6 +25,10 @@ Scoot::Scoot(const sf::Texture & mainTxtr, const sf::Texture & shadowTxtr, float
 	health = 2;
 }
 
+const Scoot::HBox & Scoot::getHitBox() const {
+	return hitBox;
+}
+
 void Scoot::changeDir(float dir) {
 	hSpeed = std::cos(dir);
 	vSpeed = std::sin(dir);	
@@ -32,8 +36,23 @@ void Scoot::changeDir(float dir) {
 
 void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, EffectGroup & effects, const sf::Time & elapsedTime) {
 	Enemy::update(xOffset, yOffset, w, effects, elapsedTime);
-	Enemy::checkShotCollision(effects, 8.f);
+	for (auto & element : effects.get<9>()) {
+		if (hitBox.overlapping(element.getHitBox()) && element.checkCanPoof()) {
+			if (health == 1) {
+				element.disablePuff();
+				element.setKillFlag();
+			}
+			element.poof();
+			health -= 1;
+			colored = true;
+			colorAmount = 1.f;
+		}
+	}
+	if (health == 0) {
+		onDeath(effects);
+	}
 	Enemy::updateColor(elapsedTime);
+	hitBox.setPosition(xPos, yPos);
 	spriteSheet.setPosition(xPos, yPos);
 	shadow.setPosition(xPos - 6, yPos + 2);
 
@@ -133,7 +152,7 @@ void Scoot::onDeath(EffectGroup & effects) {
 	} else {
 		effects.add<5>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::blueglow),
-					   xInit, yInit + 4, Powerup::Type::Heart);
+					   xInit, yInit + 4, Powerup::Type::Coin);
 	}
 	effects.add<2>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::fireExplosionGlow),

@@ -14,7 +14,7 @@
 
 class GeneralDetail : public Detail {
 public:
-	GeneralDetail(float, float, const sf::Texture &);
+	GeneralDetail(float, float, sf::Sprite &);
 	const sf::Sprite & getSprite() const;
 	void update(float, float, const sf::Time & elapsedTime);
 	

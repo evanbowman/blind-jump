@@ -8,14 +8,15 @@
 
 #include "generalDetail.hpp"
 
-GeneralDetail::GeneralDetail(float _xInit, float _yInit, const sf::Texture & txtr):
+GeneralDetail::GeneralDetail(float _xInit, float _yInit, sf::Sprite & _spr):
 	Detail{_xInit, _yInit}
 {
-	spr.setTexture(txtr);
+	spr = _spr;
 }
 
 void GeneralDetail::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
 	setPosition(xInit + xOffset, yInit + yOffset);
+	spr.setPosition(position.x, position.y);
 }
 
 const sf::Sprite & GeneralDetail::getSprite() const {

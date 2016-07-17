@@ -17,6 +17,14 @@
 #include "RenderType.hpp"
 
 class Scoot : public Enemy {
+public:
+	using HBox = Framework::HitBox<12, 12, -6, -6>;
+	Scoot(const sf::Texture &, const sf::Texture &, float, float, float, float);
+	void update(float, float, const std::vector<wall> &, EffectGroup & ef, const sf::Time &) override;
+	const sf::Sprite & getSprite() const override;
+	const sf::Sprite & getShadow() const override;
+	const HBox & getHitBox() const;
+	
 private:
 	enum class State {
 		drift1, drift2, shoot, recoil
@@ -28,12 +36,7 @@ private:
 	int32_t timer;
 	void changeDir(float);
 	void onDeath(EffectGroup &) override;
-
-public:
-	Scoot(const sf::Texture &, const sf::Texture &, float, float, float, float);
-	void update(float, float, const std::vector<wall> &, EffectGroup & ef, const sf::Time &) override;
-	const sf::Sprite & getSprite() const override;
-	const sf::Sprite & getShadow() const override;
+	HBox hitBox;
 };
 
 #endif /* scoot_hpp */

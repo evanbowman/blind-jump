@@ -15,6 +15,12 @@
 #include "effectsController.hpp"
 #include <vector>
 #include <cmath>
+#include "Framework/framework.hpp"
+
+//
+// TODO: I made these functions virtual to enforce a design pattern when making this.
+// They really shouldn't be.
+//
 
 class Enemy {
 protected:

@@ -16,9 +16,16 @@
 #include "fontController.hpp"
 #include "effectsController.hpp"
 #include "resourceHandler.hpp"
+#include "Framework/framework.hpp"
+
+//
+// TODO: Urgent: refactor
+//
 
 class Turret {
 private:
+	using HBox = Framework::HitBox<16, 32>;
+	HBox hitBox;
 	double xPos;
 	double yPos;
 	double xInit;
@@ -46,6 +53,7 @@ private:
 	
 public:
 	Turret(sf::Sprite spr[10]);
+	const HBox & getHitBox() const;
 	void setPosition(double, double);
 	sf::Sprite* getShadow();
 	sf::Sprite* getSprite(sf::Time &);

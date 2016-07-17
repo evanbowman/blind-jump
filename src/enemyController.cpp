@@ -220,3 +220,18 @@ void enemyController::setWindowSize(float windowW, float windowH) {
 	this->windowH = windowH;
 }
 
+std::vector<Critter> & enemyController::getCritters() {
+	return critters;
+}
+
+std::vector<Dasher> & enemyController::getDashers() {
+	return dashers;
+}
+
+std::vector<Scoot> & enemyController::getScoots() {
+	return scoots;
+}
+
+std::vector<Turret> & enemyController::getTurrets() {
+	return turrets;
+}

@@ -89,10 +89,14 @@ sf::Sprite* Turret::getSprite(sf::Time & elapsedTime) {
 	return &turretSprites[imageIndex];
 }
 
-//Fairly self-explanitory, updates the position of the turret when called
+const Turret::HBox & Turret::getHitBox() const {
+	return hitBox;
+}
+
 void Turret::setPosition(double x, double y) {
 	xPos = x;
 	yPos = y;
+	hitBox.setPosition(x, y);
 	xOffset = x - xInit;
 	yOffset = y - yInit;
 	for (int i = 0; i < 10; i++) {
@@ -133,23 +137,19 @@ void Turret::updateShots(EffectGroup & effects, FontController & fonts) {
 				shotsFired = 0;
 			}
 		}
-		
-	//Check collisions with player's shots, but only if the shot vectors aren't empty
-	// 	if (!ef.getBulletLayer1().empty()) {
-	// 		for (auto & element : ef.getBulletLayer1()) {
-	// 			if (std::abs(element.getXpos() - xPos) < 8 && std::abs(element.getYpos() - (yPos + 6)) < 15 && !element.getKillFlag()) {
-	// 				element.setKillFlag();		   // Kill the bullet if there's a collision between the bullet and the enemy
-	// 				// Tons of effects in one place is distracting, so don't draw another one if the enemy is about to explode
-	// 				if (hp == 1) {
-	// 					element.disablePuff();
-	// 				}
-	// 				hp -= 1;
-	// 				isColored = true;
-	// 				colorAmount = 1.f;
-	// 			}
-	// 		}
-	// 	}
-	
+
+		for (auto & element : effects.get<9>()) {
+			if (hitBox.overlapping(element.getHitBox()) && element.checkCanPoof()) {
+				if (hp == 1) {
+					element.disablePuff();
+					element.setKillFlag();
+				}
+				element.poof();
+				hp -= 1;
+				isColored = true;
+				colorAmount = 1.f;
+			}
+		}
 	}
 	
 	if (hp == 0) {

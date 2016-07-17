@@ -93,10 +93,7 @@ private:
 	
 public:
 	Scene(float, float, InputController *, FontController *);
-	//Pass in the render window and draw sprites to it
-	void update(sf::RenderWindow&, sf::Time&);
-	// The opening map does not follow the procedural generation approach, have a separate function for this
-	void updateLv1(sf::RenderWindow&);
+	void update(sf::RenderWindow &, sf::Time &);
 	void Reset();
 	bool getTeleporterCond();
 	std::vector<std::pair<int, int>>* getEnemySelectVec();
@@ -117,6 +114,7 @@ public:
 	float windowH;
 };
 
+// TODO: write an equation that does this, no need to waste memory on this!
 // The first room is not procedurally generated so the positions of the walls need to be hard coded
 const static std::array<std::pair<float, float>, 59> global_levelZeroWalls {
 	{std::make_pair(-20, 500),

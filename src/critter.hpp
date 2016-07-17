@@ -19,6 +19,7 @@ class tileController;
 
 class Critter : public Enemy {
 public:
+	using HBox = Framework::HitBox<14, 14, 5, -4>;
 	Critter(const sf::Texture &, short map[61][61], float, float, float, float);
 	void update(float, float, const std::vector<wall> &, EffectGroup & ef, const sf::Time &) override;
 	void critterUpdate(float, float, EffectGroup & ef, const sf::Time &, tileController * pTiles);
@@ -28,6 +29,7 @@ public:
 	void deActivate();
 	bool isActive();
 	void updatePlayerDead();
+	const HBox & getHitBox() const;
 	
 private:
 	void onDeath(EffectGroup &) override;
@@ -35,6 +37,7 @@ private:
 	float jumpTargetx, jumpTargety;
 	void newPath(tileController *);
 	mutable SpriteSheet<0, 57, 18, 18> spriteSheet;
+	HBox hitBox;
 	sf::Sprite shadow;
 	aStrCoordinate previous;
 	bool awake;

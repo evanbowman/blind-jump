@@ -18,7 +18,7 @@
 class Powerup : public Effect {
 public:
 	enum class Type { Heart, Coin };
-	using HBox = Framework::HitBox<13, 13, 0, 0>;
+	using HBox = Framework::HitBox<13, 13, -8, -8>;
 	Powerup(const sf::Texture &, const sf::Texture &, float, float, Type);
 	const sf::Sprite & getSprite();
 	const HBox & getHitBox() const;

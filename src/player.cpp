@@ -590,15 +590,16 @@ void Player::checkEffectCollisions(EffectGroup & effects, FontController * pFont
 	checkEffectCollision<7>(effects, *this, hitPolicy);
 	checkEffectCollision<6>(effects, *this, hitPolicy);
 	checkEffectCollision<4>(effects, *this, [&]() {
-			pFonts->updateScore(1);
-			pFonts->resetSCText();
-			renderType = Rendertype::shadeNeon;
+			pFonts->resetHPText();
+			health = fmin(pFonts->getMaxHealth(), health + 1);
+			renderType = Rendertype::shadeCrimson;
 			colorAmount = 1.f;
 			colorTimer = 0;
 		});
 	checkEffectCollision<5>(effects, *this, [&]() {
-			health = fmin(pFonts->getMaxHealth(), health + 1);
-			renderType = Rendertype::shadeCrimson;
+			pFonts->updateScore(1);
+			pFonts->resetSCText();
+			renderType = Rendertype::shadeNeon;
 			colorAmount = 1.f;
 			colorTimer = 0;
 		});

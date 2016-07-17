@@ -81,10 +81,36 @@ namespace Framework {
 	class HitBox {
 		static_assert(w > 0 && h > 0, "Zero and negative values are not valid Hitbox side length parameters");
 		Point position{};
+        #ifdef DEBUG
+		sf::RectangleShape rect; // If in debug mode provide visual representations for hitBoxes
+        #endif
     public:
+		HitBox() {
+            #ifdef DEBUG
+			rect.setFillColor(sf::Color::Transparent);
+			rect.setOutlineColor(sf::Color::Red);
+			rect.setOutlineThickness(1);
+			rect.setSize(sf::Vector2f(w, h));
+            #endif
+		}
 		void setPosition(const Point & _position) {
 			position.x = _position.x;
 			position.y = _position.y;
+            #ifdef DEBUG
+			rect.setPosition(_position.x + xOff, position.y + yOff);
+            #endif
+		}
+		#ifdef DEBUG
+		const sf::RectangleShape & getDrawableRect() const {
+			return rect;
+		}
+		#endif
+		void setPosition(float x, float y) {
+			position.x = x;
+			position.y = y;
+			#ifdef DEBUG
+			rect.setPosition(x + xOff, y + yOff);
+			#endif
 		}
 	    const Point & getPosition() const {
 			return position;

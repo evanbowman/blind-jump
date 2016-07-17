@@ -4,11 +4,12 @@
 # 
 
 CC = clang++
-CPPFLAGS = -O2 -std=c++14 -Wall -Werror
+override CPPFLAGS += -O2 -std=c++14 -Wall -Werror
 LDFLAGS = -framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio -Xlinker -rpath -Xlinker @loader_path/../Frameworks -fobjc-link-runtime
 EXECUTABLE = BlindJump
-SOURCES = $(shell find . -name "*.cpp" | awk '{print length, $$0;}' | sort -nr | cut -d ' ' -f 2-)
+SOURCES = $(shell find . -name "*.cpp" | awk '{print length, $$0;}' | sort -nr | cut -d ' ' -f 2-) # Hey it looks nice though
 OBJECTS = $(SOURCES:.cpp=.o)
+DEBUGFLAGS = # Specify them when calling make
 
 all: $(OBJECTS) ResourcePath.o
 	$(CC) $(OBJECTS) ResourcePath.o -o $(EXECUTABLE) $(LDFLAGS)
@@ -52,6 +53,7 @@ depend:
 ./playerCollisionFunctions.o: /usr/include/_types/_intmax_t.h
 ./playerCollisionFunctions.o: /usr/include/_types/_uintmax_t.h
 ./playerCollisionFunctions.o: treasureChest.hpp detailParent.hpp
+./playerCollisionFunctions.o: Framework/framework.hpp Framework/utilities.hpp
 ./playerCollisionFunctions.o: inputController.hpp spriteSheet.hpp
 ./enemyCreationFunctions.o: enemyCreationFunctions.hpp /usr/include/stdio.h
 ./enemyCreationFunctions.o: /usr/include/sys/cdefs.h
@@ -77,9 +79,9 @@ depend:
 ./enemyCreationFunctions.o: Framework/framework.hpp Framework/utilities.hpp
 ./enemyCreationFunctions.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp
 ./enemyCreationFunctions.o: smallExplosion.hpp Powerup.hpp spritesheet.hpp
-./enemyCreationFunctions.o: hitBox.hpp ResourceHandler.hpp RenderType.hpp
-./enemyCreationFunctions.o: enemyShot.hpp dasherShot.hpp turretShot.hpp
-./enemyCreationFunctions.o: scoot.hpp wall.hpp /usr/include/stdint.h
+./enemyCreationFunctions.o: ResourceHandler.hpp RenderType.hpp enemyShot.hpp
+./enemyCreationFunctions.o: dasherShot.hpp turretShot.hpp scoot.hpp wall.hpp
+./enemyCreationFunctions.o: /usr/include/stdint.h
 ./enemyCreationFunctions.o: /usr/include/sys/_types/_int8_t.h
 ./enemyCreationFunctions.o: /usr/include/sys/_types/_int16_t.h
 ./enemyCreationFunctions.o: /usr/include/sys/_types/_int32_t.h
@@ -130,10 +132,10 @@ depend:
 ./screenShakeController.o: spriteSheet.hpp Effect.hpp Framework/framework.hpp
 ./screenShakeController.o: Framework/utilities.hpp bulletType1.hpp
 ./screenShakeController.o: shotPuff.hpp FireExplosion.hpp smallExplosion.hpp
-./screenShakeController.o: Powerup.hpp spritesheet.hpp hitBox.hpp
-./screenShakeController.o: ResourceHandler.hpp RenderType.hpp enemyShot.hpp
-./screenShakeController.o: dasherShot.hpp turretShot.hpp scoot.hpp enemy.hpp
-./screenShakeController.o: dasher.hpp critter.hpp aStar.hpp coordinate.hpp
+./screenShakeController.o: Powerup.hpp spritesheet.hpp ResourceHandler.hpp
+./screenShakeController.o: RenderType.hpp enemyShot.hpp dasherShot.hpp
+./screenShakeController.o: turretShot.hpp scoot.hpp enemy.hpp dasher.hpp
+./screenShakeController.o: critter.hpp aStar.hpp coordinate.hpp
 ./screenShakeController.o: detailController.hpp Teleporter.hpp
 ./screenShakeController.o: detailParent.hpp treasureChest.hpp
 ./screenShakeController.o: inputController.hpp generalDetail.hpp
@@ -177,11 +179,10 @@ depend:
 ./mappingFunctions.o: spriteSheet.hpp Effect.hpp Framework/framework.hpp
 ./mappingFunctions.o: Framework/utilities.hpp bulletType1.hpp shotPuff.hpp
 ./mappingFunctions.o: FireExplosion.hpp smallExplosion.hpp Powerup.hpp
-./mappingFunctions.o: spritesheet.hpp hitBox.hpp ResourceHandler.hpp
-./mappingFunctions.o: RenderType.hpp enemyShot.hpp dasherShot.hpp
-./mappingFunctions.o: turretShot.hpp scoot.hpp enemy.hpp dasher.hpp
-./mappingFunctions.o: critter.hpp aStar.hpp coordinate.hpp
-./mappingFunctions.o: mappingFunctions.hpp
+./mappingFunctions.o: spritesheet.hpp ResourceHandler.hpp RenderType.hpp
+./mappingFunctions.o: enemyShot.hpp dasherShot.hpp turretShot.hpp scoot.hpp
+./mappingFunctions.o: enemy.hpp dasher.hpp critter.hpp aStar.hpp
+./mappingFunctions.o: coordinate.hpp mappingFunctions.hpp
 ./enemyPlacementFn.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 ./enemyPlacementFn.o: /usr/include/sys/_symbol_aliasing.h
 ./enemyPlacementFn.o: /usr/include/sys/_posix_availability.h
@@ -218,61 +219,15 @@ depend:
 ./enemyPlacementFn.o: Framework/framework.hpp Framework/utilities.hpp
 ./enemyPlacementFn.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp
 ./enemyPlacementFn.o: smallExplosion.hpp Powerup.hpp spritesheet.hpp
-./enemyPlacementFn.o: hitBox.hpp ResourceHandler.hpp RenderType.hpp
-./enemyPlacementFn.o: enemyShot.hpp dasherShot.hpp turretShot.hpp scoot.hpp
-./enemyPlacementFn.o: enemy.hpp dasher.hpp critter.hpp aStar.hpp
-./enemyPlacementFn.o: coordinate.hpp detailController.hpp Teleporter.hpp
-./enemyPlacementFn.o: detailParent.hpp treasureChest.hpp inputController.hpp
-./enemyPlacementFn.o: generalDetail.hpp lampLight.hpp userInterface.hpp
-./enemyPlacementFn.o: damagedRobot.hpp rock.hpp IntroDoor.hpp
-./enemyPlacementFn.o: soundController.hpp backgroundHandler.hpp
-./enemyPlacementFn.o: screenShakeController.hpp initLoot.hpp
-./enemyPlacementFn.o: enemyCreationFunctions.hpp
-./detailController.o: detailController.hpp Teleporter.hpp detailParent.hpp
-./detailController.o: effectsController.hpp turretFlashEffect.hpp
-./detailController.o: spriteSheet.hpp Effect.hpp Framework/framework.hpp
-./detailController.o: Framework/utilities.hpp bulletType1.hpp shotPuff.hpp
-./detailController.o: FireExplosion.hpp smallExplosion.hpp Powerup.hpp
-./detailController.o: spritesheet.hpp hitBox.hpp ResourceHandler.hpp
-./detailController.o: RenderType.hpp enemyShot.hpp dasherShot.hpp
-./detailController.o: turretShot.hpp treasureChest.hpp inputController.hpp
-./detailController.o: tileController.hpp wall.hpp /usr/include/stdint.h
-./detailController.o: /usr/include/sys/_types/_int8_t.h
-./detailController.o: /usr/include/sys/_types/_int16_t.h
-./detailController.o: /usr/include/sys/_types/_int32_t.h
-./detailController.o: /usr/include/sys/_types/_int64_t.h
-./detailController.o: /usr/include/_types/_uint8_t.h
-./detailController.o: /usr/include/_types/_uint16_t.h
-./detailController.o: /usr/include/_types/_uint32_t.h
-./detailController.o: /usr/include/_types/_uint64_t.h
-./detailController.o: /usr/include/sys/_types.h /usr/include/sys/cdefs.h
-./detailController.o: /usr/include/sys/_symbol_aliasing.h
-./detailController.o: /usr/include/sys/_posix_availability.h
-./detailController.o: /usr/include/machine/_types.h
-./detailController.o: /usr/include/i386/_types.h
-./detailController.o: /usr/include/sys/_pthread/_pthread_types.h
-./detailController.o: /usr/include/sys/_types/_intptr_t.h
-./detailController.o: /usr/include/sys/_types/_uintptr_t.h
-./detailController.o: /usr/include/_types/_intmax_t.h
-./detailController.o: /usr/include/_types/_uintmax_t.h enemyController.hpp
-./detailController.o: resourceHandler.hpp ResourcePath.hpp turret.hpp
-./detailController.o: /usr/include/stdio.h /usr/include/Availability.h
-./detailController.o: /usr/include/AvailabilityInternal.h
-./detailController.o: /usr/include/_types.h
-./detailController.o: /usr/include/sys/_types/_va_list.h
-./detailController.o: /usr/include/sys/_types/_size_t.h
-./detailController.o: /usr/include/sys/_types/_null.h
-./detailController.o: /usr/include/sys/stdio.h
-./detailController.o: /usr/include/sys/_types/_off_t.h
-./detailController.o: /usr/include/sys/_types/_ssize_t.h
-./detailController.o: /usr/include/secure/_stdio.h
-./detailController.o: /usr/include/secure/_common.h fontController.hpp
-./detailController.o: scoot.hpp enemy.hpp dasher.hpp critter.hpp aStar.hpp
-./detailController.o: coordinate.hpp generalDetail.hpp lampLight.hpp
-./detailController.o: userInterface.hpp damagedRobot.hpp rock.hpp
-./detailController.o: IntroDoor.hpp player.hpp soundController.hpp scene.hpp
-./detailController.o: backgroundHandler.hpp screenShakeController.hpp
-./detailController.o: initLoot.hpp
+./enemyPlacementFn.o: ResourceHandler.hpp RenderType.hpp enemyShot.hpp
+./enemyPlacementFn.o: dasherShot.hpp turretShot.hpp scoot.hpp enemy.hpp
+./enemyPlacementFn.o: dasher.hpp critter.hpp aStar.hpp coordinate.hpp
+./enemyPlacementFn.o: detailController.hpp Teleporter.hpp detailParent.hpp
+./enemyPlacementFn.o: treasureChest.hpp inputController.hpp generalDetail.hpp
+./enemyPlacementFn.o: lampLight.hpp userInterface.hpp damagedRobot.hpp
+./enemyPlacementFn.o: rock.hpp IntroDoor.hpp soundController.hpp
+./enemyPlacementFn.o: backgroundHandler.hpp screenShakeController.hpp
+./enemyPlacementFn.o: initLoot.hpp enemyCreationFunctions.hpp
 ./soundController.o: soundController.hpp ResourcePath.hpp
 ./resourceHandler.o: resourceHandler.hpp ResourcePath.hpp
 ./inputController.o: inputController.hpp
@@ -296,9 +251,9 @@ depend:
 ./enemyController.o: spriteSheet.hpp Effect.hpp Framework/framework.hpp
 ./enemyController.o: Framework/utilities.hpp bulletType1.hpp shotPuff.hpp
 ./enemyController.o: FireExplosion.hpp smallExplosion.hpp Powerup.hpp
-./enemyController.o: spritesheet.hpp hitBox.hpp ResourceHandler.hpp
-./enemyController.o: RenderType.hpp enemyShot.hpp dasherShot.hpp
-./enemyController.o: turretShot.hpp scoot.hpp wall.hpp /usr/include/stdint.h
+./enemyController.o: spritesheet.hpp ResourceHandler.hpp RenderType.hpp
+./enemyController.o: enemyShot.hpp dasherShot.hpp turretShot.hpp scoot.hpp
+./enemyController.o: wall.hpp /usr/include/stdint.h
 ./enemyController.o: /usr/include/sys/_types/_int8_t.h
 ./enemyController.o: /usr/include/sys/_types/_int16_t.h
 ./enemyController.o: /usr/include/sys/_types/_int32_t.h
@@ -349,11 +304,10 @@ depend:
 ./tileController.o: spriteSheet.hpp Effect.hpp Framework/framework.hpp
 ./tileController.o: Framework/utilities.hpp bulletType1.hpp shotPuff.hpp
 ./tileController.o: FireExplosion.hpp smallExplosion.hpp Powerup.hpp
-./tileController.o: spritesheet.hpp hitBox.hpp ResourceHandler.hpp
-./tileController.o: RenderType.hpp enemyShot.hpp dasherShot.hpp
-./tileController.o: turretShot.hpp scoot.hpp enemy.hpp dasher.hpp critter.hpp
-./tileController.o: aStar.hpp coordinate.hpp mappingFunctions.hpp
-./tileController.o: initMapVectors.hpp drawPixels.hpp
+./tileController.o: spritesheet.hpp ResourceHandler.hpp RenderType.hpp
+./tileController.o: enemyShot.hpp dasherShot.hpp turretShot.hpp scoot.hpp
+./tileController.o: enemy.hpp dasher.hpp critter.hpp aStar.hpp coordinate.hpp
+./tileController.o: mappingFunctions.hpp initMapVectors.hpp drawPixels.hpp
 ./smallExplosion.o: smallExplosion.hpp spriteSheet.hpp Effect.hpp
 ./smallExplosion.o: Framework/framework.hpp Framework/utilities.hpp
 ./initMapVectors.o: initMapVectors.hpp wall.hpp /usr/include/stdint.h
@@ -389,17 +343,16 @@ depend:
 ./initMapVectors.o: spriteSheet.hpp Effect.hpp Framework/framework.hpp
 ./initMapVectors.o: Framework/utilities.hpp bulletType1.hpp shotPuff.hpp
 ./initMapVectors.o: FireExplosion.hpp smallExplosion.hpp Powerup.hpp
-./initMapVectors.o: spritesheet.hpp hitBox.hpp ResourceHandler.hpp
-./initMapVectors.o: RenderType.hpp enemyShot.hpp dasherShot.hpp
-./initMapVectors.o: turretShot.hpp scoot.hpp enemy.hpp dasher.hpp critter.hpp
-./initMapVectors.o: aStar.hpp
+./initMapVectors.o: spritesheet.hpp ResourceHandler.hpp RenderType.hpp
+./initMapVectors.o: enemyShot.hpp dasherShot.hpp turretShot.hpp scoot.hpp
+./initMapVectors.o: enemy.hpp dasher.hpp critter.hpp aStar.hpp
 ./fontController.o: fontController.hpp resourceHandler.hpp ResourcePath.hpp
 ./userInterface.o: userInterface.hpp fontController.hpp resourceHandler.hpp
 ./userInterface.o: ResourcePath.hpp effectsController.hpp
 ./userInterface.o: turretFlashEffect.hpp spriteSheet.hpp Effect.hpp
 ./userInterface.o: Framework/framework.hpp Framework/utilities.hpp
 ./userInterface.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp
-./userInterface.o: smallExplosion.hpp Powerup.hpp spritesheet.hpp hitBox.hpp
+./userInterface.o: smallExplosion.hpp Powerup.hpp spritesheet.hpp
 ./userInterface.o: ResourceHandler.hpp RenderType.hpp enemyShot.hpp
 ./userInterface.o: dasherShot.hpp turretShot.hpp inputController.hpp
 ./userInterface.o: player.hpp tileController.hpp wall.hpp
@@ -434,13 +387,15 @@ depend:
 ./userInterface.o: detailParent.hpp treasureChest.hpp generalDetail.hpp
 ./userInterface.o: lampLight.hpp damagedRobot.hpp rock.hpp IntroDoor.hpp
 ./userInterface.o: soundController.hpp
-./treasureChest.o: treasureChest.hpp detailParent.hpp inputController.hpp
+./treasureChest.o: treasureChest.hpp detailParent.hpp Framework/framework.hpp
+./treasureChest.o: Framework/utilities.hpp inputController.hpp
 ./treasureChest.o: spriteSheet.hpp
-./generalDetail.o: generalDetail.hpp detailParent.hpp
+./generalDetail.o: generalDetail.hpp detailParent.hpp Framework/framework.hpp
+./generalDetail.o: Framework/utilities.hpp
 ./FireExplosion.o: FireExplosion.hpp spriteSheet.hpp Effect.hpp
 ./FireExplosion.o: Framework/framework.hpp Framework/utilities.hpp
-./detailParent.o: detailParent.hpp
-./damagedRobot.o: damagedRobot.hpp detailParent.hpp spriteSheet.hpp
+./damagedRobot.o: damagedRobot.hpp detailParent.hpp Framework/framework.hpp
+./damagedRobot.o: Framework/utilities.hpp spriteSheet.hpp
 ./enemyParent.o: enemyParent.hpp wall.hpp /usr/include/stdint.h
 ./enemyParent.o: /usr/include/sys/_types/_int8_t.h
 ./enemyParent.o: /usr/include/sys/_types/_int16_t.h
@@ -463,25 +418,26 @@ depend:
 ./bulletType1.o: bulletType1.hpp spriteSheet.hpp Effect.hpp
 ./bulletType1.o: Framework/framework.hpp Framework/utilities.hpp
 ./turretShot.o: turretShot.hpp spritesheet.hpp Effect.hpp
-./turretShot.o: Framework/framework.hpp Framework/utilities.hpp hitBox.hpp
+./turretShot.o: Framework/framework.hpp Framework/utilities.hpp
 ./dasherShot.o: dasherShot.hpp spriteSheet.hpp Effect.hpp
-./dasherShot.o: Framework/framework.hpp Framework/utilities.hpp hitBox.hpp
-./Teleporter.o: Teleporter.hpp detailParent.hpp effectsController.hpp
+./dasherShot.o: Framework/framework.hpp Framework/utilities.hpp
+./Teleporter.o: Teleporter.hpp detailParent.hpp Framework/framework.hpp
+./Teleporter.o: Framework/utilities.hpp effectsController.hpp
 ./Teleporter.o: turretFlashEffect.hpp spriteSheet.hpp Effect.hpp
-./Teleporter.o: Framework/framework.hpp Framework/utilities.hpp
 ./Teleporter.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp
-./Teleporter.o: smallExplosion.hpp Powerup.hpp spritesheet.hpp hitBox.hpp
+./Teleporter.o: smallExplosion.hpp Powerup.hpp spritesheet.hpp
 ./Teleporter.o: ResourceHandler.hpp RenderType.hpp enemyShot.hpp
 ./Teleporter.o: dasherShot.hpp turretShot.hpp
-./lampLight.o: lampLight.hpp detailParent.hpp
-./enemyShot.o: enemyShot.hpp spriteSheet.hpp hitBox.hpp Effect.hpp
+./lampLight.o: lampLight.hpp detailParent.hpp Framework/framework.hpp
+./lampLight.o: Framework/utilities.hpp
+./enemyShot.o: enemyShot.hpp spriteSheet.hpp Effect.hpp
 ./enemyShot.o: Framework/framework.hpp Framework/utilities.hpp
 ./dashSmoke.o: dashSmoke.hpp
-./IntroDoor.o: IntroDoor.hpp detailParent.hpp effectsController.hpp
+./IntroDoor.o: IntroDoor.hpp detailParent.hpp Framework/framework.hpp
+./IntroDoor.o: Framework/utilities.hpp effectsController.hpp
 ./IntroDoor.o: turretFlashEffect.hpp spriteSheet.hpp Effect.hpp
-./IntroDoor.o: Framework/framework.hpp Framework/utilities.hpp
 ./IntroDoor.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp
-./IntroDoor.o: smallExplosion.hpp Powerup.hpp spritesheet.hpp hitBox.hpp
+./IntroDoor.o: smallExplosion.hpp Powerup.hpp spritesheet.hpp
 ./IntroDoor.o: ResourceHandler.hpp RenderType.hpp enemyShot.hpp
 ./IntroDoor.o: dasherShot.hpp turretShot.hpp screenShakeController.hpp
 ./IntroDoor.o: player.hpp tileController.hpp wall.hpp /usr/include/stdint.h
@@ -535,7 +491,7 @@ depend:
 ./critter.o: effectsController.hpp turretFlashEffect.hpp spriteSheet.hpp
 ./critter.o: Effect.hpp Framework/framework.hpp Framework/utilities.hpp
 ./critter.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp
-./critter.o: smallExplosion.hpp Powerup.hpp spritesheet.hpp hitBox.hpp
+./critter.o: smallExplosion.hpp Powerup.hpp spritesheet.hpp
 ./critter.o: ResourceHandler.hpp RenderType.hpp enemyShot.hpp dasherShot.hpp
 ./critter.o: turretShot.hpp aStar.hpp tileController.hpp enemyController.hpp
 ./critter.o: resourceHandler.hpp ResourcePath.hpp turret.hpp
@@ -548,8 +504,8 @@ depend:
 ./critter.o: /usr/include/sys/_types/_ssize_t.h /usr/include/secure/_stdio.h
 ./critter.o: /usr/include/secure/_common.h fontController.hpp scoot.hpp
 ./critter.o: dasher.hpp coordinate.hpp /usr/include/math.h
-./Powerup.o: Powerup.hpp spritesheet.hpp hitBox.hpp Effect.hpp
-./Powerup.o: Framework/framework.hpp Framework/utilities.hpp
+./Powerup.o: Powerup.hpp spritesheet.hpp Effect.hpp Framework/framework.hpp
+./Powerup.o: Framework/utilities.hpp
 ./turret.o: turret.hpp /usr/include/stdio.h /usr/include/sys/cdefs.h
 ./turret.o: /usr/include/sys/_symbol_aliasing.h
 ./turret.o: /usr/include/sys/_posix_availability.h
@@ -566,8 +522,8 @@ depend:
 ./turret.o: turretFlashEffect.hpp spriteSheet.hpp Effect.hpp
 ./turret.o: Framework/framework.hpp Framework/utilities.hpp bulletType1.hpp
 ./turret.o: shotPuff.hpp FireExplosion.hpp smallExplosion.hpp Powerup.hpp
-./turret.o: spritesheet.hpp hitBox.hpp ResourceHandler.hpp RenderType.hpp
-./turret.o: enemyShot.hpp dasherShot.hpp turretShot.hpp angleFunction.hpp
+./turret.o: spritesheet.hpp ResourceHandler.hpp RenderType.hpp enemyShot.hpp
+./turret.o: dasherShot.hpp turretShot.hpp angleFunction.hpp
 ./player.o: player.hpp tileController.hpp wall.hpp /usr/include/stdint.h
 ./player.o: /usr/include/sys/_types/_int8_t.h
 ./player.o: /usr/include/sys/_types/_int16_t.h
@@ -593,23 +549,22 @@ depend:
 ./player.o: effectsController.hpp turretFlashEffect.hpp spriteSheet.hpp
 ./player.o: Effect.hpp Framework/framework.hpp Framework/utilities.hpp
 ./player.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp smallExplosion.hpp
-./player.o: Powerup.hpp spritesheet.hpp hitBox.hpp ResourceHandler.hpp
-./player.o: RenderType.hpp enemyShot.hpp dasherShot.hpp turretShot.hpp
-./player.o: scoot.hpp enemy.hpp dasher.hpp critter.hpp aStar.hpp
-./player.o: coordinate.hpp detailController.hpp Teleporter.hpp
-./player.o: detailParent.hpp treasureChest.hpp inputController.hpp
-./player.o: generalDetail.hpp lampLight.hpp userInterface.hpp
-./player.o: damagedRobot.hpp rock.hpp IntroDoor.hpp soundController.hpp
-./player.o: playerAnimationFunctions.hpp playerCollisionFunctions.hpp
-./player.o: scene.hpp backgroundHandler.hpp screenShakeController.hpp
-./player.o: initLoot.hpp
+./player.o: Powerup.hpp spritesheet.hpp ResourceHandler.hpp RenderType.hpp
+./player.o: enemyShot.hpp dasherShot.hpp turretShot.hpp scoot.hpp enemy.hpp
+./player.o: dasher.hpp critter.hpp aStar.hpp coordinate.hpp
+./player.o: detailController.hpp Teleporter.hpp detailParent.hpp
+./player.o: treasureChest.hpp inputController.hpp generalDetail.hpp
+./player.o: lampLight.hpp userInterface.hpp damagedRobot.hpp rock.hpp
+./player.o: IntroDoor.hpp soundController.hpp playerAnimationFunctions.hpp
+./player.o: playerCollisionFunctions.hpp scene.hpp backgroundHandler.hpp
+./player.o: screenShakeController.hpp initLoot.hpp
 ./dasher.o: dasher.hpp effectsController.hpp turretFlashEffect.hpp
 ./dasher.o: spriteSheet.hpp Effect.hpp Framework/framework.hpp
 ./dasher.o: Framework/utilities.hpp bulletType1.hpp shotPuff.hpp
 ./dasher.o: FireExplosion.hpp smallExplosion.hpp Powerup.hpp spritesheet.hpp
-./dasher.o: hitBox.hpp ResourceHandler.hpp RenderType.hpp enemyShot.hpp
-./dasher.o: dasherShot.hpp turretShot.hpp enemy.hpp wall.hpp
-./dasher.o: /usr/include/stdint.h /usr/include/sys/_types/_int8_t.h
+./dasher.o: ResourceHandler.hpp RenderType.hpp enemyShot.hpp dasherShot.hpp
+./dasher.o: turretShot.hpp enemy.hpp wall.hpp /usr/include/stdint.h
+./dasher.o: /usr/include/sys/_types/_int8_t.h
 ./dasher.o: /usr/include/sys/_types/_int16_t.h
 ./dasher.o: /usr/include/sys/_types/_int32_t.h
 ./dasher.o: /usr/include/sys/_types/_int64_t.h /usr/include/_types/_uint8_t.h
@@ -641,9 +596,9 @@ depend:
 ./scoot.o: effectsController.hpp turretFlashEffect.hpp spriteSheet.hpp
 ./scoot.o: Effect.hpp Framework/framework.hpp Framework/utilities.hpp
 ./scoot.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp smallExplosion.hpp
-./scoot.o: Powerup.hpp spritesheet.hpp hitBox.hpp ResourceHandler.hpp
-./scoot.o: RenderType.hpp enemyShot.hpp dasherShot.hpp turretShot.hpp
-./scoot.o: enemy.hpp resourceHandler.hpp ResourcePath.hpp angleFunction.hpp
+./scoot.o: Powerup.hpp spritesheet.hpp ResourceHandler.hpp RenderType.hpp
+./scoot.o: enemyShot.hpp dasherShot.hpp turretShot.hpp enemy.hpp
+./scoot.o: resourceHandler.hpp ResourcePath.hpp angleFunction.hpp
 ./scene.o: mappingFunctions.hpp tileController.hpp wall.hpp
 ./scene.o: /usr/include/stdint.h /usr/include/sys/_types/_int8_t.h
 ./scene.o: /usr/include/sys/_types/_int16_t.h
@@ -669,13 +624,12 @@ depend:
 ./scene.o: effectsController.hpp turretFlashEffect.hpp spriteSheet.hpp
 ./scene.o: Effect.hpp Framework/framework.hpp Framework/utilities.hpp
 ./scene.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp smallExplosion.hpp
-./scene.o: Powerup.hpp spritesheet.hpp hitBox.hpp ResourceHandler.hpp
-./scene.o: RenderType.hpp enemyShot.hpp dasherShot.hpp turretShot.hpp
-./scene.o: scoot.hpp enemy.hpp dasher.hpp critter.hpp aStar.hpp
-./scene.o: coordinate.hpp initMapVectors.hpp enemyPlacementFn.hpp
-./scene.o: lightingMap.h pillarPlacement.h /usr/include/math.h
-./scene.o: enemyCreationFunctions.hpp scene.hpp player.hpp
-./scene.o: detailController.hpp Teleporter.hpp detailParent.hpp
+./scene.o: Powerup.hpp spritesheet.hpp ResourceHandler.hpp RenderType.hpp
+./scene.o: enemyShot.hpp dasherShot.hpp turretShot.hpp scoot.hpp enemy.hpp
+./scene.o: dasher.hpp critter.hpp aStar.hpp coordinate.hpp initMapVectors.hpp
+./scene.o: enemyPlacementFn.hpp lightingMap.h pillarPlacement.h
+./scene.o: /usr/include/math.h enemyCreationFunctions.hpp scene.hpp
+./scene.o: player.hpp detailController.hpp Teleporter.hpp detailParent.hpp
 ./scene.o: treasureChest.hpp inputController.hpp generalDetail.hpp
 ./scene.o: lampLight.hpp userInterface.hpp damagedRobot.hpp rock.hpp
 ./scene.o: IntroDoor.hpp soundController.hpp backgroundHandler.hpp
@@ -697,8 +651,8 @@ depend:
 ./enemy.o: effectsController.hpp turretFlashEffect.hpp spriteSheet.hpp
 ./enemy.o: Effect.hpp Framework/framework.hpp Framework/utilities.hpp
 ./enemy.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp smallExplosion.hpp
-./enemy.o: Powerup.hpp spritesheet.hpp hitBox.hpp ResourceHandler.hpp
-./enemy.o: RenderType.hpp enemyShot.hpp dasherShot.hpp turretShot.hpp
+./enemy.o: Powerup.hpp spritesheet.hpp ResourceHandler.hpp RenderType.hpp
+./enemy.o: enemyShot.hpp dasherShot.hpp turretShot.hpp
 ./aStar.o: aStar.hpp
 ./wall.o: wall.hpp /usr/include/stdint.h /usr/include/sys/_types/_int8_t.h
 ./wall.o: /usr/include/sys/_types/_int16_t.h
@@ -713,7 +667,8 @@ depend:
 ./wall.o: /usr/include/sys/_types/_intptr_t.h
 ./wall.o: /usr/include/sys/_types/_uintptr_t.h
 ./wall.o: /usr/include/_types/_intmax_t.h /usr/include/_types/_uintmax_t.h
-./rock.o: rock.hpp detailParent.hpp spriteSheet.hpp
+./rock.o: rock.hpp detailParent.hpp Framework/framework.hpp
+./rock.o: Framework/utilities.hpp spriteSheet.hpp
 ./main.o: player.hpp tileController.hpp wall.hpp /usr/include/stdint.h
 ./main.o: /usr/include/sys/_types/_int8_t.h
 ./main.o: /usr/include/sys/_types/_int16_t.h
@@ -739,9 +694,9 @@ depend:
 ./main.o: effectsController.hpp turretFlashEffect.hpp spriteSheet.hpp
 ./main.o: Effect.hpp Framework/framework.hpp Framework/utilities.hpp
 ./main.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp smallExplosion.hpp
-./main.o: Powerup.hpp spritesheet.hpp hitBox.hpp ResourceHandler.hpp
-./main.o: RenderType.hpp enemyShot.hpp dasherShot.hpp turretShot.hpp
-./main.o: scoot.hpp enemy.hpp dasher.hpp critter.hpp aStar.hpp coordinate.hpp
+./main.o: Powerup.hpp spritesheet.hpp ResourceHandler.hpp RenderType.hpp
+./main.o: enemyShot.hpp dasherShot.hpp turretShot.hpp scoot.hpp enemy.hpp
+./main.o: dasher.hpp critter.hpp aStar.hpp coordinate.hpp
 ./main.o: detailController.hpp Teleporter.hpp detailParent.hpp
 ./main.o: treasureChest.hpp inputController.hpp generalDetail.hpp
 ./main.o: lampLight.hpp userInterface.hpp damagedRobot.hpp rock.hpp

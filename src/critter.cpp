@@ -29,6 +29,10 @@ Critter::Critter(const sf::Texture & txtr, short _map[61][61], float _xInit, flo
 	shadow.setTextureRect(sf::IntRect(54, 57, 18, 18));
 }
 
+const Critter::HBox & Critter::getHitBox() const {
+	return hitBox;
+}
+
 void Critter::updatePlayerDead() {
 	frameIndex = 0;
 }
@@ -38,10 +42,24 @@ void Critter::update(float, float, const std::vector<wall> &, EffectGroup &, con
 void Critter::critterUpdate(float xOffset, float yOffset, EffectGroup & effects, const sf::Time & elapsedTime, tileController * pTiles) {
 	xPos = xInit + xOffset + 12;
 	yPos = yInit + yOffset;
-	Enemy::checkShotCollision(effects, 8.f);
+	for (auto & element : effects.get<9>()) {
+		if (element.getHitBox().overlapping(hitBox) && element.checkCanPoof()) {
+			if (health == 1) {
+				element.disablePuff();
+				element.setKillFlag();
+			}
+			element.poof();
+			health -= 1;
+			colored = true;
+			colorAmount = 1.f;
+		}
+	}
+	if (health == 0) {
+		onDeath(effects);
+	}
 	xPos -= 12; // Currently off-centered, this is just temporary work-around
 	Enemy::updateColor(elapsedTime);
-
+	hitBox.setPosition(xPos, yPos);
 	float tilePosX = pTiles->posX;
 	float tilePosY = pTiles->posY;
 	
@@ -142,10 +160,16 @@ void Critter::onDeath(EffectGroup & effects) {
 	// With some random chance, add a heart item to the map
 	unsigned long int temp = rand() % 5;
 	if (temp == 0) {
-		//effects.addHearts(xInit + 10, yInit);
+	    effects.add<4>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
+					   xInit + 10, yInit, Powerup::Type::Heart);
 	} else {
-		//effects.addCoins(xInit + 10, yInit);
+	    effects.add<5>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandler.getTexture(ResourceHandler::Texture::blueglow),
+					   xInit + 10, yInit, Powerup::Type::Coin);
 	}
-	//effects.addSmallExplosion(xInit + 8, yInit);
+    effects.add<1>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+				   globalResourceHandler.getTexture(ResourceHandler::Texture::fireExplosionGlow),
+				   xInit + 8, yInit);
 	killFlag = true;
 }

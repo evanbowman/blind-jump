@@ -15,7 +15,8 @@
 #include "resourceHandler.hpp"
 
 class Dasher : public Enemy {
-public:	
+public:
+	using HBox = Framework::HitBox<20, 32, -6, -4>;
 	struct Blur {
 		Blur(sf::Sprite *, float, float);
 		sf::Sprite * getSprite();
@@ -37,8 +38,10 @@ public:
 	std::vector<Dasher::Blur> * getBlurEffects();
 	State getState() const;
 	const sf::Vector2f & getScale() const;
+	const HBox & getHitBox() const;
 	
 private:
+	HBox hitBox;
 	uint8_t shotCount;
 	State state;
 	mutable SpriteSheet<648, 38, 29, 38> dasherSheet;

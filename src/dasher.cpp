@@ -46,6 +46,10 @@ bool Dasher::Blur::getKillFlag() {
 	return killflag;
 }
 
+const Dasher::HBox & Dasher::getHitBox() const {
+	return hitBox;
+}
+
 Dasher::Dasher(const sf::Texture & mainTxtr, float _xInit, float _yInit, float _ppx, float _ppy)
 	: Enemy{_xInit, _yInit, _ppx, _ppy},
 	  shotCount{0},
@@ -89,14 +93,30 @@ void Dasher::facePlayer() {
 
 void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & walls, EffectGroup & effects, const sf::Time & elapsedTime) {
 	Enemy::update(xOffset, yOffset, walls, effects, elapsedTime);
-	if (health > 0)
-		Enemy::checkShotCollision(effects, 14.f);
+	if (health > 0) {
+		for (auto & element : effects.get<9>()) {
+			if (hitBox.overlapping(element.getHitBox()) && element.checkCanPoof()) {
+				if (health == 1) {
+					element.disablePuff();
+					element.setKillFlag();
+				}
+				element.poof();
+				health -= 1;
+				colored = true;
+				colorAmount = 1.f;
+			}
+		}
+		if (health == 0) {
+			onDeath(effects);
+		}
+	}
 	Enemy::updateColor(elapsedTime);
-
+	
 	dasherSheet.setPosition(xPos + 4, yPos);
 	deathSheet.setPosition(xPos + 4, yPos);
 	shadow.setPosition(xPos - 4, yPos + 22);
-
+	hitBox.setPosition(xPos, yPos);
+	
 	timer += elapsedTime.asMilliseconds();
 	
 	switch(state) {
@@ -259,9 +279,9 @@ void Dasher::onDeath(EffectGroup & effects) {
 	} else {
 	    effects.add<5>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::blueglow),
-					   xInit, yInit + 4, Powerup::Type::Heart);
+					   xInit, yInit + 4, Powerup::Type::Coin);
 	}
-    effects.add<2>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
+    effects.add<1>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::fireExplosionGlow),
 				   xInit, yInit - 2);
 	blurEffects.clear();

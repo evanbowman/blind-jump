@@ -42,5 +42,10 @@ public:
 	void addDasher(tileController *);
 	void addCritter(tileController *);
 	void setWindowSize(float, float);
+
+	std::vector<Critter> & getCritters();
+	std::vector<Scoot> & getScoots();
+	std::vector<Dasher> & getDashers();
+	std::vector<Turret> & getTurrets();
 };
 #endif /* enemyController_hpp */
