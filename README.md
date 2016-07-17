@@ -8,7 +8,7 @@ I began this project as a way of learning C++ syntax, so some older parts of the
 
 ## Installation
 
-This project uses make and makedepend as a build system. Currently, the game is Mac only, but uses cross-platform libraries and could easily be ported (uses SFML 2.3, required to compile project). To install on MacOS:
+This project uses make and makedepend as a build system. Currently, the game is Mac only, but uses cross-platform libraries and could easily be ported (uses SFML 2.3, required to compile project). To install on macOS:
 
 1. Resolve dependencies
 ```bash
