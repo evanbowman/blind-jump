@@ -160,6 +160,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		details.update(xOffset, yOffset, elapsedTime);
 	}
 	drawGroup(details, gameObjects, gameShadows, glowSprs1, glowSprs2, target);
+
 	// TODO: clean up enemyController::update()...
 	en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, &ssc, *pFonts, elapsedTime);
     if (player.visible) {
@@ -174,7 +175,9 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	}
 	
 	glowSprs1.clear();
-	effectGroup.update(xOffset, yOffset, elapsedTime);
+	if (!UI.isOpen() || (UI.isOpen() && player.getState() == Player::State::dead)) {
+		effectGroup.update(xOffset, yOffset, elapsedTime);
+	}
 	drawGroup(effectGroup, gameObjects, glowSprs1);
 	
 	// Draw shadows to the target
@@ -313,7 +316,6 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	// UI effects & fonts                                        //
 	//===========================================================//
 	if (player.getState() == Player::State::dead) {
-		//if (!UI.desaturateEnabled())
 		UI.dispDeathSeq();
 		// If the death sequence is complete and the UI controller is finished playing its animation
 		if (UI.isComplete()) {
@@ -321,13 +323,12 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 			UI.reset();
 			// Reset the player
 			player.reset();
-			// Reset the map
+			// Reset the map. Reset() increments level, set to -1 so that it will be zero
 			level = -1;
 			enemySelectVec.clear();
 			Reset();
 			pFonts->reset();
 			transitionDelay = 320;
-			// Set the max health back to 3
 			pFonts->updateMaxHealth(4, 4);
 			pFonts->setWaypointText(level);
 			dispEntryBeam = false;
@@ -345,6 +346,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	
 	window.setView(worldView);
 
+	// TODO: This code is a mess!
 	//===========================================================//
 	// Scene transitions                                         //
 	//===========================================================//
