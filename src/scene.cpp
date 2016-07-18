@@ -27,6 +27,8 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	  en{},
 	  pFonts{_pFonts},
 	  level{0},
+	  stashed{false},
+	  preload{false},
 	  teleporterCond{false},
 	  windowW{_windowW},
 	  windowH{_windowH}  
@@ -39,7 +41,9 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	secondPass.setSmooth(true);
 	thirdPass.create(windowW, windowH);
 	thirdPass.setSmooth(true);
-    lightingMap.create(windowW, windowH);
+	stash.create(windowW, windowH);
+	stash.setSmooth(true);
+	lightingMap.create(windowW, windowH);
 	shadowShape.setFillColor(sf::Color(190, 190, 210, 255));
 	shadowShape.setSize(sf::Vector2f(windowW, windowH));
 	vignetteSprite.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::vignette));
@@ -150,60 +154,65 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 
 	float xOffset{player.getWorldOffsetX()};
 	float yOffset{player.getWorldOffsetY()};
-
-	bkg.setOffset(xOffset, yOffset);
-	bkg.drawBackground(target);
-	tiles.setOffset(xOffset, yOffset);
-	tiles.drawTiles(target, &glowSprs1, &glowSprs2, level);
-	glowSprs2.clear();
 	
-	details.update(xOffset, yOffset, elapsedTime);
+	// Blurring is graphics intensive, the game caches frames in a RenderTexture when possible
+	if (stashed && UI.getState() != UserInterface::State::statsScreen && UI.getState() != UserInterface::State::menuScreen) {
+		stashed = false;
+	}
+	if (!stashed || preload) {
+		bkg.setOffset(xOffset, yOffset);
+		bkg.drawBackground(target);
+		tiles.setOffset(xOffset, yOffset);
+		tiles.drawTiles(target, &glowSprs1, &glowSprs2, level);
+		glowSprs2.clear();
+	
+		details.update(xOffset, yOffset, elapsedTime);
 		
-	drawGroup(details, gameObjects, gameShadows, glowSprs1, glowSprs2, target);
+		drawGroup(details, gameObjects, gameShadows, glowSprs1, glowSprs2, target);
 
-	// TODO: clean up enemyController::update()...
-	en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, &ssc, *pFonts, elapsedTime);
-    if (player.visible) {
-		// Draw the player to the window, as long as the object is visible
-		player.update(this, elapsedTime);
-		player.draw(gameObjects, gameShadows, elapsedTime);
-	}
-	
-	// If player was hit rumble the screen.
-	if (player.scrShakeState) {
-		ssc.rumble();
-	}
-	
-	glowSprs1.clear();
-	if (!UI.isOpen() || (UI.isOpen() && player.getState() == Player::State::dead)) {
-		effectGroup.update(xOffset, yOffset, elapsedTime);
-	}
-	drawGroup(effectGroup, gameObjects, glowSprs1);
-	
-	// Draw shadows to the target
-	if (!gameShadows.empty()) {
-		for (auto & element : gameShadows) {
-			target.draw(std::get<0>(element));
+		// TODO: clean up enemyController::update()...
+		en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, &ssc, *pFonts, elapsedTime);
+		if (player.visible) {
+			// Draw the player to the window, as long as the object is visible
+			player.update(this, elapsedTime);
+			player.draw(gameObjects, gameShadows, elapsedTime);
 		}
-	}
-	gameShadows.clear();
 	
-	// Sort the game object based on y-position (performance for this is fine, only sorts objects inside the window, on the ordr of 10 in most cases)
-	std::sort(gameObjects.begin(), gameObjects.end(), [](const std::tuple<sf::Sprite, float, Rendertype, float> & arg1, const std::tuple<sf::Sprite, float, Rendertype, float> & arg2) {
-		return (std::get<1>(arg1) < std::get<1>(arg2));
-	});
+		// If player was hit rumble the screen.
+		if (player.scrShakeState) {
+			ssc.rumble();
+		}
 	
-	lightingMap.clear(sf::Color::Transparent);
+		glowSprs1.clear();
+		if (!UI.isOpen() || (UI.isOpen() && player.getState() == Player::State::dead)) {
+			effectGroup.update(xOffset, yOffset, elapsedTime);
+		}
+		drawGroup(effectGroup, gameObjects, glowSprs1);
 	
-	window.setView(worldView);
+		// Draw shadows to the target
+		if (!gameShadows.empty()) {
+			for (auto & element : gameShadows) {
+				target.draw(std::get<0>(element));
+			}
+		}
+		gameShadows.clear();
+	
+		// Sort the game object based on y-position (performance for this is fine, only sorts objects inside the window, on the ordr of 10 in most cases)
+		std::sort(gameObjects.begin(), gameObjects.end(), [](const std::tuple<sf::Sprite, float, Rendertype, float> & arg1, const std::tuple<sf::Sprite, float, Rendertype, float> & arg2) {
+				return (std::get<1>(arg1) < std::get<1>(arg2));
+			});
+	
+		lightingMap.clear(sf::Color::Transparent);
+	
+		window.setView(worldView);
 
-	//===========================================================//
-	// Object shading                                            //
-	//===========================================================//
-	if (!gameObjects.empty()) {
-		sf::Shader & colorShader = globalResourceHandler.getShader(ResourceHandler::Shader::color);
-		for (auto & element : gameObjects) {
-			switch (std::get<2>(element)) {
+		//===========================================================//
+		// Object shading                                            //
+		//===========================================================//
+		if (!gameObjects.empty()) {
+			sf::Shader & colorShader = globalResourceHandler.getShader(ResourceHandler::Shader::color);
+			for (auto & element : gameObjects) {
+				switch (std::get<2>(element)) {
 				case Rendertype::shadeDefault:
 					std::get<0>(element).setColor(sf::Color(objectShadeColor.r, objectShadeColor.g, objectShadeColor.b, std::get<0>(element).getColor().a));
 					lightingMap.draw(std::get<0>(element));
@@ -236,59 +245,86 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 					colorShader.setParameter("targetColor", sf::Vector3f(0.29, 0.99, 0.99));
 					lightingMap.draw(std::get<0>(element), &colorShader);
 					break;
+				}
 			}
 		}
+	
+		sf::Color blendAmount(185, 185, 185, 255);
+		sf::Sprite tempSprite;
+		for (auto element : glowSprs2) {
+			tempSprite = *element;
+			tempSprite.setColor(blendAmount);
+			tempSprite.setPosition(tempSprite.getPosition().x, tempSprite.getPosition().y - 12);
+			lightingMap.draw(tempSprite, sf::BlendMode(sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One, sf::BlendMode::Add, sf::BlendMode::DstAlpha, sf::BlendMode::Zero, sf::BlendMode::Add)));
+		}
+	
+		lightingMap.display();
+		target.draw(sf::Sprite(lightingMap.getTexture()));
+	
+		// Clear out the vectors for the next round of drawing
+		gameObjects.clear();
+		bkg.drawForeground(target);
+		target.draw(vignetteSprite, sf::BlendMultiply);
+		target.draw(vignetteShadowSpr);
+		target.display();
 	}
-	
-	sf::Color blendAmount(185, 185, 185, 255);
-	sf::Sprite tempSprite;
-	for (auto element : glowSprs2) {
-		tempSprite = *element;
-		tempSprite.setColor(blendAmount);
-		tempSprite.setPosition(tempSprite.getPosition().x, tempSprite.getPosition().y - 12);
-		lightingMap.draw(tempSprite, sf::BlendMode(sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One, sf::BlendMode::Add, sf::BlendMode::DstAlpha, sf::BlendMode::Zero, sf::BlendMode::Add)));
-	}
-	
-	lightingMap.display();
-	target.draw(sf::Sprite(lightingMap.getTexture()));
-	
-	// Clear out the vectors for the next round of drawing
-	gameObjects.clear();
-	bkg.drawForeground(target);
-	target.draw(vignetteSprite, sf::BlendMultiply);
-	target.draw(vignetteShadowSpr);
-	target.display();
 	
 	//===========================================================//
 	// Post Processing Effects                                   //
 	//===========================================================//
 	if (UI.blurEnabled() && UI.desaturateEnabled()) {
-		sf::Shader & blurShader = globalResourceHandler.getShader(ResourceHandler::Shader::blur);
-		sf::Shader & desaturateShader = globalResourceHandler.getShader(ResourceHandler::Shader::desaturate);
-		secondPass.clear(sf::Color::Transparent);
-		thirdPass.clear(sf::Color::Transparent);
-		sf::Vector2u textureSize = target.getSize();
-		// Get the blur amount from the UI controller
-		float blurAmount = UI.getBlurAmount();
-		blurShader.setParameter("blur_radius", sf::Vector2f(0.f, blurAmount / textureSize.y));
-		secondPass.draw(sf::Sprite(target.getTexture()), &blurShader);
-		secondPass.display();
-		blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
-		thirdPass.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
-		thirdPass.display();
-		desaturateShader.setParameter("amount", UI.getDesaturateAmount());
-		window.draw(sf::Sprite(thirdPass.getTexture()), &desaturateShader);
+		if (stashed) {
+			window.draw(sf::Sprite(stash.getTexture()));
+		} else {
+			sf::Shader & blurShader = globalResourceHandler.getShader(ResourceHandler::Shader::blur);
+			sf::Shader & desaturateShader = globalResourceHandler.getShader(ResourceHandler::Shader::desaturate);
+			secondPass.clear(sf::Color::Transparent);
+			thirdPass.clear(sf::Color::Transparent);
+			sf::Vector2u textureSize = target.getSize();
+			// Get the blur amount from the UI controller
+			float blurAmount = UI.getBlurAmount();
+			blurShader.setParameter("blur_radius", sf::Vector2f(0.f, blurAmount / textureSize.y));
+			secondPass.draw(sf::Sprite(target.getTexture()), &blurShader);
+			secondPass.display();
+			blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
+			thirdPass.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
+			thirdPass.display();
+			desaturateShader.setParameter("amount", UI.getDesaturateAmount());
+			window.draw(sf::Sprite(thirdPass.getTexture()), &desaturateShader);
+			if (!stashed && (UI.getState() == UserInterface::State::statsScreen
+							 || UI.getState() == UserInterface::State::menuScreen)) {
+				stash.clear(sf::Color::Black);
+				stash.draw(sf::Sprite(thirdPass.getTexture()), &desaturateShader);
+				stash.display();
+				stashed = true;
+			}
+		}
 	} else if (UI.blurEnabled() && !UI.desaturateEnabled()) {
-		sf::Shader & blurShader = globalResourceHandler.getShader(ResourceHandler::Shader::blur);
-		secondPass.clear(sf::Color::Transparent);
-		sf::Vector2u textureSize = target.getSize();
-		// Get the blur amount from the UI controller
-		float blurAmount = UI.getBlurAmount();
-		blurShader.setParameter("blur_radius", sf::Vector2f(0.f, blurAmount / textureSize.y));
-		secondPass.draw(sf::Sprite(target.getTexture()), &blurShader);
-		secondPass.display();
-		blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
-		window.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
+		if (stashed) {
+			if (pInput->escapePressed()) {
+				preload = true;
+			}
+			window.draw(sf::Sprite(stash.getTexture()));
+		} else {
+			sf::Shader & blurShader = globalResourceHandler.getShader(ResourceHandler::Shader::blur);
+			secondPass.clear(sf::Color::Transparent);
+			sf::Vector2u textureSize = target.getSize();
+			// Get the blur amount from the UI controller
+			float blurAmount = UI.getBlurAmount();
+			blurShader.setParameter("blur_radius", sf::Vector2f(0.f, blurAmount / textureSize.y));
+			secondPass.draw(sf::Sprite(target.getTexture()), &blurShader);
+			secondPass.display();
+			blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
+			window.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
+			if (!stashed && (UI.getState() == UserInterface::State::statsScreen
+							 || UI.getState() == UserInterface::State::menuScreen)) {
+				stash.clear(sf::Color::Black);
+				stash.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
+				stash.display();
+				stashed = true;
+				preload = false;
+			}
+		}
 	} else if (!UI.blurEnabled() && UI.getDesaturateAmount()) {
 		sf::Shader & desaturateShader = globalResourceHandler.getShader(ResourceHandler::Shader::desaturate);
 		desaturateShader.setParameter("amount", UI.getDesaturateAmount());

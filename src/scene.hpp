@@ -32,7 +32,8 @@ private:
    	enemyController en;
 	FontController * pFonts;
    	int level;
-	bool stashed;
+	// Stash static post effects for efficiency. Preload is for recovery from stash
+	bool stashed, preload;
 	sf::Sprite vignetteSprite;
 	backgroundHandler bkg;	
 	bool teleporterCond;

@@ -31,6 +31,10 @@ bool UserInterface::isOpen() const {
 	return state != State::closed;
 }
 
+const UserInterface::State UserInterface::getState() const {
+	return state;
+}
+
 void UserInterface::update(sf::RenderWindow& window, Player & player, FontController & fonts, InputController * pInput, const sf::Time & elapsed) {
 	bool z = pInput->zPressed();
 	bool up = pInput->upPressed();

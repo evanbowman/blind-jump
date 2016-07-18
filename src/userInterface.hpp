@@ -20,6 +20,17 @@ class Player;
 
 class UserInterface {	
 public:
+	enum class State {
+		closed,
+		deathScreenEntry,
+		deathScreen,
+		deathScreenExit,
+		statsScreen,
+		complete,
+		menuScreenEntry,
+		menuScreenExit,
+		menuScreen
+	};
 	UserInterface(float, float);
 	void update(sf::RenderWindow &, Player &, FontController &, InputController *, const sf::Time &);
 	void addItem(char, EffectGroup &, float, float, FontController &, Player &);
@@ -33,6 +44,8 @@ public:
 	float getDesaturateAmount();
 	
 	bool isVisible();
+
+	const State getState() const;
 	
 	void reset();
 	void setEnemyValueCount(int);
@@ -44,17 +57,6 @@ public:
 	void setView(sf::View *);
 	
 private:
-	enum class State {
-		closed,
-		deathScreenEntry,
-		deathScreen,
-		deathScreenExit,
-		statsScreen,
-		complete,
-		menuScreenEntry,
-		menuScreenExit,
-		menuScreen
-	};
 	State state;
 	float xPos, yPos;
 	
