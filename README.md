@@ -21,6 +21,4 @@ make macOS
 ```
 
 3. Install
-```bash
-mv -r ../prod/BlindJump.app/ ~/Applications
-```
+Drag the application from ../prod into your ~/Applications directory.
