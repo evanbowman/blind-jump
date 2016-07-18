@@ -59,9 +59,9 @@ void UserInterface::update(sf::RenderWindow& window, Player & player, FontContro
 			fonts.setTextAlpha(255 * blurAmount, FontController::Text::resumeText);
 			fonts.setTextAlpha(255 * blurAmount, FontController::Text::settingsText);
 			fonts.setTextAlpha(255 * blurAmount, FontController::Text::quitText);
-			fonts.setTextOffset(0, -0.02 * blurAmount, FontController::Text::resumeText);
-			fonts.setTextOffset(0, -0.02 * blurAmount, FontController::Text::settingsText);
-			fonts.setTextOffset(0, -0.02 * blurAmount, FontController::Text::quitText);
+			fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::resumeText);
+			fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::settingsText);
+			fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::quitText);
 			if (blurAmount > 0.99999f) {
 				blurAmount = 0.99999f;
 				state = State::menuScreen;
@@ -93,9 +93,9 @@ void UserInterface::update(sf::RenderWindow& window, Player & player, FontContro
 			fonts.setTextAlpha(255 * blurAmount, FontController::Text::resumeText);
 			fonts.setTextAlpha(255 * blurAmount, FontController::Text::settingsText);
 			fonts.setTextAlpha(255 * blurAmount, FontController::Text::quitText);
-			fonts.setTextOffset(0, -0.02 * blurAmount, FontController::Text::resumeText);
-			fonts.setTextOffset(0, -0.02 * blurAmount, FontController::Text::settingsText);
-			fonts.setTextOffset(0, -0.02 * blurAmount, FontController::Text::quitText);
+			fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::resumeText);
+			fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::settingsText);
+			fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::quitText);
 			if (blurAmount < 0.1f) {
 				blurAmount = 0.1f;
 				state = State::closed;

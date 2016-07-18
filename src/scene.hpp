@@ -32,58 +32,42 @@ private:
    	enemyController en;
 	FontController * pFonts;
    	int level;
-	
+	bool stashed;
 	sf::Sprite vignetteSprite;
 	backgroundHandler bkg;	
 	bool teleporterCond;
     sf::Sprite vignetteShadowSpr;
 	tileController::Tileset set;
-
 	std::vector<sf::Sprite *> glowSprs1, glowSprs2;
-	
-	// Create a GL rectangle primitive for the teleporter effect
 	sf::RectangleShape teleporterBeam;
 	sf::RectangleShape entryBeam;
-	
 	// For the beam to cast a glow to the map
 	sf::Texture beamGlowTxr;
 	sf::Sprite beamGlowSpr;
-	
 	// State variables for the teleporter effects at the end of the levels
 	bool animationBegin;
 	bool beamExpanding;
 	bool dispEntryBeam;
 	bool transitionIn;
-	
 	sf::View worldView, hudView;
-	
 	// RenderTexture and shapes for lighting effects
 	sf::RenderTexture lightingMap;
 	sf::RectangleShape shadowShape;
-	
-	sf::RenderTexture target, secondPass, thirdPass;
-	
+	sf::RenderTexture target, secondPass, thirdPass, stash;
 	// Locations to place lights
 	std::vector<Coordinate> lightPositions;
-	
 	sf::RectangleShape transitionShape;
-	
 	sf::Texture titleTxtr;
 	sf::Sprite titleSpr;
-	
-	sf::Color objectShadeColor;
-	
+	sf::Color objectShadeColor;	
 	// Locations to place pillars
 	std::vector<Coordinate> rockPositions;
-	
 	// Create a vector of pairs with enemy index and placement probability for enemy creation
 	std::vector<std::pair<int, int>> enemySelectVec;
-	
 	// Vector of sprites with y-position and height, for z-ordering
 	std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> gameObjects;
 	std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> gameShadows;
 	ScreenShakeController ssc;
-	
 	bool transitioning;
 	short int transitionDelay;
 	
@@ -94,7 +78,6 @@ public:
 	bool getTeleporterCond();
 	std::vector<std::pair<int, int>>* getEnemySelectVec();
 	int getLevel();
-
 	DetailGroup & getDetails();
 	enemyController & getEnemyController();
 	tileController & getTileController();
@@ -104,7 +87,6 @@ public:
 	ScreenShakeController * getPSSC();
 	UserInterface & getUI();
 	FontController * getPFonts();
-	
 	// Store the window width and window height for map resets
 	float windowW;
 	float windowH;
