@@ -147,18 +147,18 @@ void drawHBox(std::vector<T> & vec, sf::RenderWindow & target) {
 
 void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	target.clear(sf::Color::Transparent);
-	// Start by getting the displacement that the player has moved, in order to update the position of all of the tiles and game objects
+
 	float xOffset{player.getWorldOffsetX()};
 	float yOffset{player.getWorldOffsetY()};
-	
+
 	bkg.setOffset(xOffset, yOffset);
 	bkg.drawBackground(target);
 	tiles.setOffset(xOffset, yOffset);
 	tiles.drawTiles(target, &glowSprs1, &glowSprs2, level);
 	glowSprs2.clear();
-	if (!UI.isOpen()) {
-		details.update(xOffset, yOffset, elapsedTime);
-	}
+	
+	details.update(xOffset, yOffset, elapsedTime);
+		
 	drawGroup(details, gameObjects, gameShadows, glowSprs1, glowSprs2, target);
 
 	// TODO: clean up enemyController::update()...

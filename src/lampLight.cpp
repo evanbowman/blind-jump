@@ -20,8 +20,6 @@ void LampLight::update(float xOffset, float yOffset, const sf::Time & elapsedTim
 	setPosition(xInit + xOffset, yInit + yOffset);
 	lampSprite.setPosition(position.x, position.y + 8);
 	glowSprite.setPosition(position.x - 250 + 16, position.y - 250 + 16);
-	float offset = rand() % 20;
-	glowSprite.setColor(sf::Color(230 + offset, 230 + offset, 230 + offset, 255));
 }
 
 const sf::Sprite & LampLight::getSprite() const {
