@@ -21,7 +21,6 @@ FontController::FontController(sf::View fontView, float x, float y) {
 	windowCenterX = x;
 	windowCenterY = y;
 	
-	health = 4;
 	maxHealth = 4;
 	score = 0;
 
@@ -61,42 +60,108 @@ FontController::FontController(sf::View fontView, float x, float y) {
 	coin.setPointCount(20);
 	coin.setRadius(0.018f * scale);
 	coin.setOrigin(coin.getLocalBounds().width / 2, coin.getLocalBounds().height / 2);
-
+	
 	const sf::Font & cornerstone = globalResourceHandler.getFont(ResourceHandler::Font::cornerstone);
+
+	auto initText = [](const sf::Font & font, sf::Text & text, const std::string string, float size) {
+		text.setFont(font);
+		text.setCharacterSize(size);
+		text.setString(string);
+	};
+
+	// Worth noting that cornerstone is an all caps font anyway, but in case I change it...
 	
-	// Set the waypoint text
-	waypointText.setFont(cornerstone);
-	waypointText.setString("WAYPOINT-1");
-	waypointText.setCharacterSize(0.055 * scale);
+	initText(cornerstone, waypointText, std::string("WAYPOINT-1"), 0.055f * scale);
 	waypointText.setPosition(16, 0);
+
+	initText(cornerstone, scoreText, std::string("0: "), 0.032f * scale);
 	
-	scoreText.setString("0 :");
-	scoreText.setCharacterSize(0.032 * scale);
-	scoreText.setFont(cornerstone);
-	
-	healthNumText.setString(std::to_string(static_cast<int>(health)) + " / " + std::to_string(static_cast<int>(maxHealth)) + ": ");
+	healthNumText.setString(std::to_string(4) + " / " + std::to_string(static_cast<int>(maxHealth)) + ": ");
 	healthNumText.setCharacterSize(0.032 * scale);
 	healthNumText.setFont(cornerstone);
+
+	initText(cornerstone, resumeText, std::string("RESUME"), 0.085f * scale);
+	resumeText.setColor(sf::Color(255, 255, 255, 0));
 	
-	continueText.setString("Press z to continue");
-	continueText.setCharacterSize(0.026 * scale);
-	continueText.setFont(cornerstone);
+	initText(cornerstone, settingsText, std::string("SETTINGS"), 0.085 * scale);
+	settingsText.setColor(sf::Color(255, 255, 255, 0));
 	
-	titleText.setString("Blind Jump");
-	titleText.setCharacterSize(0.115 * scale);
-	titleText.setFont(cornerstone);
+	initText(cornerstone, quitText, std::string("QUIT"), 0.085 * scale);
+	quitText.setColor(sf::Color(255, 255, 255, 0));
+	
+	initText(cornerstone, titleText, std::string("BLIND JUMP"), 0.115f * scale);
 	titleText.setPosition(fontView.getSize().x / 2 - titleText.getLocalBounds().width / 2, fontView.getSize().y / 8 - titleText.getLocalBounds().height / 2);
 	titleText.setColor(sf::Color(255, 255, 255, 0));
-	
-	deathText.setCharacterSize(0.115 * scale);
-	deathText.setFont(cornerstone);
-	deathText.setString("YOU DIED");
+
+	initText(cornerstone, deathText, std::string("YOU DIED"), 0.115 * scale);
 	deathText.setColor(sf::Color(231, 26, 83));
 	deathText.setPosition(fontView.getSize().x / 2 - deathText.getLocalBounds().width / 2, fontView.getSize().y / 12 - deathText.getLocalBounds().height / 2);
 }
 
+void FontController::setTextOffset(float xOffset, float yOffset, FontController::Text text) {
+	float scale;
+	if (fontView.getSize().y < fontView.getSize().x) {
+		scale = fontView.getSize().y;
+	} else {
+		scale = fontView.getSize().x;
+	}
+	switch (text) {
+	case Text::resumeText:
+		resumeText.setPosition(xOffset * scale + fontView.getSize().x / 2 - resumeText.getLocalBounds().width / 2, fontView.getSize().y / 2.8f - resumeText.getLocalBounds().height / 2 + yOffset * scale);
+		break;
+
+	case Text::settingsText:
+		settingsText.setPosition(xOffset * scale + fontView.getSize().x / 2 - settingsText.getLocalBounds().width / 2, resumeText.getPosition().y + settingsText.getLocalBounds().height * 2 + yOffset * scale);
+		break;
+
+	case Text::quitText:
+		quitText.setPosition(xOffset * scale + fontView.getSize().x / 2 - quitText.getLocalBounds().width / 2, settingsText.getPosition().y + quitText.getLocalBounds().height * 2 + yOffset * scale);
+		break;
+
+	default:
+		// TODO: handle other cases...
+		break;
+	}
+}
+
+void FontController::setTextAlpha(uint8_t alpha, FontController::Text text) {
+	switch (text) {
+	case Text::resumeText:
+		resumeText.setColor(sf::Color(255, 255, 255, alpha));
+		break;
+
+	case Text::settingsText:
+		settingsText.setColor(sf::Color(255, 255, 255, alpha));
+		break;
+
+	case Text::quitText:
+		quitText.setColor(sf::Color(255, 255, 255, alpha));
+		break;
+
+	case Text::healthNumText:
+		healthNumText.setColor(sf::Color(255, 255, 255, alpha));
+		break;
+
+	case Text::scoreText:
+		scoreText.setColor(sf::Color(255, 255, 255, alpha));
+		break;
+
+	case Text::waypointText:
+		waypointText.setColor(sf::Color(255, 255, 255, alpha));
+		break;
+
+	case Text::heart:
+		heart.setFillColor(sf::Color(255, 255, 255, alpha));
+		break;
+
+	case Text::coin:
+		coin.setFillColor(sf::Color(255, 255, 255, alpha));
+		break;
+	}
+}
+
 void FontController::reset() {
-  score = 0;
+	score = 0;
 }
 
 void FontController::setWaypointText(int level) {
@@ -161,6 +226,21 @@ void FontController::print(sf::RenderWindow & window) {
 		window.draw(scoreText);
 		window.draw(coin);
 	}
+
+	c = resumeText.getColor();
+	if (c.a > 0) {
+		window.draw(resumeText);
+	}
+
+	c = settingsText.getColor();
+	if (c.a > 0) {
+		window.draw(settingsText);
+	}
+
+	c = quitText.getColor();
+	if (c.a > 0) {
+		window.draw(quitText);
+	}
 }
 
 void FontController::resetWPText() {
@@ -190,6 +270,7 @@ void FontController::resetHPText() {
 
 void FontController::update(sf::RenderWindow & window, float xOffset, float yOffset) {
 	window.setView(fontView);
+	// hmmm... maybe some of FontController::print() should be here... TODO
 }
 
 void FontController::drawTitle(unsigned char alpha, sf::RenderWindow& window) {
@@ -209,14 +290,12 @@ sf::Text* FontController::getTitle() {
 }
 
 void FontController::updateHealth(char health) {
-	// Set health equal to the input parameter or the max health, depending on which is lower
-	this->health = std::min(health, maxHealth);
 	healthNumText.setString(std::to_string(static_cast<int>(health)) + " / " + std::to_string(static_cast<int>(maxHealth)) + " :");
 	healthNumText.setPosition(fontView.getSize().x - healthNumText.getLocalBounds().width - fontView.getSize().x * 0.015 - heart.getLocalBounds().width, healthNumText.getLocalBounds().height);
 }
 
-void FontController::updateMaxHealth(char health) {
-	maxHealth = health;
+void FontController::updateMaxHealth(char _maxHealth, char health) {
+	maxHealth = _maxHealth;
 	healthNumText.setString(std::to_string(static_cast<int>(health)) + " / " + std::to_string(static_cast<int>(maxHealth)) + " :");
 	resetHPText();
 }

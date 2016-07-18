@@ -326,7 +326,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 			pFonts->reset();
 			transitionDelay = 320;
 			// Set the max health back to 3
-			pFonts->updateMaxHealth(4);
+			pFonts->updateMaxHealth(4, 4);
 			pFonts->setWaypointText(level);
 			dispEntryBeam = false;
 		}

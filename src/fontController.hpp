@@ -21,8 +21,8 @@ class FontController {
 private:
 	sf::Texture texture;
 	sf::View fontView;
-	sf::Text waypointText, titleText, credit, deathText, scoreText, continueText, healthNumText;
-	char health;
+	sf::Text waypointText, titleText, deathText, scoreText, healthNumText;
+	sf::Text resumeText, settingsText, quitText;
 	char maxHealth;
 	int score;
 	float windowCenterX, windowCenterY;
@@ -31,13 +31,18 @@ private:
 	sf::CircleShape coin;
 	
 public:
+	enum class Text {
+		resumeText, settingsText, quitText, healthNumText, scoreText, waypointText, heart, coin
+	};
 	FontController(sf::View, float, float);
-	void update(sf::RenderWindow&, float, float);
+	void update(sf::RenderWindow &, float, float);
 	void setWaypointText(int);
 	void setZoneText(char);
-	void print(sf::RenderWindow&);
+	void print(sf::RenderWindow &);
+	void setTextAlpha(uint8_t, Text);
+	void setTextOffset(float, float, Text);
 	void updateHealth(char);
-	void updateMaxHealth(char);
+	void updateMaxHealth(char, char);
 	void drawTitle(unsigned char, sf::RenderWindow&);
 	void drawDeathText(unsigned char, sf::RenderWindow&);
 	char getMaxHealth() const;

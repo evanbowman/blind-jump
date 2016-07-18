@@ -23,7 +23,7 @@ ResourcePath.o: ResourcePath.hpp
 clean:
 	rm *.o
 
-MacOS: all packageScriptMac.sh
+macOS: all packageScriptMac.sh
 	bash packageScriptMac.sh $(EXECUTABLE) BlindJump
 
 depend:
