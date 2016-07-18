@@ -156,7 +156,9 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	tiles.setOffset(xOffset, yOffset);
 	tiles.drawTiles(target, &glowSprs1, &glowSprs2, level);
 	glowSprs2.clear();
-	details.update(xOffset, yOffset, elapsedTime);
+	if (!UI.isOpen()) {
+		details.update(xOffset, yOffset, elapsedTime);
+	}
 	drawGroup(details, gameObjects, gameShadows, glowSprs1, glowSprs2, target);
 	// TODO: clean up enemyController::update()...
 	en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, &ssc, *pFonts, elapsedTime);
