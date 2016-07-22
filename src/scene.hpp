@@ -34,6 +34,25 @@
 #include "resourceHandler.hpp"
 
 class Scene {
+public:
+	Scene(float, float, InputController *, FontController *);
+	void update(sf::RenderWindow &, sf::Time &);
+	void Reset();
+	bool getTeleporterCond();
+	std::vector<std::pair<int, int>>* getEnemySelectVec();
+	int getLevel();
+	DetailGroup & getDetails();
+	enemyController & getEnemyController();
+	tileController & getTileController();
+	Player & getPlayer();
+	EffectGroup & getEffects();
+	InputController * getPInput();
+	ScreenShakeController * getPSSC();
+	UserInterface & getUI();
+	FontController * getPFonts();
+	float windowW;
+	float windowH;
+
 private:
 	InputController * pInput;
 	Player player;
@@ -45,10 +64,10 @@ private:
    	enemyController en;
 	FontController * pFonts;
    	int level;
-	// Stash static post effects for efficiency. Preload is for recovery from stash
+	// Stash static rendered frames for efficiency. Preload is for recovery from stash
 	bool stashed, preload;
 	sf::Sprite vignetteSprite;
-	backgroundHandler bkg;	
+	backgroundHandler bkg;
 	bool teleporterCond;
     sf::Sprite vignetteShadowSpr;
 	tileController::Tileset set;
@@ -84,26 +103,6 @@ private:
 	ScreenShakeController ssc;
 	bool transitioning;
 	short int transitionDelay;
-	
-public:
-	Scene(float, float, InputController *, FontController *);
-	void update(sf::RenderWindow &, sf::Time &);
-	void Reset();
-	bool getTeleporterCond();
-	std::vector<std::pair<int, int>>* getEnemySelectVec();
-	int getLevel();
-	DetailGroup & getDetails();
-	enemyController & getEnemyController();
-	tileController & getTileController();
-	Player & getPlayer();
-	EffectGroup & getEffects();
-	InputController * getPInput();
-	ScreenShakeController * getPSSC();
-	UserInterface & getUI();
-	FontController * getPFonts();
-	// Store the window width and window height for map resets
-	float windowW;
-	float windowH;
 };
 
 // TODO: write an equation that does this, no need to waste memory on this!

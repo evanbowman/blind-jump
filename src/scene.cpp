@@ -35,7 +35,9 @@ Coordinate pickLocation(std::vector<Coordinate>& emptyLocations) {
 }
 
 Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontController * _pFonts)
-	: pInput{_pInput},
+	: windowW{_windowW},
+	  windowH{_windowH},
+	  pInput{_pInput},
 	  player{_windowW / 2, _windowH / 2},
 	  UI{_windowW / 2, _windowH / 2},
 	  tiles{}, // TODO: remove default constructible members
@@ -44,9 +46,7 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	  level{0},
 	  stashed{false},
 	  preload{false},
-	  teleporterCond{false},
-	  windowW{_windowW},
-	  windowH{_windowH}  
+	  teleporterCond{false}
 {
 	//===========================================================//
 	// Set up post processing effect textures and shapes         //

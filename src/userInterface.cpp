@@ -159,8 +159,10 @@ void UserInterface::update(sf::RenderWindow& window, Player & player, FontContro
 		timer += elapsed.asMilliseconds();
 		blurAmount = Easing::easeIn<3>(timer, 300);
 		{
-			uint8_t textAlpha = 255 * blurAmount;
-			fonts.drawDeathText(static_cast<unsigned char>(textAlpha), window);
+			uint8_t textAlpha = Easing::easeOut<3>(timer, 300) * 255;
+			if (textAlpha < 0) {
+				fonts.drawDeathText(textAlpha, window);
+			}
 		}
 		if (blurAmount == 1.f) {
 			state = State::statsScreen;
