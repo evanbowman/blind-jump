@@ -15,6 +15,7 @@
 #include "effectsController.hpp"
 #include "inputController.hpp"
 #include <array>
+#include "easingTemplates.hpp"
 
 class Player;
 
@@ -62,8 +63,6 @@ private:
 	
 	int32_t timer, timerAlt;
 
-	float textAlpha;
-	
 	float blurAmount, desaturateAmount;
 
 	sf::View * pWorldView, cachedView;

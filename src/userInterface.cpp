@@ -16,8 +16,7 @@ UserInterface::UserInterface(float _xPos, float _yPos) :
 	yPos{_yPos + 16},
 	timer{0},
 	timerAlt{0},
-	textAlpha{0.f},
-	blurAmount{0.1f},
+	blurAmount{0.f},
 	desaturateAmount{0.f}
 {
 }
@@ -56,23 +55,19 @@ void UserInterface::update(sf::RenderWindow& window, Player & player, FontContro
 			
 	case State::menuScreenEntry:
 		timer += elapsed.asMilliseconds();
-		if (timer > 20) {
-			timer -= 20;
-			blurAmount *= 1.2f;
-			// These are loopable, but casting the loop index to a scoped enum would be less readable IMO...
-			fonts.setTextAlpha(255 * blurAmount, FontController::Text::resumeText);
-			fonts.setTextAlpha(255 * blurAmount, FontController::Text::settingsText);
-			fonts.setTextAlpha(255 * blurAmount, FontController::Text::quitText);
-			fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::resumeText);
-			fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::settingsText);
-			fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::quitText);
-			if (blurAmount > 0.99999f) {
-				blurAmount = 0.99999f;
-				state = State::menuScreen;
-				fonts.setTextAlpha(255, FontController::Text::resumeText);
-				fonts.setTextAlpha(255, FontController::Text::settingsText);
-				fonts.setTextAlpha(255, FontController::Text::quitText);
-			}
+		blurAmount = Easing::easeIn<3>(timer, 280);
+		fonts.setTextAlpha(255 * blurAmount, FontController::Text::resumeText);
+		fonts.setTextAlpha(255 * blurAmount, FontController::Text::settingsText);
+		fonts.setTextAlpha(255 * blurAmount, FontController::Text::quitText);
+		fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::resumeText);
+		fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::settingsText);
+		fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::quitText);
+		if (blurAmount == 1.f) {
+			state = State::menuScreen;
+			fonts.setTextAlpha(255, FontController::Text::resumeText);
+			fonts.setTextAlpha(255, FontController::Text::settingsText);
+			fonts.setTextAlpha(255, FontController::Text::quitText);
+			
 		}
 		break;
 
@@ -91,23 +86,20 @@ void UserInterface::update(sf::RenderWindow& window, Player & player, FontContro
 		
 	case State::menuScreenExit:
 		timer += elapsed.asMilliseconds();
-		if (timer > 20) {
-			timer -= 20;
-			blurAmount *= 0.9f;
-			fonts.setTextAlpha(255 * blurAmount, FontController::Text::resumeText);
-			fonts.setTextAlpha(255 * blurAmount, FontController::Text::settingsText);
-			fonts.setTextAlpha(255 * blurAmount, FontController::Text::quitText);
-			fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::resumeText);
-			fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::settingsText);
-			fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::quitText);
-			if (blurAmount < 0.1f) {
-				blurAmount = 0.1f;
-				state = State::closed;
-				player.activate();
-				fonts.setTextAlpha(0, FontController::Text::resumeText);
-				fonts.setTextAlpha(0, FontController::Text::settingsText);
-				fonts.setTextAlpha(0, FontController::Text::quitText);
-			}
+		blurAmount = Easing::easeOut<3>(timer, 280);
+		fonts.setTextAlpha(255 * blurAmount, FontController::Text::resumeText);
+		fonts.setTextAlpha(255 * blurAmount, FontController::Text::settingsText);
+		fonts.setTextAlpha(255 * blurAmount, FontController::Text::quitText);
+		fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::resumeText);
+		fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::settingsText);
+		fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::quitText);
+		if (blurAmount == 0.f) {
+			state = State::closed;
+			timer = 0;
+			player.activate();
+			fonts.setTextAlpha(0, FontController::Text::resumeText);
+			fonts.setTextAlpha(0, FontController::Text::settingsText);
+			fonts.setTextAlpha(0, FontController::Text::quitText);
 		}
 		break;
 			
@@ -128,8 +120,11 @@ void UserInterface::update(sf::RenderWindow& window, Player & player, FontContro
 			state = State::deathScreen;
 			timerAlt = 0.f;
 		}
-		textAlpha = desaturateAmount * 255 + 89.25f;
-		fonts.drawDeathText(static_cast<unsigned char>(textAlpha), window);
+		// Need to define a scope since this is a switch statement...
+		{
+			uint8_t textAlpha = desaturateAmount * 255 + 89.25f;
+			fonts.drawDeathText(static_cast<unsigned char>(textAlpha), window);
+		}
 		break;
 			
 	case State::deathScreen:
@@ -153,18 +148,12 @@ void UserInterface::update(sf::RenderWindow& window, Player & player, FontContro
 			
 	case State::deathScreenExit:
 		timer += elapsed.asMilliseconds();
-		if (timer > 20) {
-			timer -= 20;
-			if (textAlpha > 15.f) {
-				textAlpha -= 15.f;
-			}
-			blurAmount *= 1.2f;
+		blurAmount = Easing::easeIn<3>(timer, 300);
+		{
+			uint8_t textAlpha = 255 * blurAmount;
+			fonts.drawDeathText(static_cast<unsigned char>(textAlpha), window);
 		}
-			
-		fonts.drawDeathText(static_cast<unsigned char>(textAlpha), window);
-			
-		if (blurAmount > 0.99999f) {
-			blurAmount = 0.99999f;
+		if (blurAmount == 1.f) {
 			state = State::statsScreen;
 		}
 		break;
@@ -203,7 +192,8 @@ float UserInterface::getBlurAmount() {
 void UserInterface::reset() {
 	state = State::closed;
 	desaturateAmount = 0.f;
-	blurAmount = 0.1f;
+	blurAmount = 0.f;
+	timer = 0;
 }
 
 float UserInterface::getDesaturateAmount() {
@@ -211,7 +201,7 @@ float UserInterface::getDesaturateAmount() {
 }
 
 bool UserInterface::blurEnabled() {
-	return blurAmount != 0.1f;
+	return blurAmount != 0.f;
 }
 
 bool UserInterface::desaturateEnabled() {

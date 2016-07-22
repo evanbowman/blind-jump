@@ -10,7 +10,7 @@
 #include <cmath>
 
 TreasureChest::TreasureChest(float _xInit, float _yInit, const sf::Texture & mainTxtr, char _item)
-	: Detail{_xInit + (rand() % 4) + -2, _yInit},
+	: Detail{_xInit + (std::abs(static_cast<int>(globalRNG())) % 4) + -2, _yInit},
 	  state{State::closed},
 	  item{_item},
 	  animationTimer{0},

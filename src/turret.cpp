@@ -125,7 +125,7 @@ void Turret::updateShots(EffectGroup & effects, FontController & fonts) {
 			//Create a shot object with an angle equal to the angle between the player and the turret
 			effects.add<6>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 						   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
-						   xInit, yInit, angleFunction(xPos + 18, yPos, playerPosX, playerPosY));
+						   xInit, yInit, angleFunction(xPos + 18, yPos + 6, playerPosX, playerPosY));
 			//Increment the number of shots fired
 			shotsFired++;
 			//Reset the countdown timer
@@ -154,7 +154,7 @@ void Turret::updateShots(EffectGroup & effects, FontController & fonts) {
 	
 	if (hp == 0) {
 		killFlag = true;
-		if ((rand() % 4) == 0) {
+		if ((std::abs(static_cast<int>(globalRNG())) % 4) == 0) {
 			effects.add<4>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
 					   xInit, yInit + 4, Powerup::Type::Heart);

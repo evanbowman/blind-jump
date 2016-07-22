@@ -13,6 +13,7 @@
 #include "detailParent.hpp"
 #include "inputController.hpp"
 #include "spriteSheet.hpp"
+#include "rng.hpp"
 
 class TreasureChest : public Detail {
 public:

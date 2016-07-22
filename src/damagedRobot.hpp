@@ -13,6 +13,7 @@
 #include "detailParent.hpp"
 #include "SFML/Graphics.hpp"
 #include "spriteSheet.hpp"
+#include "rng.hpp"
 
 class DamagedRobot : public Detail {
 public:

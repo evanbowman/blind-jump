@@ -158,7 +158,7 @@ bool Critter::isActive() {
 
 void Critter::onDeath(EffectGroup & effects) {
 	// With some random chance, add a heart item to the map
-	unsigned long int temp = rand() % 5;
+	unsigned long int temp = std::abs(static_cast<int>(globalRNG())) % 5;
 	if (temp == 0) {
 	    effects.add<4>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),

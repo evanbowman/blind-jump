@@ -34,7 +34,7 @@ void getRockPositions(short gameMap[61][61], std::vector<Coordinate>& availableL
 			if (gameMap[i][j] == 3 || gameMap[i][j] == 4) {
 				c.x = i;
 				c.y = j;
-				c.r = PILLAR_RADIUS + rand() % 60;
+				c.r = PILLAR_RADIUS + std::abs(static_cast<int>(globalRNG())) % 60;
 				pillarMap.push_back(c);
 			}
 		}

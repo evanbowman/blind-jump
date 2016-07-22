@@ -11,7 +11,7 @@
 DamagedRobot::DamagedRobot(float _xInit, float _yInit, const sf::Texture & inpTxtr)
 	: Detail{_xInit, _yInit}, robotSheet{inpTxtr}
 {
-	robotSheet[rand() % 2]; // Randomly pick one of the textures...
+	robotSheet[std::abs(static_cast<int>(globalRNG())) % 2]; // Randomly pick one of the textures...
 }
 
 void DamagedRobot::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {

@@ -12,11 +12,11 @@ Rock::Rock(float _xInit, float _yInit, const sf::Texture & inpTxtr)
 	: Detail{_xInit, _yInit}
 {
 	rockSheet.setTexture(inpTxtr);
-    if (rand() % 2) {
+    if (std::abs(static_cast<int>(globalRNG())) % 2) {
 		rockSheet.setScale(-1, 1);
 	    xInit += 32;
 	}
-	rockSheet[rand() % 4];
+	rockSheet[std::abs(static_cast<int>(globalRNG())) % 4];
 }
 
 void Rock::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {

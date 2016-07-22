@@ -73,7 +73,7 @@ inline void addCenterTiles (short map[61][61]) {
 	for (int i = 0; i < 61; i++) {
 		for (int j = 0; j < 61; j++) {
 			if ((map[i - 1][j] == 5 || map[i - 1][j] == 3 || map[i - 1][j] == 4) && (map[i + 1][j] == 5 || map[i + 1][j] == 3 || map[i + 1][j] == 4) && (map[i][j - 1] == 5 || map[i][j - 1] == 3 || map[i][j - 1] == 4) && (map[i][j + 1] == 5 || map[i][j + 1] == 3 || map[i][j + 1] == 4)) {
-				if ((rand() % 12) > 2) {
+				if ((std::abs(static_cast<int>(globalRNG())) % 12) > 2) {
 					map[i][j] = 3;
 				}
 				else {
@@ -159,15 +159,15 @@ int initMapOverlay(short map[61][61]) {
 	//Loop through again, and create a series of other numbers greater than 2
 	for (int i = 5; i < 54; i++) {
 		for (int j = 5; j < 54; j++) {
-			map[i][j] = (rand() % 2);
+			map[i][j] = (std::abs(static_cast<int>(globalRNG())) % 2);
 		}
 	}
 	condense(map, maptemp, 3);
 	short xindex;
 	short yindex;
 	do {
-		xindex = rand() % 61;
-		yindex = rand() % 61;
+		xindex = std::abs(static_cast<int>(globalRNG())) % 61;
+		yindex = std::abs(static_cast<int>(globalRNG())) % 61;
 	}
 	while (map[xindex][yindex] != 1);
 	floodFill(map, xindex, yindex, 5);
@@ -240,7 +240,7 @@ int mappingFunction(short map[61][61], int level, bool enableGrass) {
 		//Loop through again, and create a series of other numbers greater than 2
 		for (int i = 16; i < 44; i++) {
 			for (int j = 16; j < 44; j++) {
-				map[i][j] = (rand() % 2);
+				map[i][j] = (std::abs(static_cast<int>(globalRNG())) % 2);
 			}
 		}
 		condense(map, maptemp, 1);
@@ -248,8 +248,8 @@ int mappingFunction(short map[61][61], int level, bool enableGrass) {
 		short xindex;
 		short yindex;
 		do {
-			xindex = rand() % 61;
-			yindex = rand() % 61;
+			xindex = std::abs(static_cast<int>(globalRNG())) % 61;
+			yindex = std::abs(static_cast<int>(globalRNG())) % 61;
 		}
 		while (map[xindex][yindex] != 7);
 		floodFill(map, xindex, yindex, 5);

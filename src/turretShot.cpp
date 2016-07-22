@@ -13,7 +13,7 @@ TurretShot::TurretShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxt
 {
 	spriteSheet.setTexture(mainTxtr);
 	glowSprite.setTexture(glowTxtr);
-	int diff = pow(-1,rand() % 2) + rand() % 6 - 3;
+	int diff = pow(-1,std::abs(static_cast<int>(globalRNG())) % 2) + std::abs(static_cast<int>(globalRNG())) % 6 - 3;
 	spriteSheet.setRotation(dir + diff);
 	spriteSheet.setOrigin(4, 6);
 	glowSprite.setOrigin(22.5, 22.5);
@@ -33,7 +33,7 @@ void TurretShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 	if (timer > 600) {
 	    setKillFlag();
 	}
-	float offset = rand() % 20;
+	float offset = std::abs(static_cast<int>(globalRNG())) % 20;
 	glowSprite.setColor(sf::Color(230 + offset, 230 + offset, 230 + offset, 255));
 	animationTimer += elapsedTime.asMilliseconds();
 	if (animationTimer > 50) {

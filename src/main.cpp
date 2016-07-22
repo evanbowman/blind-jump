@@ -11,13 +11,16 @@
 #include "inputController.hpp"
 #include "resourceHandler.hpp"
 #include <iostream>
+#include "rng.hpp"
 
 // Many classes need to access the resource handler, and its accessors return only const references
 ResourceHandler globalResourceHandler;
 
-int main(int argc, char * argv[]) {
-	srand(static_cast<unsigned int>(time(0)));
+std::mt19937 globalRNG;
 
+int main(int argc, char * argv[]) {
+	seedRNG();
+	
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 	
 	float aspectRatio = static_cast<float>(sf::VideoMode::getDesktopMode().width) / static_cast<float>(sf::VideoMode::getDesktopMode().height);

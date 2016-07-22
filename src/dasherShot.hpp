@@ -14,6 +14,7 @@
 #include <cmath>
 #include "spriteSheet.hpp"
 #include "Effect.hpp"
+#include "rng.hpp"
 
 class DasherShot : public Effect {
 public:

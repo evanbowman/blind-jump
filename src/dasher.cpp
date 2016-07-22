@@ -123,7 +123,7 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 	case State::idle:
 		if (timer >= 200) {
 			timer -= 200;
-			const int select = rand() % 2;
+			const int select = std::abs(static_cast<int>(globalRNG())) % 2;
 			if (select) {
 				state = State::dashBegin;
 				frameIndex = 1;
@@ -186,7 +186,7 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 			state = State::dashing;
 			frameIndex = 2;
 			uint8_t tries{0};
-			float dir{static_cast<float>(rand() % 359)};
+			float dir{static_cast<float>(std::abs(static_cast<int>(globalRNG())) % 359)};
 			do {
 				tries++;
 				if (tries > 254) {
@@ -271,7 +271,7 @@ void Dasher::onDeath(EffectGroup & effects) {
 	hSpeed = 0;
 	vSpeed = 0;
 	frameIndex = 0;
-	unsigned long int temp = rand() % 4;
+	unsigned long int temp = std::abs(static_cast<int>(globalRNG())) % 4;
 	if (temp == 0) {
 	    effects.add<4>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),

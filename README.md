@@ -4,23 +4,20 @@ Blind Jump is a procedurally generated space adventure game that I've been worki
 
 ## Reading the Code
 
-I began this project as a way of learning C++ syntax, so some older parts of the code suffer from bad design. I have gone back and rewritten large portions of the code, but at this point I do not plan on rewriting badly designed parts of game unless there would be an obvious performance benefit. Generally speaking, the code is fast.
+I began this project as a way of learning C++ syntax, so some older parts of the code suffer from bad design. The most readable parts are the newer ones, like the files in the framework/ folder, userInterface.cpp, and easingTemplates.cpp. scene.cpp and player.cpp have some older parts, but they're pretty readable too, and are probably the most important files in terms of understanding how everything works. 
 
 ## Installation
 
 This project uses make and makedepend as a build system. Currently, the game is Mac only, but uses cross-platform libraries and could easily be ported (uses SFML 2.3, required to compile project). In bash:
 
-1. Resolve dependencies
+Resolve dependencies
 ```bash
 make depend
 ```
 
-2. Compile
+Compile
 ```bash
 make macOS
 ```
 
-3. Install
-```bash
-# Drag the application from ../prod into your ~/Applications directory.
-```
+This will create a .app package in the prod folder.

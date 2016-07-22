@@ -13,6 +13,7 @@
 #include <cmath>
 #include "spritesheet.hpp"
 #include "Effect.hpp"
+#include "rng.hpp"
 
 class TurretShot : public Effect {
 public:

@@ -18,8 +18,8 @@ void initMapVectors(tileController * pTiles) {
 	wall w;
 	
 	do {
-		transporterX = rand() % 55;
-		transporterY = rand() % 55;
+		transporterX = std::abs(static_cast<int>(globalRNG())) % 55;
+		transporterY = std::abs(static_cast<int>(globalRNG())) % 55;
 	} while ((pTiles->mapArray[transporterX][transporterY] != 4));
 	
 	pTiles->teleporterLocation.x = transporterX;

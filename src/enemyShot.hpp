@@ -14,6 +14,7 @@
 #include <cmath>
 #include "spriteSheet.hpp"
 #include "Effect.hpp"
+#include "rng.hpp"
 
 class EnemyShot : public Effect {
 public:

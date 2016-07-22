@@ -12,7 +12,7 @@
 #include "scene.hpp"
 
 Coordinate pickLocation(std::vector<Coordinate>& emptyLocations) {
-	int locationSelect = rand() % emptyLocations.size();
+	int locationSelect = std::abs(static_cast<int>(globalRNG())) % emptyLocations.size();
 	Coordinate c = emptyLocations[locationSelect];
 	emptyLocations[locationSelect] = emptyLocations.back();
 	emptyLocations.pop_back();
@@ -597,7 +597,7 @@ void Scene::Reset() {
 		set = tileController::Tileset::intro;
 		objectShadeColor = sf::Color(190, 190, 210, 255);
 	} else {
-	    // /if (rand() % 2) {
+	    // /if (std::abs(static_cast<int>(globalRNG())) % 2) {
 		// 	set = tileController::Tileset::nova;
 		// 	objectShadeColor = sf::Color(210, 195, 195, 255);
 		// } else {
@@ -630,7 +630,7 @@ void Scene::Reset() {
 		initEnemies(this);
 	
 		// 50 / 50 : place an item chest
-		if (rand() % 2) {
+		if (std::abs(static_cast<int>(globalRNG())) % 2) {
 			Coordinate c = pickLocation(tiles.emptyMapLocations);
 			details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
 						   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), 0);

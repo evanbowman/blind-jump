@@ -15,11 +15,11 @@ Scoot::Scoot(const sf::Texture & mainTxtr, const sf::Texture & shadowTxtr, float
 	  spriteSheet{mainTxtr},
 	  speedScale{0.5f},
 	  state{State::drift1},
-	  timer{rand() % 250}
+	  timer{std::abs(static_cast<int>(globalRNG())) % 250}
 {
 	spriteSheet.setOrigin(6, 6);
 	shadow.setTexture(shadowTxtr);
-	float dir = rand() % 359;
+	float dir = std::abs(static_cast<int>(globalRNG())) % 359;
 	hSpeed = cos(dir) * 0.5;
 	vSpeed = sin(dir) * 0.5;
 	health = 2;
@@ -69,10 +69,10 @@ void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, Ef
 		if (timer > 1800) {
 			timer -= 1800;;
 			state = State::drift2;
-			if (rand() % 2)
+			if (std::abs(static_cast<int>(globalRNG())) % 2)
 				changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
 			else
-				changeDir(static_cast<float>(rand() % 359));
+				changeDir(static_cast<float>(std::abs(static_cast<int>(globalRNG())) % 359));
 		}
 		break;
 
@@ -108,10 +108,10 @@ void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, Ef
 			timer -= 400;
 			state = State::drift1;
 			speedScale = 0.5f;
-			if (rand() % 2)
+			if (std::abs(static_cast<int>(globalRNG())) % 2)
 				changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
 			else
-				changeDir(static_cast<float>(rand() % 359));
+				changeDir(static_cast<float>(std::abs(static_cast<int>(globalRNG())) % 359));
 		}
 		break;
 	}
@@ -144,7 +144,7 @@ const sf::Sprite & Scoot::getShadow() const {
 }
 
 void Scoot::onDeath(EffectGroup & effects) {
-	int select{rand() % 5};
+	int select{std::abs(static_cast<int>(globalRNG())) % 5};
 	if (select == 0) {
 		effects.add<4>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),

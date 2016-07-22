@@ -42,7 +42,7 @@ void EnemyShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 		setKillFlag();
 	}
 	
-	float offset = rand() % 20;
+	float offset = std::abs(static_cast<int>(globalRNG())) % 20;
 	glowSprite.setColor(sf::Color(230 + offset, 230 + offset, 230 + offset, 255));
 	spriteSheet.setPosition(position.x, position.y);
 }

@@ -36,7 +36,7 @@ void createMapImage(sf::Image * tileImage, short mapArray[61][61], sf::Texture t
 			mapTemp[i][j] = 0;
 			bitMask[i][j] = 0;
 			gratePositions[i][j] = 0;
-			if (mapArray[i][j] == 5 && !(rand() % 11)) {
+			if (mapArray[i][j] == 5 && !(std::abs(static_cast<int>(globalRNG())) % 11)) {
 				gratePositions[i][j] = 1;
 			}
 		}
@@ -49,7 +49,7 @@ void createMapImage(sf::Image * tileImage, short mapArray[61][61], sf::Texture t
 		for (int i = 1; i < 60; i++) {
 			for (int j = 1; j < 60; j++) {
 				count = gratePositions[i - 1][j] + gratePositions[i + 1][j] + gratePositions[i][j - 1] + gratePositions[i][j + 1];
-				if (count && !(rand() % 3)) {
+				if (count && !(std::abs(static_cast<int>(globalRNG())) % 3)) {
 					gratePositions[i][j] = 1;
 				}
 			}
@@ -67,8 +67,7 @@ void createMapImage(sf::Image * tileImage, short mapArray[61][61], sf::Texture t
 	for (int i = 0; i < 61; i++) {
 		for (int j = 0; j < 61; j++) {
 			if (mapTemp[i][j] == 1) {
-				bitMask[i][j] += 1 * mapTemp[i][j - 1];
-				
+				bitMask[i][j] += 1 * mapTemp[i][j - 1];				
 				if (mapArray[i + 1][j] != 10 && mapArray[i + 1][j] != 9)
 					bitMask[i][j] += 2 * mapTemp[i + 1][j];
 				
@@ -88,7 +87,7 @@ void createMapImage(sf::Image * tileImage, short mapArray[61][61], sf::Texture t
 	// Loop through all indices of the map array and copy the corresponding pixels from the tileset to the image
 	for (int i = 0; i < 60; i++) {
 		for (int j = 0; j < 60; j++) {
-			int select = rand() % 3;
+			int select = std::abs(static_cast<int>(globalRNG())) % 3;
 			switch (mapArray[i][j]) {
 				case 5:
 					if (gratePositions[i][j] != 1) {
