@@ -19,9 +19,9 @@ Compile
 ```bash
 make macOS
 ```
+This will create a .app package in the prod folder.
 
 ## Bugs
 
 Please report any bugs that you find.
 Known bugs: Orb enemies stuck in walls.
-This will create a .app package in the prod folder.
