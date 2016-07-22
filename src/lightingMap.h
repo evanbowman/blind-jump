@@ -1,19 +1,21 @@
-//
-//  Header.h
-//  Blind Jump
-//
-//  Created by Evan Bowman on 2/16/16.
-//  Copyright © 2016 Evan Bowman. All rights reserved.
-//
-//  This algorithm procedurally generates a lighting map for lights using additive
-//  blending by first drawing circles at every point on a game map, randomly shuffling
-//  the resulting list, and then iterating through it and for each circle removing all
-//  overlapping circles.
+//========================================================================//
+// Copyright (C) 2016 Evan Bowman                                         //
+//                                                                        //
+// This program is free software: you can redistribute it and/or modify   //
+// it under the terms of the GNU General Public License as published by   //
+// the Free Software Foundation, either version 3 of the License, or      //
+// (at your option) any later version.                                    //
+//                                                                        //
+// This program is distributed in the hope that it will be useful,        //
+// but WITHOUT ANY WARRANTY; without even the implied warranty of         //
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          //
+// GNU General Public License for more details.                           //
+//                                                                        //
+// You should have received a copy of the GNU General Public License      //
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.  //
+//========================================================================//
 
-
-
-#ifndef lightingmap_h
-#define lightingmap_h
+#pragma once
 
 #include <vector>
 #include "coordinate.hpp"
@@ -77,5 +79,3 @@ void getLightingPositions(short gameMap[61][61], std::vector<Coordinate>& availa
 		availableLocations.push_back(c);
 	}
 }
-
-#endif /* Header_h */

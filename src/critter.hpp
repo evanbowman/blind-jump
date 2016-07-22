@@ -1,14 +1,21 @@
-//
-//  chaser.hpp
-//  Blind Jump
-//
-//  Created by Evan Bowman on 2/26/16.
-//  Copyright © 2016 Evan Bowman. All rights reserved.
-//
+//========================================================================//
+// Copyright (C) 2016 Evan Bowman                                         //
+//                                                                        //
+// This program is free software: you can redistribute it and/or modify   //
+// it under the terms of the GNU General Public License as published by   //
+// the Free Software Foundation, either version 3 of the License, or      //
+// (at your option) any later version.                                    //
+//                                                                        //
+// This program is distributed in the hope that it will be useful,        //
+// but WITHOUT ANY WARRANTY; without even the implied warranty of         //
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          //
+// GNU General Public License for more details.                           //
+//                                                                        //
+// You should have received a copy of the GNU General Public License      //
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.  //
+//========================================================================//
 
 #pragma once
-#ifndef chaser_hpp
-#define chaser_hpp
 
 #include "enemy.hpp"
 #include "effectsController.hpp"
@@ -49,5 +56,3 @@ private:
 	// Store a pointer to the game map
 	short (*map)[61]; //*** I know this is a nasty solution, perhaps there's a better way to not store it locally...
 };
-
-#endif /* chaser_hpp */

@@ -1,14 +1,21 @@
-//
-//  playerAnimationFunctions.hpp
-//  Blind Jump
-//
-//  Created by Evan Bowman on 10/10/15.
-//  Copyright © 2015 Evan Bowman. All rights reserved.
-//
+//========================================================================//
+// Copyright (C) 2016 Evan Bowman                                         //
+//                                                                        //
+// This program is free software: you can redistribute it and/or modify   //
+// it under the terms of the GNU General Public License as published by   //
+// the Free Software Foundation, either version 3 of the License, or      //
+// (at your option) any later version.                                    //
+//                                                                        //
+// This program is distributed in the hope that it will be useful,        //
+// but WITHOUT ANY WARRANTY; without even the implied warranty of         //
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          //
+// GNU General Public License for more details.                           //
+//                                                                        //
+// You should have received a copy of the GNU General Public License      //
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.  //
+//========================================================================//
 
 #pragma once
-#ifndef playerAnimationFunctions_hpp
-#define playerAnimationFunctions_hpp
 
 //Decodes the horizontal movement based on the input (animation sprites are not in sequence, and I reused some of them). It's long, so we dont want this in the player object
 inline uint8_t horizontalAnimationDecoder(uint8_t index) {
@@ -90,5 +97,3 @@ inline uint8_t verticalAnimationDecoder(uint8_t index) {
 			break;
 	}
 }
-
-#endif /* playerAnimationFunctions_hpp */
