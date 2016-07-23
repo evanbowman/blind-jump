@@ -188,9 +188,23 @@ void Player::update(Scene * pGM, const sf::Time & elapsedTime) {
 	bool collisionDown {false};
 	bool collisionLeft {false};
 	bool collisionRight {false};
+	uint_fast8_t collisionMask = checkCollisionWall(tiles.walls, yPos, xPos);
+	collisionMask |= checkCollisionChest(details.get<1>(), yPos, xPos);
+	if (collisionMask & 0x01) {
+		collisionLeft = true;
+	}
 	
-	checkCollisionWall(tiles.walls, collisionDown, collisionUp, collisionRight, collisionLeft, yPos, xPos);
-	checkCollisionChest(details.get<1>(), collisionDown, collisionUp, collisionRight, collisionLeft, yPos, xPos);
+	if (collisionMask & 0x02) {
+		collisionRight = true;
+	}
+	
+	if (collisionMask & 0x04) {
+		collisionUp = true;
+	}
+	
+	if (collisionMask & 0x08) {
+		collisionDown = true;
+	}
 	
 	switch (state) {
 	case State::deactivated:

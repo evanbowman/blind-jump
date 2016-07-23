@@ -451,12 +451,13 @@ void Scene::updateTransitions(float xOffset, float yOffset, const sf::Time & ela
 		timer += elapsedTime.asMilliseconds();
 		// TODO: On intro level display title text and go to alternate fade out state?
 		if (timer > 100) {
-			uint_fast8_t alpha = Easing::easeIn<1>(timer - 100, 1000) * 255;
+			uint_fast8_t alpha = Easing::easeIn<1>(timer - 100, 900) * 255;
 			transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
 		}
 		if (timer >= 1000) {
 			transitionState = TransitionState::TransitionIn;
 			timer = 0;
+			transitionShape.setFillColor(sf::Color(0, 0, 0, 255));
 			teleporterCond = true;
 		}
 		window.draw(transitionShape);

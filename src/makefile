@@ -438,7 +438,6 @@ depend:
 ./lampLight.o: Framework/utilities.hpp
 ./enemyShot.o: enemyShot.hpp spriteSheet.hpp Effect.hpp
 ./enemyShot.o: Framework/framework.hpp Framework/utilities.hpp rng.hpp
-./dashSmoke.o: dashSmoke.hpp
 ./IntroDoor.o: IntroDoor.hpp detailParent.hpp Framework/framework.hpp
 ./IntroDoor.o: Framework/utilities.hpp effectsController.hpp
 ./IntroDoor.o: turretFlashEffect.hpp spriteSheet.hpp Effect.hpp rng.hpp
@@ -584,7 +583,6 @@ depend:
 ./dasher.o: /usr/include/sys/_types/_uintptr_t.h
 ./dasher.o: /usr/include/_types/_intmax_t.h /usr/include/_types/_uintmax_t.h
 ./dasher.o: resourceHandler.hpp ResourcePath.hpp angleFunction.hpp
-./Effect.o: Effect.hpp Framework/framework.hpp Framework/utilities.hpp
 ./scoot.o: scoot.hpp wall.hpp /usr/include/stdint.h
 ./scoot.o: /usr/include/sys/_types/_int8_t.h
 ./scoot.o: /usr/include/sys/_types/_int16_t.h

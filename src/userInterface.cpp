@@ -164,7 +164,9 @@ void UserInterface::update(sf::RenderWindow& window, Player & player, FontContro
 				fonts.drawDeathText(textAlpha, window);
 			}
 		}
-		if (blurAmount == 1.f) {
+		if (timer >= 300) {
+			timer = 0;
+			blurAmount = 1.f;
 			state = State::statsScreen;
 		}
 		break;
