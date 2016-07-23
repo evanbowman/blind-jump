@@ -18,7 +18,7 @@
 #pragma once
 
 #include <cmath>
-#include "spritesheet.hpp"
+#include "spriteSheet.hpp"
 #include "Effect.hpp"
 #include "rng.hpp"
 

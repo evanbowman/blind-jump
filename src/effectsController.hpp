@@ -24,7 +24,7 @@
 #include "FireExplosion.hpp"
 #include "smallExplosion.hpp"
 #include "Powerup.hpp"
-#include "ResourceHandler.hpp"
+#include "resourceHandler.hpp"
 #include "RenderType.hpp"
 #include "Framework/framework.hpp"
 #include "enemyShot.hpp"

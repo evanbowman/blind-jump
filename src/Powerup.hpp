@@ -19,7 +19,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include "spritesheet.hpp"
+#include "spriteSheet.hpp"
 #include "Effect.hpp"
 
 class Powerup : public Effect {

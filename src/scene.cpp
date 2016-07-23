@@ -401,9 +401,10 @@ void Scene::updateTransitions(float xOffset, float yOffset, const sf::Time & ela
 	case TransitionState::ExitBeamEnter:
 		timer += elapsedTime.asMilliseconds();
 		{
-			float beamHeight = Easing::easeIn<1>(timer, 500) * -(windowH / 2 + 36 /* Magic number, why does it work...? */);
+			// About the static casts--macOS and Linux use different underlying types for int_fast32_t
+			float beamHeight = Easing::easeIn<1>(timer, static_cast<int_fast32_t>(500)) * -(windowH / 2 + 36);
 			beamShape.setSize(sf::Vector2f(2, beamHeight));
-			uint_fast8_t alpha = Easing::easeIn<1>(timer, 450) * 255;
+			uint_fast8_t alpha = Easing::easeIn<1>(timer, static_cast<int_fast32_t>(450)) * 255;
 			beamShape.setFillColor(sf::Color(114, 255, 229, alpha));
 		}
 		if (timer > 500) {
@@ -418,7 +419,7 @@ void Scene::updateTransitions(float xOffset, float yOffset, const sf::Time & ela
 	case TransitionState::ExitBeamInflate:
 		timer += elapsedTime.asMilliseconds();
 		{
-			float beamWidth = std::max(2.f, Easing::easeIn<2>(timer, 250) * 20.f);
+			float beamWidth = std::max(2.f, Easing::easeIn<2>(timer, static_cast<int_fast32_t>(250)) * 20.f);
 			float beamHeight = beamShape.getSize().y;
 			beamShape.setSize(sf::Vector2f(beamWidth, beamHeight));
 			beamShape.setPosition(windowW / 2 - 0.5f - beamWidth / 2.f, windowH / 2 + 36);
@@ -451,7 +452,7 @@ void Scene::updateTransitions(float xOffset, float yOffset, const sf::Time & ela
 		timer += elapsedTime.asMilliseconds();
 		// TODO: On intro level display title text and go to alternate fade out state?
 		if (timer > 100) {
-			uint_fast8_t alpha = Easing::easeIn<1>(timer - 100, 900) * 255;
+			uint_fast8_t alpha = Easing::easeIn<1>(timer - 100, static_cast<int_fast32_t>(900)) * 255;
 			transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
 		}
 		if (timer >= 1000) {
@@ -466,7 +467,7 @@ void Scene::updateTransitions(float xOffset, float yOffset, const sf::Time & ela
 	case TransitionState::TransitionIn:
 	    timer += elapsedTime.asMilliseconds();
 		{
-			uint_fast8_t alpha = Easing::easeOut<1>(timer, 800) * 255;
+			uint_fast8_t alpha = Easing::easeOut<1>(timer, static_cast<int_fast32_t>(800)) * 255;
 			transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
 		}
 		if (timer >= 800) {
@@ -482,7 +483,7 @@ void Scene::updateTransitions(float xOffset, float yOffset, const sf::Time & ela
 	case TransitionState::EntryBeamDrop:
 		timer += elapsedTime.asMilliseconds();
 		{
-			float beamHeight = Easing::easeIn<2>(timer, 300) * (windowH / 2 + 26);
+			float beamHeight = Easing::easeIn<2>(timer, static_cast<int_fast32_t>(300)) * (windowH / 2 + 26);
 			beamShape.setSize(sf::Vector2f(4, beamHeight));
 		}
 		if (timer > 300) {
@@ -497,7 +498,7 @@ void Scene::updateTransitions(float xOffset, float yOffset, const sf::Time & ela
 	case TransitionState::EntryBeamFade:
 		timer += elapsedTime.asMilliseconds();
 		{
-			uint_fast8_t alpha = Easing::easeOut<1>(timer, 250) * 240;
+			uint_fast8_t alpha = Easing::easeOut<1>(timer, static_cast<int_fast32_t>(250)) * 240;
 			beamShape.setFillColor(sf::Color(114, 255, 229, alpha));
 		}
 		if (timer > 250) {
