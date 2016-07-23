@@ -35,6 +35,16 @@
 
 class Scene {
 public:
+	enum class TransitionState {
+		None,
+		ExitBeamEnter,
+		ExitBeamInflate,
+		ExitBeamDeflate,
+		TransitionOut,
+		TransitionIn,
+		EntryBeamDrop,
+	    EntryBeamFade
+	};
 	Scene(float, float, InputController *, FontController *);
 	void update(sf::RenderWindow &, sf::Time &);
 	void Reset();
@@ -52,6 +62,7 @@ public:
 	FontController * getPFonts();
 	float windowW;
 	float windowH;
+	TransitionState transitionState;
 
 private:
 	InputController * pInput;
@@ -64,6 +75,7 @@ private:
    	enemyController en;
 	FontController * pFonts;
    	int level;
+	std::vector<std::pair<int, int>> enemySelectVec;
 	// Stash static rendered frames for efficiency. Preload is for recovery from stash
 	bool stashed, preload;
 	sf::Sprite vignetteSprite;
@@ -72,16 +84,8 @@ private:
     sf::Sprite vignetteShadowSpr;
 	tileController::Tileset set;
 	std::vector<sf::Sprite *> glowSprs1, glowSprs2;
-	sf::RectangleShape teleporterBeam;
-	sf::RectangleShape entryBeam;
-	// For the beam to cast a glow to the map
 	sf::Texture beamGlowTxr;
 	sf::Sprite beamGlowSpr;
-	// State variables for the teleporter effects at the end of the levels
-	bool animationBegin;
-	bool beamExpanding;
-	bool dispEntryBeam;
-	bool transitionIn;
 	sf::View worldView, hudView;
 	// RenderTexture and shapes for lighting effects
 	sf::RenderTexture lightingMap;
@@ -89,26 +93,22 @@ private:
 	sf::RenderTexture target, secondPass, thirdPass, stash;
 	// Locations to place lights
 	std::vector<Coordinate> lightPositions;
-	sf::RectangleShape transitionShape;
+	sf::RectangleShape transitionShape, beamShape;
 	sf::Texture titleTxtr;
 	sf::Sprite titleSpr;
-	sf::Color objectShadeColor;	
 	// Locations to place pillars
 	std::vector<Coordinate> rockPositions;
-	// Create a vector of pairs with enemy index and placement probability for enemy creation
-	std::vector<std::pair<int, int>> enemySelectVec;
-	// Vector of sprites with y-position and height, for z-ordering
 	std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> gameObjects;
 	std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> gameShadows;
 	ScreenShakeController ssc;
-	bool transitioning;
-	short int transitionDelay;
+	void updateTransitions(float, float, const sf::Time &, sf::RenderWindow &);
+	int_fast32_t timer;
 };
 
 // TODO: write an equation that does this, no need to waste memory on this!
 // The first room is not procedurally generated so the positions of the walls need to be hard coded
 const static std::array<std::pair<float, float>, 59> global_levelZeroWalls {
-	{std::make_pair(-20, 500),
+	{ std::make_pair(-20, 500),
 			std::make_pair(-20, 526),
 			std::make_pair(-20, 474),
 			std::make_pair(-20, 448),

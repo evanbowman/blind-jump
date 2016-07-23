@@ -25,6 +25,7 @@
 #include "math.h"
 #include "enemyCreationFunctions.hpp"
 #include "scene.hpp"
+#include "easingTemplates.hpp"
 
 Coordinate pickLocation(std::vector<Coordinate>& emptyLocations) {
 	int locationSelect = std::abs(static_cast<int>(globalRNG())) % emptyLocations.size();
@@ -37,6 +38,7 @@ Coordinate pickLocation(std::vector<Coordinate>& emptyLocations) {
 Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontController * _pFonts)
 	: windowW{_windowW},
 	  windowH{_windowH},
+	  transitionState{TransitionState::None},
 	  pInput{_pInput},
 	  player{_windowW / 2, _windowH / 2},
 	  UI{_windowW / 2, _windowH / 2},
@@ -46,7 +48,8 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	  level{0},
 	  stashed{false},
 	  preload{false},
-	  teleporterCond{false}
+	  teleporterCond{false},
+	  timer{0}
 {
 	//===========================================================//
 	// Set up post processing effect textures and shapes         //
@@ -66,14 +69,6 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	vignetteShadowSpr.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::vignetteShadow));
 	vignetteShadowSpr.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setColor(sf::Color(255,255,255,100));
-	sf::Vector2f v1(2, 1);
-	teleporterBeam.setPosition(windowW / 2 - 1.5, windowH / 2 + 36);
-	teleporterBeam.setSize(v1);
-	teleporterBeam.setFillColor(sf::Color(114, 255, 229, 6));
-	sf::Vector2f v2(4, 8);
-	entryBeam.setPosition(windowW / 2 - 2, -68);
-	entryBeam.setSize(v2);
-	entryBeam.setFillColor(sf::Color(104, 255, 229, 180));
 	
 	//===========================================================//
 	// Set the views                                             //
@@ -83,19 +78,9 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	hudView.setSize(windowW, windowH);
 	hudView.setCenter(windowW / 2, windowH / 2);
 	
-	// TODO: Tell the background controller how big the window is so it doesn't draw out of bounds
 	bkg.giveWindowSize(windowW, windowH);
 	
 	UI.setView(&worldView);
-	
-	transitioning = false;
-	transitionDelay = 320;
-	
-	dispEntryBeam = false;
-	transitionIn = false;
-	
-	// Each object that isn't an effect or passed through a shader gets darkened according to the ambient conditions of the current tileset
-	objectShadeColor = sf::Color(190, 190, 210, 255);
 	
 	//Let the tile controller know where player is
 	tiles.setPosition((windowW / 2) - 16, (windowH / 2));
@@ -138,10 +123,6 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::teleporterGlow));
 	
 	bkg.setBkg(0);
-	
-	beamExpanding = false;
-	animationBegin = false;
-	dispEntryBeam = false;
 	
 	sndCtrl.playMusic(0);
 	beamGlowTxr.loadFromFile(resourcePath() + "teleporterBeamGlow.png");
@@ -229,7 +210,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 			for (auto & element : gameObjects) {
 				switch (std::get<2>(element)) {
 				case Rendertype::shadeDefault:
-					std::get<0>(element).setColor(sf::Color(objectShadeColor.r, objectShadeColor.g, objectShadeColor.b, std::get<0>(element).getColor().a));
+					std::get<0>(element).setColor(sf::Color(190, 190, 210, std::get<0>(element).getColor().a));
 					lightingMap.draw(std::get<0>(element));
 					break;
 					
@@ -379,14 +360,12 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 			enemySelectVec.clear();
 			Reset();
 			pFonts->reset();
-			transitionDelay = 320;
 			pFonts->updateMaxHealth(4, 4);
 			pFonts->setWaypointText(level);
-			dispEntryBeam = false;
 		}
 		UI.update(window, player, *pFonts, pInput, elapsedTime);
 	} else {
-		if (!transitioning && !dispEntryBeam && !transitionIn) {
+		if (transitionState == TransitionState::None) {
 			UI.update(window, player, *pFonts, pInput, elapsedTime);
 		}
 		pFonts->updateHealth(player.getHealth());
@@ -397,201 +376,136 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	
 	window.setView(worldView);
 
-	// TODO: This code is a mess!
-	//===========================================================//
-	// Scene transitions                                         //
-	//===========================================================//
-	if (dispEntryBeam) {
-		// Cast the beam's glow to the overworld
-		glowSprs1.push_back(&beamGlowSpr);
-		glowSprs2.push_back(&beamGlowSpr);
+    updateTransitions(xOffset, yOffset, elapsedTime, window);
+}
 
-		// Get the current size of the beam shape
-		sf::Vector2f v2 = entryBeam.getSize();
-		// Keep track of the original size of the beam, makes it easier later to update the shape position
-		double originalYval = v2.y;
-		// Until the beam reaches the player position at the center of the window, increase it's height and move it down. Purely an aesthetic thing
-		if (v2.y < 518) {
-			v2.y *= 1.11;
-			sf::Color c = beamGlowSpr.getColor();
-			c.r += 5;
-			c.b += 5;
-			c.g += 5;
-			beamGlowSpr.setColor(c);
-		} else if (v2.y > 518) {
-			player.visible = true;
-			// Call a function within the screen shake controller to shake the screen
-			ssc.shake();
-			v2.y = 518;
-			// Add a warp smoke effect when the player appears, purely aesthetic
-			/// TODO: effects.addWarpEffect(windowW / 2 - 8, windowH / 2 + 16);
-			// Add a warp impack detail to the overworld where the player landed
-			/// TODO: details.addWarpImpact(windowW / 2 - 12, windowH / 2 + 18);
-		} else {
-			player.setState(Player::State::deactivated);
+void Scene::updateTransitions(float xOffset, float yOffset, const sf::Time & elapsedTime, sf::RenderWindow & window) {
+	switch (transitionState) {
+	case TransitionState::None:
+		{
+			// If the player is near the teleporter, snap to its center and deactivate the player
+			float teleporterX = details.get<0>().back().getPosition().x;
+			float teleporterY = details.get<0>().back().getPosition().y;
+			if ((std::abs(player.getXpos() - teleporterX) < 10 && std::abs(player.getYpos() - teleporterY + 12) < 8)) {
+				player.setWorldOffsetX(xOffset + (player.getXpos() - teleporterX) + 2);
+				player.setWorldOffsetY(yOffset + (player.getYpos() - teleporterY) + 16);
+				player.setState(Player::State::deactivated);
+				transitionState = TransitionState::ExitBeamEnter;
+			}
+			beamShape.setFillColor(sf::Color(114, 255, 229, 6));
+			beamShape.setPosition(windowW / 2 - 1.5, windowH / 2 + 36);
+			beamShape.setSize(sf::Vector2f(2, 0));
 		}
-		// Get the current color of the beam shape, in order to decrement its alpha value
-		sf::Color c1 = entryBeam.getFillColor();
-		// Decrement the alpha value of the beam shape
-		if (v2.y == 518) {
-			c1.a *= 0.88;
-			sf::Color c = beamGlowSpr.getColor();
-			c.r -= 8;
-			c.b -= 8;
-			c.g -= 8;
-			beamGlowSpr.setColor(c);
+		break;
+
+	case TransitionState::ExitBeamEnter:
+		timer += elapsedTime.asMilliseconds();
+		{
+			float beamHeight = Easing::easeIn<1>(timer, 500) * -(windowH / 2 + 36 /* Magic number, why does it work...? */);
+			beamShape.setSize(sf::Vector2f(2, beamHeight));
+			uint_fast8_t alpha = Easing::easeIn<1>(timer, 450) * 255;
+			beamShape.setFillColor(sf::Color(114, 255, 229, alpha));
 		}
-		// Update the shape color
-		entryBeam.setFillColor(c1);
-		// Update the size of the beam shape
-		entryBeam.setSize(v2);
-		// Reset the shape's position based on the distance that the player has moved and the beam's previous position
-		entryBeam.setPosition(entryBeam.getPosition().x, entryBeam.getPosition().y + 0.5 * (originalYval - v2.y));
-		// Draw the shape to the window
-		window.draw(entryBeam);
-		
-		if (c1.a < 6) {
-			// Beam has faded out, so now stop drawing it
-			dispEntryBeam = false;
-			beamGlowSpr.setColor(sf::Color(0, 0, 0, 255));
-			// Reset the initial values for the shape so that the program can draw it again next level
-			sf::Vector2f v2(4, 8);
-			entryBeam.setPosition(windowW/2 - 2, -68);
-			entryBeam.setSize(v2);
-			entryBeam.setFillColor(sf::Color(104, 255, 229, 180));
-			// Reactivate the player now that the beam animation has finished
-			player.setState(Player::State::nominal);
+		if (timer > 500) {
+			timer = 0;
+			beamShape.setSize(sf::Vector2f(2, -(windowH / 2 + 36)));
+			beamShape.setFillColor(sf::Color(114, 255, 229, 255));
+			transitionState = TransitionState::ExitBeamInflate;
 		}
-	}
-	
-	if (transitionIn) {
-		sf::Color c = transitionShape.getFillColor();
-		if (c.a > 10) {
-			c.a -= 10;
+		window.draw(beamShape);
+		break;
+
+	case TransitionState::ExitBeamInflate:
+		timer += elapsedTime.asMilliseconds();
+		{
+			float beamWidth = std::max(2.f, Easing::easeIn<2>(timer, 250) * 20.f);
+			float beamHeight = beamShape.getSize().y;
+			beamShape.setSize(sf::Vector2f(beamWidth, beamHeight));
+			beamShape.setPosition(windowW / 2 - 0.5f - beamWidth / 2.f, windowH / 2 + 36);
 		}
-		transitionShape.setFillColor(c);
+		if (timer > 250) {
+			timer = 0;
+			transitionState = TransitionState::ExitBeamDeflate;
+			player.visible = false;
+		}
+		window.draw(beamShape);
+		break;
+
+	case TransitionState::ExitBeamDeflate:
+		timer += elapsedTime.asMilliseconds();
+		{
+			// beamWidth is carefully calibrated, be sure to recalculate the regression based on the timer if you change it...
+		    float beamWidth = 0.9999995 * std::exp(-0.0050125355 * static_cast<double>(timer)) * 20.f;
+			float beamHeight = beamShape.getSize().y;
+			beamShape.setSize(sf::Vector2f(beamWidth, beamHeight));
+			beamShape.setPosition(windowW / 2 - 0.5f - beamWidth / 2.f, windowH / 2 + 36);
+			if (timer >= 640) {
+				timer = 0;
+				transitionState = TransitionState::TransitionOut;
+			}
+		}
+		window.draw(beamShape);
+		break;
+
+	case TransitionState::TransitionOut:
+		timer += elapsedTime.asMilliseconds();
+		// TODO: On intro level display title text and go to alternate fade out state?
+		if (timer > 100) {
+			uint_fast8_t alpha = Easing::easeIn<1>(timer - 100, 1000) * 255;
+			transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
+		}
+		if (timer >= 1000) {
+			transitionState = TransitionState::TransitionIn;
+			timer = 0;
+			teleporterCond = true;
+		}
 		window.draw(transitionShape);
+		break;
 
-		if (--transitionDelay == 0) {
-			transitionIn = false;
-			dispEntryBeam = true;
-			// Allow the teleporter animation to play again
-			animationBegin = false;
-			transitionDelay = 65;
+	case TransitionState::TransitionIn:
+	    timer += elapsedTime.asMilliseconds();
+		{
+			uint_fast8_t alpha = Easing::easeOut<1>(timer, 800) * 255;
+			transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
 		}
-	}
+		if (timer >= 800) {
+			transitionState = TransitionState::EntryBeamDrop;
+			timer = 0;
+			beamShape.setSize(sf::Vector2f(4, 0));
+			beamShape.setPosition(windowW / 2 - 2, 0);
+			beamShape.setFillColor(sf::Color(114, 255, 229, 240));
+		}
+		window.draw(transitionShape);
+		break;
 
-	float teleporterX = details.get<0>().back().getPosition().x;
-	float teleporterY = details.get<0>().back().getPosition().y;
-	// Check if the player is close to a teleporter. If so, go to the next level
-	if ((std::abs(player.getXpos() - teleporterX) < 10 && std::abs(player.getYpos() - teleporterY + 12) < 8) /*&& player.isActive()*/) {
-		// Center the player over the teleporter for the duration of the teleport animation (ie center the world under the player)
-		if (!animationBegin) {
-			player.setWorldOffsetX(xOffset + (player.getXpos() - teleporterX) + 2);
-			player.setWorldOffsetY(yOffset + (player.getYpos() - teleporterY) + 16);
-			beamExpanding = true;
-			animationBegin = true;
+	case TransitionState::EntryBeamDrop:
+		timer += elapsedTime.asMilliseconds();
+		{
+			float beamHeight = Easing::easeIn<2>(timer, 300) * (windowH / 2 + 26);
+			beamShape.setSize(sf::Vector2f(4, beamHeight));
 		}
-		player.setState(Player::State::deactivated);
-		// Cast the beam's glow to the overworld
-		if (!transitioning) {
-			window.draw(teleporterBeam);
-			glowSprs1.push_back(&beamGlowSpr);
-			glowSprs2.push_back(&beamGlowSpr);
+		if (timer > 300) {
+			transitionState = TransitionState::EntryBeamFade;
+			timer = 0;
+			player.visible = true;
+			ssc.shake();
 		}
-		sf::Color beamColor = teleporterBeam.getFillColor();
-		sf::Vector2f v1 = teleporterBeam.getSize();
-		if (beamExpanding) {
-			if (beamColor.a < 246) {
-				beamColor.a += 5;
-			}
-			sf::Color c = beamGlowSpr.getColor();
-			c.r += 4;
-			c.b += 4;
-			c.g += 4;
-			beamGlowSpr.setColor(c);
-			teleporterBeam.setFillColor(beamColor);
-			if (v1.y < 300) {
-				v1.y += 8;
-				teleporterBeam.setPosition(teleporterBeam.getPosition().x, teleporterBeam.getPosition().y - 8);
-			}
-			
-			if (v1.y > 260 && v1.x < 22) {
-				double temp = v1.x;
-				v1.x *= 1.18;
-				teleporterBeam.setPosition(teleporterBeam.getPosition().x - (v1.x - temp) * 0.5, teleporterBeam.getPosition().y);
-			} else if (v1.x > 21) {
-				beamExpanding = false;
-				player.visible = false;
-			}
-			teleporterBeam.setSize(v1);
-		} else if (!beamExpanding) {
-			double temp = v1.x;
-			v1.x *= 0.92;
-			beamColor.a -= 1.4;
-			sf::Color c = beamGlowSpr.getColor();
-			if (c.r > 6) {
-				c.r -= 6;
-				c.b -= 6;
-				c.g -= 6;
-			}
-			beamGlowSpr.setColor(c);
-			teleporterBeam.setFillColor(beamColor);
-			teleporterBeam.setPosition(teleporterBeam.getPosition().x - (v1.x - temp) * 0.5, teleporterBeam.getPosition().y);
-			teleporterBeam.setSize(v1);
-			if (v1.x < 0.5) {
-				transitioning = true;
-				beamGlowSpr.setColor(sf::Color(0, 0, 0, 255));
-			}
-		}
+		window.draw(beamShape);
+		break;
 
-		pFonts->update(window, xOffset, yOffset);
-		window.setView(worldView);
-		
-		if (transitioning) {
-			if (level == 0) {
-				if (transitionDelay < 130) {
-					sf::Color c = pFonts->getTitle()->getColor();
-					if (c.a > 4) {
-						c.a -= 4;
-					} else {
-						c.a = 0;
-					}
-					if (transitionDelay < 90) {
-						sf::Color c2 = transitionShape.getFillColor();
-						if (c2.a < 253) {
-							c2.a += 3;
-						}
-						transitionShape.setFillColor(c2);
-						window.draw(transitionShape);
-					}
-					pFonts->drawTitle(c.a, window);
-				} else {
-					pFonts->drawTitle(255, window);
-				}
-				
-				if (--transitionDelay == 0) {
-					transitioning = false;
-					transitionDelay = 55;
-					teleporterCond = true;
-					titleSpr.setColor(sf::Color(255, 255, 255, 255));
-				}
-			} else {
-				if (transitionDelay < 50) {
-					sf::Color c = transitionShape.getFillColor();
-					if (c.a < 250) {
-						c.a += 5;
-					}
-					transitionShape.setFillColor(c);
-					window.draw(transitionShape);
-				}
-				if (--transitionDelay == 0) {
-					transitioning = false;
-					transitionDelay = 30;
-					teleporterCond = true;
-				}
-			}
+	case TransitionState::EntryBeamFade:
+		timer += elapsedTime.asMilliseconds();
+		{
+			uint_fast8_t alpha = Easing::easeOut<1>(timer, 250) * 240;
+			beamShape.setFillColor(sf::Color(114, 255, 229, alpha));
 		}
+		if (timer > 250) {
+			transitionState = TransitionState::None;
+			player.setState(Player::State::nominal);
+			timer = 0;
+		}
+		window.draw(beamShape);
+		break;
 	}
 }
 
@@ -610,14 +524,12 @@ void Scene::Reset() {
 	
 	if (level == 0) {
 		set = tileController::Tileset::intro;
-		objectShadeColor = sf::Color(190, 190, 210, 255);
 	} else {
 	    // /if (std::abs(static_cast<int>(globalRNG())) % 2) {
 		// 	set = tileController::Tileset::nova;
 		// 	objectShadeColor = sf::Color(210, 195, 195, 255);
 		// } else {
 			set = tileController::Tileset::regular;
-			objectShadeColor = sf::Color(190, 190, 210, 255);
 		// }
 	}
 	
@@ -712,15 +624,6 @@ void Scene::Reset() {
 			w.setYinit(it->second);
 			tiles.walls.push_back(w);
 		}
-	}
-	
-	// Reset the teleporter beam coordinates, alpha, & size
-	sf::Vector2f v1(2, 1);
-	teleporterBeam.setPosition(windowW/2 - 1, windowH/2 + 36);
-	teleporterBeam.setSize(v1);
-	teleporterBeam.setFillColor(sf::Color(104, 255, 229, 6));
-	if (level != 0) {
-		transitionIn = true;
 	}
 }
 
