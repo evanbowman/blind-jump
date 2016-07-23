@@ -27,6 +27,7 @@ Enemy::Enemy(float _xInit, float _yInit, float _playerPosX, float _playerPosY)
 	  xPos{0.f},
 	  yPos{0.f},
 	  colorAmount{0.f},
+	  frameIndex{0},
 	  colorTimer{0},
 	  frameTimer{0}
 {}
@@ -64,25 +65,26 @@ void Enemy::update(float xOffset, float yOffset, const std::vector<wall> & w, Ef
 	yPos = yInit + yOffset;
 }
 
-bool Enemy::checkWallCollision(const std::vector<wall> & w, float collisionRadius, float xPos, float yPos) {
+uint_fast8_t Enemy::checkWallCollision(const std::vector<wall> & w, float collisionRadius, float xPos, float yPos) {
+	uint_fast8_t collisionMask = 0;
 	for (auto & element : w) {
 		if ((xPos + 6 < (element.getPosX() + element.getWidth()) && (xPos + 6 > (element.getPosX()))) && (fabs((yPos + 16) - element.getPosY()) <= 13))  {
-			return true;
+			collisionMask |= 0x01;
 		}
 		
 		if ((xPos + 24 > (element.getPosX()) && (xPos + 24 < (element.getPosX() + element.getWidth()))) && (fabs((yPos + 16) - element.getPosY()) <= 13))  {
-			return true;
+			collisionMask |= 0x02;
 		}
 		
 		if (((yPos + 22 < (element.getPosY() + element.getHeight())) && (yPos + 22 > (element.getPosY()))) && (fabs((xPos) - element.getPosX()) <= 16))  {
-			return true;
+			collisionMask |= 0x04;
 		}
 		
 		if (((yPos + 36 > element.getPosY()) && (yPos + 36 < element.getPosY() + element.getHeight())) && (fabs((xPos) - element.getPosX()) <= 16))  {
-			return true;
+			collisionMask |= 0x08;
 		}
 	}
-	return false;
+	return collisionMask;
 }
 
 bool Enemy::wallInPath(const std::vector<wall> & w, float dir, float xPos, float yPos) {
@@ -96,22 +98,6 @@ bool Enemy::wallInPath(const std::vector<wall> & w, float dir, float xPos, float
 }
 
 void Enemy::checkShotCollision(EffectGroup & effects, float rad) {
-	// if (!effects.getBulletLayer1().empty()) {
-	// 	for (auto & element : effects.getBulletLayer1()) {
-	// 		if (std::abs(element.getXpos() - (xPos - 6)) < rad
-	// 			&& std::abs(element.getYpos() - (yPos - 6)) < rad
-	// 			&& !element.getKillFlag()) {
-	// 			if (health == 1) {
-	// 				element.disablePuff();
-	// 			}
-	// 			element.setKillFlag();
-	// 			health -= 1;
-	// 			colored = true;
-	// 			colorAmount = 1.f;
-	// 		}
-	// 	}
-	// }
-
 	if (health == 0) {
 		onDeath(effects);
 	}

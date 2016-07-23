@@ -125,22 +125,30 @@ void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, Ef
 		break;
 	}
 
-	if (Enemy::checkWallCollision(w, 8.f, xPos - 8, yPos - 8)) {
-		hSpeed *= -1;
-		vSpeed *= -1;
+	uint_fast8_t collisionMask = Enemy::checkWallCollision(w, 8.f, xPos - 8, yPos - 8);
+	if (collisionMask) {
+		hSpeed = 0;
+		vSpeed = 0;
+		if (collisionMask & 0x01) {
+			hSpeed += 1;
+		}
+		if (collisionMask & 0x02) {
+			hSpeed -= 1;
+		}
+		if (collisionMask & 0x04) {
+			vSpeed += 1;
+		}
+		if (collisionMask & 0x08) {
+			vSpeed -= 1;
+		}
 	}
-	
 	xInit += (elapsedTime.asMilliseconds() / 17.6) * hSpeed * speedScale;
 	yInit += (elapsedTime.asMilliseconds() / 17.6) * vSpeed * speedScale;
-	
-	// Update the frameIndex based on delta time
+	// Update the frameIndex based on time
 	frameTimer += elapsedTime.asMilliseconds();
 	if (frameTimer > 87) {
 		frameTimer -= 87;
-		if (frameIndex == 0)
-			frameIndex = 1;
-		else
-			frameIndex = 0;
+		frameIndex ^= 0x01;
 	}
 }
 
