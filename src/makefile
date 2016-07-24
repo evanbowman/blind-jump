@@ -4,27 +4,30 @@
 # 
 
 CC = clang++
-override CPPFLAGS += -flto -O2 -std=c++14 -Wall -Werror
-LDFLAGS = -flto -framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio -Xlinker -rpath -Xlinker @loader_path/../Frameworks -fobjc-link-runtime
+override CPPFLAGS += -O2 -std=c++14 -Wall -Werror
+LDFLAGS_MAC = -framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio -Xlinker -rpath -Xlinker @loader_path/../Frameworks -fobjc-link-runtime
+LDFLAGS_LINUX = -lsfml-graphics -lsfml-audio -lsfml-system -lsfml-window
 EXECUTABLE = BlindJump
 SOURCES = $(shell find . -name "*.cpp" | awk '{print length, $$0;}' | sort -nr | cut -d ' ' -f 2-) # Hey it looks nice though
 OBJECTS = $(SOURCES:.cpp=.o)
-DEBUGFLAGS = # Specify them when calling make
 
-all: $(OBJECTS) ResourcePath.o
-	$(CC) $(OBJECTS) ResourcePath.o -o $(EXECUTABLE) $(LDFLAGS)
-
-ResourcePath.o: ResourcePath.hpp
-	$(CC) ResourcePath.mm -c -o ResourcePath.o
+all:
+	@echo Specify a platform to build for, i.e.: make macOS or make Linux
 
 .cpp.o:
 	$(CC) $(CPPFLAGS) -c $< -o $@
 
+macOS: $(OBJECTS) packageScriptMac.sh ResourcePath.mm ResourcePath.hpp
+	$(CC) ResourcePath.mm -c -o ResourcePath.o
+	$(CC) $(OBJECTS) ResourcePath.o -o $(EXECUTABLE) $(LDFLAGS_MAC)
+	bash packageScriptMac.sh $(EXECUTABLE) BlindJump
+
+Linux: $(OBJECTS) ResourcePath.hpp ResourcePath.cxx
+	$(CC) -c ResourcePath.cxx -o ResourcePath.o
+	$(CC) $(OBJECTS) ResourcePath.o -o $(EXECUTABLE) $(LDFLAGS_LINUX)
+
 clean:
 	rm *.o
-
-macOS: all packageScriptMac.sh
-	bash packageScriptMac.sh $(EXECUTABLE) BlindJump
 
 depend:
 	makedepend -- $(CPPFLAGS) -- $(SOURCES)
