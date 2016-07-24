@@ -21,8 +21,8 @@
 
 class InputController {
 private:
-	bool left, right, up, down, x, z, c, focused, escape;
-	
+	uint_fast32_t keyMask;
+	uint_fast32_t joystickMask;
 public:
 	InputController();
 	bool isFocused() const;

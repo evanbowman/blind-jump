@@ -23,6 +23,7 @@ UserInterface::UserInterface(float _xPos, float _yPos) :
 	state{State::closed},
 	xPos{_xPos},
 	yPos{_yPos + 16},
+	selectorPosition{0},
 	timer{0},
 	timerAlt{0},
 	blurAmount{0.f},
@@ -61,7 +62,7 @@ void UserInterface::update(sf::RenderWindow& window, Player & player, FontContro
 			fonts.setTextAlpha(0, FontController::Text::coin);
 		}
 		break;
-			
+		
 	case State::menuScreenEntry:
 		timer += elapsed.asMilliseconds();
 		blurAmount = Easing::easeIn<3>(timer, 280);
@@ -76,20 +77,38 @@ void UserInterface::update(sf::RenderWindow& window, Player & player, FontContro
 			fonts.setTextAlpha(255, FontController::Text::resumeText);
 			fonts.setTextAlpha(255, FontController::Text::settingsText);
 			fonts.setTextAlpha(255, FontController::Text::quitText);
-			
 		}
 		break;
-
+		
 	case State::menuScreen:
 		if (escape) {
 			timer = 0;
+			selectorPosition = 0;
 			state = State::menuScreenExit;
 		} else if (up) {
-			// TODO
+			if (selectorPosition > 0) {
+				--selectorPosition;
+			}
 		} else if (down) {
-			// TODO
+		    if (selectorPosition < 2) {
+				++selectorPosition;
+			}
 		} else if (z) {
-			// TODO
+			switch (selectorPosition) {
+			case 0:
+				selectorPosition = 0;
+				state = State::menuScreenExit;
+				timer = 0;
+				break;
+
+			case 1:
+				// TODO: settings screen
+				break;
+
+			case 2:
+				window.close();
+				break;
+			}
 		}
 		break;
 		

@@ -20,51 +20,44 @@
 #include <iostream>
 
 InputController::InputController()
-	: left{false},
-	  right{false},
-	  up{false},
-	  down{false},
-	  x{false},
-	  z{false},
-	  c{false},
-	  focused{true},
-	  escape{false}
+	: keyMask{0},
+	  joystickMask{0}
 {}
 
 bool InputController::isFocused() const {
-	return focused;
+	return keyMask & 0x0080 || joystickMask & 0x0080;
 }
 
 bool InputController::escapePressed() const {
-	return escape;
+	return keyMask & 0x0100 || joystickMask & 0x0100;
 }
 
 bool InputController::xPressed() const {
-	return x;
+	return keyMask & 0x0010 || joystickMask & 0x0010;
 }
 
 bool InputController::zPressed() const {
-	return z;
+	return keyMask & 0x0020 || joystickMask & 0x0020;
 }
 
 bool InputController::leftPressed() const {
-	return left;
+	return keyMask & 0x0001 || joystickMask & 0x0001;
 }
 
 bool InputController::rightPressed() const {
-	return right;
+	return keyMask & 0x0002 || joystickMask & 0x0002;
 }
 
 bool InputController::upPressed() const {
-	return up;
+	return keyMask & 0x0004 || joystickMask & 0x0004;
 }
 
 bool InputController::downPressed() const {
-	return down;
+	return keyMask & 0x0008 || joystickMask & 0x0008;
 }
 
 bool InputController::cPressed() const {
-	return c;
+	return keyMask & 0x0040 || joystickMask & 0x0040;
 }
 
 void InputController::update(sf::RenderWindow & window) {
@@ -75,35 +68,35 @@ void InputController::update(sf::RenderWindow & window) {
 		} else if (event.type == sf::Event::KeyPressed) {
 			switch(event.key.code) {
 			case sf::Keyboard::Escape:
-			    escape = true;
+			    keyMask |= 0x0100;
 				break;
 
 			case sf::Keyboard::Left:
-				left = true;
+				keyMask |= 0x0001;
 				break;
 
 			case sf::Keyboard::Right:
-				right = true;
+				keyMask |= 0x0002;
 				break;
 
 			case sf::Keyboard::Up:
-				up = true;
+				keyMask |= 0x0004;
 				break;
 
 			case sf::Keyboard::Down:
-				down = true;
+				keyMask |= 0x0008;
 				break;
 
 			case sf::Keyboard::X:
-				x = true;
+				keyMask |= 0x0010;
 				break;
 
 			case sf::Keyboard::Z:
-				z = true;
+				keyMask |= 0x0020;
 				break;
 
 			case sf::Keyboard::C:
-				c = true;
+				keyMask |= 0x0040;
 				break;
 
 			default:
@@ -112,50 +105,78 @@ void InputController::update(sf::RenderWindow & window) {
 		} else if (event.type == sf::Event::KeyReleased) {
 			switch(event.key.code) {
 			case sf::Keyboard::Escape:
-				escape = false;
+				keyMask &= 0xFEFF;
 				break;
 				
 			case sf::Keyboard::Left:
-				left = false;
+				keyMask &= 0xFFFE;
 				break;
 
 			case sf::Keyboard::Right:
-				right = false;
+				keyMask &= 0xFFFD;
 				break;
 
 			case sf::Keyboard::Up:
-				up = false;
+				keyMask &= 0xFFFB;
 				break;
 
 			case sf::Keyboard::Down:
-				down = false;
+				keyMask &= 0xFFF7;
 				break;
 
 			case sf::Keyboard::X:
-				x = false;
+				keyMask &= 0xFFEF;
 				break;
 
 			case sf::Keyboard::Z:
-				z = false;
+				keyMask &= 0xFFDF;
 				break;
 
 			case sf::Keyboard::C:
-				c = false;
+				keyMask &= 0xFFBF;
 				break;
 
 			default:
 				break;
 			}
 		} else if (event.type == sf::Event::GainedFocus) {
-			focused = true;
+			keyMask |= 0x0080;
 		} else if (event.type == sf::Event::LostFocus) {
-			focused = false;
+			keyMask &= 0xFF7F;
 		} else if (event.type == sf::Event::JoystickButtonPressed) {
-			// TODO
+			// TODO: Allow users to change the button configuration
+			if (event.joystickButton.button == 0) {
+				joystickMask |= 0x0010;
+			}
 		} else if (event.type == sf::Event::JoystickButtonReleased) {
-			// TODO
+			// TODO: Allow users to change the button configuration
+			if (event.joystickButton.button == 0) {
+				joystickMask &= 0xFFEF;
+			}
 		} else if (event.type == sf::Event::JoystickMoved) {
-			// TODO
+ 			if (event.joystickMove.axis == sf::Joystick::Axis::X) {
+				float position = event.joystickMove.position;
+				if (position > 30) {
+ 					joystickMask &= 0xFFFE;
+					joystickMask |= 0x0002;
+				} else if (position < -30) {
+					joystickMask &= 0xFFFD;
+					joystickMask |= 0x0001;
+				} else {
+					joystickMask &= 0xFFFC;
+				}
+			} else if (event.joystickMove.axis == sf::Joystick::Axis::Y) {
+				float position = event.joystickMove.position;
+				if (position < -30) {
+					joystickMask &= 0xFFF7;
+					joystickMask |= 0x0004;
+				} else if (position > 30) {
+					joystickMask &= 0xFFFB;
+					joystickMask |= 0x0008;
+				} else {
+					joystickMask &= 0xFFF3;
+				}
+			}
 		}
 	}
 }

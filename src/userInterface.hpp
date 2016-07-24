@@ -67,9 +67,11 @@ public:
 private:
 	State state;
 	float xPos, yPos;
+
+	int selectorPosition;
 	
 	int32_t timer, timerAlt;
-
+	
 	float blurAmount, desaturateAmount;
 
 	sf::View * pWorldView, cachedView;
