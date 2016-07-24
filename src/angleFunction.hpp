@@ -21,6 +21,6 @@
 
 //A function to calculate the angle between two objects
 inline float angleFunction(float x, float y, float fixedX, float fixedY) {
-	float angle = atan2(y - fixedY, fixedX - x);	//Rounding to zero, so there's no error in this cast
-	return -angle * (180 / 3.14) + 270;
+	float angle = atan2(y - fixedY, x - fixedX);	//Rounding to zero, so there's no error in this cast
+	return angle * (180 / 3.14);
 }

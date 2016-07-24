@@ -23,10 +23,10 @@ TurretShot::TurretShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxt
 	spriteSheet.setTexture(mainTxtr);
 	glowSprite.setTexture(glowTxtr);
 	int diff = pow(-1,std::abs(static_cast<int>(globalRNG())) % 2) + std::abs(static_cast<int>(globalRNG())) % 6 - 3;
-	spriteSheet.setRotation(dir + diff);
+	spriteSheet.setRotation(dir + 270 + diff);
 	spriteSheet.setOrigin(4, 6);
 	glowSprite.setOrigin(22.5, 22.5);
-	direction = (dir - 270 + diff) * (3.14 / 180);
+	direction = (dir + diff) * (3.14 / 180);
 	scale = 2.8;
 	animationTimer = 0;
 }

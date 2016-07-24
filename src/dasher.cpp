@@ -161,12 +161,12 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 				effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xInit - 14, yInit + 2);
 				effects.add<7>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 							   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
-							   xInit - 12, yInit, angleFunction(xPos, yPos, playerPosX, playerPosY));
+							   xInit - 12, yInit, angleFunction(playerPosX, playerPosY, xPos, yPos));
 			} else {
 				effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xInit + 6, yInit + 2);
 				effects.add<7>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 							   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
-							   xInit + 4, yInit, angleFunction(xPos, yPos, playerPosX, playerPosY));
+							   xInit + 4, yInit, angleFunction(playerPosX, playerPosY, xPos, yPos));
 			}
 		}
 

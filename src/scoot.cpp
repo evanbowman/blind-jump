@@ -97,7 +97,7 @@ void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, Ef
 		effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xInit - 8, yInit - 12);
 		effects.add<8>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
-					   xInit - 8, yInit - 12, angleFunction(xPos - 8, yPos - 8, playerPosX, playerPosY));
+					   xInit - 8, yInit - 12, angleFunction(playerPosX, playerPosY + 8, xPos - 8, yPos - 8));
 		state = State::recoil;
 		changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
 		hSpeed *= -1;

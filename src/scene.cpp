@@ -270,6 +270,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	//===========================================================//
 	if (UI.blurEnabled() && UI.desaturateEnabled()) {
 		if (stashed) {
+			window.setView(worldView);
 			window.draw(sf::Sprite(stash.getTexture()));
 		} else {
 			sf::Shader & blurShader = globalResourceHandler.getShader(ResourceHandler::Shader::blur);
@@ -300,6 +301,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 			if (pInput->escapePressed()) {
 				preload = true;
 			}
+			window.setView(worldView);
 			window.draw(sf::Sprite(stash.getTexture()));
 		} else {
 			sf::Shader & blurShader = globalResourceHandler.getShader(ResourceHandler::Shader::blur);
@@ -450,18 +452,37 @@ void Scene::updateTransitions(float xOffset, float yOffset, const sf::Time & ela
 
 	case TransitionState::TransitionOut:
 		timer += elapsedTime.asMilliseconds();
-		// TODO: On intro level display title text and go to alternate fade out state?
-		if (timer > 100) {
-			uint_fast8_t alpha = Easing::easeIn<1>(timer - 100, static_cast<int_fast32_t>(900)) * 255;
-			transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
+		if (level != 0) {
+			if (timer > 100) {
+				uint_fast8_t alpha = Easing::easeIn<1>(timer - 100, static_cast<int_fast32_t>(900)) * 255;
+				transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
+				window.setView(worldView);
+				window.draw(transitionShape);
+			}
+			if (timer >= 1000) {
+				transitionState = TransitionState::TransitionIn;
+				timer = 0;
+				transitionShape.setFillColor(sf::Color(0, 0, 0, 255));
+				teleporterCond = true;
+			}
+		} else {
+			if (timer > 1600) {
+				uint_fast8_t alpha = Easing::easeIn<1>(timer - 1600, static_cast<int_fast32_t>(1400)) * 255;
+				transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
+				window.setView(worldView);
+				window.draw(transitionShape);
+				alpha = Easing::easeOut<1>(timer - 1600, static_cast<int_fast32_t>(600)) * 255;
+				pFonts->drawTitle(alpha, window);
+			} else {
+				pFonts->drawTitle(255, window);
+			}
+			if (timer > 3000) {
+				transitionState = TransitionState::TransitionIn;
+				timer = 0;
+				transitionShape.setFillColor(sf::Color(0, 0, 0, 255));
+				teleporterCond = true;
+			}
 		}
-		if (timer >= 1000) {
-			transitionState = TransitionState::TransitionIn;
-			timer = 0;
-			transitionShape.setFillColor(sf::Color(0, 0, 0, 255));
-			teleporterCond = true;
-		}
-		window.draw(transitionShape);
 		break;
 
 	case TransitionState::TransitionIn:
