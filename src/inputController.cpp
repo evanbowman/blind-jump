@@ -21,8 +21,18 @@
 
 InputController::InputController()
 	: keyMask{0},
-	  joystickMask{0}
-{}
+	  joystickMask{0},
+	  joystickXMap{15},
+	  joystickZMap{14},
+	  joystickCMap{9},
+	  joystickEscMap{3}
+{
+	init();
+}
+
+void InputController::init() {
+	// Load joystick config file
+}
 
 bool InputController::isFocused() const {
 	return keyMask & 0x0080 || joystickMask & 0x0080;
@@ -144,14 +154,28 @@ void InputController::update(sf::RenderWindow & window) {
 		} else if (event.type == sf::Event::LostFocus) {
 			keyMask &= 0xFF7F;
 		} else if (event.type == sf::Event::JoystickButtonPressed) {
-			// TODO: Allow users to change the button configuration
-			if (event.joystickButton.button == 0) {
-				joystickMask |= 0x0010;
+			if (event.joystickButton.joystickId == 0) {
+				if (event.joystickButton.button == joystickXMap) {
+					joystickMask |= 0x0010;
+				} else if (event.joystickButton.button == joystickZMap) {
+					joystickMask |= 0x0020;
+				} else if (event.joystickButton.button == joystickCMap) {
+					joystickMask |= 0x0040;
+				} else if (event.joystickButton.button == joystickEscMap) {
+					joystickMask |= 0x0100;
+				}
 			}
 		} else if (event.type == sf::Event::JoystickButtonReleased) {
-			// TODO: Allow users to change the button configuration
-			if (event.joystickButton.button == 0) {
-				joystickMask &= 0xFFEF;
+			if (event.joystickButton.joystickId == 0) {
+				if (event.joystickButton.button == joystickXMap) {
+					joystickMask &= 0xFFEF;
+				} else if (event.joystickButton.button == joystickZMap) {
+					joystickMask &= 0xFFDF;
+				} else if (event.joystickButton.button == joystickCMap) {
+					joystickMask &= 0xFFBF;
+				} else if (event.joystickButton.button == joystickEscMap) {
+					joystickMask &= 0xFEFF;
+				}
 			}
 		} else if (event.type == sf::Event::JoystickMoved) {
  			if (event.joystickMove.axis == sf::Joystick::Axis::X) {
@@ -176,6 +200,11 @@ void InputController::update(sf::RenderWindow & window) {
 				} else {
 					joystickMask &= 0xFFF3;
 				}
+			}
+		} else if (event.type == sf::Event::JoystickConnected) {
+			if (event.joystickConnect.joystickId == 0) {
+				sf::Joystick::Identification joystickInfoStruct = sf::Joystick::getIdentification(0);
+				// Use the joystick info to load the proper configuration
 			}
 		}
 	}

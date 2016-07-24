@@ -21,10 +21,13 @@
 
 class InputController {
 private:
-	uint_fast32_t keyMask;
-	uint_fast32_t joystickMask;
+	uint32_t keyMask;
+	uint32_t joystickMask;
+	uint16_t joystickXMap, joystickZMap, joystickCMap, joystickEscMap;
+	
 public:
 	InputController();
+	void init();
 	bool isFocused() const;
 	bool escapePressed() const;
 	bool leftPressed() const;
