@@ -27,7 +27,7 @@ private:
 	
 public:
 	InputController();
-	void init();
+	void mapJoystickBtns();
 	bool isFocused() const;
 	bool escapePressed() const;
 	bool leftPressed() const;

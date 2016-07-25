@@ -22,16 +22,21 @@
 InputController::InputController()
 	: keyMask{0},
 	  joystickMask{0},
-	  joystickXMap{15},
-	  joystickZMap{14},
-	  joystickCMap{9},
-	  joystickEscMap{3}
+	  joystickXMap{1},
+	  joystickZMap{2},
+	  joystickCMap{3},
+	  joystickEscMap{4}
 {
-	init();
 }
 
-void InputController::init() {
-	// Load joystick config file
+void InputController::mapJoystickBtns() {
+	// Get information from the joystick to help identify it
+	sf::Joystick::Identification ident = sf::Joystick::getIdentification(0);
+	if (ident.vendorId == 1356 && ident.productId == 616) { // PS3 controller
+		joystickXMap = 15;
+		joystickZMap = 14;
+		joystickCMap = 9;
+	}
 }
 
 bool InputController::isFocused() const {
@@ -203,8 +208,7 @@ void InputController::update(sf::RenderWindow & window) {
 			}
 		} else if (event.type == sf::Event::JoystickConnected) {
 			if (event.joystickConnect.joystickId == 0) {
-				sf::Joystick::Identification joystickInfoStruct = sf::Joystick::getIdentification(0);
-				// Use the joystick info to load the proper configuration
+			    mapJoystickBtns();
 			}
 		}
 	}

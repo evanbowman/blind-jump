@@ -86,6 +86,8 @@ int main(int argc, char * argv[]) {
 	window.setMouseCursorVisible(false);
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(80);
+
+	input.mapJoystickBtns();
 	
 	sf::Image icon;
 	if (!icon.loadFromFile(resourcePath() + "gameIcon.png")) {
