@@ -191,15 +191,12 @@ tileController::tileController() {
 
 	transitionLvSpr.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::introLevel));
 
-	int errCnt = 0;
-	errCnt += tileImg[0].loadFromFile(resourcePath() + "soilTileset.png");
-	errCnt += tileImg[1].loadFromFile(resourcePath() + "aquaTileset.png");
-	errCnt += grassSet[0].loadFromFile(resourcePath() + "grassSet.png");
-	errCnt += grassSetEdge[0].loadFromFile(resourcePath() + "grassSetEdge.png");
-	errCnt += grassSet[1].loadFromFile(resourcePath() + "grassSetBluish.png");
-	errCnt += grassSetEdge[1].loadFromFile(resourcePath() + "grassSetEdgeBluish.png");
-
-	if (errCnt) exit(EXIT_FAILURE);
+	tileImg[0].loadFromFile(resourcePath() + "soilTileset.png");
+	tileImg[1].loadFromFile(resourcePath() + "aquaTileset.png");
+	grassSet[0].loadFromFile(resourcePath() + "grassSet.png");
+	grassSetEdge[0].loadFromFile(resourcePath() + "grassSetEdge.png");
+	grassSet[1].loadFromFile(resourcePath() + "grassSetBluish.png");
+	grassSetEdge[1].loadFromFile(resourcePath() + "grassSetEdgeBluish.png");
 	
 	// Call the mapping function to populate the array with useful data
 	int count = generateMap(mapArray);
