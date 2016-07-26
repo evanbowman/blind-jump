@@ -42,8 +42,6 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	  pInput{_pInput},
 	  player{_windowW / 2, _windowH / 2},
 	  UI{_windowW / 2, _windowH / 2},
-	  tiles{}, // TODO: remove default constructible members
-	  en{},
 	  pFonts{_pFonts},
 	  level{0},
 	  stashed{false},
@@ -86,7 +84,7 @@ Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontCont
 	tiles.setPosition((windowW / 2) - 16, (windowH / 2));
 	tiles.setWindowSize(windowW, windowH);
 	
-	// Completely non-general code only used by the intro level
+	// Completely non-general code only used by the intro level (it's not procedurally generated)
 	details.add<2>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (6 * 26),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
@@ -155,36 +153,36 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	if (stashed && UI.getState() != UserInterface::State::statsScreen && UI.getState() != UserInterface::State::menuScreen) {
 		stashed = false;
 	}
+
 	if (!stashed || preload) {
 		bkg.setOffset(xOffset, yOffset);
 		bkg.drawBackground(target);
+
 		tiles.setOffset(xOffset, yOffset);
 		tiles.drawTiles(target, &glowSprs1, &glowSprs2, level);
+
 		glowSprs2.clear();
-	
 		details.update(xOffset, yOffset, elapsedTime);
-		
-		drawGroup(details, gameObjects, gameShadows, glowSprs1, glowSprs2, target);
+	    drawGroup(details, gameObjects, gameShadows, glowSprs1, glowSprs2, target);
 
 		// TODO: clean up enemyController::update()...
 		en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, &ssc, *pFonts, elapsedTime);
 		if (player.visible) {
-			// Draw the player to the window, as long as the object is visible
 			player.update(this, elapsedTime);
 			player.draw(gameObjects, gameShadows, elapsedTime);
 		}
-	
+
 		// If player was hit rumble the screen.
 		if (player.scrShakeState) {
 			ssc.rumble();
 		}
-	
+
 		glowSprs1.clear();
 		if (!UI.isOpen() || (UI.isOpen() && player.getState() == Player::State::dead)) {
 			effectGroup.update(xOffset, yOffset, elapsedTime);
 		}
 		drawGroup(effectGroup, gameObjects, glowSprs1);
-	
+
 		// Draw shadows to the target
 		if (!gameShadows.empty()) {
 			for (auto & element : gameShadows) {
@@ -192,16 +190,13 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 			}
 		}
 		gameShadows.clear();
-	
-		// Sort the game object based on y-position (performance for this is fine, only sorts objects inside the window, on the ordr of 10 in most cases)
+		// Sort the game objects based on y-position for z-ordering
 		std::sort(gameObjects.begin(), gameObjects.end(), [](const std::tuple<sf::Sprite, float, Rendertype, float> & arg1, const std::tuple<sf::Sprite, float, Rendertype, float> & arg2) {
 				return (std::get<1>(arg1) < std::get<1>(arg2));
 			});
-	
 		lightingMap.clear(sf::Color::Transparent);
-	
 		window.setView(worldView);
-
+		
 		//===========================================================//
 		// Object shading                                            //
 		//===========================================================//
@@ -548,21 +543,16 @@ void Scene::Reset() {
 	if (level == 0) {
 		set = tileController::Tileset::intro;
 	} else {
-	    // /if (std::abs(static_cast<int>(globalRNG())) % 2) {
-		// 	set = tileController::Tileset::nova;
-		// 	objectShadeColor = sf::Color(210, 195, 195, 255);
-		// } else {
-			set = tileController::Tileset::regular;
-		// }
+		set = tileController::Tileset::regular;
 	}
 	
 	vignetteSprite.setColor(sf::Color(255, 255, 255, 255));
 	
 	if (set != tileController::Tileset::intro) {
 		//Now call the mapping function again to generate a new map, and make sure it's large enough
-		int count = mappingFunction(tiles.mapArray, level, set != tileController::Tileset::nova);
+		int count = generateMap(tiles.mapArray);
 			while (count < 150) {
-			count = mappingFunction(tiles.mapArray, level, set != tileController::Tileset::nova);
+			count = generateMap(tiles.mapArray);
 		}
 	}
 	
@@ -579,7 +569,6 @@ void Scene::Reset() {
 		
 		initEnemies(this);
 	
-		// 50 / 50 : place an item chest
 		if (std::abs(static_cast<int>(globalRNG())) % 2) {
 			Coordinate c = pickLocation(tiles.emptyMapLocations);
 			details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
@@ -590,7 +579,6 @@ void Scene::Reset() {
 		glowSprs2.clear();
 		
 		if (set == tileController::Tileset::regular) {
-			// Put rock/pillar detail things on map
 			getRockPositions(tiles.mapArray, rockPositions);
 			for (auto element : rockPositions) {
 				details.add<3>(tiles.posX + 32 * element.x, tiles.posY + 26 * element.y - 35,
@@ -598,17 +586,8 @@ void Scene::Reset() {
 			}
 			rockPositions.clear();
 			// // TODO: Delete rocks close to the teleporter
-			// std::vector<Rock> & rocks = details.get<3>();
-			// for (auto it = rocks.begin(); it != rocks.end();) {
-			// 	if (fabsf(it->getPosition().x - teleporter.getPosition().x) < 80 && fabsf(it->getPosition().y - teleporter.getPosition().y) < 80) {
-			// 		it = rocks.erase(it);
-			// 	} else {
-			// 		++it;
-			// 	}
-			// }
-		}
+    	}
 		
-		// Put light sources on the map
 		getLightingPositions(tiles.mapArray, lightPositions);
 		size_t len = lightPositions.size();
 		for (size_t i = 0; i < len; i++) {

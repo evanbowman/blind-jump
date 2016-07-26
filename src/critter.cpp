@@ -20,7 +20,7 @@
 #include "math.h"
 #include <cmath>
 
-Critter::Critter(const sf::Texture & txtr, short _map[61][61], float _xInit, float _yInit, float _playerPosX, float _playerPosY) :
+Critter::Critter(const sf::Texture & txtr, uint8_t _map[61][61], float _xInit, float _yInit, float _playerPosX, float _playerPosY) :
 	Enemy{_xInit, _yInit, _playerPosX, _playerPosY},
 	currentDir{0.f},
 	jumpTargetx{0.f},

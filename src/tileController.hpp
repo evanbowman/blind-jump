@@ -28,18 +28,14 @@
 class tileController {
 public:
 	enum class Tileset {
-		intro, regular, nova
+		intro, regular
 	};
-
-	sf::Sprite lmplght;
 
 	sf::Sprite transitionLvSpr;
 	
 	sf::Image tileImg[2];
 	sf::Image grassSet[2];
 	sf::Image grassSetEdge[2];
-	sf::Image redSet;
-	sf::Image redSetFlowers;
 
 	tileController();
 	void drawTiles(sf::RenderTexture&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, int level);
@@ -58,16 +54,12 @@ public:
 	sf::Texture mapTexture[2];
 	sf::Sprite mapSprite1, mapSprite2;
 	
-	// Rendertexture top, rendertexture edge
 	sf::RenderTexture rt, re;
 	
-	//Declare a map array variable
-	short mapArray[61][61];
+	uint8_t mapArray[61][61];
 
-	//Declare a wall vector
 	std::vector <wall> walls;
 
-	//Declare vectors to hold posible positions for object placement
 	std::vector<Coordinate> emptyMapLocations;
 	std::vector<Coordinate> edgeLocations;
 	std::vector<Coordinate> primeChestLocations;	// Find tiles with small number of neighbors, good place to hide items
@@ -79,7 +71,7 @@ public:
 	float windowH;
 	float windowW;
 	//Declare an array to keep track of the positions of objects drawn to the map as not to place two in the same spot
-	short descriptionArray[61][61];
+	uint8_t descriptionArray[61][61];
 	void clear();
 	// Draw a different overworld based on choice of current working set of tiles
 	unsigned char workingSet;

@@ -23,6 +23,6 @@
 #include "enemyController.hpp"
 #include "coordinate.hpp"
 
-void addTurret(short mapArray[61][61], short descriptionArray[61][61], enemyController&, float, float, float, float, std::vector<Coordinate>&);
+void addTurret(uint8_t mapArray[61][61], uint8_t descriptionArray[61][61], enemyController&, float, float, float, float, std::vector<Coordinate>&);
 
 #endif /* enemyCreationFunctions_hpp */

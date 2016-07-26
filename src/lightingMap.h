@@ -37,7 +37,7 @@ bool checkOverlap(Circle c1, Circle c2) {
 	return false;
 }
 
-void getLightingPositions(short gameMap[61][61], std::vector<Coordinate>& availableLocations) {
+void getLightingPositions(uint8_t gameMap[61][61], std::vector<Coordinate>& availableLocations) {
 	// First create a temporary map containing only the surfaces from the game map
 	std::vector<Circle> lightMap;
 	int i, j;

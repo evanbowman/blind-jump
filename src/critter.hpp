@@ -27,7 +27,7 @@ class tileController;
 class Critter : public Enemy {
 public:
 	using HBox = Framework::HitBox<14, 14, 5, -4>;
-	Critter(const sf::Texture &, short map[61][61], float, float, float, float);
+	Critter(const sf::Texture &, uint8_t map[61][61], float, float, float, float);
 	void update(float, float, const std::vector<wall> &, EffectGroup & ef, const sf::Time &) override;
 	void critterUpdate(float, float, EffectGroup & ef, const sf::Time &, tileController * pTiles);
 	const sf::Sprite & getSprite() const override;
@@ -54,5 +54,5 @@ private:
 	bool active;
 	int recalc;
 	// Store a pointer to the game map
-	short (*map)[61]; //*** I know this is a nasty solution, perhaps there's a better way to not store it locally...
+	uint8_t (*map)[61]; //*** I know this is a nasty solution, perhaps there's a better way to not store it locally...
 };

@@ -19,6 +19,4 @@
 
 #include "tileController.hpp"
 
-#define TRANSITION_LEVEL_1 7
-
-int mappingFunction(short map[61][61], int level, bool enableGrass);
+int generateMap(uint8_t map[61][61]);

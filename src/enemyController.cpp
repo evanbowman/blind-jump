@@ -24,8 +24,7 @@
 #include "screenShakeController.hpp"
 
 
-enemyController::enemyController()
-{
+enemyController::enemyController() {
 	//Load all of the textures to apply to the enemies
 	const std::string turretfileExt[10] = {"turret5.png", "turret4.png", "turret3.png", "turret2.png", "turret1.png", "turretShadow5.png", "turretShadow4.png", "turretShadow3.png", "turretShadow2.png", "turretShadow1.png"};
 	for (int i = 0; i < 10; i++) {

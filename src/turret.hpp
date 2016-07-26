@@ -41,15 +41,15 @@ private:
 	double playerPosY;
 	uint8_t imageIndex;
 	char spriteIndex;
-	short disableCountdown;
+	int16_t disableCountdown;
 	bool visibility;
 	sf::Sprite turretSprites[10];
 	//Set the duration between animation frame transitions
 	char animationCount;
 	bool active;
 	int activateTimer;
-	short shotCountdown;
-	short shotsFired;
+	int16_t shotCountdown;
+	int16_t shotsFired;
 	double xOffset;
 	double yOffset;
 	float hp;

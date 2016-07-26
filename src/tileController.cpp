@@ -36,9 +36,9 @@ float tileController::getPosY() const {
 	return posY;
 }
 
-void createMapImage(sf::Image * tileImage, short mapArray[61][61], sf::Texture tx[2], sf::Image* grassSet, sf::Image* grassSetEdge) {
+void createMapImage(sf::Image * tileImage, uint8_t mapArray[61][61], sf::Texture tx[2], sf::Image* grassSet, sf::Image* grassSetEdge) {
 	// Loop through the entire image and create a tilemap for drawing grass
-	short mapTemp[61][61], bitMask[61][61], gratePositions[61][61];
+	uint8_t mapTemp[61][61], bitMask[61][61], gratePositions[61][61];
 	// Begin by initializing the whole map to zero
 	for (int i = 0; i < 61; i++) {
 		for (int j = 0; j < 61; j++) {
@@ -175,11 +175,8 @@ void createMapImage(sf::Image * tileImage, short mapArray[61][61], sf::Texture t
 			}
 		}
 	}
-	
 	tx[0].loadFromImage(tileMap);
 	tx[1].loadFromImage(tileMapEdge);
-	//tileMap.saveToFile("TEST_MAP.png");
-	//tileMapEdge.saveToFile("TEST_MAP_EDGE.png");
 }
 
 tileController::tileController() {
@@ -192,25 +189,25 @@ tileController::tileController() {
 	windowH = 0;
 	windowW = 0;
 
-	lmplght.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
 	transitionLvSpr.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::introLevel));
+
+	int errCnt = 0;
+	errCnt += tileImg[0].loadFromFile(resourcePath() + "soilTileset.png");
+	errCnt += tileImg[1].loadFromFile(resourcePath() + "aquaTileset.png");
+	errCnt += grassSet[0].loadFromFile(resourcePath() + "grassSet.png");
+	errCnt += grassSetEdge[0].loadFromFile(resourcePath() + "grassSetEdge.png");
+	errCnt += grassSet[1].loadFromFile(resourcePath() + "grassSetBluish.png");
+	errCnt += grassSetEdge[1].loadFromFile(resourcePath() + "grassSetEdgeBluish.png");
+
+	if (errCnt) exit(EXIT_FAILURE);
 	
-	tileImg[0].loadFromFile(resourcePath() + "soilTileset.png");
-	tileImg[1].loadFromFile(resourcePath() + "aquaTileset.png");
-	grassSet[0].loadFromFile(resourcePath() + "grassSet.png");
-	grassSetEdge[0].loadFromFile(resourcePath() + "grassSetEdge.png");
-	grassSet[1].loadFromFile(resourcePath() + "grassSetBluish.png");
-	grassSetEdge[1].loadFromFile(resourcePath() + "grassSetEdgeBluish.png");
-    
-	//Call the mapping function to transform the array into something useful
-	int count = mappingFunction(mapArray, 0, true);
+	// Call the mapping function to populate the array with useful data
+	int count = generateMap(mapArray);
 	
 	while (count < 200) {
-		count = mappingFunction(mapArray, 0, true);
+		count = generateMap(mapArray);
 	}
 	
-	createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet[0], &grassSetEdge[0]);
-
 	createMapImage(&tileImg[0], mapArray, mapTexture, &grassSet[0], &grassSetEdge[0]);
 	mapSprite1.setTexture(mapTexture[0]);
 	mapSprite2.setTexture(mapTexture[1]);
@@ -304,15 +301,6 @@ void tileController::rebuild(Tileset set) {
 		shadow.setFillColor(sf::Color(188, 188, 198, 255));
 		break;
 
-	case Tileset::nova:
-		workingSet = 2;
-		shadow.setFillColor(sf::Color(215, 194, 194, 255));
-		createMapImage(&tileImg[1], mapArray, mapTexture, &grassSet[1], &grassSetEdge[1]);
-		initMapVectors(this);
-		mapSprite1.setTexture(mapTexture[0]);
-		mapSprite2.setTexture(mapTexture[1]);
-		break;
-
 	case Tileset::regular:
 		workingSet = 1;
 		shadow.setFillColor(sf::Color(188, 188, 198, 255));
@@ -330,7 +318,6 @@ unsigned char tileController::getWorkingSet() {
 void tileController::setWindowSize(float w, float h) {
 	rt.create(w, h);
 	re.create(w, h);
-	
 	sf::Vector2f v;
 	v.x = w;
 	v.y = h;
@@ -342,6 +329,5 @@ Coordinate tileController::getTeleporterLoc() {
 }
 
 void tileController::reset() {
-
 	
 }

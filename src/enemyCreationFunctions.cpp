@@ -21,7 +21,7 @@
 #include "dasher.hpp"
 
 //A function to add a turret
-void addTurret(short mapArray[61][61], short descriptionArray[61][61], enemyController& en, float posX, float posY, float windowW, float windowH, std::vector<Coordinate>& emptyLocations) {
+void addTurret(uint8_t mapArray[61][61], uint8_t descriptionArray[61][61], enemyController& en, float posX, float posY, float windowW, float windowH, std::vector<Coordinate>& emptyLocations) {
 	
 	//Construct a turret with all its sprites
 	Turret t(en.getTurretSprites());

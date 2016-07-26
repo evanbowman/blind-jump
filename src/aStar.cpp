@@ -53,7 +53,7 @@ struct compare {
 };
 
 // A function to return a list of adjacent empty squares
-std::vector<aStrCoordinate> getAdjacent(aStrCoordinate& coord, aStrCoordinate& target, short map[MAP_WIDTH][MAP_HEIGHT]) {
+std::vector<aStrCoordinate> getAdjacent(aStrCoordinate& coord, aStrCoordinate& target, uint8_t map[MAP_WIDTH][MAP_HEIGHT]) {
 	// Declare a vector of adjacent coordinates to return
 	std::vector<aStrCoordinate> adjacentTiles;
 	bool diagonalMove = true;
@@ -170,7 +170,7 @@ std::vector<aStrCoordinate> reconstruct_path(aStrCoordinate start, aStrCoordinat
 }
 
 // The main function for finding a path between two points using the A* algorithm
-std::vector<aStrCoordinate> astar_path(aStrCoordinate& origin, aStrCoordinate& target, short map[MAP_WIDTH][MAP_HEIGHT]) {
+std::vector<aStrCoordinate> astar_path(aStrCoordinate& origin, aStrCoordinate& target, uint8_t map[MAP_WIDTH][MAP_HEIGHT]) {
 	// The open and closed sets of nodes
 	std::vector<aStrCoordinate> closed;
 	std::vector<aStrCoordinate> open = {origin};
