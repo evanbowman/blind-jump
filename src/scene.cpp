@@ -353,7 +353,6 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 			player.reset();
 			// Reset the map. Reset() increments level, set to -1 so that it will be zero
 			level = -1;
-			enemySelectVec.clear();
 			Reset();
 			pFonts->reset();
 			pFonts->updateMaxHealth(4, 4);
@@ -666,10 +665,6 @@ FontController * Scene::getPFonts() {
 
 bool Scene::getTeleporterCond() {
 	return teleporterCond;
-}
-
-std::vector<std::pair<int, int>>* Scene::getEnemySelectVec() {
-	return &enemySelectVec;
 }
 
 int Scene::getLevel() {

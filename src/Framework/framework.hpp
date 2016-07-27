@@ -32,6 +32,7 @@ namespace Framework {
 	//===========================================================//
 	struct Point {
 		float x, y;
+	public:
 		inline bool operator==(const Point & other) {
 			return x == other.x && y == other.y;	
 		}

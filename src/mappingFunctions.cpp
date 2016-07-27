@@ -18,6 +18,8 @@
 #include "tileController.hpp"
 #include "mappingFunctions.hpp"
 
+// This code is not so readable... TODO: make map type a scoped enum
+
 void floodFillspread(uint8_t screen[61][61], uint8_t x, uint8_t y, uint8_t prevC, uint8_t newC) {
 	// Base cases
 	if (x <= 2 || x >= 59 || y <= 2 || y >= 59) return;
@@ -60,7 +62,7 @@ inline void renumber(uint8_t map[61][61]) {
 	}
 }
 
-inline void addEdges (uint8_t map[61][61]) {
+inline void addEdges(uint8_t map[61][61]) {
 	for (int i = 0; i < 61; i++) {
 		for (int j = 0; j < 61; j++) {
 			if (map[i][j] == 1) {
@@ -78,7 +80,7 @@ inline void addEdges (uint8_t map[61][61]) {
 	}
 }
 
-inline void addCenterTiles (uint8_t map[61][61]) {
+inline void addCenterTiles(uint8_t map[61][61]) {
 	for (int i = 0; i < 61; i++) {
 		for (int j = 0; j < 61; j++) {
 			if ((map[i - 1][j] == 5 || map[i - 1][j] == 3 || map[i - 1][j] == 4) && (map[i + 1][j] == 5 || map[i + 1][j] == 3 || map[i + 1][j] == 4) && (map[i][j - 1] == 5 || map[i][j - 1] == 3 || map[i][j - 1] == 4) && (map[i][j + 1] == 5 || map[i][j + 1] == 3 || map[i][j + 1] == 4)) {
@@ -92,7 +94,7 @@ inline void addCenterTiles (uint8_t map[61][61]) {
 	}
 }
 
-void condense (uint8_t map[61][61], uint8_t maptemp[61][61], char rep) {
+void condense(uint8_t map[61][61], uint8_t maptemp[61][61], char rep) {
 	int count = 0;
 	// Heh it's not copy-paste it's *unrolled*
 	for (int i = 2; i < 59; i++) {
@@ -184,14 +186,11 @@ void combine(uint8_t map[61][61], uint8_t overlay[61][61]) {
 			if ((overlay[i][j] == 5 && map[i][j] != 0) && (overlay[i][j] == 5 && map[i][j] != 1)) {
 				if (map[i][j] == 2) {
 					map[i][j] = 9;
-				}
-				else if (map[i][j] == 6) {
+				} else if (map[i][j] == 6) {
 					map[i][j] = 10;
-				}
-				else if (map[i][j] == 5) {
+				} else if (map[i][j] == 5) {
 					map[i][j] = 8;
-				}
-				else {
+				} else {
 					map[i][j] = 11;
 				}
 			}
@@ -204,8 +203,7 @@ void cleanEdgesPostCombine(uint8_t map[61][61]) {
 		for (int j = 1; j < 60; j++) {
 			if (map[i][j] == 9 && map[i][j - 1] != 8) {
 				map[i][j] = 2;
-			}
-			else if (map[i][j] == 10 && map[i][j + 1] != 8) {
+			} else if (map[i][j] == 10 && map[i][j + 1] != 8) {
 				map[i][j] = 6;
 			}
 		}
@@ -257,7 +255,6 @@ int generateMap(uint8_t map[61][61]) {
 	do {
 		count2 = initMapOverlay(mapOverlay);
 	} while (count2 < 300);
-			
 	combine(map, mapOverlay);
 	cleanEdgesPostCombine(map);
 	return count;

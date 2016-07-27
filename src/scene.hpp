@@ -49,7 +49,6 @@ public:
 	void update(sf::RenderWindow &, sf::Time &);
 	void Reset();
 	bool getTeleporterCond();
-	std::vector<std::pair<int, int>>* getEnemySelectVec();
 	int getLevel();
 	DetailGroup & getDetails();
 	enemyController & getEnemyController();
@@ -75,7 +74,6 @@ private:
    	enemyController en;
 	FontController * pFonts;
    	int level;
-	std::vector<std::pair<int, int>> enemySelectVec;
 	// Stash static rendered frames for efficiency. Preload is for recovery from stash
 	bool stashed, preload;
 	sf::Sprite vignetteSprite;

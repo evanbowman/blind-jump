@@ -18,6 +18,7 @@
 #include "initMapVectors.hpp"
 #include <cmath>
 #include "tileController.hpp"
+#include "Framework/framework.hpp"
 
 void initMapVectors(tileController * pTiles) {
 	
@@ -48,34 +49,26 @@ void initMapVectors(tileController * pTiles) {
 				pTiles->emptyMapLocations.push_back(c1);
 			
 
-			}
-			
-			else if (pTiles->mapArray[i][j] == 5 || pTiles->mapArray[i][j] == 8) {
+			} else if (pTiles->mapArray[i][j] == 5 || pTiles->mapArray[i][j] == 8) {
 				Coordinate c1;
 				c1.x = i;
 				c1.y = j;
 				pTiles->edgeLocations.push_back(c1);
-			}
-			
-			else if (pTiles->mapArray[i][j] == 2 || pTiles->mapArray[i][j] == 9) {
+			} else if (pTiles->mapArray[i][j] == 2 || pTiles->mapArray[i][j] == 9) {
 					//Set the wall's x position
 				    w.setXinit((i * 32));
 					w.setYinit((j * 26));
 					w.setPosition(w.getXinit(), w.getYinit());
 					//Push it back
 					pTiles->walls.push_back(w);
-			}
-			
-			else if (pTiles->mapArray[i][j] == 6 || pTiles->mapArray[i][j] == 10) {
+			} else if (pTiles->mapArray[i][j] == 6 || pTiles->mapArray[i][j] == 10) {
 					//Set the wall's x position
 				    w.setXinit((i * 32));
 				    w.setYinit((j * 26));
 					w.setPosition(w.getXinit(), w.getYinit());
 					//Push it back
 					pTiles->walls.push_back(w);
-			}
-				
-			else if (pTiles->mapArray[i][j] == 1) {		 //If the array index corresponds to a wall
+			} else if (pTiles->mapArray[i][j] == 1) {		 //If the array index corresponds to a wall
 					//Set the wall's position
 				    w.setXinit((i * 32));
 				    w.setYinit((j * 26));
@@ -86,6 +79,7 @@ void initMapVectors(tileController * pTiles) {
 			
 		}
 	}
+	
 	// Sort the empty location vector based on coordinate priorities
 	std::sort(pTiles->emptyMapLocations.begin(), pTiles->emptyMapLocations.end(), [](const Coordinate c1, const Coordinate c2) {return c1.priority < c2.priority;});
 	playerX = pTiles->emptyMapLocations.back().x;

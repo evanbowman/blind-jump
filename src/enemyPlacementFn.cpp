@@ -36,38 +36,18 @@ int initEnemies(Scene * gm) {
 
 	// Count sum of energy values for all enemies, used in health station cost calculations
 	int count = 0;
-	std::vector<std::pair<int, int>>* pVec = gm->getEnemySelectVec();
-	// Not all enemies are available for placement initially (don't want to place a high level enemy on the first stage!)
-	std::pair<int, int> scoot, dasher, turret, critter;
-	switch (currentLevel) {
-		case 1:
-			// push new enemies to the enemy creation vector
-			scoot.first = 1;
-			scoot.second = abs(currentLevel - targetLevel[0]);
-			pVec->push_back(scoot);
-			critter.first = 1;
-			critter.second = abs(currentLevel - targetLevel[1]);
-			pVec->push_back(critter);
-			break;
-			
-			
-		case 2:
-			dasher.first = 2;
-			dasher.second = abs(currentLevel - targetLevel[2]);
-			pVec->push_back(dasher);
-			break;
-			
-		case 4:
-			turret.first = 3;
-			turret.second = abs(currentLevel - targetLevel[3]);
-			pVec->push_back(turret);
-			break;
-			
-		default:
-			// Do nothing
-			break;
+	std::vector<std::pair<int, int>> enemySelectVec;
+	if (currentLevel >= 1) {
+		enemySelectVec.emplace_back(1, std::abs(currentLevel - targetLevel[0]));
+		enemySelectVec.emplace_back(1, std::abs(currentLevel - targetLevel[1]));
+		if (currentLevel >= 2) {
+			enemySelectVec.emplace_back(2, currentLevel - targetLevel[2]);
+			if (currentLevel >= 4) {
+				enemySelectVec.emplace_back(3, currentLevel - targetLevel[3]);
+			}
+		}
 	}
-	size_t enemyVecLen = gm->getEnemySelectVec()->size();
+	size_t enemyVecLen = enemySelectVec.size();
 	
 	// Collect enemy weight terms under a variable and init to 0
 	int collector = 0;
@@ -78,7 +58,7 @@ int initEnemies(Scene * gm) {
 		// Set the weight to 100 divided by the difference between the current level and the ideal level
 		// Max function to prevent divide by 0
 		diff = (100 + currentLevel) / std::max(abs(currentLevel - targetLevel[i]), 1);
-		(*pVec)[i].second = diff;
+		enemySelectVec[i].second = diff;
 		collector += diff;
 		intervals[i] = collector;
 	}
