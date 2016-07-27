@@ -151,14 +151,8 @@ void condense (uint8_t map[61][61], uint8_t maptemp[61][61], char rep) {
 
 int initMapOverlay(uint8_t map[61][61]) {
 	uint8_t maptemp[61][61];
-	//First initialize the whole map as walls (1)
-	for (int i = 0; i < 61; i++) {
-		for (int j = 0; j < 61; j++) {
-			map[i][j] = 0;
-			maptemp[i][j] = 0;
-		}
-	}
-	//Loop through again, and create a series of other numbers greater than 2
+	memset(map, 0, sizeof(map[0][0]) * std::pow(61, 2));
+	memset(map, 0, sizeof(map[0][0]) * std::pow(61, 2));
 	for (int i = 5; i < 54; i++) {
 		for (int j = 5; j < 54; j++) {
 			map[i][j] = (std::abs(static_cast<int>(globalRNG())) % 2);

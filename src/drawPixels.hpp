@@ -17,4 +17,4 @@
 
 #pragma once
 
-void drawPixels(sf::Image&, sf::Image&, int, int, int, int);
+void drawPixels(sf::Image &, const sf::Image &, int, int, int, int);

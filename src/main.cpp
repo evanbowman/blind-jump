@@ -44,9 +44,10 @@ int main(int argc, char * argv[]) {
 	float aspectRatio = static_cast<float>(sf::VideoMode::getDesktopMode().width) / static_cast<float>(sf::VideoMode::getDesktopMode().height);
 	float windowWidth = 450.f;
 	float windowHeight = 450.f;
+	
+	float windowAspect;
 
 	if (aspectRatio > 1.f) {
-		float windowAspect;
 		do {
 			windowWidth += 0.025f;
 			windowHeight -= 0.025f;
@@ -54,7 +55,6 @@ int main(int argc, char * argv[]) {
 		}
 		while (fabs(aspectRatio - windowAspect) > 0.005f);
 	} else {
-		float windowAspect;
 		do {
 			windowWidth -= 0.025f;
 			windowHeight += 0.025f;
@@ -63,7 +63,7 @@ int main(int argc, char * argv[]) {
 		while (fabs(aspectRatio - windowAspect) > 0.005f);
 	}
 	
-	if(!globalResourceHandler.load()) {
+	if (globalResourceHandler.load()) {
 		return EXIT_FAILURE;
 	}
 	

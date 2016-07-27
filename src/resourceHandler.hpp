@@ -49,18 +49,23 @@ public:
 	enum class Font {
 		cornerstone
 	};
-    
-	bool load();
+	enum class Image {
+		soilTileset, grassSet1, grassSet2
+	};
+	
+	int load();
 	
 	const sf::Texture & getTexture(ResourceHandler::Texture) const;
 	const sf::Texture & getTexture(int) const;
 	const sf::Font & getFont(ResourceHandler::Font) const;
+	const sf::Image & getImage(ResourceHandler::Image) const;
 	sf::Shader & getShader(ResourceHandler::Shader) const; // Exception: shader cannot be a constant reference
 	
 private:
 	mutable std::map<int, sf::Texture> textures;
 	mutable std::array<sf::Shader, 3> shaders;
 	mutable std::array<sf::Font, 1> fonts;
+	mutable std::array<sf::Image, 3> images;
 };
 
 // Many classes need to access the resource handler, and its accessors return only const references

@@ -38,16 +38,10 @@ public:
 	sf::Image grassSetEdge[2];
 
 	tileController();
-	void drawTiles(sf::RenderTexture&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, int level);
-	void drawTiles(sf::RenderTexture&);
-	void drawMiniMap(sf::RenderTexture&);
-
-	float xOffset;
-	float yOffset;
+	void drawTiles(sf::RenderTexture&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, int level, const float, const float);
 	float posX;
 	float posY;
 	void setPosition(float, float);
-	void setOffset(float, float);
 
 	sf::RectangleShape shadow;
 	

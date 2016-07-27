@@ -17,98 +17,85 @@
 
 #include "resourceHandler.hpp"
 
-bool loadTexture(const char * fname, ResourceHandler::Texture id, std::map<int, sf::Texture> & textures) {
+int loadTexture(const char * fname, ResourceHandler::Texture id, std::map<int, sf::Texture> & textures) {
 	sf::Texture temp;
 	if (!temp.loadFromFile(resourcePath() + fname)) {
-		return false;
+		return 1;
 	}
 	textures[static_cast<int>(id)] = temp;
-	return true;
+	return 0;
 }
 
-bool loadShader(const char * fname, ResourceHandler::Shader id, std::array<sf::Shader, 3> & shaders) {
+int loadShader(const char * fname, ResourceHandler::Shader id, std::array<sf::Shader, 3> & shaders) {
 	std::size_t index = static_cast<int>(id);
 	if (!shaders[index].loadFromFile(resourcePath() + fname, sf::Shader::Fragment)) {
-		return false;
+		return 1;
 	}
 	shaders[index].setParameter("texture", sf::Shader::CurrentTexture);
-	return true;
+	return 0;
 }
 
-bool loadFont(const char * fname, ResourceHandler::Font id, std::array<sf::Font, 1> & fonts) {
+int loadImage(const char * fname, ResourceHandler::Image id, std::array<sf::Image, 3> & images) {
+	std::size_t index = static_cast<int>(id);
+	if (!images[index].loadFromFile(resourcePath() + fname)) {
+		return 1;
+	}
+	return 0;
+}
+
+int loadFont(const char * fname, ResourceHandler::Font id, std::array<sf::Font, 1> & fonts) {
 	std::size_t index = static_cast<int>(id);
 	if (!fonts[index].loadFromFile(resourcePath() + fname)) {
-		return false;
+		return 1;
 	}
-	return true;
+	return 0;
 }
 
-bool ResourceHandler::load() {
-	if (!loadTexture("gameObjects.png", Texture::gameObjects, textures)) {
-		return false;
-	}
+int ResourceHandler::load() {
+	int errs = 0;
+	errs += loadTexture("gameObjects.png", Texture::gameObjects, textures);
 
-	if (!loadTexture("vignetteMask.png", Texture::vignette, textures)) {
-		return false;
-	}
+	errs += loadTexture("vignetteMask.png", Texture::vignette, textures);
 
-	if (!loadTexture("vignetteShadow.png", Texture::vignetteShadow, textures)) {
-		return false;
-	}
+	errs += loadTexture("vignetteShadow.png", Texture::vignetteShadow, textures);
 
-	if (!loadTexture("lampLight.png", Texture::lamplight, textures)) {
-		return false;
-	}
+	errs += loadTexture("lampLight.png", Texture::lamplight, textures);
 
-	if (!loadTexture("introLevel.png", Texture::introLevel, textures)) {
-		return false;
-	}
+	errs += loadTexture("introLevel.png", Texture::introLevel, textures);
 
-	if (!loadTexture("teleporterGlow.png", Texture::teleporterGlow, textures)) {
-		return false;
-	}
+	errs += loadTexture("teleporterGlow.png", Texture::teleporterGlow, textures);
 
-	if (!loadTexture("introWall.png", Texture::introWall, textures)) {
-		return false;
-	}
+	errs += loadTexture("introWall.png", Texture::introWall, textures);
 
-	if (!loadTexture("redFloorGlow.png", Texture::redglow, textures)) {
-		return false;
-	}
+	errs += loadTexture("redFloorGlow.png", Texture::redglow, textures);
 
-	if (!loadTexture("blueFloorGlow.png", Texture::blueglow, textures)) {
-		return false;
-	}
-	
-	if (!loadTexture("fireExplosionGlow.png", Texture::fireExplosionGlow, textures)) {
-		return false;
-	}
+	errs += loadTexture("blueFloorGlow.png", Texture::blueglow, textures);
 
-	if (!loadTexture("whiteFloorGlow.png", Texture::whiteGlow, textures)) {
-		return false;
-	}
+	errs += loadTexture("fireExplosionGlow.png", Texture::fireExplosionGlow, textures);
 
-	if (!loadTexture("charger_enemy_shadow.png", Texture::scootShadow, textures)) {
-		return false;
-	}
+	errs += loadTexture("whiteFloorGlow.png", Texture::whiteGlow, textures);
 
-	if (!loadShader("color.frag", Shader::color, shaders)) {
-		return false;
-	}
+	errs += loadTexture("charger_enemy_shadow.png", Texture::scootShadow, textures);
 
-	if (!loadShader("blur.frag", Shader::blur, shaders)) {
-		return false;
-	}
+	errs += loadShader("color.frag", Shader::color, shaders);
 
-	if (!loadShader("desaturate.frag", Shader::desaturate, shaders)) {
-		return false;
-	}
+	errs += loadShader("blur.frag", Shader::blur, shaders);
 
-	if (!loadFont("Cornerstone.ttf", Font::cornerstone, fonts)) {
-		return false;
-	}
-	
-	return true;
+	errs += loadShader("desaturate.frag", Shader::desaturate, shaders);
+
+	errs += loadFont("Cornerstone.ttf", Font::cornerstone, fonts);
+
+	errs += loadImage("soilTileset.png", Image::soilTileset, images);
+
+	errs += loadImage("grassSet.png", Image::grassSet1, images);
+
+	errs += loadImage("grassSetEdge.png", Image::grassSet2, images);
+
+	return errs;
+}
+
+const sf::Image & ResourceHandler::getImage(Image id) const {
+	return images[static_cast<int>(id)];
 }
 
 const sf::Texture & ResourceHandler::getTexture(Texture id) const {

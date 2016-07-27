@@ -158,8 +158,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		bkg.setOffset(xOffset, yOffset);
 		bkg.drawBackground(target);
 
-		tiles.setOffset(xOffset, yOffset);
-		tiles.drawTiles(target, &glowSprs1, &glowSprs2, level);
+		tiles.drawTiles(target, &glowSprs1, &glowSprs2, level, xOffset, yOffset);
 
 		glowSprs2.clear();
 		details.update(xOffset, yOffset, elapsedTime);
