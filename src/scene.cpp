@@ -292,7 +292,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		}
 	} else if (UI.blurEnabled() && !UI.desaturateEnabled()) {
 		if (stashed) {
-			if (pInput->escapePressed()) {
+			if (pInput->pausePressed()) {
 				preload = true;
 			}
 			window.setView(worldView);

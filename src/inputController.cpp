@@ -19,13 +19,29 @@
 #include <cmath>
 #include <iostream>
 
+enum Button { // Purposefully unscoped, used as array index, would require noisy casts
+	ButtonShoot,
+	ButtonAction,
+	ButtonPause,
+	ButtonLeft,
+	ButtonRight,
+	ButtonUp,
+	ButtonDown
+};
+
 InputController::InputController()
 	: keyMask{0},
-	  joystickMask{0},
-	  joystickXMap{1},
-	  joystickZMap{2},
-	  joystickCMap{3},
-	  joystickEscMap{4}
+	  joystickMask{0}, 
+	  joystickMappings{{0, 1, 2}},
+	  keyboardMappings{
+		  { sf::Keyboard::X,
+		    sf::Keyboard::Z,
+		    sf::Keyboard::Escape,
+		    sf::Keyboard::Left,
+		    sf::Keyboard::Right,
+		    sf::Keyboard::Up,
+			sf::Keyboard::Down }
+	  }
 {
 }
 
@@ -33,25 +49,25 @@ void InputController::mapJoystickBtns() {
 	// Get information from the joystick to help identify it
 	sf::Joystick::Identification ident = sf::Joystick::getIdentification(0);
 	if (ident.vendorId == 1356 && ident.productId == 616) { // PS3 controller
-		joystickXMap = 15;
-		joystickZMap = 14;
-		joystickCMap = 9;
+		joystickMappings[ButtonShoot] = 15;
+		joystickMappings[ButtonAction] = 14;
+		joystickMappings[ButtonPause] = 4;
 	}
 }
 
 bool InputController::isFocused() const {
-	return keyMask & 0x0080 || joystickMask & 0x0080;
+	return keyMask & 0x0080;
 }
 
-bool InputController::escapePressed() const {
+bool InputController::pausePressed() const {
 	return keyMask & 0x0100 || joystickMask & 0x0100;
 }
 
-bool InputController::xPressed() const {
+bool InputController::shootPressed() const {
 	return keyMask & 0x0010 || joystickMask & 0x0010;
 }
 
-bool InputController::zPressed() const {
+bool InputController::actionPressed() const {
 	return keyMask & 0x0020 || joystickMask & 0x0020;
 }
 
@@ -71,88 +87,42 @@ bool InputController::downPressed() const {
 	return keyMask & 0x0008 || joystickMask & 0x0008;
 }
 
-bool InputController::cPressed() const {
-	return keyMask & 0x0040 || joystickMask & 0x0040;
-}
-
 void InputController::update(sf::RenderWindow & window) {
 	sf::Event event;
 	while (window.pollEvent(event)) {
 		if (event.type == sf::Event::Closed) {
 			window.close();
 		} else if (event.type == sf::Event::KeyPressed) {
-			switch(event.key.code) {
-			case sf::Keyboard::Escape:
-			    keyMask |= 0x0100;
-				break;
-
-			case sf::Keyboard::Left:
+			if (event.key.code == keyboardMappings[ButtonPause]) {
+				keyMask |= 0x0100;
+			} else if (event.key.code == keyboardMappings[ButtonLeft]) {
 				keyMask |= 0x0001;
-				break;
-
-			case sf::Keyboard::Right:
+			} else if (event.key.code == keyboardMappings[ButtonRight]) {
 				keyMask |= 0x0002;
-				break;
-
-			case sf::Keyboard::Up:
+			} else if (event.key.code == keyboardMappings[ButtonUp]) {
 				keyMask |= 0x0004;
-				break;
-
-			case sf::Keyboard::Down:
+			} else if (event.key.code == keyboardMappings[ButtonDown]) {
 				keyMask |= 0x0008;
-				break;
-
-			case sf::Keyboard::X:
+			} else if (event.key.code == keyboardMappings[ButtonShoot]) {
 				keyMask |= 0x0010;
-				break;
-
-			case sf::Keyboard::Z:
+			} else if (event.key.code == keyboardMappings[ButtonAction]) {
 				keyMask |= 0x0020;
-				break;
-
-			case sf::Keyboard::C:
-				keyMask |= 0x0040;
-				break;
-
-			default:
-				break;
 			}
 		} else if (event.type == sf::Event::KeyReleased) {
-			switch(event.key.code) {
-			case sf::Keyboard::Escape:
+			if (event.key.code == keyboardMappings[ButtonPause]) {
 				keyMask &= 0xFEFF;
-				break;
-				
-			case sf::Keyboard::Left:
+			} else if (event.key.code == keyboardMappings[ButtonLeft]) {
 				keyMask &= 0xFFFE;
-				break;
-
-			case sf::Keyboard::Right:
+			} else if (event.key.code == keyboardMappings[ButtonRight]) {
 				keyMask &= 0xFFFD;
-				break;
-
-			case sf::Keyboard::Up:
+			} else if (event.key.code ==  keyboardMappings[ButtonUp]) {
 				keyMask &= 0xFFFB;
-				break;
-
-			case sf::Keyboard::Down:
+			} else if (event.key.code == keyboardMappings[ButtonDown]) {
 				keyMask &= 0xFFF7;
-				break;
-
-			case sf::Keyboard::X:
+			} else if (event.key.code == keyboardMappings[ButtonShoot]) {
 				keyMask &= 0xFFEF;
-				break;
-
-			case sf::Keyboard::Z:
+			} else if (event.key.code == keyboardMappings[ButtonAction]) {
 				keyMask &= 0xFFDF;
-				break;
-
-			case sf::Keyboard::C:
-				keyMask &= 0xFFBF;
-				break;
-
-			default:
-				break;
 			}
 		} else if (event.type == sf::Event::GainedFocus) {
 			keyMask |= 0x0080;
@@ -160,25 +130,21 @@ void InputController::update(sf::RenderWindow & window) {
 			keyMask &= 0xFF7F;
 		} else if (event.type == sf::Event::JoystickButtonPressed) {
 			if (event.joystickButton.joystickId == 0) {
-				if (event.joystickButton.button == joystickXMap) {
+				if (event.joystickButton.button == joystickMappings[ButtonShoot]) {
 					joystickMask |= 0x0010;
-				} else if (event.joystickButton.button == joystickZMap) {
+				} else if (event.joystickButton.button == joystickMappings[ButtonAction]) {
 					joystickMask |= 0x0020;
-				} else if (event.joystickButton.button == joystickCMap) {
-					joystickMask |= 0x0040;
-				} else if (event.joystickButton.button == joystickEscMap) {
+				} else if (event.joystickButton.button == joystickMappings[ButtonPause]) {
 					joystickMask |= 0x0100;
 				}
 			}
 		} else if (event.type == sf::Event::JoystickButtonReleased) {
 			if (event.joystickButton.joystickId == 0) {
-				if (event.joystickButton.button == joystickXMap) {
+				if (event.joystickButton.button == joystickMappings[ButtonShoot]) {
 					joystickMask &= 0xFFEF;
-				} else if (event.joystickButton.button == joystickZMap) {
+				} else if (event.joystickButton.button == joystickMappings[ButtonAction]) {
 					joystickMask &= 0xFFDF;
-				} else if (event.joystickButton.button == joystickCMap) {
-					joystickMask &= 0xFFBF;
-				} else if (event.joystickButton.button == joystickEscMap) {
+				} else if (event.joystickButton.button == joystickMappings[ButtonPause]) {
 					joystickMask &= 0xFEFF;
 				}
 			}
@@ -209,6 +175,13 @@ void InputController::update(sf::RenderWindow & window) {
 		} else if (event.type == sf::Event::JoystickConnected) {
 			if (event.joystickConnect.joystickId == 0) {
 			    mapJoystickBtns();
+				joystickMask = 0x0000;
+			}
+		} else if (event.type == sf::Event::JoystickDisconnected) {
+			if (event.joystickConnect.joystickId == 0) {
+				// If any bits are set when the joystick is diconnected, there will be no way to zero them because
+				// there will be no joystickmoved events. So zero them here...
+				joystickMask = 0x0000;
 			}
 		}
 	}

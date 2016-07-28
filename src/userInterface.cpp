@@ -45,14 +45,14 @@ const UserInterface::State UserInterface::getState() const {
 }
 
 void UserInterface::update(sf::RenderWindow& window, Player & player, FontController & fonts, InputController * pInput, const sf::Time & elapsed) {
-	bool z = pInput->zPressed();
+	bool action = pInput->actionPressed();
 	bool up = pInput->upPressed();
 	bool down = pInput->downPressed();
-	bool escape = pInput->escapePressed();
+	bool pause = pInput->pausePressed();
 	
 	switch (state) {
 	case State::closed:
-		if (escape) {
+		if (pause) {
 			state = State::menuScreenEntry;
 			player.setState(Player::State::deactivated);
 			fonts.setTextAlpha(0, FontController::Text::waypointText);
@@ -81,7 +81,7 @@ void UserInterface::update(sf::RenderWindow& window, Player & player, FontContro
 		break;
 		
 	case State::menuScreen:
-		if (escape) {
+		if (pause) {
 			timer = 0;
 			selectorPosition = 0;
 			state = State::menuScreenExit;
@@ -93,7 +93,7 @@ void UserInterface::update(sf::RenderWindow& window, Player & player, FontContro
 		    if (selectorPosition < 2) {
 				++selectorPosition;
 			}
-		} else if (z) {
+		} else if (action) {
 			switch (selectorPosition) {
 			case 0:
 				selectorPosition = 0;
@@ -191,7 +191,7 @@ void UserInterface::update(sf::RenderWindow& window, Player & player, FontContro
 		break;
 			
 	case State::statsScreen:
-		if (z) {
+		if (action) {
 			state = State::complete;
 			*pWorldView = cachedView;
 		}

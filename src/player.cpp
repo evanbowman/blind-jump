@@ -178,8 +178,8 @@ void Player::update(Scene * pGM, const sf::Time & elapsedTime) {
 	DetailGroup & details {pGM->getDetails()};
 	EffectGroup & effects {pGM->getEffects()};
 	FontController * pFonts {pGM->getPFonts()};
-	bool x {pInput->xPressed()};
-	bool z {pInput->zPressed()};
+	bool shoot {pInput->shootPressed()};
+	bool action {pInput->actionPressed()};
 	bool up {pInput->upPressed()};
 	bool down {pInput->downPressed()};
 	bool left {pInput->leftPressed()};
@@ -221,8 +221,8 @@ void Player::update(Scene * pGM, const sf::Time & elapsedTime) {
 		break;
 
 	case State::nominal:
-		updateGun(elapsedTime, x, effects, worldOffsetX, worldOffsetY);
-		if (!x) {
+		updateGun(elapsedTime, shoot, effects, worldOffsetX, worldOffsetY);
+		if (!shoot) {
 			regKeyResponse<Sheet::walkUp>(up, down, left, right, sheetIndex, uSpeed, collisionUp);
 			regKeyResponse<Sheet::walkDown>(down, up, left, right, sheetIndex, dSpeed, collisionDown);
 			regKeyResponse<Sheet::walkLeft>(left, right, down, up, sheetIndex, lSpeed, collisionLeft);
@@ -253,12 +253,12 @@ void Player::update(Scene * pGM, const sf::Time & elapsedTime) {
 				altKeyResponse<Sheet::walkLeft>(right, up, down, sheetIndex, collisionRight, rSpeed);
 			}
 		}
-		onKeyReleased<Player::Sheet::stillLeft, 5>(left, right, up, down, leftPrevious, x, sheetIndex, frameIndex);
-		onKeyReleased<Player::Sheet::stillRight, 5>(right, left, up, down, rightPrevious, x, sheetIndex, frameIndex);
-		onKeyReleased<Player::Sheet::stillUp, 4>(up, left, right, down, upPrevious, x, sheetIndex, frameIndex);
-		onKeyReleased<Player::Sheet::stillDown, 4>(down, left, right, up, downPrevious, x, sheetIndex, frameIndex);
+		onKeyReleased<Player::Sheet::stillLeft, 5>(left, right, up, down, leftPrevious, shoot, sheetIndex, frameIndex);
+		onKeyReleased<Player::Sheet::stillRight, 5>(right, left, up, down, rightPrevious, shoot, sheetIndex, frameIndex);
+		onKeyReleased<Player::Sheet::stillUp, 4>(up, left, right, down, upPrevious, shoot, sheetIndex, frameIndex);
+		onKeyReleased<Player::Sheet::stillDown, 4>(down, left, right, up, downPrevious, shoot, sheetIndex, frameIndex);
 		
-		if (z && !zPrevious && (left || right || up || down)) {
+		if (action && !actionPrevious && (left || right || up || down)) {
 			state = State::prepdash;
 			if (sheetIndex == Sheet::stillDown || sheetIndex == Sheet::walkDown) {
 				frameIndex = 6;
@@ -273,7 +273,7 @@ void Player::update(Scene * pGM, const sf::Time & elapsedTime) {
 			sheetIndex = Sheet::dashSheet;
  		}
 		
-		zPrevious = z;
+		actionPrevious = action;
 		upPrevious = up;
 		downPrevious = down;
 		leftPrevious = left;

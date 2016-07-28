@@ -107,5 +107,5 @@ private:
 	bool downPrevious;
 	bool leftPrevious;
 	bool rightPrevious;
-	bool zPrevious;
+	bool actionPrevious;
 };

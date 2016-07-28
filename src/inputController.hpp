@@ -17,25 +17,26 @@
 
 #pragma once
 
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
+#include <array>
 
 class InputController {
-private:
-	uint32_t keyMask;
-	uint32_t joystickMask;
-	uint16_t joystickXMap, joystickZMap, joystickCMap, joystickEscMap;
-	
 public:
 	InputController();
 	void mapJoystickBtns();
 	bool isFocused() const;
-	bool escapePressed() const;
+	bool pausePressed() const;
 	bool leftPressed() const;
 	bool rightPressed() const;
 	bool upPressed() const;
 	bool downPressed() const;
-	bool xPressed() const;
-	bool zPressed() const;
-	bool cPressed() const;
+	bool shootPressed() const;
+	bool actionPressed() const;
 	void update(sf::RenderWindow &);
+
+private:
+	uint32_t keyMask;
+	uint32_t joystickMask;
+	std::array<unsigned int, 3> joystickMappings;
+	std::array<sf::Keyboard::Key, 7> keyboardMappings;
 };
