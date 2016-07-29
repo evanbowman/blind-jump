@@ -76,7 +76,7 @@ int main(int argc, char * argv[]) {
 	FontController fonts(fontView, windowWidth / 2, windowHeight / 2);
 	
 	//Initialize the map
-	Scene Map(windowWidth, windowHeight, &input, &fonts);
+	Game game(windowWidth, windowHeight, &input, &fonts);
 	
 	// Set up the window context settings
 	sf::ContextSettings settings;
@@ -87,7 +87,7 @@ int main(int argc, char * argv[]) {
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(80);
 
-	input.mapJoystickBtns();
+	input.mapJoystickFromId();
 	
 	sf::Image icon;
 	if (!icon.loadFromFile(resourcePath() + "gameIcon.png")) {
@@ -100,7 +100,11 @@ int main(int argc, char * argv[]) {
 	sf::Time elapsedTime;
 
 	while (window.isOpen()) {
-		input.update(window);
+		// Do not update the inputController to check for input while the user is re-mapping the keys
+		if (game.getUI().getState() != UserInterface::State::customizeKeyboardScreen &&
+			game.getUI().getState() != UserInterface::State::customizeJoystickScreen) {
+			input.update(window);
+		}
 		
 		window.clear();
 		
@@ -108,11 +112,11 @@ int main(int argc, char * argv[]) {
 		
 		elapsedTime = gameClock.restart();
 		if (input.isFocused()) {
-			Map.update(window, elapsedTime);
+			game.update(window, elapsedTime);
 		}
 		
-		if (Map.getTeleporterCond()) {
-			Map.Reset();
+		if (game.getTeleporterCond()) {
+			game.Reset();
 		}
 
 		window.display();

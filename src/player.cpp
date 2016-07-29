@@ -172,7 +172,7 @@ void setSpeed(bool key1, bool key2, bool key3, bool collision, float & speed) {
 	}
 }
 
-void Player::update(Scene * pGM, const sf::Time & elapsedTime) {
+void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 	InputController * pInput {pGM->getPInput()};
 	tileController & tiles {pGM->getTileController()};
 	DetailGroup & details {pGM->getDetails()};

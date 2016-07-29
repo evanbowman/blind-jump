@@ -22,7 +22,7 @@
 #include <cmath>
 #include <array>
 
-int initEnemies(Scene * gm) {
+int initEnemies(Game * gm) {
 	constexpr static std::array<int, 4> targetLevel = {{
 	    4   /*Scoot*/,
 		5   /*Critter*/,

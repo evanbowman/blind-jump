@@ -17,7 +17,7 @@
 
 #pragma once
 
-class Scene;
+class Game;
 
-int initEnemies(Scene*);
+int initEnemies(Game*);
 

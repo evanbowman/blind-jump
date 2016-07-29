@@ -19,16 +19,6 @@
 #include <cmath>
 #include <iostream>
 
-enum Button { // Purposefully unscoped, used as array index, would require noisy casts
-	ButtonShoot,
-	ButtonAction,
-	ButtonPause,
-	ButtonLeft,
-	ButtonRight,
-	ButtonUp,
-	ButtonDown
-};
-
 InputController::InputController()
 	: keyMask{0},
 	  joystickMask{0}, 
@@ -45,7 +35,7 @@ InputController::InputController()
 {
 }
 
-void InputController::mapJoystickBtns() {
+void InputController::mapJoystickFromId() {
 	// Get information from the joystick to help identify it
 	sf::Joystick::Identification ident = sf::Joystick::getIdentification(0);
 	if (ident.vendorId == 1356 && ident.productId == 616) { // PS3 controller
@@ -53,6 +43,14 @@ void InputController::mapJoystickBtns() {
 		joystickMappings[ButtonAction] = 14;
 		joystickMappings[ButtonPause] = 4;
 	}
+}
+
+void InputController::mapKeyboardKey(sf::Keyboard::Key key, uint8_t indx) {
+	keyboardMappings[indx] = key;
+}
+
+void InputController::mapJoystickButton(unsigned int button, uint8_t indx) {
+	joystickMappings[indx] = button;
 }
 
 bool InputController::isFocused() const {
@@ -115,7 +113,7 @@ void InputController::update(sf::RenderWindow & window) {
 				keyMask &= 0xFFFE;
 			} else if (event.key.code == keyboardMappings[ButtonRight]) {
 				keyMask &= 0xFFFD;
-			} else if (event.key.code ==  keyboardMappings[ButtonUp]) {
+			} else if (event.key.code == keyboardMappings[ButtonUp]) {
 				keyMask &= 0xFFFB;
 			} else if (event.key.code == keyboardMappings[ButtonDown]) {
 				keyMask &= 0xFFF7;
@@ -174,7 +172,7 @@ void InputController::update(sf::RenderWindow & window) {
 			}
 		} else if (event.type == sf::Event::JoystickConnected) {
 			if (event.joystickConnect.joystickId == 0) {
-			    mapJoystickBtns();
+			    mapJoystickFromId();
 				joystickMask = 0x0000;
 			}
 		} else if (event.type == sf::Event::JoystickDisconnected) {

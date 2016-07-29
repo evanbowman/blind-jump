@@ -19,10 +19,8 @@
 #include <cmath>
 #include "player.hpp"
 
-UserInterface::UserInterface(float _xPos, float _yPos) :
+UserInterface::UserInterface() :
 	state{State::closed},
-	xPos{_xPos},
-	yPos{_yPos + 16},
 	selectorPosition{0},
 	timer{0},
 	timerAlt{0},
@@ -44,12 +42,11 @@ const UserInterface::State UserInterface::getState() const {
 	return state;
 }
 
-void UserInterface::update(sf::RenderWindow& window, Player & player, FontController & fonts, InputController * pInput, const sf::Time & elapsed) {
+void UserInterface::update(sf::RenderWindow & window, Player & player, FontController & fonts, InputController * pInput, const sf::Time & elapsed) {
 	bool action = pInput->actionPressed();
 	bool up = pInput->upPressed();
 	bool down = pInput->downPressed();
 	bool pause = pInput->pausePressed();
-	
 	switch (state) {
 	case State::closed:
 		if (pause) {
@@ -142,13 +139,11 @@ void UserInterface::update(sf::RenderWindow& window, Player & player, FontContro
 			size.y -= 0.5 * (size.y / temp);
 			pWorldView->setSize(size);
 		}
-			
 		if (desaturateAmount > 0.65f) {
 			desaturateAmount = 0.65f;
 			state = State::deathScreen;
 			timerAlt = 0.f;
 		}
-		// Need to define a scope since this is a switch statement...
 		{
 			uint8_t textAlpha = desaturateAmount * 255 + 89.25f;
 			fonts.drawDeathText(static_cast<unsigned char>(textAlpha), window);
@@ -199,11 +194,45 @@ void UserInterface::update(sf::RenderWindow& window, Player & player, FontContro
 			
 	case State::complete:
 		break;
-	}
-}
 
-void UserInterface::addItem(char newItem, EffectGroup & ef, float xStart, float yStart, FontController& fonts, Player& player) {
-	// TODO...
+	case State::settingsScreen:
+		// TODO: Display various settings, go to customization screens...
+		// if (...) -> selectorPosition = 0, state := customizeKeyboardScreen
+		// if (...) -> selectorposition = 0, state := customizeJoystickScreen
+		break;
+
+	case State::customizeKeyboardScreen:
+		// TODO: while in this state display text and select each heading accordingly
+		{
+			sf::Event event;
+			while (window.pollEvent(event)) {
+				if (event.type == sf::Event::KeyPressed) {
+					pInput->mapKeyboardKey(event.key.code, selectorPosition);
+					if (++selectorPosition > 7) {
+						state = State::settingsScreen;
+					}
+				}
+			}
+		}
+		break;
+
+	case State::customizeJoystickScreen:
+		// TODO: while in this state display text and select each heading accordingly
+		{
+			sf::Event event;
+			while (window.pollEvent(event)) {
+				if (event.type == sf::Event::JoystickButtonPressed) {
+					if (event.joystickButton.joystickId == 0) {
+						pInput->mapJoystickButton(event.joystickButton.button, selectorPosition);
+						if (++selectorPosition > 3) {
+							state = State::settingsScreen;
+						}
+					}
+				}
+			}
+		}
+		break;
+	}
 }
 
 void UserInterface::dispDeathSeq() {

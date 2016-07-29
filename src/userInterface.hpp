@@ -37,47 +37,30 @@ public:
 		complete,
 		menuScreenEntry,
 		menuScreenExit,
-		menuScreen
+		menuScreen,
+		customizeKeyboardScreen,
+		customizeJoystickScreen,
+		settingsScreen
 	};
-	UserInterface(float, float);
+	UserInterface();
 	void update(sf::RenderWindow &, Player &, FontController &, InputController *, const sf::Time &);
-	void addItem(char, EffectGroup &, float, float, FontController &, Player &);
-	
 	void dispDeathSeq();
 	bool isComplete();
 	bool canHeal;
-
 	bool isOpen() const;
-	
 	float getDesaturateAmount();
-	
-	bool isVisible();
-
 	const State getState() const;
-	
 	void reset();
 	void setEnemyValueCount(int);
-
 	bool blurEnabled();
 	bool desaturateEnabled();
 	float getBlurAmount();
-
 	void setView(sf::View *);
 	
 private:
 	State state;
-	float xPos, yPos;
-
 	int selectorPosition;
-	
 	int32_t timer, timerAlt;
-	
 	float blurAmount, desaturateAmount;
-
 	sf::View * pWorldView, cachedView;
-	
-	sf::Texture selectorShadowTexture;
-	sf::Sprite selectorShadowSprite;
-	
-	std::vector<sf::Sprite> textToDisplay;
 };

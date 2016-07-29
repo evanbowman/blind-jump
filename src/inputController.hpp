@@ -22,8 +22,17 @@
 
 class InputController {
 public:
+	enum Button {
+		ButtonShoot,
+		ButtonAction,
+		ButtonPause,
+		ButtonLeft,
+		ButtonRight,
+		ButtonUp,
+		ButtonDown
+	};
 	InputController();
-	void mapJoystickBtns();
+	void mapJoystickFromId();
 	bool isFocused() const;
 	bool pausePressed() const;
 	bool leftPressed() const;
@@ -33,7 +42,9 @@ public:
 	bool shootPressed() const;
 	bool actionPressed() const;
 	void update(sf::RenderWindow &);
-
+	void mapKeyboardKey(sf::Keyboard::Key, uint8_t);
+	void mapJoystickButton(unsigned int, uint8_t);
+	
 private:
 	uint32_t keyMask;
 	uint32_t joystickMask;

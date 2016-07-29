@@ -35,13 +35,12 @@ Coordinate pickLocation(std::vector<Coordinate>& emptyLocations) {
 	return c;
 }
 
-Scene::Scene(float _windowW, float _windowH, InputController * _pInput, FontController * _pFonts)
+Game::Game(float _windowW, float _windowH, InputController * _pInput, FontController * _pFonts)
 	: windowW{_windowW},
 	  windowH{_windowH},
 	  transitionState{TransitionState::None},
 	  pInput{_pInput},
 	  player{_windowW / 2, _windowH / 2},
-	  UI{_windowW / 2, _windowH / 2},
 	  pFonts{_pFonts},
 	  level{0},
 	  stashed{false},
@@ -143,7 +142,7 @@ void drawHBox(std::vector<T> & vec, sf::RenderWindow & target) {
 }
 #endif
 
-void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
+void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	target.clear(sf::Color::Transparent);
 
 	float xOffset{player.getWorldOffsetX()};
@@ -374,7 +373,7 @@ void Scene::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
     updateTransitions(xOffset, yOffset, elapsedTime, window);
 }
 
-void Scene::updateTransitions(float xOffset, float yOffset, const sf::Time & elapsedTime, sf::RenderWindow & window) {
+void Game::updateTransitions(float xOffset, float yOffset, const sf::Time & elapsedTime, sf::RenderWindow & window) {
 	switch (transitionState) {
 	case TransitionState::None:
 		{
@@ -525,7 +524,7 @@ void Scene::updateTransitions(float xOffset, float yOffset, const sf::Time & ela
 	}
 }
 
-void Scene::Reset() {
+void Game::Reset() {
 	level += 1;
 	pFonts->setWaypointText(level);
 	tiles.clear();
@@ -627,47 +626,47 @@ void Scene::Reset() {
 	}
 }
 
-DetailGroup & Scene::getDetails() {
+DetailGroup & Game::getDetails() {
 	return details;
 }
 
-enemyController & Scene::getEnemyController() {
+enemyController & Game::getEnemyController() {
 	return en;
 }
 
-tileController & Scene::getTileController() {
+tileController & Game::getTileController() {
 	return tiles;
 }
 
-Player & Scene::getPlayer() {
+Player & Game::getPlayer() {
 	return player;
 }
 
-EffectGroup & Scene::getEffects() {
+EffectGroup & Game::getEffects() {
 	return effectGroup;
 }
 
-InputController * Scene::getPInput() {
+InputController * Game::getPInput() {
 	return pInput;
 }
 
-ScreenShakeController * Scene::getPSSC() {
+ScreenShakeController * Game::getPSSC() {
 	return &ssc;
 }
 
-UserInterface & Scene::getUI() {
+UserInterface & Game::getUI() {
 	return UI;
 }
 
-FontController * Scene::getPFonts() {
+FontController * Game::getPFonts() {
 	return pFonts;
 }
 
-bool Scene::getTeleporterCond() {
+bool Game::getTeleporterCond() {
 	return teleporterCond;
 }
 
-int Scene::getLevel() {
+int Game::getLevel() {
 	return level;
 }
 

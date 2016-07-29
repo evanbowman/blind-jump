@@ -33,7 +33,7 @@
 #include "RenderType.hpp"
 #include "resourceHandler.hpp"
 
-class Scene {
+class Game {
 public:
 	enum class TransitionState {
 		None,
@@ -45,7 +45,7 @@ public:
 		EntryBeamDrop,
 	    EntryBeamFade
 	};
-	Scene(float, float, InputController *, FontController *);
+	Game(float, float, InputController *, FontController *);
 	void update(sf::RenderWindow &, sf::Time &);
 	void Reset();
 	bool getTeleporterCond();
