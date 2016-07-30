@@ -169,18 +169,18 @@ void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 			player.update(this, elapsedTime);
 			player.draw(gameObjects, gameShadows, elapsedTime);
 		}
-
+		
 		// If player was hit rumble the screen.
 		if (player.scrShakeState) {
 			ssc.rumble();
 		}
-
+		
 		glowSprs1.clear();
 		if (!UI.isOpen() || (UI.isOpen() && player.getState() == Player::State::dead)) {
 			effectGroup.update(xOffset, yOffset, elapsedTime);
 		}
 		drawGroup(effectGroup, gameObjects, glowSprs1);
-
+		
 		// Draw shadows to the target
 		if (!gameShadows.empty()) {
 			for (auto & element : gameShadows) {

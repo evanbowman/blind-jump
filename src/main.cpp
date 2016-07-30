@@ -87,7 +87,9 @@ int main(int argc, char * argv[]) {
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(80);
 
-	input.mapJoystickFromId();
+	if (sf::Joystick::isConnected(0)) {
+		input.mapJsById();
+	}
 	
 	sf::Image icon;
 	if (!icon.loadFromFile(resourcePath() + "gameIcon.png")) {

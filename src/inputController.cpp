@@ -22,7 +22,6 @@
 InputController::InputController()
 	: keyMask{0},
 	  joystickMask{0}, 
-	  joystickMappings{{0, 1, 2}},
 	  keyboardMappings{
 		  { sf::Keyboard::X,
 		    sf::Keyboard::Z,
@@ -35,13 +34,29 @@ InputController::InputController()
 {
 }
 
-void InputController::mapJoystickFromId() {
-	// Get information from the joystick to help identify it
+void InputController::mapJsById() {
+	enum Vendor {
+		Sony = 0x054C,
+		Microsoft = 0x045E
+	};
+	enum Product {
+		PS3Controller = 0x0268,
+		PS4Controller = 0x05C4,
+		XBOneController = 0x02D1
+	};
 	sf::Joystick::Identification ident = sf::Joystick::getIdentification(0);
-	if (ident.vendorId == 1356 && ident.productId == 616) { // PS3 controller
+	if (ident.vendorId == Sony && ident.productId == PS3Controller) {
 		joystickMappings[ButtonShoot] = 15;
 		joystickMappings[ButtonAction] = 14;
 		joystickMappings[ButtonPause] = 4;
+	} else if (ident.vendorId == Sony && ident.productId == PS4Controller) {
+		// TODO: Test PS4 Controller
+	} else if (ident.vendorId == Microsoft && ident.productId == XBOneController) {
+		// TODO: Test XBOne Controller
+	} else {
+		joystickMappings[ButtonShoot] = 0;
+		joystickMappings[ButtonAction] = 1;
+		joystickMappings[ButtonPause] = 2;
 	}
 }
 
@@ -147,12 +162,13 @@ void InputController::update(sf::RenderWindow & window) {
 				}
 			}
 		} else if (event.type == sf::Event::JoystickMoved) {
- 			if (event.joystickMove.axis == sf::Joystick::Axis::X) {
+			static const int deadZone = 15;
+			if (event.joystickMove.axis == sf::Joystick::Axis::X) {
 				float position = event.joystickMove.position;
-				if (position > 30) {
+				if (position > deadZone) {
  					joystickMask &= 0xFFFE;
 					joystickMask |= 0x0002;
-				} else if (position < -30) {
+				} else if (-position > deadZone) {
 					joystickMask &= 0xFFFD;
 					joystickMask |= 0x0001;
 				} else {
@@ -160,10 +176,10 @@ void InputController::update(sf::RenderWindow & window) {
 				}
 			} else if (event.joystickMove.axis == sf::Joystick::Axis::Y) {
 				float position = event.joystickMove.position;
-				if (position < -30) {
+				if (-position > deadZone) {
 					joystickMask &= 0xFFF7;
 					joystickMask |= 0x0004;
-				} else if (position > 30) {
+				} else if (position > deadZone) {
 					joystickMask &= 0xFFFB;
 					joystickMask |= 0x0008;
 				} else {
@@ -172,13 +188,11 @@ void InputController::update(sf::RenderWindow & window) {
 			}
 		} else if (event.type == sf::Event::JoystickConnected) {
 			if (event.joystickConnect.joystickId == 0) {
-			    mapJoystickFromId();
+			    mapJsById();
 				joystickMask = 0x0000;
 			}
 		} else if (event.type == sf::Event::JoystickDisconnected) {
 			if (event.joystickConnect.joystickId == 0) {
-				// If any bits are set when the joystick is diconnected, there will be no way to zero them because
-				// there will be no joystickmoved events. So zero them here...
 				joystickMask = 0x0000;
 			}
 		}

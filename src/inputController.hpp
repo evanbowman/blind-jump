@@ -32,7 +32,7 @@ public:
 		ButtonDown
 	};
 	InputController();
-	void mapJoystickFromId();
+	void mapJsById();
 	bool isFocused() const;
 	bool pausePressed() const;
 	bool leftPressed() const;
