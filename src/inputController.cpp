@@ -164,7 +164,7 @@ void InputController::update(sf::RenderWindow & window) {
 				}
 			}
 		} else if (event.type == sf::Event::JoystickMoved) {
-			static const int deadZone = 15;
+			static const int deadZone = 30;
 			if (event.joystickMove.axis == sf::Joystick::Axis::X) {
 				float position = event.joystickMove.position;
 				if (position > deadZone) {
