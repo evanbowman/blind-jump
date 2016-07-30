@@ -50,7 +50,9 @@ void InputController::mapJsById() {
 		joystickMappings[ButtonAction] = 14;
 		joystickMappings[ButtonPause] = 4;
 	} else if (ident.vendorId == Sony && ident.productId == PS4Controller) {
-		// TODO: Test PS4 Controller
+		joystickMappings[ButtonShoot] = 0;
+		joystickMappings[ButtonAction] = 1;
+		joystickMappings[ButtonPause] = 12;
 	} else if (ident.vendorId == Microsoft && ident.productId == XBOneController) {
 		// TODO: Test XBOne Controller
 	} else {
