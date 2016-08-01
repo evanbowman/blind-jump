@@ -50,7 +50,7 @@ public:
 	void clear();
 	sf::Sprite * getTurretSprites();
 	sf::Sprite * getChaserSprites();
-	void addTurret(Turret);
+	void addTurret(tileController *);
 	void addScoot(tileController *);
 	void addDasher(tileController *);
 	void addCritter(tileController *);

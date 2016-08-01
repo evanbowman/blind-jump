@@ -24,6 +24,7 @@
 #include "effectsController.hpp"
 #include "resourceHandler.hpp"
 #include "Framework/framework.hpp"
+#include "spriteSheet.hpp"
 
 //
 // TODO: Urgent: refactor
@@ -33,25 +34,22 @@ class Turret {
 private:
 	using HBox = Framework::HitBox<16, 32>;
 	HBox hitBox;
-	double xPos;
-	double yPos;
-	double xInit;
-	double yInit;
-	double playerPosX;
-	double playerPosY;
+	float xPos;
+	float yPos;
+	float xInit;
+	float yInit;
+	float playerPosX;
+	float playerPosY;
 	uint8_t imageIndex;
-	char spriteIndex;
 	int16_t disableCountdown;
-	bool visibility;
 	sf::Sprite turretSprites[10];
-	//Set the duration between animation frame transitions
+	SpriteSheet<0, 0, 16, 32> turretSheet;
+	SpriteSheet<0, 32, 16, 26> shadowSheet;
 	char animationCount;
 	bool active;
 	int activateTimer;
 	int16_t shotCountdown;
 	int16_t shotsFired;
-	double xOffset;
-	double yOffset;
 	float hp;
 	bool killFlag;
 	char colorTimer;
@@ -59,21 +57,20 @@ private:
 	float colorAmount;
 	
 public:
-	Turret(sf::Sprite spr[10]);
+	Turret(const sf::Texture &, float, float, float, float);
 	const HBox & getHitBox() const;
-	void setPosition(double, double);
-	sf::Sprite* getShadow();
-	sf::Sprite* getSprite(sf::Time &);
+	void setPosition(float, float);
+	const sf::Sprite & getShadow();
+	const sf::Sprite & getSprite();
+	void update(const sf::Time &);
 	void updateShots(EffectGroup &, FontController&);
-	double getXinit();
-	double getYinit();
+	float getXinit();
+	float getYinit();
 	bool getKillFlag();
-	void setInitPosition(double, double);
-	double getPlayerPosX();
-	double getPlayerPosY();
-	void setPlayerPos(double, double);
-	double getXpos();
-	double getYpos();
+	float getPlayerPosX();
+	float getPlayerPosY();
+	float getXpos();
+	float getYpos();
 	bool colored();
 	float getColorAmount();
 };

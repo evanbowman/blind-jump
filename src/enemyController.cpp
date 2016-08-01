@@ -50,11 +50,13 @@ void enemyController::update(drawableVec & gameObjects, drawableVec & gameShadow
 			if (element.getXpos() > -64 && element.getXpos() < windowW + 64 && element.getYpos() > -64 && element.getYpos() < windowH + 64) {
 				// Get the enemy's shadow
 				std::tuple<sf::Sprite, float, Rendertype, float> shadow;
-				std::get<0>(shadow) = *element.getShadow();
+				std::get<0>(shadow) = element.getShadow();
 				gameShadows.push_back(shadow);
 
+				element.update(elapsedTime);
+
 				std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
-				std::get<0>(tSpr) = *element.getSprite(elapsedTime);
+				std::get<0>(tSpr) = element.getSprite();
 				std::get<1>(tSpr) = element.getYpos();
 				
 				if (element.colored()) {
@@ -190,8 +192,14 @@ sf::Sprite * enemyController::getTurretSprites() {
 	return turretSprites;
 }
 
-void enemyController::addTurret(Turret t) {
-	turrets.push_back(t);
+void enemyController::addTurret(tileController * pTiles) {
+	auto pCoordVec = pTiles->getEmptyLocations();
+	int locationSelect = (std::abs(static_cast<int>(globalRNG())) % 2) ? std::abs(static_cast<int>(globalRNG())) % (pCoordVec->size() / 2) : std::abs(static_cast<int>(globalRNG())) % (pCoordVec->size());
+	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
+	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
+	turrets.emplace_back(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xInit, yInit, windowW / 2, windowH / 2);
+	(*pCoordVec)[locationSelect] = pCoordVec->back();
+	pCoordVec->pop_back();
 }
 
 void enemyController::addScoot(tileController * pTiles) {

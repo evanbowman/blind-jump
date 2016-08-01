@@ -24,7 +24,7 @@ EnemyShot::EnemyShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr,
 	glowSprite.setTexture(glowTxtr);
 	glowSprite.setOrigin(22.5, 22.5);
 	spriteSheet.setTexture(mainTxtr);
-	direction = (dir - 270) * (3.14 / 180);
+	direction = dir * (3.14 / 180);
 }
 
 void EnemyShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {

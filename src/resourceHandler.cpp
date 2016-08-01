@@ -54,43 +54,24 @@ int loadFont(const char * fname, ResourceHandler::Font id, std::array<sf::Font, 
 int ResourceHandler::load() {
 	int errs = 0;
 	errs += loadTexture("gameObjects.png", Texture::gameObjects, textures);
-
 	errs += loadTexture("vignetteMask.png", Texture::vignette, textures);
-
 	errs += loadTexture("vignetteShadow.png", Texture::vignetteShadow, textures);
-
 	errs += loadTexture("lampLight.png", Texture::lamplight, textures);
-
 	errs += loadTexture("introLevel.png", Texture::introLevel, textures);
-
 	errs += loadTexture("teleporterGlow.png", Texture::teleporterGlow, textures);
-
 	errs += loadTexture("introWall.png", Texture::introWall, textures);
-
 	errs += loadTexture("redFloorGlow.png", Texture::redglow, textures);
-
 	errs += loadTexture("blueFloorGlow.png", Texture::blueglow, textures);
-
 	errs += loadTexture("fireExplosionGlow.png", Texture::fireExplosionGlow, textures);
-
 	errs += loadTexture("whiteFloorGlow.png", Texture::whiteGlow, textures);
-
 	errs += loadTexture("charger_enemy_shadow.png", Texture::scootShadow, textures);
-
 	errs += loadShader("color.frag", Shader::color, shaders);
-
 	errs += loadShader("blur.frag", Shader::blur, shaders);
-
 	errs += loadShader("desaturate.frag", Shader::desaturate, shaders);
-
 	errs += loadFont("Cornerstone.ttf", Font::cornerstone, fonts);
-
 	errs += loadImage("soilTileset.png", Image::soilTileset, images);
-
 	errs += loadImage("grassSet.png", Image::grassSet1, images);
-
 	errs += loadImage("grassSetEdge.png", Image::grassSet2, images);
-
 	return errs;
 }
 

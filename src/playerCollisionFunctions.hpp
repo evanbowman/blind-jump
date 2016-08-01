@@ -33,7 +33,7 @@ inline uint_fast8_t checkCollisionWall(std::vector<wall> & walls, float posY, fl
 	return collisionMask;
 }
 
-inline uint_fast8_t checkCollisionChest (std::vector<TreasureChest> chests, float posY, float posX) {
+inline uint_fast8_t checkCollisionChest(std::vector<TreasureChest> chests, float posY, float posX) {
 	uint_fast8_t collisionMask = 0;
 	for (auto & chest : chests) {
 		if ((posX + 6 < (chest.getPosition().x + 16) && (posX + 6 > (chest.getPosition().x))) && (fabs((posY + 16) - chest.getPosition().y) <= 8))  {

@@ -107,7 +107,7 @@ int initEnemies(Game * gm) {
 				break;
 				
 			case 3:
-				addTurret(tiles.mapArray, tiles.descriptionArray, enemies, tiles.posX, tiles.posY, gm->windowW, gm->windowH, tiles.emptyMapLocations);
+				enemies.addTurret(&tiles);
 				count += 8;
 				break;
 				

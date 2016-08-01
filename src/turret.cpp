@@ -19,35 +19,34 @@
 #include <cmath>
 #include "angleFunction.hpp"
 
-Turret::Turret(sf::Sprite spr[10]) {
-	xPos = 0;
-	yPos = 0;
-	xInit = 0;
-	yInit = 0;
-	visibility = 1;
-	imageIndex = 0;
-	//Save all the input sprites, we'll need to return them later for drawing to the game window
-	for (int i = 0; i < 10; i++) {
-		turretSprites[i] = spr[i];
-	}
-	playerPosX = 0;
-	playerPosY = 0;
-	//What stage of the animation is the turret in? Lets keep track of it:
-	animationCount = 0;
-	active = 0;
-	//How long the sprite waits before turning on, in case the player spawns nearby
-	activateTimer = 120;
-	shotCountdown = 40;
-	shotsFired = 0;
-	hp = 6;
-	killFlag = 0;
-	isColored = 0;
-	colorTimer = 0.f;
-	colorAmount = 0.f;
+Turret::Turret(const sf::Texture & gameObjects, float _xInit, float _yInit, float _playerPosX, float _playerPosY) :
+	xPos{0.f},
+	yPos{0.f},
+	xInit{_xInit},
+	yInit{_yInit},
+	playerPosX{_playerPosX},
+	playerPosY{_playerPosY},
+	imageIndex{0},
+	animationCount{0},
+	active{0},
+	activateTimer{120},
+	shotCountdown{40},
+	shotsFired{0},
+	hp{6},
+	killFlag{0},
+	colorTimer{0},
+	isColored{0},
+	colorAmount{0}
+{
+	turretSheet.setTexture(gameObjects);
+	shadowSheet.setTexture(gameObjects);
 }
 
-//Returns the turret's sprite based on its animation sequence
-sf::Sprite* Turret::getSprite(sf::Time & elapsedTime) {
+const sf::Sprite & Turret::getSprite() {
+	return turretSheet[imageIndex];
+}
+
+void Turret::update(const sf::Time & elapsedTime) {
 	if (isColored) {
 		colorTimer += elapsedTime.asMilliseconds();
 		if (colorTimer > 20.f) {
@@ -95,33 +94,23 @@ sf::Sprite* Turret::getSprite(sf::Time & elapsedTime) {
 			active = 1;
 		}
 	}
-	return &turretSprites[imageIndex];
 }
 
 const Turret::HBox & Turret::getHitBox() const {
 	return hitBox;
 }
 
-void Turret::setPosition(double x, double y) {
+void Turret::setPosition(float x, float y) {
 	xPos = x;
 	yPos = y;
 	hitBox.setPosition(x, y);
-	xOffset = x - xInit;
-	yOffset = y - yInit;
-	for (int i = 0; i < 10; i++) {
-		if (i > 4) {
-			turretSprites[i].setPosition(x, y + 18);
-		}
-		else {
-			turretSprites[i].setPosition(x, y);
-		}
-		
-	}
+	turretSheet.setPosition(x, y);
+	shadowSheet.setPosition(x, y + 18);
 }
 
 //Returns the turret's shadow sprite
-sf::Sprite * Turret::getShadow() {
-	return &turretSprites[imageIndex + 5];
+const sf::Sprite & Turret::getShadow() {
+	return shadowSheet[imageIndex];
 }
 
 void Turret::updateShots(EffectGroup & effects, FontController & fonts) {
@@ -134,7 +123,7 @@ void Turret::updateShots(EffectGroup & effects, FontController & fonts) {
 			//Create a shot object with an angle equal to the angle between the player and the turret
 			effects.add<6>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 						   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
-						   xInit, yInit, angleFunction(xPos + 18, yPos + 6, playerPosX, playerPosY));
+						   xInit, yInit, angleFunction(playerPosX, playerPosY, xPos + 18, yPos + 6));
 			//Increment the number of shots fired
 			shotsFired++;
 			//Reset the countdown timer
@@ -170,7 +159,7 @@ void Turret::updateShots(EffectGroup & effects, FontController & fonts) {
 		} else {
 		    effects.add<5>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::blueglow),
-					   xInit, yInit + 4, Powerup::Type::Heart);
+					   xInit, yInit + 4, Powerup::Type::Coin);
 		}
 		effects.add<2>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::fireExplosionGlow),
@@ -182,37 +171,27 @@ bool Turret::getKillFlag() {
 	return killFlag;
 }
 
-double Turret::getXinit() {
+float Turret::getXinit() {
 	return xInit;
 }
 
-double Turret::getYinit() {
+float Turret::getYinit() {
 	return yInit;
 }
 
-void Turret::setInitPosition(double x, double y) {
-	xInit = x;
-	yInit = y;
-}
-
-double Turret::getPlayerPosX() {
+float Turret::getPlayerPosX() {
 	return playerPosX;
 }
 
-double Turret::getPlayerPosY() {
+float Turret::getPlayerPosY() {
 	return playerPosY;
 }
 
-void Turret::setPlayerPos(double x, double y) {
-	playerPosX = x / 2;
-	playerPosY = y / 2;
-}
-
-double Turret::getXpos() {
+float Turret::getXpos() {
 	return xPos;
 }
 
-double Turret::getYpos() {
+float Turret::getYpos() {
 	return yPos;
 }
 

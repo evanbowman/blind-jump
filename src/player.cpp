@@ -1,3 +1,4 @@
+
 //========================================================================//
 // Copyright (C) 2016 Evan Bowman                                         //
 //                                                                        //
@@ -277,7 +278,21 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 		upPrevious = up;
 		downPrevious = down;
 		leftPrevious = left;
-		rightPrevious = right;	
+		rightPrevious = right;
+		// If the action button is pressed, open nearby chests
+		if (state == State::nominal) {
+			std::vector<TreasureChest> & chests = details.get<1>();
+			for (auto & chest : chests) {
+				if (std::abs(xPos - chest.getPosition().x) < 32 &&
+					std::abs(yPos - chest.getPosition().y) < 26 &&
+					chest.getState() == TreasureChest::State::closed &&
+					action) {
+
+					chest.setState(TreasureChest::State::opening);
+					// TODO: Opening chest should change player and/or UI state
+				}
+			}
+		}
 		break;
 
 	case State::prepdash:

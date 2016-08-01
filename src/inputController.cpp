@@ -46,11 +46,11 @@ void InputController::mapJsById() {
 	};
 	sf::Joystick::Identification ident = sf::Joystick::getIdentification(0);
 	if (ident.vendorId == Sony && ident.productId == PS3Controller) {
-		joystickMappings[ButtonShoot] = 15;
+		joystickMappings[ButtonShoot] = 11;
 		joystickMappings[ButtonAction] = 14;
-		joystickMappings[ButtonPause] = 4;
+		joystickMappings[ButtonPause] = 16;
 	} else if (ident.vendorId == Sony && ident.productId == PS4Controller) {
-		joystickMappings[ButtonShoot] = 0;
+		joystickMappings[ButtonShoot] = 5;
 		joystickMappings[ButtonAction] = 1;
 		joystickMappings[ButtonPause] = 12;
 	} else if (ident.vendorId == Microsoft && ident.productId == XBOneController) {

@@ -26,7 +26,7 @@ Teleporter::Teleporter(float _xInit, float _yInit, const sf::Texture & mainTxtr,
 	}
 	glowSprite.setTexture(glowTxtr);
 	glowSprite.setOrigin(200, 200);
-	TeleporterSprites[0].setTextureRect(sf::IntRect(752, 76, 34, 29));
+	TeleporterSprites[0].setTextureRect(sf::IntRect(390, 224, 34, 29));
 	TeleporterSprites[1].setTextureRect(sf::IntRect(174, 195, 34, 29));
 }
 
