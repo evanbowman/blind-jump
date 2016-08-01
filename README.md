@@ -4,7 +4,7 @@ Blind Jump is a procedurally generated space adventure game that I've been worki
 
 ## Installation
 
-This project uses make and makedepend as a build system. Currently, the game is Mac only, but uses cross-platform libraries and could easily be ported (uses SFML 2.3, required to compile project). In bash:
+This project uses make and makedepend as a build system. Currently, the game is available on Unix-like systems, but it uses cross-platform libraries and could easily be ported (uses SFML 2.3, required to compile project). In bash:
 
 Resolve dependencies
 ```bash
