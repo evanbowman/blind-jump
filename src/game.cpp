@@ -24,7 +24,7 @@
 #include "pillarPlacement.h"
 #include "math.h"
 #include "enemyCreationFunctions.hpp"
-#include "scene.hpp"
+#include "game.hpp"
 #include "easingTemplates.hpp"
 
 Coordinate pickLocation(std::vector<Coordinate>& emptyLocations) {
@@ -534,9 +534,8 @@ void Game::Reset() {
 	player.setWorldOffsetY(0);
 	en.clear();
 	teleporterCond = 0;
-	
+
 	set = tileController::Tileset::intro;
-	
 	if (level == 0) {
 		set = tileController::Tileset::intro;
 	} else {
@@ -547,10 +546,10 @@ void Game::Reset() {
 	
 	if (set != tileController::Tileset::intro) {
 		//Now call the mapping function again to generate a new map, and make sure it's large enough
-		int count = generateMap(tiles.mapArray);
-			while (count < 150) {
+		int count;
+		do {
 			count = generateMap(tiles.mapArray);
-		}
+		} while (count < 150);
 	}
 	
 	tiles.rebuild(set);

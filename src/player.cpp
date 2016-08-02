@@ -22,7 +22,7 @@
 #include "playerCollisionFunctions.hpp"
 #include "wall.hpp"
 #include <tuple>
-#include "scene.hpp"
+#include "game.hpp"
 
 Player::Player(float _xPos, float _yPos)
 	: gun{},

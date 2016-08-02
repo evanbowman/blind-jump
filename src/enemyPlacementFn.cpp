@@ -17,7 +17,7 @@
 
 #include <stdio.h>
 #include "enemyPlacementFn.hpp"
-#include "scene.hpp"
+#include "game.hpp"
 #include "enemyCreationFunctions.hpp"
 #include <cmath>
 #include <array>

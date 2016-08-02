@@ -24,7 +24,7 @@
 #include "backgroundHandler.hpp"
 #include <cmath>
 #include <SFML/Window.hpp>
-#include "scene.hpp"
+#include "game.hpp"
 #include "ResourcePath.hpp"
 #include "inputController.hpp"
 #include "resourceHandler.hpp"
