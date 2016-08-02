@@ -39,9 +39,7 @@ std::mt19937 globalRNG;
 
 int main(int argc, char * argv[]) {
 	seedRNG();
-	if (globalResourceHandler.load()) {
-		return EXIT_FAILURE;
-	}
+	if (globalResourceHandler.load()) return EXIT_FAILURE;
 	// Since the graphics are pixel art it's okay to use upsampled textures for everything except font rendering
 	sf::Vector2f drawableRegionSize = getDrawableRegionSize();
 	sf::ContextSettings settings;

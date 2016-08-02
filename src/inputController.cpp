@@ -32,6 +32,9 @@ InputController::InputController()
 			sf::Keyboard::Down }
 	  }
 {
+	if (sf::Joystick::isConnected(0)) {
+		input.mapJsById();
+	}
 }
 
 void InputController::mapJsById() {
