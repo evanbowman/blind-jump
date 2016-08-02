@@ -47,6 +47,7 @@ public:
 	};
 	Game(float, float, InputController *, FontController *);
 	void update(sf::RenderWindow &, sf::Time &);
+	void draw(sf::RenderWindow &, sf::Time &);
 	void Reset();
 	bool getTeleporterCond();
 	int getLevel();

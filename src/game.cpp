@@ -133,71 +133,25 @@ Game::Game(float _windowW, float _windowH, InputController * _pInput, FontContro
 	vignetteSprite.setColor(sf::Color(255, 255, 255));
 }
 
-#ifdef DEBUG
-template<typename T>
-void drawHBox(std::vector<T> & vec, sf::RenderWindow & target) {
-	for (auto & element : vec) {
-		target.draw(element.getHitBox().getDrawableRect());
-	}
-}
-#endif
-
-void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
+void Game::draw(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	target.clear(sf::Color::Transparent);
-
-	float xOffset{player.getWorldOffsetX()};
-	float yOffset{player.getWorldOffsetY()};
-	
-	// Blurring is graphics intensive, the game caches frames in a RenderTexture when possible
-	if (stashed && UI.getState() != UserInterface::State::statsScreen && UI.getState() != UserInterface::State::menuScreen) {
-		stashed = false;
-	}
-
 	if (!stashed || preload) {
-		bkg.setOffset(xOffset, yOffset);
 		bkg.drawBackground(target);
-
-		tiles.drawTiles(target, &glowSprs1, &glowSprs2, level, xOffset, yOffset);
-
+		tiles.draw(target, &glowSprs1, &glowSprs2, level);
 		glowSprs2.clear();
-		details.update(xOffset, yOffset, elapsedTime);
-	    drawGroup(details, gameObjects, gameShadows, glowSprs1, glowSprs2, target);
-
-		// TODO: clean up enemyController::update()...
-		en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, &ssc, *pFonts, elapsedTime);
+		glowSprs1.clear();
+		drawGroup(details, gameObjects, gameShadows, glowSprs1, glowSprs2, target);
 		if (player.visible) {
-			player.update(this, elapsedTime);
 			player.draw(gameObjects, gameShadows, elapsedTime);
 		}
-		
-		// If player was hit rumble the screen.
-		if (player.scrShakeState) {
-			ssc.rumble();
-		}
-		
-		glowSprs1.clear();
-		if (!UI.isOpen() || (UI.isOpen() && player.getState() == Player::State::dead)) {
-			effectGroup.update(xOffset, yOffset, elapsedTime);
-		}
 		drawGroup(effectGroup, gameObjects, glowSprs1);
-		
-		// Draw shadows to the target
 		if (!gameShadows.empty()) {
 			for (auto & element : gameShadows) {
 				target.draw(std::get<0>(element));
 			}
 		}
-		gameShadows.clear();
-		// Sort the game objects based on y-position for z-ordering
-		std::sort(gameObjects.begin(), gameObjects.end(), [](const std::tuple<sf::Sprite, float, Rendertype, float> & arg1, const std::tuple<sf::Sprite, float, Rendertype, float> & arg2) {
-				return (std::get<1>(arg1) < std::get<1>(arg2));
-			});
 		lightingMap.clear(sf::Color::Transparent);
 		window.setView(worldView);
-		
-		//===========================================================//
-		// Object shading                                            //
-		//===========================================================//
 		if (!gameObjects.empty()) {
 			sf::Shader & colorShader = globalResourceHandler.getShader(ResourceHandler::Shader::color);
 			for (auto & element : gameObjects) {
@@ -237,30 +191,23 @@ void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 				}
 			}
 		}
-	
 		sf::Color blendAmount(185, 185, 185, 255);
 		sf::Sprite tempSprite;
 		for (auto element : glowSprs2) {
 			tempSprite = *element;
 			tempSprite.setColor(blendAmount);
 			tempSprite.setPosition(tempSprite.getPosition().x, tempSprite.getPosition().y - 12);
-			lightingMap.draw(tempSprite, sf::BlendMode(sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One, sf::BlendMode::Add, sf::BlendMode::DstAlpha, sf::BlendMode::Zero, sf::BlendMode::Add)));
+			lightingMap.draw(tempSprite, sf::BlendMode(sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One,
+																	 sf::BlendMode::Add, sf::BlendMode::DstAlpha,
+																	 sf::BlendMode::Zero, sf::BlendMode::Add)));
 		}
-	
 		lightingMap.display();
 		target.draw(sf::Sprite(lightingMap.getTexture()));
-	
-		// Clear out the vectors for the next round of drawing
-		gameObjects.clear();
 		bkg.drawForeground(target);
 		target.draw(vignetteSprite, sf::BlendMultiply);
 		target.draw(vignetteShadowSpr);
 		target.display();
 	}
-	
-	//===========================================================//
-	// Post Processing Effects                                   //
-	//===========================================================//
 	if (UI.blurEnabled() && UI.desaturateEnabled()) {
 		if (stashed) {
 			window.setView(worldView);
@@ -323,26 +270,53 @@ void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 	} else {
 		window.draw(sf::Sprite(target.getTexture()));
 	}
-
-	// In debug mode draw visual hitboxes
-	#ifdef DEBUG
-	drawHBox(effectGroup.get<4>(), window);
-	drawHBox(effectGroup.get<5>(), window);
-	drawHBox(effectGroup.get<6>(), window);
-	drawHBox(effectGroup.get<7>(), window);
-	drawHBox(effectGroup.get<8>(), window);
-	drawHBox(effectGroup.get<9>(), window);
-	window.draw(player.getHitBox().getDrawableRect());
-	drawHBox(en.getCritters(), window);
-	drawHBox(en.getScoots(), window);
-	drawHBox(en.getDashers(), window);
-	drawHBox(en.getTurrets(), window);
-	#endif
-
-	//===========================================================//
-	// UI effects & fonts                                        //
-	//===========================================================//
 	if (player.getState() == Player::State::dead) {
+		UI.draw(window, *pFonts);
+	} else {
+		if (transitionState == TransitionState::None) {
+			UI.draw(window, *pFonts);
+		}
+		pFonts->print(window);
+	}
+	window.setView(worldView);
+    // updateTransitions(xOffset, yOffset, elapsedTime, window);
+}
+
+void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
+	float xOffset{player.getWorldOffsetX()};
+	float yOffset{player.getWorldOffsetY()};
+	// Blurring is graphics intensive, the game caches frames in a RenderTexture when possible
+	if (stashed && UI.getState() != UserInterface::State::statsScreen && UI.getState() != UserInterface::State::menuScreen) {
+		stashed = false;
+	}
+	if (!stashed || preload) {
+		// Clear out previous vectors for the next round of drawing
+		gameShadows.clear();
+		gameObjects.clear();
+		// Update positions and repopulate buffers
+		bkg.setOffset(xOffset, yOffset);
+		tiles.update(xOffset, yOffset);
+		details.update(xOffset, yOffset, elapsedTime);
+		en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, &ssc, *pFonts, elapsedTime);
+		if (player.visible) {
+			player.update(this, elapsedTime);
+		}
+		
+		// If player was hit rumble the screen.
+		if (player.scrShakeState) {
+			ssc.rumble();
+		}
+		
+		if (!UI.isOpen() || (UI.isOpen() && player.getState() == Player::State::dead)) {
+			effectGroup.update(xOffset, yOffset, elapsedTime);
+		}
+
+		// Sort the game objects based on y-position for z-ordering
+		std::sort(gameObjects.begin(), gameObjects.end(), [](const std::tuple<sf::Sprite, float, Rendertype, float> & arg1, const std::tuple<sf::Sprite, float, Rendertype, float> & arg2) {
+				return (std::get<1>(arg1) < std::get<1>(arg2));
+			});
+	}
+    if (player.getState() == Player::State::dead) {
 		UI.dispDeathSeq();
 		// If the death sequence is complete and the UI controller is finished playing its animation
 		if (UI.isComplete()) {
@@ -363,14 +337,9 @@ void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 			UI.update(window, player, *pFonts, pInput, elapsedTime);
 		}
 		pFonts->updateHealth(player.getHealth());
-		pFonts->print(window);
 	}
 	// Update the screen shake controller
 	ssc.update(player);
-	
-	window.setView(worldView);
-
-    updateTransitions(xOffset, yOffset, elapsedTime, window);
 }
 
 void Game::updateTransitions(float xOffset, float yOffset, const sf::Time & elapsedTime, sf::RenderWindow & window) {

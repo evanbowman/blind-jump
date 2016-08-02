@@ -38,7 +38,8 @@ public:
 	sf::Image grassSetEdge[2];
 
 	tileController();
-	void drawTiles(sf::RenderTexture&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, int level, const float, const float);
+	void update(const float, const float);
+	void draw(sf::RenderTexture&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, int level);
 	float posX;
 	float posY;
 	void setPosition(float, float);

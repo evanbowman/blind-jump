@@ -178,14 +178,16 @@ tileController::tileController() : posX{-72}, posY{-476}, windowH{0}, windowW{0}
 	shadow.setFillColor(sf::Color(188, 188, 198, 255));
 }
 
-void tileController::drawTiles(sf::RenderTexture& window, std::vector<sf::Sprite*>* glowSprites, std::vector<sf::Sprite*>* glowSprites2, int level, const float xOffset, const float yOffset) {
+void tileController::update(const float xOffset, const float yOffset) {
 	for (auto & element : walls) {
 		element.setPosition(element.getXinit() + xOffset + posX, element.getYinit() + yOffset + posY);
 	}
 	transitionLvSpr.setPosition(posX + xOffset, posY + yOffset);
 	mapSprite1.setPosition(posX + xOffset, posY + yOffset);
 	mapSprite2.setPosition(posX + xOffset, posY + yOffset);
-	
+}
+
+void tileController::draw(sf::RenderTexture& window, std::vector<sf::Sprite*>* glowSprites, std::vector<sf::Sprite*>* glowSprites2, int level) {
 	// Clear out the RenderTexture
 	rt.clear(sf::Color::Transparent);
 	// Draw the map sprite to the texture
@@ -203,11 +205,11 @@ void tileController::drawTiles(sf::RenderTexture& window, std::vector<sf::Sprite
 													  sf::BlendMode::Zero, sf::BlendMode::Add)));
 	}
 	
-	for (auto & element : *glowSprites2) {
-		rt.draw(*element, sf::BlendMode(sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One,
-													  sf::BlendMode::Add, sf::BlendMode::DstAlpha,
-													  sf::BlendMode::Zero, sf::BlendMode::Add)));
-	}
+	// for (auto & element : *glowSprites2) {
+	// 	rt.draw(*element, sf::BlendMode(sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One,
+	// 												  sf::BlendMode::Add, sf::BlendMode::DstAlpha,
+	// 												  sf::BlendMode::Zero, sf::BlendMode::Add)));
+	// }
 
 	// Set the render texture to display
 	rt.display();

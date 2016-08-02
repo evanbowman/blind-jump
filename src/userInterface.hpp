@@ -44,6 +44,7 @@ public:
 	};
 	UserInterface();
 	void update(sf::RenderWindow &, Player &, FontController &, InputController *, const sf::Time &);
+	void draw(sf::RenderWindow &, FontController &);
 	void dispDeathSeq();
 	bool isComplete();
 	bool canHeal;

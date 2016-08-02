@@ -30,6 +30,7 @@
 #include "resourceHandler.hpp"
 #include <iostream>
 #include "rng.hpp"
+#include <thread>
 
 // Many classes need to access the resource handler, and its accessors return only const references
 ResourceHandler globalResourceHandler;
@@ -101,6 +102,15 @@ int main(int argc, char * argv[]) {
 	sf::Clock gameClock;
 	sf::Time elapsedTime;
 
+	// TODO: update visuals on a separate thread (sounds tough!)
+	// auto updateVisuals = [](Game * pGame, sf::RenderWindow * pWindow) {
+	// 	while (pWindow->isOpen()) {
+	// 		pGame->getLevel();
+	// 	}
+	// };
+	
+	// std::thread graphicsThread(updateVisuals, &game, &window);
+	
 	while (window.isOpen()) {
 		// Do not update the inputController to check for input while the user is re-mapping the keys
 		if (game.getUI().getState() != UserInterface::State::customizeKeyboardScreen &&
@@ -115,6 +125,7 @@ int main(int argc, char * argv[]) {
 		elapsedTime = gameClock.restart();
 		if (input.isFocused()) {
 			game.update(window, elapsedTime);
+			game.draw(window, elapsedTime);
 		}
 		
 		if (game.getTeleporterCond()) {
@@ -124,6 +135,8 @@ int main(int argc, char * argv[]) {
 		window.display();
 	}
 
-	return EXIT_SUCCESS;
+	// graphicsThread.join();
+
+	return 0;
 }
 

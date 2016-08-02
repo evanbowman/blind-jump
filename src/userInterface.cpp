@@ -42,6 +42,33 @@ const UserInterface::State UserInterface::getState() const {
 	return state;
 }
 
+void UserInterface::draw(sf::RenderWindow & window, FontController & fonts) {
+	switch (state) {
+	case State::deathScreenEntry:
+		{
+			uint8_t textAlpha = desaturateAmount * 255 + 89.25f;
+			fonts.drawDeathText(static_cast<unsigned char>(textAlpha), window);
+		}
+		break;
+
+	case State::deathScreen:
+		fonts.drawDeathText(255, window);
+		break;
+
+	case State::deathScreenExit:
+		{
+			uint8_t textAlpha = Easing::easeOut<3>(timer, 300) * 255;
+			if (textAlpha < 0) {
+				fonts.drawDeathText(textAlpha, window);
+			}
+		}
+		break;
+
+	default:
+		break;
+	}
+}
+
 void UserInterface::update(sf::RenderWindow & window, Player & player, FontController & fonts, InputController * pInput, const sf::Time & elapsed) {
 	bool action = pInput->actionPressed();
 	bool up = pInput->upPressed();
@@ -144,14 +171,9 @@ void UserInterface::update(sf::RenderWindow & window, Player & player, FontContr
 			state = State::deathScreen;
 			timerAlt = 0.f;
 		}
-		{
-			uint8_t textAlpha = desaturateAmount * 255 + 89.25f;
-			fonts.drawDeathText(static_cast<unsigned char>(textAlpha), window);
-		}
 		break;
 			
 	case State::deathScreen:
-		fonts.drawDeathText(255, window);
 		timer += elapsed.asMilliseconds();
 		timerAlt += elapsed.asMilliseconds();
 		if (timer > 20) {
@@ -172,12 +194,6 @@ void UserInterface::update(sf::RenderWindow & window, Player & player, FontContr
 	case State::deathScreenExit:
 		timer += elapsed.asMilliseconds();
 		blurAmount = Easing::easeIn<3>(timer, 300);
-		{
-			uint8_t textAlpha = Easing::easeOut<3>(timer, 300) * 255;
-			if (textAlpha < 0) {
-				fonts.drawDeathText(textAlpha, window);
-			}
-		}
 		if (timer >= 300) {
 			timer = 0;
 			blurAmount = 1.f;
