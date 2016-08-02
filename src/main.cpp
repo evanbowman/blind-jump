@@ -86,7 +86,6 @@ int main(int argc, char * argv[]) {
 	sf::RenderWindow window(sf::VideoMode(desktop.width, desktop.height), "Blind Jump", sf::Style::Fullscreen, settings);
 	window.setMouseCursorVisible(false);
 	window.setVerticalSyncEnabled(true);
-	window.setFramerateLimit(80);
 
 	if (sf::Joystick::isConnected(0)) {
 		input.mapJsById();
@@ -111,9 +110,12 @@ int main(int argc, char * argv[]) {
 			pWindow->display();
 		}
 	};
-	
-	std::thread graphicsThread(updateVisuals, &game, &window, &view);
-	
+	// TODO: Check hardware concurrency, if single-core processor do things serially
+	try {
+		std::thread graphicsThread(updateVisuals, &game, &window, &view);
+	} catch (...) {
+		// TODO: Log the error
+	}
 	while (window.isOpen()) {
 		// Do not update the inputController to check for input while the user is re-mapping the keys
 		if (game.getUI().getState() != UserInterface::State::customizeKeyboardScreen &&
