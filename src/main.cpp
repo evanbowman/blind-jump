@@ -20,47 +20,22 @@
 
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
-#include "player.hpp"
-#include "backgroundHandler.hpp"
+#include <thread>
 #include <cmath>
 #include <SFML/Window.hpp>
+#include "player.hpp"
+#include "backgroundHandler.hpp"
 #include "game.hpp"
 #include "ResourcePath.hpp"
 #include "inputController.hpp"
 #include "resourceHandler.hpp"
-#include <iostream>
 #include "rng.hpp"
-#include <thread>
+#include "aspectScaling.hpp"
+#include "alias.hpp"
 
 ResourceHandler globalResourceHandler;
 
 std::mt19937 globalRNG;
-
-sf::Vector2f getDrawableRegionSize() {
-	sf::Vector2f drawableRegionSize;
-	float aspectRatio = static_cast<float>(sf::VideoMode::getDesktopMode().width) /
-		static_cast<float>(sf::VideoMode::getDesktopMode().height);
-	drawableRegionSize.x = 450.f;
-	drawableRegionSize.y = 450.f;
-	float windowAspect;
-	// TODO: Binary search
-	if (aspectRatio > 1.f) {
-		do {
-			drawableRegionSize.x += 0.025f;
-			drawableRegionSize.y -= 0.025f;
-			windowAspect = drawableRegionSize.x / drawableRegionSize.y;
-		}
-		while (fabs(aspectRatio - windowAspect) > 0.005f);
-	} else {
-		do {
-			drawableRegionSize.x -= 0.025f;
-			drawableRegionSize.y += 0.025f;
-			windowAspect = drawableRegionSize.x / drawableRegionSize.y;
-		}
-		while (fabs(aspectRatio - windowAspect) > 0.005f);
-	}
-	return drawableRegionSize;
-}
 
 int main(int argc, char * argv[]) {
 	seedRNG();
@@ -88,6 +63,7 @@ int main(int argc, char * argv[]) {
 	}
 	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 	sf::Clock gameClock;
+	duration logicUpdateDelta;
 	try {
 		std::thread graphicsThread([](Game * pGame, sf::RenderWindow * pWindow, sf::View * pView) {
 		    while (pWindow->isOpen()) {
@@ -98,6 +74,7 @@ int main(int argc, char * argv[]) {
 			}
 		}, &game, &window, &view);
 		while (window.isOpen()) {
+			time_point start = high_resolution_clock::now();
 			sf::Time elapsedTime = gameClock.restart();
 			// Do not update the inputController to check for input while the user is re-mapping the keys
 			if (game.getUI().getState() != UserInterface::State::customizeKeyboardScreen &&
@@ -110,8 +87,10 @@ int main(int argc, char * argv[]) {
 			if (game.getTeleporterCond()) {
 				game.Reset();
 			}
-			// TODO: if elapsed time is greater than a certain value, insert a delay
-			// std::this_thread::sleep_for(std::chrono::milliseconds(...));
+			time_point stop = high_resolution_clock::now();
+			logicUpdateDelta = std::chrono::duration_cast<nanoseconds>(stop - start);
+			static const microseconds logicUpdateDelay(1000);
+			std::this_thread::sleep_for(logicUpdateDelay - logicUpdateDelta);
 		}
 		graphicsThread.join();
 	} catch (std::system_error err) {
