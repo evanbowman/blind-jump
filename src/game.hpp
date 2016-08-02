@@ -17,7 +17,8 @@
 
 #pragma once
 
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
+#include <thread>
 #include "player.hpp"
 #include "backgroundHandler.hpp"
 #include "effectsController.hpp"

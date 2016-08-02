@@ -105,7 +105,7 @@ int main(int argc, char * argv[]) {
 	// TODO: update visuals on a separate thread (sounds tough!)
 	// auto updateVisuals = [](Game * pGame, sf::RenderWindow * pWindow) {
 	// 	while (pWindow->isOpen()) {
-	// 		pGame->getLevel();
+	// 		pGame->draw(*pWindow);
 	// 	}
 	// };
 	

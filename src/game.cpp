@@ -140,6 +140,9 @@ void Game::draw(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		tiles.draw(target, &glowSprs1, &glowSprs2, level);
 		glowSprs2.clear();
 		glowSprs1.clear();
+		// Clear out previous vectors for the next round of drawing
+		gameShadows.clear();
+		gameObjects.clear();
 		drawGroup(details, gameObjects, gameShadows, glowSprs1, glowSprs2, target);
 		if (player.visible) {
 			player.draw(gameObjects, gameShadows, elapsedTime);
@@ -151,6 +154,10 @@ void Game::draw(sf::RenderWindow & window, sf::Time & elapsedTime) {
 			}
 		}
 		lightingMap.clear(sf::Color::Transparent);
+		// Sort the game objects based on y-position for z-ordering
+		std::sort(gameObjects.begin(), gameObjects.end(), [](const std::tuple<sf::Sprite, float, Rendertype, float> & arg1, const std::tuple<sf::Sprite, float, Rendertype, float> & arg2) {
+				return (std::get<1>(arg1) < std::get<1>(arg2));
+			});
 		window.setView(worldView);
 		if (!gameObjects.empty()) {
 			sf::Shader & colorShader = globalResourceHandler.getShader(ResourceHandler::Shader::color);
@@ -290,10 +297,7 @@ void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		stashed = false;
 	}
 	if (!stashed || preload) {
-		// Clear out previous vectors for the next round of drawing
-		gameShadows.clear();
-		gameObjects.clear();
-		// Update positions and repopulate buffers
+		// Update positions
 		bkg.setOffset(xOffset, yOffset);
 		tiles.update(xOffset, yOffset);
 		details.update(xOffset, yOffset, elapsedTime);
@@ -301,20 +305,13 @@ void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		if (player.visible) {
 			player.update(this, elapsedTime);
 		}
-		
 		// If player was hit rumble the screen.
 		if (player.scrShakeState) {
 			ssc.rumble();
 		}
-		
 		if (!UI.isOpen() || (UI.isOpen() && player.getState() == Player::State::dead)) {
 			effectGroup.update(xOffset, yOffset, elapsedTime);
 		}
-
-		// Sort the game objects based on y-position for z-ordering
-		std::sort(gameObjects.begin(), gameObjects.end(), [](const std::tuple<sf::Sprite, float, Rendertype, float> & arg1, const std::tuple<sf::Sprite, float, Rendertype, float> & arg2) {
-				return (std::get<1>(arg1) < std::get<1>(arg2));
-			});
 	}
     if (player.getState() == Player::State::dead) {
 		UI.dispDeathSeq();
