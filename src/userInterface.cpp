@@ -51,6 +51,24 @@ void UserInterface::draw(sf::RenderWindow & window, FontController & fonts) {
 		}
 		break;
 
+	case State::menuScreenEntry:
+		fonts.setTextAlpha(255 * blurAmount, FontController::Text::resumeText);
+		fonts.setTextAlpha(255 * blurAmount, FontController::Text::settingsText);
+		fonts.setTextAlpha(255 * blurAmount, FontController::Text::quitText);
+		fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::resumeText);
+		fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::settingsText);
+		fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::quitText);
+		break;
+
+	case State::menuScreenExit:
+		fonts.setTextAlpha(255 * blurAmount, FontController::Text::resumeText);
+		fonts.setTextAlpha(255 * blurAmount, FontController::Text::settingsText);
+		fonts.setTextAlpha(255 * blurAmount, FontController::Text::quitText);
+		fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::resumeText);
+		fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::settingsText);
+		fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::quitText);
+		break;
+		
 	case State::deathScreen:
 		fonts.drawDeathText(255, window);
 		break;
@@ -90,12 +108,6 @@ void UserInterface::update(sf::RenderWindow & window, Player & player, FontContr
 	case State::menuScreenEntry:
 		timer += elapsed.asMilliseconds();
 		blurAmount = Easing::easeIn<3>(timer, 280);
-		fonts.setTextAlpha(255 * blurAmount, FontController::Text::resumeText);
-		fonts.setTextAlpha(255 * blurAmount, FontController::Text::settingsText);
-		fonts.setTextAlpha(255 * blurAmount, FontController::Text::quitText);
-		fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::resumeText);
-		fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::settingsText);
-		fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::quitText);
 		if (blurAmount == 1.f) {
 			state = State::menuScreen;
 			fonts.setTextAlpha(255, FontController::Text::resumeText);
@@ -139,12 +151,6 @@ void UserInterface::update(sf::RenderWindow & window, Player & player, FontContr
 	case State::menuScreenExit:
 		timer += elapsed.asMilliseconds();
 		blurAmount = Easing::easeOut<3>(timer, 280);
-		fonts.setTextAlpha(255 * blurAmount, FontController::Text::resumeText);
-		fonts.setTextAlpha(255 * blurAmount, FontController::Text::settingsText);
-		fonts.setTextAlpha(255 * blurAmount, FontController::Text::quitText);
-		fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::resumeText);
-		fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::settingsText);
-		fonts.setTextOffset(0, -0.01 * blurAmount, FontController::Text::quitText);
 		if (blurAmount == 0.f) {
 			state = State::closed;
 			timer = 0;

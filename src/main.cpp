@@ -32,75 +32,62 @@
 #include "rng.hpp"
 #include <thread>
 
-// Many classes need to access the resource handler, and its accessors return only const references
 ResourceHandler globalResourceHandler;
 
 std::mt19937 globalRNG;
 
-int main(int argc, char * argv[]) {
-	seedRNG();
-	
-	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-	
-	float aspectRatio = static_cast<float>(sf::VideoMode::getDesktopMode().width) / static_cast<float>(sf::VideoMode::getDesktopMode().height);
-	float windowWidth = 450.f;
-	float windowHeight = 450.f;
-	
+sf::Vector2f getDrawableRegionSize() {
+	sf::Vector2f drawableRegionSize;
+	float aspectRatio = static_cast<float>(sf::VideoMode::getDesktopMode().width) /
+		static_cast<float>(sf::VideoMode::getDesktopMode().height);
+	drawableRegionSize.x = 450.f;
+	drawableRegionSize.y = 450.f;
 	float windowAspect;
-
+	// TODO: Binary search
 	if (aspectRatio > 1.f) {
 		do {
-			windowWidth += 0.025f;
-			windowHeight -= 0.025f;
-			windowAspect = windowWidth / windowHeight;
+			drawableRegionSize.x += 0.025f;
+			drawableRegionSize.y -= 0.025f;
+			windowAspect = drawableRegionSize.x / drawableRegionSize.y;
 		}
 		while (fabs(aspectRatio - windowAspect) > 0.005f);
 	} else {
 		do {
-			windowWidth -= 0.025f;
-			windowHeight += 0.025f;
-			windowAspect = windowWidth / windowHeight;
+			drawableRegionSize.x -= 0.025f;
+			drawableRegionSize.y += 0.025f;
+			windowAspect = drawableRegionSize.x / drawableRegionSize.y;
 		}
 		while (fabs(aspectRatio - windowAspect) > 0.005f);
 	}
-	
+	return drawableRegionSize;
+}
+
+int main(int argc, char * argv[]) {
+	seedRNG();
 	if (globalResourceHandler.load()) {
 		return EXIT_FAILURE;
 	}
-	
-	// Wraps input from keyboard and gamepad
-	InputController input;
-	
-	// Don't want the fonts to be scaled and blurry, so define another view for drawing them
-	sf::View fontView(sf::FloatRect(0, 0, desktop.width, desktop.height));
-	sf::View view(sf::FloatRect(0, 0, windowWidth, windowHeight));
-	FontController fonts(fontView, windowWidth / 2, windowHeight / 2);
-	
-	//Initialize the map
-	Game game(windowWidth, windowHeight, &input, &fonts);
-	
-	// Set up the window context settings
+	// Since the graphics are pixel art it's okay to use downsampled textures for everything except font rendering
+	sf::Vector2f drawableRegionSize = getDrawableRegionSize();
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 6;
-	
-	sf::RenderWindow window(sf::VideoMode(desktop.width, desktop.height), "Blind Jump", sf::Style::Fullscreen, settings);
+	sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Blind Jump", sf::Style::Fullscreen, settings);
 	window.setMouseCursorVisible(false);
 	window.setVerticalSyncEnabled(true);
-
+	InputController input;
 	if (sf::Joystick::isConnected(0)) {
 		input.mapJsById();
 	}
-	
+	sf::View fontView(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
+	sf::View view(sf::FloatRect(0, 0, drawableRegionSize.x, drawableRegionSize.y));
+	FontController fonts(fontView, drawableRegionSize.x / 2, drawableRegionSize.y / 2);
+	Game game(drawableRegionSize.x, drawableRegionSize.y, &input, &fonts);
 	sf::Image icon;
 	if (!icon.loadFromFile(resourcePath() + "gameIcon.png")) {
 		return EXIT_FAILURE;
 	}
-	
 	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-	
 	sf::Clock gameClock;
-	sf::Time elapsedTime;
-
 	try {
 		std::thread graphicsThread([](Game * pGame, sf::RenderWindow * pWindow, sf::View * pView) {
 		    while (pWindow->isOpen()) {
@@ -116,7 +103,7 @@ int main(int argc, char * argv[]) {
 				game.getUI().getState() != UserInterface::State::customizeJoystickScreen) {
 				input.update(window);
 			}
-			elapsedTime = gameClock.restart();
+			sf::Time elapsedTime = gameClock.restart();
 			if (input.isFocused()) {
 				game.update(window, elapsedTime);
 			}

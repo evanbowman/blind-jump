@@ -27,7 +27,7 @@
 #include "game.hpp"
 #include "easingTemplates.hpp"
 
-std::mutex globalMutex;
+std::mutex globalObjectMutex, globalUIMutex;
 
 Coordinate pickLocation(std::vector<Coordinate>& emptyLocations) {
 	int locationSelect = std::abs(static_cast<int>(globalRNG())) % emptyLocations.size();
@@ -141,29 +141,20 @@ void Game::draw(sf::RenderWindow & window) {
 		//=====================================//
 		// Begin Critical Section              //
 		//=====================================//
-		globalMutex.lock();
+		globalObjectMutex.lock();
 		bkg.drawBackground(target);
 		tiles.draw(target, &glowSprs1, &glowSprs2, level);
-		globalMutex.unlock();
-		//=====================================//
-		// End Critical Section                //
-		//=====================================//
-		// Clear out previous vectors for the next round of drawing
 		glowSprs2.clear();
 		glowSprs1.clear();
 		gameShadows.clear();
 		gameObjects.clear();
-		//=====================================//
-		// Begin Critical Section              //
-		//=====================================//
-		globalMutex.lock();
 		drawGroup(details, gameObjects, gameShadows, glowSprs1, glowSprs2, target);
 		if (player.visible) {
 			player.draw(gameObjects, gameShadows);
 		}
 		drawGroup(effectGroup, gameObjects, glowSprs1);
 		en.draw(gameObjects, gameShadows);
-		globalMutex.unlock();
+		globalObjectMutex.unlock();
 		//=====================================//
 		// End Critical Section                //
 		//=====================================//
@@ -296,6 +287,10 @@ void Game::draw(sf::RenderWindow & window) {
 	} else {
 		window.draw(sf::Sprite(target.getTexture()));
 	}
+	//=====================================//
+	// Begin Critical Section              //
+	//=====================================//
+	globalUIMutex.lock();
 	if (player.getState() == Player::State::dead) {
 		UI.draw(window, *pFonts);
 	} else {
@@ -305,7 +300,11 @@ void Game::draw(sf::RenderWindow & window) {
 		pFonts->print(window);
 	}
 	window.setView(worldView);
-    // updateTransitions(xOffset, yOffset, elapsedTime, window);
+	globalUIMutex.unlock();
+	//=====================================//
+	// End Critical Section                //
+	//=====================================//
+	// updateTransitions(xOffset, yOffset, elapsedTime, window);
 }
 
 void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
@@ -319,7 +318,7 @@ void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		//=====================================//
 		// Begin Critical Section              //
 		//=====================================//
-		globalMutex.lock();
+		globalObjectMutex.lock();
 		// Update positions
 		bkg.setOffset(xOffset, yOffset);
 		tiles.update(xOffset, yOffset);
@@ -335,11 +334,15 @@ void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		if (!UI.isOpen() || (UI.isOpen() && player.getState() == Player::State::dead)) {
 			effectGroup.update(xOffset, yOffset, elapsedTime);
 		}
-		globalMutex.unlock();
+		globalObjectMutex.unlock();
 		//=====================================//
 		// End Critical Section                //
 		//=====================================//
 	}
+	//=====================================//
+	// Begin Critical Section              //
+	//=====================================//
+	globalUIMutex.lock();
     if (player.getState() == Player::State::dead) {
 		UI.dispDeathSeq();
 		// If the death sequence is complete and the UI controller is finished playing its animation
@@ -362,6 +365,10 @@ void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		}
 		pFonts->updateHealth(player.getHealth());
 	}
+	globalUIMutex.unlock();
+	//=====================================//
+	// Begin Critical Section              //
+	//=====================================//
 	// Update the screen shake controller
 	ssc.update(player);
 }
