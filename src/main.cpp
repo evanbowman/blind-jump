@@ -101,18 +101,15 @@ int main(int argc, char * argv[]) {
 	sf::Clock gameClock;
 	sf::Time elapsedTime;
 
-	// TODO: update visuals on a separate thread (sounds tough!)
-	auto updateVisuals = [](Game * pGame, sf::RenderWindow * pWindow, sf::View * pView) {
-		while (pWindow->isOpen()) {
-			pWindow->clear();
-			pWindow->setView(*pView);
-			pGame->draw(*pWindow);
-			pWindow->display();
-		}
-	};
-	// TODO: Check hardware concurrency, if single-core processor do things serially
 	try {
-		std::thread graphicsThread(updateVisuals, &game, &window, &view);
+		std::thread graphicsThread([](Game * pGame, sf::RenderWindow * pWindow, sf::View * pView) {
+		    while (pWindow->isOpen()) {
+				pWindow->clear();
+				pWindow->setView(*pView);
+				pGame->draw(*pWindow);
+				pWindow->display();
+			}
+		}, &game, &window, &view);
 		while (window.isOpen()) {
 			// Do not update the inputController to check for input while the user is re-mapping the keys
 			if (game.getUI().getState() != UserInterface::State::customizeKeyboardScreen &&
