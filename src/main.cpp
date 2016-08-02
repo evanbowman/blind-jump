@@ -67,7 +67,7 @@ int main(int argc, char * argv[]) {
 	if (globalResourceHandler.load()) {
 		return EXIT_FAILURE;
 	}
-	// Since the graphics are pixel art it's okay to use downsampled textures for everything except font rendering
+	// Since the graphics are pixel art it's okay to use upsampled textures for everything except font rendering
 	sf::Vector2f drawableRegionSize = getDrawableRegionSize();
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 6;
@@ -98,18 +98,20 @@ int main(int argc, char * argv[]) {
 			}
 		}, &game, &window, &view);
 		while (window.isOpen()) {
+			sf::Time elapsedTime = gameClock.restart();
 			// Do not update the inputController to check for input while the user is re-mapping the keys
 			if (game.getUI().getState() != UserInterface::State::customizeKeyboardScreen &&
 				game.getUI().getState() != UserInterface::State::customizeJoystickScreen) {
 				input.update(window);
 			}
-			sf::Time elapsedTime = gameClock.restart();
 			if (input.isFocused()) {
 				game.update(window, elapsedTime);
 			}
 			if (game.getTeleporterCond()) {
 				game.Reset();
 			}
+			// TODO: if elapsed time is greater than a certain value, insert a delay
+			// std::this_thread::sleep_for(std::chrono::milliseconds(...));
 		}
 		graphicsThread.join();
 	} catch (std::system_error err) {
