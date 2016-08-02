@@ -406,9 +406,80 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 	
 	worldOffsetX += (lSpeed + -rSpeed) * (elapsedTime.asMilliseconds() / 17.6);
 	worldOffsetY += (uSpeed + -dSpeed) * (elapsedTime.asMilliseconds() / 17.6);
+	if (!blurs.empty()) {
+		for (auto it = blurs.begin(); it != blurs.end();) {
+			if (it->getKillFlag())
+				it = blurs.erase(it);
+			else {
+				it->update(elapsedTime, worldOffsetX, worldOffsetY);
+				++it;
+			}
+		}
+	}
+	switch (sheetIndex) {
+	case Sheet::stillDown:
+		if (gun.timeout > 0) {
+			gun.gunSpr.setPosition(xPos + 12, yPos + 15);
+		}
+		break;
+
+	case Sheet::stillUp:
+		break;
+
+	case Sheet::stillLeft:
+		if (gun.timeout > 0) {
+			gun.gunSpr.setPosition(xPos + 2, yPos + 13);
+		}
+		break;
+
+	case Sheet::stillRight:
+		if (gun.timeout > 0) {
+			gun.gunSpr.setPosition(xPos + 19, yPos + 13);
+		}
+		break;
+			
+	case Sheet::walkDown:
+		if (gun.timeout > 0) {
+			gun.gunSpr.setPosition(xPos + 12, yPos + 15);
+		}
+		updateAnimation(elapsedTime, 9, 100);
+		break;
+
+	case Sheet::walkUp:
+		updateAnimation(elapsedTime, 9, 100);
+		break;
+			
+	case Sheet::walkLeft:
+		if (gun.timeout > 0) {
+			gun.gunSpr.setPosition(xPos + 2, yPos + 13);
+		}
+		updateAnimation(elapsedTime, 5, 100);
+		break;
+			
+	case Sheet::walkRight:
+		if (gun.timeout > 0) {
+			gun.gunSpr.setPosition(xPos + 19, yPos + 13);
+		}
+		updateAnimation(elapsedTime, 5, 100);
+		break;
+			
+	case Sheet::deathSheet:
+		if (frameIndex < 10) {
+			animationTimer += elapsedTime.asMilliseconds();
+			if (animationTimer > 60) {
+				animationTimer = 0;
+				++frameIndex;
+			}
+		}
+		break;
+			
+	case Sheet::dashSheet:
+		animationTimer += elapsedTime.asMilliseconds();
+		break;
+	}
 }
 
-void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf::Time & elapsedTime) {
+void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows) {
 	if (visible) {
 		auto gunIndexOffset = [](int32_t timeout) {
 			if (timeout < 1707 && timeout > 44) {
@@ -420,7 +491,6 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf
 		switch (sheetIndex) {
 		case Sheet::stillDown:
 			if (gun.timeout > 0) {
-				gun.gunSpr.setPosition(xPos + 12, yPos + 15);
 				gameObjects.emplace_back(gun.gunSpr[4 + gunIndexOffset(gun.timeout)],
 										 gun.gunSpr.getYpos() - 14, renderType, colorAmount);
 			}
@@ -435,8 +505,7 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf
 
 		case Sheet::stillLeft:
 			if (gun.timeout > 0) {
-				gun.gunSpr.setPosition(xPos + 2, yPos + 13);
-				gameObjects.emplace_back(gun.gunSpr[2 + gunIndexOffset(gun.timeout)],
+ 				gameObjects.emplace_back(gun.gunSpr[2 + gunIndexOffset(gun.timeout)],
 										 gun.gunSpr.getYpos() - 14, renderType, colorAmount);
 			}
 			gameObjects.emplace_back(walkLeft[6], yPos, renderType, colorAmount);
@@ -445,7 +514,6 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf
 
 		case Sheet::stillRight:
 			if (gun.timeout > 0) {
-				gun.gunSpr.setPosition(xPos + 19, yPos + 13);
 				gameObjects.emplace_back(gun.gunSpr[gunIndexOffset(gun.timeout)],
 										 gun.gunSpr.getYpos() - 14, renderType, colorAmount);
 			}
@@ -455,58 +523,43 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf
 			
 		case Sheet::walkDown:
 			if (gun.timeout > 0) {
-				gun.gunSpr.setPosition(xPos + 12, yPos + 15);
 				gameObjects.emplace_back(gun.gunSpr[4 + gunIndexOffset(gun.timeout)],
 										 gun.gunSpr.getYpos() - 14, renderType, colorAmount);
 			}
-			updateAnimation(elapsedTime, 9, 100);
 			gameObjects.emplace_back(walkDown[verticalAnimationDecoder(frameIndex)], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			break;
 
 		case Sheet::walkUp:
-			updateAnimation(elapsedTime, 9, 100);
 			gameObjects.emplace_back(walkUp[verticalAnimationDecoder(frameIndex)], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			break;
 			
 		case Sheet::walkLeft:
 		    if (gun.timeout > 0) {
-				gun.gunSpr.setPosition(xPos + 2, yPos + 13);
 				gameObjects.emplace_back(gun.gunSpr[2 + gunIndexOffset(gun.timeout)],
 										 gun.gunSpr.getYpos() - 14, renderType, colorAmount);
 			}
-			updateAnimation(elapsedTime, 5, 100);
 			gameObjects.emplace_back(walkLeft[frameIndex], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			break;
 			
 		case Sheet::walkRight:
 			if (gun.timeout > 0) {
-				gun.gunSpr.setPosition(xPos + 19, yPos + 13);
 				gameObjects.emplace_back(gun.gunSpr[gunIndexOffset(gun.timeout)],
 										 gun.gunSpr.getYpos() - 14, renderType, colorAmount);
 			}
-			updateAnimation(elapsedTime, 5, 100);
 			gameObjects.emplace_back(walkRight[frameIndex], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			break;
 			
 		case Sheet::deathSheet:
-			if (frameIndex < 10) {
-				animationTimer += elapsedTime.asMilliseconds();
-				if (animationTimer > 60) {
-					animationTimer = 0;
-					++frameIndex;
-				}
-			}
 			gameObjects.emplace_back(deathSheet[frameIndex], yPos, renderType, colorAmount);
 			break;
 			
 		case Sheet::dashSheet:
 			gameObjects.emplace_back(dashSheet[frameIndex], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
-			animationTimer += elapsedTime.asMilliseconds();
 			if (state == Player::State::dashing) {
 				if (animationTimer > 20) {
 					animationTimer = 0;
@@ -516,17 +569,8 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows, const sf
 			break;
 		}
 	}
-
-	if (!blurs.empty()) {
-		for (auto it = blurs.begin(); it != blurs.end();) {
-			if (it->getKillFlag())
-				it = blurs.erase(it);
-			else {
-				it->update(elapsedTime, worldOffsetX, worldOffsetY);
-				gameObjects.emplace_back(*it->getSprite(), it->yInit, Rendertype::shadeDefault, 0.f);
-				++it;
-			}
-		}
+	for (auto & element : blurs) {
+		gameObjects.emplace_back(*element.getSprite(), element.yInit, Rendertype::shadeDefault, 0.f);
 	}
 }
 

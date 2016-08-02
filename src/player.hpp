@@ -65,7 +65,7 @@ public:
 	void activate();
 	float getXpos() const; // The player's absolute position in the window
 	float getYpos() const;
-	void draw(drawableVec &, drawableVec &, const sf::Time &);
+	void draw(drawableVec &, drawableVec &);
 	void update(Game *, const sf::Time &);
 	void setState(State);
 	State getState() const;

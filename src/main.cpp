@@ -103,13 +103,16 @@ int main(int argc, char * argv[]) {
 	sf::Time elapsedTime;
 
 	// TODO: update visuals on a separate thread (sounds tough!)
-	// auto updateVisuals = [](Game * pGame, sf::RenderWindow * pWindow) {
-	// 	while (pWindow->isOpen()) {
-	// 		pGame->draw(*pWindow);
-	// 	}
-	// };
+	auto updateVisuals = [](Game * pGame, sf::RenderWindow * pWindow, sf::View * pView) {
+		while (pWindow->isOpen()) {
+			pWindow->clear();
+			pWindow->setView(*pView);
+			pGame->draw(*pWindow);
+			pWindow->display();
+		}
+	};
 	
-	// std::thread graphicsThread(updateVisuals, &game, &window);
+	std::thread graphicsThread(updateVisuals, &game, &window, &view);
 	
 	while (window.isOpen()) {
 		// Do not update the inputController to check for input while the user is re-mapping the keys
@@ -117,25 +120,17 @@ int main(int argc, char * argv[]) {
 			game.getUI().getState() != UserInterface::State::customizeJoystickScreen) {
 			input.update(window);
 		}
-		
-		window.clear();
-		
-		window.setView(view);
-		
 		elapsedTime = gameClock.restart();
 		if (input.isFocused()) {
 			game.update(window, elapsedTime);
-			game.draw(window, elapsedTime);
 		}
 		
 		if (game.getTeleporterCond()) {
 			game.Reset();
 		}
-
-		window.display();
 	}
 
-	// graphicsThread.join();
+	graphicsThread.join();
 
 	return 0;
 }

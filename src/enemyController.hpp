@@ -46,7 +46,8 @@ private:
 	
 public:
 	enemyController();
-	void update(drawableVec &, drawableVec &, float, float, EffectGroup &, std::vector<wall>, bool, tileController*, ScreenShakeController*, FontController&, sf::Time &);
+	void update(float, float, EffectGroup &, std::vector<wall>, bool, tileController*, ScreenShakeController*, FontController&, sf::Time &);
+	void draw(drawableVec &, drawableVec &);
 	void clear();
 	sf::Sprite * getTurretSprites();
 	sf::Sprite * getChaserSprites();

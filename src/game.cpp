@@ -27,6 +27,8 @@
 #include "game.hpp"
 #include "easingTemplates.hpp"
 
+std::mutex globalMutex;
+
 Coordinate pickLocation(std::vector<Coordinate>& emptyLocations) {
 	int locationSelect = std::abs(static_cast<int>(globalRNG())) % emptyLocations.size();
 	Coordinate c = emptyLocations[locationSelect];
@@ -133,21 +135,38 @@ Game::Game(float _windowW, float _windowH, InputController * _pInput, FontContro
 	vignetteSprite.setColor(sf::Color(255, 255, 255));
 }
 
-void Game::draw(sf::RenderWindow & window, sf::Time & elapsedTime) {
+void Game::draw(sf::RenderWindow & window) {
 	target.clear(sf::Color::Transparent);
 	if (!stashed || preload) {
+		//=====================================//
+		// Begin Critical Section              //
+		//=====================================//
+		globalMutex.lock();
 		bkg.drawBackground(target);
 		tiles.draw(target, &glowSprs1, &glowSprs2, level);
+		globalMutex.unlock();
+		//=====================================//
+		// End Critical Section                //
+		//=====================================//
+		// Clear out previous vectors for the next round of drawing
 		glowSprs2.clear();
 		glowSprs1.clear();
-		// Clear out previous vectors for the next round of drawing
 		gameShadows.clear();
 		gameObjects.clear();
+		//=====================================//
+		// Begin Critical Section              //
+		//=====================================//
+		globalMutex.lock();
 		drawGroup(details, gameObjects, gameShadows, glowSprs1, glowSprs2, target);
 		if (player.visible) {
-			player.draw(gameObjects, gameShadows, elapsedTime);
+			player.draw(gameObjects, gameShadows);
 		}
 		drawGroup(effectGroup, gameObjects, glowSprs1);
+		en.draw(gameObjects, gameShadows);
+		globalMutex.unlock();
+		//=====================================//
+		// End Critical Section                //
+		//=====================================//
 		if (!gameShadows.empty()) {
 			for (auto & element : gameShadows) {
 				target.draw(std::get<0>(element));
@@ -297,11 +316,15 @@ void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		stashed = false;
 	}
 	if (!stashed || preload) {
+		//=====================================//
+		// Begin Critical Section              //
+		//=====================================//
+		globalMutex.lock();
 		// Update positions
 		bkg.setOffset(xOffset, yOffset);
 		tiles.update(xOffset, yOffset);
 		details.update(xOffset, yOffset, elapsedTime);
-		en.update(gameObjects, gameShadows, player.getWorldOffsetX(), player.getWorldOffsetY(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, &ssc, *pFonts, elapsedTime);
+		en.update(player.getWorldOffsetX(), player.getWorldOffsetY(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, &ssc, *pFonts, elapsedTime);
 		if (player.visible) {
 			player.update(this, elapsedTime);
 		}
@@ -312,6 +335,10 @@ void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		if (!UI.isOpen() || (UI.isOpen() && player.getState() == Player::State::dead)) {
 			effectGroup.update(xOffset, yOffset, elapsedTime);
 		}
+		globalMutex.unlock();
+		//=====================================//
+		// End Critical Section                //
+		//=====================================//
 	}
     if (player.getState() == Player::State::dead) {
 		UI.dispDeathSeq();

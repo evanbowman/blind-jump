@@ -33,43 +33,80 @@ enemyController::enemyController() {
 	}
 }
 
-void enemyController::update(drawableVec & gameObjects, drawableVec & gameShadows, float x, float y, EffectGroup & ef, std::vector<wall> w, bool enabled, tileController* pTiles, ScreenShakeController* scrn, FontController& fonts, sf::Time & elapsedTime) {
+void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows) {
+	for (auto & element : turrets) {
+		if (element.getXpos() > -64 && element.getXpos() < windowW + 64 && element.getYpos() > -64 && element.getYpos() < windowH + 64) {
+			// Get the enemy's shadow
+			std::tuple<sf::Sprite, float, Rendertype, float> shadow;
+			std::get<0>(shadow) = element.getShadow();
+			gameShadows.push_back(shadow);
+			std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
+			std::get<0>(tSpr) = element.getSprite();
+			std::get<1>(tSpr) = element.getYpos();
+			if (element.colored()) {
+				std::get<2>(tSpr) = Rendertype::shadeWhite;
+			} else {
+				std::get<2>(tSpr) = Rendertype::shadeDefault;
+			}
+			gameObjects.push_back(tSpr);
+		}
+	}
+
+	for (auto & element : critters) {
+		gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
+		std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
+		std::get<0>(tSpr) = element.getSprite();
+		std::get<1>(tSpr) = element.getYpos() - 16;
+		// If the enemy should be colored, let the rendering code know to pass it through a fragment shader
+		if (element.isColored()) {
+			gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16, Rendertype::shadeWhite, element.getColorAmount());
+		} else {
+			gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16, Rendertype::shadeDefault, 0.f);
+		}		
+	}
+	
+	for (auto & element : scoots) {
+		if (element.getXpos() > -64 && element.getXpos() < windowW + 64 && element.getYpos() > -64 && element.getYpos() < windowH + 64) {
+			gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
+			if (element.isColored()) {
+				gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16, Rendertype::shadeWhite, element.getColorAmount());
+			} else {
+				gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16, Rendertype::shadeDefault, 0.f);
+			}
+		}
+	}
+	
+	for (auto & element : dashers) {
+		if (element.getXpos() > -64 && element.getXpos() < windowW + 64 && element.getYpos() > -64 && element.getYpos() < windowH + 64) {
+			auto state = element.getState();
+			if (state != Dasher::State::dying && state != Dasher::State::dead) {
+				gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
+			}		
+			for (auto & blur : *element.getBlurEffects()) {
+				gameObjects.emplace_back(*blur.getSprite(), blur.yInit + 200, Rendertype::shadeDefault, 0.f);
+			}			
+			if (element.isColored()) {
+				gameObjects.emplace_back(element.getSprite(), element.getYpos(), Rendertype::shadeWhite, element.getColorAmount());
+			} else {
+				gameObjects.emplace_back(element.getSprite(), element.getYpos(), Rendertype::shadeDefault, 0.f);
+			}
+		}
+	}
+}
+
+void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wall> w, bool enabled, tileController* pTiles, ScreenShakeController* scrn, FontController& fonts, sf::Time & elapsedTime) {
 	if (!turrets.empty()) {
 		for (auto it = turrets.begin(); it != turrets.end();) {
 			if (it->getKillFlag() == 1) {
 				scrn->rumble();
 				it = turrets.erase(it);
-			}
-			else {
-				++it;
-			}
-		}
-		
-		for (auto & element : turrets) {
-			element.setPosition(x + element.getXinit(), y + element.getYinit());		 //Update the enemies' position, x and y are offsets
-			if (element.getXpos() > -64 && element.getXpos() < windowW + 64 && element.getYpos() > -64 && element.getYpos() < windowH + 64) {
-				// Get the enemy's shadow
-				std::tuple<sf::Sprite, float, Rendertype, float> shadow;
-				std::get<0>(shadow) = element.getShadow();
-				gameShadows.push_back(shadow);
-
-				element.update(elapsedTime);
-
-				std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
-				std::get<0>(tSpr) = element.getSprite();
-				std::get<1>(tSpr) = element.getYpos();
-				
-				if (element.colored()) {
-					std::get<2>(tSpr) = Rendertype::shadeWhite;
-				} else {
-					std::get<2>(tSpr) = Rendertype::shadeDefault;
-				}
-				
-				gameObjects.push_back(tSpr);
-				
+			} else {
+				it->setPosition(x + it->getXinit(), y + it->getYinit());
+				it->update(elapsedTime);
 				if (enabled) {
-					element.updateShots(ef, fonts);								//If the turrets are ready to shoot, pass them the effects controller so to store the effects in
+					it->updateShots(ef, fonts);
 				}
+				++it;
 			}
 		}
 	}
@@ -84,19 +121,10 @@ void enemyController::update(drawableVec & gameObjects, drawableVec & gameShadow
 					if (enabled) {
 						it->update(x, y, w, ef, elapsedTime);
 					}
-					gameShadows.emplace_back(it->getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
-				    if (it->isColored()) {
-						gameObjects.emplace_back(it->getSprite(), it->getYpos() - 16, Rendertype::shadeWhite, it->getColorAmount());
-					} else {
-						gameObjects.emplace_back(it->getSprite(), it->getYpos() - 16, Rendertype::shadeDefault, 0.f);
-					}
-				}
-				
-				else {
+				} else {
 					// If outside the window, update the enemy's position, but don't move it, draw it, check collisions, etc.
 					it->Enemy::update(x, y, w, ef, elapsedTime);
 				}
-				
 				++it;
 			}
 		}
@@ -121,28 +149,12 @@ void enemyController::update(drawableVec & gameObjects, drawableVec & gameShadow
 				// Rumble the screen
 				scrn->rumble();
 				it = critters.erase(it);
-			}
-			
-			else {
-
+			} else {
 				if (enabled) {
 					it->critterUpdate(x, y, ef, elapsedTime, pTiles);
 				} else {
 					it->Enemy::update(x, y, w, ef, elapsedTime);
 				}
-
-				gameShadows.emplace_back(it->getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
-					
-				std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
-				std::get<0>(tSpr) = it->getSprite();
-				std::get<1>(tSpr) = it->getYpos() - 16;
-				// If the enemy should be colored, let the rendering code know to pass it through a fragment shader
-				if (it->isColored()) {
-					gameObjects.emplace_back(it->getSprite(), it->getYpos() - 16, Rendertype::shadeWhite, it->getColorAmount());
-				} else {
-					gameObjects.emplace_back(it->getSprite(), it->getYpos() - 16, Rendertype::shadeDefault, 0.f);
-			   }
-			    
 				++it;
 			}
 		}
@@ -156,22 +168,8 @@ void enemyController::update(drawableVec & gameObjects, drawableVec & gameShadow
 	if (!dashers.empty()) {
 		for (auto & element : dashers) {
 			if (element.getXpos() > -64 && element.getXpos() < windowW + 64 && element.getYpos() > -64 && element.getYpos() < windowH + 64) {
-				if (enabled)
+				if (enabled) {
 					element.update(x, y, w, ef, elapsedTime);	
-					
-				auto state = element.getState();
-				if (state != Dasher::State::dying && state != Dasher::State::dead) {
-					gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
-				}
-				
-				for (auto & blur : *element.getBlurEffects()) {
-					gameObjects.emplace_back(*blur.getSprite(), blur.yInit + y, Rendertype::shadeDefault, 0.f);
-				}
-					
-				if (element.isColored()) {
-					gameObjects.emplace_back(element.getSprite(), element.getYpos(), Rendertype::shadeWhite, element.getColorAmount());
-				} else {
-					gameObjects.emplace_back(element.getSprite(), element.getYpos(), Rendertype::shadeDefault, 0.f);
 				}	
 			} else {
 				// If outside the window, update the enemy's position, but don't move it, draw it, check collisions, etc.
