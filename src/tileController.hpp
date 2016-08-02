@@ -39,7 +39,7 @@ public:
 
 	tileController();
 	void update(const float, const float);
-	void draw(sf::RenderTexture&, std::vector<sf::Sprite*>*, std::vector<sf::Sprite*>*, int level);
+	void draw(sf::RenderTexture&, std::vector<sf::Sprite>*, std::vector<sf::Sprite>*, int level);
 	float posX;
 	float posY;
 	void setPosition(float, float);

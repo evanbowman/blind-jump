@@ -211,10 +211,9 @@ void Game::draw(sf::RenderWindow & window) {
 		sf::Color blendAmount(185, 185, 185, 255);
 		sf::Sprite tempSprite;
 		for (auto element : glowSprs2) {
-			tempSprite = *element;
-			tempSprite.setColor(blendAmount);
-			tempSprite.setPosition(tempSprite.getPosition().x, tempSprite.getPosition().y - 12);
-			lightingMap.draw(tempSprite, sf::BlendMode(sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One,
+			element.setColor(blendAmount);
+			element.setPosition(element.getPosition().x, element.getPosition().y - 12);
+			lightingMap.draw(element, sf::BlendMode(sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One,
 																	 sf::BlendMode::Add, sf::BlendMode::DstAlpha,
 																	 sf::BlendMode::Zero, sf::BlendMode::Add)));
 		}

@@ -46,8 +46,8 @@ void Teleporter::update(float xOffset, float yOffset, const sf::Time & elapsedTi
 	TeleporterSprites[1].setPosition(position.x - 3, position.y + 4);
 }
 
-sf::Sprite * Teleporter::getGlow() {
-	return &glowSprite;
+const sf::Sprite & Teleporter::getGlow() const {
+	return glowSprite;
 }
 
 bool Teleporter::smokeReady() {

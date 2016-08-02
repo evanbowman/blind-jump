@@ -26,7 +26,7 @@ public:
 	using HBox = Framework::HitBox<12, 12, 2, 2>;
 	PlayerShot(const sf::Texture &, const sf::Texture &, char, float, float);
 	const sf::Sprite & getSprite();
-	sf::Sprite * getGlow();
+	const sf::Sprite & getGlow();
 	void update(float, float, const sf::Time &);
 	char getDirection();
 	bool checkCanPoof();

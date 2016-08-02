@@ -187,7 +187,7 @@ void tileController::update(const float xOffset, const float yOffset) {
 	mapSprite2.setPosition(posX + xOffset, posY + yOffset);
 }
 
-void tileController::draw(sf::RenderTexture& window, std::vector<sf::Sprite*>* glowSprites, std::vector<sf::Sprite*>* glowSprites2, int level) {
+void tileController::draw(sf::RenderTexture& window, std::vector<sf::Sprite>* glowSprites, std::vector<sf::Sprite>* glowSprites2, int level) {
 	// Clear out the RenderTexture
 	rt.clear(sf::Color::Transparent);
 	// Draw the map sprite to the texture
@@ -200,7 +200,7 @@ void tileController::draw(sf::RenderTexture& window, std::vector<sf::Sprite*>* g
 	rt.draw(shadow, sf::BlendMultiply);
 	// Draw glow sprites
 	for (auto & element : *glowSprites) {
-		rt.draw(*element, sf::BlendMode(sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One,
+		rt.draw(element, sf::BlendMode(sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One,
 													  sf::BlendMode::Add, sf::BlendMode::DstAlpha,
 													  sf::BlendMode::Zero, sf::BlendMode::Add)));
 	}

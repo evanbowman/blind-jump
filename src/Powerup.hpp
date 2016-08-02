@@ -29,7 +29,7 @@ public:
 	Powerup(const sf::Texture &, const sf::Texture &, float, float, Type);
 	const sf::Sprite & getSprite();
 	const HBox & getHitBox() const;
-	sf::Sprite * getGlow();
+	const sf::Sprite & getGlow();
 	void update(float, float, sf::Time &);
 	
 protected:

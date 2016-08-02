@@ -47,8 +47,8 @@ void SmallExplosion::update(float xOffset, float yOffset, const sf::Time & elaps
 	glow.setPosition(position.x - 225, position.y - 225);
 }
 
-sf::Sprite * SmallExplosion::getGlow() {
-	return &glow;
+const sf::Sprite & SmallExplosion::getGlow() const {
+	return glow;
 }
 
 const sf::Sprite & SmallExplosion::getSprite() const {

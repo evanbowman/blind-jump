@@ -35,6 +35,6 @@ const sf::Sprite & LampLight::getSprite() const {
 	return lampSprite;
 }
 
-sf::Sprite * LampLight::getGlow() {
-	return &glowSprite;
+const sf::Sprite & LampLight::getGlow() const {
+	return glowSprite;
 }

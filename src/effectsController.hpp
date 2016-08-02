@@ -53,14 +53,14 @@ void drawVec(EffectGroup & eg, drawableVec & vec) {
 }
 
 template<std::size_t indx, int8_t yOffset = 0>
-void drawVecGlow(EffectGroup & eg, drawableVec & vec, std::vector<Sprite *> & glowSprs) {
+void drawVecGlow(EffectGroup & eg, drawableVec & vec, std::vector<Sprite> & glowSprs) {
 	for (auto & element : eg.get<indx>()) {
 		glowSprs.push_back(element.getGlow());
 		vec.emplace_back(element.getSprite(), element.getPosition().y + yOffset, Rendertype::shadeNone, 0.f);
 	}
 }
 
-inline void drawGroup(EffectGroup & eg, drawableVec & vec, std::vector<Sprite *> & glowSprs) {
+inline void drawGroup(EffectGroup & eg, drawableVec & vec, std::vector<Sprite> & glowSprs) {
 	drawVec<0, 11>(eg, vec);
 	drawVec<3>(eg, vec);
 	drawVecGlow<1>(eg, vec, glowSprs);

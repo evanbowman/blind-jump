@@ -27,7 +27,7 @@ public:
 	using HBox = Framework::HitBox<10, 10, -5, -5>;
 	const HBox & getHitBox() const;
 	TurretShot(const sf::Texture &, const sf::Texture &, float, float, float);
-	sf::Sprite * getGlow();
+	const sf::Sprite & getGlow();
 	const sf::Sprite & getSprite();
 	void update(float, float, sf::Time&);
 	void speedFactor(float);

@@ -30,5 +30,5 @@ public:
 	FireExplosion(const sf::Texture &, const sf::Texture &, float, float);
 	void update(float, float, const sf::Time &);
 	const sf::Sprite & getSprite() const;
-	sf::Sprite * getGlow();
+	const sf::Sprite & getGlow() const;
 };

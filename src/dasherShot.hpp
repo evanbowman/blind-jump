@@ -33,7 +33,7 @@ public:
 	float direction;
 	void speedFactor(float);
 	bool driftSel;
-	sf::Sprite * getGlow();
+	const sf::Sprite & getGlow() const;
 	const HBox & getHitBox() const;
 	
 private:

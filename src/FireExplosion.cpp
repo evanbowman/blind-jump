@@ -48,8 +48,8 @@ void FireExplosion::update(float xOffset, float yOffset, const sf::Time & elapse
 	glow.setPosition(position.x - 225, position.y - 225);
 }
 
-Sprite * FireExplosion::getGlow() {
-	return &glow;
+const Sprite & FireExplosion::getGlow() const {
+	return glow;
 }
 
 const Sprite & FireExplosion::getSprite() const {

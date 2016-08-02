@@ -63,8 +63,8 @@ const sf::Sprite & DasherShot::getSprite() {
 	return spriteSheet[frameIndex];
 }
 
-sf::Sprite * DasherShot::getGlow() {
-	return &glowSprite;
+const sf::Sprite & DasherShot::getGlow() const {
+	return glowSprite;
 }
 
 void DasherShot::speedFactor(float factor) {

@@ -25,7 +25,7 @@ class LampLight : public Detail {
 public:
 	LampLight(float, float, const sf::Texture &, const sf::Texture &);
 	const sf::Sprite & getSprite() const;
-	sf::Sprite * getGlow();
+	const sf::Sprite & getGlow() const;
 	void update(float, float, const sf::Time &);
 	
 private:

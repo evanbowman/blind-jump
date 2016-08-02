@@ -59,8 +59,8 @@ const sf::Sprite & TurretShot::getSprite() {
 	return spriteSheet[frameIndex];
 }
 
-sf::Sprite * TurretShot::getGlow() {
-	return &glowSprite;
+const sf::Sprite & TurretShot::getGlow() {
+	return glowSprite;
 }
 
 void TurretShot::speedFactor(float factor) {

@@ -46,8 +46,8 @@ const sf::Sprite & PlayerShot::getSprite() {
 	}
 }
 
-sf::Sprite * PlayerShot::getGlow() {
-	return &glow;
+const sf::Sprite & PlayerShot::getGlow() {
+	return glow;
 }
 
 void PlayerShot::poof() {

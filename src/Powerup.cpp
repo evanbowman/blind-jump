@@ -45,9 +45,9 @@ const sf::Sprite & Powerup::getSprite() {
 	return powerupSheet.getSprite();
 }
 
-sf::Sprite * Powerup::getGlow() {
+const sf::Sprite & Powerup::getGlow() {
 	glow.setPosition(position.x, position.y + 10);
-	return &glow;
+	return glow;
 }
 
 const Powerup::HBox & Powerup::getHitBox() const {

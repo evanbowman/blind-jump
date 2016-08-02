@@ -83,7 +83,7 @@ private:
 	bool teleporterCond;
     sf::Sprite vignetteShadowSpr;
 	tileController::Tileset set;
-	std::vector<sf::Sprite *> glowSprs1, glowSprs2;
+	std::vector<sf::Sprite> glowSprs1, glowSprs2;
 	sf::Texture beamGlowTxr;
 	sf::Sprite beamGlowSpr;
 	sf::View worldView, hudView;
