@@ -120,7 +120,6 @@ int main(int argc, char * argv[]) {
 			if (input.isFocused()) {
 				game.update(window, elapsedTime);
 			}
-		
 			if (game.getTeleporterCond()) {
 				game.Reset();
 			}
