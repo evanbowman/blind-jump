@@ -113,27 +113,27 @@ int main(int argc, char * argv[]) {
 	// TODO: Check hardware concurrency, if single-core processor do things serially
 	try {
 		std::thread graphicsThread(updateVisuals, &game, &window, &view);
-	} catch (...) {
-		// TODO: Log the error
-	}
-	while (window.isOpen()) {
-		// Do not update the inputController to check for input while the user is re-mapping the keys
-		if (game.getUI().getState() != UserInterface::State::customizeKeyboardScreen &&
-			game.getUI().getState() != UserInterface::State::customizeJoystickScreen) {
-			input.update(window);
-		}
-		elapsedTime = gameClock.restart();
-		if (input.isFocused()) {
-			game.update(window, elapsedTime);
-		}
+		while (window.isOpen()) {
+			// Do not update the inputController to check for input while the user is re-mapping the keys
+			if (game.getUI().getState() != UserInterface::State::customizeKeyboardScreen &&
+				game.getUI().getState() != UserInterface::State::customizeJoystickScreen) {
+				input.update(window);
+			}
+			elapsedTime = gameClock.restart();
+			if (input.isFocused()) {
+				game.update(window, elapsedTime);
+			}
 		
-		if (game.getTeleporterCond()) {
-			game.Reset();
+			if (game.getTeleporterCond()) {
+				game.Reset();
+			}
 		}
+		graphicsThread.join();
+	} catch (std::system_error err) {
+		// TODO: Handle possible error in thread construction
+	} catch (...) {
+		// TODO: Handle other exceptional cases
 	}
-
-	graphicsThread.join();
-
 	return 0;
 }
 
