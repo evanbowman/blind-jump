@@ -27,8 +27,9 @@
 #include "game.hpp"
 #include "easingTemplates.hpp"
 
-std::mutex gObjectMutex, gUIMutex, gTransitionMutex;
+std::mutex globalObjectMutex, globalUIMutex, globalTransitionMutex;
 
+// TODO: This function is unsafe...
 Coordinate pickLocation(std::vector<Coordinate>& emptyLocations) {
 	int locationSelect = std::abs(static_cast<int>(globalRNG())) % emptyLocations.size();
 	Coordinate c = emptyLocations[locationSelect];
@@ -50,9 +51,6 @@ Game::Game(float _windowW, float _windowH, InputController * _pInput, FontContro
 	  teleporterCond{false},
 	  timer{0}
 {
-	//===========================================================//
-	// Set up post processing effect textures and shapes         //
-	//===========================================================//
 	target.create(windowW, windowH);
 	secondPass.create(windowW, windowH);
 	secondPass.setSmooth(true);
@@ -68,23 +66,14 @@ Game::Game(float _windowW, float _windowH, InputController * _pInput, FontContro
 	vignetteShadowSpr.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::vignetteShadow));
 	vignetteShadowSpr.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setColor(sf::Color(255,255,255,100));
-	
-	//===========================================================//
-	// Set the views                                             //
-	//===========================================================//
 	worldView.setSize(windowW, windowH);
 	worldView.setCenter(windowW / 2, windowH / 2);
 	hudView.setSize(windowW, windowH);
 	hudView.setCenter(windowW / 2, windowH / 2);
-	
 	bkg.giveWindowSize(windowW, windowH);
-	
 	UI.setView(&worldView);
-	
-	//Let the tile controller know where player is
 	tiles.setPosition((windowW / 2) - 16, (windowH / 2));
 	tiles.setWindowSize(windowW, windowH);
-	
 	// Completely non-general code only used by the intro level (it's not procedurally generated)
 	details.add<2>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (6 * 26),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
@@ -112,33 +101,26 @@ Game::Game(float _windowW, float _windowH, InputController * _pInput, FontContro
 		w.setYinit(it->second);
 		tiles.walls.push_back(w);
 	}
-	
 	en.setWindowSize(windowW, windowH);
-	
 	pFonts->setWaypointText(level);
-	
 	details.add<0>(tiles.posX - 178 + 8 * 32, tiles.posY + 284 + -7 * 26,
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::teleporterGlow));
-	
 	bkg.setBkg(0);
-	
 	sndCtrl.playMusic(0);
 	beamGlowTxr.loadFromFile(resourcePath() + "teleporterBeamGlow.png");
 	beamGlowSpr.setTexture(beamGlowTxr);
 	beamGlowSpr.setPosition(windowW / 2 - 200, windowH / 2 - 200 + 30);
 	beamGlowSpr.setColor(sf::Color(0, 0, 0, 255));
-	
 	transitionShape.setSize(sf::Vector2f(windowW, windowH));
 	transitionShape.setFillColor(sf::Color(0, 0, 0, 0));
-	
 	vignetteSprite.setColor(sf::Color(255, 255, 255));
 }
 
 void Game::draw(sf::RenderWindow & window) {
 	target.clear(sf::Color::Transparent);
 	if (!stashed || preload) {
-		gObjectMutex.lock();
+		globalObjectMutex.lock();
 		bkg.drawBackground(target);
 		tiles.draw(target, &glowSprs1, &glowSprs2, level);
 		glowSprs2.clear();
@@ -151,7 +133,7 @@ void Game::draw(sf::RenderWindow & window) {
 		}
 		drawGroup(effectGroup, gameObjects, glowSprs1);
 		en.draw(gameObjects, gameShadows);
-		gObjectMutex.unlock();
+		globalObjectMutex.unlock();
 		if (!gameShadows.empty()) {
 			for (auto & element : gameShadows) {
 				target.draw(std::get<0>(element));
@@ -163,43 +145,41 @@ void Game::draw(sf::RenderWindow & window) {
 				return (std::get<1>(arg1) < std::get<1>(arg2));
 			});
 		window.setView(worldView);
-		if (!gameObjects.empty()) {
-			sf::Shader & colorShader = globalResourceHandler.getShader(ResourceHandler::Shader::color);
-			for (auto & element : gameObjects) {
-				switch (std::get<2>(element)) {
-				case Rendertype::shadeDefault:
-					std::get<0>(element).setColor(sf::Color(190, 190, 210, std::get<0>(element).getColor().a));
-					lightingMap.draw(std::get<0>(element));
-					break;
+		sf::Shader & colorShader = globalResourceHandler.getShader(ResourceHandler::Shader::color);
+		for (auto & element : gameObjects) {
+			switch (std::get<2>(element)) {
+			case Rendertype::shadeDefault:
+				std::get<0>(element).setColor(sf::Color(190, 190, 210, std::get<0>(element).getColor().a));
+				lightingMap.draw(std::get<0>(element));
+				break;
 					
-				case Rendertype::shadeNone:
-					lightingMap.draw(std::get<0>(element));
-					break;
+			case Rendertype::shadeNone:
+				lightingMap.draw(std::get<0>(element));
+				break;
 					
-				case Rendertype::shadeWhite:
-					colorShader.setParameter("amount", std::get<3>(element));
-					colorShader.setParameter("targetColor", sf::Vector3f(1.00, 1.00, 1.00));
-					lightingMap.draw(std::get<0>(element), &colorShader);
-					break;
+			case Rendertype::shadeWhite:
+				colorShader.setParameter("amount", std::get<3>(element));
+				colorShader.setParameter("targetColor", sf::Vector3f(1.00, 1.00, 1.00));
+				lightingMap.draw(std::get<0>(element), &colorShader);
+				break;
 					
-				case Rendertype::shadeRed:
-					colorShader.setParameter("amount", std::get<3>(element));
-					colorShader.setParameter("targetColor", sf::Vector3f(0.98, 0.22, 0.03));
-					lightingMap.draw(std::get<0>(element), &colorShader);
-					break;
+			case Rendertype::shadeRed:
+				colorShader.setParameter("amount", std::get<3>(element));
+				colorShader.setParameter("targetColor", sf::Vector3f(0.98, 0.22, 0.03));
+				lightingMap.draw(std::get<0>(element), &colorShader);
+				break;
 					
-				case Rendertype::shadeCrimson:
-					colorShader.setParameter("amount", std::get<3>(element));
-					colorShader.setParameter("targetColor", sf::Vector3f(0.94, 0.09, 0.34));
-					lightingMap.draw(std::get<0>(element), &colorShader);
-					break;
+			case Rendertype::shadeCrimson:
+				colorShader.setParameter("amount", std::get<3>(element));
+				colorShader.setParameter("targetColor", sf::Vector3f(0.94, 0.09, 0.34));
+				lightingMap.draw(std::get<0>(element), &colorShader);
+				break;
 					
-				case Rendertype::shadeNeon:
-					colorShader.setParameter("amount", std::get<3>(element));
-					colorShader.setParameter("targetColor", sf::Vector3f(0.29, 0.99, 0.99));
-					lightingMap.draw(std::get<0>(element), &colorShader);
-					break;
-				}
+			case Rendertype::shadeNeon:
+				colorShader.setParameter("amount", std::get<3>(element));
+				colorShader.setParameter("targetColor", sf::Vector3f(0.29, 0.99, 0.99));
+				lightingMap.draw(std::get<0>(element), &colorShader);
+				break;
 			}
 		}
 		sf::Color blendAmount(185, 185, 185, 255);
@@ -280,7 +260,7 @@ void Game::draw(sf::RenderWindow & window) {
 	} else {
 		window.draw(sf::Sprite(target.getTexture()));
 	}
-	gUIMutex.lock();
+	globalUIMutex.lock();
 	if (player.getState() == Player::State::dead) {
 		UI.draw(window, *pFonts);
 	} else {
@@ -290,21 +270,21 @@ void Game::draw(sf::RenderWindow & window) {
 		pFonts->print(window);
 	}
 	window.setView(worldView);
-	gUIMutex.unlock();
-	gTransitionMutex.lock();
+	globalUIMutex.unlock();
+	globalTransitionMutex.lock();
 	drawTransitions(window);
-	gTransitionMutex.unlock();
+	globalTransitionMutex.unlock();
 }
 
 void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
-	float xOffset{player.getWorldOffsetX()};
-	float yOffset{player.getWorldOffsetY()};
+	float xOffset = player.getWorldOffsetX();
+	float yOffset = player.getWorldOffsetY();
 	// Blurring is graphics intensive, the game caches frames in a RenderTexture when possible
 	if (stashed && UI.getState() != UserInterface::State::statsScreen && UI.getState() != UserInterface::State::menuScreen) {
 		stashed = false;
 	}
 	if (!stashed || preload) {
-		gObjectMutex.lock();
+		globalObjectMutex.lock();
 		// Update positions
 		bkg.setOffset(xOffset, yOffset);
 		tiles.update(xOffset, yOffset);
@@ -320,9 +300,9 @@ void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		if (!UI.isOpen() || (UI.isOpen() && player.getState() == Player::State::dead)) {
 			effectGroup.update(xOffset, yOffset, elapsedTime);
 		}
-		gObjectMutex.unlock();
+		globalObjectMutex.unlock();
 	}
-	gUIMutex.lock();
+	globalUIMutex.lock();
     if (player.getState() == Player::State::dead) {
 		UI.dispDeathSeq();
 		// If the death sequence is complete and the UI controller is finished playing its animation
@@ -345,11 +325,11 @@ void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		}
 		pFonts->updateHealth(player.getHealth());
 	}
-	gUIMutex.unlock();
+	globalUIMutex.unlock();
 	ssc.update(player);
-	gTransitionMutex.lock();
+	globalTransitionMutex.lock();
 	updateTransitions(xOffset, yOffset, elapsedTime);
-	gTransitionMutex.unlock();
+	globalTransitionMutex.unlock();
 }
 
 void Game::drawTransitions(sf::RenderWindow & window) {

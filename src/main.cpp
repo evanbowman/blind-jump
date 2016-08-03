@@ -76,8 +76,8 @@ int main(int argc, char * argv[]) {
 			}
 			time_point stop = high_resolution_clock::now();
 			logicUpdateDelta = std::chrono::duration_cast<nanoseconds>(stop - start);
-			static const microseconds logicUpdateDelay(1000);
-			std::this_thread::sleep_for(logicUpdateDelay - logicUpdateDelta);
+			static const microseconds logicUpdateCap(1000);
+			std::this_thread::sleep_for(logicUpdateCap - logicUpdateDelta);
 		}
 		graphicsThread.join();
 	} catch (std::system_error err) {
