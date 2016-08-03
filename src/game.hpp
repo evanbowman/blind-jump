@@ -101,7 +101,8 @@ private:
 	std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> gameObjects;
 	std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> gameShadows;
 	ScreenShakeController ssc;
-	void updateTransitions(float, float, const sf::Time &, sf::RenderWindow &);
+	void updateTransitions(float, float, const sf::Time &);
+	void drawTransitions(sf::RenderWindow &);
 	int_fast32_t timer;
 };
 

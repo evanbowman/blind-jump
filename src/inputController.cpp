@@ -33,7 +33,7 @@ InputController::InputController()
 	  }
 {
 	if (sf::Joystick::isConnected(0)) {
-		input.mapJsById();
+		mapJsById();
 	}
 }
 

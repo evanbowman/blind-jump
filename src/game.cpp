@@ -27,7 +27,7 @@
 #include "game.hpp"
 #include "easingTemplates.hpp"
 
-std::mutex globalObjectGuard, globalUIGuard;
+std::mutex gObjectMutex, gUIMutex, gTransitionMutex;
 
 Coordinate pickLocation(std::vector<Coordinate>& emptyLocations) {
 	int locationSelect = std::abs(static_cast<int>(globalRNG())) % emptyLocations.size();
@@ -138,10 +138,7 @@ Game::Game(float _windowW, float _windowH, InputController * _pInput, FontContro
 void Game::draw(sf::RenderWindow & window) {
 	target.clear(sf::Color::Transparent);
 	if (!stashed || preload) {
-		//=====================================//
-		// Begin Critical Section              //
-		//=====================================//
-		globalObjectGuard.lock();
+		gObjectMutex.lock();
 		bkg.drawBackground(target);
 		tiles.draw(target, &glowSprs1, &glowSprs2, level);
 		glowSprs2.clear();
@@ -154,10 +151,7 @@ void Game::draw(sf::RenderWindow & window) {
 		}
 		drawGroup(effectGroup, gameObjects, glowSprs1);
 		en.draw(gameObjects, gameShadows);
-		globalObjectGuard.unlock();
-		//=====================================//
-		// End Critical Section                //
-		//=====================================//
+		gObjectMutex.unlock();
 		if (!gameShadows.empty()) {
 			for (auto & element : gameShadows) {
 				target.draw(std::get<0>(element));
@@ -286,10 +280,7 @@ void Game::draw(sf::RenderWindow & window) {
 	} else {
 		window.draw(sf::Sprite(target.getTexture()));
 	}
-	//=====================================//
-	// Begin Critical Section              //
-	//=====================================//
-	globalUIGuard.lock();
+	gUIMutex.lock();
 	if (player.getState() == Player::State::dead) {
 		UI.draw(window, *pFonts);
 	} else {
@@ -299,11 +290,10 @@ void Game::draw(sf::RenderWindow & window) {
 		pFonts->print(window);
 	}
 	window.setView(worldView);
-	globalUIGuard.unlock();
-	//=====================================//
-	// End Critical Section                //
-	//=====================================//
-	// updateTransitions(xOffset, yOffset, elapsedTime, window);
+	gUIMutex.unlock();
+	gTransitionMutex.lock();
+	drawTransitions(window);
+	gTransitionMutex.unlock();
 }
 
 void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
@@ -314,10 +304,7 @@ void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		stashed = false;
 	}
 	if (!stashed || preload) {
-		//=====================================//
-		// Begin Critical Section              //
-		//=====================================//
-		globalObjectGuard.lock();
+		gObjectMutex.lock();
 		// Update positions
 		bkg.setOffset(xOffset, yOffset);
 		tiles.update(xOffset, yOffset);
@@ -333,15 +320,9 @@ void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		if (!UI.isOpen() || (UI.isOpen() && player.getState() == Player::State::dead)) {
 			effectGroup.update(xOffset, yOffset, elapsedTime);
 		}
-		globalObjectGuard.unlock();
-		//=====================================//
-		// End Critical Section                //
-		//=====================================//
+		gObjectMutex.unlock();
 	}
-	//=====================================//
-	// Begin Critical Section              //
-	//=====================================//
-	globalUIGuard.lock();
+	gUIMutex.lock();
     if (player.getState() == Player::State::dead) {
 		UI.dispDeathSeq();
 		// If the death sequence is complete and the UI controller is finished playing its animation
@@ -364,15 +345,64 @@ void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 		}
 		pFonts->updateHealth(player.getHealth());
 	}
-	globalUIGuard.unlock();
-	//=====================================//
-	// Begin Critical Section              //
-	//=====================================//
-	// Update the screen shake controller
+	gUIMutex.unlock();
 	ssc.update(player);
+	gTransitionMutex.lock();
+	updateTransitions(xOffset, yOffset, elapsedTime);
+	gTransitionMutex.unlock();
 }
 
-void Game::updateTransitions(float xOffset, float yOffset, const sf::Time & elapsedTime, sf::RenderWindow & window) {
+void Game::drawTransitions(sf::RenderWindow & window) {
+switch (transitionState) {
+	case TransitionState::None:
+    	break;
+
+	case TransitionState::ExitBeamEnter:
+    	window.draw(beamShape);
+		break;
+
+	case TransitionState::ExitBeamInflate:
+    	window.draw(beamShape);
+		break;
+
+	case TransitionState::ExitBeamDeflate:
+    	window.draw(beamShape);
+		break;
+
+	case TransitionState::TransitionOut:
+		if (level != 0) {
+			if (timer > 100) {
+				window.setView(worldView);
+				window.draw(transitionShape);
+			}
+		} else {
+			if (timer > 1600) {
+				window.setView(worldView);
+				window.draw(transitionShape);
+				uint8_t alpha = Easing::easeOut<1>(timer - 1600, static_cast<int_fast32_t>(600)) * 255;
+				pFonts->drawTitle(alpha, window);
+			} else {
+				pFonts->drawTitle(255, window);
+			}
+		}
+		break;
+
+	case TransitionState::TransitionIn:
+    	window.draw(transitionShape);
+		break;
+
+	case TransitionState::EntryBeamDrop:
+    	window.draw(beamShape);
+		break;
+
+	case TransitionState::EntryBeamFade:
+    	window.draw(beamShape);
+		break;
+	}
+	
+}
+
+void Game::updateTransitions(float xOffset, float yOffset, const sf::Time & elapsedTime) {
 	switch (transitionState) {
 	case TransitionState::None:
 		{
@@ -406,7 +436,6 @@ void Game::updateTransitions(float xOffset, float yOffset, const sf::Time & elap
 			beamShape.setFillColor(sf::Color(114, 255, 229, 255));
 			transitionState = TransitionState::ExitBeamInflate;
 		}
-		window.draw(beamShape);
 		break;
 
 	case TransitionState::ExitBeamInflate:
@@ -422,7 +451,6 @@ void Game::updateTransitions(float xOffset, float yOffset, const sf::Time & elap
 			transitionState = TransitionState::ExitBeamDeflate;
 			player.visible = false;
 		}
-		window.draw(beamShape);
 		break;
 
 	case TransitionState::ExitBeamDeflate:
@@ -438,7 +466,6 @@ void Game::updateTransitions(float xOffset, float yOffset, const sf::Time & elap
 				transitionState = TransitionState::TransitionOut;
 			}
 		}
-		window.draw(beamShape);
 		break;
 
 	case TransitionState::TransitionOut:
@@ -447,31 +474,23 @@ void Game::updateTransitions(float xOffset, float yOffset, const sf::Time & elap
 			if (timer > 100) {
 				uint_fast8_t alpha = Easing::easeIn<1>(timer - 100, static_cast<int_fast32_t>(900)) * 255;
 				transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
-				window.setView(worldView);
-				window.draw(transitionShape);
 			}
 			if (timer >= 1000) {
 				transitionState = TransitionState::TransitionIn;
 				timer = 0;
 				transitionShape.setFillColor(sf::Color(0, 0, 0, 255));
-				teleporterCond = true;
+				Reset();
 			}
 		} else {
 			if (timer > 1600) {
 				uint_fast8_t alpha = Easing::easeIn<1>(timer - 1600, static_cast<int_fast32_t>(1400)) * 255;
 				transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
-				window.setView(worldView);
-				window.draw(transitionShape);
-				alpha = Easing::easeOut<1>(timer - 1600, static_cast<int_fast32_t>(600)) * 255;
-				pFonts->drawTitle(alpha, window);
-			} else {
-				pFonts->drawTitle(255, window);
 			}
 			if (timer > 3000) {
 				transitionState = TransitionState::TransitionIn;
 				timer = 0;
 				transitionShape.setFillColor(sf::Color(0, 0, 0, 255));
-				teleporterCond = true;
+				Reset();
 			}
 		}
 		break;
@@ -489,7 +508,6 @@ void Game::updateTransitions(float xOffset, float yOffset, const sf::Time & elap
 			beamShape.setPosition(windowW / 2 - 2, 0);
 			beamShape.setFillColor(sf::Color(114, 255, 229, 240));
 		}
-		window.draw(transitionShape);
 		break;
 
 	case TransitionState::EntryBeamDrop:
@@ -504,7 +522,6 @@ void Game::updateTransitions(float xOffset, float yOffset, const sf::Time & elap
 			player.visible = true;
 			ssc.shake();
 		}
-		window.draw(beamShape);
 		break;
 
 	case TransitionState::EntryBeamFade:
@@ -518,7 +535,6 @@ void Game::updateTransitions(float xOffset, float yOffset, const sf::Time & elap
 			player.setState(Player::State::nominal);
 			timer = 0;
 		}
-		window.draw(beamShape);
 		break;
 	}
 }

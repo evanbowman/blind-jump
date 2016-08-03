@@ -48,18 +48,10 @@ int main(int argc, char * argv[]) {
 	window.setMouseCursorVisible(false);
 	window.setVerticalSyncEnabled(true);
 	InputController input;
-	if (sf::Joystick::isConnected(0)) {
-		input.mapJsById();
-	}
 	sf::View fontView(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
 	sf::View view(sf::FloatRect(0, 0, drawableRegionSize.x, drawableRegionSize.y));
 	FontController fonts(fontView, drawableRegionSize.x / 2, drawableRegionSize.y / 2);
 	Game game(drawableRegionSize.x, drawableRegionSize.y, &input, &fonts);
-	sf::Image icon;
-	if (!icon.loadFromFile(resourcePath() + "gameIcon.png")) {
-		return EXIT_FAILURE;
-	}
-	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 	sf::Clock gameClock;
 	duration logicUpdateDelta;
 	try {
@@ -73,7 +65,7 @@ int main(int argc, char * argv[]) {
 		}, &game, &window, &view);
 		while (window.isOpen()) {
 			time_point start = high_resolution_clock::now();
-			sf::Time elapsedTime = gameClock.restart();
+			sf::Time elapsedTime = gameClock.restart(); // TODO: use chrono clock instead
 			// Do not update the inputController to check for input while the user is re-mapping the keys
 			if (game.getUI().getState() != UserInterface::State::customizeKeyboardScreen &&
 				game.getUI().getState() != UserInterface::State::customizeJoystickScreen) {
@@ -81,9 +73,6 @@ int main(int argc, char * argv[]) {
 			}
 			if (input.isFocused()) {
 				game.update(window, elapsedTime);
-			}
-			if (game.getTeleporterCond()) {
-				game.Reset();
 			}
 			time_point stop = high_resolution_clock::now();
 			logicUpdateDelta = std::chrono::duration_cast<nanoseconds>(stop - start);

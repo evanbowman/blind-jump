@@ -35,7 +35,7 @@ int loadShader(const char * fname, ResourceHandler::Shader id, std::array<sf::Sh
 	return 0;
 }
 
-int loadImage(const char * fname, ResourceHandler::Image id, std::array<sf::Image, 3> & images) {
+int loadImage(const char * fname, ResourceHandler::Image id, std::array<sf::Image, 4> & images) {
 	std::size_t index = static_cast<int>(id);
 	if (!images[index].loadFromFile(resourcePath() + fname)) {
 		return 1;
@@ -72,6 +72,7 @@ int ResourceHandler::load() {
 	errs += loadImage("soilTileset.png", Image::soilTileset, images);
 	errs += loadImage("grassSet.png", Image::grassSet1, images);
 	errs += loadImage("grassSetEdge.png", Image::grassSet2, images);
+	errs += loadImage("gameIcon.png", Image::icon, images);
 	return errs;
 }
 
