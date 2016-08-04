@@ -27,11 +27,11 @@ public:
 	float getPosX() const;
 	float getPosY() const;
 	
-	constexpr int8_t getWidth() const {
+	inline int8_t getWidth() const {
 		return 32;
 	}
 
-	constexpr int8_t getHeight() const {
+	inline int8_t getHeight() const {
 		return 26;
 	}
 

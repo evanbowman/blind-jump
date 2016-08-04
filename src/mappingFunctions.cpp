@@ -17,6 +17,7 @@
 
 #include "tileController.hpp"
 #include "mappingFunctions.hpp"
+#include <cstring>
 
 // This code is not so readable... TODO: make map type a scoped enum
 
@@ -153,8 +154,8 @@ void condense(uint8_t map[61][61], uint8_t maptemp[61][61], char rep) {
 
 int initMapOverlay(uint8_t map[61][61]) {
 	uint8_t maptemp[61][61];
-	memset(map, 0, sizeof(map[0][0]) * std::pow(61, 2));
-	memset(map, 0, sizeof(map[0][0]) * std::pow(61, 2));
+	std::memset(map, 0, sizeof(map[0][0]) * std::pow(61, 2));
+	std::memset(map, 0, sizeof(map[0][0]) * std::pow(61, 2));
 	for (int i = 5; i < 54; i++) {
 		for (int j = 5; j < 54; j++) {
 			map[i][j] = (std::abs(static_cast<int>(globalRNG())) % 2);
@@ -212,8 +213,8 @@ void cleanEdgesPostCombine(uint8_t map[61][61]) {
 
 int generateMap(uint8_t map[61][61]) {
 	uint8_t maptemp[61][61];
-	memset(map, 0, sizeof(map[0][0]) * std::pow(61, 2));
-	memset(maptemp, 0, sizeof(maptemp[0][0]) * std::pow(61, 2));
+	std::memset(map, 0, sizeof(map[0][0]) * std::pow(61, 2));
+	std::memset(maptemp, 0, sizeof(maptemp[0][0]) * std::pow(61, 2));
 	for (int i = 16; i < 44; i++) {
 		for (int j = 16; j < 44; j++) {
 			map[i][j] = (std::abs(static_cast<int>(globalRNG())) % 2);

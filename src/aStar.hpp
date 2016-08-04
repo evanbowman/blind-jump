@@ -18,6 +18,7 @@
 #pragma once
 
 #include <vector>
+#include <stdint.h>
 
 #define MAP_WIDTH 61
 #define MAP_HEIGHT 61

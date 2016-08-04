@@ -16,7 +16,7 @@
 //========================================================================//
 
 // Start Date: 10/9/15
-// End Date: 
+// End Date:
 
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
@@ -55,21 +55,22 @@ int main(int argc, char * argv[]) {
 	sf::Clock gameClock;
 	duration logicUpdateDelta;
 	try {
-		std::thread graphicsThread([](Game * pGame, sf::RenderWindow * pWindow, sf::View * pView) {
+		std::thread graphicsThread([](Game * pGame, sf::RenderWindow * pWindow, sf::View * pView, InputController * pInput) {
 		    while (pWindow->isOpen()) {
+				pInput->update(*pWindow);
 				pWindow->clear();
 				pWindow->setView(*pView);
 				pGame->draw(*pWindow);
 				pWindow->display();
 			}
-		}, &game, &window, &view);
+			}, &game, &window, &view, &input);
 		while (window.isOpen()) {
 			time_point start = high_resolution_clock::now();
 			sf::Time elapsedTime = gameClock.restart(); // TODO: use chrono clock instead
 			// Do not update the inputController to check for input while the user is re-mapping the keys
 			if (game.getUI().getState() != UserInterface::State::customizeKeyboardScreen &&
 				game.getUI().getState() != UserInterface::State::customizeJoystickScreen) {
-				input.update(window);
+				// input.update(window);
 			}
 			game.update(elapsedTime);
 			time_point stop = high_resolution_clock::now();

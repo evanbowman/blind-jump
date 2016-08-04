@@ -17,6 +17,7 @@
 
 #include "tileController.hpp"
 #include "ResourcePath.hpp"
+#include <cstring>
 #include "mappingFunctions.hpp"
 #include "turret.hpp"
 #include "initMapVectors.hpp"
@@ -42,9 +43,9 @@ float tileController::getPosY() const {
 
 void createMapImage(const sf::Image & tileImage, uint8_t mapArray[61][61], sf::Texture tx[2], const sf::Image & grassSet, const sf::Image & grassSetEdge) {
 	uint8_t mapTemp[61][61], bitMask[61][61], gratePositions[61][61];
-	memset(mapTemp, 0, sizeof(mapTemp[0][0]) * std::pow(61, 2));
-	memset(bitMask, 0, sizeof(bitMask[0][0]) * std::pow(61, 2));
-	memset(gratePositions, 0, sizeof(gratePositions[0][0]) * std::pow(61, 2));
+	std::memset(mapTemp, 0, sizeof(mapTemp[0][0]) * std::pow(61, 2));
+	std::memset(bitMask, 0, sizeof(bitMask[0][0]) * std::pow(61, 2));
+	std::memset(gratePositions, 0, sizeof(gratePositions[0][0]) * std::pow(61, 2));
 	for (int i = 0; i < 61; i++) {
 		for (int j = 0; j < 61; j++) {
 			if (mapArray[i][j] == 5 && !(std::abs(static_cast<int>(globalRNG())) % 11)) {
