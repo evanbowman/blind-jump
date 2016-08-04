@@ -47,33 +47,34 @@ int main(int argc, char * argv[]) {
 	sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Blind Jump", sf::Style::Fullscreen, settings);
 	window.setMouseCursorVisible(false);
 	window.setVerticalSyncEnabled(true);
+	window.setFramerateLimit(120);
 	InputController input;
 	sf::View fontView(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
 	sf::View view(sf::FloatRect(0, 0, drawableRegionSize.x, drawableRegionSize.y));
 	FontController fonts(fontView, drawableRegionSize.x / 2, drawableRegionSize.y / 2);
 	Game game(drawableRegionSize.x, drawableRegionSize.y, &input, &fonts);
-	sf::Clock gameClock;
-	duration logicUpdateDelta;
 	try {
-		std::thread graphicsThread([](Game * pGame, sf::RenderWindow * pWindow, sf::View * pView, InputController * pInput) {
-		    while (pWindow->isOpen()) {
-				pWindow->clear();
-				pWindow->setView(*pView);
-				pGame->draw(*pWindow);
-				pWindow->display();
+		std::thread logicThread([](Game * pGame, sf::RenderWindow * pWindow) {
+			duration logicUpdateDelta;
+			sf::Clock gameClock;
+			while (pWindow->isOpen()) {
+				time_point start = high_resolution_clock::now();
+				sf::Time elapsedTime = gameClock.restart(); // TODO: use chrono clock instead
+				pGame->update(elapsedTime);
+				time_point stop = high_resolution_clock::now();
+				logicUpdateDelta = std::chrono::duration_cast<nanoseconds>(stop - start);
+				static const microseconds logicUpdateCap(1000);
+				std::this_thread::sleep_for(logicUpdateCap - logicUpdateDelta);
 			}
-			}, &game, &window, &view, &input);
+		}, &game, &window);
 		while (window.isOpen()) {
-			time_point start = high_resolution_clock::now();
-			sf::Time elapsedTime = gameClock.restart(); // TODO: use chrono clock instead
-			input.update(window);
-			game.update(elapsedTime);
-			time_point stop = high_resolution_clock::now();
-			logicUpdateDelta = std::chrono::duration_cast<nanoseconds>(stop - start);
-			static const microseconds logicUpdateCap(1000);
-			std::this_thread::sleep_for(logicUpdateCap - logicUpdateDelta);
+			input.update(window);			
+			window.clear();
+			window.setView(view);
+			game.draw(window);
+			window.display();
 		}
-		graphicsThread.join();
+	    logicThread.join();
 	} catch (std::system_error err) {
 		// TODO: Handle possible error in thread construction
 	} catch (...) {
