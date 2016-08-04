@@ -37,7 +37,7 @@ ResourceHandler globalResourceHandler;
 
 std::mt19937 globalRNG;
 
-int main(int argc, char * argv[]) {
+int main() {
 	if (globalResourceHandler.load()) return EXIT_FAILURE;
 	seedRNG();
 	// Since the graphics are pixel art it's okay to use upsampled textures for everything except font rendering
@@ -63,8 +63,8 @@ int main(int argc, char * argv[]) {
 				pGame->update(elapsedTime);
 				time_point stop = high_resolution_clock::now();
 				logicUpdateDelta = std::chrono::duration_cast<nanoseconds>(stop - start);
-				static const microseconds logicUpdateCap(2000);
-				std::this_thread::sleep_for(logicUpdateCap - logicUpdateDelta);
+				static const microseconds logicUpdateLimit(2000);
+				std::this_thread::sleep_for(logicUpdateLimit - logicUpdateDelta);
 			}
 		}, &game, &window);
 		while (window.isOpen()) {

@@ -24,14 +24,7 @@
 #include "screenShakeController.hpp"
 
 
-enemyController::enemyController() {
-	//Load all of the textures to apply to the enemies
-	const std::string turretfileExt[10] = {"turret5.png", "turret4.png", "turret3.png", "turret2.png", "turret1.png", "turretShadow5.png", "turretShadow4.png", "turretShadow3.png", "turretShadow2.png", "turretShadow1.png"};
-	for (int i = 0; i < 10; i++) {
-		turretTextures[i].loadFromFile(resourcePath() + turretfileExt[i]);
-		turretSprites[i].setTexture(turretTextures[i]);
-	}
-}
+enemyController::enemyController() {}
 
 void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows) {
 	for (auto & element : turrets) {
@@ -184,10 +177,6 @@ void enemyController::clear() {
 	scoots.clear();
 	dashers.clear();
 	critters.clear();
-}
-
-sf::Sprite * enemyController::getTurretSprites() {
-	return turretSprites;
 }
 
 void enemyController::addTurret(tileController * pTiles) {
