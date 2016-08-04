@@ -28,8 +28,8 @@ EnemyShot::EnemyShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr,
 }
 
 void EnemyShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
-	xInit += 4.4 * (elapsedTime.asMilliseconds() / 17.6) * (cos(direction));
-	yInit += 4.4 * (elapsedTime.asMilliseconds() / 17.6) * (sin(direction));
+	xInit += 4.4 * (elapsedTime.asMicroseconds() * 0.00005f) * (cos(direction));
+	yInit += 4.4 * (elapsedTime.asMicroseconds() * 0.00005f) * (sin(direction));
 	setPosition(xInit + xOffset, yInit + yOffset);
 
 	hitBox.setPosition(position);

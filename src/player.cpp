@@ -404,8 +404,8 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 		frameIndex = 0;
 	}
 	
-	worldOffsetX += (lSpeed + -rSpeed) * (elapsedTime.asMilliseconds() * 0.02f);
-	worldOffsetY += (uSpeed + -dSpeed) * (elapsedTime.asMilliseconds() * 0.02f);
+	worldOffsetX += (lSpeed + -rSpeed) * (elapsedTime.asMicroseconds() * 0.00005f);
+	worldOffsetY += (uSpeed + -dSpeed) * (elapsedTime.asMicroseconds() * 0.00005f);
 	if (!blurs.empty()) {
 		for (auto it = blurs.begin(); it != blurs.end();) {
 			if (it->getKillFlag())

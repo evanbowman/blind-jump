@@ -104,8 +104,8 @@ void Critter::critterUpdate(float xOffset, float yOffset, EffectGroup & effects,
 		// If the path is not empty
 		else {
 			// Add each component of the direction vector to the enemy's position datafields
-			xInit -= speed * cos(currentDir) * (elapsedTime.asMilliseconds() / 17.6);
-			yInit -= speed * sin(currentDir) * (elapsedTime.asMilliseconds() / 17.6);
+			xInit -= speed * cos(currentDir) * (elapsedTime.asMicroseconds() * 0.00005f);
+			yInit -= speed * sin(currentDir) * (elapsedTime.asMicroseconds() * 0.00005f);
 			// If the enemy is sufficiently close to the target point, pop it and work on the next one
 			if (fabs(xInit - (((path.back().x * 32) + 4 + tilePosX))) < 8 && fabs(yInit - (((path.back().y * 26) + 4 + tilePosY))) < 8) {
 				recalc--;

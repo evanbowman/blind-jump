@@ -32,8 +32,8 @@ DasherShot::DasherShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxt
 }
 
 void DasherShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
-	xInit += scale * (elapsedTime.asMilliseconds() / 17.6) * (cos(direction));		 // Note: timeout starts at 60, so 60 - timout grows linearly with time
-	yInit += scale * (elapsedTime.asMilliseconds() / 17.6) * (sin(direction));
+	xInit += scale * (elapsedTime.asMicroseconds() * 0.00005f) * (cos(direction));		 // Note: timeout starts at 60, so 60 - timout grows linearly with time
+	yInit += scale * (elapsedTime.asMicroseconds() * 0.00005f) * (sin(direction));
 	setPosition(xInit + xOffset, yInit + yOffset + 11);
 	hitBox.setPosition(position);
 	glowSprite.setPosition(position.x, position.y + 18);

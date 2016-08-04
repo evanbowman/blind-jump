@@ -271,8 +271,8 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 		}
 	}
 	
-	xInit += hSpeed * (elapsedTime.asMilliseconds() / 17.6f);
-	yInit += vSpeed * (elapsedTime.asMilliseconds() / 17.6f);
+	xInit += hSpeed * (elapsedTime.asMicroseconds() * 0.00005f);
+	yInit += vSpeed * (elapsedTime.asMicroseconds() * 0.00005f);
 }
 
 void Dasher::onDeath(EffectGroup & effects) {
