@@ -4,7 +4,7 @@
 # 
 
 CC = clang++
-override CPPFLAGS += -O2 -std=c++14
+override CPPFLAGS += -O2 -std=c++14 -Wall -Werror
 LDFLAGS_MAC = -framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio -Xlinker -rpath -Xlinker @loader_path/../Frameworks -fobjc-link-runtime
 LDFLAGS_LINUX = -lsfml-graphics -lsfml-audio -lsfml-system -lsfml-window -lpthread
 EXECUTABLE = BlindJump
