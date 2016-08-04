@@ -17,7 +17,10 @@
 
 #include "FireExplosion.hpp"
 
-FireExplosion::FireExplosion(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, float x, float y) : Effect(x, y) {
+FireExplosion::FireExplosion(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, float x, float y) :
+	Effect(x, y),
+	glowFadeTimer(0)
+{
 	spriteSheet.setTexture(mainTxtr);
 	spriteSheet.setOrigin(29, 25);
 	glow.setTexture(glowTxtr);
@@ -27,6 +30,7 @@ FireExplosion::FireExplosion(const sf::Texture & mainTxtr, const sf::Texture & g
 void FireExplosion::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
 	setPosition(xInit + xOffset, yInit + yOffset);
 	timer += elapsedTime.asMilliseconds();
+	glowFadeTimer += elapsedTime.asMilliseconds();
 	if (timer > 70) {
 		timer -= 70;
 		frameIndex++;
@@ -35,14 +39,9 @@ void FireExplosion::update(float xOffset, float yOffset, const sf::Time & elapse
 			killFlag = true;
 		}
 	}
-	
-	sf::Color c = glow.getColor();
-	if (c.r > 8) {
-		c.r -= 8;
-		c.g -= 8;
-		c.b -= 8;
-		glow.setColor(c);
-	}
+
+	uint8_t color = Easing::easeOut<2>(glowFadeTimer, 560);
+    glow.setColor(sf::Color(color, color, color, 255));
 	
 	spriteSheet.setPosition(position.x, position.y);
 	glow.setPosition(position.x - 225, position.y - 225);

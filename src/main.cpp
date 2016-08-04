@@ -68,7 +68,7 @@ int main() {
 			}
 		}, &game, &window);
 		while (window.isOpen()) {
-			input.update(window);			
+			input.update(window);
 			window.clear();
 			window.setView(view);
 			game.draw(window);

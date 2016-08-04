@@ -20,11 +20,13 @@
 #include "SFML/Graphics.hpp"
 #include "spriteSheet.hpp"
 #include "Effect.hpp"
+#include "easingTemplates.hpp"
 
 class FireExplosion : public Effect {
 private:
 	mutable SpriteSheet<208, 173, 58, 51> spriteSheet;
 	sf::Sprite glow;
+    int32_t glowFadeTimer;
 	
 public:
 	FireExplosion(const sf::Texture &, const sf::Texture &, float, float);

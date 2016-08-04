@@ -23,7 +23,6 @@
 #include "lightingMap.h"
 #include "pillarPlacement.h"
 #include "math.h"
-#include "enemyCreationFunctions.hpp"
 #include "game.hpp"
 #include "easingTemplates.hpp"
 
