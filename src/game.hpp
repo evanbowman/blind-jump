@@ -47,7 +47,7 @@ public:
 	    EntryBeamFade
 	};
 	Game(float, float, InputController *, FontController *);
-	void update(sf::RenderWindow &, sf::Time &);
+	void update(sf::Time &);
 	void draw(sf::RenderWindow &);
 	void Reset();
 	bool getTeleporterCond();

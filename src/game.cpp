@@ -276,7 +276,7 @@ void Game::draw(sf::RenderWindow & window) {
 	globalTransitionMutex.unlock();
 }
 
-void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
+void Game::update(sf::Time & elapsedTime) {
 	float xOffset = player.getWorldOffsetX();
 	float yOffset = player.getWorldOffsetY();
 	// Blurring is graphics intensive, the game caches frames in a RenderTexture when possible
@@ -318,10 +318,10 @@ void Game::update(sf::RenderWindow & window, sf::Time & elapsedTime) {
 			pFonts->updateMaxHealth(4, 4);
 			pFonts->setWaypointText(level);
 		}
-		UI.update(window, player, *pFonts, pInput, elapsedTime);
+		UI.update(player, *pFonts, pInput, elapsedTime);
 	} else {
 		if (transitionState == TransitionState::None) {
-			UI.update(window, player, *pFonts, pInput, elapsedTime);
+			UI.update(player, *pFonts, pInput, elapsedTime);
 		}
 		pFonts->updateHealth(player.getHealth());
 	}

@@ -71,9 +71,7 @@ int main(int argc, char * argv[]) {
 				game.getUI().getState() != UserInterface::State::customizeJoystickScreen) {
 				input.update(window);
 			}
-			if (input.isFocused()) {
-				game.update(window, elapsedTime);
-			}
+			game.update(elapsedTime);
 			time_point stop = high_resolution_clock::now();
 			logicUpdateDelta = std::chrono::duration_cast<nanoseconds>(stop - start);
 			static const microseconds logicUpdateCap(1000);
@@ -85,6 +83,6 @@ int main(int argc, char * argv[]) {
 	} catch (...) {
 		// TODO: Handle other exceptional cases
 	}
-	return 0;
+	return EXIT_SUCCESS;
 }
 

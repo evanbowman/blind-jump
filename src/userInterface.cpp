@@ -87,7 +87,7 @@ void UserInterface::draw(sf::RenderWindow & window, FontController & fonts) {
 	}
 }
 
-void UserInterface::update(sf::RenderWindow & window, Player & player, FontController & fonts, InputController * pInput, const sf::Time & elapsed) {
+void UserInterface::update(Player & player, FontController & fonts, InputController * pInput, const sf::Time & elapsed) {
 	bool action = pInput->actionPressed();
 	bool up = pInput->upPressed();
 	bool down = pInput->downPressed();
@@ -142,7 +142,7 @@ void UserInterface::update(sf::RenderWindow & window, Player & player, FontContr
 				break;
 
 			case 2:
-				window.close();
+				// TODO: window.close();
 				break;
 			}
 		}
@@ -225,34 +225,10 @@ void UserInterface::update(sf::RenderWindow & window, Player & player, FontContr
 
 	case State::customizeKeyboardScreen:
 		// TODO: while in this state display text and select each heading accordingly
-		{
-			sf::Event event;
-			while (window.pollEvent(event)) {
-				if (event.type == sf::Event::KeyPressed) {
-					pInput->mapKeyboardKey(event.key.code, selectorPosition);
-					if (++selectorPosition > 7) {
-						state = State::settingsScreen;
-					}
-				}
-			}
-		}
 		break;
 
 	case State::customizeJoystickScreen:
 		// TODO: while in this state display text and select each heading accordingly
-		{
-			sf::Event event;
-			while (window.pollEvent(event)) {
-				if (event.type == sf::Event::JoystickButtonPressed) {
-					if (event.joystickButton.joystickId == 0) {
-						pInput->mapJoystickButton(event.joystickButton.button, selectorPosition);
-						if (++selectorPosition > 3) {
-							state = State::settingsScreen;
-						}
-					}
-				}
-			}
-		}
 		break;
 	}
 }
