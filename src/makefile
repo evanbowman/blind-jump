@@ -29,6 +29,9 @@ Linux: $(OBJECTS) ResourcePath.hpp ResourcePath.cxx
 clean:
 	rm *.o
 
+analyze:
+	cppcheck .
+
 depend:
 	makedepend -- $(CPPFLAGS) -- $(SOURCES)
 
