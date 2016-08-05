@@ -303,8 +303,8 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 		setSpeed<1>(right, up, down, collisionRight, rSpeed);
 		setSpeed<1>(up, left, right, collisionUp, uSpeed);
 		setSpeed<1>(down, left, right, collisionDown, dSpeed);
-		dashTimer += elapsedTime.asMilliseconds();
-		if (dashTimer > 60) {
+		dashTimer += elapsedTime.asMicroseconds();
+		if (dashTimer > 80000) {
 			dashTimer = 0;
 			state = State::dashing;
 			switch (frameIndex) {
@@ -367,8 +367,8 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 		setSpeed<7>(rightPrevious, upPrevious, downPrevious, collisionRight, rSpeed);
 		setSpeed<7>(upPrevious, leftPrevious, rightPrevious, collisionUp, uSpeed);
 		setSpeed<7>(downPrevious, leftPrevious, rightPrevious, collisionDown, dSpeed);
-		dashTimer += elapsedTime.asMilliseconds();
-		if (dashTimer > 88) {
+		dashTimer += elapsedTime.asMicroseconds();
+		if (dashTimer > 94000) {
 			dashTimer = 0;
 			state = State::cooldown;
 		}
@@ -379,8 +379,8 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 		setSpeed<1>(rightPrevious, upPrevious, downPrevious, collisionRight, rSpeed);
 		setSpeed<1>(upPrevious, leftPrevious, rightPrevious, collisionUp, uSpeed);
 		setSpeed<1>(downPrevious, leftPrevious, rightPrevious, collisionDown, dSpeed);
-		dashTimer += elapsedTime.asMilliseconds();
-		if (dashTimer > 220) {
+		dashTimer += elapsedTime.asMicroseconds();
+		if (dashTimer > 250000) {
 			dashTimer = 0;
 			state = State::nominal;
 			sheetIndex = cachedSheet;
@@ -442,31 +442,31 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 		if (gun.timeout > 0) {
 			gun.gunSpr.setPosition(xPos + 12, yPos + 15);
 		}
-		updateAnimation(elapsedTime, 9, 100);
+		updateAnimation(elapsedTime, 9, 110000);
 		break;
 
 	case Sheet::walkUp:
-		updateAnimation(elapsedTime, 9, 100);
+		updateAnimation(elapsedTime, 9, 110000);
 		break;
 			
 	case Sheet::walkLeft:
 		if (gun.timeout > 0) {
 			gun.gunSpr.setPosition(xPos + 2, yPos + 13);
 		}
-		updateAnimation(elapsedTime, 5, 100);
+		updateAnimation(elapsedTime, 5, 110000);
 		break;
 			
 	case Sheet::walkRight:
 		if (gun.timeout > 0) {
 			gun.gunSpr.setPosition(xPos + 19, yPos + 13);
 		}
-		updateAnimation(elapsedTime, 5, 100);
+		updateAnimation(elapsedTime, 5, 110000);
 		break;
 			
 	case Sheet::deathSheet:
 		if (frameIndex < 10) {
-			animationTimer += elapsedTime.asMilliseconds();
-			if (animationTimer > 60) {
+			animationTimer += elapsedTime.asMicroseconds();
+			if (animationTimer > 60000) {
 				animationTimer = 0;
 				++frameIndex;
 			}
@@ -474,7 +474,7 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 		break;
 			
 	case Sheet::dashSheet:
-		animationTimer += elapsedTime.asMilliseconds();
+		animationTimer += elapsedTime.asMicroseconds();
 		break;
 	}
 }
@@ -561,7 +561,7 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows) {
 			gameObjects.emplace_back(dashSheet[frameIndex], yPos, renderType, colorAmount);
 			gameShadows.emplace_back(shadowSprite, 0.f, Rendertype::shadeDefault, 0.f);
 			if (state == Player::State::dashing) {
-				if (animationTimer > 20) {
+				if (animationTimer > 20000) {
 					animationTimer = 0;
 					blurs.emplace_back(&std::get<0>(gameObjects.back()), xPos - worldOffsetX, yPos - worldOffsetY);
 				}
@@ -574,8 +574,8 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows) {
 	}
 }
 
-void Player::updateAnimation(const sf::Time & elapsedTime, uint8_t maxIndex, uint8_t count) {
-	animationTimer += elapsedTime.asMilliseconds();
+void Player::updateAnimation(const sf::Time & elapsedTime, uint8_t maxIndex, uint32_t count) {
+	animationTimer += elapsedTime.asMicroseconds();
 	if (animationTimer > count) {
 		frameIndex++;
 		animationTimer -= count; 

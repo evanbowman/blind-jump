@@ -85,7 +85,7 @@ private:
 	void checkEffectCollisions(EffectGroup &, FontController *);
 	std::vector<Dasher::Blur> blurs; // I could have designed this better...
 	Health health;
-	void updateAnimation(const sf::Time &, uint8_t, uint8_t);
+	void updateAnimation(const sf::Time &, uint8_t, uint32_t);
 	float xPos, yPos, worldOffsetX, worldOffsetY;
 	uint8_t frameIndex;
 	Sheet sheetIndex, cachedSheet;
@@ -97,7 +97,7 @@ private:
 	SpriteSheet<432, 76, 32, 32> walkRight;
 	SpriteSheet<208, 38, 40, 38> deathSheet;
 	SpriteSheet<208, 140, 32, 33> dashSheet;
-	int32_t animationTimer, dashTimer, invulnerableCounter;
+	int64_t animationTimer, dashTimer, invulnerableCounter;
 	bool invulnerable;
 	State state;
 	float colorAmount;

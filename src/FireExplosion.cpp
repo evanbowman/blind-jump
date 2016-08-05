@@ -29,10 +29,10 @@ FireExplosion::FireExplosion(const sf::Texture & mainTxtr, const sf::Texture & g
 
 void FireExplosion::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
 	setPosition(xInit + xOffset, yInit + yOffset);
-	timer += elapsedTime.asMilliseconds();
-	glowFadeTimer += elapsedTime.asMilliseconds();
-	if (timer > 70) {
-		timer -= 70;
+	timer += elapsedTime.asMicroseconds();
+	glowFadeTimer += elapsedTime.asMicroseconds();
+	if (timer > 70000) {
+		timer -= 70000;
 		frameIndex++;
 		if (frameIndex > 8) {
 			frameIndex = 8;
@@ -40,7 +40,7 @@ void FireExplosion::update(float xOffset, float yOffset, const sf::Time & elapse
 		}
 	}
 
-	uint8_t color = Easing::easeOut<2>(glowFadeTimer, 560);
+	uint8_t color = Easing::easeOut<1>(glowFadeTimer, static_cast<int64_t>(560000));
     glow.setColor(sf::Color(color, color, color, 255));
 	
 	spriteSheet.setPosition(position.x, position.y);

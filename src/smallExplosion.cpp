@@ -17,7 +17,10 @@
 
 #include "smallExplosion.hpp"
 
-SmallExplosion::SmallExplosion(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, float x, float y) : Effect(x, y) {
+SmallExplosion::SmallExplosion(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, float x, float y) :
+	Effect(x, y),
+	glowFadeTimer(0)
+{
     spriteSheet.setTexture(mainTxtr);
 	spriteSheet.setOrigin(18, 18);
 	glow.setTexture(glowTxtr);
@@ -35,14 +38,10 @@ void SmallExplosion::update(float xOffset, float yOffset, const sf::Time & elaps
 			killFlag = true;
 		}
 	}
+
+	uint8_t color = Easing::easeOut<2>(glowFadeTimer, 560);
+    glow.setColor(sf::Color(color, color, color, 255));
 	
-	sf::Color c = glow.getColor();
-	if (c.r > 8) {
-		c.r -= 10;
-		c.g -= 10;
-		c.b -= 10;
-		glow.setColor(c);
-	}
 	spriteSheet.setPosition(position.x, position.y);
 	glow.setPosition(position.x - 225, position.y - 225);
 }

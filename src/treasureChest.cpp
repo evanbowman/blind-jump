@@ -45,9 +45,9 @@ void TreasureChest::update(float xOffset, float yOffset, const sf::Time & elapse
 
 	switch (state) {
 	case State::opening:
-		animationTimer += elapsedTime.asMilliseconds();
-		if (animationTimer > 50) {
-			animationTimer -= 50;
+		animationTimer += elapsedTime.asMicroseconds();
+		if (animationTimer > 50000) {
+			animationTimer -= 50000;
 			frameIndex++;
 			if (frameIndex > 5) {
 				frameIndex = 4;

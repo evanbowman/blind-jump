@@ -20,11 +20,13 @@
 #include "SFML/Graphics.hpp"
 #include "spriteSheet.hpp"
 #include "Effect.hpp"
+#include "easingTemplates.hpp"
 
 class SmallExplosion : public Effect {
 private:
 	mutable SpriteSheet<174, 224, 36, 36> spriteSheet;
 	sf::Sprite glow;
+	int32_t glowFadeTimer;
 	
 public:
 	SmallExplosion(const sf::Texture &, const sf::Texture &, float, float);

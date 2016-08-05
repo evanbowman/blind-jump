@@ -22,7 +22,7 @@
 
 class Effect : public Framework::Object {
 protected:
-	int16_t timer;
+	int64_t timer;
 	uint8_t frameIndex;
 	float xInit, yInit;
 

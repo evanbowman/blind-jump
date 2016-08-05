@@ -38,7 +38,7 @@ public:
 private:
 	State state;
 	char item;
-	int32_t animationTimer;
+	int64_t animationTimer;
 	uint8_t frameIndex;
 	mutable SpriteSheet<656, 76, 16, 30> chestSheet;
 	mutable sf::Sprite chestShadow;

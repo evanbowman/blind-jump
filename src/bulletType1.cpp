@@ -60,22 +60,22 @@ void PlayerShot::poof() {
 }
 
 void PlayerShot::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
-	const static float movementRate = 0.45;
+	const static float movementRate = 0.00045;
 	timer += elapsedTime.asMilliseconds();
 	hitBox.setPosition(position);
 	switch (state) {
 	case State::travelling:
 		if (direction == 0 || direction == 4) {
-			yInit += movementRate * elapsedTime.asMilliseconds();
+			yInit += movementRate * elapsedTime.asMicroseconds();
 			setPosition(xInit + xOffset + 6, yInit + 12 + yOffset);	
 		} else if (direction == 1 || direction == 5) {
-			yInit -= movementRate * elapsedTime.asMilliseconds();
+			yInit -= movementRate * elapsedTime.asMicroseconds();
 			setPosition(xInit + xOffset + 6, yInit  + yOffset);	
 		} else if (direction == 2 || direction == 6) {
-			xInit -= movementRate * elapsedTime.asMilliseconds();
+			xInit -= movementRate * elapsedTime.asMicroseconds();
 			setPosition(xInit + xOffset - 5, yInit + 8 + yOffset);	
 		} else if (direction == 3 || direction == 7) {
-			xInit += movementRate * elapsedTime.asMilliseconds();
+			xInit += movementRate * elapsedTime.asMicroseconds();
 			setPosition(xInit + xOffset + 22, yInit + 8 + yOffset);	
 		}
 		spriteSheet.setPosition(position.x, position.y);
