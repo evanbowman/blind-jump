@@ -30,7 +30,8 @@ clean:
 	rm *.o
 
 analyze:
-	cppcheck .
+	rm ../test/cppcheck_results.txt
+	cppcheck --enable=warning --enable=performance --enable=information . > ../test/cppcheck_results.txt
 
 depend:
 	makedepend -- $(CPPFLAGS) -- $(SOURCES)
