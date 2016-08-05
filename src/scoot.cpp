@@ -142,8 +142,8 @@ void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, Ef
 			vSpeed -= 1;
 		}
 	}
-	xInit += (elapsedTime.asMicroseconds() * 0.00005f) * hSpeed * speedScale;
-	yInit += (elapsedTime.asMicroseconds() * 0.00005f) * vSpeed * speedScale;
+	xInit += (elapsedTime.asMicroseconds() * 0.00006f) * hSpeed * speedScale;
+	yInit += (elapsedTime.asMicroseconds() * 0.00006f) * vSpeed * speedScale;
 	// Update the frameIndex based on time
 	frameTimer += elapsedTime.asMilliseconds();
 	if (frameTimer > 87) {

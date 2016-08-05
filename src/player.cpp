@@ -404,8 +404,8 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 		frameIndex = 0;
 	}
 	
-	worldOffsetX += (lSpeed + -rSpeed) * (elapsedTime.asMicroseconds() * 0.00005f);
-	worldOffsetY += (uSpeed + -dSpeed) * (elapsedTime.asMicroseconds() * 0.00005f);
+	worldOffsetX += (lSpeed + -rSpeed) * (elapsedTime.asMicroseconds() * 0.000055f);
+	worldOffsetY += (uSpeed + -dSpeed) * (elapsedTime.asMicroseconds() * 0.000055f);
 	if (!blurs.empty()) {
 		for (auto it = blurs.begin(); it != blurs.end();) {
 			if (it->getKillFlag())
@@ -442,25 +442,25 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 		if (gun.timeout > 0) {
 			gun.gunSpr.setPosition(xPos + 12, yPos + 15);
 		}
-		updateAnimation(elapsedTime, 9, 110000);
+		updateAnimation(elapsedTime, 9, 100000);
 		break;
 
 	case Sheet::walkUp:
-		updateAnimation(elapsedTime, 9, 110000);
+		updateAnimation(elapsedTime, 9, 100000);
 		break;
 			
 	case Sheet::walkLeft:
 		if (gun.timeout > 0) {
 			gun.gunSpr.setPosition(xPos + 2, yPos + 13);
 		}
-		updateAnimation(elapsedTime, 5, 110000);
+		updateAnimation(elapsedTime, 5, 100000);
 		break;
 			
 	case Sheet::walkRight:
 		if (gun.timeout > 0) {
 			gun.gunSpr.setPosition(xPos + 19, yPos + 13);
 		}
-		updateAnimation(elapsedTime, 5, 110000);
+		updateAnimation(elapsedTime, 5, 100000);
 		break;
 			
 	case Sheet::deathSheet:
