@@ -302,6 +302,7 @@ void Game::update(sf::Time & elapsedTime) {
 		globalObjectMutex.unlock();
 	}
 	globalUIMutex.lock();
+	ssc.update(player, elapsedTime);
     if (player.getState() == Player::State::dead) {
 		UI.dispDeathSeq();
 		// If the death sequence is complete and the UI controller is finished playing its animation
@@ -325,7 +326,6 @@ void Game::update(sf::Time & elapsedTime) {
 		pFonts->updateHealth(player.getHealth());
 	}
 	globalUIMutex.unlock();
-	ssc.update(player);
 	globalTransitionMutex.lock();
 	updateTransitions(xOffset, yOffset, elapsedTime);
 	globalTransitionMutex.unlock();

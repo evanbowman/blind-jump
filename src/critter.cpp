@@ -75,7 +75,7 @@ void Critter::critterUpdate(float xOffset, float yOffset, EffectGroup & effects,
 	if (awake) {
 		float speed;
 		if (active) {
-			speed = 1.4;
+			speed = 1.7;
 		}
 		
 		else {

@@ -19,19 +19,20 @@
 
 ScreenShakeController::ScreenShakeController() {
 	active = false;
-	updateCounter = 1;
+	timer = 0;
 	shakeIndex = 0;
 	shakeMode = 0;
 }
 
-void ScreenShakeController::update(Player & p) {
+void ScreenShakeController::update(Player & p, const sf::Time & elapsedTime) {
 	if (!active) {
 		return;
 	} else {
 		switch (shakeMode) {
 			case 0:
-				if (--updateCounter == 0) {
-					updateCounter = 4;
+				timer += elapsedTime.asMicroseconds();
+				if (timer > 50000) {
+					timer = 0;
 					p.setPosition(p.getXpos(), p.getYpos() + shakeArray[shakeIndex]);
 					p.setWorldOffsetY(p.getWorldOffsetY() + shakeArray[shakeIndex]);
 					shakeIndex++;
@@ -39,13 +40,13 @@ void ScreenShakeController::update(Player & p) {
 				if (shakeIndex > 5) {
 					shakeIndex = 0;
 					active = false;
-					updateCounter = 1;
 				}
 				break;
 				
 			case 1:
-				if (--updateCounter == 0) {
-					updateCounter = 4;
+				timer += elapsedTime.asMicroseconds();
+				if (timer > 50000) {
+					timer = 0;
 					p.setPosition(p.getXpos(), p.getYpos() + shakeArray2[shakeIndex]);
 					p.setWorldOffsetY(p.getWorldOffsetY() + shakeArray2[shakeIndex]);
 					shakeIndex++;
@@ -53,7 +54,6 @@ void ScreenShakeController::update(Player & p) {
 				if (shakeIndex > 4) {
 					shakeIndex = 0;
 					active = false;
-					updateCounter = 1;
 				}
 				break;
 				

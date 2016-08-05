@@ -55,7 +55,7 @@ public:
 	};
 	struct Weapon {
 		SpriteSheet<688, 106, 11, 10> gunSpr;
-		int32_t timeout, bulletTimer;
+		int64_t timeout, bulletTimer;
 	};
 	Player(float, float);
 	float getWorldOffsetX() const; // The distance the player has moved

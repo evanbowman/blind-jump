@@ -43,30 +43,17 @@ public:
 	float posX;
 	float posY;
 	void setPosition(float, float);
-
 	sf::RectangleShape shadow;
-	
 	sf::Texture mapTexture[2];
 	sf::Sprite mapSprite1, mapSprite2;
-	
 	sf::RenderTexture rt, re;
-	
 	uint8_t mapArray[61][61];
-
 	std::vector <wall> walls;
-
 	std::vector<Coordinate> emptyMapLocations;
-	std::vector<Coordinate> edgeLocations;
-	std::vector<Coordinate> primeChestLocations;	// Find tiles with small number of neighbors, good place to hide items
-	
 	Coordinate teleporterLocation;
-	
 	Coordinate getTeleporterLoc();
-		
 	float windowH;
 	float windowW;
-	//Declare an array to keep track of the positions of objects drawn to the map as not to place two in the same spot
-	uint8_t descriptionArray[61][61];
 	void clear();
 	// Draw a different overworld based on choice of current working set of tiles
 	unsigned char workingSet;

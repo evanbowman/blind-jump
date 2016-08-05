@@ -24,7 +24,7 @@
 class ScreenShakeController {
 public:
 	ScreenShakeController();
-	void update(Player&);
+	void update(Player &, const sf::Time & elapsedTime);
 	void shake();
 	void rumble();
 	
@@ -34,7 +34,7 @@ private:
 	const char shakeArray2[5] = {3, -5, 3, -2, 1};
 	char shakeMode;
 	unsigned char shakeIndex;
-	unsigned char updateCounter;
+	int64_t timer;
 };
 
 #endif /* screenShakeController_hpp */

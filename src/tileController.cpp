@@ -240,9 +240,7 @@ void tileController::setPosition(float X, float Y) {
 // Empty all of the containers to prepare for pushing back a new map set
 void tileController::clear() {
 	walls.clear();
-	primeChestLocations.clear();
 	emptyMapLocations.clear();
-	edgeLocations.clear();
 }
 
 void tileController::rebuild(Tileset set) {

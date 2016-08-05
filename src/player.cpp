@@ -297,7 +297,7 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 
 	case State::prepdash:
 		if (gun.timeout != 0) {
-			gun.timeout = 40;
+			gun.timeout = 40000;
 		}
 		setSpeed<1>(left, up, down, collisionLeft, lSpeed);
 		setSpeed<1>(right, up, down, collisionRight, rSpeed);
@@ -481,8 +481,8 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 
 void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows) {
 	if (visible) {
-		auto gunIndexOffset = [](int32_t timeout) {
-			if (timeout < 1707 && timeout > 44) {
+		auto gunIndexOffset = [](int64_t timeout) {
+			if (timeout < 1707000 && timeout > 44000) {
 				return 1;
 			} else {
 				return 0;
@@ -624,16 +624,17 @@ void Player::reset() {
 	invulnerableCounter = 0;
 	health = 4;
 	sheetIndex = Sheet::stillDown;
+	frameIndex = 5;
 }
 
 void Player::setHealth(Health value) {
 	health = value;
 }
 
-void Player::updateGun(const sf::Time & elapsedTime, const bool x, EffectGroup & effects, float xOffset, float yOffset) {
-	gun.timeout -= elapsedTime.asMilliseconds();
+void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, EffectGroup & effects, float xOffset, float yOffset) {
+	gun.timeout -= elapsedTime.asMicroseconds();
 	if (gun.bulletTimer != 0) {
-		gun.bulletTimer -= elapsedTime.asMilliseconds();
+		gun.bulletTimer -= elapsedTime.asMicroseconds();
 		if (gun.bulletTimer < 0) {
 			gun.bulletTimer = 0;
 		}
@@ -641,14 +642,14 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool x, EffectGroup &
 	if (gun.timeout <= 0) {
 		gun.timeout = 0;
 	}
-	if (x) {
+	if (shootKey) {
 		if (gun.timeout == 0) {
-			gun.timeout = 1760;
-		} else if (gun.timeout < 1671) {
-			gun.timeout = 1671;
+			gun.timeout = 1760000;
+		} else if (gun.timeout < 1671000) {
+			gun.timeout = 1671000;
 			if (gun.bulletTimer == 0) {
 				effects.add<9>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), globalResourceHandler.getTexture(ResourceHandler::Texture::whiteGlow), static_cast<int>(sheetIndex), xPos - xOffset, yPos - yOffset);
-				gun.bulletTimer = 400;
+				gun.bulletTimer = 400000;
 			}
 		}
 	}
