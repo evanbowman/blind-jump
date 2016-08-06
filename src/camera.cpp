@@ -17,11 +17,21 @@
 
 #include "camera.hpp"
 
+inline sf::Vector2f lerp(const sf::Vector2f & A, const sf::Vector2f & B, float t) {
+	return A * t + (1 - t) * B;
+}
+
 void Camera::update(const sf::Time & elapsedTime) {
-	// TODO: Move the camera to the player's position
-	view.setCenter(pTarget->getXpos() + 9, pTarget->getYpos() + 16);
+	float lerpSpeed = elapsedTime.asMicroseconds() * 0.000005f;
+	if (lerpSpeed > 1.f) lerpSpeed = 1.f;
+	view.setCenter(lerp(pTarget->getPosition(), view.getCenter(), lerpSpeed));
 }
 
 const sf::View & Camera::getView() const {
 	return view;
+}
+
+void Camera::reset() {
+	float placementOffset = pTarget->getPosition().y / 4;
+	view.setCenter(sf::Vector2f(pTarget->getPosition().x, placementOffset));
 }

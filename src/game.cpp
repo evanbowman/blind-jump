@@ -549,8 +549,8 @@ void Game::Reset() {
 	tiles.clear();
 	effectGroup.clear();
 	details.clear();
-	// player.setWorldOffsetX(0);
-	// player.setWorldOffsetY(0);
+	player.setPosition(windowW / 2, windowH / 2);
+	camera.reset();
 	en.clear();
 	teleporterCond = 0;
 	set = tileController::Tileset::intro;

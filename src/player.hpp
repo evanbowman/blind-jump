@@ -67,6 +67,7 @@ public:
 	void setState(State);
 	State getState() const;
 	void setPosition(float, float);
+	sf::Vector2f getPosition();
 	bool scrShakeState;
 	Health getHealth() const;
 	bool visible = true;	

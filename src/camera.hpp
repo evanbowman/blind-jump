@@ -23,17 +23,13 @@
 class Camera {
 	Player * pTarget;
 	sf::View view;
-	// float movementRate;
-	// float xPos, yPos;
 
 public:
 	Camera(Player * _pTarget, const sf::Vector2f & viewPort) :
 		pTarget{_pTarget},
 		view{sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort}
-		// movementRate{0.f},
-		// xPos{0.f},
-		// yPos{0.f}
 	{}
 	void update(const sf::Time &);
+	void reset();
 	const sf::View & getView() const;
 };

@@ -70,6 +70,10 @@ Player::Player(float _xPos, float _yPos)
 	gun.gunSpr.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
 }
 
+sf::Vector2f Player::getPosition() {
+	return sf::Vector2f(xPos + 8, yPos);
+}
+
 void Player::setPosition(float _xPos, float _yPos) {
 	xPos = _xPos;
 	yPos = _yPos;
