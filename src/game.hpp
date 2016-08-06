@@ -67,9 +67,9 @@ public:
 	TransitionState transitionState;
 
 private:
-	Camera camera;
 	InputController * pInput;
 	Player player;
+	Camera camera;
 	UserInterface UI;
 	SoundController sndCtrl;
 	tileController tiles;
@@ -89,9 +89,7 @@ private:
 	sf::Texture beamGlowTxr;
 	sf::Sprite beamGlowSpr;
 	sf::View worldView, hudView;
-	// RenderTexture and shapes for lighting effects
 	sf::RenderTexture lightingMap;
-	sf::RectangleShape shadowShape;
 	sf::RenderTexture target, secondPass, thirdPass, stash;
 	sf::RectangleShape transitionShape, beamShape;
 	sf::Texture titleTxtr;

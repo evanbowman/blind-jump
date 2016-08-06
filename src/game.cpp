@@ -32,9 +32,9 @@ Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontControlle
 	: windowW{viewPort.x},
 	  windowH{viewPort.y},
 	  transitionState{TransitionState::None},
-	  camera{&player, viewPort},
 	  pInput{_pInput},
 	  player{viewPort.x / 2, viewPort.y / 2},
+	  camera{&player, viewPort},
 	  pFonts{_pFonts},
 	  level{0},
 	  stashed{false},
@@ -51,8 +51,6 @@ Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontControlle
 	stash.create(windowW, windowH);
 	stash.setSmooth(true);
 	lightingMap.create(windowW, windowH);
-	shadowShape.setFillColor(sf::Color(190, 190, 210, 255));
-	shadowShape.setSize(sf::Vector2f(windowW, windowH));
 	vignetteSprite.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::vignette));
 	vignetteSprite.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::vignetteShadow));

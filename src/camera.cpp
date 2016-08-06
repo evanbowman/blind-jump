@@ -18,13 +18,8 @@
 #include "camera.hpp"
 
 void Camera::update(const sf::Time & elapsedTime) {
-	// TODO:
-	xPos = 0; yPos = 0; movementRate = 0; elapsedTime.asMilliseconds(); pTarget = nullptr;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::M)) {
-		view.move(0.1f, 0.f);
-	} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::N)) {
-		view.move(-0.1, 0.f);
-	}
+	// TODO: Move the camera to the player's position
+	view.setCenter(pTarget->getXpos() + 9, pTarget->getYpos() + 16);
 }
 
 const sf::View & Camera::getView() const {
