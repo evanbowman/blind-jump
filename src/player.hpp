@@ -59,10 +59,6 @@ public:
 		int64_t timeout, bulletTimer;
 	};
 	Player(float, float);
-	float getWorldOffsetX() const; // The distance the player has moved
-	float getWorldOffsetY() const;
-	void setWorldOffsetX(float);
-	void setWorldOffsetY(float);
 	void activate();
 	float getXpos() const; // The player's absolute position in the window
 	float getYpos() const;
@@ -81,13 +77,13 @@ public:
 
 private:
 	HBox hitBox;
-	void updateGun(const sf::Time &, const bool, EffectGroup &, float, float);
+	void updateGun(const sf::Time &, const bool, EffectGroup &);
 	Weapon gun;
 	void checkEffectCollisions(EffectGroup &, FontController *);
 	std::vector<Dasher::Blur> blurs; // I could have designed this better...
 	Health health;
 	void updateAnimation(const sf::Time &, uint8_t, uint32_t);
-	float xPos, yPos, worldOffsetX, worldOffsetY;
+	float xPos, yPos;
 	uint8_t frameIndex;
 	Sheet sheetIndex, cachedSheet;
 	float lSpeed, rSpeed, uSpeed, dSpeed;

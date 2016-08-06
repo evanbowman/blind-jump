@@ -50,10 +50,10 @@ int main() {
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(120);
 	InputController input;
-	sf::View fontView(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
-	sf::View view(sf::FloatRect(0, 0, drawableRegionSize.x, drawableRegionSize.y));
-	FontController fonts(fontView, drawableRegionSize.x / 2, drawableRegionSize.y / 2);
-	Game game(drawableRegionSize.x, drawableRegionSize.y, &input, &fonts);
+	sf::View hudView(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
+	sf::View worldView(sf::Vector2f(drawableRegionSize.x / 2, drawableRegionSize.y / 2), drawableRegionSize);
+	FontController fonts(hudView, drawableRegionSize.x / 2, drawableRegionSize.y / 2);
+	Game game(drawableRegionSize, &input, &fonts);
 	try {
 		std::thread logicThread([](Game * pGame, sf::RenderWindow * pWindow) {
 			duration logicUpdateDelta;
@@ -76,7 +76,6 @@ int main() {
 		while (window.isOpen()) {
 			input.update(window);
 			window.clear();
-			window.setView(view);
 			game.draw(window);
 			window.display();
 		}

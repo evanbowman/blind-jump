@@ -29,8 +29,6 @@ Player::Player(float _xPos, float _yPos)
 	  health{4},
 	  xPos{_xPos - 17}, // Magic number that puts the player in the direct center of the screen. Hmmm why does it work...
 	  yPos{_yPos},
-	  worldOffsetX{0.f},
-	  worldOffsetY{0.f},
 	  frameIndex{5},
 	  sheetIndex{Sheet::stillDown},
 	  cachedSheet{Sheet::stillDown},
@@ -222,7 +220,7 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 		break;
 
 	case State::nominal:
-		updateGun(elapsedTime, shoot, effects, worldOffsetX, worldOffsetY);
+		updateGun(elapsedTime, shoot, effects);
 		if (!shoot) {
 			regKeyResponse<Sheet::walkUp>(up, down, left, right, sheetIndex, uSpeed, collisionUp);
 			regKeyResponse<Sheet::walkDown>(down, up, left, right, sheetIndex, dSpeed, collisionDown);
@@ -404,14 +402,15 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 		frameIndex = 0;
 	}
 	
-	worldOffsetX += (lSpeed + -rSpeed) * (elapsedTime.asMicroseconds() * 0.000054f);
-	worldOffsetY += (uSpeed + -dSpeed) * (elapsedTime.asMicroseconds() * 0.000054f);
+	xPos -= (lSpeed + -rSpeed) * (elapsedTime.asMicroseconds() * 0.000054f);
+    yPos -= (uSpeed + -dSpeed) * (elapsedTime.asMicroseconds() * 0.000054f);
+	setPosition(xPos, yPos);
 	if (!blurs.empty()) {
 		for (auto it = blurs.begin(); it != blurs.end();) {
 			if (it->getKillFlag())
 				it = blurs.erase(it);
 			else {
-				it->update(elapsedTime, worldOffsetX, worldOffsetY);
+				it->update(elapsedTime, 0, 0);
 				++it;
 			}
 		}
@@ -563,7 +562,7 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows) {
 			if (state == Player::State::dashing) {
 				if (animationTimer > 20000) {
 					animationTimer = 0;
-					blurs.emplace_back(&std::get<0>(gameObjects.back()), xPos - worldOffsetX, yPos - worldOffsetY);
+					blurs.emplace_back(&std::get<0>(gameObjects.back()), xPos, yPos);
 				}
 			}
 			break;
@@ -583,22 +582,6 @@ void Player::updateAnimation(const sf::Time & elapsedTime, uint8_t maxIndex, uin
 	if (frameIndex > maxIndex) {
 		frameIndex = 0;
 	}
-}
-
-float Player::getWorldOffsetX() const {
-	return worldOffsetX;
-}
-
-float Player::getWorldOffsetY() const {
-	return worldOffsetY;
-}
-
-void Player::setWorldOffsetX(float x) {
-	worldOffsetX = x;
-}
-
-void Player::setWorldOffsetY(float y) {
-	worldOffsetY = y;
 }
 
 void Player::setState(State _state) {
@@ -631,7 +614,7 @@ void Player::setHealth(Health value) {
 	health = value;
 }
 
-void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, EffectGroup & effects, float xOffset, float yOffset) {
+void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, EffectGroup & effects) {
 	gun.timeout -= elapsedTime.asMicroseconds();
 	if (gun.bulletTimer != 0) {
 		gun.bulletTimer -= elapsedTime.asMicroseconds();
@@ -648,7 +631,7 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, Effect
 		} else if (gun.timeout < 1671000) {
 			gun.timeout = 1671000;
 			if (gun.bulletTimer == 0) {
-				effects.add<9>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), globalResourceHandler.getTexture(ResourceHandler::Texture::whiteGlow), static_cast<int>(sheetIndex), xPos - xOffset, yPos - yOffset);
+				effects.add<9>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), globalResourceHandler.getTexture(ResourceHandler::Texture::whiteGlow), static_cast<int>(sheetIndex), xPos, yPos);
 				gun.bulletTimer = 440000;
 			}
 		}

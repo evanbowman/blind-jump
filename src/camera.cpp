@@ -15,66 +15,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.  //
 //========================================================================//
 
-#include "screenShakeController.hpp"
+#include "camera.hpp"
 
-ScreenShakeController::ScreenShakeController() {
-	active = false;
-	timer = 0;
-	shakeIndex = 0;
-	shakeMode = 0;
-}
-
-void ScreenShakeController::update(Player & p, const sf::Time & elapsedTime) {
-	if (!active) {
-		return;
-	} else {
-		switch (shakeMode) {
-			case 0:
-				timer += elapsedTime.asMicroseconds();
-				if (timer > 50000) {
-					timer = 0;
-					// p.setPosition(p.getXpos(), p.getYpos() + shakeArray[shakeIndex]);
-					// p.setWorldOffsetY(p.getWorldOffsetY() + shakeArray[shakeIndex]);
-					shakeIndex++;
-				}
-				if (shakeIndex > 5) {
-					shakeIndex = 0;
-					active = false;
-				}
-				break;
-				
-			case 1:
-				timer += elapsedTime.asMicroseconds();
-				if (timer > 50000) {
-					timer = 0;
-					// p.setPosition(p.getXpos(), p.getYpos() + shakeArray2[shakeIndex]);
-					// p.setWorldOffsetY(p.getWorldOffsetY() + shakeArray2[shakeIndex]);
-					shakeIndex++;
-				}
-				if (shakeIndex > 4) {
-					shakeIndex = 0;
-					active = false;
-				}
-				break;
-				
-			
-			default:
-				break;
-		}
+void Camera::update(const sf::Time & elapsedTime) {
+	// TODO:
+	xPos = 0; yPos = 0; movementRate = 0; elapsedTime.asMilliseconds(); pTarget = nullptr;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::M)) {
+		view.move(0.1f, 0.f);
+	} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::N)) {
+		view.move(-0.1, 0.f);
 	}
 }
 
-void ScreenShakeController::shake() {
-	if (!active) {
-		active = true;
-		shakeMode = 0;
-	}
+const sf::View & Camera::getView() const {
+	return view;
 }
-
-void ScreenShakeController::rumble() {
-	if (!active) {
-		active = true;
-		shakeMode = 1;
-	}
-}
-

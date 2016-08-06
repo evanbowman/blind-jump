@@ -33,6 +33,7 @@
 #include "inputController.hpp"
 #include "RenderType.hpp"
 #include "resourceHandler.hpp"
+#include "camera.hpp"
 
 class Game {
 public:
@@ -46,7 +47,7 @@ public:
 		EntryBeamDrop,
 	    EntryBeamFade
 	};
-	Game(float, float, InputController *, FontController *);
+	Game(const sf::Vector2f viewPort, InputController *, FontController *);
 	void update(sf::Time &);
 	void draw(sf::RenderWindow &);
 	void Reset();
@@ -66,6 +67,7 @@ public:
 	TransitionState transitionState;
 
 private:
+	Camera camera;
 	InputController * pInput;
 	Player player;
 	UserInterface UI;

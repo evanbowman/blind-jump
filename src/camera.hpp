@@ -15,66 +15,25 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.  //
 //========================================================================//
 
-#include "screenShakeController.hpp"
+#pragma once
+#include <SFML/Window.hpp>
+#include <SFML/System.hpp>
+#include "player.hpp"
 
-ScreenShakeController::ScreenShakeController() {
-	active = false;
-	timer = 0;
-	shakeIndex = 0;
-	shakeMode = 0;
-}
+class Camera {
+	Player * pTarget;
+	sf::View view;
+	float movementRate;
+	float xPos, yPos;
 
-void ScreenShakeController::update(Player & p, const sf::Time & elapsedTime) {
-	if (!active) {
-		return;
-	} else {
-		switch (shakeMode) {
-			case 0:
-				timer += elapsedTime.asMicroseconds();
-				if (timer > 50000) {
-					timer = 0;
-					// p.setPosition(p.getXpos(), p.getYpos() + shakeArray[shakeIndex]);
-					// p.setWorldOffsetY(p.getWorldOffsetY() + shakeArray[shakeIndex]);
-					shakeIndex++;
-				}
-				if (shakeIndex > 5) {
-					shakeIndex = 0;
-					active = false;
-				}
-				break;
-				
-			case 1:
-				timer += elapsedTime.asMicroseconds();
-				if (timer > 50000) {
-					timer = 0;
-					// p.setPosition(p.getXpos(), p.getYpos() + shakeArray2[shakeIndex]);
-					// p.setWorldOffsetY(p.getWorldOffsetY() + shakeArray2[shakeIndex]);
-					shakeIndex++;
-				}
-				if (shakeIndex > 4) {
-					shakeIndex = 0;
-					active = false;
-				}
-				break;
-				
-			
-			default:
-				break;
-		}
-	}
-}
-
-void ScreenShakeController::shake() {
-	if (!active) {
-		active = true;
-		shakeMode = 0;
-	}
-}
-
-void ScreenShakeController::rumble() {
-	if (!active) {
-		active = true;
-		shakeMode = 1;
-	}
-}
-
+public:
+	Camera(Player * _pTarget, const sf::Vector2f & viewPort) :
+		pTarget{nullptr},
+		view{sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort},
+		movementRate{0.f},
+		xPos{0.f},
+		yPos{0.f}
+	{}
+	void update(const sf::Time &);
+	const sf::View & getView() const;
+};

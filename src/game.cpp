@@ -28,17 +28,19 @@
 
 std::mutex globalObjectMutex, globalUIMutex, globalTransitionMutex;
 
-Game::Game(float _windowW, float _windowH, InputController * _pInput, FontController * _pFonts)
-	: windowW{_windowW},
-	  windowH{_windowH},
+Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontController * _pFonts)
+	: windowW{viewPort.x},
+	  windowH{viewPort.y},
 	  transitionState{TransitionState::None},
+	  camera{&player, viewPort},
 	  pInput{_pInput},
-	  player{_windowW / 2, _windowH / 2},
+	  player{viewPort.x / 2, viewPort.y / 2},
 	  pFonts{_pFonts},
 	  level{0},
 	  stashed{false},
 	  preload{false},
 	  teleporterCond{false},
+	  worldView{sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort},
 	  timer{0}
 {
 	target.create(windowW, windowH);
@@ -56,8 +58,6 @@ Game::Game(float _windowW, float _windowH, InputController * _pInput, FontContro
 	vignetteShadowSpr.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::vignetteShadow));
 	vignetteShadowSpr.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setColor(sf::Color(255,255,255,100));
-	worldView.setSize(windowW, windowH);
-	worldView.setCenter(windowW / 2, windowH / 2);
 	hudView.setSize(windowW, windowH);
 	hudView.setCenter(windowW / 2, windowH / 2);
 	bkg.giveWindowSize(windowW, windowH);
@@ -107,16 +107,29 @@ Game::Game(float _windowW, float _windowH, InputController * _pInput, FontContro
 	vignetteSprite.setColor(sf::Color(255, 255, 255));
 }
 
+//=================================================//
+// The draw function is fairly complicated, due to //
+// all of the post processing and lighting effects //
+// that the function needs to draw, all while      //
+// correctly mapping images to the proper view,    //
+// and on top of that it needs to synchronize with //
+// the logic thread at various occasions, and      //
+// to stash frames in textures at certain game     //
+// states. Considering the circumstances, I have   //
+// really made the function quite simple...        //
+//=================================================//
 void Game::draw(sf::RenderWindow & window) {
 	target.clear(sf::Color::Transparent);
 	if (!stashed || preload) {
 		globalObjectMutex.lock();
-		bkg.drawBackground(target);
-		tiles.draw(target, &glowSprs1, &glowSprs2, level);
+		lightingMap.setView(camera.getView());
+		bkg.drawBackground(target, worldView, camera.getView());
+		tiles.draw(target, &glowSprs1, &glowSprs2, level, worldView, camera.getView());
 		glowSprs2.clear();
 		glowSprs1.clear();
 		gameShadows.clear();
 		gameObjects.clear();
+		target.setView(camera.getView());
 		drawGroup(details, gameObjects, gameShadows, glowSprs1, glowSprs2, target);
 		if (player.visible) {
 			player.draw(gameObjects, gameShadows);
@@ -129,6 +142,7 @@ void Game::draw(sf::RenderWindow & window) {
 				target.draw(std::get<0>(element));
 			}
 		}
+		target.setView(worldView);
 		lightingMap.clear(sf::Color::Transparent);
 		// Sort the game objects based on y-position for z-ordering
 		std::sort(gameObjects.begin(), gameObjects.end(), [](const std::tuple<sf::Sprite, float, Rendertype, float> & arg1, const std::tuple<sf::Sprite, float, Rendertype, float> & arg2) {
@@ -183,7 +197,9 @@ void Game::draw(sf::RenderWindow & window) {
 		}
 		lightingMap.display();
 		target.draw(sf::Sprite(lightingMap.getTexture()));
+		target.setView(camera.getView());
 		bkg.drawForeground(target);
+		target.setView(worldView);
 		target.draw(vignetteSprite, sf::BlendMultiply);
 		target.draw(vignetteShadowSpr);
 		target.display();
@@ -267,14 +283,15 @@ void Game::draw(sf::RenderWindow & window) {
 }
 
 void Game::update(sf::Time & elapsedTime) {
-	float xOffset = player.getWorldOffsetX();
-	float yOffset = player.getWorldOffsetY();
+	float xOffset = 0;
+	float yOffset = 0;
 	// Blurring is graphics intensive, the game caches frames in a RenderTexture when possible
 	if (stashed && UI.getState() != UserInterface::State::statsScreen && UI.getState() != UserInterface::State::menuScreen) {
 		stashed = false;
 	}
 	if (!stashed || preload) {
 		globalObjectMutex.lock();
+		camera.update(elapsedTime);
 		// Update positions
 		bkg.setOffset(xOffset, yOffset);
 		tiles.update(xOffset, yOffset);
@@ -288,7 +305,7 @@ void Game::update(sf::Time & elapsedTime) {
 				}
 			}
 		});
-		en.update(player.getWorldOffsetX(), player.getWorldOffsetY(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, &ssc, *pFonts, elapsedTime);
+		en.update(0, 0, effectGroup, tiles.walls, !UI.isOpen(), &tiles, &ssc, *pFonts, elapsedTime);
 		if (player.visible) {
 			player.update(this, elapsedTime);
 		}
@@ -360,12 +377,12 @@ switch (transitionState) {
 	case TransitionState::TransitionOut:
 		if (level != 0) {
 			if (timer > 100) {
-				window.setView(worldView);
+				window.setView(camera.getView());
 				window.draw(transitionShape);
 			}
 		} else {
 			if (timer > 1600) {
-				window.setView(worldView);
+				window.setView(camera.getView());
 				window.draw(transitionShape);
 				uint8_t alpha = Easing::easeOut<1>(timer - 1600, static_cast<int_fast32_t>(600)) * 255;
 				pFonts->drawTitle(alpha, window);
@@ -398,8 +415,9 @@ void Game::updateTransitions(float xOffset, float yOffset, const sf::Time & elap
 			float teleporterX = details.get<0>().back().getPosition().x;
 			float teleporterY = details.get<0>().back().getPosition().y;
 			if ((std::abs(player.getXpos() - teleporterX) < 10 && std::abs(player.getYpos() - teleporterY + 12) < 8)) {
-				player.setWorldOffsetX(xOffset + (player.getXpos() - teleporterX) + 2);
-				player.setWorldOffsetY(yOffset + (player.getYpos() - teleporterY) + 16);
+				// TODO: snap player to the teleporter
+				// player.setWorldOffsetX(xOffset + (player.getXpos() - teleporterX) + 2);
+				// player.setWorldOffsetY(yOffset + (player.getYpos() - teleporterY) + 16);
 				player.setState(Player::State::deactivated);
 				transitionState = TransitionState::ExitBeamEnter;
 			}
@@ -533,8 +551,8 @@ void Game::Reset() {
 	tiles.clear();
 	effectGroup.clear();
 	details.clear();
-	player.setWorldOffsetX(0);
-	player.setWorldOffsetY(0);
+	// player.setWorldOffsetX(0);
+	// player.setWorldOffsetY(0);
 	en.clear();
 	teleporterCond = 0;
 	set = tileController::Tileset::intro;

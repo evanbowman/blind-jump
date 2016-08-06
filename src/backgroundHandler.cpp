@@ -74,26 +74,26 @@ void backgroundHandler::drawForeground(sf::RenderTexture & window) {
 	}
 }
 
-void backgroundHandler::drawBackground(sf::RenderTexture& window) {
+void backgroundHandler::drawBackground(sf::RenderTexture & target, const sf::View & worldView, const sf::View & cameraView) {
 	switch (workingSet) {
 		case 0:
 			foregroundTreesSpr.setPosition(windowW / 2 + xOffset - 108, windowH / 2 + yOffset - 494);
-			window.draw(solidBkg);
+			target.draw(solidBkg);
 			break;
 			
 		case 1:
-			window.draw(bkgSprite[1]);
+		    target.draw(bkgSprite[1]);
 			break;
 			
 		case 2:
-			window.draw(bkgSprite[0]);
+		    target.draw(bkgSprite[0]);
 			break;
 			
 		default:
-			window.draw(bkgSprite[0]);
+		    target.draw(bkgSprite[0]);
 			break;
 	}
-	
+	target.setView(cameraView);
 	if (workingSet != 0) {
 		for (int i = 0; i < STARMAP_SIZE; i++) {
 			for (int j = 0; j < STARMAP_SIZE; j++) {
@@ -131,12 +131,12 @@ void backgroundHandler::drawBackground(sf::RenderTexture& window) {
 				
 				starsFar[i][j].setPosition(starsFar[i][j].getPosition().x - (xOffPrev - xOffset)/3.5, starsFar[i][j].getPosition().y - (yOffPrev - yOffset)/3.5);
 				stars[i][j].setPosition(stars[i][j].getPosition().x - (xOffPrev - xOffset)/3, stars[i][j].getPosition().y - (yOffPrev - yOffset)/3);
-				window.draw(starsFar[i][j]);
-				window.draw(stars[i][j]);
+				target.draw(starsFar[i][j]);
+				target.draw(stars[i][j]);
 			}
 		}
 	}
-	
+	target.setView(worldView);
 	xOffPrev = xOffset;
 	yOffPrev = yOffset;
 }

@@ -188,8 +188,9 @@ void tileController::update(const float xOffset, const float yOffset) {
 	mapSprite2.setPosition(posX + xOffset, posY + yOffset);
 }
 
-void tileController::draw(sf::RenderTexture& window, std::vector<sf::Sprite>* glowSprites, std::vector<sf::Sprite>* glowSprites2, int level) {
+void tileController::draw(sf::RenderTexture& window, std::vector<sf::Sprite>* glowSprites, std::vector<sf::Sprite>* glowSprites2, int level, const sf::View & worldView, const sf::View & cameraView) {
 	// Clear out the RenderTexture
+	rt.setView(cameraView);
 	rt.clear(sf::Color::Transparent);
 	// Draw the map sprite to the texture
 	if (level != 0) {
@@ -198,7 +199,9 @@ void tileController::draw(sf::RenderTexture& window, std::vector<sf::Sprite>* gl
 		rt.draw(transitionLvSpr);
 	}
 	// Draw a shadow over everything
+	rt.setView(worldView);
 	rt.draw(shadow, sf::BlendMultiply);
+	rt.setView(cameraView);
 	// Draw glow sprites
 	for (auto & element : *glowSprites) {
 		rt.draw(element, sf::BlendMode(sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One,
@@ -214,11 +217,13 @@ void tileController::draw(sf::RenderTexture& window, std::vector<sf::Sprite>* gl
 
 	// Set the render texture to display
 	rt.display();
-	
+
+	re.setView(cameraView);
 	re.clear(sf::Color::Transparent);
 	if (level != 0) {
 		re.draw(mapSprite2);
 	}
+	re.setView(worldView);
 	re.draw(shadow, sf::BlendMultiply);
 	
 	re.display();

@@ -44,7 +44,7 @@ private:
 	
 public:
 	backgroundHandler();
-	void drawBackground(sf::RenderTexture&);
+	void drawBackground(sf::RenderTexture&, const sf::View &, const sf::View &);
 	void drawForeground(sf::RenderTexture&);
 	void setOffset(float, float);
 	void setPosition(float, float);

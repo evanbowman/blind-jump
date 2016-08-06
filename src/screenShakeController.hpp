@@ -30,8 +30,8 @@ public:
 	
 private:
 	bool active;
-	const char shakeArray[6] = {4, -8, 6, -4, 3, -1};
-	const char shakeArray2[5] = {3, -5, 3, -2, 1};
+	// const char shakeArray[6] = {4, -8, 6, -4, 3, -1};
+	// const char shakeArray2[5] = {3, -5, 3, -2, 1};
 	char shakeMode;
 	unsigned char shakeIndex;
 	int64_t timer;
