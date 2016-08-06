@@ -19,31 +19,3 @@
 #include "player.hpp"
 
 bool Feedback::isAsleep{false};
-
-namespace {
-	float globalShakeIntensity{0.f};
-	bool globalShakeActive{false};
-	int64_t shakeDuration{0};
-	int64_t timer{0};
-}
-	
-void Feedback::Shake::shake(const float intensity, const int64_t duration) {
-	if (!globalShakeActive) {
-		globalShakeIntensity = intensity;
-		shakeDuration = duration;
-		globalShakeActive = true;
-	}
-}
-
-void Feedback::Shake::update(Player & player, const sf::Time & elaspedTime) {
-	if (globalShakeActive) {
-		timer += elapsedTime.asMicroseconds();
-		const static float PI{3.1415926535};
-		// Interpolates a damped sinusoid
-		float yOffset = Easing::easeOut<2>(timer, 50000) * globalShakeIntensity * std::sin(2 * PI * timer * 0.001f + 180);
-		if (timer < 50000) {
-			globalShakeActive = false;
-			timer = 0;
-		}
-	}
-}
