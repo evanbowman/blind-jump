@@ -22,6 +22,7 @@
 #include "spriteSheet.hpp"
 #include "Effect.hpp"
 #include "rng.hpp"
+#include "easingTemplates.hpp"
 
 class DasherShot : public Effect {
 public:
@@ -37,8 +38,9 @@ public:
 	const HBox & getHitBox() const;
 	
 private:
-	int32_t timeout;
+	int64_t timeout;
 	float scale;
+	float initialVelocity;
 	HBox hitBox;
 	sf::Sprite glowSprite;
 };

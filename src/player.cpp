@@ -368,7 +368,7 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 		setSpeed<7>(upPrevious, leftPrevious, rightPrevious, collisionUp, uSpeed);
 		setSpeed<7>(downPrevious, leftPrevious, rightPrevious, collisionDown, dSpeed);
 		dashTimer += elapsedTime.asMicroseconds();
-		if (dashTimer > 94000) {
+		if (dashTimer > 115000) {
 			dashTimer = 0;
 			state = State::cooldown;
 		}
@@ -404,8 +404,8 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 		frameIndex = 0;
 	}
 	
-	worldOffsetX += (lSpeed + -rSpeed) * (elapsedTime.asMicroseconds() * 0.000055f);
-	worldOffsetY += (uSpeed + -dSpeed) * (elapsedTime.asMicroseconds() * 0.000055f);
+	worldOffsetX += (lSpeed + -rSpeed) * (elapsedTime.asMicroseconds() * 0.000054f);
+	worldOffsetY += (uSpeed + -dSpeed) * (elapsedTime.asMicroseconds() * 0.000054f);
 	if (!blurs.empty()) {
 		for (auto it = blurs.begin(); it != blurs.end();) {
 			if (it->getKillFlag())
@@ -649,7 +649,7 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, Effect
 			gun.timeout = 1671000;
 			if (gun.bulletTimer == 0) {
 				effects.add<9>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), globalResourceHandler.getTexture(ResourceHandler::Texture::whiteGlow), static_cast<int>(sheetIndex), xPos - xOffset, yPos - yOffset);
-				gun.bulletTimer = 400000;
+				gun.bulletTimer = 440000;
 			}
 		}
 	}

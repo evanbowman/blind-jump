@@ -75,10 +75,8 @@ void Critter::critterUpdate(float xOffset, float yOffset, EffectGroup & effects,
 	if (awake) {
 		float speed;
 		if (active) {
-			speed = 1.7;
-		}
-		
-		else {
+			speed = 1.4;
+		} else {
 			speed= 0.7;
 		}
 		// If the enemy is finished following its path to the player

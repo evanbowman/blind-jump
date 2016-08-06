@@ -37,7 +37,7 @@ bool checkOverlap(Circle c1, Circle c2) {
 	return false;
 }
 
-void getLightingPositions(uint8_t gameMap[61][61], std::vector<Coordinate>& availableLocations) {
+void getLightingPositions(uint8_t gameMap[61][61], std::vector<Coordinate>& availableLocations, Circle & teleporterFootprint) {
 	// First create a temporary map containing only the surfaces from the game map
 	std::vector<Circle> lightMap;
 	int i, j;
@@ -52,6 +52,14 @@ void getLightingPositions(uint8_t gameMap[61][61], std::vector<Coordinate>& avai
 			}
 		}
 	}
+
+	for (std::vector<Circle>::iterator it = lightMap.begin(); it != lightMap.end();) {
+		if (checkOverlap(teleporterFootprint, *it)) {
+			it = lightMap.erase(it);
+		} else {
+			++it;
+		}
+	}
 	
 	size_t length = lightMap.size();
 	// Randomly shuffle the vector so not to just pick elements that are spatially close
@@ -62,10 +70,7 @@ void getLightingPositions(uint8_t gameMap[61][61], std::vector<Coordinate>& avai
 			if (checkOverlap(lightMap[i], *it) && (it->x != lightMap[i].x || it->y != lightMap[i].y)) {
 				it = lightMap.erase(it);
 				length--;
-			}
-			
-			else {
-				// Go to the next element
+			} else {
 				++it;
 			}
 		}

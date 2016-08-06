@@ -60,7 +60,7 @@ void PlayerShot::poof() {
 }
 
 void PlayerShot::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
-	const static float movementRate = 0.00045;
+	const static float movementRate = 0.00038;
 	timer += elapsedTime.asMilliseconds();
 	hitBox.setPosition(position);
 	switch (state) {

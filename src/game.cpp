@@ -28,15 +28,6 @@
 
 std::mutex globalObjectMutex, globalUIMutex, globalTransitionMutex;
 
-// TODO: This function is unsafe...
-Coordinate pickLocation(std::vector<Coordinate>& emptyLocations) {
-	int locationSelect = std::abs(static_cast<int>(globalRNG())) % emptyLocations.size();
-	Coordinate c = emptyLocations[locationSelect];
-	emptyLocations[locationSelect] = emptyLocations.back();
-	emptyLocations.pop_back();
-	return c;
-}
-
 Game::Game(float _windowW, float _windowH, InputController * _pInput, FontController * _pFonts)
 	: windowW{_windowW},
 	  windowH{_windowH},
@@ -528,29 +519,30 @@ void Game::Reset() {
 	player.setWorldOffsetY(0);
 	en.clear();
 	teleporterCond = 0;
-
 	set = tileController::Tileset::intro;
 	if (level == 0) {
 		set = tileController::Tileset::intro;
 	} else {
 		set = tileController::Tileset::regular;
 	}
-	
 	vignetteSprite.setColor(sf::Color(255, 255, 255, 255));
-	
 	if (set != tileController::Tileset::intro) {
-		//Now call the mapping function again to generate a new map, and make sure it's large enough
 		int count;
 		do {
 			count = generateMap(tiles.mapArray);
 		} while (count < 150);
 	}
-	
 	tiles.rebuild(set);
 	bkg.setBkg(tiles.getWorkingSet());
 	tiles.setPosition((windowW / 2) - 16, (windowH / 2));
 	bkg.setPosition((tiles.posX / 2) + 206, tiles.posY / 2);
-
+	auto pickLocation = [](std::vector<Coordinate>& emptyLocations) {
+		int locationSelect = std::abs(static_cast<int>(globalRNG())) % emptyLocations.size();
+		Coordinate c = emptyLocations[locationSelect];
+		emptyLocations[locationSelect] = emptyLocations.back();
+		emptyLocations.pop_back();
+		return c;
+	};
 	if (level != 0) {
 		Coordinate c = tiles.getTeleporterLoc();
 		details.add<0>(tiles.posX + c.x * 32 + 2, tiles.posY + c.y * 26 - 4,
@@ -558,7 +550,6 @@ void Game::Reset() {
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::teleporterGlow));
 		
 		initEnemies(this);
-	
 		if (std::abs(static_cast<int>(globalRNG())) % 2) {
 			Coordinate c = pickLocation(tiles.emptyMapLocations);
 			details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
@@ -567,25 +558,27 @@ void Game::Reset() {
 		
 		glowSprs1.clear();
 		glowSprs2.clear();
-		
+		Circle teleporterFootprint;
+		teleporterFootprint.x = tiles.getTeleporterLoc().x;
+		teleporterFootprint.y = tiles.getTeleporterLoc().y;
+		teleporterFootprint.r = 50;
+		std::vector<Coordinate> detailPositions;
 		if (set == tileController::Tileset::regular) {
-			getRockPositions(tiles.mapArray, rockPositions);
-			for (auto element : rockPositions) {
+			getRockPositions(tiles.mapArray, detailPositions, teleporterFootprint);
+			for (auto element : detailPositions) {
 				details.add<3>(tiles.posX + 32 * element.x, tiles.posY + 26 * element.y - 35,
 							   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
 			}
-			rockPositions.clear();
-			// // TODO: Delete rocks close to the teleporter
+			detailPositions.clear();
     	}
-		
-		getLightingPositions(tiles.mapArray, lightPositions);
-		size_t len = lightPositions.size();
+		getLightingPositions(tiles.mapArray, detailPositions, teleporterFootprint);
+		size_t len = detailPositions.size();
 		for (size_t i = 0; i < len; i++) {
-			details.add<2>(tiles.posX + 16 + (lightPositions[i].x * 32), tiles.posY - 3 + (lightPositions[i].y * 26),
+			details.add<2>(tiles.posX + 16 + (detailPositions[i].x * 32), tiles.posY - 3 + (detailPositions[i].y * 26),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
 		}
-		lightPositions.clear();
+		detailPositions.clear();
 	} else if (set == tileController::Tileset::intro) {
 		details.add<2>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (6 * 26),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),

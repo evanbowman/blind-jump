@@ -21,7 +21,7 @@
 
 #define PILLAR_RADIUS 180
 
-void getRockPositions(uint8_t gameMap[61][61], std::vector<Coordinate>& availableLocations) {
+void getRockPositions(uint8_t gameMap[61][61], std::vector<Coordinate>& availableLocations, Circle & teleporterFootprint) {
 	// First create a temporary map containing only the surfaces from the game map
 	std::vector<Circle> pillarMap;
 	int i, j;
@@ -45,6 +45,14 @@ void getRockPositions(uint8_t gameMap[61][61], std::vector<Coordinate>& availabl
 			}
 		}
 	}
+
+	for (std::vector<Circle>::iterator it = pillarMap.begin(); it != pillarMap.end();) {
+		if (checkOverlap(teleporterFootprint, *it)) {
+			it = pillarMap.erase(it);
+		} else {
+			++it;
+		}
+	}
 	
 	size_t length = pillarMap.size();
 	// Randomly shuffle the vector so not to just pick elements that are spatially close
@@ -55,10 +63,7 @@ void getRockPositions(uint8_t gameMap[61][61], std::vector<Coordinate>& availabl
 			if (checkOverlap(pillarMap[i], *it) && (it->x != pillarMap[i].x || it->y != pillarMap[i].y)) {
 				it = pillarMap.erase(it);
 				length--;
-			}
-			
-			else {
-				// Go to the next element
+			} else {
 				++it;
 			}
 		}

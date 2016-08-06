@@ -91,13 +91,9 @@ private:
 	sf::RenderTexture lightingMap;
 	sf::RectangleShape shadowShape;
 	sf::RenderTexture target, secondPass, thirdPass, stash;
-	// Locations to place lights
-	std::vector<Coordinate> lightPositions;
 	sf::RectangleShape transitionShape, beamShape;
 	sf::Texture titleTxtr;
 	sf::Sprite titleSpr;
-	// Locations to place pillars
-	std::vector<Coordinate> rockPositions;
 	std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> gameObjects;
 	std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> gameShadows;
 	ScreenShakeController ssc;
