@@ -16,15 +16,25 @@
 //========================================================================//
 
 #pragma once
+#include <SFML/System.hpp>
 #include <chrono>
 #include <thread>
+#include <cmath>
 #include "alias.hpp"
+#include "easingTemplates.hpp"
 
-extern bool globalLogicPaused;
+class Player;
 
-inline void pause(const milliseconds & time) {
-	globalLogicPaused = true;
-	std::this_thread::sleep_for(time);
+namespace Feedback {
+	extern bool isAsleep;
+	inline void sleep(const milliseconds & time) {
+	    isAsleep = true;
+		std::this_thread::sleep_for(time);
+	}
+	namespace Shake {
+		void shake(const float, const int64_t);
+		void update(Player &, const sf::Time &);
+	}
 }
 
 

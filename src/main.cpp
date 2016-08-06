@@ -32,13 +32,11 @@
 #include "rng.hpp"
 #include "aspectScaling.hpp"
 #include "alias.hpp"
-#include "pause.hpp"
+#include "feedback.hpp"
 
 ResourceHandler globalResourceHandler;
 
 std::mt19937 globalRNG;
-
-bool globalLogicPaused;
 
 int main() {
 	if (globalResourceHandler.load()) return EXIT_FAILURE;
@@ -63,10 +61,10 @@ int main() {
 			while (pWindow->isOpen()) {
 				time_point start = high_resolution_clock::now();
 				sf::Time elapsedTime = gameClock.restart(); // TODO: use chrono clock instead
-				if (globalLogicPaused) {
+				if (Feedback::isAsleep) {
 					// When waking from pause the elapsed time between updates will be huge, so zero the clock
 					elapsedTime = gameClock.restart();
-					globalLogicPaused = false;
+					Feedback::isAsleep = false;
 				}
 				pGame->update(elapsedTime);
 				time_point stop = high_resolution_clock::now();

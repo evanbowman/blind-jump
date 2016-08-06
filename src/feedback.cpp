@@ -15,45 +15,35 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.  //
 //========================================================================//
 
-#pragma once
-
-#include <thread>
-#include <SFML/Graphics.hpp>
-#include "resourceHandler.hpp"
-#include "turret.hpp"
-#include "effectsController.hpp"
-#include "scoot.hpp"
-#include "dasher.hpp"
-#include "critter.hpp"
-#include "RenderType.hpp"
 #include "feedback.hpp"
+#include "player.hpp"
 
-class ScreenShakeController;
-class detailController;
-class tileController;
+bool Feedback::isAsleep{false};
 
-class enemyController {
-private:
-	using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
-	std::vector<Turret> turrets;
-	std::vector<Scoot> scoots;
-	std::vector<Dasher> dashers;
-	std::vector<Critter> critters;
-	float windowW;
-	float windowH;
+namespace {
+	float globalShakeIntensity{0.f};
+	bool globalShakeActive{false};
+	int64_t shakeDuration{0};
+	int64_t timer{0};
+}
 	
-public:
-	enemyController();
-	void update(float, float, EffectGroup &, std::vector<wall>, bool, tileController*, ScreenShakeController*, FontController&, sf::Time &);
-	void draw(drawableVec &, drawableVec &);
-	void clear();
-	void addTurret(tileController *);
-	void addScoot(tileController *);
-	void addDasher(tileController *);
-	void addCritter(tileController *);
-	void setWindowSize(float, float);
-	std::vector<Critter> & getCritters();
-	std::vector<Scoot> & getScoots();
-	std::vector<Dasher> & getDashers();
-	std::vector<Turret> & getTurrets();
-};
+void Feedback::Shake::shake(const float intensity, const int64_t duration) {
+	if (!globalShakeActive) {
+		globalShakeIntensity = intensity;
+		shakeDuration = duration;
+		globalShakeActive = true;
+	}
+}
+
+void Feedback::Shake::update(Player & player, const sf::Time & elaspedTime) {
+	if (globalShakeActive) {
+		timer += elapsedTime.asMicroseconds();
+		const static float PI{3.1415926535};
+		// Interpolates a damped sinusoid
+		float yOffset = Easing::easeOut<2>(timer, 50000) * globalShakeIntensity * std::sin(2 * PI * timer * 0.001f + 180);
+		if (timer < 50000) {
+			globalShakeActive = false;
+			timer = 0;
+		}
+	}
+}
