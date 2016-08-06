@@ -278,7 +278,16 @@ void Game::update(sf::Time & elapsedTime) {
 		// Update positions
 		bkg.setOffset(xOffset, yOffset);
 		tiles.update(xOffset, yOffset);
-		details.update(xOffset, yOffset, elapsedTime);
+		details.apply([&](auto & vec) {
+			for (auto it = vec.begin(); it != vec.end();) {
+				if (it->getKillFlag()) {
+					it = vec.erase(it);
+				} else {
+					it->update(xOffset, yOffset, elapsedTime);
+					++it;
+				}
+			}
+		});
 		en.update(player.getWorldOffsetX(), player.getWorldOffsetY(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, &ssc, *pFonts, elapsedTime);
 		if (player.visible) {
 			player.update(this, elapsedTime);
@@ -288,7 +297,16 @@ void Game::update(sf::Time & elapsedTime) {
 			ssc.rumble();
 		}
 		if (!UI.isOpen() || (UI.isOpen() && player.getState() == Player::State::dead)) {
-			effectGroup.update(xOffset, yOffset, elapsedTime);
+			effectGroup.apply([&](auto & vec) {
+				for (auto it = vec.begin(); it != vec.end();) {
+					if (it->getKillFlag()) {
+						it = vec.erase(it);
+					} else {
+						it->update(xOffset, yOffset, elapsedTime);
+						++it;
+					}
+				}
+			});
 		}
 		globalObjectMutex.unlock();
 	}
