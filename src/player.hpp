@@ -25,6 +25,7 @@
 #include "RenderType.hpp"
 #include "resourceHandler.hpp"
 #include "spriteSheet.hpp"
+#include "pause.hpp"
 
 class Game;
 

@@ -16,44 +16,15 @@
 //========================================================================//
 
 #pragma once
-
+#include <chrono>
 #include <thread>
-#include <SFML/Graphics.hpp>
-#include "resourceHandler.hpp"
-#include "turret.hpp"
-#include "effectsController.hpp"
-#include "scoot.hpp"
-#include "dasher.hpp"
-#include "critter.hpp"
-#include "RenderType.hpp"
-#include "pause.hpp"
+#include "alias.hpp"
 
-class ScreenShakeController;
-class detailController;
-class tileController;
+extern bool globalLogicPaused;
 
-class enemyController {
-private:
-	using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
-	std::vector<Turret> turrets;
-	std::vector<Scoot> scoots;
-	std::vector<Dasher> dashers;
-	std::vector<Critter> critters;
-	float windowW;
-	float windowH;
-	
-public:
-	enemyController();
-	void update(float, float, EffectGroup &, std::vector<wall>, bool, tileController*, ScreenShakeController*, FontController&, sf::Time &);
-	void draw(drawableVec &, drawableVec &);
-	void clear();
-	void addTurret(tileController *);
-	void addScoot(tileController *);
-	void addDasher(tileController *);
-	void addCritter(tileController *);
-	void setWindowSize(float, float);
-	std::vector<Critter> & getCritters();
-	std::vector<Scoot> & getScoots();
-	std::vector<Dasher> & getDashers();
-	std::vector<Turret> & getTurrets();
-};
+inline void pause(const milliseconds & time) {
+	globalLogicPaused = true;
+	std::this_thread::sleep_for(time);
+}
+
+

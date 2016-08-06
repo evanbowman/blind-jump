@@ -107,6 +107,7 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 	if (!scoots.empty()) {
 		for (auto it = scoots.begin(); it != scoots.end();) {
 			if (it->getKillFlag()) {
+				pause(milliseconds(35));
 				scrn->rumble();
 				it = scoots.erase(it);
 			} else {
@@ -139,6 +140,7 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 		
 		for (auto it = critters.begin(); it != critters.end();) {
 			if (it->getKillFlag()) {
+				pause(milliseconds(35));
 				// Rumble the screen
 				scrn->rumble();
 				it = critters.erase(it);
@@ -163,7 +165,12 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 			if (element.getXpos() > -64 && element.getXpos() < windowW + 64 && element.getYpos() > -64 && element.getYpos() < windowH + 64) {
 				if (enabled) {
 					element.update(x, y, w, ef, elapsedTime);	
-				}	
+				}
+				if (element.getKillFlag()) {
+					pause(milliseconds(35));
+					scrn->rumble();
+					element.setKillFlag(false);
+				}
 			} else {
 				// If outside the window, update the enemy's position, but don't move it, draw it, check collisions, etc.
 				element.Enemy::update(x, y, w, ef, elapsedTime);

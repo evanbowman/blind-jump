@@ -280,6 +280,7 @@ void Dasher::onDeath(EffectGroup & effects) {
 	hSpeed = 0;
 	vSpeed = 0;
 	frameIndex = 0;
+	killFlag = true;
 	unsigned long int temp = std::abs(static_cast<int>(globalRNG())) % 4;
 	if (temp == 0) {
 	    effects.add<4>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),

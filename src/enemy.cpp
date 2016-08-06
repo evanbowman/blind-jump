@@ -40,6 +40,10 @@ float Enemy::getColorAmount() const {
 	return colorAmount;
 }
 
+void Enemy::setKillFlag(bool _killFlag = true) {
+	killFlag = _killFlag;
+}
+
 bool Enemy::isColored() const {
 	return colored;
 }

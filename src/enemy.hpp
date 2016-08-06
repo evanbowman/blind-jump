@@ -56,6 +56,7 @@ public:
 	float getXpos() const;
 	float getYpos() const;
 	float getColorAmount() const;
+	void setKillFlag(bool);
 };
 
 #endif /* enemyParent_hpp */
