@@ -72,7 +72,7 @@ Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontControlle
 	details.add<2>(tiles.posX - 180 + 16 + (11 * 32), tiles.posY + 200 - 3 + (11 * 26),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
-	details.add<2>(tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 200 + 8 + (-9 * 26),
+	details.add<2>(tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 204 + 8 + (-9 * 26),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
 	details.add<4>(tiles.posX - 192 + 6 * 32, tiles.posY + 301,
@@ -290,8 +290,12 @@ void Game::update(sf::Time & elapsedTime) {
 	if (!stashed || preload) {
 		globalObjectMutex.lock();
 		camera.update(elapsedTime);
-		// Update positions
-		bkg.setOffset(xOffset, yOffset);
+		if (level != 0) {
+			const sf::Vector2f & cameraOffset = camera.getOffset();
+			bkg.setOffset(cameraOffset.x, cameraOffset.y);
+		} else { // TODO: why is this necessary...?
+			bkg.setOffset(0, 0);
+		}
 		tiles.update(xOffset, yOffset);
 		details.apply([&](auto & vec) {
 			for (auto it = vec.begin(); it != vec.end();) {
@@ -624,7 +628,7 @@ void Game::Reset() {
 		details.add<2>(tiles.posX - 180 + 16 + (11 * 32), tiles.posY + 200 - 3 + (11 * 26),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
-		details.add<2>(tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 200 + 8 + (-9 * 26),
+		details.add<2>(tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 204 + 8 + (-9 * 26),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
 		details.add<4>(tiles.posX - 192 + 6 * 32, tiles.posY + 301,

@@ -21,6 +21,17 @@ inline sf::Vector2f lerp(const sf::Vector2f & A, const sf::Vector2f & B, float t
 	return A * t + (1 - t) * B;
 }
 
+Camera::Camera(Player * _pTarget, const sf::Vector2f & viewPort)  :
+		pTarget(_pTarget),
+		view(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
+		isShaking(false),
+		shakeIndex(0),
+		timer(0),
+		shakeIntensity(0.f)
+	{
+		startPosition = view.getCenter();
+	}
+
 void Camera::update(const sf::Time & elapsedTime) {
 	float trackingRate;
 	// If the player is in combat mode, lower the tracking speed
@@ -57,6 +68,7 @@ const sf::View & Camera::getView() const {
 void Camera::reset() {
 	float placementOffset = pTarget->getPosition().y / 4;
 	view.setCenter(sf::Vector2f(pTarget->getPosition().x, placementOffset));
+	startPosition = view.getCenter();
 }
 
 void Camera::shake(float _shakeIntensity) {
@@ -65,4 +77,8 @@ void Camera::shake(float _shakeIntensity) {
 		isShaking = true;
 		shakeIndex = 0;
 	}
+}
+
+sf::Vector2f Camera::getOffset() const {
+	return view.getCenter() - startPosition;
 }
