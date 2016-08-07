@@ -31,23 +31,24 @@ Dasher::Blur::Blur(sf::Sprite * spr, float xInit, float yInit) {
 	c.g -= 30;
 	c.b -= 10;
 	this->spr.setColor(c);
+	this->spr.setPosition(xInit, yInit);
 }
 
 sf::Sprite * Dasher::Blur::getSprite() {
 	return &spr;
 }
 
-void Dasher::Blur::update(const sf::Time & elapsedTime, float xOffset, float yOffset) {
+void Dasher::Blur::update(const sf::Time & elapsedTime) {
 	timer += elapsedTime.asMilliseconds();
-	spr.setPosition(xInit + xOffset, yInit + yOffset);
 	if (timer > 18) {
 		timer = 0;
 		sf::Color c = spr.getColor();
 		if (c.a > 30) {
 			c.a -= 30;
 			spr.setColor(c);
-		} else
+		} else {
 			killflag = true;
+		}
 	}
 }
 
@@ -59,8 +60,8 @@ const Dasher::HBox & Dasher::getHitBox() const {
 	return hitBox;
 }
 
-Dasher::Dasher(const sf::Texture & mainTxtr, float _xInit, float _yInit, float _ppx, float _ppy)
-	: Enemy{_xInit, _yInit, _ppx, _ppy},
+Dasher::Dasher(const sf::Texture & mainTxtr, float _xPos, float _yPos)
+	: Enemy{_xPos, _yPos},
 	  shotCount{0},
 	  state{State::idle},
 	  dasherSheet{mainTxtr},
@@ -93,15 +94,7 @@ const sf::Sprite & Dasher::getShadow() const {
 	return shadow;
 }
 
-void Dasher::facePlayer() {
-	if (xPos > playerPosX)
-		dasherSheet.setScale(1, 1);
-	else
-		dasherSheet.setScale(-1, 1);
-}
-
-void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & walls, EffectGroup & effects, const sf::Time & elapsedTime) {
-	Enemy::update(xOffset, yOffset, walls, effects, elapsedTime);
+void Dasher::update(float playerPosX, float playerPosY, const std::vector<wall> & walls, EffectGroup & effects, const sf::Time & elapsedTime) {
 	if (health > 0) {
 		for (auto & element : effects.get<9>()) {
 			if (hitBox.overlapping(element.getHitBox()) && element.checkCanPoof()) {
@@ -127,6 +120,14 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 	hitBox.setPosition(xPos, yPos);
 	
 	timer += elapsedTime.asMilliseconds();
+
+	auto facePlayer = [&]() {
+		if (xPos > playerPosX) {
+			dasherSheet.setScale(1, 1);
+		} else {
+			dasherSheet.setScale(-1, 1);
+		}
+	};
 	
 	switch(state) {
 	case State::idle:
@@ -158,15 +159,15 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 			frameTimer -= 80;
 			shotCount++;
 			if (xPos > playerPosX) {
-				effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xInit - 14, yInit + 2);
+				effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xPos - 14, yPos + 2);
 				effects.add<7>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 							   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
-							   xInit - 12, yInit, angleFunction(playerPosX, playerPosY, xPos, yPos));
+							   xPos - 12, yPos, angleFunction(playerPosX, playerPosY, xPos, yPos));
 			} else {
-				effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xInit + 6, yInit + 2);
+				effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xPos + 6, yPos + 2);
 				effects.add<7>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 							   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
-							   xInit + 4, yInit, angleFunction(playerPosX, playerPosY, xPos, yPos));
+							   xPos + 4, yPos, angleFunction(playerPosX, playerPosY, xPos, yPos));
 			}
 		}
 
@@ -221,7 +222,7 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 		frameTimer += elapsedTime.asMilliseconds();
 		if (frameTimer > 40) {
 			frameTimer = 0;
-			blurEffects.emplace_back(dasherSheet.getSpritePtr(), xInit, yInit);
+			blurEffects.emplace_back(dasherSheet.getSpritePtr(), xPos, yPos);
 		}
 		if (timer > 250) {
 			timer -= 250;
@@ -265,14 +266,14 @@ void Dasher::update(float xOffset, float yOffset, const std::vector<wall> & wall
 			if (it->getKillFlag())
 				it = blurEffects.erase(it);
 			else {
-				it->update(elapsedTime, xOffset, yOffset);
+				it->update(elapsedTime);
 				++it;
 			}
 		}
 	}
 	
-	xInit += hSpeed * (elapsedTime.asMicroseconds() * 0.00005f);
-	yInit += vSpeed * (elapsedTime.asMicroseconds() * 0.00005f);
+	xPos += hSpeed * (elapsedTime.asMicroseconds() * 0.00005f);
+	yPos += vSpeed * (elapsedTime.asMicroseconds() * 0.00005f);
 }
 
 void Dasher::onDeath(EffectGroup & effects) {
@@ -285,15 +286,15 @@ void Dasher::onDeath(EffectGroup & effects) {
 	if (temp == 0) {
 	    effects.add<4>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
-					   xInit, yInit + 4, Powerup::Type::Heart);
+					   xPos, yPos + 4, Powerup::Type::Heart);
 	} else {
 	    effects.add<5>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::blueglow),
-					   xInit, yInit + 4, Powerup::Type::Coin);
+					   xPos, yPos + 4, Powerup::Type::Coin);
 	}
     effects.add<1>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::fireExplosionGlow),
-				   xInit, yInit - 2);
+				   xPos, yPos - 2);
 	blurEffects.clear();
 }
 

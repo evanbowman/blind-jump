@@ -36,10 +36,6 @@ private:
 	HBox hitBox;
 	float xPos;
 	float yPos;
-	float xInit;
-	float yInit;
-	float playerPosX;
-	float playerPosY;
 	uint8_t imageIndex;
 	int16_t disableCountdown;
 	sf::Sprite turretSprites[10];
@@ -57,18 +53,14 @@ private:
 	float colorAmount;
 	
 public:
-	Turret(const sf::Texture &, float, float, float, float);
+	Turret(const sf::Texture &, float, float);
 	const HBox & getHitBox() const;
 	void setPosition(float, float);
 	const sf::Sprite & getShadow();
 	const sf::Sprite & getSprite();
-	void update(const sf::Time &);
-	void updateShots(EffectGroup &, FontController&);
-	float getXinit();
-	float getYinit();
+	void update(const sf::Time &, float, float);
+	void updateShots(EffectGroup &, FontController &, float, float);
 	bool getKillFlag();
-	float getPlayerPosX();
-	float getPlayerPosY();
 	float getXpos();
 	float getYpos();
 	bool colored();

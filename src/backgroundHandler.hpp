@@ -16,8 +16,8 @@
 //========================================================================//
 
 #pragma once
-
 #include <SFML/Graphics.hpp>
+#include "camera.hpp"
 
 #define STARMAP_SIZE 7
 
@@ -44,7 +44,7 @@ private:
 	
 public:
 	backgroundHandler();
-	void drawBackground(sf::RenderTexture&, const sf::View &, const sf::View &);
+	void drawBackground(sf::RenderTexture&, const sf::View &, const Camera &);
 	void drawForeground(sf::RenderTexture&);
 	void setOffset(float, float);
 	void setPosition(float, float);

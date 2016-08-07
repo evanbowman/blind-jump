@@ -19,8 +19,8 @@
 #include <cmath>
 #include "angleFunction.hpp"
 
-Scoot::Scoot(const sf::Texture & mainTxtr, const sf::Texture & shadowTxtr, float _xInit, float _yInit, float _playerPosX, float _playerPosY)
-	: Enemy{_xInit, _yInit, _playerPosX, _playerPosY},
+Scoot::Scoot(const sf::Texture & mainTxtr, const sf::Texture & shadowTxtr, float _xPos, float _yPos)
+	: Enemy{_xPos, _yPos},
 	  spriteSheet{mainTxtr},
 	  speedScale{0.5f},
 	  state{State::drift1},
@@ -43,8 +43,7 @@ void Scoot::changeDir(float dir) {
 	vSpeed = std::sin(dir);	
 }
 
-void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, EffectGroup & effects, const sf::Time & elapsedTime) {
-	Enemy::update(xOffset, yOffset, w, effects, elapsedTime);
+void Scoot::update(float playerPosX, float playerPosY, const std::vector<wall> & w, EffectGroup & effects, const sf::Time & elapsedTime) {
 	for (auto & element : effects.get<9>()) {
 		if (hitBox.overlapping(element.getHitBox()) && element.checkCanPoof()) {
 			if (health == 1) {
@@ -94,10 +93,10 @@ void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, Ef
 		break;
 		
 	case State::shoot:
-		effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xInit - 8, yInit - 12);
+		effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xPos - 8, yPos - 12);
 		effects.add<8>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
-					   xInit - 8, yInit - 12, angleFunction(playerPosX, playerPosY + 8, xPos - 8, yPos - 8));
+					   xPos - 8, yPos - 12, angleFunction(playerPosX, playerPosY + 8, xPos - 8, yPos - 8));
 		state = State::recoil;
 		changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
 		hSpeed *= -1;
@@ -142,8 +141,8 @@ void Scoot::update(float xOffset, float yOffset, const std::vector<wall> & w, Ef
 			vSpeed -= 1;
 		}
 	}
-	xInit += (elapsedTime.asMicroseconds() * 0.00006f) * hSpeed * speedScale;
-	yInit += (elapsedTime.asMicroseconds() * 0.00006f) * vSpeed * speedScale;
+	xPos += (elapsedTime.asMicroseconds() * 0.00006f) * hSpeed * speedScale;
+	yPos += (elapsedTime.asMicroseconds() * 0.00006f) * vSpeed * speedScale;
 	// Update the frameIndex based on time
 	frameTimer += elapsedTime.asMilliseconds();
 	if (frameTimer > 87) {
@@ -165,15 +164,15 @@ void Scoot::onDeath(EffectGroup & effects) {
 	if (select == 0) {
 		effects.add<4>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
-					   xInit, yInit + 4, Powerup::Type::Heart);
+					   xPos, yPos + 4, Powerup::Type::Heart);
 	} else {
 		effects.add<5>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::blueglow),
-					   xInit, yInit + 4, Powerup::Type::Coin);
+					   xPos, yPos + 4, Powerup::Type::Coin);
 	}
 	effects.add<2>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::fireExplosionGlow),
-				   xInit, yInit - 2);
+				   xPos, yPos - 2);
 	killFlag = true;
 	return;
 }

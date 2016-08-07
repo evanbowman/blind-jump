@@ -35,7 +35,7 @@ class Enemy {
 protected:
 	virtual void onDeath(EffectGroup &) = 0;
 	bool killFlag, colored;
-	float xInit, yInit, playerPosX, playerPosY, xPos, yPos, colorAmount;
+	float xPos, yPos, colorAmount;
 	uint8_t frameIndex, health;
 	uint32_t colorTimer, frameTimer;
 	uint_fast8_t checkWallCollision(const std::vector<wall> &, float, float, float);
@@ -45,14 +45,12 @@ protected:
 	void facePlayer();
 	
 public:
-	Enemy(float, float, float, float);
+	Enemy(float, float);
 	virtual const sf::Sprite & getSprite() const = 0;
 	virtual const sf::Sprite & getShadow() const = 0;
-	virtual void update(float, float, const std::vector<wall> &, EffectGroup & ef,  const sf::Time &);
+	virtual void update(float, float, const std::vector<wall> &, EffectGroup & ef,  const sf::Time &) = 0;
 	bool getKillFlag() const;
 	bool isColored() const;
-	float getXinit() const;
-	float getYinit() const;
 	float getXpos() const;
 	float getYpos() const;
 	float getColorAmount() const;

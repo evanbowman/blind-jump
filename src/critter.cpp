@@ -20,8 +20,8 @@
 #include "math.h"
 #include <cmath>
 
-Critter::Critter(const sf::Texture & txtr, uint8_t _map[61][61], float _xInit, float _yInit, float _playerPosX, float _playerPosY) :
-	Enemy{_xInit, _yInit, _playerPosX, _playerPosY},
+Critter::Critter(const sf::Texture & txtr, uint8_t _map[61][61], float _xPos, float _yPos) :
+	Enemy{_xPos, _yPos},
 	currentDir{0.f},
 	jumpTargetx{0.f},
 	jumpTargety{0.f},
@@ -48,9 +48,7 @@ void Critter::updatePlayerDead() {
 
 void Critter::update(float, float, const std::vector<wall> &, EffectGroup &, const sf::Time &) {}
 
-void Critter::critterUpdate(float xOffset, float yOffset, EffectGroup & effects, const sf::Time & elapsedTime, tileController * pTiles) {
-	xPos = xInit + xOffset + 12;
-	yPos = yInit + yOffset;
+void Critter::critterUpdate(float playerPosX, float playerPosY, EffectGroup & effects, const sf::Time & elapsedTime, tileController * pTiles) {
 	for (auto & element : effects.get<9>()) {
 		if (element.getHitBox().overlapping(hitBox) && element.checkCanPoof()) {
 			if (health == 1) {
@@ -84,33 +82,33 @@ void Critter::critterUpdate(float xOffset, float yOffset, EffectGroup & effects,
 			recalc = 8;
 			
 			aStrCoordinate origin, target;
-			origin.x = (xPos - tilePosX - xOffset) / 32;
-			origin.y = (yPos - tilePosY - yOffset) / 26;
-			target.x = (tilePosX - playerPosX + xOffset) / -32;
-			target.y = (tilePosY - playerPosY - 26 + yOffset) / -26;
+			origin.x = (xPos - tilePosX) / 32;
+			origin.y = (yPos - tilePosY) / 26;
+			target.x = (tilePosX - playerPosX) / -32;
+			target.y = (tilePosY - playerPosY - 26) / -26;
 			if (map[target.x][target.y] == 3 || map[target.x][target.y] == 4 || map[target.x][target.y] == 5 || map[target.x][target.y] == 11 || map[target.x][target.y] == 8) {
 				path = astar_path(target, origin, map);
 				previous = path.back();
 				path.pop_back();
-				xInit = ((xPos - tilePosX - xOffset) / 32) * 32 + tilePosX;
-				yInit = ((yPos - tilePosY - yOffset) / 26) * 26 + tilePosY;
+				xPos = ((xPos - tilePosX) / 32) * 32 + tilePosX;
+				yPos = ((yPos - tilePosY) / 26) * 26 + tilePosY;
 				// Calculate the direction to move in, based on the coordinate of the previous location and the coordinate of the next location
-				currentDir = atan2(yInit - (((path.back().y * 26) + 4 + tilePosY)), xInit - (((path.back().x * 32) + 4 + tilePosX)));
+				currentDir = atan2(yPos - (((path.back().y * 26) + 4 + tilePosY)), xPos - (((path.back().x * 32) + 4 + tilePosX)));
 			}
 		}
 		
 		// If the path is not empty
 		else {
 			// Add each component of the direction vector to the enemy's position datafields
-			xInit -= speed * cos(currentDir) * (elapsedTime.asMicroseconds() * 0.00005f);
-			yInit -= speed * sin(currentDir) * (elapsedTime.asMicroseconds() * 0.00005f);
+			xPos -= speed * cos(currentDir) * (elapsedTime.asMicroseconds() * 0.00005f);
+			yPos -= speed * sin(currentDir) * (elapsedTime.asMicroseconds() * 0.00005f);
 			// If the enemy is sufficiently close to the target point, pop it and work on the next one
-			if (fabs(xInit - (((path.back().x * 32) + 4 + tilePosX))) < 8 && fabs(yInit - (((path.back().y * 26) + 4 + tilePosY))) < 8) {
+			if (fabs(xPos - (((path.back().x * 32) + 4 + tilePosX))) < 8 && fabs(yPos - (((path.back().y * 26) + 4 + tilePosY))) < 8) {
 				recalc--;
 				previous = path.back();
 				path.pop_back();
 				// Calculate the direction to move in
-				currentDir = atan2(yInit - (((path.back().y * 26) + 4 + tilePosY)), xInit - (((path.back().x * 32) + 4 + tilePosX)));
+				currentDir = atan2(yPos - (((path.back().y * 26) + 4 + tilePosY)), xPos - (((path.back().x * 32) + 4 + tilePosX)));
 			}
 		}
 		
@@ -169,14 +167,14 @@ void Critter::onDeath(EffectGroup & effects) {
 	if (temp == 0) {
 	    effects.add<4>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
-					   xInit + 10, yInit, Powerup::Type::Heart);
+					   xPos + 10, yPos, Powerup::Type::Heart);
 	} else {
 	    effects.add<5>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::blueglow),
-					   xInit + 10, yInit, Powerup::Type::Coin);
+					   xPos + 10, yPos, Powerup::Type::Coin);
 	}
     effects.add<1>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::fireExplosionGlow),
-				   xInit + 8, yInit);
+				   xPos + 8, yPos);
 	killFlag = true;
 }

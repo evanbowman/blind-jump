@@ -99,10 +99,9 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 			if (it->getKillFlag() == 1) {
 				it = turrets.erase(it);
 			} else {
-				it->setPosition(x + it->getXinit(), y + it->getYinit());
-				it->update(elapsedTime);
+				it->update(elapsedTime, x, y);
 				if (enabled) {
-					it->updateShots(ef, fonts);
+					it->updateShots(ef, fonts, x, y);
 				}
 				++it;
 			}
@@ -195,7 +194,7 @@ void enemyController::addTurret(tileController * pTiles) {
 	int locationSelect = (std::abs(static_cast<int>(globalRNG())) % 2) ? std::abs(static_cast<int>(globalRNG())) % (pCoordVec->size() / 2) : std::abs(static_cast<int>(globalRNG())) % (pCoordVec->size());
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-	turrets.emplace_back(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xInit, yInit, windowW / 2, windowH / 2);
+	turrets.emplace_back(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xInit, yInit);
 	(*pCoordVec)[locationSelect] = pCoordVec->back();
 	pCoordVec->pop_back();
 }
@@ -207,7 +206,7 @@ void enemyController::addScoot(tileController * pTiles) {
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
 	scoots.emplace_back(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 						globalResourceHandler.getTexture(ResourceHandler::Texture::scootShadow),
-						xInit, yInit, windowW / 2, windowH / 2);
+						xInit, yInit);
 	(*pCoordVec)[locationSelect] = pCoordVec->back();
 	pCoordVec->pop_back();
 }
@@ -218,7 +217,7 @@ void enemyController::addDasher(tileController * pTiles) {
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
 	dashers.emplace_back(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-						 xInit, yInit, windowW / 2, windowH / 2);
+						 xInit, yInit);
 	(*pCoordVec)[locationSelect] = pCoordVec->back();
 	pCoordVec->pop_back();
 }
@@ -229,8 +228,7 @@ void enemyController::addCritter(tileController * pTiles) {
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
 	critters.emplace_back(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-						  pTiles->mapArray, xInit, yInit,
-						  windowW / 2, windowH / 2);
+						  pTiles->mapArray, xInit, yInit);
 	(*pCoordVec)[locationSelect] = pCoordVec->back();
 	pCoordVec->pop_back();
 }

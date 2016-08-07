@@ -19,13 +19,9 @@
 #include <cmath>
 #include "angleFunction.hpp"
 
-Turret::Turret(const sf::Texture & gameObjects, float _xInit, float _yInit, float _playerPosX, float _playerPosY) :
-	xPos{0.f},
-	yPos{0.f},
-	xInit{_xInit},
-	yInit{_yInit},
-	playerPosX{_playerPosX},
-	playerPosY{_playerPosY},
+Turret::Turret(const sf::Texture & gameObjects, float _xPos, float _yPos) :
+	xPos{_xPos},
+	yPos{_yPos},
 	imageIndex{0},
 	animationCount{0},
 	active{0},
@@ -46,7 +42,7 @@ const sf::Sprite & Turret::getSprite() {
 	return turretSheet[imageIndex];
 }
 
-void Turret::update(const sf::Time & elapsedTime) {
+void Turret::update(const sf::Time & elapsedTime, float playerPosX, float playerPosY) {
 	if (isColored) {
 		colorTimer += elapsedTime.asMilliseconds();
 		if (colorTimer > 20.f) {
@@ -113,17 +109,17 @@ const sf::Sprite & Turret::getShadow() {
 	return shadowSheet[imageIndex];
 }
 
-void Turret::updateShots(EffectGroup & effects, FontController & fonts) {
+void Turret::updateShots(EffectGroup & effects, FontController & fonts, float playerPosX, float playerPosY) {
 	//If the turret is open...
 	if (imageIndex == 4) {
 		//And the shot coundown timer has decremented far enough
 		if (--shotCountdown == 0) {
 			//Add a shot flash effect to the effects controller
-			effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xInit, yInit);
+			effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos);
 			//Create a shot object with an angle equal to the angle between the player and the turret
 			effects.add<6>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 						   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
-						   xInit, yInit, angleFunction(playerPosX, playerPosY, xPos + 18, yPos + 6));
+						   xPos, yPos, angleFunction(playerPosX, playerPosY, xPos + 18, yPos + 6));
 			//Increment the number of shots fired
 			shotsFired++;
 			//Reset the countdown timer
@@ -155,36 +151,20 @@ void Turret::updateShots(EffectGroup & effects, FontController & fonts) {
 		if ((std::abs(static_cast<int>(globalRNG())) % 4) == 0) {
 			effects.add<4>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
-					   xInit, yInit + 4, Powerup::Type::Heart);
+					   xPos, yPos + 4, Powerup::Type::Heart);
 		} else {
 		    effects.add<5>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::blueglow),
-					   xInit, yInit + 4, Powerup::Type::Coin);
+					   xPos, yPos + 4, Powerup::Type::Coin);
 		}
 		effects.add<2>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::fireExplosionGlow),
-				   xInit, yInit -2);
+				   xPos, yPos -2);
 	}
 }
 
 bool Turret::getKillFlag() {
 	return killFlag;
-}
-
-float Turret::getXinit() {
-	return xInit;
-}
-
-float Turret::getYinit() {
-	return yInit;
-}
-
-float Turret::getPlayerPosX() {
-	return playerPosX;
-}
-
-float Turret::getPlayerPosY() {
-	return playerPosY;
 }
 
 float Turret::getXpos() {

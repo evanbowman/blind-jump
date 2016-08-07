@@ -485,7 +485,7 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 			if (it->getKillFlag())
 				it = blurs.erase(it);
 			else {
-				it->update(elapsedTime, 0, 0);
+				it->update(elapsedTime);
 				++it;
 			}
 		}

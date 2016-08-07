@@ -27,7 +27,7 @@ public:
 	struct Blur {
 		Blur(sf::Sprite *, float, float);
 		sf::Sprite * getSprite();
-		void update(const sf::Time &, float, float);
+		void update(const sf::Time &);
 		bool getKillFlag();
 		int32_t timer;
 		float xInit;
@@ -38,7 +38,7 @@ public:
 	enum class State {
 		idle, shooting, dashBegin, dashing, dashEnd, dying, dead, shootBegin, pause
 	};
-	Dasher(const sf::Texture &, float, float, float, float);
+	Dasher(const sf::Texture &, float, float);
 	const sf::Sprite & getSprite() const override;
 	const sf::Sprite & getShadow() const override;
     void update(float, float, const std::vector<wall> &, EffectGroup & ef, const sf::Time &) override;

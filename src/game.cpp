@@ -121,7 +121,7 @@ void Game::draw(sf::RenderWindow & window) {
 	if (!stashed || preload) {
 		globalObjectMutex.lock();
 		lightingMap.setView(camera.getView());
-		bkg.drawBackground(target, worldView, camera.getView());
+		bkg.drawBackground(target, worldView, camera);
 		tiles.draw(target, &glowSprs1, &glowSprs2, level, worldView, camera.getView());
 		glowSprs2.clear();
 		glowSprs1.clear();
@@ -303,7 +303,7 @@ void Game::update(sf::Time & elapsedTime) {
 				}
 			}
 		});
-		en.update(0, 0, effectGroup, tiles.walls, !UI.isOpen(), &tiles, *pFonts, elapsedTime, camera);
+		en.update(player.getXpos(), player.getYpos(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, *pFonts, elapsedTime, camera);
 		if (player.visible) {
 			player.update(this, elapsedTime);
 		}
@@ -400,7 +400,6 @@ switch (transitionState) {
     	window.draw(beamShape);
 		break;
 	}
-	
 }
 
 void Game::updateTransitions(float xOffset, float yOffset, const sf::Time & elapsedTime) {

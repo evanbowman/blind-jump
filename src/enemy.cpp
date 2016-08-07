@@ -17,15 +17,11 @@
 
 #include "enemy.hpp"
 
-Enemy::Enemy(float _xInit, float _yInit, float _playerPosX, float _playerPosY)
+Enemy::Enemy(float _xPos, float _yPos)
 	: killFlag{false},
 	  colored{false},
-	  xInit{_xInit},
-	  yInit{_yInit},
-	  playerPosX{_playerPosX},
-	  playerPosY{_playerPosY},
-	  xPos{0.f},
-	  yPos{0.f},
+	  xPos{_xPos},
+	  yPos{_yPos},
 	  colorAmount{0.f},
 	  frameIndex{0},
 	  colorTimer{0},
@@ -56,17 +52,7 @@ float Enemy::getYpos() const {
 	return yPos;
 }
 
-float Enemy::getXinit() const {
-	return xInit;
-}
-
-float Enemy::getYinit() const {
-	return yInit;
-}
-
 void Enemy::update(float xOffset, float yOffset, const std::vector<wall> & w, EffectGroup & effects, const sf::Time & elapsedTime) {
-	xPos = xInit + xOffset;
-	yPos = yInit + yOffset;
 }
 
 uint_fast8_t Enemy::checkWallCollision(const std::vector<wall> & w, float collisionRadius, float xPos, float yPos) {
