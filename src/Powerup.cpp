@@ -30,18 +30,17 @@ Powerup::Powerup(const sf::Texture & bodyTxtr, const sf::Texture & glowTxtr, flo
 	powerupSheet.setOrigin(7, 7);
 	timer = 0;
 	killFlag = false;
-}
-
-void Powerup::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
-	setPosition(xInit + xOffset, yInit + yOffset);
 	hitBox.setPosition(position);
-	timer += elapsedTime.asMilliseconds();
 }
 
-const sf::Sprite & Powerup::getSprite() {
+void Powerup::update(sf::Time & elapsedTime) {
+	timer += elapsedTime.asMilliseconds();
 	const float offset = (3 * sinf(2 * PI * 0.001 * timer + 180));
 	// Make the sprite float up and down
 	powerupSheet.setPosition(position.x, position.y + offset);
+}
+
+const sf::Sprite & Powerup::getSprite() {
 	return powerupSheet.getSprite();
 }
 

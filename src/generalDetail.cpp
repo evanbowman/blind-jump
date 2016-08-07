@@ -21,11 +21,11 @@ GeneralDetail::GeneralDetail(float _xInit, float _yInit, sf::Sprite & _spr):
 	Detail{_xInit, _yInit}
 {
 	spr = _spr;
+	spr.setPosition(position.x, position.y);
 }
 
-void GeneralDetail::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
-	setPosition(xInit + xOffset, yInit + yOffset);
-	spr.setPosition(position.x, position.y);
+void GeneralDetail::update(const sf::Time & elapsedTime) {
+	// ...
 }
 
 const sf::Sprite & GeneralDetail::getSprite() const {

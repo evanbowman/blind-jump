@@ -27,7 +27,7 @@ class EnemyShot : public Effect {
 public:
 	using HBox = Framework::HitBox<14, 14, 0, 0>;
 	EnemyShot(const sf::Texture &, const sf::Texture &, float, float, float);
-	void update(float, float, sf::Time &);
+	void update(sf::Time &);
 	const sf::Sprite & getSprite();
     const HBox & getHitBox() const;
 	const sf::Sprite & getGlow() const;

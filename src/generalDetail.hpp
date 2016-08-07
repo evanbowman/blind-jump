@@ -25,7 +25,7 @@ class GeneralDetail : public Detail {
 public:
 	GeneralDetail(float, float, sf::Sprite &);
 	const sf::Sprite & getSprite() const;
-	void update(float, float, const sf::Time & elapsedTime);
+	void update(const sf::Time & elapsedTime);
 	
 private:
 	sf::Sprite spr;

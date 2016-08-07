@@ -20,9 +20,18 @@
 #include <cmath>
 
 inline sf::Vector2f getDrawableRegionSize() {
+	// First try a bunch of common resolutions
+	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+	float aspectRatio = static_cast<float>(desktop.width) / static_cast<float>(desktop.height);
+	if (aspectRatio == 16.f / 9.f) {
+		return sf::Vector2f(608.f, 342.f);
+	} else if (aspectRatio == 16.f / 10.f) {
+		return sf::Vector2f(576.f, 360.f);
+	} else if (aspectRatio == 4.f / 3.f) {
+		return sf::Vector2f(524.f, 393.f);
+	}
+	// If the user has a weird desktop setup, approximate a good view size
 	sf::Vector2f drawableRegionSize;
-	float aspectRatio = static_cast<float>(sf::VideoMode::getDesktopMode().width) /
-		static_cast<float>(sf::VideoMode::getDesktopMode().height);
 	drawableRegionSize.x = 450.f;
 	drawableRegionSize.y = 450.f;
 	float windowAspect;
@@ -44,10 +53,3 @@ inline sf::Vector2f getDrawableRegionSize() {
 	}
 	return drawableRegionSize;
 }
-// sf::Vector2f drawableRegionSize;
-// float aspectRatio = static_cast<float>(sf::VideoMode::getDesktopMode().width) /
-// 	static_cast<float>(sf::VideoMode::getDesktopMode().height);
-// drawableRegionSize.x = 450.f * aspectRatio * (aspectRatio * 0.5f);
-// drawableRegionSize.y = 450.f * (aspectRatio * 0.5f);
-// return drawableRegionSize;
-

@@ -27,7 +27,7 @@ public:
 	PlayerShot(const sf::Texture &, const sf::Texture &, char, float, float);
 	const sf::Sprite & getSprite();
 	const sf::Sprite & getGlow();
-	void update(float, float, const sf::Time &);
+	void update(const sf::Time &);
 	char getDirection();
 	bool checkCanPoof();
 	void poof();
@@ -35,6 +35,7 @@ public:
 	const HBox & getHitBox() const;
 
 private:
+	float xInit, yInit;
 	HBox hitBox;
 	SpriteSheet<44, 75, 16, 16> spriteSheet; // This could easily be a plain sprite, but the memory usage would be the same
 	SpriteSheet<88, 145, 16, 16> puffSheet;

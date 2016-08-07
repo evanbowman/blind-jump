@@ -31,11 +31,10 @@ DasherShot::DasherShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxt
 	driftSel = std::abs(static_cast<int>(globalRNG())) % 2;
 }
 
-void DasherShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
+void DasherShot::update(sf::Time & elapsedTime) {
 	scale = initialVelocity * Easing::easeOut<2>(timeout, static_cast<int64_t>(830000));
-	xInit += scale * (elapsedTime.asMicroseconds() * 0.00005f) * (cos(direction));
-	yInit += scale * (elapsedTime.asMicroseconds() * 0.00005f) * (sin(direction));
-	setPosition(xInit + xOffset, yInit + yOffset + 11);
+	position.x += scale * (elapsedTime.asMicroseconds() * 0.00005f) * (cos(direction));
+	position.y += scale * (elapsedTime.asMicroseconds() * 0.00005f) * (sin(direction));
 	hitBox.setPosition(position);
 	glowSprite.setPosition(position.x, position.y + 18);
 	timer += elapsedTime.asMilliseconds();
@@ -45,17 +44,14 @@ void DasherShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
 		frameIndex ^= 0x01;
 		timer -= 70;
 	}
-	
 	if (driftSel) {
 		direction += 0.004 * elapsedTime.asMicroseconds() * 0.00005;
 	} else {
 		direction -= 0.004 * elapsedTime.asMicroseconds() * 0.00005;
 	}
-	
 	if (timeout > 750000) {
 		setKillFlag();
 	}
-	
 	spriteSheet.setPosition(position.x, position.y);
 }
 

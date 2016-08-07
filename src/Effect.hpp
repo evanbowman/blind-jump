@@ -24,8 +24,7 @@ class Effect : public Framework::Object {
 protected:
 	int64_t timer;
 	uint8_t frameIndex;
-	float xInit, yInit;
 
 public:
-	Effect(float _xInit, float _yInit) : Object{0, 0}, timer{0}, frameIndex{0}, xInit{_xInit}, yInit{_yInit} {}
+	Effect(float _xInit, float _yInit) : Object{_xInit, _yInit}, timer{0}, frameIndex{0} {}
 };

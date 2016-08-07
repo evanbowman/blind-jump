@@ -29,7 +29,7 @@ private:
 	mutable SpriteSheet<80, 38, 32, 64> rockSheet;
 	
 public:
-	void update(float, float, const sf::Time &);
+	void update(const sf::Time &);
 	Rock(float, float, const sf::Texture &);
 	const sf::Sprite & getSprite() const;
 };

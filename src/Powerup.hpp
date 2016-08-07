@@ -30,7 +30,7 @@ public:
 	const sf::Sprite & getSprite();
 	const HBox & getHitBox() const;
 	const sf::Sprite & getGlow();
-	void update(float, float, sf::Time &);
+	void update(sf::Time &);
 	
 protected:
 	HBox hitBox;

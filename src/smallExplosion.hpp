@@ -30,7 +30,7 @@ private:
 	
 public:
 	SmallExplosion(const sf::Texture &, const sf::Texture &, float, float);
-	void update(float, float, const sf::Time &);
+	void update(const sf::Time &);
 	const Sprite & getSprite() const;
 	const sf::Sprite & getGlow() const;
 };

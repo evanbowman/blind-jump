@@ -32,7 +32,7 @@ private:
 	// State state;
 	
 public:
-	void update(float, float, const sf::Time &);
+	void update(const sf::Time &);
 	IntroDoor(float, float, const sf::Texture &);
 	const sf::Sprite & getSprite() const;
 };

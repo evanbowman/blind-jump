@@ -29,7 +29,7 @@ public:
 	TurretShot(const sf::Texture &, const sf::Texture &, float, float, float);
 	const sf::Sprite & getGlow();
 	const sf::Sprite & getSprite();
-	void update(float, float, sf::Time&);
+	void update(sf::Time&);
 	void speedFactor(float);
 	int32_t animationTimer;
 	

@@ -30,7 +30,7 @@ public:
 	DasherShot(const sf::Texture &, const sf::Texture &, float, float, float);
 	SpriteSheet<0, 88, 12, 12> spriteSheet;
 	const sf::Sprite & getSprite();
-	void update(float, float, sf::Time &);
+	void update(sf::Time &);
 	float direction;
 	void speedFactor(float);
 	bool driftSel;

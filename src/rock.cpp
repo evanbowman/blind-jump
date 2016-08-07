@@ -17,20 +17,20 @@
 
 #include "rock.hpp"
 
-Rock::Rock(float _xInit, float _yInit, const sf::Texture & inpTxtr)
-	: Detail{_xInit, _yInit}
+Rock::Rock(float _xPos, float _yPos, const sf::Texture & inpTxtr)
+	: Detail{_xPos, _yPos}
 {
 	rockSheet.setTexture(inpTxtr);
     if (std::abs(static_cast<int>(globalRNG())) % 2) {
 		rockSheet.setScale(-1, 1);
-	    xInit += 32;
+	    position.x += 32;
 	}
 	rockSheet[std::abs(static_cast<int>(globalRNG())) % 4];
+	rockSheet.setPosition(position.x, position.y);
 }
 
-void Rock::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
-	setPosition(xInit + xOffset, yInit + yOffset);
-	rockSheet.setPosition(position.x, position.y);
+void Rock::update(const sf::Time & elapsedTime) {
+	// nil
 }
 
 const sf::Sprite & Rock::getSprite() const {

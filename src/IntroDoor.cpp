@@ -25,7 +25,9 @@ IntroDoor::IntroDoor(float _xInit, float _yInit, const sf::Texture & inpTxtr)
 	  frameIndex{0}/*,
 	  timer{0},
 	  state{State::dormant}*/
-{}
+{
+	doorSheet.setPosition(position.x, position.y);
+}
  
 // bool checkBulletCollision(float xPos, float yPos, EffectGroup & ef) {
 // 	for (auto & element : ef.getBulletLayer1()) {
@@ -71,7 +73,6 @@ const sf::Sprite & IntroDoor::getSprite() const {
 	return doorSheet[frameIndex];
 }
 
-void IntroDoor::update(float xOffset, float yOffset, const sf::Time &) {
-	setPosition(xInit + xOffset, yInit + yOffset);
-	doorSheet.setPosition(position.x, position.y);
+void IntroDoor::update(const sf::Time &) {
+	// ...
 }

@@ -22,7 +22,13 @@ inline sf::Vector2f lerp(const sf::Vector2f & A, const sf::Vector2f & B, float t
 }
 
 void Camera::update(const sf::Time & elapsedTime) {
-	float lerpSpeed = elapsedTime.asMicroseconds() * 0.000005f;
+	float trackingRate;
+	if (pTarget->getGun().timeout == 0) {
+		trackingRate = 0.000005f;
+	} else {
+		trackingRate = 0.0000025f;
+	}
+	float lerpSpeed = elapsedTime.asMicroseconds() * trackingRate;
 	if (lerpSpeed > 1.f) lerpSpeed = 1.f;
 	view.setCenter(lerp(pTarget->getCameraTarget(view), view.getCenter(), lerpSpeed));
 }

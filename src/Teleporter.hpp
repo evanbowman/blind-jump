@@ -26,7 +26,7 @@ public:
 	const sf::Sprite & getShadow() const;
 	const sf::Sprite & getSprite() const;
 	bool smokeReady();
-	void update(float, float, const sf::Time &);
+	void update(const sf::Time &);
 	const sf::Sprite & getGlow() const;
 	
 private:

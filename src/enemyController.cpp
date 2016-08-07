@@ -22,13 +22,16 @@
 #include "tileController.hpp"
 #include "detailController.hpp"
 #include "screenShakeController.hpp"
-
+#include "camera.hpp"
 
 enemyController::enemyController() {}
 
-void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows) {
+void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows, Camera & camera) {
+	const sf::View & cameraView = camera.getView();
+	sf::Vector2f viewCenter = cameraView.getCenter();
+	sf::Vector2f viewSize = cameraView.getSize();
 	for (auto & element : turrets) {
-		if (element.getXpos() > -64 && element.getXpos() < windowW + 64 && element.getYpos() > -64 && element.getYpos() < windowH + 64) {
+		if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 48 && element.getXpos() < viewCenter.x + viewSize.x / 2 + 48 && element.getYpos() > viewCenter.y - viewSize.y / 2 - 48 && element.getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 			// Get the enemy's shadow
 			std::tuple<sf::Sprite, float, Rendertype, float> shadow;
 			std::get<0>(shadow) = element.getShadow();
@@ -59,7 +62,7 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows)
 	}
 	
 	for (auto & element : scoots) {
-		if (element.getXpos() > -64 && element.getXpos() < windowW + 64 && element.getYpos() > -64 && element.getYpos() < windowH + 64) {
+		if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 48 && element.getXpos() < viewCenter.x + viewSize.x / 2 + 48 && element.getYpos() > viewCenter.y - viewSize.y / 2 - 48 && element.getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 			gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
 			if (element.isColored()) {
 				gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16, Rendertype::shadeWhite, element.getColorAmount());
@@ -70,7 +73,7 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows)
 	}
 	
 	for (auto & element : dashers) {
-		if (element.getXpos() > -64 && element.getXpos() < windowW + 64 && element.getYpos() > -64 && element.getYpos() < windowH + 64) {
+		if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 48 && element.getXpos() < viewCenter.x + viewSize.x / 2 + 48 && element.getYpos() > viewCenter.y - viewSize.y / 2 - 48 && element.getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 			auto state = element.getState();
 			if (state != Dasher::State::dying && state != Dasher::State::dead) {
 				gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
@@ -87,11 +90,13 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows)
 	}
 }
 
-void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wall> w, bool enabled, tileController* pTiles, ScreenShakeController* scrn, FontController& fonts, sf::Time & elapsedTime) {
+void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wall> w, bool enabled, tileController* pTiles, FontController& fonts, sf::Time & elapsedTime, Camera & camera) {
+	const sf::View & cameraView = camera.getView();
+	sf::Vector2f viewCenter = cameraView.getCenter();
+	sf::Vector2f viewSize = cameraView.getSize();
 	if (!turrets.empty()) {
 		for (auto it = turrets.begin(); it != turrets.end();) {
 			if (it->getKillFlag() == 1) {
-				scrn->rumble();
 				it = turrets.erase(it);
 			} else {
 				it->setPosition(x + it->getXinit(), y + it->getYinit());
@@ -108,10 +113,9 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 		for (auto it = scoots.begin(); it != scoots.end();) {
 			if (it->getKillFlag()) {
 				Feedback::sleep(milliseconds(35));
-				scrn->rumble();
 				it = scoots.erase(it);
 			} else {
-				if (it->getXpos() > -64 && it->getXpos() < windowW + 64 && it->getYpos() > -64 && it->getYpos() < windowH + 64) {
+				if (it->getXpos() > viewCenter.x - viewSize.x / 2 - 48 && it->getXpos() < viewCenter.x + viewSize.x / 2 + 48 && it->getYpos() > viewCenter.y - viewSize.y / 2 - 48 && it->getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 					if (enabled) {
 						it->update(x, y, w, ef, elapsedTime);
 					}
@@ -141,8 +145,6 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 		for (auto it = critters.begin(); it != critters.end();) {
 			if (it->getKillFlag()) {
 				Feedback::sleep(milliseconds(35));
-				// Rumble the screen
-				scrn->rumble();
 				it = critters.erase(it);
 			} else {
 				if (enabled) {
@@ -162,13 +164,12 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 	
 	if (!dashers.empty()) {
 		for (auto & element : dashers) {
-			if (element.getXpos() > -64 && element.getXpos() < windowW + 64 && element.getYpos() > -64 && element.getYpos() < windowH + 64) {
+			if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 48 && element.getXpos() < viewCenter.x + viewSize.x / 2 + 48 && element.getYpos() > viewCenter.y - viewSize.y / 2 - 48 && element.getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 				if (enabled) {
 					element.update(x, y, w, ef, elapsedTime);	
 				}
 				if (element.getKillFlag()) {
 					Feedback::sleep(milliseconds(35));
-					scrn->rumble();
 					element.setKillFlag(false);
 				}
 			} else {

@@ -133,7 +133,7 @@ void Game::draw(sf::RenderWindow & window) {
 			player.draw(gameObjects, gameShadows);
 		}
 		drawGroup(effectGroup, gameObjects, glowSprs1);
-		en.draw(gameObjects, gameShadows);
+		en.draw(gameObjects, gameShadows, camera);
 		globalObjectMutex.unlock();
 		if (!gameShadows.empty()) {
 			for (auto & element : gameShadows) {
@@ -298,12 +298,12 @@ void Game::update(sf::Time & elapsedTime) {
 				if (it->getKillFlag()) {
 					it = vec.erase(it);
 				} else {
-					it->update(xOffset, yOffset, elapsedTime);
+					it->update(elapsedTime);
 					++it;
 				}
 			}
 		});
-		en.update(0, 0, effectGroup, tiles.walls, !UI.isOpen(), &tiles, &ssc, *pFonts, elapsedTime);
+		en.update(0, 0, effectGroup, tiles.walls, !UI.isOpen(), &tiles, *pFonts, elapsedTime, camera);
 		if (player.visible) {
 			player.update(this, elapsedTime);
 		}
@@ -317,7 +317,7 @@ void Game::update(sf::Time & elapsedTime) {
 					if (it->getKillFlag()) {
 						it = vec.erase(it);
 					} else {
-						it->update(xOffset, yOffset, elapsedTime);
+						it->update(elapsedTime);
 						++it;
 					}
 				}
@@ -410,7 +410,7 @@ void Game::updateTransitions(float xOffset, float yOffset, const sf::Time & elap
 			// If the player is near the teleporter, snap to its center and deactivate the player
 			float teleporterX = details.get<0>().back().getPosition().x;
 			float teleporterY = details.get<0>().back().getPosition().y;
-			if ((std::abs(player.getXpos() - teleporterX) < 10 && std::abs(player.getYpos() - teleporterY + 12) < 8)) {
+			if ((std::abs(player.getXpos() - teleporterX) < 6 && std::abs(player.getYpos() - teleporterY + 12) < 6)) {
 				// TODO: snap player to the teleporter
 				player.setPosition(teleporterX - 2.f, teleporterY - 16.f);
 				player.setState(Player::State::deactivated);

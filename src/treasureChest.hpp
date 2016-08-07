@@ -30,7 +30,7 @@ public:
 	TreasureChest(float, float, const sf::Texture &, char);
 	const sf::Sprite & getShadow() const;
 	const sf::Sprite & getSprite() const;
-	void update(float, float, const sf::Time &);
+	void update(const sf::Time &);
 	State getState() const;
 	void setState(const State);
 	char getItem() const;

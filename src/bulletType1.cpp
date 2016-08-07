@@ -19,6 +19,8 @@
 
 PlayerShot::PlayerShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, char dir, float x, float y) :
 	Effect{x, y},
+	xInit{x},
+	yInit{y},
 	direction{dir},
 	canPoof{true},
 	state{State::travelling}
@@ -59,7 +61,7 @@ void PlayerShot::poof() {
 	}
 }
 
-void PlayerShot::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
+void PlayerShot::update(const sf::Time & elapsedTime) {
 	const static float movementRate = 0.00038;
 	timer += elapsedTime.asMilliseconds();
 	hitBox.setPosition(position);
@@ -67,16 +69,16 @@ void PlayerShot::update(float xOffset, float yOffset, const sf::Time & elapsedTi
 	case State::travelling:
 		if (direction == 0 || direction == 4) {
 			yInit += movementRate * elapsedTime.asMicroseconds();
-			setPosition(xInit + xOffset + 6, yInit + 12 + yOffset);	
+			setPosition(xInit + 6, yInit + 12);	
 		} else if (direction == 1 || direction == 5) {
 			yInit -= movementRate * elapsedTime.asMicroseconds();
-			setPosition(xInit + xOffset + 6, yInit  + yOffset);	
+			setPosition(xInit + 6, yInit);	
 		} else if (direction == 2 || direction == 6) {
 			xInit -= movementRate * elapsedTime.asMicroseconds();
-			setPosition(xInit + xOffset - 5, yInit + 8 + yOffset);	
+			setPosition(xInit - 5, yInit + 8);	
 		} else if (direction == 3 || direction == 7) {
 			xInit += movementRate * elapsedTime.asMicroseconds();
-			setPosition(xInit + xOffset + 22, yInit + 8 + yOffset);	
+			setPosition(xInit + 22, yInit + 8);	
 		}
 		spriteSheet.setPosition(position.x, position.y);
 		glow.setPosition(position.x - 16, position.y - 11);
@@ -94,13 +96,13 @@ void PlayerShot::update(float xOffset, float yOffset, const sf::Time & elapsedTi
 
 	case State::poof:
 		if (direction == 0 || direction == 4) {
-			setPosition(xInit + xOffset + 6, yInit + 12 + yOffset);	
+			setPosition(xInit + 6, yInit + 12);	
 		} else if (direction == 1 || direction == 5) {
-			setPosition(xInit + xOffset + 6, yInit  + yOffset);	
+			setPosition(xInit + 6, yInit);	
 		} else if (direction == 2 || direction == 6) {
-			setPosition(xInit + xOffset - 5, yInit + 8 + yOffset);	
+			setPosition(xInit - 5, yInit + 8);	
 		} else if (direction == 3 || direction == 7) {
-			setPosition(xInit + xOffset + 22, yInit + 8 + yOffset);	
+			setPosition(xInit + 22, yInit + 8);	
 		}
 		if (timer > 50) {
 			timer -= 50;

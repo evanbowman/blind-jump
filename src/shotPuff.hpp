@@ -30,7 +30,7 @@ private:
 
 public:
 	ShotPuff(const sf::Texture &, float, float);
-	void update(float, float, const sf::Time &);
+	void update(const sf::Time &);
 	const Sprite & getSprite() const;
 };
 #endif /* shotPuff_hpp */

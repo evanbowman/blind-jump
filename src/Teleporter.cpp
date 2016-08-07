@@ -28,6 +28,9 @@ Teleporter::Teleporter(float _xInit, float _yInit, const sf::Texture & mainTxtr,
 	glowSprite.setOrigin(200, 200);
 	TeleporterSprites[0].setTextureRect(sf::IntRect(390, 224, 34, 29));
 	TeleporterSprites[1].setTextureRect(sf::IntRect(174, 195, 34, 29));
+	glowSprite.setPosition(position.x + 16, position.y + 13);
+	TeleporterSprites[0].setPosition(position.x - 3, position.y);
+	TeleporterSprites[1].setPosition(position.x - 3, position.y + 4);
 }
 
 const sf::Sprite & Teleporter::getShadow() const {
@@ -38,12 +41,8 @@ const sf::Sprite & Teleporter::getSprite() const {
 	return TeleporterSprites[0];
 }
 
-void Teleporter::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
-	smokeTimer += elapsedTime.asMilliseconds();
-	setPosition(xInit + xOffset, yInit + yOffset);
-	glowSprite.setPosition(position.x + 16, position.y + 13);
-	TeleporterSprites[0].setPosition(position.x - 3, position.y);
-	TeleporterSprites[1].setPosition(position.x - 3, position.y + 4);
+void Teleporter::update(const sf::Time & elapsedTime) {
+	// nil
 }
 
 const sf::Sprite & Teleporter::getGlow() const {

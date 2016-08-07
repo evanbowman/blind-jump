@@ -21,11 +21,11 @@ DamagedRobot::DamagedRobot(float _xInit, float _yInit, const sf::Texture & inpTx
 	: Detail{_xInit, _yInit}, robotSheet{inpTxtr}
 {
 	robotSheet[std::abs(static_cast<int>(globalRNG())) % 2]; // Randomly pick one of the textures...
+	robotSheet.setPosition(position.x, position.y);
 }
 
-void DamagedRobot::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
-	setPosition(xInit + xOffset, yInit + yOffset);
-	robotSheet.setPosition(position.x, position.y);
+void DamagedRobot::update(const sf::Time & elapsedTime) {
+	// ...
 }
 
 const sf::Sprite & DamagedRobot::getSprite() const {

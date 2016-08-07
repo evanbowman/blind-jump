@@ -28,6 +28,8 @@ TreasureChest::TreasureChest(float _xInit, float _yInit, const sf::Texture & mai
 {
 	chestShadow.setTexture(mainTxtr);
 	chestShadow.setTextureRect(sf::IntRect(18, 107, 16, 8));
+	chestSheet.setPosition(position.x, position.y - 16);
+	chestShadow.setPosition(position.x, position.y + 12);
 }
 
 const sf::Sprite & TreasureChest::getShadow() const {
@@ -38,11 +40,7 @@ const sf::Sprite & TreasureChest::getSprite() const {
 	return chestSheet[frameIndex];
 }
 
-void TreasureChest::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
-	setPosition(xInit + xOffset, yInit + yOffset);
-	chestSheet.setPosition(position.x, position.y - 16);
-	chestShadow.setPosition(position.x, position.y + 12);
-
+void TreasureChest::update(const sf::Time & elapsedTime) {
 	switch (state) {
 	case State::opening:
 		animationTimer += elapsedTime.asMicroseconds();

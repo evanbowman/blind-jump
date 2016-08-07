@@ -76,7 +76,8 @@ public:
 	void updateColor(const sf::Time &);
 	void setHealth(Health);
 	const HBox & getHitBox() const;
-
+	const Weapon & getGun() const;
+	
 private:
 	HBox hitBox;
 	void updateGun(const sf::Time &, const bool, EffectGroup &);

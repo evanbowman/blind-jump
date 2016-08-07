@@ -22,11 +22,12 @@ TurretFlashEffect::TurretFlashEffect(const sf::Texture & txtr, float x, float y)
 	bool select = std::abs(static_cast<int>(globalRNG())) % 2;
 	if (select) {
 		spriteSheet.setScale(-1.f, 1.f);
-		xInit += 17;
+		position.x += 17;
 	}
+	spriteSheet.setPosition(position.x, position.y);
 }
 
-void TurretFlashEffect::update(float xOffset, float yOffset, const sf::Time & elapsedTime) {
+void TurretFlashEffect::update(const sf::Time & elapsedTime) {
 	timer += elapsedTime.asMilliseconds();
 	if (timer > 40) {
 		timer -= 40;
@@ -36,8 +37,6 @@ void TurretFlashEffect::update(float xOffset, float yOffset, const sf::Time & el
 			frameIndex = 4;
 		};
 	}
-	setPosition(xInit + xOffset, yInit + yOffset);
-	spriteSheet.setPosition(position.x, position.y);
 }
 
 const Sprite & TurretFlashEffect::getSprite() const {

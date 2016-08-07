@@ -31,10 +31,9 @@ TurretShot::TurretShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxt
 	animationTimer = 0;
 }
 
-void TurretShot::update(float xOffset, float yOffset, sf::Time & elapsedTime) {
-	xInit += scale * 1.5 * (elapsedTime.asMicroseconds() * 0.00005f) * (cos(direction));
-	yInit += scale * 1.5 * (elapsedTime.asMicroseconds() * 0.00005f) * (sin(direction));
-	setPosition(xInit + xOffset, yInit + yOffset);
+void TurretShot::update(sf::Time & elapsedTime) {
+	position.x += scale * 1.5 * (elapsedTime.asMicroseconds() * 0.00005f) * (cos(direction));
+    position.y += scale * 1.5 * (elapsedTime.asMicroseconds() * 0.00005f) * (sin(direction));
 	hitBox.setPosition(position);
 	spriteSheet.setPosition(position.x, position.y);
 	glowSprite.setPosition(position.x, position.y + 18);
