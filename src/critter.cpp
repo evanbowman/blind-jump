@@ -20,8 +20,10 @@
 #include "math.h"
 #include <cmath>
 
-Critter::Critter(const sf::Texture & txtr, uint8_t _map[61][61], float _xPos, float _yPos) :
-	Enemy{_xPos, _yPos},
+Critter::Critter(const sf::Texture & txtr, uint8_t _map[61][61], float _xInit, float _yInit) :
+	Enemy{_xInit, _yInit},
+	xInit{_xInit},
+	yInit{_yInit},
 	currentDir{0.f},
 	jumpTargetx{0.f},
 	jumpTargety{0.f},
@@ -49,6 +51,8 @@ void Critter::updatePlayerDead() {
 void Critter::update(float, float, const std::vector<wall> &, EffectGroup &, const sf::Time &) {}
 
 void Critter::critterUpdate(float playerPosX, float playerPosY, EffectGroup & effects, const sf::Time & elapsedTime, tileController * pTiles) {
+	xPos = xInit + 12;
+	yPos = yInit;
 	for (auto & element : effects.get<9>()) {
 		if (element.getHitBox().overlapping(hitBox) && element.checkCanPoof()) {
 			if (health == 1) {
@@ -90,25 +94,25 @@ void Critter::critterUpdate(float playerPosX, float playerPosY, EffectGroup & ef
 				path = astar_path(target, origin, map);
 				previous = path.back();
 				path.pop_back();
-				xPos = ((xPos - tilePosX) / 32) * 32 + tilePosX;
-				yPos = ((yPos - tilePosY) / 26) * 26 + tilePosY;
+				xInit = ((xPos - tilePosX) / 32) * 32 + tilePosX;
+				yInit = ((yPos - tilePosY) / 26) * 26 + tilePosY;
 				// Calculate the direction to move in, based on the coordinate of the previous location and the coordinate of the next location
-				currentDir = atan2(yPos - (((path.back().y * 26) + 4 + tilePosY)), xPos - (((path.back().x * 32) + 4 + tilePosX)));
+				currentDir = atan2(yInit - (((path.back().y * 26) + 4 + tilePosY)), xInit - (((path.back().x * 32) + 4 + tilePosX)));
 			}
 		}
 		
 		// If the path is not empty
 		else {
 			// Add each component of the direction vector to the enemy's position datafields
-			xPos -= speed * cos(currentDir) * (elapsedTime.asMicroseconds() * 0.00005f);
-			yPos -= speed * sin(currentDir) * (elapsedTime.asMicroseconds() * 0.00005f);
+			xInit -= speed * cos(currentDir) * (elapsedTime.asMicroseconds() * 0.00005f);
+			yInit -= speed * sin(currentDir) * (elapsedTime.asMicroseconds() * 0.00005f);
 			// If the enemy is sufficiently close to the target point, pop it and work on the next one
-			if (fabs(xPos - (((path.back().x * 32) + 4 + tilePosX))) < 8 && fabs(yPos - (((path.back().y * 26) + 4 + tilePosY))) < 8) {
+			if (fabs(xInit - (((path.back().x * 32) + 4 + tilePosX))) < 8 && fabs(yInit - (((path.back().y * 26) + 4 + tilePosY))) < 8) {
 				recalc--;
 				previous = path.back();
 				path.pop_back();
 				// Calculate the direction to move in
-				currentDir = atan2(yPos - (((path.back().y * 26) + 4 + tilePosY)), xPos - (((path.back().x * 32) + 4 + tilePosX)));
+				currentDir = atan2(yInit - (((path.back().y * 26) + 4 + tilePosY)), xInit - (((path.back().x * 32) + 4 + tilePosX)));
 			}
 		}
 		
@@ -167,14 +171,14 @@ void Critter::onDeath(EffectGroup & effects) {
 	if (temp == 0) {
 	    effects.add<4>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
-					   xPos + 10, yPos, Powerup::Type::Heart);
+					   xInit + 10, yInit, Powerup::Type::Heart);
 	} else {
 	    effects.add<5>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandler.getTexture(ResourceHandler::Texture::blueglow),
-					   xPos + 10, yPos, Powerup::Type::Coin);
+					   xInit + 10, yInit, Powerup::Type::Coin);
 	}
     effects.add<1>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::fireExplosionGlow),
-				   xPos + 8, yPos);
+				   xInit + 8, yInit);
 	killFlag = true;
 }

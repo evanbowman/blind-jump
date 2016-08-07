@@ -39,6 +39,7 @@ public:
 	const HBox & getHitBox() const;
 	
 private:
+	float xInit, yInit;
 	void onDeath(EffectGroup &) override;
     float currentDir;
 	float jumpTargetx, jumpTargety;
