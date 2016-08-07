@@ -24,7 +24,7 @@ inline sf::Vector2f lerp(const sf::Vector2f & A, const sf::Vector2f & B, float t
 void Camera::update(const sf::Time & elapsedTime) {
 	float trackingRate;
 	if (pTarget->getGun().timeout == 0) {
-		trackingRate = 0.000005f;
+		trackingRate = 0.0000055f;
 	} else {
 		trackingRate = 0.0000025f;
 	}
