@@ -44,4 +44,10 @@ inline sf::Vector2f getDrawableRegionSize() {
 	}
 	return drawableRegionSize;
 }
+// sf::Vector2f drawableRegionSize;
+// float aspectRatio = static_cast<float>(sf::VideoMode::getDesktopMode().width) /
+// 	static_cast<float>(sf::VideoMode::getDesktopMode().height);
+// drawableRegionSize.x = 450.f * aspectRatio * (aspectRatio * 0.5f);
+// drawableRegionSize.y = 450.f * (aspectRatio * 0.5f);
+// return drawableRegionSize;
 

@@ -24,7 +24,7 @@ inline sf::Vector2f lerp(const sf::Vector2f & A, const sf::Vector2f & B, float t
 void Camera::update(const sf::Time & elapsedTime) {
 	float lerpSpeed = elapsedTime.asMicroseconds() * 0.000005f;
 	if (lerpSpeed > 1.f) lerpSpeed = 1.f;
-	view.setCenter(lerp(pTarget->getPosition(), view.getCenter(), lerpSpeed));
+	view.setCenter(lerp(pTarget->getCameraTarget(view), view.getCenter(), lerpSpeed));
 }
 
 const sf::View & Camera::getView() const {

@@ -47,7 +47,8 @@ Player::Player(float _xPos, float _yPos)
 	  upPrevious{false},
 	  downPrevious{false},
 	  leftPrevious{false},
-	  rightPrevious{false}
+	  rightPrevious{false},
+	  actionPrevious{false}
 {
 	scrShakeState = false;
 	deathSheet.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
@@ -71,7 +72,77 @@ Player::Player(float _xPos, float _yPos)
 }
 
 sf::Vector2f Player::getPosition() {
-	return sf::Vector2f(xPos + 8, yPos);
+	return sf::Vector2f(xPos + 16, yPos);
+}
+
+sf::Vector2f Player::getCameraTarget(const sf::View & cameraView) {
+	if (gun.timeout > 0) {
+		switch (sheetIndex) {
+		case Sheet::stillDown:
+			dir = 0;
+			return sf::Vector2f(xPos + 8, yPos + cameraView.getSize().y / 5);
+			break;
+
+		case Sheet::walkDown:
+			dir = 0;
+			return sf::Vector2f(xPos + 8, yPos + cameraView.getSize().y / 5);
+			break;
+
+		case Sheet::stillUp:
+			dir = 1;
+			return sf::Vector2f(xPos + 8, yPos - cameraView.getSize().y / 5);
+			break;
+
+		case Sheet::walkUp:
+			dir = 1;
+			return sf::Vector2f(xPos + 8, yPos - cameraView.getSize().y / 5);
+			break;
+
+		case Sheet::stillLeft:
+			dir = 2;
+			return sf::Vector2f(xPos + 8 - cameraView.getSize().x / 5, yPos);
+			break;
+
+		case Sheet::walkLeft:
+			dir = 2;
+			return sf::Vector2f(xPos + 8 - cameraView.getSize().x / 5, yPos);
+			break;
+
+		case Sheet::stillRight:
+			dir = 3;
+			return sf::Vector2f(xPos + 8 + cameraView.getSize().x / 5, yPos);
+			break;
+
+		case Sheet::walkRight:
+			dir = 3;
+			return sf::Vector2f(xPos + 8 + cameraView.getSize().x / 5, yPos);
+			break;
+
+		case Sheet::dashSheet:
+			switch (dir) {
+			case 0:
+				return sf::Vector2f(xPos + 8, yPos + cameraView.getSize().y / 5);
+				break;
+
+			case 1:
+				return sf::Vector2f(xPos + 8, yPos - cameraView.getSize().y / 5);
+				break;
+
+			case 2:
+				return sf::Vector2f(xPos + 8 - cameraView.getSize().x / 5, yPos);
+				break;
+
+			case 3:
+				return sf::Vector2f(xPos + 8 + cameraView.getSize().x / 5, yPos);
+				break;
+			}
+			break;
+
+		default:
+			return getPosition();
+		}
+	}
+	return getPosition();
 }
 
 void Player::setPosition(float _xPos, float _yPos) {
@@ -275,7 +346,6 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 			cachedSheet = sheetIndex; // So we know what to go back to after dash
 			sheetIndex = Sheet::dashSheet;
  		}
-		
 		actionPrevious = action;
 		upPrevious = up;
 		downPrevious = down;

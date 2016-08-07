@@ -68,6 +68,7 @@ public:
 	State getState() const;
 	void setPosition(float, float);
 	sf::Vector2f getPosition();
+	sf::Vector2f getCameraTarget(const sf::View &);
 	bool scrShakeState;
 	Health getHealth() const;
 	bool visible = true;	
@@ -106,4 +107,5 @@ private:
 	bool leftPrevious;
 	bool rightPrevious;
 	bool actionPrevious;
+	uint8_t dir = 0;
 };

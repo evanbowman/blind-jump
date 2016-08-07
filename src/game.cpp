@@ -375,12 +375,10 @@ switch (transitionState) {
 	case TransitionState::TransitionOut:
 		if (level != 0) {
 			if (timer > 100) {
-				window.setView(camera.getView());
 				window.draw(transitionShape);
 			}
 		} else {
 			if (timer > 1600) {
-				window.setView(camera.getView());
 				window.draw(transitionShape);
 				uint8_t alpha = Easing::easeOut<1>(timer - 1600, static_cast<int_fast32_t>(600)) * 255;
 				pFonts->drawTitle(alpha, window);
@@ -414,10 +412,13 @@ void Game::updateTransitions(float xOffset, float yOffset, const sf::Time & elap
 			float teleporterY = details.get<0>().back().getPosition().y;
 			if ((std::abs(player.getXpos() - teleporterX) < 10 && std::abs(player.getYpos() - teleporterY + 12) < 8)) {
 				// TODO: snap player to the teleporter
-				// player.setWorldOffsetX(xOffset + (player.getXpos() - teleporterX) + 2);
-				// player.setWorldOffsetY(yOffset + (player.getYpos() - teleporterY) + 16);
+				player.setPosition(teleporterX - 2.f, teleporterY - 16.f);
 				player.setState(Player::State::deactivated);
-				transitionState = TransitionState::ExitBeamEnter;
+				const sf::Vector2f playerPos = player.getPosition();
+				const sf::Vector2f & cameraPos = camera.getView().getCenter();
+				if (std::abs(playerPos.x - cameraPos.x) < 1.f && std::abs(playerPos.y - cameraPos.y) < 1.f) {
+					transitionState = TransitionState::ExitBeamEnter;
+				}
 			}
 			beamShape.setFillColor(sf::Color(114, 255, 229, 6));
 			beamShape.setPosition(windowW / 2 - 1.5, windowH / 2 + 36);
@@ -549,7 +550,7 @@ void Game::Reset() {
 	tiles.clear();
 	effectGroup.clear();
 	details.clear();
-	player.setPosition(windowW / 2, windowH / 2);
+	player.setPosition(windowW / 2 - 17, windowH / 2);
 	camera.reset();
 	en.clear();
 	teleporterCond = 0;
