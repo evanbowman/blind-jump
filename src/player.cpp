@@ -730,6 +730,7 @@ void Player::checkEffectCollisions(EffectGroup & effects, FontController * pFont
 		renderType = Rendertype::shadeRed;
 		colorAmount = 1.f;
 		colorTimer = 0;
+		Feedback::sleep(milliseconds(40));
 	};
 	checkEffectCollision<8>(effects, *this, hitPolicy);
 	checkEffectCollision<7>(effects, *this, hitPolicy);
