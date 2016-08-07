@@ -45,7 +45,7 @@ private:
 	
 public:
 	enemyController();
-	void update(float, float, EffectGroup &, std::vector<wall>, bool, tileController*, FontController&, sf::Time &, Camera &);
+	void update(float, float, EffectGroup &, std::vector<wall>, bool, tileController*, FontController&, sf::Time &, Camera &, std::vector<sf::Vector2f> &);
 	void draw(drawableVec &, drawableVec &, Camera &);
 	void clear();
 	void addTurret(tileController *);

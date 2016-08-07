@@ -289,7 +289,6 @@ void Game::update(sf::Time & elapsedTime) {
 	}
 	if (!stashed || preload) {
 		globalObjectMutex.lock();
-		camera.update(elapsedTime);
 		if (level != 0) {
 			const sf::Vector2f & cameraOffset = camera.getOffset();
 			bkg.setOffset(cameraOffset.x, cameraOffset.y);
@@ -307,7 +306,9 @@ void Game::update(sf::Time & elapsedTime) {
 				}
 			}
 		});
-		en.update(player.getXpos(), player.getYpos(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, *pFonts, elapsedTime, camera);
+		std::vector<sf::Vector2f> cameraTargets;
+		en.update(player.getXpos(), player.getYpos(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, *pFonts, elapsedTime, camera, cameraTargets);
+		camera.update(elapsedTime, cameraTargets);
 		if (player.visible) {
 			player.update(this, elapsedTime);
 		}

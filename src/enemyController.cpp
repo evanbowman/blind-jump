@@ -90,7 +90,7 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
 	}
 }
 
-void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wall> w, bool enabled, tileController* pTiles, FontController& fonts, sf::Time & elapsedTime, Camera & camera) {
+void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wall> w, bool enabled, tileController* pTiles, FontController& fonts, sf::Time & elapsedTime, Camera & camera, std::vector<sf::Vector2f> & cameraTargets) {
 	const sf::View & cameraView = camera.getView();
 	sf::Vector2f viewCenter = cameraView.getCenter();
 	sf::Vector2f viewSize = cameraView.getSize();
@@ -115,10 +115,14 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 				camera.shake(0.1f);
 				it = scoots.erase(it);
 			} else {
-				if (it->getXpos() > viewCenter.x - viewSize.x / 2 - 48 && it->getXpos() < viewCenter.x + viewSize.x / 2 + 48 && it->getYpos() > viewCenter.y - viewSize.y / 2 - 48 && it->getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
+				if (it->getXpos() > viewCenter.x - viewSize.x / 2 - 48 &&
+					it->getXpos() < viewCenter.x + viewSize.x / 2 + 48 &&
+					it->getYpos() > viewCenter.y - viewSize.y / 2 - 48 &&
+					it->getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 					if (enabled) {
 						it->update(x, y, w, ef, elapsedTime);
 					}
+					cameraTargets.emplace_back(it->getXpos(), it->getYpos());
 				} else {
 					// If outside the window, update the enemy's position, but don't move it, draw it, check collisions, etc.
 					it->Enemy::update(x, y, w, ef, elapsedTime);
@@ -148,6 +152,12 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 				camera.shake(0.1f);
 				it = critters.erase(it);
 			} else {
+				if (it->getXpos() > viewCenter.x - viewSize.x / 2 - 48 &&
+					it->getXpos() < viewCenter.x + viewSize.x / 2 + 48 &&
+					it->getYpos() > viewCenter.y - viewSize.y / 2 - 48 &&
+					it->getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
+					cameraTargets.emplace_back(it->getXpos(), it->getYpos());
+				}
 				if (enabled) {
 					it->critterUpdate(x, y, ef, elapsedTime, pTiles);
 				} else {
@@ -165,9 +175,15 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 	
 	if (!dashers.empty()) {
 		for (auto & element : dashers) {
-			if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 48 && element.getXpos() < viewCenter.x + viewSize.x / 2 + 48 && element.getYpos() > viewCenter.y - viewSize.y / 2 - 48 && element.getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
+			if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 48 &&
+				element.getXpos() < viewCenter.x + viewSize.x / 2 + 48 &&
+				element.getYpos() > viewCenter.y - viewSize.y / 2 - 48 &&
+				element.getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 				if (enabled) {
-					element.update(x, y, w, ef, elapsedTime);	
+					element.update(x, y, w, ef, elapsedTime);
+					if (element.getState() != Dasher::State::dead) {
+						cameraTargets.emplace_back(element.getXpos(), element.getYpos());
+					}
 				}
 				if (element.getKillFlag()) {
 					Feedback::sleep(milliseconds(45));

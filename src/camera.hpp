@@ -18,6 +18,8 @@
 #pragma once
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
+#include <utility>
+#include <vector>
 #include "player.hpp"
 
 class Camera {
@@ -31,7 +33,7 @@ class Camera {
 	
 public:
 	Camera(Player * _pTarget, const sf::Vector2f & viewPort);
-	void update(const sf::Time &);
+	void update(const sf::Time &, const std::vector<sf::Vector2f> &);
 	void reset();
 	const sf::View & getView() const;
 	void shake(float);

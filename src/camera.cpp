@@ -32,17 +32,30 @@ Camera::Camera(Player * _pTarget, const sf::Vector2f & viewPort)  :
 		startPosition = view.getCenter();
 	}
 
-void Camera::update(const sf::Time & elapsedTime) {
-	float trackingRate;
-	// If the player is in combat mode, lower the tracking speed
-	if (pTarget->getGun().timeout == 0) {
-		trackingRate = 0.0000055f;
+void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f> & targets) {
+	float lerpSpeed;
+	sf::Vector2f cameraPos;
+	if (targets.empty()) {
+		lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000055f);
+		cameraPos = lerp(pTarget->getPosition(), view.getCenter(), lerpSpeed);
+	} else if (pTarget->getState() != Player::State::deactivated) {
+		// This bit does some math and makes the camera track the midpoint of the
+		// player and the average position of all other significant objects in the
+		// window
+		lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000020f);
+		sf::Vector2f aggregate;
+		float divisor = 0;
+		for (auto & vec : targets) {
+			aggregate += vec;
+			++divisor;
+		}
+		aggregate /= divisor;
+		sf::Vector2f midpoint = lerp(pTarget->getPosition(), aggregate, 0.78f);
+		cameraPos = lerp(midpoint, view.getCenter(), lerpSpeed);
 	} else {
-		trackingRate = 0.0000020f;
+		lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000055f);
+		cameraPos = lerp(pTarget->getPosition(), view.getCenter(), lerpSpeed);
 	}
-	float lerpSpeed = elapsedTime.asMicroseconds() * trackingRate;
-	lerpSpeed = std::min(1.f, lerpSpeed);
-	sf::Vector2f cameraPos = lerp(pTarget->getCameraTarget(view), view.getCenter(), lerpSpeed);
 	if (isShaking) {
 		timer += elapsedTime.asMicroseconds();
 		if (timer > 50000) {
