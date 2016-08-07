@@ -112,7 +112,8 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 	if (!scoots.empty()) {
 		for (auto it = scoots.begin(); it != scoots.end();) {
 			if (it->getKillFlag()) {
-				Feedback::sleep(milliseconds(35));
+				Feedback::sleep(milliseconds(45));
+				camera.shake(0.1f);
 				it = scoots.erase(it);
 			} else {
 				if (it->getXpos() > viewCenter.x - viewSize.x / 2 - 48 && it->getXpos() < viewCenter.x + viewSize.x / 2 + 48 && it->getYpos() > viewCenter.y - viewSize.y / 2 - 48 && it->getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
@@ -144,7 +145,8 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 		
 		for (auto it = critters.begin(); it != critters.end();) {
 			if (it->getKillFlag()) {
-				Feedback::sleep(milliseconds(35));
+				Feedback::sleep(milliseconds(45));
+				camera.shake(0.1f);
 				it = critters.erase(it);
 			} else {
 				if (enabled) {
@@ -169,7 +171,8 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 					element.update(x, y, w, ef, elapsedTime);	
 				}
 				if (element.getKillFlag()) {
-					Feedback::sleep(milliseconds(35));
+					Feedback::sleep(milliseconds(45));
+					camera.shake(0.1f);
 					element.setKillFlag(false);
 				}
 			} else {

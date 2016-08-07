@@ -80,60 +80,60 @@ sf::Vector2f Player::getCameraTarget(const sf::View & cameraView) {
 		switch (sheetIndex) {
 		case Sheet::stillDown:
 			dir = 0;
-			return sf::Vector2f(xPos + 8, yPos + cameraView.getSize().y / 6);
+			return sf::Vector2f(xPos + 8, yPos + cameraView.getSize().y / 7);
 			break;
 
 		case Sheet::walkDown:
 			dir = 0;
-			return sf::Vector2f(xPos + 8, yPos + cameraView.getSize().y / 6);
+			return sf::Vector2f(xPos + 8, yPos + cameraView.getSize().y / 7);
 			break;
 
 		case Sheet::stillUp:
 			dir = 1;
-			return sf::Vector2f(xPos + 8, yPos - cameraView.getSize().y / 6);
+			return sf::Vector2f(xPos + 8, yPos - cameraView.getSize().y / 7);
 			break;
 
 		case Sheet::walkUp:
 			dir = 1;
-			return sf::Vector2f(xPos + 8, yPos - cameraView.getSize().y / 6);
+			return sf::Vector2f(xPos + 8, yPos - cameraView.getSize().y / 7);
 			break;
 
 		case Sheet::stillLeft:
 			dir = 2;
-			return sf::Vector2f(xPos + 8 - cameraView.getSize().x / 6, yPos);
+			return sf::Vector2f(xPos + 8 - cameraView.getSize().x / 7, yPos);
 			break;
 
 		case Sheet::walkLeft:
 			dir = 2;
-			return sf::Vector2f(xPos + 8 - cameraView.getSize().x / 6, yPos);
+			return sf::Vector2f(xPos + 8 - cameraView.getSize().x / 7, yPos);
 			break;
 
 		case Sheet::stillRight:
 			dir = 3;
-			return sf::Vector2f(xPos + 8 + cameraView.getSize().x / 6, yPos);
+			return sf::Vector2f(xPos + 8 + cameraView.getSize().x / 7, yPos);
 			break;
 
 		case Sheet::walkRight:
 			dir = 3;
-			return sf::Vector2f(xPos + 8 + cameraView.getSize().x / 6, yPos);
+			return sf::Vector2f(xPos + 8 + cameraView.getSize().x / 7, yPos);
 			break;
 
 		case Sheet::dashSheet:
 			switch (dir) {
 			case 0:
-				return sf::Vector2f(xPos + 8, yPos + cameraView.getSize().y / 6);
+				return sf::Vector2f(xPos + 8, yPos + cameraView.getSize().y / 7);
 				break;
 
 			case 1:
-				return sf::Vector2f(xPos + 8, yPos - cameraView.getSize().y / 6);
+				return sf::Vector2f(xPos + 8, yPos - cameraView.getSize().y / 7);
 				break;
 
 			case 2:
-				return sf::Vector2f(xPos + 8 - cameraView.getSize().x / 6, yPos);
+				return sf::Vector2f(xPos + 8 - cameraView.getSize().x / 7, yPos);
 				break;
 
 			case 3:
-				return sf::Vector2f(xPos + 8 + cameraView.getSize().x / 6, yPos);
+				return sf::Vector2f(xPos + 8 + cameraView.getSize().x / 7, yPos);
 				break;
 			}
 			break;

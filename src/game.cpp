@@ -411,7 +411,7 @@ void Game::updateTransitions(float xOffset, float yOffset, const sf::Time & elap
 			float teleporterX = details.get<0>().back().getPosition().x;
 			float teleporterY = details.get<0>().back().getPosition().y;
 			if ((std::abs(player.getXpos() - teleporterX) < 6 && std::abs(player.getYpos() - teleporterY + 12) < 6)) {
-				// TODO: snap player to the teleporter
+				// Todo: snap player to the teleporter
 				player.setPosition(teleporterX - 2.f, teleporterY - 16.f);
 				player.setState(Player::State::deactivated);
 				const sf::Vector2f playerPos = player.getPosition();
@@ -525,7 +525,8 @@ void Game::updateTransitions(float xOffset, float yOffset, const sf::Time & elap
 			transitionState = TransitionState::EntryBeamFade;
 			timer = 0;
 			player.visible = true;
-			ssc.shake();
+			Feedback::sleep(milliseconds(20));
+			camera.shake(0.15f);
 		}
 		break;
 

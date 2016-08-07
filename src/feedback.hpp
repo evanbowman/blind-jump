@@ -31,10 +31,6 @@ namespace Feedback {
 	    isAsleep = true;
 		std::this_thread::sleep_for(time);
 	}
-	namespace Shake {
-		void shake(const float, const int64_t);
-		void update(Player &, const sf::Time &);
-	}
 }
 
 

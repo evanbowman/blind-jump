@@ -23,13 +23,22 @@
 class Camera {
 	Player * pTarget;
 	sf::View view;
-
+	bool isShaking;
+	uint8_t shakeIndex;
+	int64_t timer;
+	float shakeIntensity;
+	
 public:
 	Camera(Player * _pTarget, const sf::Vector2f & viewPort) :
-		pTarget{_pTarget},
-		view{sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort}
+		pTarget(_pTarget),
+		view(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
+		isShaking(false),
+		shakeIndex(0),
+		timer(0),
+		shakeIntensity(0.f)
 	{}
 	void update(const sf::Time &);
 	void reset();
 	const sf::View & getView() const;
+	void shake(float);
 };
