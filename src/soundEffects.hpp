@@ -15,19 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.  //
 //========================================================================//
 
-#include "soundController.hpp"
+#pragma once
 
-void SoundController::update() {
-	for (auto it = sounds.begin(); it != sounds.end();) {
-		if (it->getStatus() == sf::Sound::Status::Stopped) {
-			it = sounds.erase(it);
-		} else {
-			++it;
-		}
-	}
-}
-
-void SoundController::play(ResourceHandler::Sound indx) {
-	sounds.emplace_back(pRH->getSound(indx));
-	sounds.back().play();
-}
+enum class Music {
+		// TODO...
+};
+enum class Sound {
+	Gunshot
+};

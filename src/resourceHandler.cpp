@@ -95,3 +95,7 @@ const sf::Font & ResourceHandler::getFont(Font id) const {
 sf::Shader & ResourceHandler::getShader(Shader id) const {
 	return shaders[static_cast<int>(id)];
 }
+
+const sf::SoundBuffer & ResourceHandler::getSound(Sound id) const {
+	return sounds[static_cast<int>(id)];
+}

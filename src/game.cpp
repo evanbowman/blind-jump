@@ -95,7 +95,6 @@ Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontControlle
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
 				   globalResourceHandler.getTexture(ResourceHandler::Texture::teleporterGlow));
 	bkg.setBkg(0);
-	sndCtrl.playMusic(0);
 	beamGlowTxr.loadFromFile(resourcePath() + "teleporterBeamGlow.png");
 	beamGlowSpr.setTexture(beamGlowTxr);
 	beamGlowSpr.setPosition(windowW / 2 - 200, windowH / 2 - 200 + 30);

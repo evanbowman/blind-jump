@@ -470,7 +470,7 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 	case Sheet::deathSheet:
 		if (frameIndex < 10) {
 			animationTimer += elapsedTime.asMicroseconds();
-			if (animationTimer > 60000) {
+			if (animationTimer > 90000) {
 				animationTimer = 0;
 				++frameIndex;
 			}
@@ -655,12 +655,14 @@ void checkEffectCollision(EffectGroup & effects, Player & player, const F & poli
 
 void Player::checkEffectCollisions(EffectGroup & effects, FontController * pFonts) {
 	auto hitPolicy = [&]() {
-		pFonts->resetHPText();
-		--health;
-		renderType = Rendertype::shadeRed;
-		colorAmount = 1.f;
-		colorTimer = 0;
-		Feedback::sleep(milliseconds(40));
+		if (colorAmount == 0.f) {
+			pFonts->resetHPText();
+			--health;
+			renderType = Rendertype::shadeRed;
+			colorAmount = 1.f;
+			colorTimer = 0;
+			Feedback::sleep(milliseconds(40));
+		}
 	};
 	checkEffectCollision<8>(effects, *this, hitPolicy);
 	checkEffectCollision<7>(effects, *this, hitPolicy);
@@ -695,6 +697,7 @@ void Player::updateColor(const sf::Time & elapsedTime) {
 			colorAmount -= 0.1f;
 		}
 	} else {
+		colorAmount = 0.f;
 		renderType = Rendertype::shadeDefault;
 	}
 }

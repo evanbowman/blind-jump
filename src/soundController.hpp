@@ -17,28 +17,18 @@
 
 #pragma once
 
-#include "SFML/Audio.hpp"
+#include <SFML/Audio.hpp>
 #include <array>
+#include "resourceHandler.hpp"
 
 class SoundController {
-private:
-	// Effect sounds
-	std::array<sf::SoundBuffer, 1> laserSounds;
-	std::array<sf::SoundBuffer, 1> stepEffects;
-	std::array<sf::SoundBuffer, 2> machineSounds;
-	std::array<sf::Sound, 3> sounds;
-	int currentSong;
-	
 public:
-	enum class Effect {
-		step,
-		gunshot,
-		coin
-	};
-	
-	SoundController();
-	// Game objects can pass a value to the music controller to
-	void playEffect(Effect);
-	void playMusic(unsigned char);
-	void stopMusic();
+	explicit SoundController(ResourceHandler * _pRH) : pRH(_pRH) {}
+	void update();
+	void play(ResourceHandler::Music);
+	void play(ResourceHandler::Sound);
+
+private:
+	ResourceHandler * pRH;
+	std::vector<sf::Sound> sounds;
 };

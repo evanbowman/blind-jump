@@ -20,6 +20,7 @@
 #define TEXTUREMANAGER_HPP
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <map>
 #include <utility>
 #include <array>
@@ -52,6 +53,12 @@ public:
 	enum class Image {
 		soilTileset, grassSet1, grassSet2, icon
 	};
+	enum class Sound {
+		// TODO...
+	};
+	enum class Music {
+		// TODO...
+	};
 	
 	int load();
 	
@@ -59,6 +66,7 @@ public:
 	const sf::Texture & getTexture(int) const;
 	const sf::Font & getFont(ResourceHandler::Font) const;
 	const sf::Image & getImage(ResourceHandler::Image) const;
+	const sf::SoundBuffer & getSound(ResourceHandler::Sound) const;
 	sf::Shader & getShader(ResourceHandler::Shader) const; // Exception: shader cannot be a constant reference
 	
 private:
@@ -66,6 +74,7 @@ private:
 	mutable std::array<sf::Shader, 3> shaders;
 	mutable std::array<sf::Font, 1> fonts;
 	mutable std::array<sf::Image, 4> images;
+	std::array<sf::SoundBuffer, 1> sounds;
 };
 
 // Many classes need to access the resource handler, and its accessors return only const references

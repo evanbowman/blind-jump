@@ -20,22 +20,25 @@
 #include "angleFunction.hpp"
 
 Turret::Turret(const sf::Texture & gameObjects, float _xPos, float _yPos) :
-	xPos{_xPos},
-	yPos{_yPos},
-	imageIndex{0},
-	animationCount{0},
-	active{0},
-	activateTimer{120},
-	shotCountdown{40},
-	shotsFired{0},
-	hp{6},
-	killFlag{0},
-	colorTimer{0},
-	isColored{0},
-	colorAmount{0}
+	xPos(_xPos),
+	yPos(_yPos),
+	imageIndex(0),
+	animationCount(0),
+	active(0),
+	activateTimer(120),
+	shotCountdown(40),
+	shotsFired(0),
+	hp(6),
+	killFlag(0),
+	colorTimer(0),
+	isColored(0),
+	colorAmount(0)
 {
 	turretSheet.setTexture(gameObjects);
 	shadowSheet.setTexture(gameObjects);
+	hitBox.setPosition(xPos, yPos);
+	turretSheet.setPosition(xPos, yPos);
+	shadowSheet.setPosition(xPos, yPos + 18);
 }
 
 const sf::Sprite & Turret::getSprite() {
@@ -94,14 +97,6 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 
 const Turret::HBox & Turret::getHitBox() const {
 	return hitBox;
-}
-
-void Turret::setPosition(float x, float y) {
-	xPos = x;
-	yPos = y;
-	hitBox.setPosition(x, y);
-	turretSheet.setPosition(x, y);
-	shadowSheet.setPosition(x, y + 18);
 }
 
 //Returns the turret's shadow sprite

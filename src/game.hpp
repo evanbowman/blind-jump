@@ -71,7 +71,6 @@ private:
 	Player player;
 	Camera camera;
 	UserInterface UI;
-	SoundController sndCtrl;
 	tileController tiles;
 	EffectGroup effectGroup;
 	DetailGroup details;

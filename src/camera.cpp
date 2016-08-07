@@ -36,13 +36,13 @@ void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f
 	float lerpSpeed;
 	sf::Vector2f cameraPos;
 	if (targets.empty()) {
-		lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000055f);
+		lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000045f);
 		cameraPos = lerp(pTarget->getPosition(), view.getCenter(), lerpSpeed);
-	} else if (pTarget->getState() != Player::State::deactivated) {
+	} else if (pTarget->getState() != Player::State::deactivated && pTarget->getState() != Player::State::dead) {
 		// This bit does some math and makes the camera track the midpoint of the
 		// player and the average position of all other significant objects in the
 		// window
-		lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000020f);
+		lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000030f);
 		sf::Vector2f aggregate;
 		float divisor = 0;
 		for (auto & vec : targets) {
