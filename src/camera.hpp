@@ -25,11 +25,15 @@
 class Camera {
 	Player * pTarget;
 	sf::View view;
-	sf::Vector2f startPosition;
+	sf::Vector2f startPosition, midpoint, buffer;
 	bool isShaking;
 	uint8_t shakeIndex;
-	int64_t timer;
+	int64_t shakeTimer, trackingTimer;
 	float shakeIntensity;
+	enum class State {
+		trackMidpoint, followPlayer, foundEnemy
+    };
+	State state;
 	
 public:
 	Camera(Player * _pTarget, const sf::Vector2f & viewPort);

@@ -26,45 +26,83 @@ Camera::Camera(Player * _pTarget, const sf::Vector2f & viewPort)  :
 		view(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
 		isShaking(false),
 		shakeIndex(0),
-		timer(0),
-		shakeIntensity(0.f)
-	{
-		startPosition = view.getCenter();
-	}
+		shakeTimer(0),
+		trackingTimer(0),
+		shakeIntensity(0.f),
+		state(State::followPlayer)
+{
+	startPosition = view.getCenter();
+}
 
 void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f> & targets) {
 	float lerpSpeed;
 	sf::Vector2f cameraPos;
-	if (targets.empty()) {
-		lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000045f);
-		cameraPos = lerp(pTarget->getPosition(), view.getCenter(), lerpSpeed);
-	} else if (pTarget->getState() != Player::State::deactivated && pTarget->getState() != Player::State::dead) {
-		// This bit does some math and makes the camera track the midpoint of the
-		// player and the average position of all other significant objects in the
-		// window
-		lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000030f);
-		sf::Vector2f aggregate;
-		float divisor = 0;
-		for (auto & vec : targets) {
-			aggregate += vec;
-			++divisor;
+	if (state == State::trackMidpoint && targets.empty()) {
+		state = State::followPlayer;
+		trackingTimer = 0;
+	}
+	if (pTarget->getState() != Player::State::deactivated && pTarget->getState() != Player::State::dead) {
+		switch (state) {
+		case State::followPlayer:
+			lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000025f);
+			cameraPos = lerp(pTarget->getPosition(), view.getCenter(), lerpSpeed);
+			if (!targets.empty()) {
+				state = State::foundEnemy;
+				trackingTimer = 0;
+			}
+			break;
+
+		case State::trackMidpoint:
+			{
+				lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000025f);
+				sf::Vector2f aggregate;
+				float divisor = 0;
+				for (auto & vec : targets) {
+					aggregate += vec;
+					++divisor;
+				}
+				aggregate /= divisor;
+				buffer = lerp(buffer, aggregate, lerpSpeed * 0.5f);
+				midpoint = lerp(pTarget->getPosition(), buffer, 0.78);
+				cameraPos = lerp(midpoint, view.getCenter(), lerpSpeed);
+			}
+			break;
+
+		case State::foundEnemy:
+			{
+				lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000025f);
+				sf::Vector2f aggregate;
+				float divisor = 0;
+				for (auto & vec : targets) {
+					aggregate += vec;
+					++divisor;
+				}
+				aggregate /= divisor;
+				trackingTimer += elapsedTime.asMicroseconds();
+				float targetWeight = 1.f - 0.22f * Easing::easeIn<1>(trackingTimer, static_cast<int64_t>(900000));
+				midpoint = lerp(pTarget->getPosition(), aggregate, targetWeight);
+				cameraPos = lerp(midpoint, view.getCenter(), lerpSpeed);
+				if (trackingTimer > 900000) {
+					state = State::trackMidpoint;
+					buffer = aggregate;
+				}
+			}
+			break;
 		}
-		aggregate /= divisor;
-		sf::Vector2f midpoint = lerp(pTarget->getPosition(), aggregate, 0.78f);
-		cameraPos = lerp(midpoint, view.getCenter(), lerpSpeed);
 	} else {
+		state = State::followPlayer;
 		lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000055f);
 		cameraPos = lerp(pTarget->getPosition(), view.getCenter(), lerpSpeed);
 	}
 	if (isShaking) {
-		timer += elapsedTime.asMicroseconds();
-		if (timer > 50000) {
-			timer = 0;
+		shakeTimer += elapsedTime.asMicroseconds();
+		if (shakeTimer > 50000) {
+			shakeTimer = 0;
 			shakeIndex += 1;
 			if (shakeIndex > 4) {
 				shakeIndex = 4;
 				isShaking = false;
-				timer = 0;
+				shakeTimer = 0;
 			}
 		}
 		const static std::array<int, 5> shakeConstants = {{3, -5, 3, -2, 1}};
@@ -79,7 +117,7 @@ const sf::View & Camera::getView() const {
 }
 
 void Camera::reset() {
-	float placementOffset = pTarget->getPosition().y / 4;
+	float placementOffset = pTarget->getPosition().y / 2;
 	view.setCenter(sf::Vector2f(pTarget->getPosition().x, placementOffset));
 	startPosition = view.getCenter();
 }
