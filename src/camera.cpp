@@ -64,7 +64,7 @@ void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f
 				aggregate /= divisor;
 				// Enemies entering and leaving the camera view creates jarring shifts
 				// so I'm using a buffer of the average enemy positions
-				buffer = lerp(buffer, aggregate, lerpSpeed * 0.35f);
+				buffer = lerp(buffer, aggregate, lerpSpeed * 0.1f);
 				midpoint = lerp(pTarget->getPosition(), buffer, 0.78);
 				cameraPos = lerp(midpoint, view.getCenter(), lerpSpeed);
 			}
