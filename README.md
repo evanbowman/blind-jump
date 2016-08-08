@@ -25,4 +25,4 @@ This will create an executable in the src folder. In the future running this mak
 
 ## Bugs
 
-Please report any bugs that you find. I want the application to feel well polished, so if there are any legitiment runtime issues I'd like to know about them. As of right now it compiles with no warnings and passes two separate static analysis tools with no issues, so I do not expect that the app will crash.
+Please report any bugs that you find. I want the application to feel well polished, so if there are any legitiment runtime issues I'd appreciate being notified of them.

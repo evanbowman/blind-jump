@@ -63,7 +63,7 @@ public:
 	float getXpos() const; // The player's absolute position in the window
 	float getYpos() const;
 	void draw(drawableVec &, drawableVec &);
-	void update(Game *, const sf::Time &);
+	void update(Game *, const sf::Time &, SoundController &);
 	void setState(State);
 	State getState() const;
 	void setPosition(float, float);
@@ -80,7 +80,7 @@ public:
 	
 private:
 	HBox hitBox;
-	void updateGun(const sf::Time &, const bool, EffectGroup &);
+	void updateGun(const sf::Time &, const bool, EffectGroup &, SoundController &);
 	Weapon gun;
 	void checkEffectCollisions(EffectGroup &, FontController *);
 	std::vector<Dasher::Blur> blurs; // I could have designed this better...

@@ -54,7 +54,7 @@ public:
 		soilTileset, grassSet1, grassSet2, icon
 	};
 	enum class Sound {
-		// TODO...
+		gunShot
 	};
 	enum class Music {
 		// TODO...

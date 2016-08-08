@@ -176,7 +176,7 @@ void setSpeed(bool key1, bool key2, bool key3, bool collision, float & speed) {
 	}
 }
 
-void Player::update(Game * pGM, const sf::Time & elapsedTime) {
+void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & sounds) {
 	InputController * pInput {pGM->getPInput()};
 	tileController & tiles {pGM->getTileController()};
 	DetailGroup & details {pGM->getDetails()};
@@ -226,7 +226,7 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 		break;
 
 	case State::nominal:
-		updateGun(elapsedTime, shoot, effects);
+		updateGun(elapsedTime, shoot, effects, sounds);
 		if (!shoot) {
 			regKeyResponse<Sheet::walkUp>(up, down, left, right, sheetIndex, uSpeed, collisionUp);
 			regKeyResponse<Sheet::walkDown>(down, up, left, right, sheetIndex, dSpeed, collisionDown);
@@ -470,7 +470,7 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime) {
 	case Sheet::deathSheet:
 		if (frameIndex < 10) {
 			animationTimer += elapsedTime.asMicroseconds();
-			if (animationTimer > 90000) {
+			if (animationTimer > 80000) {
 				animationTimer = 0;
 				++frameIndex;
 			}
@@ -619,7 +619,7 @@ void Player::setHealth(Health value) {
 	health = value;
 }
 
-void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, EffectGroup & effects) {
+void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, EffectGroup & effects, SoundController & sounds) {
 	gun.timeout -= elapsedTime.asMicroseconds();
 	if (gun.bulletTimer != 0) {
 		gun.bulletTimer -= elapsedTime.asMicroseconds();
@@ -636,6 +636,7 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, Effect
 		} else if (gun.timeout < 1671000) {
 			gun.timeout = 1671000;
 			if (gun.bulletTimer == 0) {
+				sounds.play(ResourceHandler::Sound::gunShot);
 				effects.add<9>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), globalResourceHandler.getTexture(ResourceHandler::Texture::whiteGlow), static_cast<int>(sheetIndex), xPos, yPos);
 				gun.bulletTimer = 440000;
 			}

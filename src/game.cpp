@@ -29,19 +29,20 @@
 std::mutex globalObjectMutex, globalUIMutex, globalTransitionMutex;
 
 Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontController * _pFonts)
-	: windowW{viewPort.x},
-	  windowH{viewPort.y},
-	  transitionState{TransitionState::None},
-	  pInput{_pInput},
-	  player{viewPort.x / 2, viewPort.y / 2},
-	  camera{&player, viewPort},
-	  pFonts{_pFonts},
-	  level{0},
-	  stashed{false},
-	  preload{false},
-	  teleporterCond{false},
-	  worldView{sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort},
-	  timer{0}
+	: windowW(viewPort.x),
+	  windowH(viewPort.y),
+	  transitionState(TransitionState::None),
+	  pInput(_pInput),
+	  sounds(&globalResourceHandler),
+	  player(viewPort.x / 2, viewPort.y / 2),
+	  camera(&player, viewPort),
+	  pFonts(_pFonts),
+	  level(0),
+	  stashed(false),
+	  preload(false),
+	  teleporterCond(false),
+	  worldView(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
+	  timer(0)
 {
 	target.create(windowW, windowH);
 	secondPass.create(windowW, windowH);
@@ -309,7 +310,7 @@ void Game::update(sf::Time & elapsedTime) {
 		en.update(player.getXpos(), player.getYpos(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, *pFonts, elapsedTime, camera, cameraTargets);
 		camera.update(elapsedTime, cameraTargets);
 		if (player.visible) {
-			player.update(this, elapsedTime);
+			player.update(this, elapsedTime, sounds);
 		}
 		// If player was hit rumble the screen.
 		if (player.scrShakeState) {

@@ -51,6 +51,14 @@ int loadFont(const char * fname, ResourceHandler::Font id, std::array<sf::Font, 
 	return 0;
 }
 
+int loadSound(const char * fname, ResourceHandler::Sound id, std::array<sf::SoundBuffer, 1> & sounds) {
+	std::size_t index = static_cast<int>(id);
+	if (!sounds[index].loadFromFile(resourcePath() + fname)) {
+		return 1;
+	}
+	return 0;
+}
+
 int ResourceHandler::load() {
 	int errs = 0;
 	errs += loadTexture("gameObjects.png", Texture::gameObjects, textures);
@@ -73,6 +81,7 @@ int ResourceHandler::load() {
 	errs += loadImage("grassSet.png", Image::grassSet1, images);
 	errs += loadImage("grassSetEdge.png", Image::grassSet2, images);
 	errs += loadImage("gameIcon.png", Image::icon, images);
+	errs += loadSound("gunshot.ogg", Sound::gunShot, sounds);
 	return errs;
 }
 

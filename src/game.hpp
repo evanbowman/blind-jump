@@ -68,6 +68,7 @@ public:
 
 private:
 	InputController * pInput;
+	SoundController sounds;
 	Player player;
 	Camera camera;
 	UserInterface UI;
