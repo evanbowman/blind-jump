@@ -25,7 +25,7 @@
 #include "RenderType.hpp"
 #include "resourceHandler.hpp"
 #include "spriteSheet.hpp"
-#include "feedback.hpP"
+#include "feedback.hpp"
 
 class Game;
 

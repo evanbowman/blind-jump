@@ -33,6 +33,9 @@
 #include "aspectScaling.hpp"
 #include "alias.hpp"
 #include "feedback.hpp"
+#ifdef LINUX
+#include <X11/Xlib.h>
+#endif
 
 ResourceHandler globalResourceHandler;
 
@@ -55,6 +58,11 @@ int main() {
 	FontController fonts(hudView, drawableRegionSize.x / 2, drawableRegionSize.y / 2);
 	Game game(drawableRegionSize, &input, &fonts);
 	try {
+		#ifdef LINUX
+		if (!XInitThreads()) {
+			return EXIT_FAILURE;
+		}
+		#endif
 		std::thread logicThread([](Game * pGame, sf::RenderWindow * pWindow) {
 			duration logicUpdateDelta;
 			sf::Clock gameClock;

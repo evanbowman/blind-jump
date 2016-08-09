@@ -19,9 +19,9 @@ This will create a .app package in the prod folder.
 
 Compile (Linux)
 ```bash
-make Linux
+make Linux CPPFLAGS=-DLINUX
 ```
-This will create an executable in the src folder. In the future running this make target will create a deb packege in the prod folder.
+In the future I'm hoping to simplify the build system with cmake or something.
 
 ## Bugs
 

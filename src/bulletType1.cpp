@@ -38,12 +38,12 @@ PlayerShot::PlayerShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxt
 
 const sf::Sprite & PlayerShot::getSprite() {
 	switch (state) {
-	case State::travelling:
-		return spriteSheet.getSprite();
-		break;
-
 	case State::poof:
 		return puffSheet[frameIndex];
+		break;
+
+	default:
+		return spriteSheet.getSprite();
 		break;
 	}
 }
