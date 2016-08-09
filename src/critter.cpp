@@ -21,17 +21,17 @@
 #include <cmath>
 
 Critter::Critter(const sf::Texture & txtr, uint8_t _map[61][61], float _xInit, float _yInit) :
-	Enemy{_xInit, _yInit},
-	xInit{_xInit},
-	yInit{_yInit},
-	currentDir{0.f},
-	jumpTargetx{0.f},
-	jumpTargety{0.f},
-	spriteSheet{txtr},
-	awake{false},
-	active{true},
-	recalc{4},
-	map{_map}
+	Enemy(_xInit, _yInit),
+	xInit(_xInit),
+	yInit(_yInit),
+	currentDir(0.f),
+	jumpTargetx(0.f),
+	jumpTargety(0.f),
+	spriteSheet(txtr),
+	awake(false),
+	active(true),
+	recalc(4),
+	map(_map)
 {
 	health = 3;
 	spriteSheet.setOrigin(9, 9);
@@ -88,8 +88,8 @@ void Critter::critterUpdate(float playerPosX, float playerPosY, EffectGroup & ef
 			aStrCoordinate origin, target;
 			origin.x = (xPos - tilePosX) / 32;
 			origin.y = (yPos - tilePosY) / 26;
-			target.x = (tilePosX - playerPosX) / -32;
-			target.y = (tilePosY - playerPosY - 26) / -26;
+			target.x = (tilePosX - playerPosX - 12) / -32;
+			target.y = (tilePosY - playerPosY - 32) / -26;
 			if (map[target.x][target.y] == 3 || map[target.x][target.y] == 4 || map[target.x][target.y] == 5 || map[target.x][target.y] == 11 || map[target.x][target.y] == 8) {
 				path = astar_path(target, origin, map);
 				previous = path.back();

@@ -3,10 +3,11 @@
 #  Evan Bowman 2016
 # 
 
-CC = clang++
+CC = g++
 override CPPFLAGS += -O2 -std=c++14 -Wall -Werror
 LDFLAGS_MAC = -framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio -Xlinker -rpath -Xlinker @loader_path/../Frameworks -fobjc-link-runtime
 LDFLAGS_LINUX = -lsfml-graphics -lsfml-audio -lsfml-system -lsfml-window -lpthread
+LDFLAGS_WINDOWS = 
 EXECUTABLE = BlindJump
 SOURCES = $(shell find . -name "*.cpp" | awk '{print length, $$0;}' | sort -nr | cut -d ' ' -f 2-) # Hey it looks nice though
 OBJECTS = $(SOURCES:.cpp=.o)
@@ -25,6 +26,10 @@ macOS: $(OBJECTS) packageScriptMac.sh ResourcePath.mm ResourcePath.hpp
 Linux: $(OBJECTS) ResourcePath.hpp ResourcePath.cxx
 	$(CC) -c ResourcePath.cxx -o ResourcePath.o
 	$(CC) $(OBJECTS) ResourcePath.o -o $(EXECUTABLE) $(LDFLAGS_LINUX)
+
+Windows: $(OBJECTS)
+	$(CC) -c ResourcePath.cxx -o ResourcePath.o
+	$(CC) $(OBJECTS) ResourcePath.o -o $(EXECUTABLE) $(LDFLAGS_WINDOWS)
 
 clean:
 	rm *.o

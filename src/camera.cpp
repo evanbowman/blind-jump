@@ -37,7 +37,7 @@ Camera::Camera(Player * _pTarget, const sf::Vector2f & viewPort)  :
 void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f> & targets) {
 	float lerpSpeed;
 	sf::Vector2f cameraPos;
-	if (state == State::trackMidpoint && targets.empty()) {
+	if ((state == State::trackMidpoint || state == State::foundEnemy) && targets.empty()) {
 		state = State::followPlayer;
 		trackingTimer = 0;
 	}
