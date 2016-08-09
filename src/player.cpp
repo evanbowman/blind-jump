@@ -645,9 +645,9 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, Effect
 }
 
 template<std::size_t indx, typename F >
-void checkEffectCollision(EffectGroup & effects, Player & player, const F & policy) {
+void checkEffectCollision(EffectGroup & effects, Player * pPlayer, const F & policy) {
 	for (auto & element : effects.get<indx>()) {
-		if (player.getHitBox().overlapping(element.getHitBox())) {
+		if (pPlayer->getHitBox().overlapping(element.getHitBox())) {
 			element.setKillFlag();
 			policy();
 		}
@@ -665,10 +665,10 @@ void Player::checkEffectCollisions(EffectGroup & effects, FontController * pFont
 			Feedback::sleep(milliseconds(40));
 		}
 	};
-	checkEffectCollision<8>(effects, *this, hitPolicy);
-	checkEffectCollision<7>(effects, *this, hitPolicy);
-	checkEffectCollision<6>(effects, *this, hitPolicy);
-	checkEffectCollision<4>(effects, *this, [&]() {
+	checkEffectCollision<8>(effects, this, hitPolicy);
+	checkEffectCollision<7>(effects, this, hitPolicy);
+	checkEffectCollision<6>(effects, this, hitPolicy);
+	checkEffectCollision<4>(effects, this, [&]() {
 			pFonts->resetHPText();
 			health = fmin(pFonts->getMaxHealth(), health + 1);
 			renderType = Rendertype::shadeCrimson;
@@ -676,9 +676,10 @@ void Player::checkEffectCollisions(EffectGroup & effects, FontController * pFont
 			colorTimer = 0;
 			Feedback::sleep(milliseconds(20));
 		});
-	checkEffectCollision<5>(effects, *this, [&]() {
-			pFonts->updateScore(1);
-			pFonts->resetSCText();
+	checkEffectCollision<5>(effects, this, [&]() {
+			// TODO: Working with fonts is UI code and needs to happen on the main thread
+			// pFonts->updateScore(1);
+			// pFonts->resetSCText();
 			renderType = Rendertype::shadeNeon;
 			colorAmount = 1.f;
 			colorTimer = 0;
