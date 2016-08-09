@@ -104,7 +104,7 @@ const sf::Sprite & Turret::getShadow() {
 	return shadowSheet[imageIndex];
 }
 
-void Turret::updateShots(EffectGroup & effects, FontController & fonts, float playerPosX, float playerPosY) {
+void Turret::updateShots(EffectGroup & effects, float playerPosX, float playerPosY) {
 	//If the turret is open...
 	if (imageIndex == 4) {
 		//And the shot coundown timer has decremented far enough

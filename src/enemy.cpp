@@ -52,10 +52,9 @@ float Enemy::getYpos() const {
 	return yPos;
 }
 
-void Enemy::update(float xOffset, float yOffset, const std::vector<wall> & w, EffectGroup & effects, const sf::Time & elapsedTime) {
-}
 
-uint_fast8_t Enemy::checkWallCollision(const std::vector<wall> & w, float collisionRadius, float xPos, float yPos) {
+
+uint_fast8_t Enemy::checkWallCollision(const std::vector<wall> & w, float xPos, float yPos) {
 	uint_fast8_t collisionMask = 0;
 	for (auto & element : w) {
 		if ((xPos + 6 < (element.getPosX() + element.getWidth()) && (xPos + 6 > (element.getPosX()))) && (fabs((yPos + 16) - element.getPosY()) <= 13))  {
@@ -79,7 +78,7 @@ uint_fast8_t Enemy::checkWallCollision(const std::vector<wall> & w, float collis
 
 bool Enemy::wallInPath(const std::vector<wall> & w, float dir, float xPos, float yPos) {
 	for (int i{10}; i < 100; i += 16) {
-		if (checkWallCollision(w, 0, xPos + cos(dir) * i, yPos + sin(dir) * i)) {
+		if (checkWallCollision(w, xPos + cos(dir) * i, yPos + sin(dir) * i)) {
 			return true;
 		}
 	}
@@ -87,7 +86,7 @@ bool Enemy::wallInPath(const std::vector<wall> & w, float dir, float xPos, float
 	return false;
 }
 
-void Enemy::checkShotCollision(EffectGroup & effects, float rad) {
+void Enemy::checkShotCollision(EffectGroup & effects) {
 	if (health == 0) {
 		onDeath(effects);
 	}

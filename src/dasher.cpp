@@ -232,7 +232,7 @@ void Dasher::update(float playerPosX, float playerPosY, const std::vector<wall> 
 			vSpeed = 0.f;
 		}
 		
-		if (Enemy::checkWallCollision(walls, 48, xPos, yPos)) {
+		if (Enemy::checkWallCollision(walls, xPos, yPos)) {
 			hSpeed *= -1.f;
 			vSpeed *= -1.f;
 		}

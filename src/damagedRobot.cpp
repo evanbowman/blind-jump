@@ -24,7 +24,7 @@ DamagedRobot::DamagedRobot(float _xInit, float _yInit, const sf::Texture & inpTx
 	robotSheet.setPosition(position.x, position.y);
 }
 
-void DamagedRobot::update(const sf::Time & elapsedTime) {
+void DamagedRobot::update(const sf::Time &) {
 	// ...
 }
 

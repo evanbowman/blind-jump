@@ -50,7 +50,7 @@ public:
 	bool canHeal;
 	bool isOpen() const;
 	float getDesaturateAmount();
-	const State getState() const;
+	State getState() const;
 	void reset();
 	void setEnemyValueCount(int);
 	bool blurEnabled();

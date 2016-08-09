@@ -122,7 +122,7 @@ void Game::draw(sf::RenderWindow & window) {
 		globalObjectMutex.lock();
 		lightingMap.setView(camera.getView());
 		bkg.drawBackground(target, worldView, camera);
-		tiles.draw(target, &glowSprs1, &glowSprs2, level, worldView, camera.getView());
+		tiles.draw(target, &glowSprs1, level, worldView, camera.getView());
 		glowSprs2.clear();
 		glowSprs1.clear();
 		gameShadows.clear();
@@ -307,14 +307,10 @@ void Game::update(sf::Time & elapsedTime) {
 			}
 		});
 		std::vector<sf::Vector2f> cameraTargets;
-		en.update(player.getXpos(), player.getYpos(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, *pFonts, elapsedTime, camera, cameraTargets);
+		en.update(player.getXpos(), player.getYpos(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, elapsedTime, camera, cameraTargets);
 		camera.update(elapsedTime, cameraTargets);
 		if (player.visible) {
 			player.update(this, elapsedTime, sounds);
-		}
-		// If player was hit rumble the screen.
-		if (player.scrShakeState) {
-			ssc.rumble();
 		}
 		if (!UI.isOpen() || (UI.isOpen() && player.getState() == Player::State::dead)) {
 			effectGroup.apply([&](auto & vec) {
@@ -331,7 +327,6 @@ void Game::update(sf::Time & elapsedTime) {
 		globalObjectMutex.unlock();
 	}
 	globalUIMutex.lock();
-	ssc.update(player, elapsedTime);
     if (player.getState() == Player::State::dead) {
 		UI.dispDeathSeq();
 		// If the death sequence is complete and the UI controller is finished playing its animation
@@ -356,7 +351,7 @@ void Game::update(sf::Time & elapsedTime) {
 	}
 	globalUIMutex.unlock();
 	globalTransitionMutex.lock();
-	updateTransitions(xOffset, yOffset, elapsedTime);
+	updateTransitions(elapsedTime);
 	globalTransitionMutex.unlock();
 }
 
@@ -407,7 +402,7 @@ switch (transitionState) {
 	}
 }
 
-void Game::updateTransitions(float xOffset, float yOffset, const sf::Time & elapsedTime) {
+void Game::updateTransitions(const sf::Time & elapsedTime) {
 	switch (transitionState) {
 	case TransitionState::None:
 		{
@@ -674,10 +669,6 @@ EffectGroup & Game::getEffects() {
 
 InputController * Game::getPInput() {
 	return pInput;
-}
-
-ScreenShakeController * Game::getPSSC() {
-	return &ssc;
 }
 
 UserInterface & Game::getUI() {

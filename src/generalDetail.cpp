@@ -24,7 +24,7 @@ GeneralDetail::GeneralDetail(float _xInit, float _yInit, sf::Sprite & _spr):
 	spr.setPosition(position.x, position.y);
 }
 
-void GeneralDetail::update(const sf::Time & elapsedTime) {
+void GeneralDetail::update(const sf::Time &) {
 	// ...
 }
 

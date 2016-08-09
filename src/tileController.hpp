@@ -31,16 +31,13 @@ public:
 	enum class Tileset {
 		intro, regular
 	};
-
 	sf::Sprite transitionLvSpr;
-	
 	sf::Image tileImg[2];
 	sf::Image grassSet[2];
 	sf::Image grassSetEdge[2];
-
 	tileController();
 	void update(const float, const float);
-	void draw(sf::RenderTexture&, std::vector<sf::Sprite>*, std::vector<sf::Sprite>*, int level, const sf::View &, const sf::View &);
+	void draw(sf::RenderTexture&, std::vector<sf::Sprite>*, int level, const sf::View &, const sf::View &);
 	float posX;
 	float posY;
 	void setPosition(float, float);

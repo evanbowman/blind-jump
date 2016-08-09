@@ -38,7 +38,7 @@ bool UserInterface::isOpen() const {
 	return state != State::closed;
 }
 
-const UserInterface::State UserInterface::getState() const {
+UserInterface::State UserInterface::getState() const {
 	return state;
 }
 
@@ -76,7 +76,7 @@ void UserInterface::draw(sf::RenderWindow & window, FontController & fonts) {
 	case State::deathScreenExit:
 		{
 			uint8_t textAlpha = Easing::easeOut<3>(timer, 300) * 255;
-			if (textAlpha < 0) {
+			if (textAlpha > 0) {
 				fonts.drawDeathText(textAlpha, window);
 			}
 		}

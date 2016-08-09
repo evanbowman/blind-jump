@@ -27,7 +27,7 @@ class Scoot : public Enemy {
 public:
 	using HBox = Framework::HitBox<12, 12, -6, -6>;
 	Scoot(const sf::Texture &, const sf::Texture &, float, float);
-	void update(float, float, const std::vector<wall> &, EffectGroup & ef, const sf::Time &) override;
+	void update(float, float, const std::vector<wall> &, EffectGroup & ef, const sf::Time &);
 	const sf::Sprite & getSprite() const override;
 	const sf::Sprite & getShadow() const override;
 	const HBox & getHitBox() const;

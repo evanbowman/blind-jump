@@ -124,7 +124,7 @@ void Scoot::update(float playerPosX, float playerPosY, const std::vector<wall> &
 		break;
 	}
 
-	uint_fast8_t collisionMask = Enemy::checkWallCollision(w, 8.f, xPos - 8, yPos - 8);
+	uint_fast8_t collisionMask = Enemy::checkWallCollision(w, xPos - 8, yPos - 8);
 	if (collisionMask) {
 		hSpeed = 0;
 		vSpeed = 0;

@@ -90,7 +90,7 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
 	}
 }
 
-void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wall> w, bool enabled, tileController* pTiles, FontController& fonts, sf::Time & elapsedTime, Camera & camera, std::vector<sf::Vector2f> & cameraTargets) {
+void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wall> w, bool enabled, tileController* pTiles, sf::Time & elapsedTime, Camera & camera, std::vector<sf::Vector2f> & cameraTargets) {
 	const sf::View & cameraView = camera.getView();
 	sf::Vector2f viewCenter = cameraView.getCenter();
 	sf::Vector2f viewSize = cameraView.getSize();
@@ -101,7 +101,7 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 			} else {
 				it->update(elapsedTime, x, y);
 				if (enabled) {
-					it->updateShots(ef, fonts, x, y);
+					it->updateShots(ef, x, y);
 				}
 				++it;
 			}
@@ -123,9 +123,6 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 						it->update(x, y, w, ef, elapsedTime);
 					}
 					cameraTargets.emplace_back(it->getXpos(), it->getYpos());
-				} else {
-					// If outside the window, update the enemy's position, but don't move it, draw it, check collisions, etc.
-					it->Enemy::update(x, y, w, ef, elapsedTime);
 				}
 				++it;
 			}
@@ -160,8 +157,6 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 				}
 				if (enabled) {
 					it->critterUpdate(x, y, ef, elapsedTime, pTiles);
-				} else {
-					it->Enemy::update(x, y, w, ef, elapsedTime);
 				}
 				++it;
 			}
@@ -190,9 +185,6 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 					camera.shake(0.1f);
 					element.setKillFlag(false);
 				}
-			} else {
-				// If outside the window, update the enemy's position, but don't move it, draw it, check collisions, etc.
-				element.Enemy::update(x, y, w, ef, elapsedTime);
 			}
 		}
 	}

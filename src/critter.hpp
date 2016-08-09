@@ -28,7 +28,7 @@ class Critter : public Enemy {
 public:
 	using HBox = Framework::HitBox<12, 12, 4, -3>;
 	Critter(const sf::Texture &, uint8_t map[61][61], float, float);
-	void update(float, float, const std::vector<wall> &, EffectGroup & ef, const sf::Time &) override;
+	void update(float, float, const std::vector<wall> &, EffectGroup & ef, const sf::Time &);
 	void critterUpdate(float, float, EffectGroup & ef, const sf::Time &, tileController * pTiles);
 	const sf::Sprite & getSprite() const override;
 	const sf::Sprite & getShadow() const override;

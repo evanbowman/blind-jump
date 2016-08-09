@@ -276,11 +276,6 @@ void FontController::resetHPText() {
 	healthDisplayTimer.restart();
 }
 
-void FontController::update(sf::RenderWindow & window, float xOffset, float yOffset) {
-	window.setView(fontView);
-	// hmmm... maybe some of FontController::print() should be here... TODO
-}
-
 void FontController::drawTitle(unsigned char alpha, sf::RenderWindow& window) {
 	titleText.setColor(sf::Color(255, 255, 255, alpha));
 	window.setView(fontView);

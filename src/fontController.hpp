@@ -40,7 +40,6 @@ public:
 		resumeText, settingsText, quitText, healthNumText, scoreText, waypointText, heart, coin
 	};
 	FontController(sf::View, float, float);
-	void update(sf::RenderWindow &, float, float);
 	void setWaypointText(int);
 	void setZoneText(char);
 	void print(sf::RenderWindow &);

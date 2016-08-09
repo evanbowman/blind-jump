@@ -20,7 +20,6 @@
 #include <stdio.h>
 #include <SFML/Graphics.hpp>
 #include "turret.hpp"
-#include "fontController.hpp"
 #include "effectsController.hpp"
 #include "resourceHandler.hpp"
 #include "Framework/framework.hpp"
@@ -59,7 +58,7 @@ public:
 	const sf::Sprite & getShadow();
 	const sf::Sprite & getSprite();
 	void update(const sf::Time &, float, float);
-	void updateShots(EffectGroup &, FontController &, float, float);
+	void updateShots(EffectGroup &, float, float);
 	bool getKillFlag();
 	float getXpos();
 	float getYpos();
