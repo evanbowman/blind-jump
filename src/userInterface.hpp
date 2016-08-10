@@ -23,6 +23,7 @@
 #include "inputController.hpp"
 #include <array>
 #include "easingTemplates.hpp"
+#include "shutdownSignal.hpp"
 
 class Player;
 

@@ -142,7 +142,7 @@ void UserInterface::update(Player & player, FontController & fonts, InputControl
 				break;
 
 			case 2:
-				// TODO: window.close();
+				throw ShutdownSignal();
 				break;
 			}
 		}

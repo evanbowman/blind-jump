@@ -26,7 +26,7 @@
 #include "game.hpp"
 #include "easingTemplates.hpp"
 
-std::mutex globalObjectMutex, globalUIMutex, globalTransitionMutex;
+std::mutex globalOverworldMutex, globalUIMutex, globalTransitionMutex;
 
 Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontController * _pFonts)
 	: windowW(viewPort.x),
@@ -105,21 +105,10 @@ Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontControlle
 	vignetteSprite.setColor(sf::Color(255, 255, 255));
 }
 
-//=================================================//
-// The draw function is fairly complicated, due to //
-// all of the post processing and lighting effects //
-// that the function needs to draw, all while      //
-// correctly mapping images to the proper view,    //
-// and on top of that it needs to synchronize with //
-// the logic thread at various occasions, and      //
-// to stash frames in textures at certain game     //
-// states. Considering the circumstances, I have   //
-// really made the function quite simple...        //
-//=================================================//
 void Game::draw(sf::RenderWindow & window) {
 	target.clear(sf::Color::Transparent);
 	if (!stashed || preload) {
-		globalObjectMutex.lock();
+		std::unique_lock<std::mutex> overworldLock(globalOverworldMutex);
 		lightingMap.setView(camera.getView());
 		bkg.drawBackground(target, worldView, camera);
 		tiles.draw(target, &glowSprs1, level, worldView, camera.getView());
@@ -135,7 +124,7 @@ void Game::draw(sf::RenderWindow & window) {
 		drawGroup(effectGroup, gameObjects, glowSprs1);
 		en.draw(gameObjects, gameShadows, camera);
 		sounds.poll();
-		globalObjectMutex.unlock();
+		overworldLock.unlock();
 		if (!gameShadows.empty()) {
 			for (auto & element : gameShadows) {
 				target.draw(std::get<0>(element));
@@ -265,7 +254,7 @@ void Game::draw(sf::RenderWindow & window) {
 	} else {
 		window.draw(sf::Sprite(target.getTexture()));
 	}
-	globalUIMutex.lock();
+	std::unique_lock<std::mutex> UILock(globalUIMutex);
 	if (player.getState() == Player::State::dead) {
 		UI.draw(window, *pFonts);
 	} else {
@@ -274,11 +263,10 @@ void Game::draw(sf::RenderWindow & window) {
 		}
 		pFonts->print(window);
 	}
+	UILock.unlock();
 	window.setView(worldView);
 	globalUIMutex.unlock();
-	globalTransitionMutex.lock();
 	drawTransitions(window);
-	globalTransitionMutex.unlock();
 }
 
 void Game::update(sf::Time & elapsedTime) {
@@ -289,7 +277,7 @@ void Game::update(sf::Time & elapsedTime) {
 		stashed = false;
 	}
 	if (!stashed || preload) {
-		globalObjectMutex.lock();
+		std::lock_guard<std::mutex> overworldLock(globalOverworldMutex);
 		if (level != 0) {
 			const sf::Vector2f & cameraOffset = camera.getOffset();
 			bkg.setOffset(cameraOffset.x, cameraOffset.y);
@@ -325,9 +313,8 @@ void Game::update(sf::Time & elapsedTime) {
 				}
 			});
 		}
-		globalObjectMutex.unlock();
 	}
-	globalUIMutex.lock();
+	std::unique_lock<std::mutex> UILock(globalUIMutex);
     if (player.getState() == Player::State::dead) {
 		UI.dispDeathSeq();
 		// If the death sequence is complete and the UI controller is finished playing its animation
@@ -350,14 +337,13 @@ void Game::update(sf::Time & elapsedTime) {
 		}
 		pFonts->updateHealth(player.getHealth());
 	}
-	globalUIMutex.unlock();
-	globalTransitionMutex.lock();
+	UILock.unlock();
 	updateTransitions(elapsedTime);
-	globalTransitionMutex.unlock();
 }
 
 void Game::drawTransitions(sf::RenderWindow & window) {
-switch (transitionState) {
+	std::lock_guard<std::mutex> grd(globalTransitionMutex);
+	switch (transitionState) {
 	case TransitionState::None:
     	break;
 
@@ -404,6 +390,7 @@ switch (transitionState) {
 }
 
 void Game::updateTransitions(const sf::Time & elapsedTime) {
+	std::lock_guard<std::mutex> grd(globalTransitionMutex);
 	switch (transitionState) {
 	case TransitionState::None:
 		{

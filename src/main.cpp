@@ -23,6 +23,9 @@
 #include <thread>
 #include <cmath>
 #include <SFML/Window.hpp>
+#include <exception>
+#include <iostream>
+#include <stdexcept>
 #include "player.hpp"
 #include "backgroundHandler.hpp"
 #include "game.hpp"
@@ -33,6 +36,7 @@
 #include "aspectScaling.hpp"
 #include "alias.hpp"
 #include "feedback.hpp"
+#include "shutdownSignal.hpp"
 #ifdef LINUX
 #include <X11/Xlib.h>
 #endif
@@ -40,6 +44,8 @@
 ResourceHandler globalResourceHandler;
 
 std::mt19937 globalRNG;
+
+static std::exception_ptr pWorkerException;
 
 int main() {
 	if (globalResourceHandler.load()) return EXIT_FAILURE;
@@ -66,19 +72,24 @@ int main() {
 		std::thread logicThread([](Game * pGame, sf::RenderWindow * pWindow) {
 			duration logicUpdateDelta;
 			sf::Clock gameClock;
-			while (pWindow->isOpen()) {
-				time_point start = high_resolution_clock::now();
-				sf::Time elapsedTime = gameClock.restart(); // TODO: use chrono clock instead
-				// TODO: What if the app freezes? Then the elapsed time will be really large!
-				if (Feedback::isAsleep) {
-					elapsedTime = gameClock.restart();
-					Feedback::isAsleep = false;
+			try {
+				while (pWindow->isOpen()) {
+					time_point start = high_resolution_clock::now();
+					sf::Time elapsedTime = gameClock.restart(); // TODO: use chrono clock instead
+					// TODO: What if the app freezes? Then the elapsed time will be really large!
+					if (Feedback::isAsleep) {
+						elapsedTime = gameClock.restart();
+						Feedback::isAsleep = false;
+					}
+					pGame->update(elapsedTime);
+					time_point stop = high_resolution_clock::now();
+					logicUpdateDelta = std::chrono::duration_cast<nanoseconds>(stop - start);
+					static const microseconds logicUpdateLimit(2000);
+					std::this_thread::sleep_for(logicUpdateLimit - logicUpdateDelta);
 				}
-				pGame->update(elapsedTime);
-				time_point stop = high_resolution_clock::now();
-				logicUpdateDelta = std::chrono::duration_cast<nanoseconds>(stop - start);
-				static const microseconds logicUpdateLimit(2000);
-				std::this_thread::sleep_for(logicUpdateLimit - logicUpdateDelta);
+			} catch (...) {
+				pWorkerException = std::current_exception();
+				return;
 			}
 		}, &game, &window);
 		while (window.isOpen()) {
@@ -86,12 +97,14 @@ int main() {
 			window.clear();
 			game.draw(window);
 			window.display();
+			if (pWorkerException) {
+				logicThread.join();
+				std::rethrow_exception(pWorkerException);
+			}
 		}
 	    logicThread.join();
-	} catch (std::system_error err) {
-		// TODO: Handle possible error in thread construction
-	} catch (...) {
-		// TODO: Handle other exceptional cases
+	} catch (const std::exception & ex) {
+		std::cerr << ex.what() << std::endl;
 	}
 	return EXIT_SUCCESS;
 }
