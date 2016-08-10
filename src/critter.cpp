@@ -169,16 +169,16 @@ void Critter::onDeath(EffectGroup & effects) {
 	// With some random chance, add a heart item to the map
 	unsigned long int temp = std::abs(static_cast<int>(globalRNG())) % 5;
 	if (temp == 0) {
-	    effects.add<4>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
+	    effects.add<4>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
 					   xInit + 10, yInit, Powerup::Type::Heart);
 	} else {
-	    effects.add<5>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::blueglow),
+	    effects.add<5>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::blueglow),
 					   xInit + 10, yInit, Powerup::Type::Coin);
 	}
-    effects.add<1>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-				   globalResourceHandler.getTexture(ResourceHandler::Texture::fireExplosionGlow),
+    effects.add<1>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::fireExplosionGlow),
 				   xInit + 8, yInit);
 	killFlag = true;
 }

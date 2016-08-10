@@ -159,14 +159,14 @@ void Dasher::update(float playerPosX, float playerPosY, const std::vector<wall> 
 			frameTimer -= 80;
 			shotCount++;
 			if (xPos > playerPosX) {
-				effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xPos - 14, yPos + 2);
-				effects.add<7>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-							   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
+				effects.add<0>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos - 14, yPos + 2);
+				effects.add<7>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+							   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
 							   xPos - 12, yPos, angleFunction(playerPosX, playerPosY, xPos, yPos));
 			} else {
-				effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xPos + 6, yPos + 2);
-				effects.add<7>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-							   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
+				effects.add<0>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos + 6, yPos + 2);
+				effects.add<7>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+							   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
 							   xPos + 4, yPos, angleFunction(playerPosX, playerPosY, xPos, yPos));
 			}
 		}
@@ -284,16 +284,16 @@ void Dasher::onDeath(EffectGroup & effects) {
 	killFlag = true;
 	unsigned long int temp = std::abs(static_cast<int>(globalRNG())) % 4;
 	if (temp == 0) {
-	    effects.add<4>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
+	    effects.add<4>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
 					   xPos, yPos + 4, Powerup::Type::Heart);
 	} else {
-	    effects.add<5>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::blueglow),
+	    effects.add<5>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::blueglow),
 					   xPos, yPos + 4, Powerup::Type::Coin);
 	}
-    effects.add<1>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-				   globalResourceHandler.getTexture(ResourceHandler::Texture::fireExplosionGlow),
+    effects.add<1>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::fireExplosionGlow),
 				   xPos, yPos - 2);
 	blurEffects.clear();
 }

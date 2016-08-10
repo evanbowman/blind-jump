@@ -175,7 +175,7 @@ void createMapImage(const sf::Image & tileImage, uint8_t mapArray[61][61], sf::T
 }
 
 tileController::tileController() : posX{-72}, posY{-476}, windowH{0}, windowW{0} {
-	transitionLvSpr.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::introLevel));
+	transitionLvSpr.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::introLevel));
 	shadow.setFillColor(sf::Color(188, 188, 198, 255));
 }
 
@@ -249,9 +249,9 @@ void tileController::rebuild(Tileset set) {
 	case Tileset::regular:
 		workingSet = 1;
 		shadow.setFillColor(sf::Color(188, 188, 198, 255));
-		createMapImage(globalResourceHandler.getImage(ResourceHandler::Image::soilTileset),
-				   mapArray, mapTexture, globalResourceHandler.getImage(ResourceHandler::Image::grassSet1),
-				   globalResourceHandler.getImage(ResourceHandler::Image::grassSet2));
+		createMapImage(globalResourceHandlerPtr->getImage(ResourceHandler::Image::soilTileset),
+				   mapArray, mapTexture, globalResourceHandlerPtr->getImage(ResourceHandler::Image::grassSet1),
+				   globalResourceHandlerPtr->getImage(ResourceHandler::Image::grassSet2));
 		initMapVectors(this);
 		mapSprite1.setTexture(mapTexture[0]);
 		mapSprite2.setTexture(mapTexture[1]);

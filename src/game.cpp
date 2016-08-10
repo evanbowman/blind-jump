@@ -33,7 +33,6 @@ Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontControlle
 	  windowH(viewPort.y),
 	  transitionState(TransitionState::None),
 	  pInput(_pInput),
-	  sounds(&globalResourceHandler),
 	  player(viewPort.x / 2, viewPort.y / 2),
 	  camera(&player, viewPort),
 	  pFonts(_pFonts),
@@ -51,9 +50,9 @@ Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontControlle
 	stash.create(windowW, windowH);
 	stash.setSmooth(true);
 	lightingMap.create(windowW, windowH);
-	vignetteSprite.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::vignette));
+	vignetteSprite.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::vignette));
 	vignetteSprite.setScale(windowW / 450, windowH / 450);
-	vignetteShadowSpr.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::vignetteShadow));
+	vignetteShadowSpr.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::vignetteShadow));
 	vignetteShadowSpr.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setColor(sf::Color(255,255,255,100));
 	hudView.setSize(windowW, windowH);
@@ -64,21 +63,21 @@ Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontControlle
 	tiles.setWindowSize(windowW, windowH);
 	// Completely non-general code only used by the intro level (it's not procedurally generated)
 	details.add<2>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (6 * 26),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
 	details.add<2>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (0 * 26),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
 	details.add<2>(tiles.posX - 180 + 16 + (11 * 32), tiles.posY + 200 - 3 + (11 * 26),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
 	details.add<2>(tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 204 + 8 + (-9 * 26),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
 	details.add<4>(tiles.posX - 192 + 6 * 32, tiles.posY + 301,
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::introWall));
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::introWall));
 	sf::Sprite podSpr;
-	podSpr.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
+	podSpr.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
 	podSpr.setTextureRect(sf::IntRect(164, 145, 44, 50));
 	details.add<6>(tiles.posX + 3 * 32, tiles.posY + 4 + 17 * 26, podSpr);;
 	tiles.teleporterLocation.x = 8;
@@ -92,8 +91,8 @@ Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontControlle
 	en.setWindowSize(windowW, windowH);
 	pFonts->setWaypointText(level);
 	details.add<0>(tiles.posX - 178 + 8 * 32, tiles.posY + 284 + -7 * 26,
-				   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-				   globalResourceHandler.getTexture(ResourceHandler::Texture::teleporterGlow));
+				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::teleporterGlow));
 	bkg.setBkg(0);
 	beamGlowTxr.loadFromFile(resourcePath() + "teleporterBeamGlow.png");
 	beamGlowSpr.setTexture(beamGlowTxr);
@@ -138,7 +137,7 @@ void Game::draw(sf::RenderWindow & window) {
 				return (std::get<1>(arg1) < std::get<1>(arg2));
 			});
 		window.setView(worldView);
-		sf::Shader & colorShader = globalResourceHandler.getShader(ResourceHandler::Shader::color);
+		sf::Shader & colorShader = globalResourceHandlerPtr->getShader(ResourceHandler::Shader::color);
 		for (auto & element : gameObjects) {
 			switch (std::get<2>(element)) {
 			case Rendertype::shadeDefault:
@@ -198,8 +197,8 @@ void Game::draw(sf::RenderWindow & window) {
 			window.setView(worldView);
 			window.draw(sf::Sprite(stash.getTexture()));
 		} else {
-			sf::Shader & blurShader = globalResourceHandler.getShader(ResourceHandler::Shader::blur);
-			sf::Shader & desaturateShader = globalResourceHandler.getShader(ResourceHandler::Shader::desaturate);
+			sf::Shader & blurShader = globalResourceHandlerPtr->getShader(ResourceHandler::Shader::blur);
+			sf::Shader & desaturateShader = globalResourceHandlerPtr->getShader(ResourceHandler::Shader::desaturate);
 			secondPass.clear(sf::Color::Transparent);
 			thirdPass.clear(sf::Color::Transparent);
 			sf::Vector2u textureSize = target.getSize();
@@ -229,7 +228,7 @@ void Game::draw(sf::RenderWindow & window) {
 			window.setView(worldView);
 			window.draw(sf::Sprite(stash.getTexture()));
 		} else {
-			sf::Shader & blurShader = globalResourceHandler.getShader(ResourceHandler::Shader::blur);
+			sf::Shader & blurShader = globalResourceHandlerPtr->getShader(ResourceHandler::Shader::blur);
 			secondPass.clear(sf::Color::Transparent);
 			sf::Vector2u textureSize = target.getSize();
 			// Get the blur amount from the UI controller
@@ -249,7 +248,7 @@ void Game::draw(sf::RenderWindow & window) {
 			}
 		}
 	} else if (!UI.blurEnabled() && UI.getDesaturateAmount()) {
-		sf::Shader & desaturateShader = globalResourceHandler.getShader(ResourceHandler::Shader::desaturate);
+		sf::Shader & desaturateShader = globalResourceHandlerPtr->getShader(ResourceHandler::Shader::desaturate);
 		desaturateShader.setParameter("amount", UI.getDesaturateAmount());
 		window.draw(sf::Sprite(target.getTexture()), &desaturateShader);
 	} else {
@@ -568,14 +567,14 @@ void Game::Reset() {
 	if (level != 0) {
 		Coordinate c = tiles.getTeleporterLoc();
 		details.add<0>(tiles.posX + c.x * 32 + 2, tiles.posY + c.y * 26 - 4,
-				   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-				   globalResourceHandler.getTexture(ResourceHandler::Texture::teleporterGlow));
+				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::teleporterGlow));
 		
 		initEnemies(this);
 		if (std::abs(static_cast<int>(globalRNG())) % 2) {
 			Coordinate c = pickLocation(tiles.emptyMapLocations);
 			details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
-						   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), 0);
+						   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), 0);
 		}
 		
 		glowSprs1.clear();
@@ -589,7 +588,7 @@ void Game::Reset() {
 			getRockPositions(tiles.mapArray, detailPositions, teleporterFootprint);
 			for (auto element : detailPositions) {
 				details.add<3>(tiles.posX + 32 * element.x, tiles.posY + 26 * element.y - 35,
-							   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
+							   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
 			}
 			detailPositions.clear();
     	}
@@ -597,34 +596,34 @@ void Game::Reset() {
 		size_t len = detailPositions.size();
 		for (size_t i = 0; i < len; i++) {
 			details.add<2>(tiles.posX + 16 + (detailPositions[i].x * 32), tiles.posY - 3 + (detailPositions[i].y * 26),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
 		}
 		detailPositions.clear();
 	} else if (set == tileController::Tileset::intro) {
 		details.add<2>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (6 * 26),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
 		details.add<2>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (0 * 26),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
 		details.add<2>(tiles.posX - 180 + 16 + (11 * 32), tiles.posY + 200 - 3 + (11 * 26),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
 		details.add<2>(tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 204 + 8 + (-9 * 26),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::lamplight));
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
 		details.add<4>(tiles.posX - 192 + 6 * 32, tiles.posY + 301,
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::introWall));
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::introWall));
 		sf::Sprite podSpr;
-		podSpr.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
+		podSpr.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
 		podSpr.setTextureRect(sf::IntRect(164, 145, 44, 50));
 		details.add<6>(tiles.posX + 3 * 32, tiles.posY + 4 + 17 * 26, podSpr);;
 		tiles.teleporterLocation.x = 8;
 		tiles.teleporterLocation.y = -7;
 		details.add<0>(tiles.posX - 178 + 8 * 32, tiles.posY + 284 + -7 * 26,
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::teleporterGlow));
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::teleporterGlow));
 		for (auto it = global_levelZeroWalls.begin(); it != global_levelZeroWalls.end(); ++it) {
 			wall w;
 			w.setXinit(it->first);

@@ -41,14 +41,16 @@
 #include <X11/Xlib.h>
 #endif
 
-ResourceHandler globalResourceHandler;
+static std::exception_ptr pWorkerException;
 
 std::mt19937 globalRNG;
 
-static std::exception_ptr pWorkerException;
+ResourceHandler * globalResourceHandlerPtr = nullptr;
 
 int main() {
-	if (globalResourceHandler.load()) return EXIT_FAILURE;
+	ResourceHandler resourceHandler;
+	globalResourceHandlerPtr = &resourceHandler;
+	if (resourceHandler.load()) return EXIT_FAILURE;
 	seedRNG();
 	// Graphics are pixel art so it's okay to use upsampled textures for everything except font rendering
 	sf::Vector2f drawableRegionSize = getDrawableRegionSize();
@@ -76,7 +78,7 @@ int main() {
 				while (pWindow->isOpen()) {
 					time_point start = high_resolution_clock::now();
 					sf::Time elapsedTime = gameClock.restart(); // TODO: use chrono clock instead
-					// TODO: What if the app freezes or looses focus? Then the elapsed time will be really large!
+					// TODO: What if the app freezes? Then the elapsed time will be really large!
 					if (Feedback::isAsleep) {
 						elapsedTime = gameClock.restart();
 						Feedback::isAsleep = false;
@@ -91,7 +93,7 @@ int main() {
 				pWorkerException = std::current_exception();
 				return;
 			}
-			}, &game, &window);
+		}, &game, &window);
 		while (window.isOpen()) {
 			input.update(window);
 			window.clear();

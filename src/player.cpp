@@ -51,11 +51,11 @@ Player::Player(float _xPos, float _yPos)
 	  actionPrevious{false}
 {
 	scrShakeState = false;
-	deathSheet.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
-	walkDown.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
-	walkUp.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
-	walkLeft.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
-	walkRight.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
+	deathSheet.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
+	walkDown.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
+	walkUp.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
+	walkLeft.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
+	walkRight.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
 	walkDown.setPosition(xPos, yPos);
 	walkUp.setPosition(xPos, yPos);
 	walkLeft.setPosition(xPos, yPos);
@@ -63,12 +63,12 @@ Player::Player(float _xPos, float _yPos)
 	shadowSprite.setPosition(xPos + 7, yPos + 24);
 	dashSheet.setPosition(xPos, yPos);
 	deathSheet.setPosition(xPos - 13, yPos - 1);
-	dashSheet.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
+	dashSheet.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
 	dashSheet.setOrigin(0, 1);
-	shadowSprite.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
+	shadowSprite.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
 	shadowSprite.setTextureRect(sf::IntRect(0, 100, 18, 16));
 	gun.gunSpr.setPosition(xPos, yPos);
-	gun.gunSpr.setTexture(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects));
+	gun.gunSpr.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
 }
 
 sf::Vector2f Player::getPosition() {
@@ -637,7 +637,7 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, Effect
 			gun.timeout = 1671000;
 			if (gun.bulletTimer == 0) {
 				sounds.play(ResourceHandler::Sound::gunShot);
-				effects.add<9>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), globalResourceHandler.getTexture(ResourceHandler::Texture::whiteGlow), static_cast<int>(sheetIndex), xPos, yPos);
+				effects.add<9>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::whiteGlow), static_cast<int>(sheetIndex), xPos, yPos);
 				gun.bulletTimer = 440000;
 			}
 		}

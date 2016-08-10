@@ -24,7 +24,6 @@
 
 class SoundController {
 public:
-	explicit SoundController(ResourceHandler * _pRH) : pRH(_pRH) {}
 	// The function that updates the sound controller is called poll and
 	// not update because it does not run in the game's update function
 	// like a lot of the other controller code. Some operating systems
@@ -35,7 +34,6 @@ public:
 	void play(ResourceHandler::Sound);
 
 private:
-	ResourceHandler * pRH;
 	std::vector<sf::Sound> sounds;
 	std::vector<ResourceHandler::Sound> soundIdxQueue;
 };

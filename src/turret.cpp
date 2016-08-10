@@ -110,10 +110,10 @@ void Turret::updateShots(EffectGroup & effects, float playerPosX, float playerPo
 		//And the shot coundown timer has decremented far enough
 		if (--shotCountdown == 0) {
 			//Add a shot flash effect to the effects controller
-			effects.add<0>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos);
+			effects.add<0>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos);
 			//Create a shot object with an angle equal to the angle between the player and the turret
-			effects.add<6>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-						   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
+			effects.add<6>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+						   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
 						   xPos, yPos, angleFunction(playerPosX, playerPosY, xPos + 18, yPos + 6));
 			//Increment the number of shots fired
 			shotsFired++;
@@ -144,16 +144,16 @@ void Turret::updateShots(EffectGroup & effects, float playerPosX, float playerPo
 	if (hp == 0) {
 		killFlag = true;
 		if ((std::abs(static_cast<int>(globalRNG())) % 4) == 0) {
-			effects.add<4>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::redglow),
+			effects.add<4>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
 					   xPos, yPos + 4, Powerup::Type::Heart);
 		} else {
-		    effects.add<5>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandler.getTexture(ResourceHandler::Texture::blueglow),
+		    effects.add<5>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::blueglow),
 					   xPos, yPos + 4, Powerup::Type::Coin);
 		}
-		effects.add<2>(globalResourceHandler.getTexture(ResourceHandler::Texture::gameObjects),
-				   globalResourceHandler.getTexture(ResourceHandler::Texture::fireExplosionGlow),
+		effects.add<2>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::fireExplosionGlow),
 				   xPos, yPos -2);
 	}
 }

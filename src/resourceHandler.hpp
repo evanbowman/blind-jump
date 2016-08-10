@@ -59,9 +59,7 @@ public:
 	enum class Music {
 		// TODO...
 	};
-	
 	int load();
-	
 	const sf::Texture & getTexture(ResourceHandler::Texture) const;
 	const sf::Texture & getTexture(int) const;
 	const sf::Font & getFont(ResourceHandler::Font) const;
@@ -77,7 +75,6 @@ private:
 	std::array<sf::SoundBuffer, 1> sounds;
 };
 
-// Many classes need to access the resource handler, and its accessors return only const references
-extern ResourceHandler globalResourceHandler;
+extern ResourceHandler * globalResourceHandlerPtr;
 
 #endif
