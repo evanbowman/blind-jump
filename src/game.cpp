@@ -108,23 +108,24 @@ Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontControlle
 void Game::draw(sf::RenderWindow & window) {
 	target.clear(sf::Color::Transparent);
 	if (!stashed || preload) {
-		std::unique_lock<std::mutex> overworldLock(globalOverworldMutex);
-		lightingMap.setView(camera.getView());
-		bkg.drawBackground(target, worldView, camera);
-		tiles.draw(target, &glowSprs1, level, worldView, camera.getView());
-		glowSprs2.clear();
-		glowSprs1.clear();
-		gameShadows.clear();
-		gameObjects.clear();
-		target.setView(camera.getView());
-		drawGroup(details, gameObjects, gameShadows, glowSprs1, glowSprs2, target);
-		if (player.visible) {
-			player.draw(gameObjects, gameShadows);
+		{
+			std::lock_guard<std::mutex> overworldLock(globalOverworldMutex);
+			lightingMap.setView(camera.getView());
+			bkg.drawBackground(target, worldView, camera);
+			tiles.draw(target, &glowSprs1, level, worldView, camera.getView());
+			glowSprs2.clear();
+			glowSprs1.clear();
+			gameShadows.clear();
+			gameObjects.clear();
+			target.setView(camera.getView());
+			drawGroup(details, gameObjects, gameShadows, glowSprs1, glowSprs2, target);
+			if (player.visible) {
+				player.draw(gameObjects, gameShadows);
+			}
+			drawGroup(effectGroup, gameObjects, glowSprs1);
+			en.draw(gameObjects, gameShadows, camera);
+			sounds.poll();
 		}
-		drawGroup(effectGroup, gameObjects, glowSprs1);
-		en.draw(gameObjects, gameShadows, camera);
-		sounds.poll();
-		overworldLock.unlock();
 		if (!gameShadows.empty()) {
 			for (auto & element : gameShadows) {
 				target.draw(std::get<0>(element));
@@ -254,18 +255,18 @@ void Game::draw(sf::RenderWindow & window) {
 	} else {
 		window.draw(sf::Sprite(target.getTexture()));
 	}
-	std::unique_lock<std::mutex> UILock(globalUIMutex);
-	if (player.getState() == Player::State::dead) {
-		UI.draw(window, *pFonts);
-	} else {
-		if (transitionState == TransitionState::None) {
+	{
+		std::lock_guard<std::mutex> UILock(globalUIMutex);
+		if (player.getState() == Player::State::dead) {
 			UI.draw(window, *pFonts);
+		} else {
+			if (transitionState == TransitionState::None) {
+				UI.draw(window, *pFonts);
+			}
+			pFonts->print(window);
 		}
-		pFonts->print(window);
 	}
-	UILock.unlock();
 	window.setView(worldView);
-	globalUIMutex.unlock();
 	drawTransitions(window);
 }
 
@@ -314,30 +315,31 @@ void Game::update(sf::Time & elapsedTime) {
 			});
 		}
 	}
-	std::unique_lock<std::mutex> UILock(globalUIMutex);
-    if (player.getState() == Player::State::dead) {
-		UI.dispDeathSeq();
-		// If the death sequence is complete and the UI controller is finished playing its animation
-		if (UI.isComplete()) {
-			// Reset the UI controller
-			UI.reset();
-			// Reset the player
-			player.reset();
-			// Reset the map. Reset() increments level, set to -1 so that it will be zero
-			level = -1;
-			Reset();
-			pFonts->reset();
-			pFonts->updateMaxHealth(4, 4);
-			pFonts->setWaypointText(level);
-		}
-		UI.update(player, *pFonts, pInput, elapsedTime);
-	} else {
-		if (transitionState == TransitionState::None) {
+	{
+		std::lock_guard<std::mutex> UILock(globalUIMutex);
+		if (player.getState() == Player::State::dead) {
+			UI.dispDeathSeq();
+			// If the death sequence is complete and the UI controller is finished playing its animation
+			if (UI.isComplete()) {
+				// Reset the UI controller
+				UI.reset();
+				// Reset the player
+				player.reset();
+				// Reset the map. Reset() increments level, set to -1 so that it will be zero
+				level = -1;
+				Reset();
+				pFonts->reset();
+				pFonts->updateMaxHealth(4, 4);
+				pFonts->setWaypointText(level);
+			}
 			UI.update(player, *pFonts, pInput, elapsedTime);
+		} else {
+			if (transitionState == TransitionState::None) {
+				UI.update(player, *pFonts, pInput, elapsedTime);
+			}
+			pFonts->updateHealth(player.getHealth());
 		}
-		pFonts->updateHealth(player.getHealth());
 	}
-	UILock.unlock();
 	updateTransitions(elapsedTime);
 }
 

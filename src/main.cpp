@@ -50,7 +50,7 @@ static std::exception_ptr pWorkerException;
 int main() {
 	if (globalResourceHandler.load()) return EXIT_FAILURE;
 	seedRNG();
-	// Since the graphics are pixel art it's okay to use upsampled textures for everything except font rendering
+	// Graphics are pixel art so it's okay to use upsampled textures for everything except font rendering
 	sf::Vector2f drawableRegionSize = getDrawableRegionSize();
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 6;
