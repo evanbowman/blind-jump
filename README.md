@@ -2,6 +2,8 @@
 
 Blind Jump is a procedurally generated space adventure game that I've been working on off and on in my free time. The object of the game is to get to the teleporter at the end of each level, while battling monsters and evil robots.
 
+![Alt text](/screenshot.png?raw=true)
+
 ## Contributing
 
 One thing that I can't easily do myself is add support for every type of gamepad out there, because it would be expensive for me to buy them all. In time I'll add a UI menu for customizing controls, but either way it's always good to provide reasonable defaults, the more things that I can get working out of the box the better! If you can add your controller information to the function InputController::mapJsByid() and get it working, I'll happily merge your changes! Also, I have no idea how compiling on windows works, so if anyone can add a working make target for that I'd really appreciate it! 
