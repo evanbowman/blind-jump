@@ -24,7 +24,7 @@ public:
 	template<typename Function, typename ...Args>
 	explicit SmartThread(Function && f, Args && ...args) :
 		thread(std::forward<Function>(f), std::forward<Args>(args)...) {}
-	SmartThread(std::thread && other) : thread(other) {}
+	SmartThread(std::thread && other) : thread(std::move(other)) {}
 	SmartThread(const SmartThread &) = delete;
 	SmartThread & operator=(SmartThread &) = delete;
 	~SmartThread() {

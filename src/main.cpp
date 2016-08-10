@@ -69,7 +69,7 @@ int main() {
 			return EXIT_FAILURE;
 		}
 		#endif
-		ThreadGuard logicThread([](Game * pGame, sf::RenderWindow * pWindow) {
+		SmartThread logicThread([](Game * pGame, sf::RenderWindow * pWindow) {
 			duration logicUpdateDelta;
 			sf::Clock gameClock;
 			try {
