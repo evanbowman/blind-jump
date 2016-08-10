@@ -40,7 +40,6 @@ Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontControlle
 	  level(0),
 	  stashed(false),
 	  preload(false),
-	  teleporterCond(false),
 	  worldView(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
 	  timer(0)
 {
@@ -134,7 +133,7 @@ void Game::draw(sf::RenderWindow & window) {
 		target.setView(worldView);
 		lightingMap.clear(sf::Color::Transparent);
 		// Sort the game objects based on y-position for z-ordering
-		std::sort(gameObjects.begin(), gameObjects.end(), [](const std::tuple<sf::Sprite, float, Rendertype, float> & arg1, const std::tuple<sf::Sprite, float, Rendertype, float> & arg2) {
+		std::sort(gameObjects.begin(), gameObjects.end(), [](const drawableMetadata & arg1, const drawableMetadata & arg2) {
 				return (std::get<1>(arg1) < std::get<1>(arg2));
 			});
 		window.setView(worldView);
@@ -319,11 +318,8 @@ void Game::update(sf::Time & elapsedTime) {
 		std::lock_guard<std::mutex> UILock(globalUIMutex);
 		if (player.getState() == Player::State::dead) {
 			UI.dispDeathSeq();
-			// If the death sequence is complete and the UI controller is finished playing its animation
 			if (UI.isComplete()) {
-				// Reset the UI controller
 				UI.reset();
-				// Reset the player
 				player.reset();
 				// Reset the map. Reset() increments level, set to -1 so that it will be zero
 				level = -1;
@@ -543,7 +539,6 @@ void Game::Reset() {
 	player.setPosition(windowW / 2 - 17, windowH / 2);
 	camera.reset();
 	en.clear();
-	teleporterCond = 0;
 	set = tileController::Tileset::intro;
 	if (level == 0) {
 		set = tileController::Tileset::intro;
@@ -667,10 +662,6 @@ UserInterface & Game::getUI() {
 
 FontController * Game::getPFonts() {
 	return pFonts;
-}
-
-bool Game::getTeleporterCond() {
-	return teleporterCond;
 }
 
 int Game::getLevel() {
