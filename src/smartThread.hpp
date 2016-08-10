@@ -24,10 +24,11 @@ public:
 	template<typename Function, typename ...Args>
 	explicit SmartThread(Function && f, Args && ...args) :
 		thread(std::forward<Function>(f), std::forward<Args>(args)...) {}
-	SmartThread(std::thread && other) : thread(std::move(other)) {}
+	SmartThread(std::thread && _thread) : thread(std::move(_thread)) {}
 	SmartThread(const SmartThread &) = delete;
 	SmartThread & operator=(SmartThread &) = delete;
+	const std::thread & get() const { return thread; }
 	~SmartThread() {
-		thread.join();
+		if (thread.joinable()) thread.join();
 	}
 };

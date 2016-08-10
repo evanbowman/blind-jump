@@ -542,8 +542,8 @@ void Game::Reset() {
 	if (level != 0) {
 		Coordinate c = tiles.getTeleporterLoc();
 		details.add<0>(tiles.posX + c.x * 32 + 2, tiles.posY + c.y * 26 - 4,
-				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::teleporterGlow));
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::teleporterGlow));
 		
 		initEnemies(this);
 		if (std::abs(static_cast<int>(globalRNG())) % 2) {
@@ -571,8 +571,8 @@ void Game::Reset() {
 		size_t len = detailPositions.size();
 		for (size_t i = 0; i < len; i++) {
 			details.add<2>(tiles.posX + 16 + (detailPositions[i].x * 32), tiles.posY - 3 + (detailPositions[i].y * 26),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
+						   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+						   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
 		}
 		detailPositions.clear();
 	} else if (set == tileController::Tileset::intro) {
