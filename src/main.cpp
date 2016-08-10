@@ -20,12 +20,12 @@
 
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
-#include <thread>
 #include <cmath>
 #include <SFML/Window.hpp>
 #include <exception>
 #include <iostream>
 #include <stdexcept>
+#include "smartThread.hpp"
 #include "player.hpp"
 #include "backgroundHandler.hpp"
 #include "game.hpp"
@@ -69,7 +69,7 @@ int main() {
 			return EXIT_FAILURE;
 		}
 		#endif
-		std::thread logicThread([](Game * pGame, sf::RenderWindow * pWindow) {
+		ThreadGuard logicThread([](Game * pGame, sf::RenderWindow * pWindow) {
 			duration logicUpdateDelta;
 			sf::Clock gameClock;
 			try {
@@ -98,11 +98,9 @@ int main() {
 			game.draw(window);
 			window.display();
 			if (pWorkerException) {
-				logicThread.join();
 				std::rethrow_exception(pWorkerException);
 			}
 		}
-	    logicThread.join();
 	} catch (const std::exception & ex) {
 		std::cerr << ex.what() << std::endl;
 	}
