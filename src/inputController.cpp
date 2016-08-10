@@ -110,6 +110,7 @@ void InputController::update(sf::RenderWindow & window) {
 	while (window.pollEvent(event)) {
 		if (event.type == sf::Event::Closed) {
 			window.close();
+			throw ShutdownSignal();
 		} else if (event.type == sf::Event::KeyPressed) {
 			if (event.key.code == keyboardMappings[ButtonPause]) {
 				keyMask |= 0x0100;

@@ -105,6 +105,7 @@ Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontControlle
 }
 
 void Game::draw(sf::RenderWindow & window) {
+	if (!pInput->isFocused()) return;
 	target.clear(sf::Color::Transparent);
 	if (!stashed || preload) {
 		{
@@ -270,6 +271,7 @@ void Game::draw(sf::RenderWindow & window) {
 }
 
 void Game::update(sf::Time & elapsedTime) {
+	if (!pInput->isFocused()) return;
 	float xOffset = 0;
 	float yOffset = 0;
 	// Blurring is graphics intensive, the game caches frames in a RenderTexture when possible

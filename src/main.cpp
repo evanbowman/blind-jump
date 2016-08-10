@@ -76,12 +76,12 @@ int main() {
 				while (pWindow->isOpen()) {
 					time_point start = high_resolution_clock::now();
 					sf::Time elapsedTime = gameClock.restart(); // TODO: use chrono clock instead
-					// TODO: What if the app freezes? Then the elapsed time will be really large!
+					// TODO: What if the app freezes or looses focus? Then the elapsed time will be really large!
 					if (Feedback::isAsleep) {
 						elapsedTime = gameClock.restart();
 						Feedback::isAsleep = false;
 					}
-					pGame->update(elapsedTime);
+				    pGame->update(elapsedTime);
 					time_point stop = high_resolution_clock::now();
 					logicUpdateDelta = std::chrono::duration_cast<nanoseconds>(stop - start);
 					static const microseconds logicUpdateLimit(2000);
@@ -91,13 +91,14 @@ int main() {
 				pWorkerException = std::current_exception();
 				return;
 			}
-		}, &game, &window);
+			}, &game, &window);
 		while (window.isOpen()) {
 			input.update(window);
 			window.clear();
 			game.draw(window);
 			window.display();
 			if (pWorkerException) {
+				window.close();
 				std::rethrow_exception(pWorkerException);
 			}
 		}

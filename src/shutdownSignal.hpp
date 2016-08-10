@@ -32,6 +32,6 @@ class ShutdownSignal : public std::exception {
 	std::string msg;
 public:
 	ShutdownSignal();
-	const char * what() const noexcept;
+	const char * what() const noexcept override;
 	virtual ~ShutdownSignal() {}
 };

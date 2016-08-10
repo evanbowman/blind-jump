@@ -18,6 +18,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "shutdownSignal.hpp"
 #include <array>
 
 class InputController {
