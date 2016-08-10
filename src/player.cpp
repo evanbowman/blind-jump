@@ -657,8 +657,8 @@ void checkEffectCollision(EffectGroup & effects, Player * pPlayer, const F & pol
 void Player::checkEffectCollisions(EffectGroup & effects, FontController * pFonts) {
 	auto hitPolicy = [&]() {
 		if (colorAmount == 0.f) {
-			pFonts->resetHPText();
-			--health;
+			health -= 1;
+			pFonts->updateHealth(health);
 			renderType = Rendertype::shadeRed;
 			colorAmount = 1.f;
 			colorTimer = 0;
@@ -669,17 +669,15 @@ void Player::checkEffectCollisions(EffectGroup & effects, FontController * pFont
 	checkEffectCollision<7>(effects, this, hitPolicy);
 	checkEffectCollision<6>(effects, this, hitPolicy);
 	checkEffectCollision<4>(effects, this, [&]() {
-			pFonts->resetHPText();
 			health = fmin(pFonts->getMaxHealth(), health + 1);
+			pFonts->updateHealth(health);
 			renderType = Rendertype::shadeCrimson;
 			colorAmount = 1.f;
 			colorTimer = 0;
 			Feedback::sleep(milliseconds(20));
 		});
 	checkEffectCollision<5>(effects, this, [&]() {
-			// TODO: Working with fonts is UI code and needs to happen on the main thread
-			// pFonts->updateScore(1);
-			// pFonts->resetSCText();
+			pFonts->updateScore(1);
 			renderType = Rendertype::shadeNeon;
 			colorAmount = 1.f;
 			colorTimer = 0;

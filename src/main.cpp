@@ -62,7 +62,7 @@ int main() {
 	window.setFramerateLimit(120);
 	InputController input;
 	sf::View hudView(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
-	sf::View worldView(sf::Vector2f(drawableRegionSize.x / 2, drawableRegionSize.y / 2), drawableRegionSize);
+	sf::View worldView(drawableRegionSize / 2.f, drawableRegionSize);
 	FontController fonts(hudView, drawableRegionSize.x / 2, drawableRegionSize.y / 2);
 	Game game(drawableRegionSize, &input, &fonts);
 	try {

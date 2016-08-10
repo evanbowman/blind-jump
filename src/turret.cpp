@@ -19,15 +19,16 @@
 #include <cmath>
 #include "angleFunction.hpp"
 
+//
+// TODO: Urgent: refactor
+//
+
 Turret::Turret(const sf::Texture & gameObjects, float _xPos, float _yPos) :
+	state(State::closed),
 	xPos(_xPos),
 	yPos(_yPos),
-	imageIndex(0),
-	animationCount(0),
-	active(0),
-	activateTimer(120),
-	shotCountdown(40),
-	shotsFired(0),
+	frameIndex(0),
+	timer(0),
 	hp(6),
 	killFlag(0),
 	colorTimer(0),
@@ -42,10 +43,10 @@ Turret::Turret(const sf::Texture & gameObjects, float _xPos, float _yPos) :
 }
 
 const sf::Sprite & Turret::getSprite() {
-	return turretSheet[imageIndex];
+	return turretSheet[frameIndex];
 }
 
-void Turret::update(const sf::Time & elapsedTime, float playerPosX, float playerPosY) {
+void Turret::update(const sf::Time & elapsedTime, float playerPosX, float playerPosY, EffectGroup & effects) {
 	if (isColored) {
 		colorTimer += elapsedTime.asMilliseconds();
 		if (colorTimer > 20.f) {
@@ -57,41 +58,98 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 			isColored = false;
 		}
 	}
-	if (active) {
-		if (sqrt(pow((xPos - playerPosX + 8), 2) + pow((yPos - playerPosY + 16), 2)) > 174) {
-			if (imageIndex != 0 && sqrt(pow((xPos - playerPosX + 8), 2) + pow((yPos - playerPosY + 16), 2)) > 228) {	//If the player is far enough away de-activate it
-				if (animationCount == 1) {
-					imageIndex -= 1;
-					animationCount = 0;
+	for (auto & element : effects.get<9>()) {
+		if (hitBox.overlapping(element.getHitBox()) && element.checkCanPoof()) {
+			if (hp == 1) {
+				element.disablePuff();
+				element.setKillFlag();
 				}
-				animationCount += 1;
-				//Lets have the time until the turret shoots after upening be the same every time:
-				shotCountdown = 20;
-				shotsFired = 0;
-			}
-			else {
-				animationCount = 0;
-			}
-		}
-		else {							  //If the player is close activate the turret
-			if (imageIndex != 4) {
-				if (animationCount == 3) {
-					imageIndex += 1;
-					animationCount = 0;
-				}
-				animationCount += 1;
-			
-			}
-			else {
-				animationCount = 0;
-				disableCountdown = 50;
-			}
+			element.poof();
+			hp -= 1;
+			isColored = true;
+			colorAmount = 1.f;
 		}
 	}
-	else {
-		if (--activateTimer == 0) {
-			active = 1;
+	switch (state) {
+	case State::closed:
+		if (std::sqrt(std::pow((xPos - playerPosX + 8), 2) + std::pow((yPos - playerPosY + 16), 2)) < 174) {
+			state = State::opening;
+			timer = 0;
+			frameIndex = 0;
 		}
+		break;
+
+	case State::opening:
+		timer += elapsedTime.asMicroseconds();
+		if (timer > 50000) {
+			timer = 0;
+			frameIndex += 1;
+			if (frameIndex > 4) {
+				frameIndex = 4;
+				state = State::shoot1;
+			}
+		}
+		break;
+
+	case State::shoot1:
+		timer += elapsedTime.asMicroseconds();
+		if (timer > 200000) {
+			effects.add<0>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos);
+			effects.add<6>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+						   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
+						   xPos, yPos, angleFunction(playerPosX, playerPosY, xPos + 18, yPos + 6));
+			timer = 0;
+			state = State::shoot2;
+		}
+		break;
+
+	case State::shoot2:
+		timer += elapsedTime.asMicroseconds();
+		if (timer > 200000) {
+			effects.add<0>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos);
+			effects.add<6>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+						   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
+						   xPos, yPos, angleFunction(playerPosX, playerPosY, xPos + 18, yPos + 6));
+			timer = 0;
+			state = State::shoot3;
+		}
+		break;
+
+	case State::shoot3:
+		timer += elapsedTime.asMicroseconds();
+		if (timer > 200000) {
+			effects.add<0>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos);
+			effects.add<6>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+						   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
+						   xPos, yPos, angleFunction(playerPosX, playerPosY, xPos + 18, yPos + 6));
+			timer = 0;
+			state = State::rest;
+		}
+		break;
+
+	case State::rest:
+		timer += elapsedTime.asMicroseconds();
+		if (timer > 800000) {
+			if (std::sqrt(std::pow((xPos - playerPosX + 8), 2) + std::pow((yPos - playerPosY + 16), 2)) < 174) {
+				state = State::shoot1;
+			} else {
+				state = State::closing;
+			}
+			timer = 0;
+		}
+		break;
+		
+	case State::closing:
+		timer += elapsedTime.asMicroseconds();
+		if (timer > 50000) {
+			timer = 0;
+			frameIndex -= 1;
+			if (frameIndex < 0) {
+				frameIndex = 0;
+				state = State::closed;
+			}
+		}
+		break;
 	}
 }
 
@@ -101,61 +159,7 @@ const Turret::HBox & Turret::getHitBox() const {
 
 //Returns the turret's shadow sprite
 const sf::Sprite & Turret::getShadow() {
-	return shadowSheet[imageIndex];
-}
-
-void Turret::updateShots(EffectGroup & effects, float playerPosX, float playerPosY) {
-	//If the turret is open...
-	if (imageIndex == 4) {
-		//And the shot coundown timer has decremented far enough
-		if (--shotCountdown == 0) {
-			//Add a shot flash effect to the effects controller
-			effects.add<0>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos);
-			//Create a shot object with an angle equal to the angle between the player and the turret
-			effects.add<6>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-						   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
-						   xPos, yPos, angleFunction(playerPosX, playerPosY, xPos + 18, yPos + 6));
-			//Increment the number of shots fired
-			shotsFired++;
-			//Reset the countdown timer
-			if (shotsFired != 3) {
-				shotCountdown = 8;
-			}
-			else {
-				shotCountdown = 60;
-				shotsFired = 0;
-			}
-		}
-
-		for (auto & element : effects.get<9>()) {
-			if (hitBox.overlapping(element.getHitBox()) && element.checkCanPoof()) {
-				if (hp == 1) {
-					element.disablePuff();
-					element.setKillFlag();
-				}
-				element.poof();
-				hp -= 1;
-				isColored = true;
-				colorAmount = 1.f;
-			}
-		}
-	}
-	
-	if (hp == 0) {
-		killFlag = true;
-		if ((std::abs(static_cast<int>(globalRNG())) % 4) == 0) {
-			effects.add<4>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
-					   xPos, yPos + 4, Powerup::Type::Heart);
-		} else {
-		    effects.add<5>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::blueglow),
-					   xPos, yPos + 4, Powerup::Type::Coin);
-		}
-		effects.add<2>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::fireExplosionGlow),
-				   xPos, yPos -2);
-	}
+	return shadowSheet[frameIndex];
 }
 
 bool Turret::getKillFlag() {

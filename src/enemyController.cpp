@@ -99,9 +99,8 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 			if (it->getKillFlag() == 1) {
 				it = turrets.erase(it);
 			} else {
-				it->update(elapsedTime, x, y);
 				if (enabled) {
-					it->updateShots(ef, x, y);
+					it->update(elapsedTime, x, y, ef);
 				}
 				++it;
 			}

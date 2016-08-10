@@ -28,7 +28,8 @@ private:
 	sf::View fontView;
 	sf::Text waypointText, titleText, deathText, scoreText, healthNumText;
 	sf::Text resumeText, settingsText, quitText;
-	char maxHealth;
+	char maxHealth, health;
+	bool healthModified, scoreModified;
 	int score;
 	float windowCenterX, windowCenterY;
 	sf::Clock wpTextDisplayTimer, healthDisplayTimer, scoreDisplayTimer;
@@ -46,7 +47,7 @@ public:
 	void setTextAlpha(uint8_t, Text);
 	void setTextOffset(float, float, Text);
 	void updateHealth(char);
-	void updateMaxHealth(char, char);
+	void updateMaxHealth(char);
 	void drawTitle(unsigned char, sf::RenderWindow&);
 	void drawDeathText(unsigned char, sf::RenderWindow&);
 	char getMaxHealth() const;

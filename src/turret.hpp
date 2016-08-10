@@ -31,20 +31,19 @@
 
 class Turret {
 private:
+	enum class State {
+		closed, opening, shoot1, shoot2, shoot3, rest, closing
+    };
+	State state;	
 	using HBox = Framework::HitBox<16, 32>;
 	HBox hitBox;
 	float xPos;
 	float yPos;
-	uint8_t imageIndex;
-	int16_t disableCountdown;
-	sf::Sprite turretSprites[10];
+	int8_t frameIndex;
 	SpriteSheet<0, 0, 16, 32> turretSheet;
 	SpriteSheet<0, 32, 16, 26> shadowSheet;
-	char animationCount;
 	bool active;
-	int activateTimer;
-	int16_t shotCountdown;
-	int16_t shotsFired;
+	int64_t timer;
 	float hp;
 	bool killFlag;
 	char colorTimer;
@@ -57,8 +56,7 @@ public:
 	void setPosition(float, float);
 	const sf::Sprite & getShadow();
 	const sf::Sprite & getSprite();
-	void update(const sf::Time &, float, float);
-	void updateShots(EffectGroup &, float, float);
+	void update(const sf::Time &, float, float, EffectGroup &);
 	bool getKillFlag();
 	float getXpos();
 	float getYpos();

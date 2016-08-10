@@ -301,7 +301,8 @@ void Game::update(sf::Time & elapsedTime) {
 				level = -1;
 				Reset();
 				pFonts->reset();
-				pFonts->updateMaxHealth(4, 4);
+				pFonts->updateHealth(4);
+				pFonts->updateMaxHealth(4);
 				pFonts->setWaypointText(level);
 			}
 			UI.update(player, *pFonts, pInput, elapsedTime);
@@ -309,7 +310,6 @@ void Game::update(sf::Time & elapsedTime) {
 			if (transitionState == TransitionState::None) {
 				UI.update(player, *pFonts, pInput, elapsedTime);
 			}
-			pFonts->updateHealth(player.getHealth());
 		}
 	}
 	updateTransitions(elapsedTime);

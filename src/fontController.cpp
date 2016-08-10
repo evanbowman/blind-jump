@@ -22,7 +22,7 @@
 #define SCORE_TEXT_FADE_SECONDS 3
 #define WAYPOINT_TEXT_FADE_SECONDS 3
 
-FontController::FontController(sf::View fontView, float x, float y) {
+FontController::FontController(sf::View fontView, float x, float y) : healthModified(false), scoreModified(false) {
 	// Store the view to use when drawing fonts
 	this->fontView = fontView;
 	
@@ -30,6 +30,7 @@ FontController::FontController(sf::View fontView, float x, float y) {
 	windowCenterY = y;
 	
 	maxHealth = 4;
+	health = 4;
 	score = 0;
 
 	float scale;
@@ -201,6 +202,16 @@ int FontController::getScore() {
 void FontController::print(sf::RenderWindow & window) {
 	// Set the correct view, so not to blur the fonts
 	window.setView(fontView);
+	if (healthModified) {
+		healthModified = false;
+		healthNumText.setString(std::to_string(static_cast<int>(health)) + " / " + std::to_string(static_cast<int>(maxHealth)) + " :");
+		healthNumText.setPosition(fontView.getSize().x - healthNumText.getLocalBounds().width - fontView.getSize().x * 0.015 - heart.getLocalBounds().width, healthNumText.getLocalBounds().height);
+	}
+	if (scoreModified) {
+		scoreModified = false;
+		scoreText.setString(std::to_string(score) + " :");
+		scoreText.setPosition(fontView.getSize().x - scoreText.getLocalBounds().width - fontView.getSize().x * 0.015 - heart.getLocalBounds().width, scoreText.getLocalBounds().height * 3);
+	}
 	// Slowly fade out the  waypoint text
 	sf::Color c = waypointText.getColor();
 	if (c.a > 5) {
@@ -264,9 +275,8 @@ void FontController::resetSCText() {
 
 void FontController::updateScore(int offset) {
 	score += offset;
-	scoreText.setString(std::to_string(score) + " :");
-	scoreText.setPosition(fontView.getSize().x - scoreText.getLocalBounds().width - fontView.getSize().x * 0.015 - heart.getLocalBounds().width, scoreText.getLocalBounds().height * 3);
 	resetSCText();
+	scoreModified = true;
 }
 
 void FontController::resetHPText() {
@@ -292,14 +302,17 @@ sf::Text* FontController::getTitle() {
 	return &titleText;
 }
 
-void FontController::updateHealth(char health) {
-	healthNumText.setString(std::to_string(static_cast<int>(health)) + " / " + std::to_string(static_cast<int>(maxHealth)) + " :");
-	healthNumText.setPosition(fontView.getSize().x - healthNumText.getLocalBounds().width - fontView.getSize().x * 0.015 - heart.getLocalBounds().width, healthNumText.getLocalBounds().height);
+void FontController::updateHealth(char _health) {
+	health = _health;
+	// Can't update the actual text from here, since it needs to happen on the main thread.
+	// Instead mark it as modifed and handle it later
+	healthModified = true;
+	resetHPText();
 }
 
-void FontController::updateMaxHealth(char _maxHealth, char health) {
+void FontController::updateMaxHealth(char _maxHealth) {
 	maxHealth = _maxHealth;
-	healthNumText.setString(std::to_string(static_cast<int>(health)) + " / " + std::to_string(static_cast<int>(maxHealth)) + " :");
+	healthModified = true;
 	resetHPText();
 }
 
