@@ -18,17 +18,24 @@
 #pragma once
 
 #include <SFML/Audio.hpp>
-#include <array>
+#include <vector>
+#include <deque>
 #include "resourceHandler.hpp"
 
 class SoundController {
 public:
 	explicit SoundController(ResourceHandler * _pRH) : pRH(_pRH) {}
-	void update();
+	// The function that updates the sound controller is called poll and
+	// not update because it does not run in the game's update function
+	// like a lot of the other controller code. Some operating systems
+	// require graphics and sound related stuff to happen on the main
+	// thread, it may not be necessary, but just to be safe...
+	void poll();
 	void play(ResourceHandler::Music);
 	void play(ResourceHandler::Sound);
 
 private:
 	ResourceHandler * pRH;
 	std::vector<sf::Sound> sounds;
+	std::vector<ResourceHandler::Sound> soundIdxQueue;
 };

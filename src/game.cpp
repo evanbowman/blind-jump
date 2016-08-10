@@ -134,6 +134,7 @@ void Game::draw(sf::RenderWindow & window) {
 		}
 		drawGroup(effectGroup, gameObjects, glowSprs1);
 		en.draw(gameObjects, gameShadows, camera);
+		sounds.poll();
 		globalObjectMutex.unlock();
 		if (!gameShadows.empty()) {
 			for (auto & element : gameShadows) {

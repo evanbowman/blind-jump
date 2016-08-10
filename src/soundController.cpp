@@ -17,7 +17,14 @@
 
 #include "soundController.hpp"
 
-void SoundController::update() {
+void SoundController::poll() {
+	if (!soundIdxQueue.empty()) {
+		for (auto & element : soundIdxQueue) {
+			sounds.emplace_back(pRH->getSound(element));
+			sounds.back().play();
+		}
+		soundIdxQueue.clear();
+	}
 	for (auto it = sounds.begin(); it != sounds.end();) {
 		if (it->getStatus() == sf::Sound::Status::Stopped) {
 			it = sounds.erase(it);
@@ -28,6 +35,5 @@ void SoundController::update() {
 }
 
 void SoundController::play(ResourceHandler::Sound indx) {
-	sounds.emplace_back(pRH->getSound(indx));
-	sounds.back().play();
+	soundIdxQueue.push_back(indx);
 }

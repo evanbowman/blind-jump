@@ -5,8 +5,8 @@
 
 CC = g++
 override CPPFLAGS += -O2 -flto -std=c++14 -Wall -Wextra -Wunreachable-code -pedantic -Werror
-LDFLAGS_MAC = -framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio -Xlinker -rpath -Xlinker @loader_path/../Frameworks -fobjc-link-runtime -lfl
-LDFLAGS_LINUX = -lsfml-graphics -lsfml-audio -lsfml-system -lsfml-window -lpthread -lX11 -lfl
+LDFLAGS_MAC = -framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio -Xlinker -rpath -Xlinker @loader_path/../Frameworks -fobjc-link-runtime -flto
+LDFLAGS_LINUX = -lsfml-graphics -lsfml-audio -lsfml-system -lsfml-window -lpthread -lX11 -flto
 LDFLAGS_WINDOWS = 
 EXECUTABLE = BlindJump
 SOURCES = $(shell find . -name "*.cpp" | awk '{print length, $$0;}' | sort -nr | cut -d ' ' -f 2-) # Hey it looks nice though
@@ -119,112 +119,6 @@ depend:
 ./playerCollisionFunctions.o: /usr/include/SFML/Graphics/Text.hpp
 ./playerCollisionFunctions.o: Framework/framework.hpp Framework/utilities.hpp
 ./playerCollisionFunctions.o: inputController.hpp spriteSheet.hpp rng.hpp
-./screenShakeController.o: screenShakeController.hpp player.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics.hpp
-./screenShakeController.o: /usr/include/SFML/Window.hpp
-./screenShakeController.o: /usr/include/SFML/System.hpp
-./screenShakeController.o: /usr/include/SFML/Config.hpp
-./screenShakeController.o: /usr/include/SFML/System/Clock.hpp
-./screenShakeController.o: /usr/include/SFML/System/Export.hpp
-./screenShakeController.o: /usr/include/SFML/System/Time.hpp
-./screenShakeController.o: /usr/include/SFML/System/Err.hpp
-./screenShakeController.o: /usr/include/SFML/System/FileInputStream.hpp
-./screenShakeController.o: /usr/include/SFML/System/InputStream.hpp
-./screenShakeController.o: /usr/include/SFML/System/NonCopyable.hpp
-./screenShakeController.o: /usr/include/SFML/System/Lock.hpp
-./screenShakeController.o: /usr/include/SFML/System/MemoryInputStream.hpp
-./screenShakeController.o: /usr/include/SFML/System/Mutex.hpp
-./screenShakeController.o: /usr/include/SFML/System/Sleep.hpp
-./screenShakeController.o: /usr/include/SFML/System/String.hpp
-./screenShakeController.o: /usr/include/SFML/System/Utf.hpp
-./screenShakeController.o: /usr/include/SFML/System/Utf.inl
-./screenShakeController.o: /usr/include/SFML/System/String.inl
-./screenShakeController.o: /usr/include/SFML/System/Thread.hpp
-./screenShakeController.o: /usr/include/SFML/System/Thread.inl
-./screenShakeController.o: /usr/include/SFML/System/ThreadLocal.hpp
-./screenShakeController.o: /usr/include/SFML/System/ThreadLocalPtr.hpp
-./screenShakeController.o: /usr/include/SFML/System/ThreadLocalPtr.inl
-./screenShakeController.o: /usr/include/SFML/System/Vector2.hpp
-./screenShakeController.o: /usr/include/SFML/System/Vector2.inl
-./screenShakeController.o: /usr/include/SFML/System/Vector3.hpp
-./screenShakeController.o: /usr/include/SFML/System/Vector3.inl
-./screenShakeController.o: /usr/include/SFML/Window/Context.hpp
-./screenShakeController.o: /usr/include/SFML/Window/Export.hpp
-./screenShakeController.o: /usr/include/SFML/Window/GlResource.hpp
-./screenShakeController.o: /usr/include/SFML/Window/ContextSettings.hpp
-./screenShakeController.o: /usr/include/SFML/Window/Event.hpp
-./screenShakeController.o: /usr/include/SFML/Window/Joystick.hpp
-./screenShakeController.o: /usr/include/SFML/Window/Keyboard.hpp
-./screenShakeController.o: /usr/include/SFML/Window/Mouse.hpp
-./screenShakeController.o: /usr/include/SFML/Window/Sensor.hpp
-./screenShakeController.o: /usr/include/SFML/Window/Touch.hpp
-./screenShakeController.o: /usr/include/SFML/Window/VideoMode.hpp
-./screenShakeController.o: /usr/include/SFML/Window/Window.hpp
-./screenShakeController.o: /usr/include/SFML/Window/WindowHandle.hpp
-./screenShakeController.o: /usr/include/SFML/Window/WindowStyle.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/BlendMode.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/Export.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/CircleShape.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/Shape.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/Drawable.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/RenderStates.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/Transform.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/Rect.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/Rect.inl
-./screenShakeController.o: /usr/include/SFML/Graphics/Transformable.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/VertexArray.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/Vertex.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/Color.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/PrimitiveType.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/ConvexShape.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/Font.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/Glyph.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/Texture.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/Image.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/RectangleShape.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/RenderTarget.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/View.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/RenderTexture.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/RenderWindow.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/Shader.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/Sprite.hpp
-./screenShakeController.o: /usr/include/SFML/Graphics/Text.hpp
-./screenShakeController.o: tileController.hpp wall.hpp /usr/include/stdint.h
-./screenShakeController.o: /usr/include/features.h /usr/include/stdc-predef.h
-./screenShakeController.o: enemyController.hpp resourceHandler.hpp
-./screenShakeController.o: /usr/include/SFML/Audio.hpp
-./screenShakeController.o: /usr/include/SFML/Audio/InputSoundFile.hpp
-./screenShakeController.o: /usr/include/SFML/Audio/Export.hpp
-./screenShakeController.o: /usr/include/SFML/Audio/Listener.hpp
-./screenShakeController.o: /usr/include/SFML/Audio/Music.hpp
-./screenShakeController.o: /usr/include/SFML/Audio/SoundStream.hpp
-./screenShakeController.o: /usr/include/SFML/Audio/SoundSource.hpp
-./screenShakeController.o: /usr/include/SFML/Audio/AlResource.hpp
-./screenShakeController.o: /usr/include/SFML/Audio/OutputSoundFile.hpp
-./screenShakeController.o: /usr/include/SFML/Audio/Sound.hpp
-./screenShakeController.o: /usr/include/SFML/Audio/SoundBuffer.hpp
-./screenShakeController.o: /usr/include/SFML/Audio/SoundBufferRecorder.hpp
-./screenShakeController.o: /usr/include/SFML/Audio/SoundRecorder.hpp
-./screenShakeController.o: /usr/include/SFML/Audio/SoundFileFactory.hpp
-./screenShakeController.o: /usr/include/SFML/Audio/SoundFileFactory.inl
-./screenShakeController.o: /usr/include/SFML/Audio/SoundFileReader.hpp
-./screenShakeController.o: /usr/include/SFML/Audio/SoundFileWriter.hpp
-./screenShakeController.o: ResourcePath.hpp turret.hpp /usr/include/stdio.h
-./screenShakeController.o: /usr/include/libio.h /usr/include/_G_config.h
-./screenShakeController.o: /usr/include/wchar.h fontController.hpp
-./screenShakeController.o: effectsController.hpp turretFlashEffect.hpp
-./screenShakeController.o: spriteSheet.hpp Effect.hpp Framework/framework.hpp
-./screenShakeController.o: Framework/utilities.hpp rng.hpp bulletType1.hpp
-./screenShakeController.o: shotPuff.hpp FireExplosion.hpp easingTemplates.hpp
-./screenShakeController.o: smallExplosion.hpp Powerup.hpp RenderType.hpp
-./screenShakeController.o: enemyShot.hpp dasherShot.hpp turretShot.hpp
-./screenShakeController.o: scoot.hpp enemy.hpp dasher.hpp critter.hpp
-./screenShakeController.o: aStar.hpp feedback.hpp alias.hpp coordinate.hpp
-./screenShakeController.o: camera.hpp detailController.hpp Teleporter.hpp
-./screenShakeController.o: detailParent.hpp treasureChest.hpp
-./screenShakeController.o: inputController.hpp generalDetail.hpp
-./screenShakeController.o: lampLight.hpp userInterface.hpp damagedRobot.hpp
-./screenShakeController.o: rock.hpp IntroDoor.hpp soundController.hpp
 ./turretFlashEffect.o: turretFlashEffect.hpp /usr/include/SFML/Graphics.hpp
 ./turretFlashEffect.o: /usr/include/SFML/Window.hpp
 ./turretFlashEffect.o: /usr/include/SFML/System.hpp
@@ -387,20 +281,19 @@ depend:
 ./backgroundHandler.o: /usr/include/SFML/Audio/SoundFileWriter.hpp
 ./backgroundHandler.o: ResourcePath.hpp turret.hpp /usr/include/stdio.h
 ./backgroundHandler.o: /usr/include/libio.h /usr/include/_G_config.h
-./backgroundHandler.o: /usr/include/wchar.h fontController.hpp
-./backgroundHandler.o: effectsController.hpp turretFlashEffect.hpp
-./backgroundHandler.o: spriteSheet.hpp Effect.hpp Framework/framework.hpp
-./backgroundHandler.o: Framework/utilities.hpp rng.hpp bulletType1.hpp
-./backgroundHandler.o: shotPuff.hpp FireExplosion.hpp easingTemplates.hpp
-./backgroundHandler.o: smallExplosion.hpp Powerup.hpp RenderType.hpp
-./backgroundHandler.o: enemyShot.hpp dasherShot.hpp turretShot.hpp scoot.hpp
-./backgroundHandler.o: enemy.hpp dasher.hpp critter.hpp aStar.hpp
-./backgroundHandler.o: feedback.hpp alias.hpp coordinate.hpp
-./backgroundHandler.o: detailController.hpp Teleporter.hpp detailParent.hpp
-./backgroundHandler.o: treasureChest.hpp inputController.hpp
+./backgroundHandler.o: /usr/include/wchar.h effectsController.hpp
+./backgroundHandler.o: turretFlashEffect.hpp spriteSheet.hpp Effect.hpp
+./backgroundHandler.o: Framework/framework.hpp Framework/utilities.hpp
+./backgroundHandler.o: rng.hpp bulletType1.hpp shotPuff.hpp FireExplosion.hpp
+./backgroundHandler.o: easingTemplates.hpp smallExplosion.hpp Powerup.hpp
+./backgroundHandler.o: RenderType.hpp enemyShot.hpp dasherShot.hpp
+./backgroundHandler.o: turretShot.hpp scoot.hpp enemy.hpp dasher.hpp
+./backgroundHandler.o: critter.hpp aStar.hpp feedback.hpp alias.hpp
+./backgroundHandler.o: coordinate.hpp detailController.hpp Teleporter.hpp
+./backgroundHandler.o: detailParent.hpp treasureChest.hpp inputController.hpp
 ./backgroundHandler.o: generalDetail.hpp lampLight.hpp userInterface.hpp
-./backgroundHandler.o: damagedRobot.hpp rock.hpp IntroDoor.hpp
-./backgroundHandler.o: soundController.hpp
+./backgroundHandler.o: fontController.hpp damagedRobot.hpp rock.hpp
+./backgroundHandler.o: IntroDoor.hpp soundController.hpp
 ./mappingFunctions.o: tileController.hpp /usr/include/SFML/Graphics.hpp
 ./mappingFunctions.o: /usr/include/SFML/Window.hpp
 ./mappingFunctions.o: /usr/include/SFML/System.hpp
@@ -491,20 +384,20 @@ depend:
 ./mappingFunctions.o: /usr/include/SFML/Audio/SoundFileWriter.hpp
 ./mappingFunctions.o: ResourcePath.hpp turret.hpp /usr/include/stdio.h
 ./mappingFunctions.o: /usr/include/libio.h /usr/include/_G_config.h
-./mappingFunctions.o: /usr/include/wchar.h fontController.hpp
-./mappingFunctions.o: effectsController.hpp turretFlashEffect.hpp
-./mappingFunctions.o: spriteSheet.hpp Effect.hpp Framework/framework.hpp
-./mappingFunctions.o: Framework/utilities.hpp rng.hpp bulletType1.hpp
-./mappingFunctions.o: shotPuff.hpp FireExplosion.hpp easingTemplates.hpp
-./mappingFunctions.o: smallExplosion.hpp Powerup.hpp RenderType.hpp
-./mappingFunctions.o: enemyShot.hpp dasherShot.hpp turretShot.hpp scoot.hpp
-./mappingFunctions.o: enemy.hpp dasher.hpp critter.hpp aStar.hpp feedback.hpp
-./mappingFunctions.o: alias.hpp coordinate.hpp camera.hpp player.hpp
+./mappingFunctions.o: /usr/include/wchar.h effectsController.hpp
+./mappingFunctions.o: turretFlashEffect.hpp spriteSheet.hpp Effect.hpp
+./mappingFunctions.o: Framework/framework.hpp Framework/utilities.hpp rng.hpp
+./mappingFunctions.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp
+./mappingFunctions.o: easingTemplates.hpp smallExplosion.hpp Powerup.hpp
+./mappingFunctions.o: RenderType.hpp enemyShot.hpp dasherShot.hpp
+./mappingFunctions.o: turretShot.hpp scoot.hpp enemy.hpp dasher.hpp
+./mappingFunctions.o: critter.hpp aStar.hpp feedback.hpp alias.hpp
+./mappingFunctions.o: coordinate.hpp camera.hpp player.hpp
 ./mappingFunctions.o: detailController.hpp Teleporter.hpp detailParent.hpp
 ./mappingFunctions.o: treasureChest.hpp inputController.hpp generalDetail.hpp
-./mappingFunctions.o: lampLight.hpp userInterface.hpp damagedRobot.hpp
-./mappingFunctions.o: rock.hpp IntroDoor.hpp soundController.hpp
-./mappingFunctions.o: mappingFunctions.hpp
+./mappingFunctions.o: lampLight.hpp userInterface.hpp fontController.hpp
+./mappingFunctions.o: damagedRobot.hpp rock.hpp IntroDoor.hpp
+./mappingFunctions.o: soundController.hpp mappingFunctions.hpp
 ./enemyPlacementFn.o: /usr/include/stdio.h /usr/include/features.h
 ./enemyPlacementFn.o: /usr/include/stdc-predef.h /usr/include/libio.h
 ./enemyPlacementFn.o: /usr/include/_G_config.h /usr/include/wchar.h
@@ -597,20 +490,20 @@ depend:
 ./enemyPlacementFn.o: /usr/include/SFML/Audio/SoundFileFactory.inl
 ./enemyPlacementFn.o: /usr/include/SFML/Audio/SoundFileReader.hpp
 ./enemyPlacementFn.o: /usr/include/SFML/Audio/SoundFileWriter.hpp
-./enemyPlacementFn.o: ResourcePath.hpp turret.hpp fontController.hpp
-./enemyPlacementFn.o: effectsController.hpp turretFlashEffect.hpp
-./enemyPlacementFn.o: spriteSheet.hpp Effect.hpp Framework/framework.hpp
-./enemyPlacementFn.o: Framework/utilities.hpp rng.hpp bulletType1.hpp
-./enemyPlacementFn.o: shotPuff.hpp FireExplosion.hpp easingTemplates.hpp
-./enemyPlacementFn.o: smallExplosion.hpp Powerup.hpp RenderType.hpp
-./enemyPlacementFn.o: enemyShot.hpp dasherShot.hpp turretShot.hpp scoot.hpp
-./enemyPlacementFn.o: enemy.hpp dasher.hpp critter.hpp aStar.hpp feedback.hpp
-./enemyPlacementFn.o: alias.hpp coordinate.hpp camera.hpp
-./enemyPlacementFn.o: detailController.hpp Teleporter.hpp detailParent.hpp
-./enemyPlacementFn.o: treasureChest.hpp inputController.hpp generalDetail.hpp
-./enemyPlacementFn.o: lampLight.hpp userInterface.hpp damagedRobot.hpp
+./enemyPlacementFn.o: ResourcePath.hpp turret.hpp effectsController.hpp
+./enemyPlacementFn.o: turretFlashEffect.hpp spriteSheet.hpp Effect.hpp
+./enemyPlacementFn.o: Framework/framework.hpp Framework/utilities.hpp rng.hpp
+./enemyPlacementFn.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp
+./enemyPlacementFn.o: easingTemplates.hpp smallExplosion.hpp Powerup.hpp
+./enemyPlacementFn.o: RenderType.hpp enemyShot.hpp dasherShot.hpp
+./enemyPlacementFn.o: turretShot.hpp scoot.hpp enemy.hpp dasher.hpp
+./enemyPlacementFn.o: critter.hpp aStar.hpp feedback.hpp alias.hpp
+./enemyPlacementFn.o: coordinate.hpp camera.hpp detailController.hpp
+./enemyPlacementFn.o: Teleporter.hpp detailParent.hpp treasureChest.hpp
+./enemyPlacementFn.o: inputController.hpp generalDetail.hpp lampLight.hpp
+./enemyPlacementFn.o: userInterface.hpp fontController.hpp damagedRobot.hpp
 ./enemyPlacementFn.o: rock.hpp IntroDoor.hpp soundController.hpp
-./enemyPlacementFn.o: backgroundHandler.hpp screenShakeController.hpp
+./enemyPlacementFn.o: backgroundHandler.hpp
 ./soundController.o: soundController.hpp /usr/include/SFML/Audio.hpp
 ./soundController.o: /usr/include/SFML/System.hpp
 ./soundController.o: /usr/include/SFML/Config.hpp
@@ -942,20 +835,20 @@ depend:
 ./enemyController.o: ResourcePath.hpp turret.hpp /usr/include/stdio.h
 ./enemyController.o: /usr/include/features.h /usr/include/stdc-predef.h
 ./enemyController.o: /usr/include/libio.h /usr/include/_G_config.h
-./enemyController.o: /usr/include/wchar.h fontController.hpp
-./enemyController.o: effectsController.hpp turretFlashEffect.hpp
-./enemyController.o: spriteSheet.hpp Effect.hpp Framework/framework.hpp
-./enemyController.o: Framework/utilities.hpp rng.hpp bulletType1.hpp
-./enemyController.o: shotPuff.hpp FireExplosion.hpp easingTemplates.hpp
-./enemyController.o: smallExplosion.hpp Powerup.hpp RenderType.hpp
-./enemyController.o: enemyShot.hpp dasherShot.hpp turretShot.hpp scoot.hpp
-./enemyController.o: wall.hpp /usr/include/stdint.h enemy.hpp dasher.hpp
-./enemyController.o: critter.hpp aStar.hpp feedback.hpp alias.hpp
-./enemyController.o: tileController.hpp coordinate.hpp camera.hpp player.hpp
-./enemyController.o: detailController.hpp Teleporter.hpp detailParent.hpp
-./enemyController.o: treasureChest.hpp inputController.hpp generalDetail.hpp
-./enemyController.o: lampLight.hpp userInterface.hpp damagedRobot.hpp
-./enemyController.o: rock.hpp IntroDoor.hpp soundController.hpp
+./enemyController.o: /usr/include/wchar.h effectsController.hpp
+./enemyController.o: turretFlashEffect.hpp spriteSheet.hpp Effect.hpp
+./enemyController.o: Framework/framework.hpp Framework/utilities.hpp rng.hpp
+./enemyController.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp
+./enemyController.o: easingTemplates.hpp smallExplosion.hpp Powerup.hpp
+./enemyController.o: RenderType.hpp enemyShot.hpp dasherShot.hpp
+./enemyController.o: turretShot.hpp scoot.hpp wall.hpp /usr/include/stdint.h
+./enemyController.o: enemy.hpp dasher.hpp critter.hpp aStar.hpp feedback.hpp
+./enemyController.o: alias.hpp tileController.hpp coordinate.hpp camera.hpp
+./enemyController.o: player.hpp detailController.hpp Teleporter.hpp
+./enemyController.o: detailParent.hpp treasureChest.hpp inputController.hpp
+./enemyController.o: generalDetail.hpp lampLight.hpp userInterface.hpp
+./enemyController.o: fontController.hpp damagedRobot.hpp rock.hpp
+./enemyController.o: IntroDoor.hpp soundController.hpp
 ./enemyController.o: screenShakeController.hpp
 ./tileController.o: tileController.hpp /usr/include/SFML/Graphics.hpp
 ./tileController.o: /usr/include/SFML/Window.hpp /usr/include/SFML/System.hpp
@@ -1046,18 +939,18 @@ depend:
 ./tileController.o: /usr/include/SFML/Audio/SoundFileWriter.hpp
 ./tileController.o: ResourcePath.hpp turret.hpp /usr/include/stdio.h
 ./tileController.o: /usr/include/libio.h /usr/include/_G_config.h
-./tileController.o: /usr/include/wchar.h fontController.hpp
-./tileController.o: effectsController.hpp turretFlashEffect.hpp
-./tileController.o: spriteSheet.hpp Effect.hpp Framework/framework.hpp
-./tileController.o: Framework/utilities.hpp rng.hpp bulletType1.hpp
-./tileController.o: shotPuff.hpp FireExplosion.hpp easingTemplates.hpp
-./tileController.o: smallExplosion.hpp Powerup.hpp RenderType.hpp
-./tileController.o: enemyShot.hpp dasherShot.hpp turretShot.hpp scoot.hpp
-./tileController.o: enemy.hpp dasher.hpp critter.hpp aStar.hpp feedback.hpp
-./tileController.o: alias.hpp coordinate.hpp camera.hpp player.hpp
-./tileController.o: detailController.hpp Teleporter.hpp detailParent.hpp
-./tileController.o: treasureChest.hpp inputController.hpp generalDetail.hpp
-./tileController.o: lampLight.hpp userInterface.hpp damagedRobot.hpp rock.hpp
+./tileController.o: /usr/include/wchar.h effectsController.hpp
+./tileController.o: turretFlashEffect.hpp spriteSheet.hpp Effect.hpp
+./tileController.o: Framework/framework.hpp Framework/utilities.hpp rng.hpp
+./tileController.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp
+./tileController.o: easingTemplates.hpp smallExplosion.hpp Powerup.hpp
+./tileController.o: RenderType.hpp enemyShot.hpp dasherShot.hpp
+./tileController.o: turretShot.hpp scoot.hpp enemy.hpp dasher.hpp critter.hpp
+./tileController.o: aStar.hpp feedback.hpp alias.hpp coordinate.hpp
+./tileController.o: camera.hpp player.hpp detailController.hpp Teleporter.hpp
+./tileController.o: detailParent.hpp treasureChest.hpp inputController.hpp
+./tileController.o: generalDetail.hpp lampLight.hpp userInterface.hpp
+./tileController.o: fontController.hpp damagedRobot.hpp rock.hpp
 ./tileController.o: IntroDoor.hpp soundController.hpp mappingFunctions.hpp
 ./tileController.o: initMapVectors.hpp drawPixels.hpp
 ./smallExplosion.o: smallExplosion.hpp /usr/include/SFML/Graphics.hpp
@@ -1220,18 +1113,18 @@ depend:
 ./initMapVectors.o: /usr/include/SFML/Audio/SoundFileWriter.hpp
 ./initMapVectors.o: ResourcePath.hpp turret.hpp /usr/include/stdio.h
 ./initMapVectors.o: /usr/include/libio.h /usr/include/_G_config.h
-./initMapVectors.o: /usr/include/wchar.h fontController.hpp
-./initMapVectors.o: effectsController.hpp turretFlashEffect.hpp
-./initMapVectors.o: spriteSheet.hpp Effect.hpp Framework/framework.hpp
-./initMapVectors.o: Framework/utilities.hpp rng.hpp bulletType1.hpp
-./initMapVectors.o: shotPuff.hpp FireExplosion.hpp easingTemplates.hpp
-./initMapVectors.o: smallExplosion.hpp Powerup.hpp RenderType.hpp
-./initMapVectors.o: enemyShot.hpp dasherShot.hpp turretShot.hpp scoot.hpp
-./initMapVectors.o: enemy.hpp dasher.hpp critter.hpp aStar.hpp feedback.hpp
-./initMapVectors.o: alias.hpp camera.hpp player.hpp detailController.hpp
-./initMapVectors.o: Teleporter.hpp detailParent.hpp treasureChest.hpp
-./initMapVectors.o: inputController.hpp generalDetail.hpp lampLight.hpp
-./initMapVectors.o: userInterface.hpp damagedRobot.hpp rock.hpp IntroDoor.hpp
+./initMapVectors.o: /usr/include/wchar.h effectsController.hpp
+./initMapVectors.o: turretFlashEffect.hpp spriteSheet.hpp Effect.hpp
+./initMapVectors.o: Framework/framework.hpp Framework/utilities.hpp rng.hpp
+./initMapVectors.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp
+./initMapVectors.o: easingTemplates.hpp smallExplosion.hpp Powerup.hpp
+./initMapVectors.o: RenderType.hpp enemyShot.hpp dasherShot.hpp
+./initMapVectors.o: turretShot.hpp scoot.hpp enemy.hpp dasher.hpp critter.hpp
+./initMapVectors.o: aStar.hpp feedback.hpp alias.hpp camera.hpp player.hpp
+./initMapVectors.o: detailController.hpp Teleporter.hpp detailParent.hpp
+./initMapVectors.o: treasureChest.hpp inputController.hpp generalDetail.hpp
+./initMapVectors.o: lampLight.hpp userInterface.hpp fontController.hpp
+./initMapVectors.o: damagedRobot.hpp rock.hpp IntroDoor.hpp
 ./initMapVectors.o: soundController.hpp
 ./fontController.o: fontController.hpp /usr/include/SFML/Graphics.hpp
 ./fontController.o: /usr/include/SFML/Window.hpp /usr/include/SFML/System.hpp
@@ -1700,76 +1593,6 @@ depend:
 ./damagedRobot.o: /usr/include/SFML/Graphics/Sprite.hpp
 ./damagedRobot.o: /usr/include/SFML/Graphics/Text.hpp Framework/framework.hpp
 ./damagedRobot.o: Framework/utilities.hpp spriteSheet.hpp rng.hpp
-./enemyParent.o: enemyParent.hpp /usr/include/SFML/Graphics.hpp
-./enemyParent.o: /usr/include/SFML/Window.hpp /usr/include/SFML/System.hpp
-./enemyParent.o: /usr/include/SFML/Config.hpp
-./enemyParent.o: /usr/include/SFML/System/Clock.hpp
-./enemyParent.o: /usr/include/SFML/System/Export.hpp
-./enemyParent.o: /usr/include/SFML/System/Time.hpp
-./enemyParent.o: /usr/include/SFML/System/Err.hpp
-./enemyParent.o: /usr/include/SFML/System/FileInputStream.hpp
-./enemyParent.o: /usr/include/SFML/System/InputStream.hpp
-./enemyParent.o: /usr/include/SFML/System/NonCopyable.hpp
-./enemyParent.o: /usr/include/SFML/System/Lock.hpp
-./enemyParent.o: /usr/include/SFML/System/MemoryInputStream.hpp
-./enemyParent.o: /usr/include/SFML/System/Mutex.hpp
-./enemyParent.o: /usr/include/SFML/System/Sleep.hpp
-./enemyParent.o: /usr/include/SFML/System/String.hpp
-./enemyParent.o: /usr/include/SFML/System/Utf.hpp
-./enemyParent.o: /usr/include/SFML/System/Utf.inl
-./enemyParent.o: /usr/include/SFML/System/String.inl
-./enemyParent.o: /usr/include/SFML/System/Thread.hpp
-./enemyParent.o: /usr/include/SFML/System/Thread.inl
-./enemyParent.o: /usr/include/SFML/System/ThreadLocal.hpp
-./enemyParent.o: /usr/include/SFML/System/ThreadLocalPtr.hpp
-./enemyParent.o: /usr/include/SFML/System/ThreadLocalPtr.inl
-./enemyParent.o: /usr/include/SFML/System/Vector2.hpp
-./enemyParent.o: /usr/include/SFML/System/Vector2.inl
-./enemyParent.o: /usr/include/SFML/System/Vector3.hpp
-./enemyParent.o: /usr/include/SFML/System/Vector3.inl
-./enemyParent.o: /usr/include/SFML/Window/Context.hpp
-./enemyParent.o: /usr/include/SFML/Window/Export.hpp
-./enemyParent.o: /usr/include/SFML/Window/GlResource.hpp
-./enemyParent.o: /usr/include/SFML/Window/ContextSettings.hpp
-./enemyParent.o: /usr/include/SFML/Window/Event.hpp
-./enemyParent.o: /usr/include/SFML/Window/Joystick.hpp
-./enemyParent.o: /usr/include/SFML/Window/Keyboard.hpp
-./enemyParent.o: /usr/include/SFML/Window/Mouse.hpp
-./enemyParent.o: /usr/include/SFML/Window/Sensor.hpp
-./enemyParent.o: /usr/include/SFML/Window/Touch.hpp
-./enemyParent.o: /usr/include/SFML/Window/VideoMode.hpp
-./enemyParent.o: /usr/include/SFML/Window/Window.hpp
-./enemyParent.o: /usr/include/SFML/Window/WindowHandle.hpp
-./enemyParent.o: /usr/include/SFML/Window/WindowStyle.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/BlendMode.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/Export.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/CircleShape.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/Shape.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/Drawable.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/RenderStates.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/Transform.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/Rect.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/Rect.inl
-./enemyParent.o: /usr/include/SFML/Graphics/Transformable.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/VertexArray.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/Vertex.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/Color.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/PrimitiveType.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/ConvexShape.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/Font.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/Glyph.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/Texture.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/Image.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/RectangleShape.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/RenderTarget.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/View.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/RenderTexture.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/RenderWindow.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/Shader.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/Sprite.hpp
-./enemyParent.o: /usr/include/SFML/Graphics/Text.hpp wall.hpp
-./enemyParent.o: /usr/include/stdint.h /usr/include/features.h
-./enemyParent.o: /usr/include/stdc-predef.h /usr/include/math.h
 ./bulletType1.o: bulletType1.hpp /usr/include/SFML/Graphics.hpp
 ./bulletType1.o: /usr/include/SFML/Window.hpp /usr/include/SFML/System.hpp
 ./bulletType1.o: /usr/include/SFML/Config.hpp
@@ -2294,17 +2117,7 @@ depend:
 ./IntroDoor.o: /usr/include/SFML/Audio/SoundFileReader.hpp
 ./IntroDoor.o: /usr/include/SFML/Audio/SoundFileWriter.hpp ResourcePath.hpp
 ./IntroDoor.o: RenderType.hpp enemyShot.hpp dasherShot.hpp turretShot.hpp
-./IntroDoor.o: screenShakeController.hpp player.hpp tileController.hpp
-./IntroDoor.o: wall.hpp /usr/include/stdint.h /usr/include/features.h
-./IntroDoor.o: /usr/include/stdc-predef.h enemyController.hpp turret.hpp
-./IntroDoor.o: /usr/include/stdio.h /usr/include/libio.h
-./IntroDoor.o: /usr/include/_G_config.h /usr/include/wchar.h
-./IntroDoor.o: fontController.hpp scoot.hpp enemy.hpp dasher.hpp critter.hpp
-./IntroDoor.o: aStar.hpp feedback.hpp alias.hpp coordinate.hpp camera.hpp
-./IntroDoor.o: detailController.hpp Teleporter.hpp treasureChest.hpp
-./IntroDoor.o: inputController.hpp generalDetail.hpp lampLight.hpp
-./IntroDoor.o: userInterface.hpp damagedRobot.hpp rock.hpp
-./IntroDoor.o: soundController.hpp
+./IntroDoor.o: screenShakeController.hpp
 ./enemyShot.o: enemyShot.hpp /usr/include/SFML/Graphics.hpp
 ./enemyShot.o: /usr/include/SFML/Window.hpp /usr/include/SFML/System.hpp
 ./enemyShot.o: /usr/include/SFML/Config.hpp
@@ -2531,16 +2344,16 @@ depend:
 ./feedback.o: /usr/include/SFML/Audio/SoundFileWriter.hpp ResourcePath.hpp
 ./feedback.o: turret.hpp /usr/include/stdio.h /usr/include/libio.h
 ./feedback.o: /usr/include/_G_config.h /usr/include/wchar.h
-./feedback.o: fontController.hpp effectsController.hpp turretFlashEffect.hpp
-./feedback.o: spriteSheet.hpp Effect.hpp Framework/framework.hpp
-./feedback.o: Framework/utilities.hpp rng.hpp bulletType1.hpp shotPuff.hpp
-./feedback.o: FireExplosion.hpp smallExplosion.hpp Powerup.hpp RenderType.hpp
-./feedback.o: enemyShot.hpp dasherShot.hpp turretShot.hpp scoot.hpp enemy.hpp
-./feedback.o: dasher.hpp critter.hpp aStar.hpp coordinate.hpp camera.hpp
+./feedback.o: effectsController.hpp turretFlashEffect.hpp spriteSheet.hpp
+./feedback.o: Effect.hpp Framework/framework.hpp Framework/utilities.hpp
+./feedback.o: rng.hpp bulletType1.hpp shotPuff.hpp FireExplosion.hpp
+./feedback.o: smallExplosion.hpp Powerup.hpp RenderType.hpp enemyShot.hpp
+./feedback.o: dasherShot.hpp turretShot.hpp scoot.hpp enemy.hpp dasher.hpp
+./feedback.o: critter.hpp aStar.hpp coordinate.hpp camera.hpp
 ./feedback.o: detailController.hpp Teleporter.hpp detailParent.hpp
 ./feedback.o: treasureChest.hpp inputController.hpp generalDetail.hpp
-./feedback.o: lampLight.hpp userInterface.hpp damagedRobot.hpp rock.hpp
-./feedback.o: IntroDoor.hpp soundController.hpp
+./feedback.o: lampLight.hpp userInterface.hpp fontController.hpp
+./feedback.o: damagedRobot.hpp rock.hpp IntroDoor.hpp soundController.hpp
 ./Powerup.o: Powerup.hpp /usr/include/SFML/Graphics.hpp
 ./Powerup.o: /usr/include/SFML/Window.hpp /usr/include/SFML/System.hpp
 ./Powerup.o: /usr/include/SFML/Config.hpp /usr/include/SFML/System/Clock.hpp
@@ -2702,11 +2515,11 @@ depend:
 ./critter.o: RenderType.hpp enemyShot.hpp dasherShot.hpp turretShot.hpp
 ./critter.o: aStar.hpp tileController.hpp enemyController.hpp turret.hpp
 ./critter.o: /usr/include/stdio.h /usr/include/libio.h
-./critter.o: /usr/include/_G_config.h /usr/include/wchar.h fontController.hpp
-./critter.o: scoot.hpp dasher.hpp feedback.hpp alias.hpp coordinate.hpp
-./critter.o: camera.hpp player.hpp detailController.hpp Teleporter.hpp
-./critter.o: detailParent.hpp treasureChest.hpp inputController.hpp
-./critter.o: generalDetail.hpp lampLight.hpp userInterface.hpp
+./critter.o: /usr/include/_G_config.h /usr/include/wchar.h scoot.hpp
+./critter.o: dasher.hpp feedback.hpp alias.hpp coordinate.hpp camera.hpp
+./critter.o: player.hpp detailController.hpp Teleporter.hpp detailParent.hpp
+./critter.o: treasureChest.hpp inputController.hpp generalDetail.hpp
+./critter.o: lampLight.hpp userInterface.hpp fontController.hpp
 ./critter.o: damagedRobot.hpp rock.hpp IntroDoor.hpp soundController.hpp
 ./critter.o: /usr/include/math.h
 ./turret.o: turret.hpp /usr/include/stdio.h /usr/include/features.h
@@ -2777,7 +2590,11 @@ depend:
 ./turret.o: /usr/include/SFML/Graphics/RenderWindow.hpp
 ./turret.o: /usr/include/SFML/Graphics/Shader.hpp
 ./turret.o: /usr/include/SFML/Graphics/Sprite.hpp
-./turret.o: /usr/include/SFML/Graphics/Text.hpp fontController.hpp
+./turret.o: /usr/include/SFML/Graphics/Text.hpp effectsController.hpp
+./turret.o: turretFlashEffect.hpp spriteSheet.hpp Effect.hpp
+./turret.o: Framework/framework.hpp Framework/utilities.hpp rng.hpp
+./turret.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp
+./turret.o: easingTemplates.hpp smallExplosion.hpp Powerup.hpp
 ./turret.o: resourceHandler.hpp /usr/include/SFML/Audio.hpp
 ./turret.o: /usr/include/SFML/Audio/InputSoundFile.hpp
 ./turret.o: /usr/include/SFML/Audio/Export.hpp
@@ -2795,11 +2612,8 @@ depend:
 ./turret.o: /usr/include/SFML/Audio/SoundFileFactory.inl
 ./turret.o: /usr/include/SFML/Audio/SoundFileReader.hpp
 ./turret.o: /usr/include/SFML/Audio/SoundFileWriter.hpp ResourcePath.hpp
-./turret.o: effectsController.hpp turretFlashEffect.hpp spriteSheet.hpp
-./turret.o: Effect.hpp Framework/framework.hpp Framework/utilities.hpp
-./turret.o: rng.hpp bulletType1.hpp shotPuff.hpp FireExplosion.hpp
-./turret.o: easingTemplates.hpp smallExplosion.hpp Powerup.hpp RenderType.hpp
-./turret.o: enemyShot.hpp dasherShot.hpp turretShot.hpp angleFunction.hpp
+./turret.o: RenderType.hpp enemyShot.hpp dasherShot.hpp turretShot.hpp
+./turret.o: angleFunction.hpp
 ./player.o: player.hpp /usr/include/SFML/Graphics.hpp
 ./player.o: /usr/include/SFML/Window.hpp /usr/include/SFML/System.hpp
 ./player.o: /usr/include/SFML/Config.hpp /usr/include/SFML/System/Clock.hpp
@@ -2886,7 +2700,7 @@ depend:
 ./player.o: /usr/include/SFML/Audio/SoundFileReader.hpp
 ./player.o: /usr/include/SFML/Audio/SoundFileWriter.hpp ResourcePath.hpp
 ./player.o: turret.hpp /usr/include/stdio.h /usr/include/libio.h
-./player.o: /usr/include/_G_config.h /usr/include/wchar.h fontController.hpp
+./player.o: /usr/include/_G_config.h /usr/include/wchar.h
 ./player.o: effectsController.hpp turretFlashEffect.hpp spriteSheet.hpp
 ./player.o: Effect.hpp Framework/framework.hpp Framework/utilities.hpp
 ./player.o: rng.hpp bulletType1.hpp shotPuff.hpp FireExplosion.hpp
@@ -2896,9 +2710,9 @@ depend:
 ./player.o: coordinate.hpp camera.hpp detailController.hpp Teleporter.hpp
 ./player.o: detailParent.hpp treasureChest.hpp inputController.hpp
 ./player.o: generalDetail.hpp lampLight.hpp userInterface.hpp
-./player.o: damagedRobot.hpp rock.hpp IntroDoor.hpp soundController.hpp
-./player.o: playerAnimationFunctions.hpp playerCollisionFunctions.hpp
-./player.o: game.hpp backgroundHandler.hpp screenShakeController.hpp
+./player.o: fontController.hpp damagedRobot.hpp rock.hpp IntroDoor.hpp
+./player.o: soundController.hpp playerAnimationFunctions.hpp
+./player.o: playerCollisionFunctions.hpp game.hpp backgroundHandler.hpp
 ./dasher.o: dasher.hpp effectsController.hpp /usr/include/SFML/Graphics.hpp
 ./dasher.o: /usr/include/SFML/Window.hpp /usr/include/SFML/System.hpp
 ./dasher.o: /usr/include/SFML/Config.hpp /usr/include/SFML/System/Clock.hpp
@@ -3075,7 +2889,7 @@ depend:
 ./camera.o: /usr/include/SFML/Audio/SoundFileReader.hpp
 ./camera.o: /usr/include/SFML/Audio/SoundFileWriter.hpp ResourcePath.hpp
 ./camera.o: turret.hpp /usr/include/stdio.h /usr/include/libio.h
-./camera.o: /usr/include/_G_config.h /usr/include/wchar.h fontController.hpp
+./camera.o: /usr/include/_G_config.h /usr/include/wchar.h
 ./camera.o: effectsController.hpp turretFlashEffect.hpp spriteSheet.hpp
 ./camera.o: Effect.hpp Framework/framework.hpp Framework/utilities.hpp
 ./camera.o: rng.hpp bulletType1.hpp shotPuff.hpp FireExplosion.hpp
@@ -3085,7 +2899,8 @@ depend:
 ./camera.o: coordinate.hpp detailController.hpp Teleporter.hpp
 ./camera.o: detailParent.hpp treasureChest.hpp inputController.hpp
 ./camera.o: generalDetail.hpp lampLight.hpp userInterface.hpp
-./camera.o: damagedRobot.hpp rock.hpp IntroDoor.hpp soundController.hpp
+./camera.o: fontController.hpp damagedRobot.hpp rock.hpp IntroDoor.hpp
+./camera.o: soundController.hpp
 ./scoot.o: scoot.hpp wall.hpp /usr/include/stdint.h /usr/include/features.h
 ./scoot.o: /usr/include/stdc-predef.h effectsController.hpp
 ./scoot.o: /usr/include/SFML/Graphics.hpp /usr/include/SFML/Window.hpp
@@ -3418,18 +3233,17 @@ depend:
 ./main.o: /usr/include/stdc-predef.h enemyController.hpp resourceHandler.hpp
 ./main.o: ResourcePath.hpp turret.hpp /usr/include/stdio.h
 ./main.o: /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h
-./main.o: fontController.hpp effectsController.hpp turretFlashEffect.hpp
-./main.o: spriteSheet.hpp Effect.hpp Framework/framework.hpp
-./main.o: Framework/utilities.hpp rng.hpp bulletType1.hpp shotPuff.hpp
-./main.o: FireExplosion.hpp easingTemplates.hpp smallExplosion.hpp
-./main.o: Powerup.hpp RenderType.hpp enemyShot.hpp dasherShot.hpp
-./main.o: turretShot.hpp scoot.hpp enemy.hpp dasher.hpp critter.hpp aStar.hpp
-./main.o: feedback.hpp alias.hpp coordinate.hpp camera.hpp
-./main.o: detailController.hpp Teleporter.hpp detailParent.hpp
+./main.o: effectsController.hpp turretFlashEffect.hpp spriteSheet.hpp
+./main.o: Effect.hpp Framework/framework.hpp Framework/utilities.hpp rng.hpp
+./main.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp easingTemplates.hpp
+./main.o: smallExplosion.hpp Powerup.hpp RenderType.hpp enemyShot.hpp
+./main.o: dasherShot.hpp turretShot.hpp scoot.hpp enemy.hpp dasher.hpp
+./main.o: critter.hpp aStar.hpp feedback.hpp alias.hpp coordinate.hpp
+./main.o: camera.hpp detailController.hpp Teleporter.hpp detailParent.hpp
 ./main.o: treasureChest.hpp inputController.hpp generalDetail.hpp
-./main.o: lampLight.hpp userInterface.hpp damagedRobot.hpp rock.hpp
-./main.o: IntroDoor.hpp soundController.hpp backgroundHandler.hpp game.hpp
-./main.o: screenShakeController.hpp aspectScaling.hpp
+./main.o: lampLight.hpp userInterface.hpp fontController.hpp damagedRobot.hpp
+./main.o: rock.hpp IntroDoor.hpp soundController.hpp backgroundHandler.hpp
+./main.o: game.hpp aspectScaling.hpp
 ./game.o: mappingFunctions.hpp tileController.hpp
 ./game.o: /usr/include/SFML/Graphics.hpp /usr/include/SFML/Window.hpp
 ./game.o: /usr/include/SFML/System.hpp /usr/include/SFML/Config.hpp
@@ -3515,17 +3329,17 @@ depend:
 ./game.o: /usr/include/SFML/Audio/SoundFileReader.hpp
 ./game.o: /usr/include/SFML/Audio/SoundFileWriter.hpp ResourcePath.hpp
 ./game.o: turret.hpp /usr/include/stdio.h /usr/include/libio.h
-./game.o: /usr/include/_G_config.h /usr/include/wchar.h fontController.hpp
-./game.o: effectsController.hpp turretFlashEffect.hpp spriteSheet.hpp
-./game.o: Effect.hpp Framework/framework.hpp Framework/utilities.hpp rng.hpp
+./game.o: /usr/include/_G_config.h /usr/include/wchar.h effectsController.hpp
+./game.o: turretFlashEffect.hpp spriteSheet.hpp Effect.hpp
+./game.o: Framework/framework.hpp Framework/utilities.hpp rng.hpp
 ./game.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp easingTemplates.hpp
 ./game.o: smallExplosion.hpp Powerup.hpp RenderType.hpp enemyShot.hpp
 ./game.o: dasherShot.hpp turretShot.hpp scoot.hpp enemy.hpp dasher.hpp
 ./game.o: critter.hpp aStar.hpp feedback.hpp alias.hpp coordinate.hpp
 ./game.o: camera.hpp player.hpp detailController.hpp Teleporter.hpp
 ./game.o: detailParent.hpp treasureChest.hpp inputController.hpp
-./game.o: generalDetail.hpp lampLight.hpp userInterface.hpp damagedRobot.hpp
-./game.o: rock.hpp IntroDoor.hpp soundController.hpp initMapVectors.hpp
-./game.o: enemyPlacementFn.hpp lightingMap.h pillarPlacement.h
-./game.o: /usr/include/math.h game.hpp backgroundHandler.hpp
-./game.o: screenShakeController.hpp
+./game.o: generalDetail.hpp lampLight.hpp userInterface.hpp
+./game.o: fontController.hpp damagedRobot.hpp rock.hpp IntroDoor.hpp
+./game.o: soundController.hpp initMapVectors.hpp enemyPlacementFn.hpp
+./game.o: lightingMap.h pillarPlacement.h /usr/include/math.h game.hpp
+./game.o: backgroundHandler.hpp

@@ -69,8 +69,8 @@ int main() {
 			while (pWindow->isOpen()) {
 				time_point start = high_resolution_clock::now();
 				sf::Time elapsedTime = gameClock.restart(); // TODO: use chrono clock instead
+				// TODO: What if the app freezes? Then the elapsed time will be really large!
 				if (Feedback::isAsleep) {
-					// When waking from pause the elapsed time between updates will be huge, so zero the clock
 					elapsedTime = gameClock.restart();
 					Feedback::isAsleep = false;
 				}
