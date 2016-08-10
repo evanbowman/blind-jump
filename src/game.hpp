@@ -64,6 +64,7 @@ public:
 	TransitionState transitionState;
 
 private:
+	void Init();
 	InputController * pInput;
 	SoundController sounds;
 	Player player;

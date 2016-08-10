@@ -42,6 +42,10 @@ Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontControlle
 	  worldView(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
 	  timer(0)
 {
+	Init();
+}
+
+void Game::Init() {
 	target.create(windowW, windowH);
 	secondPass.create(windowW, windowH);
 	secondPass.setSmooth(true);
@@ -61,33 +65,6 @@ Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontControlle
 	UI.setView(&worldView);
 	tiles.setPosition((windowW / 2) - 16, (windowH / 2));
 	tiles.setWindowSize(windowW, windowH);
-	// Completely non-general code only used by the intro level (it's not procedurally generated)
-	details.add<2>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (6 * 26),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
-	details.add<2>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (0 * 26),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
-	details.add<2>(tiles.posX - 180 + 16 + (11 * 32), tiles.posY + 200 - 3 + (11 * 26),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
-	details.add<2>(tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 204 + 8 + (-9 * 26),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
-	details.add<4>(tiles.posX - 192 + 6 * 32, tiles.posY + 301,
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::introWall));
-	sf::Sprite podSpr;
-	podSpr.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
-	podSpr.setTextureRect(sf::IntRect(164, 145, 44, 50));
-	details.add<6>(tiles.posX + 3 * 32, tiles.posY + 4 + 17 * 26, podSpr);;
-	tiles.teleporterLocation.x = 8;
-	tiles.teleporterLocation.y = -7;
-	for (auto it = global_levelZeroWalls.begin(); it != global_levelZeroWalls.end(); ++it) {
-		wall w;
-		w.setXinit(it->first);
-		w.setYinit(it->second);
-		tiles.walls.push_back(w);
-	}
 	en.setWindowSize(windowW, windowH);
 	pFonts->setWaypointText(level);
 	details.add<0>(tiles.posX - 178 + 8 * 32, tiles.posY + 284 + -7 * 26,
@@ -101,6 +78,8 @@ Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontControlle
 	transitionShape.setSize(sf::Vector2f(windowW, windowH));
 	transitionShape.setFillColor(sf::Color(0, 0, 0, 0));
 	vignetteSprite.setColor(sf::Color(255, 255, 255));
+	level = -1;
+	Reset();
 }
 
 void Game::draw(sf::RenderWindow & window) {
