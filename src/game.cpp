@@ -67,10 +67,6 @@ void Game::Init() {
 	tiles.setWindowSize(windowW, windowH);
 	en.setWindowSize(windowW, windowH);
 	pFonts->setWaypointText(level);
-	details.add<0>(tiles.posX - 178 + 8 * 32, tiles.posY + 284 + -7 * 26,
-				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::teleporterGlow));
-	bkg.setBkg(0);
 	beamGlowTxr.loadFromFile(resourcePath() + "teleporterBeamGlow.png");
 	beamGlowSpr.setTexture(beamGlowTxr);
 	beamGlowSpr.setPosition(windowW / 2 - 200, windowH / 2 - 200 + 30);
