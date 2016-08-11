@@ -48,24 +48,23 @@ std::mt19937 globalRNG;
 ResourceHandler * globalResourceHandlerPtr = nullptr;
 
 int main() {
-	ResourceHandler resourceHandler;
-	globalResourceHandlerPtr = &resourceHandler;
-	if (resourceHandler.load()) return EXIT_FAILURE;
-	seedRNG();
-	// Graphics are pixel art so it's okay to use upsampled textures for everything except font rendering
-	sf::Vector2f drawableRegionSize = getDrawableRegionSize();
-	sf::ContextSettings settings;
-	settings.antialiasingLevel = 6;
-	sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Blind Jump", sf::Style::Fullscreen, settings);
-	window.setMouseCursorVisible(false);
-	window.setVerticalSyncEnabled(true);
-	window.setFramerateLimit(120);
-	InputController input;
-	sf::View hudView(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
-	sf::View worldView(drawableRegionSize / 2.f, drawableRegionSize);
-	FontController fonts(hudView, drawableRegionSize.x / 2, drawableRegionSize.y / 2);
-	Game game(drawableRegionSize, &input, &fonts);
 	try {
+		ResourceHandler resourceHandler;
+		globalResourceHandlerPtr = &resourceHandler;
+		seedRNG();
+		// Graphics are pixel art so it's okay to use upsampled textures for everything except font rendering
+		sf::Vector2f drawableRegionSize = getDrawableRegionSize();
+		sf::ContextSettings settings;
+		settings.antialiasingLevel = 6;
+		sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Blind Jump", sf::Style::Fullscreen, settings);
+		window.setMouseCursorVisible(false);
+		window.setVerticalSyncEnabled(true);
+		window.setFramerateLimit(120);
+		InputController input;
+		sf::View hudView(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
+		sf::View worldView(drawableRegionSize / 2.f, drawableRegionSize);
+		FontController fonts(hudView, drawableRegionSize.x / 2, drawableRegionSize.y / 2);
+		Game game(drawableRegionSize, &input, &fonts);
 		#ifdef LINUX
 		if (!XInitThreads()) {
 			return EXIT_FAILURE;

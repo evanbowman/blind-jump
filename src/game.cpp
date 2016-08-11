@@ -55,8 +55,9 @@ void Game::Init() {
 	stash.setSmooth(true);
 	lightingMap.create(windowW, windowH);
 	vignetteSprite.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::vignette));
-	vignetteSprite.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::vignetteShadow));
+	beamGlowSpr.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::teleporterBeamGlow));
+	vignetteSprite.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setColor(sf::Color(255,255,255,100));
 	hudView.setSize(windowW, windowH);
@@ -67,9 +68,7 @@ void Game::Init() {
 	tiles.setWindowSize(windowW, windowH);
 	en.setWindowSize(windowW, windowH);
 	pFonts->setWaypointText(level);
-	beamGlowTxr.loadFromFile(resourcePath() + "teleporterBeamGlow.png");
-	beamGlowSpr.setTexture(beamGlowTxr);
-	beamGlowSpr.setPosition(windowW / 2 - 200, windowH / 2 - 200 + 30);
+	beamGlowSpr.setPosition(windowW / 2 - 200, windowH / 2 - 200 + 36);
 	beamGlowSpr.setColor(sf::Color(0, 0, 0, 255));
 	transitionShape.setSize(sf::Vector2f(windowW, windowH));
 	transitionShape.setFillColor(sf::Color(0, 0, 0, 0));
@@ -222,7 +221,7 @@ void Game::draw(sf::RenderWindow & window) {
 				preload = false;
 			}
 		}
-	} else if (!UI.blurEnabled() && UI.getDesaturateAmount()) {
+	} else if (!UI.blurEnabled() && UI.desaturateEnabled()) {
 		sf::Shader & desaturateShader = globalResourceHandlerPtr->getShader(ResourceHandler::Shader::desaturate);
 		desaturateShader.setParameter("amount", UI.getDesaturateAmount());
 		window.draw(sf::Sprite(target.getTexture()), &desaturateShader);
@@ -323,25 +322,28 @@ void Game::drawTransitions(sf::RenderWindow & window) {
 
 	case TransitionState::ExitBeamEnter:
     	window.draw(beamShape);
+		glowSprs1.push_back(beamGlowSpr);
 		break;
 
 	case TransitionState::ExitBeamInflate:
     	window.draw(beamShape);
+		glowSprs1.push_back(beamGlowSpr);
 		break;
 
 	case TransitionState::ExitBeamDeflate:
     	window.draw(beamShape);
+		glowSprs1.push_back(beamGlowSpr);
 		break;
 
 	case TransitionState::TransitionOut:
 		if (level != 0) {
-			if (timer > 100) {
+			if (timer > 100000) {
 				window.draw(transitionShape);
 			}
 		} else {
-			if (timer > 1600) {
+			if (timer > 1600000) {
 				window.draw(transitionShape);
-				uint8_t alpha = Easing::easeOut<1>(timer - 1600, static_cast<int_fast32_t>(600)) * 255;
+				uint8_t alpha = Easing::easeOut<1>(timer - 1600000, static_cast<int_fast64_t>(600000)) * 255;
 				pFonts->drawTitle(alpha, window);
 			} else {
 				pFonts->drawTitle(255, window);
@@ -351,14 +353,17 @@ void Game::drawTransitions(sf::RenderWindow & window) {
 
 	case TransitionState::TransitionIn:
     	window.draw(transitionShape);
+		glowSprs1.push_back(beamGlowSpr);
 		break;
 
 	case TransitionState::EntryBeamDrop:
     	window.draw(beamShape);
+		glowSprs1.push_back(beamGlowSpr);
 		break;
 
 	case TransitionState::EntryBeamFade:
     	window.draw(beamShape);
+		glowSprs1.push_back(beamGlowSpr);
 		break;
 	}
 }
@@ -388,15 +393,17 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 		break;
 
 	case TransitionState::ExitBeamEnter:
-		timer += elapsedTime.asMilliseconds();
+		timer += elapsedTime.asMicroseconds();
 		{
-			// About the static casts--macOS and Linux use different underlying types for int_fast32_t
-			float beamHeight = Easing::easeIn<1>(timer, static_cast<int_fast32_t>(500)) * -(windowH / 2 + 36);
+			// About the static casts--macOS and Linux use different underlying types for int_fast64_t
+			float beamHeight = Easing::easeIn<1>(timer, static_cast<int_fast64_t>(500000)) * -(windowH / 2 + 36);
+			uint8_t brightness = Easing::easeIn<1>(timer, static_cast<int_fast64_t>(500000)) * 255;
+			beamGlowSpr.setColor(sf::Color(brightness, brightness, brightness, 255));
 			beamShape.setSize(sf::Vector2f(2, beamHeight));
-			uint_fast8_t alpha = Easing::easeIn<1>(timer, static_cast<int_fast32_t>(450)) * 255;
+			uint_fast8_t alpha = Easing::easeIn<1>(timer, static_cast<int_fast64_t>(450000)) * 255;
 			beamShape.setFillColor(sf::Color(114, 255, 229, alpha));
 		}
-		if (timer > 500) {
+		if (timer > 500000) {
 			timer = 0;
 			beamShape.setSize(sf::Vector2f(2, -(windowH / 2 + 36)));
 			beamShape.setFillColor(sf::Color(114, 255, 229, 255));
@@ -405,14 +412,14 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 		break;
 
 	case TransitionState::ExitBeamInflate:
-		timer += elapsedTime.asMilliseconds();
+		timer += elapsedTime.asMicroseconds();
 		{
-			float beamWidth = std::max(2.f, Easing::easeIn<2>(timer, static_cast<int_fast32_t>(250)) * 20.f);
+			float beamWidth = std::max(2.f, Easing::easeIn<2>(timer, static_cast<int_fast64_t>(250000)) * 20.f);
 			float beamHeight = beamShape.getSize().y;
 			beamShape.setSize(sf::Vector2f(beamWidth, beamHeight));
 			beamShape.setPosition(windowW / 2 - 0.5f - beamWidth / 2.f, windowH / 2 + 36);
 		}
-		if (timer > 250) {
+		if (timer > 250000) {
 			timer = 0;
 			transitionState = TransitionState::ExitBeamDeflate;
 			player.visible = false;
@@ -435,25 +442,27 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 		break;
 
 	case TransitionState::TransitionOut:
-		timer += elapsedTime.asMilliseconds();
+		timer += elapsedTime.asMicroseconds();
 		if (level != 0) {
-			if (timer > 100) {
-				uint_fast8_t alpha = Easing::easeIn<1>(timer - 100, static_cast<int_fast32_t>(900)) * 255;
+			if (timer > 100000) {
+				uint_fast8_t alpha = Easing::easeIn<1>(timer - 100000, static_cast<int_fast64_t>(900000)) * 255;
 				transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
 			}
-			if (timer >= 1000) {
+			if (timer >= 1000000) {
 				transitionState = TransitionState::TransitionIn;
 				timer = 0;
 				transitionShape.setFillColor(sf::Color(0, 0, 0, 255));
+				beamGlowSpr.setColor(sf::Color::Black);
 				Reset();
 			}
 		} else {
-			if (timer > 1600) {
-				uint_fast8_t alpha = Easing::easeIn<1>(timer - 1600, static_cast<int_fast32_t>(1400)) * 255;
+			if (timer > 1600000) {
+				uint_fast8_t alpha = Easing::easeIn<1>(timer - 1600000, static_cast<int_fast64_t>(1400000)) * 255;
 				transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
 			}
-			if (timer > 3000) {
+			if (timer > 3000000) {
 				transitionState = TransitionState::TransitionIn;
+				beamGlowSpr.setColor(sf::Color::Black);
 				timer = 0;
 				transitionShape.setFillColor(sf::Color(0, 0, 0, 255));
 				Reset();
@@ -462,12 +471,12 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 		break;
 
 	case TransitionState::TransitionIn:
-	    timer += elapsedTime.asMilliseconds();
+	    timer += elapsedTime.asMicroseconds();
 		{
-			uint_fast8_t alpha = Easing::easeOut<1>(timer, static_cast<int_fast32_t>(800)) * 255;
+			uint_fast8_t alpha = Easing::easeOut<1>(timer, static_cast<int_fast64_t>(800000)) * 255;
 			transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
 		}
-		if (timer >= 800) {
+		if (timer >= 800000) {
 			transitionState = TransitionState::EntryBeamDrop;
 			timer = 0;
 			beamShape.setSize(sf::Vector2f(4, 0));
@@ -477,12 +486,14 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 		break;
 
 	case TransitionState::EntryBeamDrop:
-		timer += elapsedTime.asMilliseconds();
+		timer += elapsedTime.asMicroseconds();
 		{
-			float beamHeight = Easing::easeIn<2>(timer, static_cast<int_fast32_t>(300)) * (windowH / 2 + 26);
+			float beamHeight = Easing::easeIn<2>(timer, static_cast<int_fast64_t>(350000)) * (windowH / 2 + 26);
+			uint8_t brightness = Easing::easeIn<1>(timer, static_cast<int_fast64_t>(350000)) * 255;
+			beamGlowSpr.setColor(sf::Color(brightness, brightness, brightness, 255));
 			beamShape.setSize(sf::Vector2f(4, beamHeight));
 		}
-		if (timer > 300) {
+		if (timer > 350000) {
 			transitionState = TransitionState::EntryBeamFade;
 			timer = 0;
 			player.visible = true;
@@ -492,12 +503,13 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 		break;
 
 	case TransitionState::EntryBeamFade:
-		timer += elapsedTime.asMilliseconds();
+		timer += elapsedTime.asMicroseconds();
 		{
-			uint_fast8_t alpha = Easing::easeOut<1>(timer, static_cast<int_fast32_t>(250)) * 240;
+			uint_fast8_t alpha = Easing::easeOut<1>(timer, static_cast<int_fast64_t>(300000)) * 240;
 			beamShape.setFillColor(sf::Color(114, 255, 229, alpha));
+			beamGlowSpr.setColor(sf::Color(alpha, alpha, alpha, 255));
 		}
-		if (timer > 250) {
+		if (timer > 300000) {
 			transitionState = TransitionState::None;
 			player.setState(Player::State::nominal);
 			timer = 0;

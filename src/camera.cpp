@@ -124,6 +124,10 @@ void Camera::reset() {
 	startPosition = view.getCenter();
 }
 
+void Camera::setView(const sf::View & _view) {
+	view = _view;
+}
+
 void Camera::shake(float _shakeIntensity) {
 	if (!isShaking) {
 		shakeIntensity = _shakeIntensity;

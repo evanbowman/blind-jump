@@ -95,7 +95,7 @@ private:
 	std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> gameShadows;
 	void updateTransitions(const sf::Time &);
 	void drawTransitions(sf::RenderWindow &);
-	int_fast32_t timer;
+	int_fast64_t timer;
 };
 
 // The first room is not procedurally generated so the positions of the walls need to be hard coded

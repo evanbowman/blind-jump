@@ -70,6 +70,21 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 			colorAmount = 1.f;
 		}
 	}
+	if (hp == 0) {
+		killFlag = true;
+		if ((std::abs(static_cast<int>(globalRNG())) % 4) == 0) {
+			effects.add<4>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
+					   xPos, yPos + 4, Powerup::Type::Heart);
+		} else {
+		    effects.add<5>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::blueglow),
+					   xPos, yPos + 4, Powerup::Type::Coin);
+		}
+		effects.add<2>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::fireExplosionGlow),
+				   xPos, yPos -2);
+	}
 	switch (state) {
 	case State::closed:
 		if (std::sqrt(std::pow((xPos - playerPosX + 8), 2) + std::pow((yPos - playerPosY + 16), 2)) < 174) {

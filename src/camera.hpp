@@ -41,5 +41,6 @@ public:
 	void reset();
 	const sf::View & getView() const;
 	void shake(float);
+	void setView(const sf::View &);
 	sf::Vector2f getOffset() const;
 };

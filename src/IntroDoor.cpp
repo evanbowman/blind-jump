@@ -22,7 +22,7 @@
 IntroDoor::IntroDoor(float _xInit, float _yInit, const sf::Texture & inpTxtr)
 	: Detail{_xInit, _yInit},
 	  doorSheet{inpTxtr},
-	  frameIndex{0}/*,
+	  frameIndex{3}/*,
 	  timer{0},
 	  state{State::dormant}*/
 {
