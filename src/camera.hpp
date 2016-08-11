@@ -39,8 +39,10 @@ public:
 	Camera(Player * _pTarget, const sf::Vector2f & viewPort);
 	void update(const sf::Time &, const std::vector<sf::Vector2f> &);
 	void reset();
+	void panDown();
 	const sf::View & getView() const;
 	void shake(float);
 	void setView(const sf::View &);
+	bool moving() const;
 	sf::Vector2f getOffset() const;
 };

@@ -56,7 +56,7 @@ void Game::Init() {
 	lightingMap.create(windowW, windowH);
 	vignetteSprite.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::vignette));
 	vignetteShadowSpr.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::vignetteShadow));
-	beamGlowSpr.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::teleporterBeamGlow));
+	beamGlowSpr.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::teleporterGlow));
 	vignetteSprite.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setColor(sf::Color(255,255,255,100));
@@ -187,7 +187,7 @@ void Game::draw(sf::RenderWindow & window) {
 			desaturateShader.setParameter("amount", UI.getDesaturateAmount());
 			window.draw(sf::Sprite(thirdPass.getTexture()), &desaturateShader);
 			if (!stashed && (UI.getState() == UserInterface::State::statsScreen
-							 || UI.getState() == UserInterface::State::menuScreen)) {
+							 || UI.getState() == UserInterface::State::menuScreen) && !camera.moving()) {
 				stash.clear(sf::Color::Black);
 				stash.draw(sf::Sprite(thirdPass.getTexture()), &desaturateShader);
 				stash.display();
@@ -213,7 +213,7 @@ void Game::draw(sf::RenderWindow & window) {
 			blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
 			window.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
 			if (!stashed && (UI.getState() == UserInterface::State::statsScreen
-							 || UI.getState() == UserInterface::State::menuScreen)) {
+							 || UI.getState() == UserInterface::State::menuScreen) && !camera.moving()) {
 				stash.clear(sf::Color::Black);
 				stash.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
 				stash.display();
@@ -377,17 +377,14 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 			float teleporterX = details.get<0>().back().getPosition().x;
 			float teleporterY = details.get<0>().back().getPosition().y;
 			if ((std::abs(player.getXpos() - teleporterX) < 8 && std::abs(player.getYpos() - teleporterY + 12) < 8)) {
-				// Todo: snap player to the teleporter
 				player.setPosition(teleporterX - 2.f, teleporterY - 16.f);
 				player.setState(Player::State::deactivated);
-				const sf::Vector2f playerPos = player.getPosition();
-				const sf::Vector2f & cameraPos = camera.getView().getCenter();
-				if (std::abs(playerPos.x - cameraPos.x) < 1.f && std::abs(playerPos.y - cameraPos.y) < 1.f) {
+				if (!camera.moving()) {
 					transitionState = TransitionState::ExitBeamEnter;
 				}
 			}
-			beamShape.setFillColor(sf::Color(114, 255, 229, 6));
 			beamShape.setPosition(windowW / 2 - 1.5, windowH / 2 + 36);
+			beamShape.setFillColor(sf::Color(114, 255, 229, 6));
 			beamShape.setSize(sf::Vector2f(2, 0));
 		}
 		break;
@@ -398,10 +395,10 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 			// About the static casts--macOS and Linux use different underlying types for int_fast64_t
 			float beamHeight = Easing::easeIn<1>(timer, static_cast<int_fast64_t>(500000)) * -(windowH / 2 + 36);
 			uint8_t brightness = Easing::easeIn<1>(timer, static_cast<int_fast64_t>(500000)) * 255;
-			beamGlowSpr.setColor(sf::Color(brightness, brightness, brightness, 255));
-			beamShape.setSize(sf::Vector2f(2, beamHeight));
 			uint_fast8_t alpha = Easing::easeIn<1>(timer, static_cast<int_fast64_t>(450000)) * 255;
+			beamGlowSpr.setColor(sf::Color(brightness, brightness, brightness, 255));
 			beamShape.setFillColor(sf::Color(114, 255, 229, alpha));
+			beamShape.setSize(sf::Vector2f(2, beamHeight));
 		}
 		if (timer > 500000) {
 			timer = 0;
@@ -505,9 +502,10 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 	case TransitionState::EntryBeamFade:
 		timer += elapsedTime.asMicroseconds();
 		{
-			uint_fast8_t alpha = Easing::easeOut<1>(timer, static_cast<int_fast64_t>(300000)) * 240;
+			uint8_t alpha = Easing::easeOut<1>(timer, static_cast<int_fast64_t>(300000)) * 240;
 			beamShape.setFillColor(sf::Color(114, 255, 229, alpha));
-			beamGlowSpr.setColor(sf::Color(alpha, alpha, alpha, 255));
+			uint8_t brightness = Easing::easeOut<2>(timer, static_cast<int_fast64_t>(300000)) * 255;
+			beamGlowSpr.setColor(sf::Color(brightness, brightness, brightness, 255));
 		}
 		if (timer > 300000) {
 			transitionState = TransitionState::None;
@@ -525,12 +523,13 @@ void Game::Reset() {
 	effectGroup.clear();
 	details.clear();
 	player.setPosition(windowW / 2 - 17, windowH / 2);
-	camera.reset();
 	en.clear();
 	set = tileController::Tileset::intro;
 	if (level == 0) {
+		camera.panDown();
 		set = tileController::Tileset::intro;
 	} else {
+		camera.reset();
 		set = tileController::Tileset::regular;
 	}
 	vignetteSprite.setColor(sf::Color(255, 255, 255, 255));

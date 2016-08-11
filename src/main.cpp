@@ -50,6 +50,7 @@ ResourceHandler * globalResourceHandlerPtr = nullptr;
 int main() {
 	try {
 		ResourceHandler resourceHandler;
+		resourceHandler.load();
 		globalResourceHandlerPtr = &resourceHandler;
 		seedRNG();
 		// Graphics are pixel art so it's okay to use upsampled textures for everything except font rendering

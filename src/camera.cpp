@@ -118,6 +118,11 @@ const sf::View & Camera::getView() const {
 	return view;
 }
 
+void Camera::panDown() {
+	view.setCenter(pTarget->getPosition());
+	startPosition = view.getCenter();
+}
+
 void Camera::reset() {
 	float placementOffset = pTarget->getPosition().y / 2;
 	view.setCenter(sf::Vector2f(pTarget->getPosition().x, placementOffset));
@@ -126,6 +131,15 @@ void Camera::reset() {
 
 void Camera::setView(const sf::View & _view) {
 	view = _view;
+}
+
+bool Camera::moving() const {
+	const sf::Vector2f playerPos = pTarget->getPosition();
+	const sf::Vector2f & cameraPos = view.getCenter();			
+	if (std::abs(playerPos.x - cameraPos.x) < 1.f && std::abs(playerPos.y - cameraPos.y) < 1.f) {
+		return false;
+	}
+	return true;
 }
 
 void Camera::shake(float _shakeIntensity) {

@@ -56,10 +56,6 @@ void loadSound(const char * fname, ResourceHandler::Sound id, std::array<sf::Sou
 	}
 }
 
-ResourceHandler::ResourceHandler() {
-	load();
-}
-
 void ResourceHandler::load() {
 	loadTexture("gameObjects.png", Texture::gameObjects, textures);
 	loadTexture("vignetteMask.png", Texture::vignette, textures);

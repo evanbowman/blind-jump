@@ -67,10 +67,9 @@ public:
 	const sf::Image & getImage(ResourceHandler::Image) const;
 	const sf::SoundBuffer & getSound(ResourceHandler::Sound) const;
 	sf::Shader & getShader(ResourceHandler::Shader) const; // Exception: shader cannot be a constant reference
-	ResourceHandler();
+	void load();
 	
 private:
-	void load();
 	mutable std::map<int, sf::Texture> textures;
 	mutable std::array<sf::Shader, 3> shaders;
 	mutable std::array<sf::Font, 1> fonts;
