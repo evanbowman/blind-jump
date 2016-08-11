@@ -56,7 +56,7 @@ void Game::Init() {
 	lightingMap.create(windowW, windowH);
 	vignetteSprite.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::vignette));
 	vignetteShadowSpr.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::vignetteShadow));
-	beamGlowSpr.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::teleporterGlow));
+	beamGlowSpr.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::teleporterBeamGlow));
 	vignetteSprite.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setColor(sf::Color(255,255,255,100));
@@ -68,7 +68,6 @@ void Game::Init() {
 	tiles.setWindowSize(windowW, windowH);
 	en.setWindowSize(windowW, windowH);
 	pFonts->setWaypointText(level);
-	beamGlowSpr.setPosition(windowW / 2 - 200, windowH / 2 - 200 + 36);
 	beamGlowSpr.setColor(sf::Color(0, 0, 0, 255));
 	transitionShape.setSize(sf::Vector2f(windowW, windowH));
 	transitionShape.setFillColor(sf::Color(0, 0, 0, 0));
@@ -353,7 +352,6 @@ void Game::drawTransitions(sf::RenderWindow & window) {
 
 	case TransitionState::TransitionIn:
     	window.draw(transitionShape);
-		glowSprs1.push_back(beamGlowSpr);
 		break;
 
 	case TransitionState::EntryBeamDrop:
@@ -386,6 +384,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 			beamShape.setPosition(windowW / 2 - 1.5, windowH / 2 + 36);
 			beamShape.setFillColor(sf::Color(114, 255, 229, 6));
 			beamShape.setSize(sf::Vector2f(2, 0));
+			beamGlowSpr.setPosition(windowW / 2 - 200, windowH / 2 - 200 + 36);
 		}
 		break;
 
