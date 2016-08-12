@@ -40,7 +40,7 @@ void FireExplosion::update(const sf::Time & elapsedTime) {
 			killFlag = true;
 		}
 	}
-	uint8_t color = Easing::easeOut<1>(glowFadeTimer, static_cast<int64_t>(560000));
+	uint8_t color = Easing::easeOut<1>(glowFadeTimer, static_cast<int64_t>(560000)) * 230;
     glow.setColor(sf::Color(color, color, color, 255));
 }
 

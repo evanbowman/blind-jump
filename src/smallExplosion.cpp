@@ -30,16 +30,17 @@ SmallExplosion::SmallExplosion(const sf::Texture & mainTxtr, const sf::Texture &
 }
 
 void SmallExplosion::update(const sf::Time & elapsedTime) {
-	timer += elapsedTime.asMilliseconds();
-	if (timer > 60) {
-		timer -= 60;
+	timer += elapsedTime.asMicroseconds();
+	glowFadeTimer += elapsedTime.asMicroseconds();
+	if (timer > 60000) {
+		timer -= 60000;
 		frameIndex++;
 		if (frameIndex > 5) {
 			frameIndex = 5;
 			killFlag = true;
 		}
 	}
-	uint8_t color = Easing::easeOut<2>(glowFadeTimer, 560);
+	uint8_t color = Easing::easeOut<2>(glowFadeTimer, static_cast<int64_t>(300000)) * 230;
     glow.setColor(sf::Color(color, color, color, 255));
 }
 
