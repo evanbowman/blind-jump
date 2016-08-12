@@ -35,7 +35,7 @@
 #include "rng.hpp"
 #include "aspectScaling.hpp"
 #include "alias.hpp"
-#include "feedback.hpp"
+#include "util.hpp"
 #include "shutdownSignal.hpp"
 #ifdef LINUX
 #include <X11/Xlib.h>
@@ -79,9 +79,9 @@ int main() {
 					time_point start = high_resolution_clock::now();
 					sf::Time elapsedTime = gameClock.restart(); // TODO: use chrono clock instead
 					// TODO: What if the app freezes? Then the elapsed time will be really large!
-					if (Feedback::isAsleep) {
+					if (util::isAsleep) {
 						elapsedTime = gameClock.restart();
-						Feedback::isAsleep = false;
+						util::isAsleep = false;
 					}
 				    pGame->update(elapsedTime);
 					time_point stop = high_resolution_clock::now();

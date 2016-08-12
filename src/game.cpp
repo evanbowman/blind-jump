@@ -77,7 +77,10 @@ void Game::Init() {
 }
 
 void Game::draw(sf::RenderWindow & window) {
-	if (!pInput->isFocused()) return;
+	if (!pInput->isFocused()) {
+		util::sleep(milliseconds(200));
+		return;
+	}
 	target.clear(sf::Color::Transparent);
 	if (!stashed || preload) {
 		{
@@ -244,7 +247,7 @@ void Game::draw(sf::RenderWindow & window) {
 
 void Game::update(sf::Time & elapsedTime) {
 	if (!pInput->isFocused()) {
-		
+		util::sleep(milliseconds(200));
 		return;
 	}
 	// Blurring is graphics intensive, the game caches frames in a RenderTexture when possible
@@ -494,7 +497,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 			transitionState = TransitionState::EntryBeamFade;
 			timer = 0;
 			player.visible = true;
-			Feedback::sleep(milliseconds(20));
+			util::sleep(milliseconds(20));
 			camera.shake(0.15f);
 		}
 		break;

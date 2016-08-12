@@ -110,7 +110,7 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 	if (!scoots.empty()) {
 		for (auto it = scoots.begin(); it != scoots.end();) {
 			if (it->getKillFlag()) {
-				Feedback::sleep(milliseconds(45));
+				util::sleep(milliseconds(45));
 				camera.shake(0.1f);
 				it = scoots.erase(it);
 			} else {
@@ -144,7 +144,7 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 		
 		for (auto it = critters.begin(); it != critters.end();) {
 			if (it->getKillFlag()) {
-				Feedback::sleep(milliseconds(45));
+				util::sleep(milliseconds(45));
 				camera.shake(0.1f);
 				it = critters.erase(it);
 			} else {
@@ -180,7 +180,7 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 					}
 				}
 				if (element.getKillFlag()) {
-					Feedback::sleep(milliseconds(45));
+					util::sleep(milliseconds(45));
 					camera.shake(0.1f);
 					element.setKillFlag(false);
 				}

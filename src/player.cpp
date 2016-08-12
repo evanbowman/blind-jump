@@ -290,7 +290,7 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & 
 					std::abs(yPos - chest.getPosition().y) < 26 &&
 					chest.getState() == TreasureChest::State::closed &&
 					action) {
-					Feedback::sleep(milliseconds(40));
+					util::sleep(milliseconds(40));
 					chest.setState(TreasureChest::State::opening);
 					// TODO: Opening chest should change player and/or UI state
 				}
@@ -662,7 +662,7 @@ void Player::checkEffectCollisions(EffectGroup & effects, FontController * pFont
 			renderType = Rendertype::shadeRed;
 			colorAmount = 1.f;
 			colorTimer = 0;
-			Feedback::sleep(milliseconds(40));
+			util::sleep(milliseconds(40));
 		}
 	};
 	checkEffectCollision<8>(effects, this, hitPolicy);
@@ -674,14 +674,14 @@ void Player::checkEffectCollisions(EffectGroup & effects, FontController * pFont
 			renderType = Rendertype::shadeCrimson;
 			colorAmount = 1.f;
 			colorTimer = 0;
-			Feedback::sleep(milliseconds(20));
+			util::sleep(milliseconds(20));
 		});
 	checkEffectCollision<5>(effects, this, [&]() {
 			pFonts->updateScore(1);
 			renderType = Rendertype::shadeNeon;
 			colorAmount = 1.f;
 			colorTimer = 0;
-			Feedback::sleep(milliseconds(20));
+			util::sleep(milliseconds(20));
 		});
 }
 
