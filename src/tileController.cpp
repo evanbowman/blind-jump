@@ -179,13 +179,13 @@ tileController::tileController() : posX{-72}, posY{-476}, windowH{0}, windowW{0}
 	shadow.setFillColor(sf::Color(188, 188, 198, 255));
 }
 
-void tileController::update(const float xOffset, const float yOffset) {
+void tileController::update() {
 	for (auto & element : walls) {
-		element.setPosition(element.getXinit() + xOffset + posX, element.getYinit() + yOffset + posY);
+		element.setPosition(element.getXinit() + posX, element.getYinit() + posY);
 	}
-	transitionLvSpr.setPosition(posX + xOffset, posY + yOffset);
-	mapSprite1.setPosition(posX + xOffset, posY + yOffset);
-	mapSprite2.setPosition(posX + xOffset, posY + yOffset);
+	transitionLvSpr.setPosition(posX, posY);
+	mapSprite1.setPosition(posX, posY);
+	mapSprite2.setPosition(posX, posY);
 }
 
 void tileController::draw(sf::RenderTexture& window, std::vector<sf::Sprite>* glowSprites, int level, const sf::View & worldView, const sf::View & cameraView) {

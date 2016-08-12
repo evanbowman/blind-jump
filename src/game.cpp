@@ -243,9 +243,10 @@ void Game::draw(sf::RenderWindow & window) {
 }
 
 void Game::update(sf::Time & elapsedTime) {
-	if (!pInput->isFocused()) return;
-	float xOffset = 0;
-	float yOffset = 0;
+	if (!pInput->isFocused()) {
+		
+		return;
+	}
 	// Blurring is graphics intensive, the game caches frames in a RenderTexture when possible
 	if (stashed && UI.getState() != UserInterface::State::statsScreen && UI.getState() != UserInterface::State::menuScreen) {
 		stashed = false;
@@ -258,7 +259,7 @@ void Game::update(sf::Time & elapsedTime) {
 		} else { // TODO: why is this necessary...?
 			bkg.setOffset(0, 0);
 		}
-		tiles.update(xOffset, yOffset);
+		tiles.update();
 		details.apply([&](auto & vec) {
 			for (auto it = vec.begin(); it != vec.end();) {
 				if (it->getKillFlag()) {

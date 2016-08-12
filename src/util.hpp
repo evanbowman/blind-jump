@@ -25,7 +25,7 @@
 
 class Player;
 
-namespace Feedback {
+namespace util {
 	extern bool isAsleep;
 	inline void sleep(const milliseconds & time) {
 	    isAsleep = true;
