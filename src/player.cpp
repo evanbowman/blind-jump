@@ -292,8 +292,20 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & 
 					action) {
 					util::sleep(milliseconds(40));
 					chest.setState(TreasureChest::State::opening);
-					pGM->getUI().resetPowerupBar(UserInterface::Powerup::rapidFire);
-					// TODO: Opening chest should change player and/or UI state
+					switch (chest.getPowerup()) {
+					case Powerup::rapidFire:
+						pGM->getUI().resetPowerupBar(Powerup::rapidFire);
+						break;
+
+					case Powerup::health:
+						{
+							FontController * pFonts = pGM->getPFonts();
+							pFonts->updateMaxHealth(pFonts->getMaxHealth() + 1);
+					    } break;
+
+					case Powerup::nil:
+						break;
+					}
 				}
 			}
 		}
@@ -639,7 +651,7 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, Effect
 			if (gun.bulletTimer == 0) {
 				// TODO: sounds.play(ResourceHandler::Sound::gunShot);
 				effects.add<9>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::whiteGlow), static_cast<int>(sheetIndex), xPos, yPos);
-				if (UI.getCurrentPowerup() == UserInterface::Powerup::rapidFire) {
+				if (UI.getCurrentPowerup() == Powerup::rapidFire) {
 					gun.bulletTimer = 220000;
 				} else {
 					gun.bulletTimer = 440000;

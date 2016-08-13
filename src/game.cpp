@@ -562,12 +562,14 @@ void Game::Reset() {
 		initEnemies(this);
 		// Place 0-2 powerup chests on the map
 		c = pickLocation(tiles.emptyMapLocations);
+		Powerup chestContents = static_cast<Powerup>(rand() % 2 + 1);
 		details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), 0);
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), chestContents);
 		if (std::abs(static_cast<int>(globalRNG())) % 2) {
 			c = pickLocation(tiles.emptyMapLocations);
+			chestContents = static_cast<Powerup>(rand() % 2 + 1);
 			details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
-						   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), 0);
+						   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), chestContents);
 		}
 		
 		glowSprs1.clear();

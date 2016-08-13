@@ -89,13 +89,13 @@ void UserInterface::draw(sf::RenderWindow & window, FontController & fonts) {
 	}
 }
 
-void UserInterface::resetPowerupBar(UserInterface::Powerup _powerup) {
+void UserInterface::resetPowerupBar(Powerup _powerup) {
 	dispPowerupBar = true;
 	powerup = _powerup;
 	powerupTimer = 0;
 }
 
-UserInterface::Powerup UserInterface::getCurrentPowerup() const {
+Powerup UserInterface::getCurrentPowerup() const {
 	return powerup;
 }
 
@@ -113,7 +113,7 @@ void UserInterface::update(Player & player, FontController & fonts, InputControl
 			fonts.setBarWidth(barWidth);
 			if (powerupTimer > powerupTimerCeil) {
 				dispPowerupBar = false;
-				powerup = UserInterface::Powerup::nil;
+				powerup = Powerup::nil;
 			}
 		}
 		if (pause) {

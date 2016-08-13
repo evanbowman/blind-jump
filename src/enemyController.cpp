@@ -99,8 +99,14 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 			if (it->getKillFlag() == 1) {
 				it = turrets.erase(it);
 			} else {
-				if (enabled) {
-					it->update(elapsedTime, x, y, ef);
+				if (it->getXpos() > viewCenter.x - viewSize.x / 2 - 48 &&
+					it->getXpos() < viewCenter.x + viewSize.x / 2 + 48 &&
+					it->getYpos() > viewCenter.y - viewSize.y / 2 - 48 &&
+					it->getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
+					if (enabled) {
+						it->update(elapsedTime, x, y, ef);
+					}
+					cameraTargets.emplace_back(it->getXpos(), it->getYpos());
 				}
 				++it;
 			}

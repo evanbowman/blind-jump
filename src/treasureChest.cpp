@@ -18,18 +18,22 @@
 #include "treasureChest.hpp"
 #include <cmath>
 
-TreasureChest::TreasureChest(float _xInit, float _yInit, const sf::Texture & mainTxtr, char _item)
-	: Detail{_xInit + (std::abs(static_cast<int>(globalRNG())) % 4) + -2, _yInit},
-	  state{State::closed},
-	  item{_item},
-	  animationTimer{0},
-	  frameIndex{0},
-	  chestSheet{mainTxtr}
+TreasureChest::TreasureChest(float _xInit, float _yInit, const sf::Texture & mainTxtr, Powerup _powerup)
+	: Detail(_xInit + (std::abs(static_cast<int>(globalRNG())) % 4) + -2, _yInit),
+	  state(State::closed),
+	  powerup(_powerup),
+	  animationTimer(0),
+	  frameIndex(0),
+	  chestSheet(mainTxtr)
 {
 	chestShadow.setTexture(mainTxtr);
 	chestShadow.setTextureRect(sf::IntRect(18, 107, 16, 8));
 	chestSheet.setPosition(position.x, position.y - 16);
 	chestShadow.setPosition(position.x, position.y + 12);
+}
+
+Powerup TreasureChest::getPowerup() const {
+	return powerup;
 }
 
 const sf::Sprite & TreasureChest::getShadow() const {
@@ -57,10 +61,6 @@ void TreasureChest::update(const sf::Time & elapsedTime) {
 	default:
 		break;
 	}
-}
-
-char TreasureChest::getItem() const {
-	return item;
 }
 
 TreasureChest::State TreasureChest::getState() const {

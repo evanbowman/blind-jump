@@ -16,13 +16,14 @@
 //========================================================================//
 
 #pragma once
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
+#include <array>
 #include "fontController.hpp"
 #include "effectsController.hpp"
 #include "inputController.hpp"
-#include <array>
 #include "easingTemplates.hpp"
 #include "shutdownSignal.hpp"
+#include "powerup.hpp"
 
 class Player;
 
@@ -42,10 +43,6 @@ public:
 		customizeJoystickScreen,
 		settingsScreen
 	};
-	enum class Powerup {
-		nil,
-		rapidFire,
-	}; 
 	UserInterface();
 	void update(Player &, FontController &, InputController *, const sf::Time &);
 	void draw(sf::RenderWindow &, FontController &);
@@ -61,12 +58,12 @@ public:
 	bool desaturateEnabled();
 	float getBlurAmount();
 	void setView(sf::View *);
-	void resetPowerupBar(UserInterface::Powerup);
-	UserInterface::Powerup getCurrentPowerup() const;
+	void resetPowerupBar(Powerup);
+	Powerup getCurrentPowerup() const;
 	
 private:
 	State state;
-	UserInterface::Powerup powerup;
+	Powerup powerup;
 	int selectorPosition;
 	int32_t timer, timerAlt;
 	int64_t powerupTimer;
