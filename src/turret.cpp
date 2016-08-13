@@ -19,10 +19,6 @@
 #include <cmath>
 #include "angleFunction.hpp"
 
-//
-// TODO: Urgent: refactor
-//
-
 Turret::Turret(const sf::Texture & gameObjects, float _xPos, float _yPos) :
 	state(State::closed),
 	xPos(_xPos),
@@ -63,7 +59,7 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 			if (hp == 1) {
 				element.disablePuff();
 				element.setKillFlag();
-				}
+			}
 			element.poof();
 			hp -= 1;
 			isColored = true;

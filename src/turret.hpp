@@ -25,10 +25,6 @@
 #include "Framework/framework.hpp"
 #include "spriteSheet.hpp"
 
-//
-// TODO: Urgent: refactor
-//
-
 class Turret {
 private:
 	enum class State {
@@ -37,8 +33,7 @@ private:
 	State state;	
 	using HBox = Framework::HitBox<16, 32>;
 	HBox hitBox;
-	float xPos;
-	float yPos;
+	float xPos, yPos;
 	int8_t frameIndex;
 	SpriteSheet<0, 0, 16, 32> turretSheet;
 	SpriteSheet<0, 32, 16, 26> shadowSheet;
