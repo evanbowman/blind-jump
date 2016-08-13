@@ -77,10 +77,11 @@ void Scoot::update(float playerPosX, float playerPosY, const std::vector<wall> &
 		if (timer > 1800) {
 			timer -= 1800;;
 			state = State::drift2;
-			if (std::abs(static_cast<int>(globalRNG())) % 2)
+			if (std::abs(static_cast<int>(globalRNG())) % 2) {
 				changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
-			else
+			} else {
 				changeDir(static_cast<float>(std::abs(static_cast<int>(globalRNG())) % 359));
+			}
 		}
 		break;
 
@@ -96,7 +97,7 @@ void Scoot::update(float playerPosX, float playerPosY, const std::vector<wall> &
 		effects.add<0>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos - 8, yPos - 12);
 		effects.add<8>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
-					   xPos - 8, yPos - 12, angleFunction(playerPosX, playerPosY + 8, xPos - 8, yPos - 8));
+					   xPos - 8, yPos - 12, angleFunction(playerPosX + 16, playerPosY + 8, xPos - 8, yPos - 8));
 		state = State::recoil;
 		changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
 		hSpeed *= -1;
@@ -116,14 +117,14 @@ void Scoot::update(float playerPosX, float playerPosY, const std::vector<wall> &
 			timer -= 400;
 			state = State::drift1;
 			speedScale = 0.5f;
-			if (std::abs(static_cast<int>(globalRNG())) % 2)
+			if (std::abs(static_cast<int>(globalRNG())) % 2) {
 				changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
-			else
+			} else {
 				changeDir(static_cast<float>(std::abs(static_cast<int>(globalRNG())) % 359));
+			}
 		}
 		break;
 	}
-
 	uint_fast8_t collisionMask = Enemy::checkWallCollision(w, xPos - 8, yPos - 8);
 	if (collisionMask) {
 		hSpeed = 0;
@@ -143,7 +144,6 @@ void Scoot::update(float playerPosX, float playerPosY, const std::vector<wall> &
 	}
 	xPos += (elapsedTime.asMicroseconds() * 0.00006f) * hSpeed * speedScale;
 	yPos += (elapsedTime.asMicroseconds() * 0.00006f) * vSpeed * speedScale;
-	// Update the frameIndex based on time
 	frameTimer += elapsedTime.asMilliseconds();
 	if (frameTimer > 87) {
 		frameTimer -= 87;

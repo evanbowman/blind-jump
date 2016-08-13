@@ -112,7 +112,7 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 			effects.add<0>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos);
 			effects.add<6>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 						   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
-						   xPos, yPos, angleFunction(playerPosX, playerPosY, xPos + 18, yPos + 6));
+						   xPos, yPos, angleFunction(playerPosX + 16, playerPosY + 8, xPos + 18, yPos + 6));
 			timer = 0;
 			state = State::shoot2;
 		}
@@ -124,7 +124,7 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 			effects.add<0>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos);
 			effects.add<6>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 						   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
-						   xPos, yPos, angleFunction(playerPosX, playerPosY, xPos + 18, yPos + 6));
+						   xPos, yPos, angleFunction(playerPosX + 16, playerPosY + 8, xPos + 18, yPos + 6));
 			timer = 0;
 			state = State::shoot3;
 		}
@@ -136,7 +136,7 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 			effects.add<0>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos);
 			effects.add<6>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 						   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
-						   xPos, yPos, angleFunction(playerPosX, playerPosY, xPos + 18, yPos + 6));
+						   xPos, yPos, angleFunction(playerPosX + 16, playerPosY + 8, xPos + 18, yPos + 6));
 			timer = 0;
 			state = State::rest;
 		}
