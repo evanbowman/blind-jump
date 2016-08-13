@@ -286,11 +286,11 @@ void Dasher::onDeath(EffectGroup & effects) {
 	if (temp == 0) {
 	    effects.add<4>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
-					   xPos, yPos + 4, Powerup::Type::Heart);
+					   xPos, yPos + 4, Item::Type::Heart);
 	} else {
 	    effects.add<5>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::blueglow),
-					   xPos, yPos + 4, Powerup::Type::Coin);
+					   xPos, yPos + 4, Item::Type::Coin);
 	}
     effects.add<1>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::fireExplosionGlow),

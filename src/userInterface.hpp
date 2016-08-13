@@ -16,7 +16,6 @@
 //========================================================================//
 
 #pragma once
-
 #include "SFML/Graphics.hpp"
 #include "fontController.hpp"
 #include "effectsController.hpp"
@@ -43,6 +42,10 @@ public:
 		customizeJoystickScreen,
 		settingsScreen
 	};
+	enum class Powerup {
+		nil,
+		rapidFire,
+	}; 
 	UserInterface();
 	void update(Player &, FontController &, InputController *, const sf::Time &);
 	void draw(sf::RenderWindow &, FontController &);
@@ -58,11 +61,16 @@ public:
 	bool desaturateEnabled();
 	float getBlurAmount();
 	void setView(sf::View *);
+	void resetPowerupBar(UserInterface::Powerup);
+	UserInterface::Powerup getCurrentPowerup() const;
 	
 private:
 	State state;
+	UserInterface::Powerup powerup;
 	int selectorPosition;
 	int32_t timer, timerAlt;
+	int64_t powerupTimer;
+	bool dispPowerupBar;
 	float blurAmount, desaturateAmount;
 	sf::View * pWorldView, cachedView;
 };

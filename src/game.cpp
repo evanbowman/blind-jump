@@ -560,8 +560,12 @@ void Game::Reset() {
 					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::teleporterGlow));
 		
 		initEnemies(this);
+		// Place 0-2 powerup chests on the map
+		c = pickLocation(tiles.emptyMapLocations);
+		details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
+					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), 0);
 		if (std::abs(static_cast<int>(globalRNG())) % 2) {
-			Coordinate c = pickLocation(tiles.emptyMapLocations);
+			c = pickLocation(tiles.emptyMapLocations);
 			details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
 						   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), 0);
 		}

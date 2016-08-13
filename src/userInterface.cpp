@@ -20,12 +20,14 @@
 #include "player.hpp"
 
 UserInterface::UserInterface() :
-	state{State::closed},
-	selectorPosition{0},
-	timer{0},
-	timerAlt{0},
-	blurAmount{0.f},
-	desaturateAmount{0.f}
+	state(State::closed),
+	selectorPosition(0),
+	timer(0),
+	timerAlt(0),
+	powerupTimer(0),
+	dispPowerupBar(false),
+	blurAmount(0.f),
+	desaturateAmount(0.f)
 {
 }
 
@@ -87,6 +89,16 @@ void UserInterface::draw(sf::RenderWindow & window, FontController & fonts) {
 	}
 }
 
+void UserInterface::resetPowerupBar(UserInterface::Powerup _powerup) {
+	dispPowerupBar = true;
+	powerup = _powerup;
+	powerupTimer = 0;
+}
+
+UserInterface::Powerup UserInterface::getCurrentPowerup() const {
+	return powerup;
+}
+
 void UserInterface::update(Player & player, FontController & fonts, InputController * pInput, const sf::Time & elapsed) {
 	bool action = pInput->actionPressed();
 	bool up = pInput->upPressed();
@@ -94,6 +106,16 @@ void UserInterface::update(Player & player, FontController & fonts, InputControl
 	bool pause = pInput->pausePressed();
 	switch (state) {
 	case State::closed:
+		if (dispPowerupBar) {
+			const static int64_t powerupTimerCeil = 18000000;
+			powerupTimer += elapsed.asMicroseconds();
+			float barWidth = Easing::easeOut<1>(powerupTimer, powerupTimerCeil);
+			fonts.setBarWidth(barWidth);
+			if (powerupTimer > powerupTimerCeil) {
+				dispPowerupBar = false;
+				powerup = UserInterface::Powerup::nil;
+			}
+		}
 		if (pause) {
 			state = State::menuScreenEntry;
 			player.setState(Player::State::deactivated);

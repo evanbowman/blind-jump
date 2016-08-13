@@ -22,7 +22,11 @@
 #define SCORE_TEXT_FADE_SECONDS 3
 #define WAYPOINT_TEXT_FADE_SECONDS 3
 
-FontController::FontController(sf::View fontView, float x, float y) : healthModified(false), scoreModified(false) {
+FontController::FontController(sf::View fontView, float x, float y) :
+	healthModified(false),
+	scoreModified(false),
+	barWidth(0.f)
+{
 	// Store the view to use when drawing fonts
 	this->fontView = fontView;
 	
@@ -76,10 +80,7 @@ FontController::FontController(sf::View fontView, float x, float y) : healthModi
 		text.setFont(font);
 		text.setCharacterSize(size);
 		text.setString(string);
-	};
-
-	// Worth noting that cornerstone is an all caps font anyway, but in case I change it...
-	
+	};	
 	initText(cornerstone, waypointText, std::string("WAYPOINT-1"), 0.055f * scale);
 	waypointText.setPosition(16, 0);
 
@@ -105,6 +106,13 @@ FontController::FontController(sf::View fontView, float x, float y) : healthModi
 	initText(cornerstone, deathText, std::string("YOU DIED"), 0.115 * scale);
 	deathText.setColor(sf::Color(231, 26, 83));
 	deathText.setPosition(fontView.getSize().x / 2 - deathText.getLocalBounds().width / 2, fontView.getSize().y / 12 - deathText.getLocalBounds().height / 2);
+
+	sf::Vector2f barPosition(0.f, fontView.getSize().y - fontView.getSize().y * 0.008f);
+	powerupBarFront.setPosition(barPosition);
+	powerupBarBack.setPosition(barPosition);
+	powerupBarBack.setSize(sf::Vector2f(fontView.getSize().x, fontView.getSize().y * 0.008f));
+	powerupBarBack.setFillColor(sf::Color(160, 160, 160, 255));
+	powerupBarFront.setFillColor(sf::Color::White);
 }
 
 void FontController::setTextOffset(float xOffset, float yOffset, FontController::Text text) {
@@ -202,6 +210,11 @@ int FontController::getScore() {
 void FontController::print(sf::RenderWindow & window) {
 	// Set the correct view, so not to blur the fonts
 	window.setView(fontView);
+	if (barWidth > 0) {
+	    powerupBarFront.setSize(sf::Vector2f(fontView.getSize().x * barWidth, fontView.getSize().y * 0.01f));
+		window.draw(powerupBarBack, sf::BlendMultiply);
+		window.draw(powerupBarFront);
+	}
 	if (healthModified) {
 		healthModified = false;
 		healthNumText.setString(std::to_string(static_cast<int>(health)) + " / " + std::to_string(static_cast<int>(maxHealth)) + " :");
@@ -298,7 +311,7 @@ void FontController::drawDeathText(unsigned char alpha, sf::RenderWindow & windo
 	window.draw(deathText);
 }
 
-sf::Text* FontController::getTitle() {
+sf::Text * FontController::getTitle() {
 	return &titleText;
 }
 
@@ -322,4 +335,8 @@ char FontController::getMaxHealth() const {
 
 sf::Text * FontController::getDeathText() {
 	return &deathText;
+}
+
+void FontController::setBarWidth(float _barWidth) {
+    barWidth = _barWidth;
 }

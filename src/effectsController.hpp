@@ -23,7 +23,7 @@
 #include "shotPuff.hpp"
 #include "FireExplosion.hpp"
 #include "smallExplosion.hpp"
-#include "Powerup.hpp"
+#include "Item.hpp"
 #include "resourceHandler.hpp"
 #include "RenderType.hpp"
 #include "Framework/framework.hpp"
@@ -35,8 +35,8 @@ using EffectGroup = Framework::Group<TurretFlashEffect, // - 0
 									 SmallExplosion, // ---- 1
 									 FireExplosion, // ----- 2
 									 ShotPuff, // ---------- 3 
-									 Powerup, // ----------- 4
-									 Powerup, // ----------- 5
+									 Item, // ----------- 4
+									 Item, // ----------- 5
 									 EnemyShot, // --------- 6
 									 DasherShot, // -------- 7
 									 TurretShot, // -------- 8

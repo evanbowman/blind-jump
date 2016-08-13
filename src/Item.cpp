@@ -15,25 +15,40 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.  //
 //========================================================================//
 
-#pragma once
+#include "Item.hpp"
 
-#include <SFML/Graphics.hpp>
-#include <cmath>
-#include "spriteSheet.hpp"
-#include "Effect.hpp"
+const static float PI{3.1415926535};
 
-class Powerup : public Effect {
-public:
-	enum class Type { Heart, Coin };
-	using HBox = Framework::HitBox<13, 13, -8, -8>;
-	Powerup(const sf::Texture &, const sf::Texture &, float, float, Type);
-	const sf::Sprite & getSprite();
-	const HBox & getHitBox() const;
-	const sf::Sprite & getGlow();
-	void update(sf::Time &);
-	
-protected:
-	HBox hitBox;
-	Sprite glow;
-	SpriteSheet<0, 75, 13, 13> powerupSheet;
-};
+Item::Item(const sf::Texture & bodyTxtr, const sf::Texture & glowTxtr, float xInit, float yInit, Type id) :
+	Effect(xInit, yInit)
+{
+	glow.setTexture(glowTxtr);
+	glow.setOrigin(22.5, 22.5);
+	powerupSheet.setTexture(bodyTxtr);
+	// Square brace overloads provide access, but in doing so also set the working frame
+	powerupSheet[static_cast<int>(id)];
+	powerupSheet.setOrigin(7, 7);
+	timer = 0;
+	killFlag = false;
+	hitBox.setPosition(position);
+}
+
+void Item::update(sf::Time & elapsedTime) {
+	timer += elapsedTime.asMilliseconds();
+	const float offset = (3 * sinf(2 * PI * 0.001 * timer + 180));
+	// Make the sprite float up and down
+	powerupSheet.setPosition(position.x, position.y + offset);
+}
+
+const sf::Sprite & Item::getSprite() {
+	return powerupSheet.getSprite();
+}
+
+const sf::Sprite & Item::getGlow() {
+	glow.setPosition(position.x, position.y + 10);
+	return glow;
+}
+
+const Item::HBox & Item::getHitBox() const {
+	return hitBox;
+}

@@ -226,7 +226,7 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & 
 		break;
 
 	case State::nominal:
-		updateGun(elapsedTime, shoot, effects, sounds);
+		updateGun(elapsedTime, shoot, effects, sounds, pGM->getUI());
 		if (!shoot) {
 			regKeyResponse<Sheet::walkUp>(up, down, left, right, sheetIndex, uSpeed, collisionUp);
 			regKeyResponse<Sheet::walkDown>(down, up, left, right, sheetIndex, dSpeed, collisionDown);
@@ -292,6 +292,7 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & 
 					action) {
 					util::sleep(milliseconds(40));
 					chest.setState(TreasureChest::State::opening);
+					pGM->getUI().resetPowerupBar(UserInterface::Powerup::rapidFire);
 					// TODO: Opening chest should change player and/or UI state
 				}
 			}
@@ -430,7 +431,7 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & 
 	case Sheet::stillUp:
 		break;
 
-	case Sheet::stillLeft:
+case Sheet::stillLeft:
 		if (gun.timeout > 0) {
 			gun.gunSpr.setPosition(xPos + 2, yPos + 13);
 		}
@@ -619,7 +620,7 @@ void Player::setHealth(Health value) {
 	health = value;
 }
 
-void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, EffectGroup & effects, SoundController & sounds) {
+void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, EffectGroup & effects, SoundController & /*TODO: sounds*/, UserInterface & UI) {
 	gun.timeout -= elapsedTime.asMicroseconds();
 	if (gun.bulletTimer != 0) {
 		gun.bulletTimer -= elapsedTime.asMicroseconds();
@@ -636,9 +637,13 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, Effect
 		} else if (gun.timeout < 1671000) {
 			gun.timeout = 1671000;
 			if (gun.bulletTimer == 0) {
-				sounds.play(ResourceHandler::Sound::gunShot);
+				// TODO: sounds.play(ResourceHandler::Sound::gunShot);
 				effects.add<9>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::whiteGlow), static_cast<int>(sheetIndex), xPos, yPos);
-				gun.bulletTimer = 440000;
+				if (UI.getCurrentPowerup() == UserInterface::Powerup::rapidFire) {
+					gun.bulletTimer = 220000;
+				} else {
+					gun.bulletTimer = 440000;
+				}
 			}
 		}
 	}

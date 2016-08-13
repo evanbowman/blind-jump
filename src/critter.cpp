@@ -171,11 +171,11 @@ void Critter::onDeath(EffectGroup & effects) {
 	if (temp == 0) {
 	    effects.add<4>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
-					   xInit + 10, yInit, Powerup::Type::Heart);
+					   xInit + 10, yInit, Item::Type::Heart);
 	} else {
 	    effects.add<5>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::blueglow),
-					   xInit + 10, yInit, Powerup::Type::Coin);
+					   xInit + 10, yInit, Item::Type::Coin);
 	}
     effects.add<1>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::fireExplosionGlow),

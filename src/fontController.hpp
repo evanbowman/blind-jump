@@ -22,6 +22,10 @@
 #include "SFML/Graphics.hpp"
 #include "resourceHandler.hpp"
 
+//
+// TODO: Urgent: Refactor, put in ui:: namespace, and rename to FrontEnd
+//
+
 class FontController {
 private:
 	sf::Texture texture;
@@ -35,6 +39,8 @@ private:
 	sf::Clock wpTextDisplayTimer, healthDisplayTimer, scoreDisplayTimer;
 	sf::ConvexShape heart;
 	sf::CircleShape coin;
+	float barWidth;
+	sf::RectangleShape powerupBarFront, powerupBarBack;
 	
 public:
 	enum class Text {
@@ -59,5 +65,6 @@ public:
 	void resetSCText();
 	void updateScore(int);
 	int getScore();
+	void setBarWidth(float);
 };
 #endif /* FontController_hpp */

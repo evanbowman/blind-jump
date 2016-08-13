@@ -80,7 +80,7 @@ public:
 	
 private:
 	HBox hitBox;
-	void updateGun(const sf::Time &, const bool, EffectGroup &, SoundController &);
+	void updateGun(const sf::Time &, const bool, EffectGroup &, SoundController &, UserInterface &);
 	Weapon gun;
 	void checkEffectCollisions(EffectGroup &, FontController *);
 	std::vector<Dasher::Blur> blurs; // I could have designed this better...
