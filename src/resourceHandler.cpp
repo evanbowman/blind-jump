@@ -70,6 +70,10 @@ void ResourceHandler::load() {
 	loadTexture("whiteFloorGlow.png", Texture::whiteGlow, textures);
 	loadTexture("charger_enemy_shadow.png", Texture::scootShadow, textures);
 	loadTexture("teleporterBeamGlow.png", Texture::teleporterBeamGlow, textures);
+	loadTexture("bkg_stars.png", Texture::bkgStarsNear, textures);
+	loadTexture("bkg_stars_distant.png", Texture::bkgStarsFar, textures);
+	loadTexture("introLevelMask.png", Texture::introLevelMask, textures);
+	loadTexture("bkg_orbit2.png", Texture::bkgOrbit, textures);
 	loadShader("color.frag", Shader::color, shaders);
 	loadShader("blur.frag", Shader::blur, shaders);
 	loadShader("desaturate.frag", Shader::desaturate, shaders);

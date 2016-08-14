@@ -26,15 +26,29 @@ if [ $# == 2 ]; then
     mv -f $1 ../prod/$2.app/Contents/MacOS/$1
     printf "\nMoved executable to package"
 
-    printf "\nCopying resources into package..."
+    printf "\nCopying resources into package... "
     cp -rf ../Resources ../prod/$2.app/Contents/
+    printf "Done!"
 
-    printf "\nCopying frameworks into package..."
+    printf "\nCopying frameworks into package... "
     cp -rf ../Frameworks ../prod/$2.app/Contents/
+    printf "Done!"
 
-    printf "\nMoving plist file..."
+    printf "\nCopying sources into package... "
+    mkdir ../prod/$2.app/Contents/src
+    cp -rf ./ ../prod/$2.app/Contents/src
+    rm ../prod/$2.app/Contents/src/*.o
+    printf "Done!"
+
+    printf "\nCompressing sources... "
+    tar -czf ../prod/$2.app/Contents/src.tar.gz ../prod/$2.app/Contents/src
+    rm -rf ../prod/$2.app/Contents/src
+    printf "Done!"
+    
+    printf "\nMoving plist file... "
     mv ../prod/$2.app/Contents/Resources/info.plist ../prod/$2.app/Contents/info.plist
-
+    printf "Done!"
+    
     if [ $? -eq 0 ]; then
 	printf "\nBundling complete!"
     else

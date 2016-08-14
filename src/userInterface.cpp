@@ -48,7 +48,7 @@ void UserInterface::draw(sf::RenderWindow & window, FontController & fonts) {
 	switch (state) {
 	case State::deathScreenEntry:
 		{
-			uint8_t textAlpha = desaturateAmount * 255 + 89.25f;
+			uint8_t textAlpha = desaturateAmount * 255 + 38.25f;
 			fonts.drawDeathText(static_cast<unsigned char>(textAlpha), window);
 		}
 		break;
@@ -188,14 +188,14 @@ void UserInterface::update(Player & player, FontController & fonts, InputControl
 		if (timer > 20) {
 			timer -= 20;
 			desaturateAmount += 0.01f;
-			sf::Vector2f size = pWorldView->getSize();
-			float temp = size.x;
-			size.x -= 0.5 * (size.y / size.x);
-			size.y -= 0.5 * (size.y / temp);
-			pWorldView->setSize(size);
+			// sf::Vector2f size = pWorldView->getSize();
+			// float temp = size.x;
+			// size.x -= 0.5 * (size.y / size.x);
+			// size.y -= 0.5 * (size.y / temp);
+			// pWorldView->setSize(size);
 		}
-		if (desaturateAmount > 0.65f) {
-			desaturateAmount = 0.65f;
+		if (desaturateAmount > 0.85f) {
+			desaturateAmount = 0.85f;
 			state = State::deathScreen;
 			timerAlt = 0.f;
 		}
@@ -207,11 +207,11 @@ void UserInterface::update(Player & player, FontController & fonts, InputControl
 		if (timer > 20) {
 			timer -= 20;
 			if (timerAlt < 1400) {
-				sf::Vector2f size = pWorldView->getSize();
-				float temp = size.x;
-				size.x -= 0.25f * (size.y / size.x);
-				size.y -= 0.25f * (size.y / temp);
-				pWorldView->setSize(size);
+				// sf::Vector2f size = pWorldView->getSize();
+				// float temp = size.x;
+				// size.x -= 0.25f * (size.y / size.x);
+				// size.y -= 0.25f * (size.y / temp);
+				// pWorldView->setSize(size);
 			} else {
 				timer = 0;
 				state = State::deathScreenExit;

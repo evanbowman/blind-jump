@@ -42,7 +42,11 @@ public:
 		fireExplosionGlow,
 		whiteGlow,
 		scootShadow,
-		teleporterBeamGlow
+			teleporterBeamGlow,
+			bkgStarsNear,
+			bkgStarsFar,
+			bkgOrbit,
+			introLevelMask
 	};
 	enum class Shader {
 		color,

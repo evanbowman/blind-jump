@@ -18,50 +18,30 @@
 #include "backgroundHandler.hpp"
 #include "ResourcePath.hpp"
 
+//
+// TODO: This is one of the oldest files in the project, and could be refactored...
+//
+
 backgroundHandler::backgroundHandler() {
 	xOffset = 0;
 	yOffset = 0;
 	xOffPrev = 0;
 	yOffPrev = 0;
 	posY = 0;
-	//Load in the textures for the background. There are two layer, a gradient that stays in place and a bunch of stars
-	// that do a paralax scrolling thing
-	if (!bkgLayer[0].loadFromFile(resourcePath() + "bkg_orbit.png")) {
-		//return EXIT_FAILURE;
-	}
-	if (!bkgStars.loadFromFile(resourcePath() + "bkg_stars.png")) {
-		//return EXIT_FAILURE;
-	}
-	
-	bkgLayer[2].loadFromFile(resourcePath() + "bkg_orbit2.png");
-	bkgLayer[1].loadFromFile(resourcePath() + "bkg3.png");
-	//Apply textures to an array to create a bunch of stars
-	bkgSprite[0].setTexture(bkgLayer[0]);
-	bkgSprite[1].setTexture(bkgLayer[2]);
-	bkgSprite[2].setTexture(bkgLayer[1]);
-	bkgStarsFar.loadFromFile(resourcePath() + "bkg_stars_distant.png");
-	
+	bkgSprite.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::bkgOrbit));
 	for (int i = 0; i < STARMAP_SIZE; i++) {
 		for (int j = 0; j < STARMAP_SIZE; j++) {
-			starsFar[i][j].setTexture(bkgStarsFar);
+			starsFar[i][j].setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::bkgStarsFar));
 			starsFar[i][j].setPosition(i * 128, j * 128);
-			stars[i][j].setTexture(bkgStars);
+			stars[i][j].setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::bkgStarsNear));
 			stars[i][j].setPosition(i * 128, j * 128);
 			
 		}
 	}
-	
-	foregroundTreesTxtr.loadFromFile(resourcePath() + "introLevelMask.png");
-	foregroundTreesSpr.setTexture(foregroundTreesTxtr);
-	
-	
+	foregroundTreesSpr.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::introLevelMask));
 	solidBkg.setFillColor(sf::Color(17, 45, 50));
-	
-	// The starting working tile set is initialized to 0
 	workingSet = 1;
 }
-
-
 
 void backgroundHandler::drawForeground(sf::RenderTexture & window) {
 	switch (workingSet) {
@@ -81,16 +61,8 @@ void backgroundHandler::drawBackground(sf::RenderTexture & target, const sf::Vie
 			target.draw(solidBkg);
 			break;
 			
-		case 1:
-		    target.draw(bkgSprite[1]);
-			break;
-			
-		case 2:
-		    target.draw(bkgSprite[0]);
-			break;
-			
 		default:
-		    target.draw(bkgSprite[0]);
+		    target.draw(bkgSprite);
 			break;
 	}
 	target.setView(camera.getView());
@@ -156,7 +128,7 @@ void backgroundHandler::giveWindowSize(float x, float y) {
 	windowH = y;
 	for (auto i = 0; i < 3; i++) {
 		// Scale the background sprites based on the window size, that way they always fill the game window
-		bkgSprite[i].setScale(x / 450, y / 450);
+		bkgSprite.setScale(x / 450, y / 450);
 	}
 	
 	solidBkg.setSize(sf::Vector2f(x, y));

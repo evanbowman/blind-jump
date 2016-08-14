@@ -18,6 +18,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "camera.hpp"
+#include "resourceHandler.hpp"
 
 #define STARMAP_SIZE 7
 
@@ -25,10 +26,9 @@ class backgroundHandler {
 private:
 	sf::Texture foregroundTreesTxtr;
 	sf::Sprite foregroundTreesSpr;
-	sf::Texture bkgLayer[3];
 	sf::Texture bkgStars;
 	sf::Texture bkgStarsFar;
-	sf::Sprite bkgSprite[3];
+	sf::Sprite bkgSprite;
 	sf::Sprite stars[STARMAP_SIZE][STARMAP_SIZE];
 	sf::Sprite starsFar[STARMAP_SIZE][STARMAP_SIZE];
 	sf::CircleShape planet[2];
