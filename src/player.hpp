@@ -83,6 +83,7 @@ private:
 	void updateGun(const sf::Time &, const bool, EffectGroup &, SoundController &, UserInterface &);
 	Weapon gun;
 	void checkEffectCollisions(EffectGroup &, FontController *);
+	void checkEnemyCollisions(enemyController &, FontController *);
 	std::vector<Dasher::Blur> blurs; // I could have designed this better...
 	Health health;
 	void updateAnimation(const sf::Time &, uint8_t, uint32_t);

@@ -410,10 +410,10 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & 
 		dSpeed = 0.f;
 		break;
 	}
-	
 	updateColor(elapsedTime);
-
 	checkEffectCollisions(effects, pFonts);
+	enemyController & enemies = pGM->getEnemyController();
+	checkEnemyCollisions(enemies, pFonts);
 	if (health <= 0 && state != Player::State::dead) {
 		state = Player::State::dead;
 		sheetIndex = Player::Sheet::deathSheet;
@@ -700,6 +700,32 @@ void Player::checkEffectCollisions(EffectGroup & effects, FontController * pFont
 			colorTimer = 0;
 			util::sleep(milliseconds(20));
 		});
+}
+
+template<typename T, typename F>
+void checkEnemyCollision(const std::vector<T> & enemyGroup, Player * pPlayer, const F & policy) {
+	for (auto & enemy : enemyGroup) {
+		if (pPlayer->getHitBox().overlapping(enemy.getHitBox())) {
+			policy();
+		}
+	}
+}
+
+void Player::checkEnemyCollisions(enemyController & enemies, FontController * pFonts) {
+	auto collisionPolicy = [&]() {
+		if (colorAmount == 0.f) {
+			health -= 1;
+			pFonts->updateHealth(health);
+			renderType = Rendertype::shadeRed;
+			colorAmount = 1.f;
+			colorTimer = 0;
+			util::sleep(milliseconds(40));
+		}
+	};
+	checkEnemyCollision(enemies.getCritters(), this, collisionPolicy);
+	checkEnemyCollision(enemies.getDashers(), this, collisionPolicy);
+	checkEnemyCollision(enemies.getTurrets(), this, collisionPolicy);
+	checkEnemyCollision(enemies.getScoots(), this, collisionPolicy);
 }
 
 const Player::HBox & Player::getHitBox() const {
