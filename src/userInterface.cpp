@@ -31,11 +31,6 @@ UserInterface::UserInterface() :
 {
 }
 
-void UserInterface::setView(sf::View * pView) {
-	pWorldView = pView;
-	cachedView = *pView;
-}
-
 bool UserInterface::isOpen() const {
 	return state != State::closed;
 }
@@ -188,11 +183,6 @@ void UserInterface::update(Player & player, FontController & fonts, InputControl
 		if (timer > 20) {
 			timer -= 20;
 			desaturateAmount += 0.01f;
-			// sf::Vector2f size = pWorldView->getSize();
-			// float temp = size.x;
-			// size.x -= 0.5 * (size.y / size.x);
-			// size.y -= 0.5 * (size.y / temp);
-			// pWorldView->setSize(size);
 		}
 		if (desaturateAmount > 0.85f) {
 			desaturateAmount = 0.85f;
@@ -207,11 +197,7 @@ void UserInterface::update(Player & player, FontController & fonts, InputControl
 		if (timer > 20) {
 			timer -= 20;
 			if (timerAlt < 1400) {
-				// sf::Vector2f size = pWorldView->getSize();
-				// float temp = size.x;
-				// size.x -= 0.25f * (size.y / size.x);
-				// size.y -= 0.25f * (size.y / temp);
-				// pWorldView->setSize(size);
+				// TODO: This previously zoomed the window... re-implement?
 			} else {
 				timer = 0;
 				state = State::deathScreenExit;
@@ -232,7 +218,6 @@ void UserInterface::update(Player & player, FontController & fonts, InputControl
 	case State::statsScreen:
 		if (action) {
 			state = State::complete;
-			*pWorldView = cachedView;
 		}
 		break;
 			

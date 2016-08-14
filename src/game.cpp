@@ -63,7 +63,6 @@ void Game::Init() {
 	hudView.setSize(windowW, windowH);
 	hudView.setCenter(windowW / 2, windowH / 2);
 	bkg.giveWindowSize(windowW, windowH);
-	UI.setView(&worldView);
 	tiles.setPosition((windowW / 2) - 16, (windowH / 2));
 	tiles.setWindowSize(windowW, windowH);
 	en.setWindowSize(windowW, windowH);

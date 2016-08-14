@@ -57,7 +57,6 @@ public:
 	bool blurEnabled();
 	bool desaturateEnabled();
 	float getBlurAmount();
-	void setView(sf::View *);
 	void resetPowerupBar(Powerup);
 	Powerup getCurrentPowerup() const;
 	
@@ -69,5 +68,4 @@ private:
 	int64_t powerupTimer;
 	bool dispPowerupBar;
 	float blurAmount, desaturateAmount;
-	sf::View * pWorldView, cachedView;
 };
