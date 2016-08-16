@@ -53,7 +53,6 @@ int main() {
 		resourceHandler.load();
 		global::resourceHandlerPtr = &resourceHandler;
 		seedRNG();
-		// Graphics are pixel art so it's okay to use upsampled textures for everything except font rendering
 		sf::Vector2f drawableRegionSize = getDrawableRegionSize();
 		sf::ContextSettings settings;
 		settings.antialiasingLevel = 6;
