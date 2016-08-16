@@ -48,7 +48,7 @@ namespace global {
 }
 
 int main() {
-	try {
+	try { // The rest of the code is exception safe, but loading resources and creating threads can't be
 		ResourceHandler resourceHandler;
 		resourceHandler.load();
 		global::resourceHandlerPtr = &resourceHandler;
