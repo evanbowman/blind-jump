@@ -17,10 +17,6 @@
 
 #include "camera.hpp"
 
-inline sf::Vector2f lerp(const sf::Vector2f & A, const sf::Vector2f & B, float t) {
-	return A * t + (1 - t) * B;
-}
-
 Camera::Camera(Player * _pTarget, const sf::Vector2f & viewPort)  :
 		pTarget(_pTarget),
 		view(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
@@ -45,7 +41,7 @@ void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f
 		switch (state) {
 		case State::followPlayer:
 			lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000025f);
-			cameraPos = lerp(pTarget->getPosition(), view.getCenter(), lerpSpeed);
+			cameraPos = math::lerp(pTarget->getPosition(), view.getCenter(), lerpSpeed);
 			if (!targets.empty()) {
 				state = State::foundEnemy;
 				trackingTimer = 0;
@@ -64,9 +60,9 @@ void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f
 				aggregate /= divisor;
 				// Enemies entering and leaving the camera view creates jarring shifts
 				// so I'm using a buffer of the average enemy positions
-				buffer = lerp(buffer, aggregate, lerpSpeed * 0.1f);
-				midpoint = lerp(pTarget->getPosition(), buffer, 0.78);
-				cameraPos = lerp(midpoint, view.getCenter(), lerpSpeed);
+				buffer = math::lerp(buffer, aggregate, lerpSpeed * 0.1f);
+				midpoint = math::lerp(pTarget->getPosition(), buffer, 0.78);
+				cameraPos = math::lerp(midpoint, view.getCenter(), lerpSpeed);
 			}
 			break;
 
@@ -82,8 +78,8 @@ void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f
 				aggregate /= divisor;
 				trackingTimer += elapsedTime.asMicroseconds();
 				float targetWeight = 1.f - 0.22f * Easing::easeIn<1>(trackingTimer, static_cast<int64_t>(900000));
-				midpoint = lerp(pTarget->getPosition(), aggregate, targetWeight);
-				cameraPos = lerp(midpoint, view.getCenter(), lerpSpeed);
+				midpoint = math::lerp(pTarget->getPosition(), aggregate, targetWeight);
+				cameraPos = math::lerp(midpoint, view.getCenter(), lerpSpeed);
 				if (trackingTimer > 900000) {
 					state = State::trackMidpoint;
 					buffer = aggregate;
@@ -94,7 +90,7 @@ void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f
 	} else {
 		state = State::followPlayer;
 		lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000055f);
-		cameraPos = lerp(pTarget->getPosition(), view.getCenter(), lerpSpeed);
+		cameraPos = math::lerp(pTarget->getPosition(), view.getCenter(), lerpSpeed);
 	}
 	if (isShaking) {
 		shakeTimer += elapsedTime.asMicroseconds();

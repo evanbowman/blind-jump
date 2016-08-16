@@ -44,7 +44,7 @@
 namespace global {
 	std::mt19937 RNG;
 	ResourceHandler * resourceHandlerPtr = nullptr;
-	std::exception_ptr pWorkerException;
+	std::exception_ptr pWorkerException = nullptr;
 }
 
 int main() {
