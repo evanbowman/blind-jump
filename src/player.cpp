@@ -711,6 +711,16 @@ void checkEnemyCollision(const std::vector<T> & enemyGroup, Player * pPlayer, co
 	}
 }
 
+template<typename F>
+void checkDasherCollision(const std::vector<Dasher> & dashers, Player * pPlayer, const F & policy) {
+	for (auto & enemy : dashers) {
+		if (pPlayer->getHitBox().overlapping(enemy.getHitBox()) && enemy.getState() != Dasher::State::dead) {
+			policy();
+		}
+	}
+}
+
+
 void Player::checkEnemyCollisions(enemyController & enemies, FontController * pFonts) {
 	auto collisionPolicy = [&]() {
 		if (colorAmount == 0.f) {
@@ -723,7 +733,7 @@ void Player::checkEnemyCollisions(enemyController & enemies, FontController * pF
 		}
 	};
 	checkEnemyCollision(enemies.getCritters(), this, collisionPolicy);
-	checkEnemyCollision(enemies.getDashers(), this, collisionPolicy);
+	checkDasherCollision(enemies.getDashers(), this, collisionPolicy);
 	checkEnemyCollision(enemies.getTurrets(), this, collisionPolicy);
 	checkEnemyCollision(enemies.getScoots(), this, collisionPolicy);
 }
