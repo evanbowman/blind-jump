@@ -30,7 +30,7 @@ namespace global {
 	std::mutex overworldMutex, UIMutex, transitionMutex;
 }
 	
-Game::Game(const sf::Vector2f viewPort, InputController * _pInput, FontController * _pFonts)
+Game::Game(const sf::Vector2f & viewPort, InputController * _pInput, FontController * _pFonts)
 	: windowW(viewPort.x),
 	  windowH(viewPort.y),
 	  transitionState(TransitionState::None),

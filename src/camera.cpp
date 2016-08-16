@@ -119,13 +119,13 @@ const sf::View & Camera::getView() const {
 }
 
 void Camera::panDown() {
-	view.setCenter(pTarget->getPosition());
+	float placementOffset = pTarget->getPosition().y / 2;
+	view.setCenter(sf::Vector2f(pTarget->getPosition().x, placementOffset));
 	startPosition = view.getCenter();
 }
 
 void Camera::reset() {
-	float placementOffset = pTarget->getPosition().y / 2;
-	view.setCenter(sf::Vector2f(pTarget->getPosition().x, placementOffset));
+	view.setCenter(pTarget->getPosition());
 	startPosition = view.getCenter();
 }
 
