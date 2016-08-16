@@ -76,7 +76,7 @@ int main() {
 			try {
 				while (pWindow->isOpen()) {
 					time_point start = high_resolution_clock::now();
-					sf::Time elapsedTime = gameClock.restart(); // TODO: use chrono clock instead
+					sf::Time elapsedTime = gameClock.restart();
 					// If the game went into extended sleep or froze for some reason, dt would be very high--reset clk
 					if (util::isAsleep || elapsedTime.asMilliseconds() > 20) {
 						elapsedTime = gameClock.restart();
