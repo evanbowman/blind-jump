@@ -19,7 +19,7 @@
 #include <cmath>
 
 TreasureChest::TreasureChest(float _xInit, float _yInit, const sf::Texture & mainTxtr, Powerup _powerup)
-	: Detail(_xInit + (std::abs(static_cast<int>(globalRNG())) % 4) + -2, _yInit),
+	: Detail(_xInit + (std::abs(static_cast<int>(global::RNG())) % 4) + -2, _yInit),
 	  state(State::closed),
 	  powerup(_powerup),
 	  animationTimer(0),

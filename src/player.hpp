@@ -69,7 +69,6 @@ public:
 	void setPosition(float, float);
 	sf::Vector2f getPosition();
 	sf::Vector2f getCameraTarget(const sf::View &);
-	bool scrShakeState;
 	Health getHealth() const;
 	bool visible = true;	
 	void reset();
@@ -79,6 +78,7 @@ public:
 	const Weapon & getGun() const;
 	
 private:
+	void init();
 	HBox hitBox;
 	void updateGun(const sf::Time &, const bool, EffectGroup &, SoundController &, UserInterface &);
 	Weapon gun;
@@ -98,8 +98,8 @@ private:
 	SpriteSheet<432, 76, 32, 32> walkRight;
 	SpriteSheet<208, 38, 40, 38> deathSheet;
 	SpriteSheet<208, 140, 32, 33> dashSheet;
-	int64_t animationTimer, dashTimer, invulnerableCounter;
-	bool invulnerable;
+	int64_t animationTimer, dashTimer;
+	bool invulnerable; // TODO: player invlunerable when on teleporter pads
 	State state;
 	float colorAmount;
 	int32_t colorTimer;

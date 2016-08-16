@@ -74,13 +74,22 @@ public:
 	void load();
 	
 private:
-	mutable std::map<int, sf::Texture> textures;
-	mutable std::array<sf::Shader, 3> shaders;
-	mutable std::array<sf::Font, 1> fonts;
-	mutable std::array<sf::Image, 4> images;
-	std::array<sf::SoundBuffer, 1> sounds;
+	enum resrcCnts {
+		numTextures = 17,
+		numShaders = 3,
+		numFonts = 1,
+		numImages = 4,
+		numSounds = 1
+	};
+	mutable std::array<sf::Shader, numShaders> shaders;
+	std::array<sf::Texture, numTextures> textures;
+	std::array<sf::Font, numFonts> fonts;
+	std::array<sf::Image, numImages> images;
+	std::array<sf::SoundBuffer, numSounds> sounds;
 };
 
-extern ResourceHandler * globalResourceHandlerPtr;
+namespace global {
+	extern ResourceHandler * resourceHandlerPtr;
+}
 
 #endif

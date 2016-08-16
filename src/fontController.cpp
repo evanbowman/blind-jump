@@ -74,7 +74,7 @@ FontController::FontController(sf::View fontView, float x, float y) :
 	coin.setRadius(0.018f * scale);
 	coin.setOrigin(coin.getLocalBounds().width / 2, coin.getLocalBounds().height / 2);
 	
-	const sf::Font & cornerstone = globalResourceHandlerPtr->getFont(ResourceHandler::Font::cornerstone);
+	const sf::Font & cornerstone = global::resourceHandlerPtr->getFont(ResourceHandler::Font::cornerstone);
 
 	auto initText = [](const sf::Font & font, sf::Text & text, const std::string string, float size) {
 		text.setFont(font);

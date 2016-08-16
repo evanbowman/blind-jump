@@ -19,9 +19,11 @@
 #include <random>
 #include <cmath>
 
-extern std::mt19937 globalRNG;
+namespace global {
+	extern std::mt19937 RNG;
+}
 
 inline void seedRNG() {
 	std::random_device rd;
-	globalRNG.seed(rd() ^ time(nullptr));
+	global::RNG.seed(rd() ^ time(nullptr));
 }

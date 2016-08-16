@@ -20,7 +20,7 @@
 void SoundController::poll() {
 	if (!soundIdxQueue.empty()) {
 		for (auto & element : soundIdxQueue) {
-			sounds.emplace_back(globalResourceHandlerPtr->getSound(element));
+			sounds.emplace_back(global::resourceHandlerPtr->getSound(element));
 			sounds.back().play();
 		}
 		soundIdxQueue.clear();

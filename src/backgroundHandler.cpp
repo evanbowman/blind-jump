@@ -28,17 +28,17 @@ backgroundHandler::backgroundHandler() {
 	xOffPrev = 0;
 	yOffPrev = 0;
 	posY = 0;
-	bkgSprite.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::bkgOrbit));
+	bkgSprite.setTexture(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::bkgOrbit));
 	for (int i = 0; i < STARMAP_SIZE; i++) {
 		for (int j = 0; j < STARMAP_SIZE; j++) {
-			starsFar[i][j].setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::bkgStarsFar));
+			starsFar[i][j].setTexture(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::bkgStarsFar));
 			starsFar[i][j].setPosition(i * 128, j * 128);
-			stars[i][j].setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::bkgStarsNear));
+			stars[i][j].setTexture(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::bkgStarsNear));
 			stars[i][j].setPosition(i * 128, j * 128);
 			
 		}
 	}
-	foregroundTreesSpr.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::introLevelMask));
+	foregroundTreesSpr.setTexture(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::introLevelMask));
 	solidBkg.setFillColor(sf::Color(17, 45, 50));
 	workingSet = 1;
 }

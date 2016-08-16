@@ -68,17 +68,17 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 	}
 	if (hp == 0) {
 		killFlag = true;
-		if ((std::abs(static_cast<int>(globalRNG())) % 4) == 0) {
-			effects.add<4>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
+		if ((std::abs(static_cast<int>(global::RNG())) % 4) == 0) {
+			effects.add<4>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+						   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
 					   xPos, yPos + 4, Item::Type::Heart);
 		} else {
-		    effects.add<5>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::blueglow),
+		    effects.add<5>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+						   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::blueglow),
 					   xPos + 4, yPos + 4, Item::Type::Coin);
 		}
-		effects.add<2>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::fireExplosionGlow),
+		effects.add<2>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::fireExplosionGlow),
 				   xPos + 8, yPos + 8);
 	}
 	switch (state) {
@@ -105,9 +105,9 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 	case State::shoot1:
 		timer += elapsedTime.asMicroseconds();
 		if (timer > 200000) {
-			effects.add<0>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos + 6);
-			effects.add<6>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-						   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
+			effects.add<0>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos + 6);
+			effects.add<6>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+						   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
 						   xPos, yPos + 6, angleFunction(playerPosX + 16, playerPosY + 8, xPos + 18, yPos + 6));
 			timer = 0;
 			state = State::shoot2;
@@ -117,9 +117,9 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 	case State::shoot2:
 		timer += elapsedTime.asMicroseconds();
 		if (timer > 200000) {
-			effects.add<0>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos + 6);
-			effects.add<6>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-						   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
+			effects.add<0>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos + 6);
+			effects.add<6>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+						   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
 						   xPos, yPos + 6, angleFunction(playerPosX + 16, playerPosY + 8, xPos + 18, yPos + 6));
 			timer = 0;
 			state = State::shoot3;
@@ -129,9 +129,9 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 	case State::shoot3:
 		timer += elapsedTime.asMicroseconds();
 		if (timer > 200000) {
-			effects.add<0>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos + 6);
-			effects.add<6>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-						   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
+			effects.add<0>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos + 6);
+			effects.add<6>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+						   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
 						   xPos, yPos + 6, angleFunction(playerPosX + 16, playerPosY + 8, xPos + 18, yPos + 6));
 			timer = 0;
 			state = State::rest;

@@ -133,7 +133,7 @@ void Dasher::update(float playerPosX, float playerPosY, const std::vector<wall> 
 	case State::idle:
 		if (timer >= 200) {
 			timer -= 200;
-			const int select = std::abs(static_cast<int>(globalRNG())) % 2;
+			const int select = std::abs(static_cast<int>(global::RNG())) % 2;
 			if (select) {
 				state = State::dashBegin;
 				frameIndex = 1;
@@ -159,14 +159,14 @@ void Dasher::update(float playerPosX, float playerPosY, const std::vector<wall> 
 			frameTimer -= 80;
 			shotCount++;
 			if (xPos > playerPosX) {
-				effects.add<0>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos - 14, yPos + 2);
-				effects.add<7>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-							   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
+				effects.add<0>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos - 14, yPos + 2);
+				effects.add<7>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+							   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
 							   xPos - 12, yPos, angleFunction(playerPosX, playerPosY, xPos, yPos));
 			} else {
-				effects.add<0>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos + 6, yPos + 2);
-				effects.add<7>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-							   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
+				effects.add<0>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos + 6, yPos + 2);
+				effects.add<7>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+							   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
 							   xPos + 4, yPos, angleFunction(playerPosX, playerPosY, xPos, yPos));
 			}
 		}
@@ -196,7 +196,7 @@ void Dasher::update(float playerPosX, float playerPosY, const std::vector<wall> 
 			state = State::dashing;
 			frameIndex = 2;
 			uint8_t tries{0};
-			float dir{static_cast<float>(std::abs(static_cast<int>(globalRNG())) % 359)};
+			float dir{static_cast<float>(std::abs(static_cast<int>(global::RNG())) % 359)};
 			do {
 				tries++;
 				if (tries > 254) {
@@ -282,18 +282,18 @@ void Dasher::onDeath(EffectGroup & effects) {
 	vSpeed = 0;
 	frameIndex = 0;
 	killFlag = true;
-	unsigned long int temp = std::abs(static_cast<int>(globalRNG())) % 4;
+	unsigned long int temp = std::abs(static_cast<int>(global::RNG())) % 4;
 	if (temp == 0) {
-	    effects.add<4>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
+	    effects.add<4>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
 					   xPos, yPos + 4, Item::Type::Heart);
 	} else {
-	    effects.add<5>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::blueglow),
+	    effects.add<5>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::blueglow),
 					   xPos, yPos + 4, Item::Type::Coin);
 	}
-    effects.add<1>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::fireExplosionGlow),
+    effects.add<1>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+				   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::fireExplosionGlow),
 				   xPos, yPos - 2);
 	blurEffects.clear();
 }

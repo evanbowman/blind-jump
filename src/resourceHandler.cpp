@@ -19,15 +19,16 @@
 
 static const char * failurePrefix = "[Failed to load ";
 
-void loadTexture(const char * fname, ResourceHandler::Texture id, std::map<int, sf::Texture> & textures) {
-	sf::Texture temp;
-	if (!temp.loadFromFile(resourcePath() + fname)) {
+template<typename T, typename E>
+void loadResource(const char * fname, E id, T & array) {
+	int idx = static_cast<int>(id);
+	if (!array[idx].loadFromFile(resourcePath() + fname)) {
 		throw std::runtime_error(std::string(failurePrefix) + fname + "]");
 	}
-	textures[static_cast<int>(id)] = temp;
 }
 
-void loadShader(const char * fname, ResourceHandler::Shader id, std::array<sf::Shader, 3> & shaders) {
+template<>
+void loadResource(const char * fname, ResourceHandler::Shader id, std::array<sf::Shader, 3> & shaders) {
 	std::size_t index = static_cast<int>(id);
 	if (!shaders[index].loadFromFile(resourcePath() + fname, sf::Shader::Fragment)) {
 		throw std::runtime_error(std::string(failurePrefix) + fname + "]");
@@ -35,54 +36,33 @@ void loadShader(const char * fname, ResourceHandler::Shader id, std::array<sf::S
 	shaders[index].setParameter("texture", sf::Shader::CurrentTexture);
 }
 
-void loadImage(const char * fname, ResourceHandler::Image id, std::array<sf::Image, 4> & images) {
-	std::size_t index = static_cast<int>(id);
-	if (!images[index].loadFromFile(resourcePath() + fname)) {
-		throw std::runtime_error(std::string(failurePrefix) + fname + "]");
-	}
-}
-
-void loadFont(const char * fname, ResourceHandler::Font id, std::array<sf::Font, 1> & fonts) {
-	std::size_t index = static_cast<int>(id);
-	if (!fonts[index].loadFromFile(resourcePath() + fname)) {
-		throw std::runtime_error(std::string(failurePrefix) + fname + "]");
-	}
-}
-
-void loadSound(const char * fname, ResourceHandler::Sound id, std::array<sf::SoundBuffer, 1> & sounds) {
-	std::size_t index = static_cast<int>(id);
-	if (!sounds[index].loadFromFile(resourcePath() + fname)) {
-		throw std::runtime_error(std::string(failurePrefix) + fname + "]");
-	}
-}
-
 void ResourceHandler::load() {
-	loadTexture("gameObjects.png", Texture::gameObjects, textures);
-	loadTexture("vignetteMask.png", Texture::vignette, textures);
-	loadTexture("vignetteShadow.png", Texture::vignetteShadow, textures);
-	loadTexture("lampLight.png", Texture::lamplight, textures);
-	loadTexture("introLevel.png", Texture::introLevel, textures);
-	loadTexture("teleporterGlow.png", Texture::teleporterGlow, textures);
-	loadTexture("introWall.png", Texture::introWall, textures);
-	loadTexture("redFloorGlow.png", Texture::redglow, textures);
-	loadTexture("blueFloorGlow.png", Texture::blueglow, textures);
-	loadTexture("fireExplosionGlow.png", Texture::fireExplosionGlow, textures);
-	loadTexture("whiteFloorGlow.png", Texture::whiteGlow, textures);
-	loadTexture("charger_enemy_shadow.png", Texture::scootShadow, textures);
-	loadTexture("teleporterBeamGlow.png", Texture::teleporterBeamGlow, textures);
-	loadTexture("bkg_stars.png", Texture::bkgStarsNear, textures);
-	loadTexture("bkg_stars_distant.png", Texture::bkgStarsFar, textures);
-	loadTexture("introLevelMask.png", Texture::introLevelMask, textures);
-	loadTexture("bkg_orbit2.png", Texture::bkgOrbit, textures);
-	loadShader("color.frag", Shader::color, shaders);
-	loadShader("blur.frag", Shader::blur, shaders);
-	loadShader("desaturate.frag", Shader::desaturate, shaders);
-	loadFont("Cornerstone.ttf", Font::cornerstone, fonts);
-	loadImage("soilTileset.png", Image::soilTileset, images);
-	loadImage("grassSet.png", Image::grassSet1, images);
-	loadImage("grassSetEdge.png", Image::grassSet2, images);
-	loadImage("gameIcon.png", Image::icon, images);
-	loadSound("gunshot.ogg", Sound::gunShot, sounds);
+	loadResource("teleporterBeamGlow.png", Texture::teleporterBeamGlow, textures);
+	loadResource("fireExplosionGlow.png", Texture::fireExplosionGlow, textures);
+	loadResource("charger_enemy_shadow.png", Texture::scootShadow, textures);
+	loadResource("vignetteShadow.png", Texture::vignetteShadow, textures);
+	loadResource("teleporterGlow.png", Texture::teleporterGlow, textures);
+	loadResource("bkg_stars_distant.png", Texture::bkgStarsFar, textures);
+	loadResource("introLevelMask.png", Texture::introLevelMask, textures);
+	loadResource("whiteFloorGlow.png", Texture::whiteGlow, textures);
+	loadResource("gameObjects.png", Texture::gameObjects, textures);
+	loadResource("blueFloorGlow.png", Texture::blueglow, textures);
+	loadResource("bkg_stars.png", Texture::bkgStarsNear, textures);
+	loadResource("vignetteMask.png", Texture::vignette, textures);
+	loadResource("introLevel.png", Texture::introLevel, textures);
+	loadResource("redFloorGlow.png", Texture::redglow, textures);
+	loadResource("lampLight.png", Texture::lamplight, textures);
+	loadResource("introWall.png", Texture::introWall, textures);
+	loadResource("bkg_orbit2.png", Texture::bkgOrbit, textures);
+	loadResource("desaturate.frag", Shader::desaturate, shaders);
+	loadResource("color.frag", Shader::color, shaders);
+	loadResource("blur.frag", Shader::blur, shaders);
+	loadResource("Cornerstone.ttf", Font::cornerstone, fonts);
+	loadResource("soilTileset.png", Image::soilTileset, images);
+	loadResource("grassSetEdge.png", Image::grassSet2, images);
+	loadResource("grassSet.png", Image::grassSet1, images);
+	loadResource("gameIcon.png", Image::icon, images);
+    loadResource("gunshot.ogg", Sound::gunShot, sounds);
 }
 
 const sf::Image & ResourceHandler::getImage(Image id) const {

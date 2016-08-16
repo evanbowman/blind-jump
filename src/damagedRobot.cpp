@@ -20,7 +20,7 @@
 DamagedRobot::DamagedRobot(float _xInit, float _yInit, const sf::Texture & inpTxtr)
 	: Detail{_xInit, _yInit}, robotSheet{inpTxtr}
 {
-	robotSheet[std::abs(static_cast<int>(globalRNG())) % 2]; // Randomly pick one of the textures...
+	robotSheet[std::abs(static_cast<int>(global::RNG())) % 2]; // Randomly pick one of the textures...
 	robotSheet.setPosition(position.x, position.y);
 }
 

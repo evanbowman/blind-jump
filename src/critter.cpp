@@ -167,18 +167,18 @@ bool Critter::isActive() {
 
 void Critter::onDeath(EffectGroup & effects) {
 	// With some random chance, add a heart item to the map
-	unsigned long int temp = std::abs(static_cast<int>(globalRNG())) % 5;
+	unsigned long int temp = std::abs(static_cast<int>(global::RNG())) % 5;
 	if (temp == 0) {
-	    effects.add<4>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
+	    effects.add<4>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
 					   xInit + 10, yInit, Item::Type::Heart);
 	} else {
-	    effects.add<5>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::blueglow),
+	    effects.add<5>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::blueglow),
 					   xInit + 10, yInit, Item::Type::Coin);
 	}
-    effects.add<1>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::fireExplosionGlow),
+    effects.add<1>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+				   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::fireExplosionGlow),
 				   xInit + 8, yInit);
 	killFlag = true;
 }

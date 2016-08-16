@@ -41,17 +41,17 @@
 #include <X11/Xlib.h>
 #endif
 
-static std::exception_ptr pWorkerException;
-
-std::mt19937 globalRNG;
-
-ResourceHandler * globalResourceHandlerPtr = nullptr;
+namespace global {
+	std::mt19937 RNG;
+	ResourceHandler * resourceHandlerPtr = nullptr;
+	std::exception_ptr pWorkerException;
+}
 
 int main() {
 	try {
 		ResourceHandler resourceHandler;
 		resourceHandler.load();
-		globalResourceHandlerPtr = &resourceHandler;
+		global::resourceHandlerPtr = &resourceHandler;
 		seedRNG();
 		// Graphics are pixel art so it's okay to use upsampled textures for everything except font rendering
 		sf::Vector2f drawableRegionSize = getDrawableRegionSize();
@@ -90,7 +90,7 @@ int main() {
 					std::this_thread::sleep_for(logicUpdateLimit - logicUpdateDelta);
 				}
 			} catch (...) {
-				pWorkerException = std::current_exception();
+				global::pWorkerException = std::current_exception();
 				return;
 			}
 		}, &game, &window);
@@ -99,9 +99,9 @@ int main() {
 			window.clear();
 			game.draw(window);
 			window.display();
-			if (pWorkerException) {
+			if (global::pWorkerException) {
 				window.close();
-				std::rethrow_exception(pWorkerException);
+				std::rethrow_exception(global::pWorkerException);
 			}
 		}
 	} catch (const std::exception & ex) {

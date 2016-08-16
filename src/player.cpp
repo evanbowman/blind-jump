@@ -26,36 +26,37 @@
 
 Player::Player(float _xPos, float _yPos)
 	: gun{},
-	  health{4},
-	  xPos{_xPos - 17}, // Magic number that puts the player in the direct center of the screen. Hmmm why does it work...
-	  yPos{_yPos},
-	  frameIndex{5},
-	  sheetIndex{Sheet::stillDown},
-	  cachedSheet{Sheet::stillDown},
-	  lSpeed{0.f},
-	  rSpeed{0.f},
-	  uSpeed{0.f},
-	  dSpeed{0.f},
-	  animationTimer{0},
-	  dashTimer{0},
-	  invulnerableCounter{0},
-	  invulnerable{false},
-	  state{Player::State::nominal},
-	  colorAmount{0.f},
-	  colorTimer{0},
-	  renderType{Rendertype::shadeDefault},
-	  upPrevious{false},
-	  downPrevious{false},
-	  leftPrevious{false},
-	  rightPrevious{false},
-	  actionPrevious{false}
+	  health(4),
+	  xPos(_xPos - 17), // Magic number that puts the player in the direct center of the screen. Hmmm why does it work...
+	  yPos(_yPos),
+	  frameIndex(5),
+	  sheetIndex(Sheet::stillDown),
+	  cachedSheet(Sheet::stillDown),
+	  lSpeed(0.f),
+	  rSpeed(0.f),
+	  uSpeed(0.f),
+	  dSpeed(0.f),
+	  animationTimer(0),
+	  dashTimer(0),
+	  invulnerable(false),
+	  state(Player::State::nominal),
+	  colorAmount(0.f),
+	  colorTimer(0),
+	  renderType(Rendertype::shadeDefault),
+	  upPrevious(false),
+	  downPrevious(false),
+	  leftPrevious(false),
+	  rightPrevious(false)
 {
-	scrShakeState = false;
-	deathSheet.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
-	walkDown.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
-	walkUp.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
-	walkLeft.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
-	walkRight.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
+	init();
+}
+
+void Player::init() {
+	deathSheet.setTexture(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
+	walkDown.setTexture(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
+	walkUp.setTexture(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
+	walkLeft.setTexture(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
+	walkRight.setTexture(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
 	walkDown.setPosition(xPos, yPos);
 	walkUp.setPosition(xPos, yPos);
 	walkLeft.setPosition(xPos, yPos);
@@ -63,12 +64,13 @@ Player::Player(float _xPos, float _yPos)
 	shadowSprite.setPosition(xPos + 7, yPos + 24);
 	dashSheet.setPosition(xPos, yPos);
 	deathSheet.setPosition(xPos - 13, yPos - 1);
-	dashSheet.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
+	dashSheet.setTexture(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
 	dashSheet.setOrigin(0, 1);
-	shadowSprite.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
+	shadowSprite.setTexture(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
 	shadowSprite.setTextureRect(sf::IntRect(0, 100, 18, 16));
 	gun.gunSpr.setPosition(xPos, yPos);
-	gun.gunSpr.setTexture(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
+	gun.gunSpr.setTexture(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
+
 }
 
 sf::Vector2f Player::getPosition() {
@@ -94,21 +96,6 @@ float Player::getXpos() const {
 
 float Player::getYpos() const {
 	return yPos;
-}
-
-inline void compareSheetIndex(Player::Sheet & sheetIndex) {
-	switch (sheetIndex) {
-	case Player::Sheet::walkDown: sheetIndex = Player::Sheet::stillDown;
-		break;
-	case Player::Sheet::walkUp: sheetIndex = Player::Sheet::stillUp;
-		break;
-	case Player::Sheet::walkLeft: sheetIndex = Player::Sheet::stillLeft;
-		break;
-	case Player::Sheet::walkRight: sheetIndex = Player::Sheet::stillRight;
-		break;
-	default:
-		break;
-	}
 }
 
 template <Player::Sheet S>
@@ -150,14 +137,33 @@ void altKeyResponse(bool key1, bool key2, bool key3, Player::Sheet & sheetIndex,
 }
 
 template <Player::Sheet S, uint8_t maxIndx>
-void onKeyReleased(bool key1, bool key2, bool key3, bool key4, bool keyprev, bool x, Player::Sheet & shIndex, uint8_t & frmIndex) {
+void onKeyReleased(bool key1, bool key2, bool key3, bool key4, bool keyprev, bool x, Player::Sheet & sheetIndex, uint8_t & frmIndex) {
 	if (!key1 && keyprev) {
 		if (!key2 && !key3 && !key4) {
 			if (!x) {
-				shIndex = S;
+				sheetIndex = S;
 				frmIndex = maxIndx;
 			} else {
-				compareSheetIndex(shIndex);
+				switch (sheetIndex) {
+				case Player::Sheet::walkDown:
+					sheetIndex = Player::Sheet::stillDown;
+					break;
+					
+				case Player::Sheet::walkUp:
+					sheetIndex = Player::Sheet::stillUp;
+					break;
+					
+				case Player::Sheet::walkLeft:
+					sheetIndex = Player::Sheet::stillLeft;
+					break;
+					
+				case Player::Sheet::walkRight:
+					sheetIndex = Player::Sheet::stillRight;
+					break;
+		
+				default:
+					break;
+				}
 			}
 		}
 	}
@@ -177,39 +183,35 @@ void setSpeed(bool key1, bool key2, bool key3, bool collision, float & speed) {
 }
 
 void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & sounds) {
-	InputController * pInput {pGM->getPInput()};
-	tileController & tiles {pGM->getTileController()};
-	DetailGroup & details {pGM->getDetails()};
-	EffectGroup & effects {pGM->getEffects()};
-	FontController * pFonts {pGM->getPFonts()};
-	bool shoot {pInput->shootPressed()};
-	bool action {pInput->actionPressed()};
-	bool up {pInput->upPressed()};
-	bool down {pInput->downPressed()};
-	bool left {pInput->leftPressed()};
-	bool right {pInput->rightPressed()};
-    bool collisionUp {false};
-	bool collisionDown {false};
-	bool collisionLeft {false};
-	bool collisionRight {false};
+	InputController * pInput(pGM->getPInput());
+	tileController & tiles(pGM->getTileController());
+	DetailGroup & details(pGM->getDetails());
+	EffectGroup & effects(pGM->getEffects());
+	FontController * pFonts(pGM->getPFonts());
+	bool shoot(pInput->shootPressed());
+	bool action(pInput->actionPressed());
+	bool up(pInput->upPressed());
+	bool down(pInput->downPressed());
+	bool left(pInput->leftPressed());
+	bool right(pInput->rightPressed());
+    bool collisionUp(false);
+	bool collisionDown(false);
+	bool collisionLeft(false);
+	bool collisionRight(false);
 	uint_fast8_t collisionMask = checkCollisionWall(tiles.walls, yPos, xPos);
 	collisionMask |= checkCollisionChest(details.get<1>(), yPos, xPos);
 	if (collisionMask & 0x01) {
 		collisionLeft = true;
 	}
-	
 	if (collisionMask & 0x02) {
 		collisionRight = true;
 	}
-	
 	if (collisionMask & 0x04) {
 		collisionUp = true;
 	}
-	
 	if (collisionMask & 0x08) {
 		collisionDown = true;
 	}
-	
 	switch (state) {
 	case State::deactivated:
 		sheetIndex = Sheet::stillDown;
@@ -622,7 +624,6 @@ void Player::activate() {
 void Player::reset() {
 	state = State::nominal;
 	invulnerable = false;
-	invulnerableCounter = 0;
 	health = 4;
 	sheetIndex = Sheet::stillDown;
 	frameIndex = 5;
@@ -650,7 +651,9 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, Effect
 			gun.timeout = 1671000;
 			if (gun.bulletTimer == 0) {
 				// TODO: sounds.play(ResourceHandler::Sound::gunShot);
-				effects.add<9>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::whiteGlow), static_cast<int>(sheetIndex), xPos, yPos);
+				effects.add<9>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+							   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::whiteGlow),
+							   static_cast<int>(sheetIndex), xPos, yPos);
 				if (UI.getCurrentPowerup() == Powerup::rapidFire) {
 					gun.bulletTimer = 220000;
 				} else {

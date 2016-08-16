@@ -24,11 +24,11 @@ Scoot::Scoot(const sf::Texture & mainTxtr, const sf::Texture & shadowTxtr, float
 	  spriteSheet{mainTxtr},
 	  speedScale{0.5f},
 	  state{State::drift1},
-	  timer{std::abs(static_cast<int>(globalRNG())) % 250}
+	  timer{std::abs(static_cast<int>(global::RNG())) % 250}
 {
 	spriteSheet.setOrigin(6, 6);
 	shadow.setTexture(shadowTxtr);
-	float dir = std::abs(static_cast<int>(globalRNG())) % 359;
+	float dir = std::abs(static_cast<int>(global::RNG())) % 359;
 	hSpeed = cos(dir) * 0.5;
 	vSpeed = sin(dir) * 0.5;
 	health = 2;
@@ -77,10 +77,10 @@ void Scoot::update(float playerPosX, float playerPosY, const std::vector<wall> &
 		if (timer > 1800) {
 			timer -= 1800;;
 			state = State::drift2;
-			if (std::abs(static_cast<int>(globalRNG())) % 2) {
+			if (std::abs(static_cast<int>(global::RNG())) % 2) {
 				changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
 			} else {
-				changeDir(static_cast<float>(std::abs(static_cast<int>(globalRNG())) % 359));
+				changeDir(static_cast<float>(std::abs(static_cast<int>(global::RNG())) % 359));
 			}
 		}
 		break;
@@ -94,9 +94,9 @@ void Scoot::update(float playerPosX, float playerPosY, const std::vector<wall> &
 		break;
 		
 	case State::shoot:
-		effects.add<0>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos - 8, yPos - 12);
-		effects.add<8>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
+		effects.add<0>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos - 8, yPos - 12);
+		effects.add<8>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
 					   xPos - 8, yPos - 12, angleFunction(playerPosX + 16, playerPosY + 8, xPos - 8, yPos - 8));
 		state = State::recoil;
 		changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
@@ -117,10 +117,10 @@ void Scoot::update(float playerPosX, float playerPosY, const std::vector<wall> &
 			timer -= 400;
 			state = State::drift1;
 			speedScale = 0.5f;
-			if (std::abs(static_cast<int>(globalRNG())) % 2) {
+			if (std::abs(static_cast<int>(global::RNG())) % 2) {
 				changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
 			} else {
-				changeDir(static_cast<float>(std::abs(static_cast<int>(globalRNG())) % 359));
+				changeDir(static_cast<float>(std::abs(static_cast<int>(global::RNG())) % 359));
 			}
 		}
 		break;
@@ -160,18 +160,18 @@ const sf::Sprite & Scoot::getShadow() const {
 }
 
 void Scoot::onDeath(EffectGroup & effects) {
-	int select{std::abs(static_cast<int>(globalRNG())) % 5};
+	int select{std::abs(static_cast<int>(global::RNG())) % 5};
 	if (select == 0) {
-		effects.add<4>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
+		effects.add<4>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
 					   xPos, yPos + 4, Item::Type::Heart);
 	} else {
-		effects.add<5>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::blueglow),
+		effects.add<5>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::blueglow),
 					   xPos, yPos + 4, Item::Type::Coin);
 	}
-	effects.add<2>(globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-				   globalResourceHandlerPtr->getTexture(ResourceHandler::Texture::fireExplosionGlow),
+	effects.add<2>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+				   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::fireExplosionGlow),
 				   xPos, yPos - 2);
 	killFlag = true;
 	return;
