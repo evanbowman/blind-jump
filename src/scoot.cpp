@@ -20,11 +20,11 @@
 #include "angleFunction.hpp"
 
 Scoot::Scoot(const sf::Texture & mainTxtr, const sf::Texture & shadowTxtr, float _xPos, float _yPos)
-	: Enemy{_xPos, _yPos},
-	  spriteSheet{mainTxtr},
-	  speedScale{0.5f},
-	  state{State::drift1},
-	  timer{std::abs(static_cast<int>(global::RNG())) % 250}
+	: Enemy(_xPos, _yPos),
+	  spriteSheet(mainTxtr),
+	  speedScale(0.5f),
+	  state(State::drift1),
+	  timer(std::abs(static_cast<int>(global::RNG())) % 250)
 {
 	spriteSheet.setOrigin(6, 6);
 	shadow.setTexture(shadowTxtr);

@@ -545,7 +545,7 @@ void Game::Reset() {
 	bkg.setBkg(tiles.getWorkingSet());
 	tiles.setPosition((windowW / 2) - 16, (windowH / 2));
 	bkg.setPosition((tiles.posX / 2) + 206, tiles.posY / 2);
-	auto pickLocation = [](std::vector<Coordinate>& emptyLocations) {
+	auto pickLocation = [](std::vector<Coordinate> & emptyLocations) {
 		int locationSelect = std::abs(static_cast<int>(global::RNG())) % emptyLocations.size();
 		Coordinate c = emptyLocations[locationSelect];
 		emptyLocations[locationSelect] = emptyLocations.back();
@@ -557,7 +557,6 @@ void Game::Reset() {
 		details.add<0>(tiles.posX + c.x * 32 + 2, tiles.posY + c.y * 26 - 4,
 					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::teleporterGlow));
-		
 		initEnemies(this);
 		// Place 0-2 powerup chests on the map
 		c = pickLocation(tiles.emptyMapLocations);
@@ -570,7 +569,6 @@ void Game::Reset() {
 			details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
 						   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), chestContents);
 		}
-		
 		glowSprs1.clear();
 		glowSprs2.clear();
 		Circle teleporterFootprint;

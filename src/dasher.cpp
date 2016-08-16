@@ -61,14 +61,14 @@ const Dasher::HBox & Dasher::getHitBox() const {
 }
 
 Dasher::Dasher(const sf::Texture & mainTxtr, float _xPos, float _yPos)
-	: Enemy{_xPos, _yPos},
-	  shotCount{0},
-	  state{State::idle},
-	  dasherSheet{mainTxtr},
-	  deathSheet{mainTxtr},
-	  hSpeed{0.f},
-	  vSpeed{0.f},
-	  timer{0}
+	: Enemy(_xPos, _yPos),
+	  shotCount(0),
+	  state(State::idle),
+	  dasherSheet(mainTxtr),
+	  deathSheet(mainTxtr),
+	  hSpeed(0.f),
+	  vSpeed(0.f),
+	  timer(0)
 {
 	dasherSheet.setOrigin(14, 8);
 	deathSheet.setOrigin(14, 8);
