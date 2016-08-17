@@ -34,9 +34,6 @@
 #include "RenderType.hpp"
 #include "resourceHandler.hpp"
 
-// TODO: Detail update parameters: xoffset, yoffset, elapsedtime, effectgroup, player
-// TODO: make screenShakeController global, ie globalScreenShakeController. There isn't any data in there that's vulnerable
-
 using DetailGroup = Framework::Group<Teleporter, // ----- 0
 									 TreasureChest, // -- 1
 									 LampLight, // ------ 2
