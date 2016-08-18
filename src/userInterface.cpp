@@ -187,7 +187,7 @@ void UserInterface::update(Player & player, FontController & fonts, InputControl
 		if (desaturateAmount > 0.85f) {
 			desaturateAmount = 0.85f;
 			state = State::deathScreen;
-			timerAlt = 0.f;
+			timerAlt = 0;
 		}
 		break;
 			
@@ -196,7 +196,7 @@ void UserInterface::update(Player & player, FontController & fonts, InputControl
 		timerAlt += elapsed.asMilliseconds();
 		if (timer > 20) {
 			timer -= 20;
-			if (timerAlt < 1400) {
+			if (timerAlt < 1500) {
 				// TODO: This previously zoomed the window... re-implement?
 			} else {
 				timer = 0;

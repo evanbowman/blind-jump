@@ -413,15 +413,16 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & 
 		break;
 	}
 	updateColor(elapsedTime);
-	checkEffectCollisions(effects, pFonts);
-	enemyController & enemies = pGM->getEnemyController();
-	checkEnemyCollisions(enemies, pFonts);
+	if (health > 0 && state != Player::State::deactivated) {
+		checkEffectCollisions(effects, pFonts);
+		enemyController & enemies = pGM->getEnemyController();
+		checkEnemyCollisions(enemies, pFonts);
+	}
 	if (health <= 0 && state != Player::State::dead) {
 		state = Player::State::dead;
 		sheetIndex = Player::Sheet::deathSheet;
 		frameIndex = 0;
 	}
-	
 	xPos -= (lSpeed + -rSpeed) * (elapsedTime.asMicroseconds() * 0.000054f);
     yPos -= (uSpeed + -dSpeed) * (elapsedTime.asMicroseconds() * 0.000054f);
 	setPosition(xPos, yPos);
