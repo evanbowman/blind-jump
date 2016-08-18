@@ -718,7 +718,9 @@ void checkEnemyCollision(const std::vector<T> & enemyGroup, Player * pPlayer, co
 template<typename F>
 void checkDasherCollision(const std::vector<Dasher> & dashers, Player * pPlayer, const F & policy) {
 	for (auto & enemy : dashers) {
-		if (pPlayer->getHitBox().overlapping(enemy.getHitBox()) && enemy.getState() != Dasher::State::dead) {
+		if (pPlayer->getHitBox().overlapping(enemy.getHitBox()) &&
+			enemy.getState() != Dasher::State::dead &&
+			enemy.getState() != Dasher::State::dying) {
 			policy();
 		}
 	}
