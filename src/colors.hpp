@@ -17,11 +17,25 @@
 
 #pragma once
 
-enum class Rendertype {
-	shadeDefault,
-	shadeWhite,
-	shadeGoldenGate,
-	shadeCrimson,
-	shadeNeon,
-	shadeNone
-};
+namespace colors {
+	namespace Crimson { 
+	   	constexpr float R = 0.93f;
+	    constexpr float G = 0.09f;
+		constexpr float B = 0.36f;
+	}
+	namespace GoldenGate {
+		constexpr float R = 0.98f;
+		constexpr float G = 0.22f;
+		constexpr float B = 0.03f;
+	}
+	namespace White {
+		constexpr float R = 1.f;
+		constexpr float G = 1.f;
+		constexpr float B = 1.f;
+	}
+	namespace Neon {
+		constexpr float R = 0.29f;
+		constexpr float G = 0.99f;
+		constexpr float B = 0.99f;
+	}
+}

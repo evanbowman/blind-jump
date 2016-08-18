@@ -187,8 +187,10 @@ void FontController::setWaypointText(int level) {
 	coin.setPosition(heart.getPosition().x, heart.getPosition().y + coin.getLocalBounds().height * 1.25);
 	coin.setFillColor(sf::Color(255, 255, 255, 0));
 	healthNumText.setPosition(fontView.getSize().x - healthNumText.getLocalBounds().width - heart.getLocalBounds().width, healthNumText.getLocalBounds().height);
-	healthNumText.setColor(sf::Color(255, 255, 255, 0));
-	heart.setFillColor(sf::Color(255, 255, 255, 0));
+	if (health != 1) {
+		healthNumText.setColor(sf::Color(255, 255, 255, 0));
+		heart.setFillColor(sf::Color(255, 255, 255, 0));
+	}
 	scoreText.setPosition(fontView.getSize().x - scoreText.getLocalBounds().width - fontView.getSize().x * 0.015 - heart.getLocalBounds().width, scoreText.getLocalBounds().height * 3);
 	std::string str = "WAYPOINT-";
 	str += std::to_string(level);
@@ -198,7 +200,9 @@ void FontController::setWaypointText(int level) {
 	scoreText.setColor(sf::Color(255, 255, 255, 4));
 	if (level != 0) {
 		wpTextDisplayTimer.restart();
-		healthDisplayTimer.restart();
+		if (health != 1) {
+			healthDisplayTimer.restart();
+		}
 		scoreDisplayTimer.restart();
 	}
 }
@@ -219,6 +223,13 @@ void FontController::print(sf::RenderWindow & window) {
 		healthModified = false;
 		healthNumText.setString(std::to_string(static_cast<int>(health)) + " / " + std::to_string(static_cast<int>(maxHealth)) + " :");
 		healthNumText.setPosition(fontView.getSize().x - healthNumText.getLocalBounds().width - fontView.getSize().x * 0.015 - heart.getLocalBounds().width, healthNumText.getLocalBounds().height);
+		// if (health != 1) {
+		// 	healthNumText.setColor(sf::Color::White);
+		// 	heart.setFillColor(sf::Color::White);
+		// } else {
+		// 	healthNumText.setColor(sf::Color(252, 45, 103));
+		// 	heart.setFillColor(sf::Color(252, 45, 103));
+		// }
 	}
 	if (scoreModified) {
 		scoreModified = false;
@@ -235,15 +246,19 @@ void FontController::print(sf::RenderWindow & window) {
 		window.draw(waypointText);
 	}
 
-	c = healthNumText.getColor();
-	if (c.a > 5) {
-		if (healthDisplayTimer.getElapsedTime().asSeconds() > HEALTH_TEXT_FADE_SECONDS) {
-			c.a -= 4;
-			healthNumText.setColor(c);
-			heart.setFillColor(c);
-			heart.setOutlineColor(c);
+	if (health != 1) {
+		c = healthNumText.getColor();
+		if (c.a > 5) {
+			if (healthDisplayTimer.getElapsedTime().asSeconds() > HEALTH_TEXT_FADE_SECONDS) {
+				c.a -= 4;
+				healthNumText.setColor(c);
+				heart.setFillColor(c);
+				heart.setOutlineColor(c);
+			}
+			window.draw(healthNumText);
+			window.draw(heart);
 		}
-		
+	} else {
 		window.draw(healthNumText);
 		window.draw(heart);
 	}
@@ -306,7 +321,7 @@ void FontController::drawTitle(unsigned char alpha, sf::RenderWindow& window) {
 }
 
 void FontController::drawDeathText(unsigned char alpha, sf::RenderWindow & window) {
-	deathText.setColor(sf::Color(231, 26, 83, alpha));
+	deathText.setColor(sf::Color(colors::Crimson::R * 255, colors::Crimson::G * 255, colors::Crimson::B * 255, alpha));
 	window.setView(fontView);
 	window.draw(deathText);
 }

@@ -34,6 +34,7 @@
 #include "resourceHandler.hpp"
 #include "camera.hpp"
 #include "alias.hpp"
+#include "colors.hpp"
 
 class Game {
 public:

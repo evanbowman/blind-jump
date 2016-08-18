@@ -19,8 +19,9 @@
 #ifndef fontController_hpp
 #define fontController_hpp
 
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include "resourceHandler.hpp"
+#include "colors.hpp"
 
 //
 // TODO: Urgent: Refactor, put in ui:: namespace, and rename to FrontEnd
