@@ -120,43 +120,39 @@ void Game::draw(sf::RenderWindow & window) {
 			case Rendertype::shadeDefault:
 				std::get<0>(element).setColor(sf::Color(190, 190, 210, std::get<0>(element).getColor().a));
 				lightingMap.draw(std::get<0>(element));
-				break;
+			    break;
 					
 			case Rendertype::shadeNone:
 				lightingMap.draw(std::get<0>(element));
-				break;
+			    break;
 					
-			case Rendertype::shadeWhite:
+			case Rendertype::shadeWhite: {
+				static const sf::Vector3f White(colors::White::R, colors::White::G, colors::White::B);
 				colorShader.setParameter("amount", std::get<3>(element));
-				colorShader.setParameter("targetColor", sf::Vector3f(colors::White::R,
-																	 colors::White::G,
-																	 colors::White::B));
+				colorShader.setParameter("targetColor", White);
 				lightingMap.draw(std::get<0>(element), &colorShader);
-				break;
+			    } break;
 					
-			case Rendertype::shadeGoldenGate:
+			case Rendertype::shadeGoldenGate: {
+				static const sf::Vector3f GldnGt(colors::GldnGt::R, colors::GldnGt::G, colors::GldnGt::B);
 				colorShader.setParameter("amount", std::get<3>(element));
-				colorShader.setParameter("targetColor", sf::Vector3f(colors::GoldenGate::R,
-																	 colors::GoldenGate::G,
-																	 colors::GoldenGate::B));
+				colorShader.setParameter("targetColor", GldnGt);
 				lightingMap.draw(std::get<0>(element), &colorShader);
-				break;
+			    } break;
 					
-			case Rendertype::shadeCrimson:
+			case Rendertype::shadeCrimson: {
+				static const sf::Vector3f Crimson(colors::Crimson::R, colors::Crimson::G, colors::Crimson::B);
 				colorShader.setParameter("amount", std::get<3>(element));
-				colorShader.setParameter("targetColor", sf::Vector3f(colors::Crimson::R,
-																	 colors::Crimson::G,
-																	 colors::Crimson::B));
+				colorShader.setParameter("targetColor", Crimson);
 				lightingMap.draw(std::get<0>(element), &colorShader);
-				break;
+			    } break;
 					
-			case Rendertype::shadeNeon:
+			case Rendertype::shadeNeon: {
+				static const sf::Vector3f Neon(colors::Neon::R, colors::Neon::G, colors::Neon::B);
 				colorShader.setParameter("amount", std::get<3>(element));
-				colorShader.setParameter("targetColor", sf::Vector3f(colors::Neon::R,
-																	 colors::Neon::G,
-																	 colors::Neon::B));
+				colorShader.setParameter("targetColor", Neon);
 				lightingMap.draw(std::get<0>(element), &colorShader);
-				break;
+			    } break;
 			}
 		}
 		sf::Color blendAmount(185, 185, 185, 255);

@@ -23,15 +23,15 @@ namespace colors {
 	    constexpr float G = 0.09f;
 		constexpr float B = 0.36f;
 	}
-	namespace GoldenGate {
+	namespace GldnGt {
 		constexpr float R = 0.98f;
 		constexpr float G = 0.22f;
 		constexpr float B = 0.03f;
 	}
 	namespace White {
-		constexpr float R = 1.f;
-		constexpr float G = 1.f;
-		constexpr float B = 1.f;
+		constexpr float R = 1.00f;
+		constexpr float G = 1.00f;
+		constexpr float B = 1.00f;
 	}
 	namespace Neon {
 		constexpr float R = 0.29f;
