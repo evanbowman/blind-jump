@@ -49,7 +49,6 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 			colorTimer -= 20.f;
 			colorAmount -= 0.1f;
 		}
-		
 		if (colorAmount <= 0.f) {
 			isColored = false;
 		}
@@ -71,15 +70,15 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 		if ((std::abs(static_cast<int>(global::RNG())) % 4) == 0) {
 			effects.add<4>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 						   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
-					   xPos, yPos + 4, Item::Type::Heart);
+						   xPos + 8, yPos + 4, Item::Type::Heart);
 		} else {
 		    effects.add<5>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 						   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::blueglow),
-					   xPos + 4, yPos + 4, Item::Type::Coin);
+						   xPos + 8, yPos + 4, Item::Type::Coin);
 		}
 		effects.add<2>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::fireExplosionGlow),
-				   xPos + 8, yPos + 8);
+					   xPos + 12, yPos + 12);
 	}
 	switch (state) {
 	case State::closed:
@@ -140,7 +139,7 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 
 	case State::rest:
 		timer += elapsedTime.asMicroseconds();
-		if (timer > 800000) {
+		if (timer > 1200000) {
 			if (std::sqrt(std::pow((xPos - playerPosX + 8), 2) + std::pow((yPos - playerPosY + 16), 2)) < 174) {
 				state = State::shoot1;
 			} else {

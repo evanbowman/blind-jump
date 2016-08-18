@@ -52,8 +52,8 @@ int main() {
 		ResourceHandler resourceHandler;
 		resourceHandler.load();
 		global::resourceHandlerPtr = &resourceHandler;
-		seedRNG();
 		sf::Vector2f drawableRegionSize = getDrawableRegionSize();
+		seedRNG();
 		sf::ContextSettings settings;
 		settings.antialiasingLevel = 6;
 		sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Blind Jump", sf::Style::Fullscreen, settings);

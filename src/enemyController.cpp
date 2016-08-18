@@ -47,7 +47,6 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
 			gameObjects.push_back(tSpr);
 		}
 	}
-
 	for (auto & element : critters) {
 		gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
 		std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
@@ -60,7 +59,6 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
 			gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16, Rendertype::shadeDefault, 0.f);
 		}		
 	}
-	
 	for (auto & element : scoots) {
 		if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 48 && element.getXpos() < viewCenter.x + viewSize.x / 2 + 48 && element.getYpos() > viewCenter.y - viewSize.y / 2 - 48 && element.getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 			gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
@@ -71,7 +69,6 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
 			}
 		}
 	}
-	
 	for (auto & element : dashers) {
 		if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 48 && element.getXpos() < viewCenter.x + viewSize.x / 2 + 48 && element.getYpos() > viewCenter.y - viewSize.y / 2 - 48 && element.getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 			auto state = element.getState();
@@ -97,6 +94,8 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 	if (!turrets.empty()) {
 		for (auto it = turrets.begin(); it != turrets.end();) {
 			if (it->getKillFlag() == 1) {
+				util::sleep(milliseconds(45));
+				camera.shake(0.13f);
 				it = turrets.erase(it);
 			} else {
 				if (it->getXpos() > viewCenter.x - viewSize.x / 2 - 48 &&
@@ -112,12 +111,11 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 			}
 		}
 	}
-	
 	if (!scoots.empty()) {
 		for (auto it = scoots.begin(); it != scoots.end();) {
 			if (it->getKillFlag()) {
 				util::sleep(milliseconds(45));
-				camera.shake(0.1f);
+				camera.shake(0.13f);
 				it = scoots.erase(it);
 			} else {
 				if (it->getXpos() > viewCenter.x - viewSize.x / 2 - 48 &&
@@ -133,7 +131,6 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 			}
 		}
 	}
-	
 	if (!critters.empty()) {
 		// Need to check if each enemy overlaps with any other enemies so that they don't bunch up
 		for (size_t i = 0; i < critters.size(); i++) {
@@ -147,11 +144,10 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 				}
 			}
 		}
-		
 		for (auto it = critters.begin(); it != critters.end();) {
 			if (it->getKillFlag()) {
 				util::sleep(milliseconds(45));
-				camera.shake(0.1f);
+				camera.shake(0.13f);
 				it = critters.erase(it);
 			} else {
 				if (it->getXpos() > viewCenter.x - viewSize.x / 2 - 48 &&
@@ -187,7 +183,7 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 				}
 				if (element.getKillFlag()) {
 					util::sleep(milliseconds(45));
-					camera.shake(0.1f);
+					camera.shake(0.13f);
 					element.setKillFlag(false);
 				}
 			}

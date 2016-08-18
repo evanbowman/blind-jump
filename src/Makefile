@@ -4,7 +4,7 @@
 # 
 
 CC = g++
-override CPPFLAGS += -O2 -flto -std=c++14 -Wall -Wextra -Wunreachable-code -pedantic -Werror
+override CPPFLAGS += -O2 -flto -std=c++14 -Wall -Wextra -pedantic -Werror
 LDFLAGS_MAC = -framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio -Xlinker -rpath -Xlinker @loader_path/../Frameworks -fobjc-link-runtime -flto
 LDFLAGS_LINUX = -lsfml-graphics -lsfml-audio -lsfml-system -lsfml-window -lpthread -lX11 -flto
 LDFLAGS_WINDOWS = 
