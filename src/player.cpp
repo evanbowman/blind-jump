@@ -739,7 +739,7 @@ void Player::checkEnemyCollisions(enemyController & enemies, FontController * pF
 	};
 	checkEnemyCollision(enemies.getCritters(), this, collisionPolicy);
 	checkEnemyCollision(enemies.getDashers(), this, collisionPolicy);
-	checkEnemyCollision(enemies.getTurrets(), this, collisionPolicy);
+	// TODO: why is this buggy? checkEnemyCollision(enemies.getTurrets(), this, collisionPolicy);
 	checkEnemyCollision(enemies.getScoots(), this, collisionPolicy);
 }
 
