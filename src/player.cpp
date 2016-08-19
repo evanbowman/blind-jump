@@ -680,7 +680,7 @@ void Player::checkEffectCollisions(EffectGroup & effects, FontController * pFont
 		if (colorAmount == 0.f) {
 			health -= 1;
 			pFonts->updateHealth(health);
-			renderType = Rendertype::shadeGoldenGate;
+			renderType = Rendertype::shadeGldnGt;
 			colorAmount = 1.f;
 			colorTimer = 0;
 			util::sleep(milliseconds(40));
@@ -731,7 +731,7 @@ void Player::checkEnemyCollisions(enemyController & enemies, FontController * pF
 		if (colorAmount == 0.f) {
 			health -= 1;
 			pFonts->updateHealth(health);
-			renderType = Rendertype::shadeGoldenGate;
+			renderType = Rendertype::shadeGldnGt;
 			colorAmount = 1.f;
 			colorTimer = 0;
 			util::sleep(milliseconds(40));

@@ -26,29 +26,20 @@
 #include <cmath>
 #include "Framework/framework.hpp"
 
-//
-// TODO: I made these functions virtual to enforce a design pattern when making this.
-// They really shouldn't be.
-//
-
 class Enemy {
 protected:
-	virtual void onDeath(EffectGroup &) = 0;
 	bool killFlag, colored;
 	float xPos, yPos, colorAmount;
 	uint8_t frameIndex, health;
 	uint32_t colorTimer, frameTimer;
 	uint_fast8_t checkWallCollision(const std::vector<wall> &, float, float);
 	bool wallInPath(const std::vector<wall> &, float, float, float);
-	void checkShotCollision(EffectGroup & ef);
 	void updateColor(const sf::Time &);
 	void facePlayer();
 	~Enemy() {};
 	
 public:
 	Enemy(float, float);
-	virtual const sf::Sprite & getSprite() const = 0;
-	virtual const sf::Sprite & getShadow() const = 0;
 	bool getKillFlag() const;
 	bool isColored() const;
 	float getXpos() const;

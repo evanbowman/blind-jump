@@ -30,8 +30,8 @@ public:
 	Critter(const sf::Texture &, uint8_t map[61][61], float, float);
 	void update(float, float, const std::vector<wall> &, EffectGroup & ef, const sf::Time &);
 	void critterUpdate(float, float, EffectGroup & ef, const sf::Time &, tileController * pTiles);
-	const sf::Sprite & getSprite() const override;
-	const sf::Sprite & getShadow() const override;
+	const sf::Sprite & getSprite() const;
+	const sf::Sprite & getShadow() const;
 	void activate();
 	void deActivate();
 	bool isActive();
@@ -40,20 +40,17 @@ public:
 	
 private:
 	float xInit, yInit;
-	void onDeath(EffectGroup &) override;
+	void onDeath(EffectGroup &);
     float currentDir;
 	float jumpTargetx, jumpTargety;
 	void newPath(tileController *);
 	mutable SpriteSheet<0, 57, 18, 18> spriteSheet;
-	HBox hitBox;
-	sf::Sprite shadow;
-	aStrCoordinate previous;
-	bool awake;
-	// The current path of enemy to the player
 	std::vector<aStrCoordinate> path;
-	// Next positon to move to
+	aStrCoordinate previous;
+	sf::Sprite shadow;
+	HBox hitBox;
+	bool awake;
 	bool active;
 	int recalc;
-	// Store a pointer to the game map
 	uint8_t (*map)[61]; //*** I know this is a nasty solution, perhaps there's a better way to not store it locally...
 };

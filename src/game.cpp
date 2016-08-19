@@ -133,7 +133,7 @@ void Game::draw(sf::RenderWindow & window) {
 				lightingMap.draw(std::get<0>(element), &colorShader);
 			    } break;
 					
-			case Rendertype::shadeGoldenGate: {
+			case Rendertype::shadeGldnGt: {
 				static const sf::Vector3f GldnGt(colors::GldnGt::R, colors::GldnGt::G, colors::GldnGt::B);
 				colorShader.setParameter("amount", std::get<3>(element));
 				colorShader.setParameter("targetColor", GldnGt);

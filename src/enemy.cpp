@@ -86,12 +86,6 @@ bool Enemy::wallInPath(const std::vector<wall> & w, float dir, float xPos, float
 	return false;
 }
 
-void Enemy::checkShotCollision(EffectGroup & effects) {
-	if (health == 0) {
-		onDeath(effects);
-	}
-}
-
 void Enemy::updateColor(const sf::Time & elapsedTime) {
 	if (colored) {
 		colorTimer += elapsedTime.asMilliseconds();
