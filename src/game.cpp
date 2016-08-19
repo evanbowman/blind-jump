@@ -298,8 +298,9 @@ void Game::update(sf::Time & elapsedTime) {
 				level = -1;
 				Reset();
 				pFonts->reset();
-				pFonts->updateHealth(4);
-				pFonts->updateMaxHealth(4);
+				static const char playerStartingHealth = 4;
+				pFonts->updateHealth(playerStartingHealth);
+				pFonts->updateMaxHealth(playerStartingHealth);
 				pFonts->setWaypointText(level);
 			}
 			UI.update(player, *pFonts, pInput, elapsedTime);
