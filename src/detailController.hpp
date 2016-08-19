@@ -16,8 +16,6 @@
 //========================================================================//
 
 #pragma once
-#ifndef detailController_hpp
-#define detailController_hpp
 
 #include "SFML/Graphics.hpp"
 #include "Teleporter.hpp"
@@ -78,5 +76,3 @@ inline void drawGroup(DetailGroup & dg, drawableVec & gameObjects, drawableVec &
 		glowSprs2.push_back(element.getGlow());
 	}
 }
-
-#endif /* detailController_hpp */

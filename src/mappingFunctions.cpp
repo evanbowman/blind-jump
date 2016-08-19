@@ -96,11 +96,9 @@ inline void addCenterTiles(uint8_t map[61][61]) {
 }
 
 void condense(uint8_t map[61][61], uint8_t maptemp[61][61], char rep) {
-	int count = 0;
-	// Heh it's not copy-paste it's *unrolled*
 	for (int i = 2; i < 59; i++) {
 		for (int j = 2; j < 59; j++) {
-			count = 0;
+			uint8_t count = 0;
 			if (map[i - 1][j - 1] == 1) {
 				count += 1;
 			}
@@ -140,13 +138,11 @@ void condense(uint8_t map[61][61], uint8_t maptemp[61][61], char rep) {
 			}
 		}
 	}
-	
 	for (int i = 2; i < 59; i++) {
 		for (int j = 2; j < 59; j++) {
 			map[i][j] = maptemp[i][j];
 		}
 	}
-	
 	if (rep > 0) {
 		condense(map, maptemp, rep - 1);
 	}

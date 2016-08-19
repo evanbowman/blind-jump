@@ -17,11 +17,6 @@
 //========================================================================//
 
 #include "player.hpp"
-#include "playerAnimationFunctions.hpp"
-#include <cmath>
-#include "playerCollisionFunctions.hpp"
-#include "wall.hpp"
-#include <tuple>
 #include "game.hpp"
 
 Player::Player(float _xPos, float _yPos)
@@ -70,7 +65,6 @@ void Player::init() {
 	shadowSprite.setTextureRect(sf::IntRect(0, 100, 18, 16));
 	gun.gunSpr.setPosition(xPos, yPos);
 	gun.gunSpr.setTexture(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
-
 }
 
 sf::Vector2f Player::getPosition() {

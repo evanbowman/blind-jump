@@ -268,7 +268,7 @@ void Game::update(sf::Time & elapsedTime) {
 			bkg.setOffset(0, 0);
 		}
 		tiles.update();
-		details.apply([&](auto & vec) {
+		auto groupUpdatePolicy = [&](auto & vec) {
 			for (auto it = vec.begin(); it != vec.end();) {
 				if (it->getKillFlag()) {
 					it = vec.erase(it);
@@ -277,22 +277,14 @@ void Game::update(sf::Time & elapsedTime) {
 					++it;
 				}
 			}
-		});
+		};
+		details.apply(groupUpdatePolicy);
 		std::vector<sf::Vector2f> cameraTargets;
 		en.update(player.getXpos(), player.getYpos(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, elapsedTime, camera, cameraTargets);
 		camera.update(elapsedTime, cameraTargets);
 		if (player.visible) player.update(this, elapsedTime, sounds);
 		if (!UI.isOpen() || (UI.isOpen() && player.getState() == Player::State::dead)) {
-			effectGroup.apply([&](auto & vec) {
-				for (auto it = vec.begin(); it != vec.end();) {
-					if (it->getKillFlag()) {
-						it = vec.erase(it);
-					} else {
-						it->update(elapsedTime);
-						++it;
-					}
-				}
-			});
+			effectGroup.apply(groupUpdatePolicy);
 		}
 	}
 	{

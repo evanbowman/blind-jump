@@ -18,14 +18,19 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "tileController.hpp"
+#include <cmath>
+#include <tuple>
+#include "playerAnimationFunctions.hpp"
+#include "playerCollisionFunctions.hpp"
 #include "detailController.hpp"
 #include "soundController.hpp"
 #include "inputController.hpp"
-#include "RenderType.hpp"
 #include "resourceHandler.hpp"
+#include "tileController.hpp"
 #include "spriteSheet.hpp"
+#include "RenderType.hpp"
 #include "util.hpp"
+#include "wall.hpp"
 
 class Game;
 
