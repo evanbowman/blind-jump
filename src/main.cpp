@@ -37,9 +37,6 @@
 #include "alias.hpp"
 #include "util.hpp"
 #include "shutdownSignal.hpp"
-#ifdef LINUX
-#include <X11/Xlib.h>
-#endif
 
 namespace global {
 	std::mt19937 RNG;
@@ -48,12 +45,12 @@ namespace global {
 }
 
 int main() {
-	try { // The rest of the code is exception safe, but loading resources and creating threads can't be
-		ResourceHandler resourceHandler;
+	seedRNG();
+	ResourceHandler resourceHandler;
+	sf::Vector2f drawableRegionSize = getDrawableRegionSize();
+	try {
 		resourceHandler.load();
 		global::resourceHandlerPtr = &resourceHandler;
-		sf::Vector2f drawableRegionSize = getDrawableRegionSize();
-		seedRNG();
 		sf::ContextSettings settings;
 		settings.antialiasingLevel = 6;
 		sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Blind Jump", sf::Style::Fullscreen, settings);
@@ -65,11 +62,6 @@ int main() {
 		sf::View worldView(drawableRegionSize / 2.f, drawableRegionSize);
 		FontController fonts(hudView, drawableRegionSize.x / 2, drawableRegionSize.y / 2);
 		Game game(drawableRegionSize, &input, &fonts);
-		#ifdef LINUX
-		if (!XInitThreads()) {
-			return EXIT_FAILURE;
-		}
-		#endif
 		SmartThread logicThread([](Game * pGame, sf::RenderWindow * pWindow) {
 			duration logicUpdateDelta;
 			sf::Clock gameClock;
