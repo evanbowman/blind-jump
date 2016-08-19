@@ -372,8 +372,9 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 	case TransitionState::None:
 		{
 			// If the player is near the teleporter, snap to its center and deactivate the player
-			float teleporterX = details.get<0>().back().getPosition().x;
-			float teleporterY = details.get<0>().back().getPosition().y;
+			static const std::size_t teleporterIdx = 0;
+			float teleporterX = details.get<teleporterIdx>().back().getPosition().x;
+			float teleporterY = details.get<teleporterIdx>().back().getPosition().y;
 			if ((std::abs(player.getXpos() - teleporterX) < 8 && std::abs(player.getYpos() - teleporterY + 12) < 8)) {
 				player.setPosition(teleporterX - 2.f, teleporterY - 16.f);
 				player.setState(Player::State::deactivated);
