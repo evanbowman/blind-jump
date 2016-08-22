@@ -1,14 +1,9 @@
-//
-//  playerCollisionFunctions.hpp
-//  Blind Jump
-//
-//  Created by Evan Bowman on 11/14/15.
-//  Copyright © 2015 Evan Bowman. All rights reserved.
-//
+//========================================================================//
+// Copyright (C) 2016 Evan Bowman                                         //
+// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
+//========================================================================//
 
 #pragma once
-#ifndef playerCollisionFunctions_hpp
-#define playerCollisionFunctions_hpp
 
 #include "wall.hpp"
 #include "treasureChest.hpp"
@@ -54,5 +49,3 @@ inline uint_fast8_t checkCollisionChest(std::vector<TreasureChest> chests, float
 	}
 	return collisionMask;
 }
-
-#endif /* playerCollisionFunctions_hpp */

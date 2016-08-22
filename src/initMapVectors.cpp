@@ -1,18 +1,6 @@
 //========================================================================//
 // Copyright (C) 2016 Evan Bowman                                         //
-//                                                                        //
-// This program is free software: you can redistribute it and/or modify   //
-// it under the terms of the GNU General Public License as published by   //
-// the Free Software Foundation, either version 3 of the License, or      //
-// (at your option) any later version.                                    //
-//                                                                        //
-// This program is distributed in the hope that it will be useful,        //
-// but WITHOUT ANY WARRANTY; without even the implied warranty of         //
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          //
-// GNU General Public License for more details.                           //
-//                                                                        //
-// You should have received a copy of the GNU General Public License      //
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.  //
+// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
 //========================================================================//
 
 #include "initMapVectors.hpp"
@@ -21,25 +9,19 @@
 #include "Framework/framework.hpp"
 
 void initMapVectors(tileController * pTiles) {
-	
-	// First pick points for the hero character and level exit, to make sure not to place any objects on the critical path
 	int playerX, playerY, transporterX, transporterY;
-
 	wall w;
-	
 	do {
 		transporterX = std::abs(static_cast<int>(global::RNG())) % 55;
 		transporterY = std::abs(static_cast<int>(global::RNG())) % 55;
 	} while ((pTiles->mapArray[transporterX][transporterY] != 4));
-	
 	pTiles->teleporterLocation.x = transporterX;
 	pTiles->teleporterLocation.y = transporterY;
-
-	for (int i = 0; i < 61; i++) {
-		for (int j = 0; j < 61; j++) {
+	static const int mapSideLen = 61;
+	for (int i = 0; i < mapSideLen; i++) {
+		for (int j = 0; j < mapSideLen; j++) {
 			int tileId = pTiles->mapArray[i][j];
-			if (tileId == 3 || tileId == 4 || tileId == 11) {				 //This function checks the case for each map element, and pushes back the correct sprites and positions
-				// Create a new coordinate structure holding the ordered pair set (i,j)
+			if (tileId == 3 || tileId == 4 || tileId == 11) {				 
 				Coordinate c1;
 				c1.x = i;
 				c1.y = j;
@@ -56,15 +38,15 @@ void initMapVectors(tileController * pTiles) {
 			}
 		}
 	}
-	
 	// Sort the empty location vector based on coordinate priorities
-	std::sort(pTiles->emptyMapLocations.begin(), pTiles->emptyMapLocations.end(), [](const Coordinate c1, const Coordinate c2) {return c1.priority < c2.priority;});
+	std::sort(pTiles->emptyMapLocations.begin(), pTiles->emptyMapLocations.end(), [](const Coordinate c1, const Coordinate c2) {
+			return c1.priority < c2.priority;
+		});
 	playerX = pTiles->emptyMapLocations.back().x;
 	playerY = pTiles->emptyMapLocations.back().y;
-	
-	pTiles->posX = -(32 * playerX);
-	pTiles->posY = -(26 * playerY) - 4;
-	
-	// Remove that location from the vector
+	static const uint8_t tileWidth = 32;
+	static const uint8_t tileHeight = 26;
+	pTiles->posX = -(tileWidth * playerX);
+	pTiles->posY = -(tileHeight * playerY) - 4;
 	pTiles->emptyMapLocations.pop_back();
 }

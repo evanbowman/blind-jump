@@ -1,18 +1,6 @@
 //========================================================================//
 // Copyright (C) 2016 Evan Bowman                                         //
-//                                                                        //
-// This program is free software: you can redistribute it and/or modify   //
-// it under the terms of the GNU General Public License as published by   //
-// the Free Software Foundation, either version 3 of the License, or      //
-// (at your option) any later version.                                    //
-//                                                                        //
-// This program is distributed in the hope that it will be useful,        //
-// but WITHOUT ANY WARRANTY; without even the implied warranty of         //
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          //
-// GNU General Public License for more details.                           //
-//                                                                        //
-// You should have received a copy of the GNU General Public License      //
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.  //
+// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
 //========================================================================//
 
 #include "mappingFunctions.hpp"
@@ -110,56 +98,58 @@ void Game::draw(sf::RenderWindow & window) {
 		target.setView(worldView);
 		lightingMap.clear(sf::Color::Transparent);
 		// Sort the game objects based on y-position for z-ordering
+		static const std::size_t zOrderIdx = 1;
 		std::sort(gameObjects.begin(), gameObjects.end(), [](const drawableMetadata & arg1, const drawableMetadata & arg2) {
-				return (std::get<1>(arg1) < std::get<1>(arg2));
+				return (std::get<zOrderIdx>(arg1) < std::get<zOrderIdx>(arg2));
 			});
 		window.setView(worldView);
+		static const std::size_t sprIdx = 0;
+		static const std::size_t shaderIdx = 3;
 		sf::Shader & colorShader = global::resourceHandlerPtr->getShader(ResourceHandler::Shader::color);
 		for (auto & element : gameObjects) {
 			switch (std::get<2>(element)) {
 			case Rendertype::shadeDefault:
-				std::get<0>(element).setColor(sf::Color(190, 190, 210, std::get<0>(element).getColor().a));
-				lightingMap.draw(std::get<0>(element));
+				std::get<0>(element).setColor(sf::Color(190, 190, 210, std::get<sprIdx>(element).getColor().a));
+				lightingMap.draw(std::get<sprIdx>(element));
 			    break;
 					
 			case Rendertype::shadeNone:
-				lightingMap.draw(std::get<0>(element));
+				lightingMap.draw(std::get<sprIdx>(element));
 			    break;
 					
 			case Rendertype::shadeWhite: {
 				static const sf::Vector3f White(colors::White::R, colors::White::G, colors::White::B);
-				colorShader.setParameter("amount", std::get<3>(element));
+				colorShader.setParameter("amount", std::get<shaderIdx>(element));
 				colorShader.setParameter("targetColor", White);
-				lightingMap.draw(std::get<0>(element), &colorShader);
+				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
 			    } break;
 					
 			case Rendertype::shadeGldnGt: {
 				static const sf::Vector3f GldnGt(colors::GldnGt::R, colors::GldnGt::G, colors::GldnGt::B);
-				colorShader.setParameter("amount", std::get<3>(element));
+				colorShader.setParameter("amount", std::get<shaderIdx>(element));
 				colorShader.setParameter("targetColor", GldnGt);
-				lightingMap.draw(std::get<0>(element), &colorShader);
+				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
 			    } break;
 					
 			case Rendertype::shadeCrimson: {
 				static const sf::Vector3f Crimson(colors::Crimson::R, colors::Crimson::G, colors::Crimson::B);
-				colorShader.setParameter("amount", std::get<3>(element));
+				colorShader.setParameter("amount", std::get<shaderIdx>(element));
 				colorShader.setParameter("targetColor", Crimson);
-				lightingMap.draw(std::get<0>(element), &colorShader);
+				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
 			    } break;
 					
 			case Rendertype::shadeNeon: {
 				static const sf::Vector3f Neon(colors::Neon::R, colors::Neon::G, colors::Neon::B);
-				colorShader.setParameter("amount", std::get<3>(element));
+				colorShader.setParameter("amount", std::get<shaderIdx>(element));
 				colorShader.setParameter("targetColor", Neon);
-				lightingMap.draw(std::get<0>(element), &colorShader);
+				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
 			    } break;
 			}
 		}
-		sf::Color blendAmount(185, 185, 185, 255);
+		static const sf::Color blendAmount(185, 185, 185);
 		sf::Sprite tempSprite;
 		for (auto element : glowSprs2) {
 			element.setColor(blendAmount);
-			element.setPosition(element.getPosition().x, element.getPosition().y - 12);
 			lightingMap.draw(element, sf::BlendMode(sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One,
 																	 sf::BlendMode::Add, sf::BlendMode::DstAlpha,
 																	 sf::BlendMode::Zero, sf::BlendMode::Add)));
@@ -280,7 +270,7 @@ void Game::update(sf::Time & elapsedTime) {
 		};
 		details.apply(groupUpdatePolicy);
 		std::vector<sf::Vector2f> cameraTargets;
-		en.update(player.getXpos(), player.getYpos(), effectGroup, tiles.walls, !UI.isOpen(), &tiles, elapsedTime, camera, cameraTargets);
+		en.update(this, elapsedTime); // TODO: This will break build, fix...
 		camera.update(elapsedTime, cameraTargets);
 		if (player.visible) player.update(this, elapsedTime, sounds);
 		if (!UI.isOpen() || (UI.isOpen() && player.getState() == Player::State::dead)) {
@@ -524,9 +514,8 @@ void Game::Reset() {
 	details.clear();
 	player.setPosition(windowW / 2 - 17, windowH / 2);
 	en.clear();
-	set = tileController::Tileset::intro;
 	if (level == 0) {
-		camera.reset();
+		camera.snapToTarget();
 		set = tileController::Tileset::intro;
 	} else {
 		camera.panDown();
@@ -552,20 +541,22 @@ void Game::Reset() {
 	};
 	if (level != 0) {
 		Coordinate c = tiles.getTeleporterLoc();
-		details.add<0>(tiles.posX + c.x * 32 + 2, tiles.posY + c.y * 26 - 4,
-					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::teleporterGlow));
+		static const teleporterIdx = 0;
+		details.add<teleporterIdx>(tiles.posX + c.x * 32 + 2, tiles.posY + c.y * 26 - 4,
+								   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+								   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::teleporterGlow));
 		initEnemies(this);
 		// Place 0-2 powerup chests on the map
 		c = pickLocation(tiles.emptyMapLocations);
 		Powerup chestContents = static_cast<Powerup>(rand() % 2 + 1);
-		details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
-					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), chestContents);
+		static const chestIdx = 1;
+		details.add<chestIdx>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
+							  global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), chestContents);
 		if (std::abs(static_cast<int>(global::RNG())) % 2) {
 			c = pickLocation(tiles.emptyMapLocations);
 			chestContents = static_cast<Powerup>(rand() % 2 + 1);
-			details.add<1>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
-						   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), chestContents);
+			details.add<chestIdx>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
+								  global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), chestContents);
 		}
 		glowSprs1.clear();
 		glowSprs2.clear();
@@ -591,29 +582,35 @@ void Game::Reset() {
 		}
 		detailPositions.clear();
 	} else if (set == tileController::Tileset::intro) {
-		details.add<2>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (6 * 26),
-					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
-		details.add<2>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (0 * 26),
-					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
-		details.add<2>(tiles.posX - 180 + 16 + (11 * 32), tiles.posY + 200 - 3 + (11 * 26),
-					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
-		details.add<2>(tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 204 + 8 + (-9 * 26),
-					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
-		details.add<4>(tiles.posX - 192 + 6 * 32, tiles.posY + 301,
-					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::introWall));
+		static const std::size_t lampIdx = 2;
+		static const std::size_t doorIdx = 4;
+		static const std::size_t podIdx = 6;
+		static const std::size_t teleporterIdx = 0;
+		details.add<lampIdx>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (6 * 26),
+							 global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+							 global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
+		details.add<lampIdx>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (0 * 26),
+							 global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+							 global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
+		details.add<lampIdx>(tiles.posX - 180 + 16 + (11 * 32), tiles.posY + 200 - 3 + (11 * 26),
+							 global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+							 global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
+		details.add<lampIdx>(tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 204 + 8 + (-9 * 26),
+							 global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+							 global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::lamplight));
+		details.add<doorIdx>(tiles.posX - 192 + 6 * 32, tiles.posY + 301,
+							 global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::introWall));
 		sf::Sprite podSpr;
 		podSpr.setTexture(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects));
 		podSpr.setTextureRect(sf::IntRect(164, 145, 44, 50));
-		details.add<6>(tiles.posX + 3 * 32, tiles.posY + 4 + 17 * 26, podSpr);;
-		tiles.teleporterLocation.x = 8;
-		tiles.teleporterLocation.y = -7;
-		details.add<0>(tiles.posX - 178 + 8 * 32, tiles.posY + 284 + -7 * 26,
-					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::teleporterGlow));
+		details.add<podIdx>(tiles.posX + 3 * 32, tiles.posY + 4 + 17 * 26, podSpr);
+		static const int initTeleporterLocX = 8;
+		static const int initTeleporterLocY = -7;
+		tiles.teleporterLocation.x = initTeleporterLocX;
+		tiles.teleporterLocation.y = initTeleporterLocY;
+		details.add<teleporterIdx>(tiles.posX - 178 + 8 * 32, tiles.posY + 284 + -7 * 26,
+								   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
+								   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::teleporterGlow));
 		for (auto it = global_levelZeroWalls.begin(); it != global_levelZeroWalls.end(); ++it) {
 			wall w;
 			w.setXinit(it->first);
