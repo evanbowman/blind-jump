@@ -6,7 +6,7 @@
 #pragma once
 
 namespace colors {
-	namespace Crimson { 
+	namespace Ruby { 
 	   	constexpr float R = 0.93f;
 	    constexpr float G = 0.09f;
 		constexpr float B = 0.36f;
@@ -21,7 +21,7 @@ namespace colors {
 		constexpr float G = 1.00f;
 		constexpr float B = 1.00f;
 	}
-	namespace Neon {
+	namespace Electric {
 		constexpr float R = 0.29f;
 		constexpr float G = 0.99f;
 		constexpr float B = 0.99f;

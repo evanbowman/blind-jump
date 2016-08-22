@@ -38,7 +38,7 @@ void Critter::updatePlayerDead() {
 
 void Critter::update(float, float, const std::vector<wall> &, EffectGroup &, const sf::Time &) {}
 
-void Critter::critterUpdate(float playerPosX, float playerPosY, EffectGroup & effects, const sf::Time & elapsedTime, tileController * pTiles) {
+void Critter::critterUpdate(float playerPosX, float playerPosY, EffectGroup & effects, const sf::Time & elapsedTime, tileController & tiles) {
 	xPos = xInit + 12;
 	yPos = yInit;
 	for (auto & element : effects.get<9>()) {
@@ -59,8 +59,8 @@ void Critter::critterUpdate(float playerPosX, float playerPosY, EffectGroup & ef
 	xPos -= 12; // Currently off-centered, this is just temporary work-around
 	Enemy::updateColor(elapsedTime);
 	hitBox.setPosition(xPos, yPos);
-	float tilePosX = pTiles->posX;
-	float tilePosY = pTiles->posY;
+	float tilePosX = tiles.posX;
+	float tilePosY = tiles.posY;
 	
 	if (awake) {
 		float speed;

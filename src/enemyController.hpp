@@ -19,6 +19,7 @@
 class ScreenShakeController;
 class detailController;
 class tileController;
+class Game;
 class Camera;
 
 class enemyController {
@@ -33,7 +34,7 @@ private:
 	
 public:
 	enemyController();
-	void update(float, float, EffectGroup &, std::vector<wall>, bool, tileController*, sf::Time &, Camera &, std::vector<sf::Vector2f> &);
+	void update(Game *, float, float, bool, sf::Time &, std::vector<sf::Vector2f> &);
 	void draw(drawableVec &, drawableVec &, Camera &);
 	void clear();
 	void addTurret(tileController *);

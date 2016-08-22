@@ -49,6 +49,7 @@ public:
 	InputController * getPInput();
 	UserInterface & getUI();
 	FontController * getPFonts();
+	Camera & getCamera();
 	float windowW;
 	float windowH;
 	TransitionState transitionState;

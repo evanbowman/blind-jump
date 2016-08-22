@@ -309,7 +309,7 @@ void FontController::drawTitle(unsigned char alpha, sf::RenderWindow& window) {
 }
 
 void FontController::drawDeathText(unsigned char alpha, sf::RenderWindow & window) {
-	deathText.setColor(sf::Color(colors::Crimson::R * 255, colors::Crimson::G * 255, colors::Crimson::B * 255, alpha));
+	deathText.setColor(sf::Color(colors::Ruby::R * 255, colors::Ruby::G * 255, colors::Ruby::B * 255, alpha));
 	window.setView(fontView);
 	window.draw(deathText);
 }

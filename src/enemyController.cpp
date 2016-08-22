@@ -10,6 +10,7 @@
 #include "tileController.hpp"
 #include "detailController.hpp"
 #include "camera.hpp"
+#include "game.hpp"
 
 enemyController::enemyController() {}
 
@@ -18,7 +19,10 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
 	sf::Vector2f viewCenter = cameraView.getCenter();
 	sf::Vector2f viewSize = cameraView.getSize();
 	for (auto & element : turrets) {
-		if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 48 && element.getXpos() < viewCenter.x + viewSize.x / 2 + 48 && element.getYpos() > viewCenter.y - viewSize.y / 2 - 48 && element.getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
+		if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 48 &&
+			element.getXpos() < viewCenter.x + viewSize.x / 2 + 48 &&
+			element.getYpos() > viewCenter.y - viewSize.y / 2 - 48 &&
+			element.getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 			// Get the enemy's shadow
 			std::tuple<sf::Sprite, float, Rendertype, float> shadow;
 			std::get<0>(shadow) = element.getShadow();
@@ -41,40 +45,61 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
 		std::get<1>(tSpr) = element.getYpos() - 16;
 		// If the enemy should be colored, let the rendering code know to pass it through a fragment shader
 		if (element.isColored()) {
-			gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16, Rendertype::shadeWhite, element.getColorAmount());
+			gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16,
+									 Rendertype::shadeWhite, element.getColorAmount());
 		} else {
-			gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16, Rendertype::shadeDefault, 0.f);
+			gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16,
+									 Rendertype::shadeDefault, 0.f);
 		}		
 	}
 	for (auto & element : scoots) {
-		if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 48 && element.getXpos() < viewCenter.x + viewSize.x / 2 + 48 && element.getYpos() > viewCenter.y - viewSize.y / 2 - 48 && element.getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
+		if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 48 &&
+			element.getXpos() < viewCenter.x + viewSize.x / 2 + 48 &&
+			element.getYpos() > viewCenter.y - viewSize.y / 2 - 48 &&
+			element.getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 			gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
 			if (element.isColored()) {
-				gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16, Rendertype::shadeWhite, element.getColorAmount());
+				gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16,
+										 Rendertype::shadeWhite, element.getColorAmount());
 			} else {
-				gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16, Rendertype::shadeDefault, 0.f);
+				gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16,
+										 Rendertype::shadeDefault, 0.f);
 			}
 		}
 	}
 	for (auto & element : dashers) {
-		if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 48 && element.getXpos() < viewCenter.x + viewSize.x / 2 + 48 && element.getYpos() > viewCenter.y - viewSize.y / 2 - 48 && element.getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
+		if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 48 &&
+			element.getXpos() < viewCenter.x + viewSize.x / 2 + 48 &&
+			element.getYpos() > viewCenter.y - viewSize.y / 2 - 48 &&
+			element.getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 			auto state = element.getState();
 			if (state != Dasher::State::dying && state != Dasher::State::dead) {
 				gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
 			}		
 			for (auto & blur : *element.getBlurEffects()) {
-				gameObjects.emplace_back(*blur.getSprite(), blur.yInit + 200, Rendertype::shadeDefault, 0.f);
+				gameObjects.emplace_back(*blur.getSprite(), blur.yInit + 200,
+										 Rendertype::shadeDefault, 0.f);
 			}			
 			if (element.isColored()) {
-				gameObjects.emplace_back(element.getSprite(), element.getYpos(), Rendertype::shadeWhite, element.getColorAmount());
+				gameObjects.emplace_back(element.getSprite(), element.getYpos(),
+										 Rendertype::shadeWhite, element.getColorAmount());
 			} else {
-				gameObjects.emplace_back(element.getSprite(), element.getYpos(), Rendertype::shadeDefault, 0.f);
+				gameObjects.emplace_back(element.getSprite(), element.getYpos(),
+										 Rendertype::shadeDefault, 0.f);
 			}
 		}
 	}
 }
 
-void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wall> w, bool enabled, tileController* pTiles, sf::Time & elapsedTime, Camera & camera, std::vector<sf::Vector2f> & cameraTargets) {
+void enemyController::update(Game * pGame,
+							 float x,
+							 float y,
+							 bool enabled,
+							 sf::Time & elapsedTime,
+							 std::vector<sf::Vector2f> & cameraTargets) {
+    EffectGroup & effectGroup = pGame->getEffects();
+	tileController & tileController = pGame->getTileController();
+	Camera & camera = pGame->getCamera();
 	const sf::View & cameraView = camera.getView();
 	sf::Vector2f viewCenter = cameraView.getCenter();
 	sf::Vector2f viewSize = cameraView.getSize();
@@ -90,7 +115,7 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 					it->getYpos() > viewCenter.y - viewSize.y / 2 - 48 &&
 					it->getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 					if (enabled) {
-						it->update(elapsedTime, x, y, ef);
+						it->update(elapsedTime, x, y, effectGroup);
 					}
 					cameraTargets.emplace_back(it->getXpos(), it->getYpos());
 				}
@@ -110,7 +135,7 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 					it->getYpos() > viewCenter.y - viewSize.y / 2 - 48 &&
 					it->getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 					if (enabled) {
-						it->update(x, y, w, ef, elapsedTime);
+						it->update(x, y, tileController.walls, effectGroup, elapsedTime);
 					}
 					cameraTargets.emplace_back(it->getXpos(), it->getYpos());
 				}
@@ -125,7 +150,10 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 				// Obviously it would be bad to compare an object to itself.
 				if (i != j) {
 					// If the enemy at index i is active and overlaps with another enemy that is also active...
-					if (fabs(critters[i].getXpos() - critters[j].getXpos()) < 12 && fabs(critters[i].getYpos() - critters[j].getYpos()) < 12 && critters[i].isActive() && critters[j].isActive()) {
+					if (fabs(critters[i].getXpos() - critters[j].getXpos()) < 12 &&
+						fabs(critters[i].getYpos() - critters[j].getYpos()) < 12 &&
+						critters[i].isActive() &&
+						critters[j].isActive()) {
 						critters[i].deActivate();
 					}
 				}
@@ -144,7 +172,7 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 					cameraTargets.emplace_back(it->getXpos(), it->getYpos());
 				}
 				if (enabled) {
-					it->critterUpdate(x, y, ef, elapsedTime, pTiles);
+					it->critterUpdate(x, y, effectGroup, elapsedTime, tileController);
 				}
 				++it;
 			}
@@ -163,7 +191,7 @@ void enemyController::update(float x, float y, EffectGroup & ef, std::vector<wal
 				element.getYpos() > viewCenter.y - viewSize.y / 2 - 48 &&
 				element.getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 				if (enabled) {
-					element.update(x, y, w, ef, elapsedTime);
+					element.update(x, y, tileController.walls, effectGroup, elapsedTime);
 					if (element.getState() != Dasher::State::dead) {
 						cameraTargets.emplace_back(element.getXpos(), element.getYpos());
 					}

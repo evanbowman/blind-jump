@@ -17,7 +17,7 @@
 namespace global {
 	std::mutex overworldMutex, UIMutex, transitionMutex;
 }
-	
+
 Game::Game(const sf::Vector2f & viewPort, InputController * _pInput, FontController * _pFonts)
 	: windowW(viewPort.x),
 	  windowH(viewPort.y),
@@ -131,17 +131,17 @@ void Game::draw(sf::RenderWindow & window) {
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
 			    } break;
 					
-			case Rendertype::shadeCrimson: {
-				static const sf::Vector3f Crimson(colors::Crimson::R, colors::Crimson::G, colors::Crimson::B);
+			case Rendertype::shadeRuby: {
+				static const sf::Vector3f Ruby(colors::Ruby::R, colors::Ruby::G, colors::Ruby::B);
 				colorShader.setParameter("amount", std::get<shaderIdx>(element));
-				colorShader.setParameter("targetColor", Crimson);
+				colorShader.setParameter("targetColor", Ruby);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
 			    } break;
 					
-			case Rendertype::shadeNeon: {
-				static const sf::Vector3f Neon(colors::Neon::R, colors::Neon::G, colors::Neon::B);
+			case Rendertype::shadeElectric: {
+				static const sf::Vector3f Electric(colors::Electric::R, colors::Electric::G, colors::Electric::B);
 				colorShader.setParameter("amount", std::get<shaderIdx>(element));
-				colorShader.setParameter("targetColor", Neon);
+				colorShader.setParameter("targetColor", Electric);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
 			    } break;
 			}
@@ -270,7 +270,7 @@ void Game::update(sf::Time & elapsedTime) {
 		};
 		details.apply(groupUpdatePolicy);
 		std::vector<sf::Vector2f> cameraTargets;
-		en.update(this, elapsedTime); // TODO: This will break build, fix...
+		en.update(this, player.getXpos(), player.getYpos(), !UI.isOpen(), elapsedTime, cameraTargets);
 		camera.update(elapsedTime, cameraTargets);
 		if (player.visible) player.update(this, elapsedTime, sounds);
 		if (!UI.isOpen() || (UI.isOpen() && player.getState() == Player::State::dead)) {
@@ -541,7 +541,7 @@ void Game::Reset() {
 	};
 	if (level != 0) {
 		Coordinate c = tiles.getTeleporterLoc();
-		static const teleporterIdx = 0;
+		static const std::size_t teleporterIdx = 0;
 		details.add<teleporterIdx>(tiles.posX + c.x * 32 + 2, tiles.posY + c.y * 26 - 4,
 								   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 								   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::teleporterGlow));
@@ -549,7 +549,7 @@ void Game::Reset() {
 		// Place 0-2 powerup chests on the map
 		c = pickLocation(tiles.emptyMapLocations);
 		Powerup chestContents = static_cast<Powerup>(rand() % 2 + 1);
-		static const chestIdx = 1;
+		static const std::size_t chestIdx = 1;
 		details.add<chestIdx>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
 							  global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), chestContents);
 		if (std::abs(static_cast<int>(global::RNG())) % 2) {
@@ -634,6 +634,10 @@ tileController & Game::getTileController() {
 
 Player & Game::getPlayer() {
 	return player;
+}
+
+Camera & Game::getCamera() {
+	return camera;
 }
 
 EffectGroup & Game::getEffects() {

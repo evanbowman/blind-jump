@@ -17,7 +17,7 @@ public:
 	using HBox = Framework::HitBox<12, 12, 4, -3>;
 	Critter(const sf::Texture &, uint8_t map[61][61], float, float);
 	void update(float, float, const std::vector<wall> &, EffectGroup & ef, const sf::Time &);
-	void critterUpdate(float, float, EffectGroup & ef, const sf::Time &, tileController * pTiles);
+	void critterUpdate(float, float, EffectGroup & ef, const sf::Time &, tileController & tiles);
 	const sf::Sprite & getSprite() const;
 	const sf::Sprite & getShadow() const;
 	void activate();
@@ -31,7 +31,7 @@ private:
 	void onDeath(EffectGroup &);
     float currentDir;
 	float jumpTargetx, jumpTargety;
-	void newPath(tileController *);
+	void newPath(tileController &);
 	mutable SpriteSheet<0, 57, 18, 18> spriteSheet;
 	std::vector<aStrCoordinate> path;
 	aStrCoordinate previous;

@@ -673,14 +673,14 @@ void Player::checkEffectCollisions(EffectGroup & effects, FontController * pFont
 	checkEffectCollision<4>(effects, this, [&]() {
 			health = fmin(pFonts->getMaxHealth(), health + 1);
 			pFonts->updateHealth(health);
-			renderType = Rendertype::shadeCrimson;
+			renderType = Rendertype::shadeRuby;
 			colorAmount = 1.f;
 			colorTimer = 0;
 			util::sleep(milliseconds(20));
 		});
 	checkEffectCollision<5>(effects, this, [&]() {
 			pFonts->updateScore(1);
-			renderType = Rendertype::shadeNeon;
+			renderType = Rendertype::shadeElectric;
 			colorAmount = 1.f;
 			colorTimer = 0;
 			util::sleep(milliseconds(20));
