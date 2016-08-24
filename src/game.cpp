@@ -548,13 +548,13 @@ void Game::Reset() {
 		initEnemies(this);
 		// Place 0-2 powerup chests on the map
 		c = pickLocation(tiles.emptyMapLocations);
-		Powerup chestContents = static_cast<Powerup>(rand() % 2 + 1);
+		Powerup chestContents = static_cast<Powerup>(std::abs(static_cast<int>(global::RNG())) % 2);
 		static const std::size_t chestIdx = 1;
 		details.add<chestIdx>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
 							  global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), chestContents);
 		if (std::abs(static_cast<int>(global::RNG())) % 2) {
 			c = pickLocation(tiles.emptyMapLocations);
-			chestContents = static_cast<Powerup>(rand() % 2 + 1);
+			chestContents = static_cast<Powerup>(std::abs(static_cast<int>(global::RNG())) % 2);
 			details.add<chestIdx>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
 								  global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), chestContents);
 		}

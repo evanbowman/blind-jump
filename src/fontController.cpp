@@ -5,7 +5,6 @@
 
 #include "fontController.hpp"
 
-#define healthLimit 10
 #define HEALTH_TEXT_FADE_SECONDS 3
 #define SCORE_TEXT_FADE_SECONDS 3
 #define WAYPOINT_TEXT_FADE_SECONDS 3
@@ -17,22 +16,17 @@ FontController::FontController(sf::View fontView, float x, float y) :
 {
 	// Store the view to use when drawing fonts
 	this->fontView = fontView;
-	
 	windowCenterX = x;
 	windowCenterY = y;
-	
 	maxHealth = 4;
 	health = 4;
 	score = 0;
-
 	float scale;
 	if (fontView.getSize().y < fontView.getSize().x) {
 		scale = fontView.getSize().y;
 	} else {
 		scale = fontView.getSize().x;
 	}
-	
-	// A heart shape!
 	heart.setPointCount(20);
 	heart.setPoint(0, sf::Vector2f(38, 72));
 	heart.setPoint(1, sf::Vector2f(8, 44));
@@ -61,14 +55,14 @@ FontController::FontController(sf::View fontView, float x, float y) :
 	coin.setPointCount(20);
 	coin.setRadius(0.018f * scale);
 	coin.setOrigin(coin.getLocalBounds().width / 2, coin.getLocalBounds().height / 2);
-	
+
 	const sf::Font & cornerstone = global::resourceHandlerPtr->getFont(ResourceHandler::Font::cornerstone);
 
 	auto initText = [](const sf::Font & font, sf::Text & text, const std::string string, float size) {
 		text.setFont(font);
 		text.setCharacterSize(size);
 		text.setString(string);
-	};	
+	};
 	initText(cornerstone, waypointText, std::string("WAYPOINT-1"), 0.055f * scale);
 	waypointText.setPosition(16, 0);
 
@@ -88,12 +82,14 @@ FontController::FontController(sf::View fontView, float x, float y) :
 	quitText.setColor(sf::Color(255, 255, 255, 0));
 	
 	initText(cornerstone, titleText, std::string("BLIND JUMP"), 0.115f * scale);
-	titleText.setPosition(fontView.getSize().x / 2 - titleText.getLocalBounds().width / 2, fontView.getSize().y / 8 - titleText.getLocalBounds().height / 2);
+	titleText.setPosition(fontView.getSize().x / 2 - titleText.getLocalBounds().width / 2,
+						  fontView.getSize().y / 8 - titleText.getLocalBounds().height / 2);
 	titleText.setColor(sf::Color(255, 255, 255, 0));
 
 	initText(cornerstone, deathText, std::string("YOU DIED"), 0.115 * scale);
 	deathText.setColor(sf::Color(231, 26, 83));
-	deathText.setPosition(fontView.getSize().x / 2 - deathText.getLocalBounds().width / 2, fontView.getSize().y / 12 - deathText.getLocalBounds().height / 2);
+	deathText.setPosition(fontView.getSize().x / 2 - deathText.getLocalBounds().width / 2,
+						  fontView.getSize().y / 12 - deathText.getLocalBounds().height / 2);
 
 	sf::Vector2f barPosition(0.f, fontView.getSize().y - fontView.getSize().y * 0.008f);
 	powerupBarFront.setPosition(barPosition);
@@ -112,15 +108,18 @@ void FontController::setTextOffset(float xOffset, float yOffset, FontController:
 	}
 	switch (text) {
 	case Text::resumeText:
-		resumeText.setPosition(xOffset * scale + fontView.getSize().x / 2 - resumeText.getLocalBounds().width / 2, fontView.getSize().y / 2.8f - resumeText.getLocalBounds().height / 2 + yOffset * scale);
+		resumeText.setPosition(xOffset * scale + fontView.getSize().x / 2 - resumeText.getLocalBounds().width / 2,
+							   fontView.getSize().y / 2.8f - resumeText.getLocalBounds().height / 2 + yOffset * scale);
 		break;
 
 	case Text::settingsText:
-		settingsText.setPosition(xOffset * scale + fontView.getSize().x / 2 - settingsText.getLocalBounds().width / 2, resumeText.getPosition().y + settingsText.getLocalBounds().height * 2 + yOffset * scale);
+		settingsText.setPosition(xOffset * scale + fontView.getSize().x / 2 - settingsText.getLocalBounds().width / 2,
+								 resumeText.getPosition().y + settingsText.getLocalBounds().height * 2 + yOffset * scale);
 		break;
 
 	case Text::quitText:
-		quitText.setPosition(xOffset * scale + fontView.getSize().x / 2 - quitText.getLocalBounds().width / 2, settingsText.getPosition().y + quitText.getLocalBounds().height * 2 + yOffset * scale);
+		quitText.setPosition(xOffset * scale + fontView.getSize().x / 2 - quitText.getLocalBounds().width / 2,
+							 settingsText.getPosition().y + quitText.getLocalBounds().height * 2 + yOffset * scale);
 		break;
 
 	default:
@@ -174,12 +173,16 @@ void FontController::setWaypointText(int level) {
 	//coin.setPosition(fontView.getSize().x - coin.getLocalBounds().width, heart.getPosition().y + coin.getLocalBounds().height);
 	coin.setPosition(heart.getPosition().x, heart.getPosition().y + coin.getLocalBounds().height * 1.25);
 	coin.setFillColor(sf::Color(255, 255, 255, 0));
-	healthNumText.setPosition(fontView.getSize().x - healthNumText.getLocalBounds().width - heart.getLocalBounds().width, healthNumText.getLocalBounds().height);
+	healthNumText.setPosition(fontView.getSize().x - healthNumText.getLocalBounds().width - heart.getLocalBounds().width,
+							  healthNumText.getLocalBounds().height);
 	if (health != 1) {
 		healthNumText.setColor(sf::Color(255, 255, 255, 0));
 		heart.setFillColor(sf::Color(255, 255, 255, 0));
 	}
-	scoreText.setPosition(fontView.getSize().x - scoreText.getLocalBounds().width - fontView.getSize().x * 0.015 - heart.getLocalBounds().width, scoreText.getLocalBounds().height * 3);
+	scoreText.setPosition(fontView.getSize().x
+						  - scoreText.getLocalBounds().width
+						  - fontView.getSize().x * 0.015
+						  - heart.getLocalBounds().width, scoreText.getLocalBounds().height * 3);
 	std::string str = "WAYPOINT-";
 	str += std::to_string(level);
 	waypointText.setString(str);
@@ -209,20 +212,22 @@ void FontController::print(sf::RenderWindow & window) {
 	}
 	if (healthModified) {
 		healthModified = false;
-		healthNumText.setString(std::to_string(static_cast<int>(health)) + " / " + std::to_string(static_cast<int>(maxHealth)) + " :");
-		healthNumText.setPosition(fontView.getSize().x - healthNumText.getLocalBounds().width - fontView.getSize().x * 0.015 - heart.getLocalBounds().width, healthNumText.getLocalBounds().height);
-		// if (health != 1) {
-		// 	healthNumText.setColor(sf::Color::White);
-		// 	heart.setFillColor(sf::Color::White);
-		// } else {
-		// 	healthNumText.setColor(sf::Color(252, 45, 103));
-		// 	heart.setFillColor(sf::Color(252, 45, 103));
-		// }
+		healthNumText.setString(std::to_string(static_cast<int>(health))
+								+ " / "
+								+ std::to_string(static_cast<int>(maxHealth))
+								+ " :");
+		healthNumText.setPosition(fontView.getSize().x
+								  - healthNumText.getLocalBounds().width
+								  - fontView.getSize().x * 0.015
+								  - heart.getLocalBounds().width, healthNumText.getLocalBounds().height);
 	}
 	if (scoreModified) {
 		scoreModified = false;
 		scoreText.setString(std::to_string(score) + " :");
-		scoreText.setPosition(fontView.getSize().x - scoreText.getLocalBounds().width - fontView.getSize().x * 0.015 - heart.getLocalBounds().width, scoreText.getLocalBounds().height * 3);
+		scoreText.setPosition(fontView.getSize().x
+							  - scoreText.getLocalBounds().width
+							  - fontView.getSize().x * 0.015
+							  - heart.getLocalBounds().width, scoreText.getLocalBounds().height * 3);
 	}
 	// Slowly fade out the  waypoint text
 	sf::Color c = waypointText.getColor();

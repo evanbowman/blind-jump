@@ -26,4 +26,9 @@ namespace colors {
 		constexpr float G = 0.99f;
 		constexpr float B = 0.99f;
 	}
+	namespace Koamaru {
+		constexpr float R = 0.16f;
+		constexpr float G = 0.26f;
+		constexpr float B = 0.43f;
+	}
 }
