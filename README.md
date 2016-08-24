@@ -25,9 +25,9 @@ This will create a .app package in the prod folder.
 
 Compile (Linux)
 ```bash
-make Linux CPPFLAGS=-DLINUX
+make Linux
 ```
-In the future I'm hoping to simplify the build system with cmake or something, because running the Linux target and also defining LINUX is kinda redundant.
+This places an executable in the src folder. It looks for resource files in ../Resources, so don't move it!
 
 ## Bugs
 
