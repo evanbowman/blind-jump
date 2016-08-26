@@ -6,7 +6,7 @@
 #include "dasherShot.hpp"
 
 DasherShot::DasherShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, float x, float y, float dir) :
-	Effect{x, y}
+	Effect(x, y)
 {
 	spriteSheet.setTexture(mainTxtr);
 	spriteSheet.setOrigin(6, 6);
@@ -19,8 +19,8 @@ DasherShot::DasherShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxt
 	driftSel = std::abs(static_cast<int>(global::RNG())) % 2;
 }
 
-void DasherShot::update(sf::Time & elapsedTime) {
-	scale = initialVelocity * Easing::easeOut<2>(timeout, static_cast<int64_t>(830000));
+void DasherShot::update(const sf::Time & elapsedTime) {
+	float scale = initialVelocity * Easing::easeOut<2>(timeout, static_cast<int64_t>(830000));
 	position.x += scale * (elapsedTime.asMicroseconds() * 0.00005f) * (cos(direction));
 	position.y += scale * (elapsedTime.asMicroseconds() * 0.00005f) * (sin(direction));
 	hitBox.setPosition(position);
@@ -33,9 +33,9 @@ void DasherShot::update(sf::Time & elapsedTime) {
 		timer -= 70;
 	}
 	if (driftSel) {
-		direction += 0.004 * elapsedTime.asMicroseconds() * 0.00005;
+		direction += 0.004f * elapsedTime.asMicroseconds() * 0.00005f;
 	} else {
-		direction -= 0.004 * elapsedTime.asMicroseconds() * 0.00005;
+		direction -= 0.004f * elapsedTime.asMicroseconds() * 0.00005f;
 	}
 	if (timeout > 750000) {
 		setKillFlag();
@@ -49,10 +49,6 @@ const sf::Sprite & DasherShot::getSprite() {
 
 const sf::Sprite & DasherShot::getGlow() const {
 	return glowSprite;
-}
-
-void DasherShot::speedFactor(float factor) {
-	scale = factor;
 }
 
 const DasherShot::HBox & DasherShot::getHitBox() const {

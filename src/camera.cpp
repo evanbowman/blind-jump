@@ -8,15 +8,14 @@
 Camera::Camera(Player * _pTarget, const sf::Vector2f & viewPort)  :
 		pTarget(_pTarget),
 		view(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
+		startPosition(view.getCenter()),
 		isShaking(false),
 		shakeIndex(0),
 		shakeTimer(0),
 		trackingTimer(0),
 		shakeIntensity(0.f),
 		state(State::followPlayer)
-{
-	startPosition = view.getCenter();
-}
+{}
 
 void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f> & targets) {
 	float lerpSpeed;

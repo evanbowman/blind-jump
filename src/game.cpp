@@ -258,7 +258,7 @@ void Game::update(sf::Time & elapsedTime) {
 			bkg.setOffset(0, 0);
 		}
 		tiles.update();
-		auto groupUpdatePolicy = [&](auto & vec) {
+		auto groupUpdatePolicy = [& elapsedTime](auto & vec) {
 			for (auto it = vec.begin(); it != vec.end();) {
 				if (it->getKillFlag()) {
 					it = vec.erase(it);
@@ -365,7 +365,8 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 			static const std::size_t teleporterIdx = 0;
 			float teleporterX = details.get<teleporterIdx>().back().getPosition().x;
 			float teleporterY = details.get<teleporterIdx>().back().getPosition().y;
-			if ((std::abs(player.getXpos() - teleporterX) < 8 && std::abs(player.getYpos() - teleporterY + 12) < 8)) {
+			if ((std::abs(player.getXpos() - teleporterX) < 8 &&
+				 std::abs(player.getYpos() - teleporterY + 12) < 8)) {
 				player.setPosition(teleporterX - 2.f, teleporterY - 16.f);
 				player.setState(Player::State::deactivated);
 				if (!camera.moving()) {
@@ -382,19 +383,21 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 	case TransitionState::ExitBeamEnter:
 		timer += elapsedTime.asMicroseconds();
 		{
-			// About the static casts--macOS and Linux use different underlying types for int_fast64_t
-			float beamHeight = Easing::easeIn<1>(timer, static_cast<int_fast64_t>(500000)) * -(windowH / 2 + 36);
-			uint8_t brightness = Easing::easeIn<1>(timer, static_cast<int_fast64_t>(500000)) * 255;
-			uint_fast8_t alpha = Easing::easeIn<1>(timer, static_cast<int_fast64_t>(450000)) * 255;
+			static const int_fast64_t transitionTime = 500000;
+			static const int_fast64_t alphaTransitionTime = 450000;
+			const int beamTargetY = -(windowH / 2 + 36);
+			float beamHeight = Easing::easeIn<1>(timer, transitionTime * beamTargetY);
+			uint8_t brightness = Easing::easeIn<1>(timer, transitionTime * 255);
+			uint_fast8_t alpha = Easing::easeIn<1>(timer, alphaTransitionTime * 255);
 			beamGlowSpr.setColor(sf::Color(brightness, brightness, brightness, 255));
 			beamShape.setFillColor(sf::Color(114, 255, 229, alpha));
 			beamShape.setSize(sf::Vector2f(2, beamHeight));
-		}
-		if (timer > 500000) {
-			timer = 0;
-			beamShape.setSize(sf::Vector2f(2, -(windowH / 2 + 36)));
-			beamShape.setFillColor(sf::Color(114, 255, 229, 255));
-			transitionState = TransitionState::ExitBeamInflate;
+			if (timer > transitionTime) {
+				timer = 0;
+				beamShape.setSize(sf::Vector2f(2, -(windowH / 2 + 36)));
+				beamShape.setFillColor(sf::Color(114, 255, 229, 255));
+				transitionState = TransitionState::ExitBeamInflate;
+			}
 		}
 		break;
 

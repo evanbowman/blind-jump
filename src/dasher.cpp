@@ -101,22 +101,21 @@ void Dasher::update(float playerPosX, float playerPosY, const std::vector<wall> 
 		}
 	}
 	Enemy::updateColor(elapsedTime);
-	
+
 	dasherSheet.setPosition(xPos + 4, yPos);
 	deathSheet.setPosition(xPos + 4, yPos);
 	shadow.setPosition(xPos - 4, yPos + 22);
 	hitBox.setPosition(xPos, yPos);
-	
+
 	timer += elapsedTime.asMilliseconds();
 
-	auto facePlayer = [&]() {
-		if (xPos > playerPosX) {
-			dasherSheet.setScale(1, 1);
+	auto facePlayer = [this, playerPosX]() {
+		if (this->xPos > playerPosX) {
+			this->dasherSheet.setScale(1, 1);
 		} else {
-			dasherSheet.setScale(-1, 1);
+			this->dasherSheet.setScale(-1, 1);
 		}
 	};
-	
 	switch(state) {
 	case State::idle:
 		if (timer >= 200) {

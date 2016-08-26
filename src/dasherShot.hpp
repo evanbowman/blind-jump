@@ -18,16 +18,14 @@ public:
 	DasherShot(const sf::Texture &, const sf::Texture &, float, float, float);
 	SpriteSheet<0, 88, 12, 12> spriteSheet;
 	const sf::Sprite & getSprite();
-	void update(sf::Time &);
+	void update(const sf::Time &);
 	float direction;
-	void speedFactor(float);
 	bool driftSel;
 	const sf::Sprite & getGlow() const;
 	const HBox & getHitBox() const;
 	
 private:
 	int64_t timeout;
-	float scale;
 	float initialVelocity;
 	HBox hitBox;
 	sf::Sprite glowSprite;
