@@ -386,9 +386,9 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 			static const int_fast64_t transitionTime = 500000;
 			static const int_fast64_t alphaTransitionTime = 450000;
 			const int beamTargetY = -(windowH / 2 + 36);
-			float beamHeight = Easing::easeIn<1>(timer, transitionTime * beamTargetY);
-			uint8_t brightness = Easing::easeIn<1>(timer, transitionTime * 255);
-			uint_fast8_t alpha = Easing::easeIn<1>(timer, alphaTransitionTime * 255);
+			float beamHeight = Easing::easeIn<1>(timer, transitionTime) * beamTargetY;
+			uint8_t brightness = Easing::easeIn<1>(timer, transitionTime) * 255;
+			uint_fast8_t alpha = Easing::easeIn<1>(timer, alphaTransitionTime) * 255;
 			beamGlowSpr.setColor(sf::Color(brightness, brightness, brightness, 255));
 			beamShape.setFillColor(sf::Color(114, 255, 229, alpha));
 			beamShape.setSize(sf::Vector2f(2, beamHeight));
