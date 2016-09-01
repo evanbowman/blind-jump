@@ -17,21 +17,18 @@
 class Player;
 
 namespace ui {
-	class Frontend {
+	class PowerupBubble {
+	public:
+		void init(float);
+		void setRadius(float, float);
+		void setPosition(float, float);
+		void setAlpha(uint8_t);
+		const sf::CircleShape & getShape() const;
 	private:
-		sf::Texture texture;
-		sf::View fontView;
-		sf::Text waypointText, titleText, deathText, scoreText, healthNumText;
-		sf::Text resumeText, settingsText, quitText;
-		char maxHealth, health;
-		bool healthModified, scoreModified;
-		int score;
-		float windowCenterX, windowCenterY;
-		sf::Clock wpTextDisplayTimer, healthDisplayTimer, scoreDisplayTimer;
-		sf::ConvexShape heart;
-		sf::CircleShape coin;
-		float barWidth;
-		sf::RectangleShape powerupBarFront, powerupBarBack;
+		sf::CircleShape bubble;
+	};
+	
+	class Frontend {
 	public:
 		enum class Text {
 			resumeText,
@@ -48,6 +45,7 @@ namespace ui {
 		void setZoneText(char);
 		void print(sf::RenderWindow &);
 		void setTextAlpha(uint8_t, Text);
+		void setBubbleAlpha(uint8_t);
 		void setTextOffset(float, float, Text);
 		void updateHealth(char);
 		void updateMaxHealth(char);
@@ -63,6 +61,21 @@ namespace ui {
 		void updateScore(int);
 		int getScore();
 		void setBarWidth(float);
+	private:
+		sf::Texture texture;
+		sf::View fontView;
+		sf::Text waypointText, titleText, deathText, scoreText, healthNumText;
+		sf::Text resumeText, settingsText, quitText;
+		char maxHealth, health;
+		bool healthModified, scoreModified, powerupModified;
+		int score;
+		PowerupBubble powerupBubble;
+		float windowCenterX, windowCenterY;
+		sf::Clock wpTextDisplayTimer, healthDisplayTimer, scoreDisplayTimer;
+		sf::ConvexShape heart;
+		sf::CircleShape coin;
+		float barWidth;
+		sf::RectangleShape powerupBarFront, powerupBarBack;
 	};
 
 	class Backend {	
@@ -81,6 +94,9 @@ namespace ui {
 			customizeJoystickScreen,
 			settingsScreen
 		};
+		enum class PowerupBubbleState {
+			opening, open, closing, closed, dormant
+		};
 		Backend();
 		void update(Player &, ui::Frontend &, InputController *, const sf::Time &);
 		void draw(sf::RenderWindow &, ui::Frontend &);
@@ -95,14 +111,15 @@ namespace ui {
 		bool blurEnabled();
 		bool desaturateEnabled();
 		float getBlurAmount();
-		void resetPowerupBar(Powerup);
+		void setPowerup(Powerup);
 		Powerup getCurrentPowerup() const;
 	private:
 		State state;
+		PowerupBubbleState powerupBubbleState;
 		Powerup powerup;
 		int selectorPosition;
 		int32_t timer, timerAlt;
-		int64_t powerupTimer;
+		int64_t powerupTimer, powerupBubbleTimer;
 		bool dispPowerupBar;
 		float blurAmount, desaturateAmount;
 	};

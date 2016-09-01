@@ -275,20 +275,7 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & 
 					action) {
 					util::sleep(milliseconds(40));
 					chest.setState(TreasureChest::State::opening);
-					switch (chest.getPowerup()) {
-					case Powerup::rapidFire:
-						pGM->getUI().resetPowerupBar(Powerup::rapidFire);
-						break;
-
-					case Powerup::health:
-						{
-							ui::Frontend * pUiFrontend = pGM->getPUIFrontend();
-							pUiFrontend->updateMaxHealth(pUiFrontend->getMaxHealth() + 1);
-					    } break;
-
-					case Powerup::nil:
-						break;
-					}
+					pGM->getUI().setPowerup(chest.getPowerup());
 				}
 			}
 		}

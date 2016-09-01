@@ -9,10 +9,12 @@
 
 ui::Backend::Backend() :
 	state(State::closed),
+	powerupBubbleState(PowerupBubbleState::dormant),
 	selectorPosition(0),
 	timer(0),
 	timerAlt(0),
 	powerupTimer(0),
+	powerupBubbleTimer(0),
 	dispPowerupBar(false),
 	blurAmount(0.f),
 	desaturateAmount(0.f)
@@ -71,17 +73,21 @@ void ui::Backend::draw(sf::RenderWindow & window, ui::Frontend & uIFrontEnd) {
 	}
 }
 
-void ui::Backend::resetPowerupBar(Powerup _powerup) {
-	dispPowerupBar = true;
-	powerup = _powerup;
+void ui::Backend::setPowerup(Powerup _powerup) {
+	dispPowerupBar = false;
 	powerupTimer = 0;
+	powerup = _powerup;
+	powerupBubbleState = PowerupBubbleState::opening;
 }
 
 Powerup ui::Backend::getCurrentPowerup() const {
 	return powerup;
 }
 
-void ui::Backend::update(Player & player, ui::Frontend & uIFrontEnd, InputController * pInput, const sf::Time & elapsed) {
+void ui::Backend::update(Player & player,
+						 ui::Frontend & uIFrontEnd,
+						 InputController * pInput,
+						 const sf::Time & elapsedTime) {
 	bool action = pInput->actionPressed();
 	bool up = pInput->upPressed();
 	bool down = pInput->downPressed();
@@ -90,7 +96,7 @@ void ui::Backend::update(Player & player, ui::Frontend & uIFrontEnd, InputContro
 	case State::closed:
 		if (dispPowerupBar) {
 			const static int64_t powerupTimerCeil = 18000000;
-			powerupTimer += elapsed.asMicroseconds();
+			powerupTimer += elapsedTime.asMicroseconds();
 			float barWidth = Easing::easeOut<1>(powerupTimer, powerupTimerCeil);
 			uIFrontEnd.setBarWidth(barWidth);
 			if (powerupTimer > powerupTimerCeil) {
@@ -110,7 +116,7 @@ void ui::Backend::update(Player & player, ui::Frontend & uIFrontEnd, InputContro
 		break;
 		
 	case State::menuScreenEntry:
-		timer += elapsed.asMilliseconds();
+		timer += elapsedTime.asMilliseconds();
 		blurAmount = Easing::easeIn<3>(timer, 280);
 		if (blurAmount == 1.f) {
 			state = State::menuScreen;
@@ -153,7 +159,7 @@ void ui::Backend::update(Player & player, ui::Frontend & uIFrontEnd, InputContro
 		break;
 		
 	case State::menuScreenExit:
-		timer += elapsed.asMilliseconds();
+		timer += elapsedTime.asMilliseconds();
 		blurAmount = Easing::easeOut<3>(timer, 280);
 		if (blurAmount == 0.f) {
 			state = State::closed;
@@ -166,7 +172,7 @@ void ui::Backend::update(Player & player, ui::Frontend & uIFrontEnd, InputContro
 		break;
 			
 	case State::deathScreenEntry:
-		timer += elapsed.asMilliseconds();
+		timer += elapsedTime.asMilliseconds();
 		if (timer > 20) {
 			timer -= 20;
 			desaturateAmount += 0.01f;
@@ -179,8 +185,8 @@ void ui::Backend::update(Player & player, ui::Frontend & uIFrontEnd, InputContro
 		break;
 			
 	case State::deathScreen:
-		timer += elapsed.asMilliseconds();
-		timerAlt += elapsed.asMilliseconds();
+		timer += elapsedTime.asMilliseconds();
+		timerAlt += elapsedTime.asMilliseconds();
 		if (timer > 20) {
 			timer -= 20;
 			if (timerAlt < 1500) {
@@ -193,7 +199,7 @@ void ui::Backend::update(Player & player, ui::Frontend & uIFrontEnd, InputContro
 		break;
 			
 	case State::deathScreenExit:
-		timer += elapsed.asMilliseconds();
+		timer += elapsedTime.asMilliseconds();
 		blurAmount = Easing::easeIn<3>(timer, 300);
 		if (timer >= 300) {
 			timer = 0;
@@ -223,6 +229,62 @@ void ui::Backend::update(Player & player, ui::Frontend & uIFrontEnd, InputContro
 
 	case State::customizeJoystickScreen:
 		// TODO: while in this state display text and select each heading accordingly
+		break;
+	}
+	switch (powerupBubbleState) {
+	case PowerupBubbleState::opening:
+		powerupBubbleTimer += elapsedTime.asMicroseconds();
+		uIFrontEnd.setBubbleAlpha(255);
+		{
+			static const int transitionTime = 500000;
+			if (powerupBubbleTimer > transitionTime) {
+				powerupBubbleTimer = 0;
+				powerupBubbleState = PowerupBubbleState::open;
+			}
+		}
+		break;
+
+	case PowerupBubbleState::open:
+		powerupBubbleTimer += elapsedTime.asMicroseconds();
+		{
+			static const int transitionTime = 500000;
+			if (powerupBubbleTimer > transitionTime) {
+				powerupBubbleTimer = 0;
+				powerupBubbleState = PowerupBubbleState::closing;
+			}
+		}
+		break;
+
+	case PowerupBubbleState::closing:
+		powerupBubbleTimer += elapsedTime.asMicroseconds();
+		{
+			static const int transitionTime = 500000;
+			if (powerupBubbleTimer > transitionTime) {
+				powerupBubbleTimer = 0;
+				powerupBubbleState = PowerupBubbleState::closed;
+			}
+		}
+		break;
+
+	case PowerupBubbleState::closed:
+	    uIFrontEnd.setBubbleAlpha(0);
+		switch (powerup) {
+		case Powerup::nil:
+			break;
+
+		case Powerup::health:
+			uIFrontEnd.updateMaxHealth(uIFrontEnd.getMaxHealth() + 1);
+			break;
+
+		case Powerup::rapidFire:
+			dispPowerupBar = true;
+			powerupTimer = 0;
+			break;
+		}
+		powerupBubbleState = PowerupBubbleState::dormant;
+		break;
+		
+	case PowerupBubbleState::dormant:
 		break;
 	}
 }
@@ -261,6 +323,32 @@ bool ui::Backend::desaturateEnabled() {
 	return desaturateAmount > 0.f;
 }
 
+void ui::PowerupBubble::init(float scale) {
+    bubble.setOutlineThickness(0.0065f * scale);
+	bubble.setFillColor(sf::Color(40, 48, 81, 180));
+	bubble.setOutlineColor(sf::Color::White);
+	bubble.setPointCount(60);
+}
+
+void ui::PowerupBubble::setAlpha(uint8_t alpha) {
+	bubble.setFillColor(sf::Color(40, 48, 81, alpha * 0.7));
+	bubble.setOutlineColor(sf::Color(255, 255, 255, alpha));
+}
+
+void ui::PowerupBubble::setRadius(float rad, float scale) {
+	bubble.setRadius(rad * scale);
+	float offset = bubble.getRadius();
+	bubble.setOrigin(offset, offset);
+}
+
+void ui::PowerupBubble::setPosition(float xpos, float ypos) {
+	bubble.setPosition(xpos, ypos);
+}
+
+const sf::CircleShape & ui::PowerupBubble::getShape() const {
+	return bubble;
+}
+
 #define HEALTH_TEXT_FADE_SECONDS 3
 #define SCORE_TEXT_FADE_SECONDS 3
 #define WAYPOINT_TEXT_FADE_SECONDS 3
@@ -278,11 +366,16 @@ ui::Frontend::Frontend(sf::View fontView, float x, float y) :
 	health = 4;
 	score = 0;
 	float scale;
-	if (fontView.getSize().y < fontView.getSize().x) {
-		scale = fontView.getSize().y;
+	const sf::Vector2f viewSize = fontView.getSize();
+	if (viewSize.y < viewSize.x) {
+		scale = viewSize.y;
 	} else {
-		scale = fontView.getSize().x;
+		scale = viewSize.x;
 	}
+	powerupBubble.init(scale);
+	powerupBubble.setRadius(0.065f, scale);
+	powerupBubble.setPosition(viewSize.x / 2.f, viewSize.y / 4.5f);
+	powerupBubble.setAlpha(0);
 	heart.setPointCount(20);
 	heart.setPoint(0, sf::Vector2f(38, 72));
 	heart.setPoint(1, sf::Vector2f(8, 44));
@@ -306,12 +399,10 @@ ui::Frontend::Frontend(sf::View fontView, float x, float y) :
 	heart.setPoint(19, sf::Vector2f(68, 44));
 	heart.setScale(0.0005f * scale, 0.0005f * scale);
 	heart.setOrigin(heart.getLocalBounds().width / 2, heart.getLocalBounds().height / 2);
-	
 	coin.setFillColor(sf::Color::White);
 	coin.setPointCount(20);
 	coin.setRadius(0.018f * scale);
 	coin.setOrigin(coin.getLocalBounds().width / 2, coin.getLocalBounds().height / 2);
-
 	const sf::Font & cornerstone = global::resourceHandlerPtr->getFont(ResourceHandler::Font::cornerstone);
 
 	auto initText = [](const sf::Font & font, sf::Text & text, const std::string string, float size) {
@@ -338,21 +429,25 @@ ui::Frontend::Frontend(sf::View fontView, float x, float y) :
 	quitText.setColor(sf::Color(255, 255, 255, 0));
 	
 	initText(cornerstone, titleText, std::string("BLIND JUMP"), 0.115f * scale);
-	titleText.setPosition(fontView.getSize().x / 2 - titleText.getLocalBounds().width / 2,
-						  fontView.getSize().y / 8 - titleText.getLocalBounds().height / 2);
+	titleText.setPosition(viewSize.x / 2 - titleText.getLocalBounds().width / 2,
+						  viewSize.y / 8 - titleText.getLocalBounds().height / 2);
 	titleText.setColor(sf::Color(255, 255, 255, 0));
 
 	initText(cornerstone, deathText, std::string("YOU DIED"), 0.115 * scale);
 	deathText.setColor(sf::Color(231, 26, 83));
-	deathText.setPosition(fontView.getSize().x / 2 - deathText.getLocalBounds().width / 2,
-						  fontView.getSize().y / 12 - deathText.getLocalBounds().height / 2);
+	deathText.setPosition(viewSize.x / 2 - deathText.getLocalBounds().width / 2,
+						  viewSize.y / 12 - deathText.getLocalBounds().height / 2);
 
-	sf::Vector2f barPosition(0.f, fontView.getSize().y - fontView.getSize().y * 0.008f);
+	const sf::Vector2f barPosition(0.f, viewSize.y - viewSize.y * 0.008f);
 	powerupBarFront.setPosition(barPosition);
 	powerupBarBack.setPosition(barPosition);
-	powerupBarBack.setSize(sf::Vector2f(fontView.getSize().x, fontView.getSize().y * 0.008f));
+	powerupBarBack.setSize(sf::Vector2f(viewSize.x, viewSize.y * 0.008f));
 	powerupBarBack.setFillColor(sf::Color(160, 160, 160, 255));
 	powerupBarFront.setFillColor(sf::Color::White);
+}
+
+void ui::Frontend::setBubbleAlpha(uint8_t alpha) {
+	powerupBubble.setAlpha(alpha);
 }
 
 void ui::Frontend::setTextOffset(float xOffset, float yOffset, ui::Frontend::Text text) {
@@ -462,7 +557,8 @@ void ui::Frontend::print(sf::RenderWindow & window) {
 	// Set the correct view, so not to blur the fonts
 	window.setView(fontView);
 	if (barWidth > 0) {
-	    powerupBarFront.setSize(sf::Vector2f(fontView.getSize().x * barWidth, fontView.getSize().y * 0.01f));
+	    powerupBarFront.setSize(sf::Vector2f(fontView.getSize().x * barWidth,
+											 fontView.getSize().y * 0.01f));
 		window.draw(powerupBarBack, sf::BlendMultiply);
 		window.draw(powerupBarFront);
 	}
@@ -511,7 +607,6 @@ void ui::Frontend::print(sf::RenderWindow & window) {
 		window.draw(healthNumText);
 		window.draw(heart);
 	}
-	
 	c = scoreText.getColor();
 	if (c.a > 5) {
 		if (scoreDisplayTimer.getElapsedTime().asSeconds() > SCORE_TEXT_FADE_SECONDS) {
@@ -522,20 +617,21 @@ void ui::Frontend::print(sf::RenderWindow & window) {
 		window.draw(scoreText);
 		window.draw(coin);
 	}
-
 	c = resumeText.getColor();
 	if (c.a > 0) {
 		window.draw(resumeText);
 	}
-
 	c = settingsText.getColor();
 	if (c.a > 0) {
 		window.draw(settingsText);
 	}
-
 	c = quitText.getColor();
 	if (c.a > 0) {
 		window.draw(quitText);
+	}
+	c = powerupBubble.getShape().getOutlineColor();
+	if (c.a > 0) {
+		window.draw(powerupBubble.getShape());
 	}
 }
 
