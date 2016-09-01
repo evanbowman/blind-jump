@@ -18,14 +18,14 @@ namespace global {
 	std::mutex overworldMutex, UIMutex, transitionMutex;
 }
 
-Game::Game(const sf::Vector2f & viewPort, InputController * _pInput, FontController * _pFonts)
+Game::Game(const sf::Vector2f & viewPort, InputController * _pInput, ui::Frontend * _pUiFrontend)
 	: windowW(viewPort.x),
 	  windowH(viewPort.y),
 	  transitionState(TransitionState::None),
 	  pInput(_pInput),
 	  player(viewPort.x / 2, viewPort.y / 2),
 	  camera(&player, viewPort),
-	  pFonts(_pFonts),
+	  pUiFrontend(_pUiFrontend),
 	  level(0),
 	  stashed(false),
 	  preload(false),
@@ -56,7 +56,7 @@ void Game::Init() {
 	tiles.setPosition((windowW / 2) - 16, (windowH / 2));
 	tiles.setWindowSize(windowW, windowH);
 	en.setWindowSize(windowW, windowH);
-	pFonts->setWaypointText(level);
+	pUiFrontend->setWaypointText(level);
 	beamGlowSpr.setColor(sf::Color(0, 0, 0, 255));
 	transitionShape.setSize(sf::Vector2f(windowW, windowH));
 	transitionShape.setFillColor(sf::Color(0, 0, 0, 0));
@@ -183,8 +183,8 @@ void Game::draw(sf::RenderWindow & window) {
 			thirdPass.display();
 			desaturateShader.setParameter("amount", UI.getDesaturateAmount());
 			window.draw(sf::Sprite(thirdPass.getTexture()), &desaturateShader);
-			if (!stashed && (UI.getState() == UserInterface::State::statsScreen
-							 || UI.getState() == UserInterface::State::menuScreen) && !camera.moving()) {
+			if (!stashed && (UI.getState() == ui::Backend::State::statsScreen
+							 || UI.getState() == ui::Backend::State::menuScreen) && !camera.moving()) {
 				stash.clear(sf::Color::Black);
 				stash.draw(sf::Sprite(thirdPass.getTexture()), &desaturateShader);
 				stash.display();
@@ -209,8 +209,8 @@ void Game::draw(sf::RenderWindow & window) {
 			secondPass.display();
 			blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
 			window.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
-			if (!stashed && (UI.getState() == UserInterface::State::statsScreen
-							 || UI.getState() == UserInterface::State::menuScreen) && !camera.moving()) {
+			if (!stashed && (UI.getState() == ui::Backend::State::statsScreen
+							 || UI.getState() == ui::Backend::State::menuScreen) && !camera.moving()) {
 				stash.clear(sf::Color::Black);
 				stash.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
 				stash.display();
@@ -228,12 +228,12 @@ void Game::draw(sf::RenderWindow & window) {
 	{
 		std::lock_guard<std::mutex> UILock(global::UIMutex);
 		if (player.getState() == Player::State::dead) {
-			UI.draw(window, *pFonts);
+			UI.draw(window, *pUiFrontend);
 		} else {
 			if (transitionState == TransitionState::None) {
-				UI.draw(window, *pFonts);
+				UI.draw(window, *pUiFrontend);
 			}
-			pFonts->print(window);
+			pUiFrontend->print(window);
 		}
 	}
 	window.setView(worldView);
@@ -246,7 +246,7 @@ void Game::update(sf::Time & elapsedTime) {
 		return;
 	}
 	// Blurring is graphics intensive, the game caches frames in a RenderTexture when possible
-	if (stashed && UI.getState() != UserInterface::State::statsScreen && UI.getState() != UserInterface::State::menuScreen) {
+	if (stashed && UI.getState() != ui::Backend::State::statsScreen && UI.getState() != ui::Backend::State::menuScreen) {
 		stashed = false;
 	}
 	if (!stashed || preload) {
@@ -287,16 +287,16 @@ void Game::update(sf::Time & elapsedTime) {
 				// Reset the map. Reset() increments level, set to -1 so that it will be zero
 				level = -1;
 				Reset();
-				pFonts->reset();
+				pUiFrontend->reset();
 				static const char playerStartingHealth = 4;
-				pFonts->updateHealth(playerStartingHealth);
-				pFonts->updateMaxHealth(playerStartingHealth);
-				pFonts->setWaypointText(level);
+				pUiFrontend->updateHealth(playerStartingHealth);
+				pUiFrontend->updateMaxHealth(playerStartingHealth);
+				pUiFrontend->setWaypointText(level);
 			}
-			UI.update(player, *pFonts, pInput, elapsedTime);
+			UI.update(player, *pUiFrontend, pInput, elapsedTime);
 		} else {
 			if (transitionState == TransitionState::None) {
-				UI.update(player, *pFonts, pInput, elapsedTime);
+				UI.update(player, *pUiFrontend, pInput, elapsedTime);
 			}
 		}
 	}
@@ -333,9 +333,9 @@ void Game::drawTransitions(sf::RenderWindow & window) {
 			if (timer > 1600000) {
 				window.draw(transitionShape);
 				uint8_t alpha = Easing::easeOut<1>(timer - 1600000, static_cast<int_fast64_t>(600000)) * 255;
-				pFonts->drawTitle(alpha, window);
+				pUiFrontend->drawTitle(alpha, window);
 			} else {
-				pFonts->drawTitle(255, window);
+				pUiFrontend->drawTitle(255, window);
 			}
 		}
 		break;
@@ -511,7 +511,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 
 void Game::Reset() {
 	level += 1;
-	pFonts->setWaypointText(level);
+	pUiFrontend->setWaypointText(level);
 	tiles.clear();
 	effectGroup.clear();
 	details.clear();
@@ -536,7 +536,7 @@ void Game::Reset() {
 	tiles.setPosition((windowW / 2) - 16, (windowH / 2));
 	bkg.setPosition((tiles.posX / 2) + 206, tiles.posY / 2);
 	auto pickLocation = [](std::vector<Coordinate> & emptyLocations) {
-		int locationSelect = std::abs(static_cast<int>(global::RNG())) % emptyLocations.size();
+		int locationSelect = rng::random(emptyLocations.size());
 		Coordinate c = emptyLocations[locationSelect];
 		emptyLocations[locationSelect] = emptyLocations.back();
 		emptyLocations.pop_back();
@@ -551,13 +551,13 @@ void Game::Reset() {
 		initEnemies(this);
 		// Place 0-2 powerup chests on the map
 		c = pickLocation(tiles.emptyMapLocations);
-		Powerup chestContents = static_cast<Powerup>(std::abs(static_cast<int>(global::RNG())) % 2);
+		Powerup chestContents = static_cast<Powerup>(rng::random<2, 1>());
 		static const std::size_t chestIdx = 1;
 		details.add<chestIdx>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
 							  global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), chestContents);
-		if (std::abs(static_cast<int>(global::RNG())) % 2) {
+		if (rng::random<2>()) {
 			c = pickLocation(tiles.emptyMapLocations);
-			chestContents = static_cast<Powerup>(std::abs(static_cast<int>(global::RNG())) % 2);
+			chestContents = static_cast<Powerup>(rng::random<2, 1>());
 			details.add<chestIdx>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
 								  global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), chestContents);
 		}
@@ -651,12 +651,12 @@ InputController * Game::getPInput() {
 	return pInput;
 }
 
-UserInterface & Game::getUI() {
+ui::Backend & Game::getUI() {
 	return UI;
 }
 
-FontController * Game::getPFonts() {
-	return pFonts;
+ui::Frontend * Game::getPUIFrontend() {
+	return pUiFrontend;
 }
 
 int Game::getLevel() {

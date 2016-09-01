@@ -93,9 +93,8 @@ depend:
 ./backgroundHandler.o: /usr/include/secure/_common.h scoot.hpp enemy.hpp
 ./backgroundHandler.o: dasher.hpp critter.hpp aStar.hpp util.hpp alias.hpp
 ./backgroundHandler.o: coordinate.hpp generalDetail.hpp lampLight.hpp
-./backgroundHandler.o: userInterface.hpp fontController.hpp colors.hpp
-./backgroundHandler.o: damagedRobot.hpp rock.hpp IntroDoor.hpp
-./backgroundHandler.o: soundController.hpp math.hpp
+./backgroundHandler.o: userInterface.hpp colors.hpp damagedRobot.hpp rock.hpp
+./backgroundHandler.o: IntroDoor.hpp soundController.hpp math.hpp
 ./mappingFunctions.o: tileController.hpp wall.hpp /usr/include/stdint.h
 ./mappingFunctions.o: /usr/include/sys/_types/_int8_t.h
 ./mappingFunctions.o: /usr/include/sys/_types/_int16_t.h
@@ -139,9 +138,8 @@ depend:
 ./mappingFunctions.o: detailParent.hpp inputController.hpp shutdownSignal.hpp
 ./mappingFunctions.o: powerup.hpp detailController.hpp Teleporter.hpp
 ./mappingFunctions.o: generalDetail.hpp lampLight.hpp userInterface.hpp
-./mappingFunctions.o: fontController.hpp colors.hpp damagedRobot.hpp rock.hpp
-./mappingFunctions.o: IntroDoor.hpp soundController.hpp math.hpp
-./mappingFunctions.o: mappingFunctions.hpp
+./mappingFunctions.o: colors.hpp damagedRobot.hpp rock.hpp IntroDoor.hpp
+./mappingFunctions.o: soundController.hpp math.hpp mappingFunctions.hpp
 ./enemyPlacementFn.o: /usr/include/stdio.h /usr/include/sys/cdefs.h
 ./enemyPlacementFn.o: /usr/include/sys/_symbol_aliasing.h
 ./enemyPlacementFn.o: /usr/include/sys/_posix_availability.h
@@ -186,8 +184,8 @@ depend:
 ./enemyPlacementFn.o: scoot.hpp enemy.hpp dasher.hpp critter.hpp aStar.hpp
 ./enemyPlacementFn.o: util.hpp alias.hpp coordinate.hpp camera.hpp math.hpp
 ./enemyPlacementFn.o: generalDetail.hpp lampLight.hpp userInterface.hpp
-./enemyPlacementFn.o: fontController.hpp colors.hpp damagedRobot.hpp rock.hpp
-./enemyPlacementFn.o: IntroDoor.hpp soundController.hpp backgroundHandler.hpp
+./enemyPlacementFn.o: colors.hpp damagedRobot.hpp rock.hpp IntroDoor.hpp
+./enemyPlacementFn.o: soundController.hpp backgroundHandler.hpp
 ./soundController.o: soundController.hpp resourceHandler.hpp ResourcePath.hpp
 ./resourceHandler.o: resourceHandler.hpp ResourcePath.hpp
 ./inputController.o: inputController.hpp shutdownSignal.hpp
@@ -232,8 +230,9 @@ depend:
 ./enemyController.o: detailParent.hpp inputController.hpp shutdownSignal.hpp
 ./enemyController.o: powerup.hpp detailController.hpp Teleporter.hpp
 ./enemyController.o: generalDetail.hpp lampLight.hpp userInterface.hpp
-./enemyController.o: fontController.hpp colors.hpp damagedRobot.hpp rock.hpp
-./enemyController.o: IntroDoor.hpp soundController.hpp math.hpp
+./enemyController.o: colors.hpp damagedRobot.hpp rock.hpp IntroDoor.hpp
+./enemyController.o: soundController.hpp math.hpp game.hpp
+./enemyController.o: backgroundHandler.hpp
 ./tileController.o: tileController.hpp wall.hpp /usr/include/stdint.h
 ./tileController.o: /usr/include/sys/_types/_int8_t.h
 ./tileController.o: /usr/include/sys/_types/_int16_t.h
@@ -274,9 +273,9 @@ depend:
 ./tileController.o: detailParent.hpp inputController.hpp shutdownSignal.hpp
 ./tileController.o: powerup.hpp detailController.hpp Teleporter.hpp
 ./tileController.o: generalDetail.hpp lampLight.hpp userInterface.hpp
-./tileController.o: fontController.hpp colors.hpp damagedRobot.hpp rock.hpp
-./tileController.o: IntroDoor.hpp soundController.hpp math.hpp
-./tileController.o: mappingFunctions.hpp initMapVectors.hpp drawPixels.hpp
+./tileController.o: colors.hpp damagedRobot.hpp rock.hpp IntroDoor.hpp
+./tileController.o: soundController.hpp math.hpp mappingFunctions.hpp
+./tileController.o: initMapVectors.hpp drawPixels.hpp
 ./smallExplosion.o: smallExplosion.hpp spriteSheet.hpp Effect.hpp
 ./smallExplosion.o: Framework/framework.hpp Framework/utilities.hpp
 ./smallExplosion.o: easingTemplates.hpp
@@ -321,20 +320,17 @@ depend:
 ./initMapVectors.o: treasureChest.hpp detailParent.hpp inputController.hpp
 ./initMapVectors.o: shutdownSignal.hpp powerup.hpp detailController.hpp
 ./initMapVectors.o: Teleporter.hpp generalDetail.hpp lampLight.hpp
-./initMapVectors.o: userInterface.hpp fontController.hpp colors.hpp
-./initMapVectors.o: damagedRobot.hpp rock.hpp IntroDoor.hpp
-./initMapVectors.o: soundController.hpp math.hpp
-./fontController.o: fontController.hpp resourceHandler.hpp ResourcePath.hpp
-./fontController.o: colors.hpp
-./userInterface.o: userInterface.hpp fontController.hpp resourceHandler.hpp
-./userInterface.o: ResourcePath.hpp colors.hpp effectsController.hpp
+./initMapVectors.o: userInterface.hpp colors.hpp damagedRobot.hpp rock.hpp
+./initMapVectors.o: IntroDoor.hpp soundController.hpp math.hpp
+./userInterface.o: userInterface.hpp effectsController.hpp
 ./userInterface.o: turretFlashEffect.hpp spriteSheet.hpp Effect.hpp
 ./userInterface.o: Framework/framework.hpp Framework/utilities.hpp rng.hpp
 ./userInterface.o: bulletType1.hpp shotPuff.hpp FireExplosion.hpp
 ./userInterface.o: easingTemplates.hpp smallExplosion.hpp Item.hpp
-./userInterface.o: RenderType.hpp enemyShot.hpp dasherShot.hpp turretShot.hpp
+./userInterface.o: resourceHandler.hpp ResourcePath.hpp RenderType.hpp
+./userInterface.o: enemyShot.hpp dasherShot.hpp turretShot.hpp
 ./userInterface.o: inputController.hpp shutdownSignal.hpp powerup.hpp
-./userInterface.o: player.hpp playerAnimationFunctions.hpp
+./userInterface.o: colors.hpp player.hpp playerAnimationFunctions.hpp
 ./userInterface.o: playerCollisionFunctions.hpp wall.hpp
 ./userInterface.o: /usr/include/stdint.h /usr/include/sys/_types/_int8_t.h
 ./userInterface.o: /usr/include/sys/_types/_int16_t.h
@@ -439,8 +435,8 @@ depend:
 ./critter.o: treasureChest.hpp detailParent.hpp inputController.hpp
 ./critter.o: shutdownSignal.hpp powerup.hpp detailController.hpp
 ./critter.o: Teleporter.hpp generalDetail.hpp lampLight.hpp userInterface.hpp
-./critter.o: fontController.hpp colors.hpp damagedRobot.hpp rock.hpp
-./critter.o: IntroDoor.hpp soundController.hpp math.hpp /usr/include/math.h
+./critter.o: colors.hpp damagedRobot.hpp rock.hpp IntroDoor.hpp
+./critter.o: soundController.hpp math.hpp /usr/include/math.h
 ./turret.o: turret.hpp /usr/include/stdio.h /usr/include/sys/cdefs.h
 ./turret.o: /usr/include/sys/_symbol_aliasing.h
 ./turret.o: /usr/include/sys/_posix_availability.h
@@ -491,9 +487,8 @@ depend:
 ./player.o: /usr/include/secure/_common.h scoot.hpp enemy.hpp dasher.hpp
 ./player.o: critter.hpp aStar.hpp util.hpp alias.hpp coordinate.hpp
 ./player.o: camera.hpp math.hpp generalDetail.hpp lampLight.hpp
-./player.o: userInterface.hpp fontController.hpp colors.hpp damagedRobot.hpp
-./player.o: rock.hpp IntroDoor.hpp soundController.hpp game.hpp
-./player.o: backgroundHandler.hpp
+./player.o: userInterface.hpp colors.hpp damagedRobot.hpp rock.hpp
+./player.o: IntroDoor.hpp soundController.hpp game.hpp backgroundHandler.hpp
 ./dasher.o: dasher.hpp effectsController.hpp turretFlashEffect.hpp
 ./dasher.o: spriteSheet.hpp Effect.hpp Framework/framework.hpp
 ./dasher.o: Framework/utilities.hpp rng.hpp bulletType1.hpp shotPuff.hpp
@@ -545,9 +540,9 @@ depend:
 ./camera.o: /usr/include/sys/_types/_ssize_t.h /usr/include/secure/_stdio.h
 ./camera.o: /usr/include/secure/_common.h scoot.hpp enemy.hpp dasher.hpp
 ./camera.o: critter.hpp aStar.hpp util.hpp alias.hpp coordinate.hpp
-./camera.o: generalDetail.hpp lampLight.hpp userInterface.hpp
-./camera.o: fontController.hpp colors.hpp damagedRobot.hpp rock.hpp
-./camera.o: IntroDoor.hpp soundController.hpp math.hpp
+./camera.o: generalDetail.hpp lampLight.hpp userInterface.hpp colors.hpp
+./camera.o: damagedRobot.hpp rock.hpp IntroDoor.hpp soundController.hpp
+./camera.o: math.hpp
 ./scoot.o: scoot.hpp wall.hpp /usr/include/stdint.h
 ./scoot.o: /usr/include/sys/_types/_int8_t.h
 ./scoot.o: /usr/include/sys/_types/_int16_t.h
@@ -648,8 +643,8 @@ depend:
 ./main.o: /usr/include/secure/_common.h scoot.hpp enemy.hpp dasher.hpp
 ./main.o: critter.hpp aStar.hpp util.hpp alias.hpp coordinate.hpp camera.hpp
 ./main.o: math.hpp generalDetail.hpp lampLight.hpp userInterface.hpp
-./main.o: fontController.hpp colors.hpp damagedRobot.hpp rock.hpp
-./main.o: IntroDoor.hpp soundController.hpp backgroundHandler.hpp game.hpp
+./main.o: colors.hpp damagedRobot.hpp rock.hpp IntroDoor.hpp
+./main.o: soundController.hpp backgroundHandler.hpp game.hpp
 ./main.o: aspectScaling.hpp
 ./game.o: mappingFunctions.hpp tileController.hpp wall.hpp
 ./game.o: /usr/include/stdint.h /usr/include/sys/_types/_int8_t.h
@@ -683,10 +678,10 @@ depend:
 ./game.o: playerCollisionFunctions.hpp treasureChest.hpp detailParent.hpp
 ./game.o: inputController.hpp shutdownSignal.hpp powerup.hpp
 ./game.o: detailController.hpp Teleporter.hpp generalDetail.hpp lampLight.hpp
-./game.o: userInterface.hpp fontController.hpp colors.hpp damagedRobot.hpp
-./game.o: rock.hpp IntroDoor.hpp soundController.hpp math.hpp
-./game.o: initMapVectors.hpp enemyPlacementFn.hpp lightingMap.h
-./game.o: pillarPlacement.h /usr/include/math.h game.hpp
-./game.o: backgroundHandler.hpp
+./game.o: userInterface.hpp colors.hpp damagedRobot.hpp rock.hpp
+./game.o: IntroDoor.hpp soundController.hpp math.hpp initMapVectors.hpp
+./game.o: enemyPlacementFn.hpp lightingMap.h pillarPlacement.h
+./game.o: /usr/include/math.h game.hpp backgroundHandler.hpp
 ./Item.o: Item.hpp spriteSheet.hpp Effect.hpp Framework/framework.hpp
 ./Item.o: Framework/utilities.hpp
+./rng.o: rng.hpp

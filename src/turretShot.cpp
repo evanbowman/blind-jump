@@ -28,7 +28,7 @@ void TurretShot::update(sf::Time & elapsedTime) {
 	if (timer > 600) {
 	    setKillFlag();
 	}
-	float offset = std::abs(static_cast<int>(global::RNG())) % 20;
+	float offset = rng::random<20>();
 	glowSprite.setColor(sf::Color(230 + offset, 230 + offset, 230 + offset, 255));
 	animationTimer += elapsedTime.asMilliseconds();
 	if (animationTimer > 50) {

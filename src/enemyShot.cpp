@@ -6,8 +6,8 @@
 #include "enemyShot.hpp"
 
 EnemyShot::EnemyShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, float x, float y, float dir) :
-	Effect{x, y},
-	frameTimer{0}
+	Effect(x, y),
+	frameTimer(0)
 {
 	glowSprite.setTexture(glowTxtr);
 	glowSprite.setOrigin(22.5, 22.5);
@@ -33,7 +33,7 @@ void EnemyShot::update(sf::Time & elapsedTime) {
 	if (timer > 600) {
 		setKillFlag();
 	}
-	float offset = std::abs(static_cast<int>(global::RNG())) % 20;
+	float offset = rng::random<20>();
 	glowSprite.setColor(sf::Color(230 + offset, 230 + offset, 230 + offset, 255));
 	spriteSheet.setPosition(position.x, position.y);
 }

@@ -26,6 +26,7 @@ Critter::Critter(const sf::Texture & txtr, uint8_t _map[61][61], float _xInit, f
 	shadow.setOrigin(9, 9);
 	shadow.setTexture(txtr);
 	shadow.setTextureRect(sf::IntRect(54, 57, 18, 18));
+	hitBox.setPosition(xPos, yPos);	
 }
 
 const Critter::HBox & Critter::getHitBox() const {
@@ -155,7 +156,7 @@ bool Critter::isActive() {
 
 void Critter::onDeath(EffectGroup & effects) {
 	// With some random chance, add a heart item to the map
-	unsigned long int temp = std::abs(static_cast<int>(global::RNG())) % 5;
+	unsigned long int temp = rng::random<5>();
 	if (temp == 0) {
 	    effects.add<4>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),

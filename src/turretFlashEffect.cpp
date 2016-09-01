@@ -7,7 +7,7 @@
 
 TurretFlashEffect::TurretFlashEffect(const sf::Texture & txtr, float x, float y) : Effect(x, y) {
 	spriteSheet.setTexture(txtr);
-	bool select = std::abs(static_cast<int>(global::RNG())) % 2;
+	bool select = rng::random<2>();
 	if (select) {
 		spriteSheet.setScale(-1.f, 1.f);
 		position.x += 17;

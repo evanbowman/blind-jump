@@ -36,7 +36,7 @@ void createMapImage(const sf::Image & tileImage, uint8_t mapArray[61][61], sf::T
 	std::memset(gratePositions, 0, sizeof(gratePositions[0][0]) * std::pow(61, 2));
 	for (int i = 0; i < 61; i++) {
 		for (int j = 0; j < 61; j++) {
-			if (mapArray[i][j] == 5 && !(std::abs(static_cast<int>(global::RNG())) % 11)) {
+			if (mapArray[i][j] == 5 && !rng::random<11>()) {
 				gratePositions[i][j] = 1;
 			}
 		}
@@ -49,7 +49,7 @@ void createMapImage(const sf::Image & tileImage, uint8_t mapArray[61][61], sf::T
 		for (int i = 1; i < 60; i++) {
 			for (int j = 1; j < 60; j++) {
 				count = gratePositions[i - 1][j] + gratePositions[i + 1][j] + gratePositions[i][j - 1] + gratePositions[i][j + 1];
-				if (count && !(std::abs(static_cast<int>(global::RNG())) % 3)) {
+				if (count && !rng::random<3>()) {
 					gratePositions[i][j] = 1;
 				}
 			}
@@ -87,7 +87,7 @@ void createMapImage(const sf::Image & tileImage, uint8_t mapArray[61][61], sf::T
 	// Loop through all indices of the map array and copy the corresponding pixels from the tileset to the image
 	for (int i = 10; i < 50; i++) {
 		for (int j = 10; j < 50; j++) {
-			int select = std::abs(static_cast<int>(global::RNG())) % 3;
+			int select = rng::random<3>();
 			switch (mapArray[i][j]) {
 				case 5:
 					if (gratePositions[i][j] != 1) {

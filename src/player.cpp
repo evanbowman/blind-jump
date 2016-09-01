@@ -168,7 +168,7 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & 
 	tileController & tiles(pGM->getTileController());
 	DetailGroup & details(pGM->getDetails());
 	EffectGroup & effects(pGM->getEffects());
-	FontController * pFonts(pGM->getPFonts());
+	ui::Frontend * pUiFrontend(pGM->getPUIFrontend());
 	bool shoot(pInput->shootPressed());
 	bool action(pInput->actionPressed());
 	bool up(pInput->upPressed());
@@ -282,8 +282,8 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & 
 
 					case Powerup::health:
 						{
-							FontController * pFonts = pGM->getPFonts();
-							pFonts->updateMaxHealth(pFonts->getMaxHealth() + 1);
+							ui::Frontend * pUiFrontend = pGM->getPUIFrontend();
+							pUiFrontend->updateMaxHealth(pUiFrontend->getMaxHealth() + 1);
 					    } break;
 
 					case Powerup::nil:
@@ -395,9 +395,9 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & 
 	}
 	updateColor(elapsedTime);
 	if (health > 0 && state != Player::State::deactivated) {
-		checkEffectCollisions(effects, pFonts);
+		checkEffectCollisions(effects, pUiFrontend);
 		enemyController & enemies = pGM->getEnemyController();
-		checkEnemyCollisions(enemies, pFonts);
+		checkEnemyCollisions(enemies, pUiFrontend);
 	}
 	if (health <= 0 && state != Player::State::dead) {
 		state = Player::State::dead;
@@ -615,7 +615,7 @@ void Player::setHealth(Health value) {
 	health = value;
 }
 
-void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, EffectGroup & effects, SoundController & /*TODO: sounds*/, UserInterface & UI) {
+void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, EffectGroup & effects, SoundController & /*TODO: sounds*/, ui::Backend & UI) {
 	gun.timeout -= elapsedTime.asMicroseconds();
 	if (gun.bulletTimer != 0) {
 		gun.bulletTimer -= elapsedTime.asMicroseconds();
@@ -656,11 +656,11 @@ void checkEffectCollision(EffectGroup & effects, Player * pPlayer, const F & pol
 	}
 }
 
-void Player::checkEffectCollisions(EffectGroup & effects, FontController * pFonts) {
+void Player::checkEffectCollisions(EffectGroup & effects, ui::Frontend * pUiFrontend) {
 	auto hitPolicy = [&]() {
 		if (colorAmount == 0.f) {
 			health -= 1;
-			pFonts->updateHealth(health);
+			pUiFrontend->updateHealth(health);
 			renderType = Rendertype::shadeGldnGt;
 			colorAmount = 1.f;
 			colorTimer = 0;
@@ -671,15 +671,15 @@ void Player::checkEffectCollisions(EffectGroup & effects, FontController * pFont
 	checkEffectCollision<7>(effects, this, hitPolicy);
 	checkEffectCollision<6>(effects, this, hitPolicy);
 	checkEffectCollision<4>(effects, this, [&]() {
-			health = fmin(pFonts->getMaxHealth(), health + 1);
-			pFonts->updateHealth(health);
+			health = fmin(pUiFrontend->getMaxHealth(), health + 1);
+			pUiFrontend->updateHealth(health);
 			renderType = Rendertype::shadeRuby;
 			colorAmount = 1.f;
 			colorTimer = 0;
 			util::sleep(milliseconds(20));
 		});
 	checkEffectCollision<5>(effects, this, [&]() {
-			pFonts->updateScore(1);
+			pUiFrontend->updateScore(1);
 			renderType = Rendertype::shadeElectric;
 			colorAmount = 1.f;
 			colorTimer = 0;
@@ -707,11 +707,11 @@ void checkEnemyCollision(const std::vector<Dasher> & dashers, Player * pPlayer, 
 	}
 }
 
-void Player::checkEnemyCollisions(enemyController & enemies, FontController * pFonts) {
+void Player::checkEnemyCollisions(enemyController & enemies, ui::Frontend * pUiFrontend) {
 	auto collisionPolicy = [&]() {
 		if (colorAmount == 0.f) {
 			health -= 1;
-			pFonts->updateHealth(health);
+			pUiFrontend->updateHealth(health);
 			renderType = Rendertype::shadeGldnGt;
 			colorAmount = 1.f;
 			colorTimer = 0;

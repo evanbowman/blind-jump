@@ -35,7 +35,7 @@ void getLightingPositions(uint8_t gameMap[61][61], std::vector<Coordinate>& avai
 			if (gameMap[i][j] == 3 || gameMap[i][j] == 4 || gameMap[i][j] == 8 || gameMap[i][j] == 11) {
 				c.x = i;
 				c.y = j;
-				c.r = CIRC_RADIUS + std::abs(static_cast<int>(global::RNG())) % 40;
+				c.r = CIRC_RADIUS + rng::random<40>();
 				lightMap.push_back(c);
 			}
 		}

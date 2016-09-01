@@ -12,11 +12,11 @@ DasherShot::DasherShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxt
 	spriteSheet.setOrigin(6, 6);
 	glowSprite.setTexture(glowTxtr);
 	glowSprite.setOrigin(22.5, 22.5);
-	int diff = pow(-1,std::abs(static_cast<int>(global::RNG())) % 2) + std::abs(static_cast<int>(global::RNG())) % 6 - 3;
+	int diff = pow(-1, rng::random<2>() + rng::random<6, -3>());
 	direction = (dir + diff) * (3.14 / 180);	 // I added 270 previously to get the sprite to face in the right direction, so subract it
-	initialVelocity = 5.8 + (0.8 * (std::abs(static_cast<int>(global::RNG())) % 3));
+	initialVelocity = 5.8f + (0.8f * rng::random<3>());
 	timeout = 0;
-	driftSel = std::abs(static_cast<int>(global::RNG())) % 2;
+	driftSel = rng::random<2>();
 }
 
 void DasherShot::update(const sf::Time & elapsedTime) {

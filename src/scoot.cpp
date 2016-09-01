@@ -12,11 +12,12 @@ Scoot::Scoot(const sf::Texture & mainTxtr, const sf::Texture & shadowTxtr, float
 	  spriteSheet(mainTxtr),
 	  speedScale(0.5f),
 	  state(State::drift1),
-	  timer(std::abs(static_cast<int>(global::RNG())) % 250)
+	  timer(rng::random<250>())
 {
 	spriteSheet.setOrigin(6, 6);
+	hitBox.setPosition(xPos, yPos);
 	shadow.setTexture(shadowTxtr);
-	float dir = std::abs(static_cast<int>(global::RNG())) % 359;
+	float dir = rng::random<359>();
 	hSpeed = cos(dir) * 0.5;
 	vSpeed = sin(dir) * 0.5;
 	health = 2;
@@ -31,7 +32,11 @@ void Scoot::changeDir(float dir) {
 	vSpeed = std::sin(dir);	
 }
 
-void Scoot::update(float playerPosX, float playerPosY, const std::vector<wall> & w, EffectGroup & effects, const sf::Time & elapsedTime) {
+void Scoot::update(float playerPosX,
+				   float playerPosY,
+				   const std::vector<wall> & w,
+				   EffectGroup & effects,
+				   const sf::Time & elapsedTime) {
 	for (auto & element : effects.get<9>()) {
 		if (hitBox.overlapping(element.getHitBox()) && element.checkCanPoof()) {
 			if (health == 1) {
@@ -65,10 +70,10 @@ void Scoot::update(float playerPosX, float playerPosY, const std::vector<wall> &
 		if (timer > 1800) {
 			timer -= 1800;;
 			state = State::drift2;
-			if (std::abs(static_cast<int>(global::RNG())) % 2) {
+			if (rng::random<2>()) {
 				changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
 			} else {
-				changeDir(static_cast<float>(std::abs(static_cast<int>(global::RNG())) % 359));
+				changeDir(static_cast<float>(rng::random<359>()));
 			}
 		}
 		break;
@@ -105,10 +110,10 @@ void Scoot::update(float playerPosX, float playerPosY, const std::vector<wall> &
 			timer -= 400;
 			state = State::drift1;
 			speedScale = 0.5f;
-			if (std::abs(static_cast<int>(global::RNG())) % 2) {
+			if (rng::random<2>()) {
 				changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
 			} else {
-				changeDir(static_cast<float>(std::abs(static_cast<int>(global::RNG())) % 359));
+				changeDir(rng::random<359>());
 			}
 		}
 		break;
@@ -148,7 +153,7 @@ const sf::Sprite & Scoot::getShadow() const {
 }
 
 void Scoot::onDeath(EffectGroup & effects) {
-	int select{std::abs(static_cast<int>(global::RNG())) % 5};
+	int select = rng::random<5>();
 	if (select == 0) {
 		effects.add<4>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),

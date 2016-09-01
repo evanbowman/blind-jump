@@ -73,10 +73,10 @@ public:
 private:
 	void init();
 	HBox hitBox;
-	void updateGun(const sf::Time &, const bool, EffectGroup &, SoundController &, UserInterface &);
+	void updateGun(const sf::Time &, const bool, EffectGroup &, SoundController &, ui::Backend &);
 	Weapon gun;
-	void checkEffectCollisions(EffectGroup &, FontController *);
-	void checkEnemyCollisions(enemyController &, FontController *);
+	void checkEffectCollisions(EffectGroup &, ui::Frontend *);
+	void checkEnemyCollisions(enemyController &, ui::Frontend *);
 	std::vector<Dasher::Blur> blurs; // I could have designed this better...
 	Health health;
 	void updateAnimation(const sf::Time &, uint8_t, uint32_t);

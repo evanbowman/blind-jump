@@ -215,7 +215,7 @@ void enemyController::clear() {
 
 void enemyController::addTurret(tileController * pTiles) {
 	auto pCoordVec = pTiles->getEmptyLocations();
-	int locationSelect = (std::abs(static_cast<int>(global::RNG())) % 2) ? std::abs(static_cast<int>(global::RNG())) % (pCoordVec->size() / 2) : std::abs(static_cast<int>(global::RNG())) % (pCoordVec->size());
+	int locationSelect = rng::random<2>() ? rng::random(pCoordVec->size() / 2) : rng::random(pCoordVec->size());
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
 	turrets.emplace_back(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xInit, yInit);
@@ -225,7 +225,7 @@ void enemyController::addTurret(tileController * pTiles) {
 
 void enemyController::addScoot(tileController * pTiles) {
 	auto pCoordVec = pTiles->getEmptyLocations();
-	int locationSelect = (std::abs(static_cast<int>(global::RNG())) % 2) ? std::abs(static_cast<int>(global::RNG())) % (pCoordVec->size() / 2) : std::abs(static_cast<int>(global::RNG())) % (pCoordVec->size());
+	int locationSelect = rng::random<2>() ? rng::random(pCoordVec->size() / 2) : rng::random(pCoordVec->size());
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
 	scoots.emplace_back(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
@@ -237,7 +237,7 @@ void enemyController::addScoot(tileController * pTiles) {
 
 void enemyController::addDasher(tileController * pTiles) {
 	auto pCoordVec = pTiles->getEmptyLocations();
-	int locationSelect = (std::abs(static_cast<int>(global::RNG())) % 2) ? std::abs(static_cast<int>(global::RNG())) % (pCoordVec->size() / 2) : std::abs(static_cast<int>(global::RNG())) % (pCoordVec->size() / 2);
+	int locationSelect = rng::random<2>() ? rng::random(pCoordVec->size() / 2) : rng::random(pCoordVec->size() / 2);
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
 	dashers.emplace_back(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
@@ -248,7 +248,7 @@ void enemyController::addDasher(tileController * pTiles) {
 
 void enemyController::addCritter(tileController * pTiles) {
 	auto pCoordVec = pTiles->getEmptyLocations();
-	int locationSelect = std::abs(static_cast<int>(global::RNG())) % pCoordVec->size();
+	int locationSelect = rng::random(pCoordVec->size());
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
 	critters.emplace_back(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),

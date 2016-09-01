@@ -73,7 +73,7 @@ inline void addCenterTiles(uint8_t map[61][61]) {
 	for (int i = 0; i < 61; i++) {
 		for (int j = 0; j < 61; j++) {
 			if ((map[i - 1][j] == 5 || map[i - 1][j] == 3 || map[i - 1][j] == 4) && (map[i + 1][j] == 5 || map[i + 1][j] == 3 || map[i + 1][j] == 4) && (map[i][j - 1] == 5 || map[i][j - 1] == 3 || map[i][j - 1] == 4) && (map[i][j + 1] == 5 || map[i][j + 1] == 3 || map[i][j + 1] == 4)) {
-				if ((std::abs(static_cast<int>(global::RNG())) % 12) > 2) {
+				if (rng::random<12>() > 2) {
 					map[i][j] = 3;
 				} else {
 					map[i][j] = 4;
@@ -142,15 +142,15 @@ int initMapOverlay(uint8_t map[61][61]) {
 	std::memset(maptemp, 0, sizeof(map[0][0]) * std::pow(61, 2));
 	for (int i = 5; i < 54; i++) {
 		for (int j = 5; j < 54; j++) {
-			map[i][j] = (std::abs(static_cast<int>(global::RNG())) % 2);
+			map[i][j] = rng::random<2>();
 		}
 	}
 	condense(map, maptemp, 3);
 	uint8_t xindex;
 	uint8_t yindex;
 	do {
-		xindex = std::abs(static_cast<int>(global::RNG())) % 61;
-		yindex = std::abs(static_cast<int>(global::RNG())) % 61;
+		xindex = rng::random<61>();
+		yindex = rng::random<61>();
 	}
 	while (map[xindex][yindex] != 1);
 	floodFill(map, xindex, yindex, 5);
@@ -201,7 +201,7 @@ int generateMap(uint8_t map[61][61]) {
 	std::memset(maptemp, 0, sizeof(maptemp[0][0]) * std::pow(61, 2));
 	for (int i = 16; i < 44; i++) {
 		for (int j = 16; j < 44; j++) {
-			map[i][j] = (std::abs(static_cast<int>(global::RNG())) % 2);
+			map[i][j] = rng::random<2>();
 		}
 	}
 	condense(map, maptemp, 1);
@@ -209,8 +209,8 @@ int generateMap(uint8_t map[61][61]) {
 	uint8_t xindex;
 	uint8_t yindex;
 	do {
-		xindex = std::abs(static_cast<int>(global::RNG())) % 61;
-		yindex = std::abs(static_cast<int>(global::RNG())) % 61;
+		xindex = rng::random<61>();
+		yindex = rng::random<61>();
 	}
 	while (map[xindex][yindex] != 7);
 	floodFill(map, xindex, yindex, 5);

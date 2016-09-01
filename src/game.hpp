@@ -12,7 +12,6 @@
 #include "effectsController.hpp"
 #include "detailController.hpp"
 #include "tileController.hpp"
-#include "fontController.hpp"
 #include "userInterface.hpp"
 #include "enemyController.hpp"
 #include "SFML/Audio.hpp"
@@ -36,7 +35,7 @@ public:
 		EntryBeamDrop,
 	    EntryBeamFade
 	};
-	Game(const sf::Vector2f & viewPort, InputController *, FontController *);
+	Game(const sf::Vector2f & viewPort, InputController *, ui::Frontend *);
 	void update(sf::Time &);
 	void draw(sf::RenderWindow &);
 	void Reset();
@@ -47,8 +46,8 @@ public:
 	Player & getPlayer();
 	EffectGroup & getEffects();
 	InputController * getPInput();
-	UserInterface & getUI();
-	FontController * getPFonts();
+	ui::Backend & getUI();
+	ui::Frontend * getPUIFrontend();
 	Camera & getCamera();
 	float windowW;
 	float windowH;
@@ -60,12 +59,12 @@ private:
 	SoundController sounds;
 	Player player;
 	Camera camera;
-	UserInterface UI;
+	ui::Backend UI;
 	tileController tiles;
 	EffectGroup effectGroup;
 	DetailGroup details;
    	enemyController en;
-	FontController * pFonts;
+	ui::Frontend * pUiFrontend;
    	int level;
 	// Stash static rendered frames for efficiency. Preload is for recovery from stash
 	bool stashed, preload;

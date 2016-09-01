@@ -24,6 +24,7 @@ Turret::Turret(const sf::Texture & gameObjects, float _xPos, float _yPos) :
 	hitBox.setPosition(xPos, yPos);
 	turretSheet.setPosition(xPos, yPos);
 	shadowSheet.setPosition(xPos, yPos + 18);
+	hitBox.setPosition(xPos, yPos);
 }
 
 const sf::Sprite & Turret::getSprite() {
@@ -55,7 +56,7 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 	}
 	if (hp == 0) {
 		killFlag = true;
-		if ((std::abs(static_cast<int>(global::RNG())) % 4) == 0) {
+		if (rng::random<4>() == 0) {
 			effects.add<4>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 						   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
 						   xPos + 8, yPos + 10, Item::Type::Heart);

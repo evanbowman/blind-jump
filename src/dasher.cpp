@@ -63,6 +63,7 @@ Dasher::Dasher(const sf::Texture & mainTxtr, float _xPos, float _yPos)
 	shadow.setTexture(mainTxtr);
 	shadow.setTextureRect(sf::IntRect(0, 100, 18, 16));
 	health = 5;
+	hitBox.setPosition(xPos, yPos);
 }
 
 const sf::Sprite & Dasher::getSprite() const {
@@ -120,7 +121,7 @@ void Dasher::update(float playerPosX, float playerPosY, const std::vector<wall> 
 	case State::idle:
 		if (timer >= 200) {
 			timer -= 200;
-			const int select = std::abs(static_cast<int>(global::RNG())) % 2;
+			const int select = rng::random<2>();
 			if (select) {
 				state = State::dashBegin;
 				frameIndex = 1;
@@ -183,7 +184,7 @@ void Dasher::update(float playerPosX, float playerPosY, const std::vector<wall> 
 			state = State::dashing;
 			frameIndex = 2;
 			uint8_t tries{0};
-			float dir{static_cast<float>(std::abs(static_cast<int>(global::RNG())) % 359)};
+			float dir{static_cast<float>(rng::random<359>())};
 			do {
 				tries++;
 				if (tries > 254) {
@@ -269,7 +270,7 @@ void Dasher::onDeath(EffectGroup & effects) {
 	vSpeed = 0;
 	frameIndex = 0;
 	killFlag = true;
-	unsigned long int temp = std::abs(static_cast<int>(global::RNG())) % 4;
+	unsigned long int temp = rng::random<4>();
 	if (temp == 0) {
 	    effects.add<4>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
 					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),

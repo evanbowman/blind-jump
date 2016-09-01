@@ -27,13 +27,12 @@
 #include "shutdownSignal.hpp"
 
 namespace global {
-	std::mt19937 RNG;
 	ResourceHandler * resourceHandlerPtr = nullptr;
 	std::exception_ptr pWorkerException = nullptr;
 }
 
 int main() {
-	seedRNG();
+	rng::seed();
 	ResourceHandler resourceHandler;
 	sf::Vector2f drawableRegionSize = getDrawableRegionSize();
 	try {
@@ -48,8 +47,8 @@ int main() {
 		InputController input;
 		sf::View hudView(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
 		sf::View worldView(drawableRegionSize / 2.f, drawableRegionSize);
-		FontController fonts(hudView, drawableRegionSize.x / 2, drawableRegionSize.y / 2);
-		Game game(drawableRegionSize, &input, &fonts);
+		ui::Frontend uIFrontEnd(hudView, drawableRegionSize.x / 2, drawableRegionSize.y / 2);
+		Game game(drawableRegionSize, &input, &uIFrontEnd);
 		SmartThread logicThread([](Game * pGame, sf::RenderWindow * pWindow) {
 			duration logicUpdateDelta;
 			sf::Clock gameClock;
