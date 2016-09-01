@@ -233,7 +233,7 @@ void Game::draw(sf::RenderWindow & window) {
 			if (transitionState == TransitionState::None) {
 				UI.draw(window, *pUiFrontend);
 			}
-			pUiFrontend->print(window);
+			pUiFrontend->draw(window);
 		}
 	}
 	window.setView(worldView);
@@ -435,7 +435,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 		timer += elapsedTime.asMicroseconds();
 		if (level != 0) {
 			if (timer > 100000) {
-				uint_fast8_t alpha = Easing::easeIn<1>(timer - 100000, static_cast<int_fast64_t>(900000)) * 255;
+				uint8_t alpha = math::smoothstep(0.f, 900000, timer - 100000) * 255;
 				transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
 			}
 			if (timer >= 1000000) {
@@ -447,7 +447,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 			}
 		} else {
 			if (timer > 1600000) {
-				uint_fast8_t alpha = Easing::easeIn<1>(timer - 1600000, static_cast<int_fast64_t>(1400000)) * 255;
+				uint8_t alpha = math::smoothstep(0.f, 1400000, timer - 1600000) * 255;
 				transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
 			}
 			if (timer > 3000000) {
@@ -463,7 +463,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 	case TransitionState::TransitionIn:
 	    timer += elapsedTime.asMicroseconds();
 		{
-			uint_fast8_t alpha = Easing::easeOut<1>(timer, static_cast<int_fast64_t>(800000)) * 255;
+			uint8_t alpha = 255 - math::smoothstep(0.f, 800000, timer) * 255;
 			transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
 		}
 		if (timer >= 800000) {

@@ -16,12 +16,18 @@
 
 class Player;
 
+//
+// TODO: Combine ui frontend and ui backend into one class, neater that way
+//
+
 namespace ui {
 	class PowerupBubble {
 	public:
 		void init(float);
 		void setRadius(float, float);
 		void setPosition(float, float);
+		sf::Vector2f getPosition();
+		float getRadius();
 		void setAlpha(uint8_t);
 		const sf::CircleShape & getShape() const;
 	private:
@@ -38,14 +44,16 @@ namespace ui {
 			scoreText,
 			waypointText,
 			heart,
-			coin
+			coin,
+			powerupText
 	    };
 		Frontend(sf::View, float, float);
 		void setWaypointText(int);
 		void setZoneText(char);
-		void print(sf::RenderWindow &);
+		void draw(sf::RenderWindow &);
 		void setTextAlpha(uint8_t, Text);
 		void setBubbleAlpha(uint8_t);
+		void setBubbleRadius(float);
 		void setTextOffset(float, float, Text);
 		void updateHealth(char);
 		void updateMaxHealth(char);
@@ -59,15 +67,19 @@ namespace ui {
 		void resetHPText();
 		void resetSCText();
 		void updateScore(int);
+		void addPowerup(Powerup);
 		int getScore();
 		void setBarWidth(float);
+		
 	private:
+		float scale;
 		sf::Texture texture;
 		sf::View fontView;
 		sf::Text waypointText, titleText, deathText, scoreText, healthNumText;
-		sf::Text resumeText, settingsText, quitText;
+		sf::Text resumeText, settingsText, quitText, powerupText;
 		char maxHealth, health;
-		bool healthModified, scoreModified, powerupModified;
+		bool healthModified, scoreModified;
+		Powerup powerupAdded;
 		int score;
 		PowerupBubble powerupBubble;
 		float windowCenterX, windowCenterY;
