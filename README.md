@@ -10,6 +10,8 @@ For mac users, there is a pre-compiled app package in targets/macOS, you can sim
 
 ## Building
 
+(Dependencies: SFML 2.3 and a C++14 compiler)
+
 Navigate into src/
 ```bash
 cd src
