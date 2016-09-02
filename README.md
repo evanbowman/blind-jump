@@ -6,7 +6,14 @@ Blind Jump is a procedurally generated space adventure game that I've been worki
 
 ## Installation
 
-This project uses make and makedepend as a build system. Currently, the game is available on Unix-like systems, but it uses cross-platform libraries and could easily be ported (uses SFML 2.3, required to compile project). In bash:
+For mac users, there is a pre-compiled app package in targets/macOS, you can simply click and drag that into your Applications/ directory. For Linux users, there is a .deb package in targets/Linux, or you can try compiling from the source if your distro doesn't support debian packages.
+
+## Building
+
+Navigate into src/
+```bash
+cd src
+```
 
 Resolve dependencies
 ```bash
@@ -17,14 +24,14 @@ Compile (macOS)
 ```bash
 make macOS
 ```
-This will create a .app package in the prod folder.
+This will create a .app package in targets/macOS.
 
 Compile (Linux)
 ```bash
 make Linux
 ```
-This places an executable in the src folder. It looks for resource files in ../Resources, so don't move it!
+This places an executable in src/. It looks for resource files in ../Resources, so don't move it!
 
 ## Bugs
 
-Please report any bugs that you find. I want the application to feel well polished, so if there are any legitiment runtime issues I'd appreciate being notified of them. The only one I know of currently: the mac version of the game issues a crash report when returning from main, due to bad access when attempting to call some destructors. Any ideas?
+Please report any bugs that you find. I want the application to feel well polished, so if there are any legitiment runtime issues I'd appreciate being notified of them. The only one I know of currently: the mac version of the game issues a crash report when returning from main, due to bad access when attempting to call some destructors. I am currently working on fixing this.
