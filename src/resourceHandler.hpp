@@ -34,7 +34,8 @@ public:
 		bkgStarsNear,
 		bkgStarsFar,
 		bkgOrbit,
-		introLevelMask
+		introLevelMask,
+		powerupSheet
 	};
 	enum class Shader {
 		color,
@@ -63,7 +64,7 @@ public:
 	
 private:
 	enum resrcCnts {
-		numTextures = 17,
+		numTextures = 18,
 		numShaders = 3,
 		numFonts = 1,
 		numImages = 4,

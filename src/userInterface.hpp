@@ -17,7 +17,7 @@
 class Player;
 
 //
-// TODO: Combine ui frontend and ui backend into one class, neater that way
+// TODO: Combine ui frontend and ui backend into one class, neater that way?
 //
 
 namespace ui {
@@ -30,8 +30,11 @@ namespace ui {
 		float getRadius();
 		void setAlpha(uint8_t);
 		const sf::CircleShape & getShape() const;
+		const sf::Sprite & getSprite();
+		void setFrame(std::size_t);
 	private:
 		sf::CircleShape bubble;
+	    SpriteSheet<0, 0, 46, 46> powerupSheet;
 	};
 	
 	class Frontend {
@@ -107,7 +110,7 @@ namespace ui {
 			settingsScreen
 		};
 		enum class PowerupBubbleState {
-			opening, open, closing, closed, dormant
+			triggered, opening, open, closing, closed, dormant
 		};
 		Backend();
 		void update(Player &, ui::Frontend &, InputController *, const sf::Time &);

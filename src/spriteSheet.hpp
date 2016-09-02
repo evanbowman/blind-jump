@@ -31,9 +31,17 @@ public:
 	sf::Sprite * getSpritePtr() {
 		return &sprite;
 	}
+
+	void setColor(const sf::Color color) {
+		sprite.setColor(color);
+	}
 	
 	const sf::Sprite & getSprite() {
 		return sprite;
+	}
+
+	sf::FloatRect getSize() const {
+		return sprite.getLocalBounds();
 	}
 	
 	void setRotation(float degrees) {
@@ -56,7 +64,7 @@ public:
 		sprite.setTexture(texture);
 	}
 	
-	void setOrigin(const int16_t xCenter, const int16_t yCenter) {
+	void setOrigin(const float xCenter, const float yCenter) {
 		sprite.setOrigin(xCenter, yCenter);
 	}
 };

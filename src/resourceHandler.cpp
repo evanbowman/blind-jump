@@ -32,6 +32,7 @@ void ResourceHandler::load() {
 	loadResource("teleporterGlow.png", Texture::teleporterGlow, textures);
 	loadResource("bkg_stars_distant.png", Texture::bkgStarsFar, textures);
 	loadResource("introLevelMask.png", Texture::introLevelMask, textures);
+	loadResource("powerupSheet.png", Texture::powerupSheet, textures);
 	loadResource("whiteFloorGlow.png", Texture::whiteGlow, textures);
 	loadResource("gameObjects.png", Texture::gameObjects, textures);
 	loadResource("blueFloorGlow.png", Texture::blueglow, textures);

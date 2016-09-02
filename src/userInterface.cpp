@@ -77,7 +77,7 @@ void ui::Backend::setPowerup(Powerup _powerup) {
 	dispPowerupBar = false;
 	powerupTimer = 0;
 	powerup = _powerup;
-	powerupBubbleState = PowerupBubbleState::opening;
+	powerupBubbleState = PowerupBubbleState::triggered;
 }
 
 Powerup ui::Backend::getCurrentPowerup() const {
@@ -232,6 +232,11 @@ void ui::Backend::update(Player & player,
 		break;
 	}
 	switch (powerupBubbleState) {
+	case PowerupBubbleState::triggered:
+		uIFrontEnd.addPowerup(powerup);
+		powerupBubbleState = PowerupBubbleState::opening;
+		break;
+		
 	case PowerupBubbleState::opening:
 		powerupBubbleTimer += elapsedTime.asMicroseconds();
 		{
@@ -252,7 +257,7 @@ void ui::Backend::update(Player & player,
 	case PowerupBubbleState::open:
 		powerupBubbleTimer += elapsedTime.asMicroseconds();
 		{
-			static const int transitionTime = 800000;
+			static const int transitionTime = 1200000;
 			if (powerupBubbleTimer > transitionTime) {
 				powerupBubbleTimer = 0;
 				powerupBubbleState = PowerupBubbleState::closing;
@@ -319,6 +324,7 @@ void ui::Backend::reset() {
 	desaturateAmount = 0.f;
 	blurAmount = 0.f;
 	timer = 0;
+	powerup = Powerup::nil;
 }
 
 float ui::Backend::getDesaturateAmount() {
@@ -338,21 +344,36 @@ void ui::PowerupBubble::init(float scale) {
 	bubble.setFillColor(sf::Color(40, 48, 81, 180));
 	bubble.setOutlineColor(sf::Color::White);
 	bubble.setPointCount(60);
+	powerupSheet.setTexture(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::powerupSheet));
+}
+
+void ui::PowerupBubble::setFrame(std::size_t idx) {
+	powerupSheet[idx];
 }
 
 void ui::PowerupBubble::setAlpha(uint8_t alpha) {
 	bubble.setFillColor(sf::Color(40, 48, 81, alpha * 0.7));
 	bubble.setOutlineColor(sf::Color(255, 255, 255, alpha));
+	powerupSheet.setColor(sf::Color(255, 255, 255, alpha));
+}
+
+const sf::Sprite & ui::PowerupBubble::getSprite() {
+	return powerupSheet.getSprite();
 }
 
 void ui::PowerupBubble::setRadius(float rad, float scale) {
 	bubble.setRadius(rad * scale);
-	float offset = bubble.getRadius();
+	const float offset = bubble.getRadius();
 	bubble.setOrigin(offset, offset);
+	const float sprScale = rad * scale * 0.035f;
+	powerupSheet.setScale(sprScale, sprScale);
+	const sf::FloatRect size = powerupSheet.getSize();
+	powerupSheet.setOrigin(size.width / 2.f, size.height / 2.f);
 }
 
 void ui::PowerupBubble::setPosition(float xpos, float ypos) {
 	bubble.setPosition(xpos, ypos);
+	powerupSheet.setPosition(xpos, ypos);
 }
 
 sf::Vector2f ui::PowerupBubble::getPosition() {
@@ -374,7 +395,7 @@ const sf::CircleShape & ui::PowerupBubble::getShape() const {
 ui::Frontend::Frontend(sf::View fontView, float x, float y) :
 	healthModified(false),
 	scoreModified(false),
-	powerupAdded(PowerupAdded::nil),
+	powerupAdded(Powerup::nil),
 	barWidth(0.f)
 {
 	// Store the view to use when drawing fonts
@@ -443,7 +464,6 @@ ui::Frontend::Frontend(sf::View fontView, float x, float y) :
 	powerupText.setColor(sf::Color(255, 255, 255, 0));
 	powerupText.setFont(cornerstone);
 	powerupText.setCharacterSize(0.065 * scale);
-	powerupText.setString(std::string("Life Jar"));
 	
 	initText(settingsText, std::string("SETTINGS"), 0.085 * scale);
 	settingsText.setColor(sf::Color(255, 255, 255, 0));
@@ -553,6 +573,7 @@ void ui::Frontend::setTextAlpha(uint8_t alpha, ui::Frontend::Text text) {
 
 void ui::Frontend::reset() {
 	score = 0;
+	barWidth = 0;
 }
 
 void ui::Frontend::addPowerup(Powerup powerup) {
@@ -626,14 +647,16 @@ void ui::Frontend::draw(sf::RenderWindow & window) {
 		break;
 
 	case Powerup::health:
+		powerupBubble.setFrame(static_cast<int>(powerupAdded) - 2);
 		powerupAdded = Powerup::nil;
+		barWidth = 0;
 		powerupText.setString(std::string("LIFE JAR"));
 		break;
 
 	case Powerup::rapidFire:
+		powerupBubble.setFrame(static_cast<int>(powerupAdded) - 2);
 		powerupAdded = Powerup::nil;
 		powerupText.setString(std::string("RAPID FIRE"));
-		// TODO: set icon...
 		break;
 	}
 	// Slowly fade out the  waypoint text
@@ -687,6 +710,7 @@ void ui::Frontend::draw(sf::RenderWindow & window) {
 	c = powerupBubble.getShape().getOutlineColor();
 	if (c.a > 0) {
 		window.draw(powerupBubble.getShape());
+		window.draw(powerupBubble.getSprite());
 	}
 	c = powerupText.getColor();
 	if (c.a > 0) {
