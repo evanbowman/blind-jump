@@ -1,6 +1,6 @@
 ## Overview
 
-Blind Jump is a procedurally generated space adventure game that I've been working on off and on in my free time. The object of the game is to get to the teleporter at the end of each level, while battling monsters and evil robots.
+Blind Jump is a procedurally generated space adventure game that I've been working on for fun in my free time. The object of the game is to get to the teleporter at the end of each level, while battling monsters and evil robots.
 
 <p align="center"><img src="screenshot.png"/></p>
 
@@ -9,6 +9,8 @@ Blind Jump is a procedurally generated space adventure game that I've been worki
 For mac users, there is a pre-compiled app package in targets/macOS, you can simply click and drag that into your Applications/ directory. For Linux users, see instructions below for compiling from the source files. Windows steps tba.
 
 ## Building
+
+(Dependencies: SFML 2.3 and a C++14 compiler)
 
 Navigate into src/
 ```bash
