@@ -71,6 +71,31 @@ void ui::Backend::draw(sf::RenderWindow & window, ui::Frontend & uIFrontEnd) {
 	default:
 		break;
 	}
+	switch (powerupBubbleState) {
+	case PowerupBubbleState::opening:
+		{
+			static const int transitionTime = 500000;
+			const float deg = math::smoothstep(0, transitionTime, powerupBubbleTimer);
+			uIFrontEnd.setBubbleAlpha(deg * 255);
+			uIFrontEnd.setBubbleRadius(deg * 0.06f);
+			uIFrontEnd.setTextAlpha(deg * 255, ui::Frontend::Text::powerupText);
+			uIFrontEnd.setTextOffset(0, -0.001f * deg, ui::Frontend::Text::powerupText);
+		}
+		break;
+
+	case PowerupBubbleState::closing:
+		{
+			static const int transitionTime = 300000;
+			const float deg = math::smootherstep(0, transitionTime, powerupBubbleTimer);
+			uIFrontEnd.setBubbleAlpha(255 - deg * 255);
+			uIFrontEnd.setBubbleRadius(0.06f - deg * 0.06f);
+			uIFrontEnd.setTextAlpha(255 - deg * 255, ui::Frontend::Text::powerupText);
+		}
+		break;
+		
+	default:
+		break;
+	}
 }
 
 void ui::Backend::setPowerup(Powerup _powerup) {
@@ -241,11 +266,6 @@ void ui::Backend::update(Player & player,
 		powerupBubbleTimer += elapsedTime.asMicroseconds();
 		{
 			static const int transitionTime = 500000;
-			const float deg = math::smoothstep(0, transitionTime, powerupBubbleTimer);
-			uIFrontEnd.setBubbleAlpha(deg * 255);
-			uIFrontEnd.setBubbleRadius(deg * 0.06f);
-			uIFrontEnd.setTextAlpha(deg * 255, ui::Frontend::Text::powerupText);
-			uIFrontEnd.setTextOffset(0, -0.001f * deg, ui::Frontend::Text::powerupText);
 			if (powerupBubbleTimer > transitionTime) {
 				powerupBubbleTimer = 0;
 				uIFrontEnd.setBubbleAlpha(255);
@@ -269,11 +289,6 @@ void ui::Backend::update(Player & player,
 		powerupBubbleTimer += elapsedTime.asMicroseconds();
 		{
 			static const int transitionTime = 300000;
-			const float deg = math::smootherstep(0, transitionTime, powerupBubbleTimer);
-			uIFrontEnd.setBubbleAlpha(255 - deg * 255);
-			uIFrontEnd.setBubbleRadius(0.06f - deg * 0.06f);
-			//uIFrontEnd.setTextOffset(0, -0.002f + -0.0003f * deg, ui::Frontend::Text::powerupText);
-			uIFrontEnd.setTextAlpha(255 - deg * 255, ui::Frontend::Text::powerupText);
 			if (powerupBubbleTimer > transitionTime) {
 				powerupBubbleTimer = 0;
 				powerupBubbleState = PowerupBubbleState::closed;
@@ -459,25 +474,25 @@ ui::Frontend::Frontend(sf::View fontView, float x, float y) :
 	healthNumText.setFont(cornerstone);
 
 	initText(resumeText, std::string("RESUME"), 0.085f * scale);
-	resumeText.setColor(sf::Color(255, 255, 255, 0));
+	resumeText.setFillColor(sf::Color(255, 255, 255, 0));
 
-	powerupText.setColor(sf::Color(255, 255, 255, 0));
+	powerupText.setFillColor(sf::Color(255, 255, 255, 0));
 	powerupText.setFont(cornerstone);
 	powerupText.setCharacterSize(0.065 * scale);
 	
 	initText(settingsText, std::string("SETTINGS"), 0.085 * scale);
-	settingsText.setColor(sf::Color(255, 255, 255, 0));
+	settingsText.setFillColor(sf::Color(255, 255, 255, 0));
 	
 	initText(quitText, std::string("QUIT"), 0.085 * scale);
-	quitText.setColor(sf::Color(255, 255, 255, 0));
+	quitText.setFillColor(sf::Color(255, 255, 255, 0));
 	
 	initText(titleText, std::string("BLIND JUMP"), 0.115f * scale);
 	titleText.setPosition(viewSize.x / 2 - titleText.getLocalBounds().width / 2,
 						  viewSize.y / 8 - titleText.getLocalBounds().height / 2);
-	titleText.setColor(sf::Color(255, 255, 255, 0));
+	titleText.setFillColor(sf::Color(255, 255, 255, 0));
 
 	initText(deathText, std::string("YOU DIED"), 0.115 * scale);
-	deathText.setColor(sf::Color(231, 26, 83));
+	deathText.setFillColor(sf::Color(231, 26, 83));
 	deathText.setPosition(viewSize.x / 2 - deathText.getLocalBounds().width / 2,
 						  viewSize.y / 12 - deathText.getLocalBounds().height / 2);
 
@@ -534,27 +549,27 @@ void ui::Frontend::setTextOffset(float xOffset, float yOffset, ui::Frontend::Tex
 void ui::Frontend::setTextAlpha(uint8_t alpha, ui::Frontend::Text text) {
 	switch (text) {
 	case Text::resumeText:
-		resumeText.setColor(sf::Color(255, 255, 255, alpha));
+		resumeText.setFillColor(sf::Color(255, 255, 255, alpha));
 		break;
 
 	case Text::settingsText:
-		settingsText.setColor(sf::Color(255, 255, 255, alpha));
+		settingsText.setFillColor(sf::Color(255, 255, 255, alpha));
 		break;
 
 	case Text::quitText:
-		quitText.setColor(sf::Color(255, 255, 255, alpha));
+		quitText.setFillColor(sf::Color(255, 255, 255, alpha));
 		break;
 
 	case Text::healthNumText:
-		healthNumText.setColor(sf::Color(255, 255, 255, alpha));
+		healthNumText.setFillColor(sf::Color(255, 255, 255, alpha));
 		break;
 
 	case Text::scoreText:
-		scoreText.setColor(sf::Color(255, 255, 255, alpha));
+		scoreText.setFillColor(sf::Color(255, 255, 255, alpha));
 		break;
 
 	case Text::waypointText:
-		waypointText.setColor(sf::Color(255, 255, 255, alpha));
+		waypointText.setFillColor(sf::Color(255, 255, 255, alpha));
 		break;
 
 	case Text::heart:
@@ -566,7 +581,7 @@ void ui::Frontend::setTextAlpha(uint8_t alpha, ui::Frontend::Text text) {
 		break;
 
 	case Text::powerupText:
-		powerupText.setColor(sf::Color(255, 255, 255, alpha));
+		powerupText.setFillColor(sf::Color(255, 255, 255, alpha));
 		break;
 	}
 }
@@ -588,7 +603,7 @@ void ui::Frontend::setWaypointText(int level) {
 	healthNumText.setPosition(fontView.getSize().x - healthNumText.getLocalBounds().width - heart.getLocalBounds().width,
 							  healthNumText.getLocalBounds().height);
 	if (health != 1) {
-		healthNumText.setColor(sf::Color(255, 255, 255, 0));
+		healthNumText.setFillColor(sf::Color(255, 255, 255, 0));
 		heart.setFillColor(sf::Color(255, 255, 255, 0));
 	}
 	scoreText.setPosition(fontView.getSize().x
@@ -599,8 +614,8 @@ void ui::Frontend::setWaypointText(int level) {
 	str += std::to_string(level);
 	waypointText.setString(str);
 	// Reset the color, it will fade out
-	waypointText.setColor(sf::Color::White);
-	scoreText.setColor(sf::Color(255, 255, 255, 4));
+	waypointText.setFillColor(sf::Color::White);
+	scoreText.setFillColor(sf::Color(255, 255, 255, 4));
 	if (level != 0) {
 		wpTextDisplayTimer.restart();
 		if (health != 1) {
@@ -660,21 +675,21 @@ void ui::Frontend::draw(sf::RenderWindow & window) {
 		break;
 	}
 	// Slowly fade out the  waypoint text
-	sf::Color c = waypointText.getColor();
+	sf::Color c = waypointText.getFillColor();
 	if (c.a > 5) {
 		if (wpTextDisplayTimer.getElapsedTime().asSeconds() > WAYPOINT_TEXT_FADE_SECONDS) {
 			c.a -= 4;
-			waypointText.setColor(c);
+			waypointText.setFillColor(c);
 		}
 		window.draw(waypointText);
 	}
 
 	if (health != 1) {
-		c = healthNumText.getColor();
+		c = healthNumText.getFillColor();
 		if (c.a > 5) {
 			if (healthDisplayTimer.getElapsedTime().asSeconds() > HEALTH_TEXT_FADE_SECONDS) {
 				c.a -= 4;
-				healthNumText.setColor(c);
+				healthNumText.setFillColor(c);
 				heart.setFillColor(c);
 				heart.setOutlineColor(c);
 			}
@@ -685,25 +700,25 @@ void ui::Frontend::draw(sf::RenderWindow & window) {
 		window.draw(healthNumText);
 		window.draw(heart);
 	}
-	c = scoreText.getColor();
+	c = scoreText.getFillColor();
 	if (c.a > 5) {
 		if (scoreDisplayTimer.getElapsedTime().asSeconds() > SCORE_TEXT_FADE_SECONDS) {
 			c.a -= 4;
-			scoreText.setColor(c);
+			scoreText.setFillColor(c);
 			coin.setFillColor(c);
 		}
 		window.draw(scoreText);
 		window.draw(coin);
 	}
-	c = resumeText.getColor();
+	c = resumeText.getFillColor();
 	if (c.a > 0) {
 		window.draw(resumeText);
 	}
-	c = settingsText.getColor();
+	c = settingsText.getFillColor();
 	if (c.a > 0) {
 		window.draw(settingsText);
 	}
-	c = quitText.getColor();
+	c = quitText.getFillColor();
 	if (c.a > 0) {
 		window.draw(quitText);
 	}
@@ -712,19 +727,19 @@ void ui::Frontend::draw(sf::RenderWindow & window) {
 		window.draw(powerupBubble.getShape());
 		window.draw(powerupBubble.getSprite());
 	}
-	c = powerupText.getColor();
+	c = powerupText.getFillColor();
 	if (c.a > 0) {
 		window.draw(powerupText);
 	}
 }
 
 void ui::Frontend::resetWPText() {
-	waypointText.setColor(sf::Color::White);
+	waypointText.setFillColor(sf::Color::White);
 	wpTextDisplayTimer.restart();
 }
 
 void ui::Frontend::resetSCText() {
-	scoreText.setColor(sf::Color::White);
+	scoreText.setFillColor(sf::Color::White);
 	coin.setFillColor(sf::Color::White);
 	scoreDisplayTimer.restart();
 }
@@ -736,20 +751,20 @@ void ui::Frontend::updateScore(int offset) {
 }
 
 void ui::Frontend::resetHPText() {
-	healthNumText.setColor(sf::Color::White);
+	healthNumText.setFillColor(sf::Color::White);
 	heart.setFillColor(sf::Color::White);
 	heart.setOutlineColor(sf::Color::White);
 	healthDisplayTimer.restart();
 }
 
 void ui::Frontend::drawTitle(unsigned char alpha, sf::RenderWindow& window) {
-	titleText.setColor(sf::Color(255, 255, 255, alpha));
+	titleText.setFillColor(sf::Color(255, 255, 255, alpha));
 	window.setView(fontView);
 	window.draw(titleText);
 }
 
 void ui::Frontend::drawDeathText(unsigned char alpha, sf::RenderWindow & window) {
-	deathText.setColor(sf::Color(colors::Ruby::R * 255, colors::Ruby::G * 255, colors::Ruby::B * 255, alpha));
+	deathText.setFillColor(sf::Color(colors::Ruby::R * 255, colors::Ruby::G * 255, colors::Ruby::B * 255, alpha));
 	window.setView(fontView);
 	window.draw(deathText);
 }

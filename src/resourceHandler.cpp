@@ -21,7 +21,7 @@ void loadResource(const char * fname, ResHandler::Shader id, std::array<sf::Shad
 	if (!shaders[index].loadFromFile(resourcePath() + fname, sf::Shader::Fragment)) {
 		throw std::runtime_error(std::string(failurePrefix) + fname + "]");
 	}
-	shaders[index].setParameter("texture", sf::Shader::CurrentTexture);
+	shaders[index].setUniform("texture", sf::Shader::CurrentTexture);
 }
 
 void ResHandler::load() {

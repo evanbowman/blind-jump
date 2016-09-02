@@ -121,30 +121,30 @@ void Game::draw(sf::RenderWindow & window) {
 			    break;
 					
 			case Rendertype::shadeWhite: {
-				MAKE_COLOR(colors::White, White);
-				colorShader.setParameter("amount", std::get<shaderIdx>(element));
-				colorShader.setParameter("targetColor", White);
+				STATIC_GLSL_COLOR(colors::White, White);
+				colorShader.setUniform("amount", std::get<shaderIdx>(element));
+				colorShader.setUniform("targetColor", White);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
 			    } break;
 					
 			case Rendertype::shadeGldnGt: {
-				MAKE_COLOR(colors::GldnGt, GldnGt);
-				colorShader.setParameter("amount", std::get<shaderIdx>(element));
-				colorShader.setParameter("targetColor", GldnGt);
+				STATIC_GLSL_COLOR(colors::GldnGt, GldnGt);
+				colorShader.setUniform("amount", std::get<shaderIdx>(element));
+				colorShader.setUniform("targetColor", GldnGt);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
 			    } break;
 					
 			case Rendertype::shadeRuby: {
-				MAKE_COLOR(colors::Ruby, Ruby);
-				colorShader.setParameter("amount", std::get<shaderIdx>(element));
-				colorShader.setParameter("targetColor", Ruby);
+				STATIC_GLSL_COLOR(colors::Ruby, Ruby);
+				colorShader.setUniform("amount", std::get<shaderIdx>(element));
+				colorShader.setUniform("targetColor", Ruby);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
 			    } break;
 					
 			case Rendertype::shadeElectric: {
-				MAKE_COLOR(colors::Electric, Electric);
-				colorShader.setParameter("amount", std::get<shaderIdx>(element));
-				colorShader.setParameter("targetColor", Electric);
+				STATIC_GLSL_COLOR(colors::Electric, Electric);
+				colorShader.setUniform("amount", std::get<shaderIdx>(element));
+				colorShader.setUniform("targetColor", Electric);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
 			    } break;
 			}
@@ -178,13 +178,15 @@ void Game::draw(sf::RenderWindow & window) {
 			sf::Vector2u textureSize = target.getSize();
 			// Get the blur amount from the UI controller
 			float blurAmount = UI.getBlurAmount();
-			blurShader.setParameter("blur_radius", sf::Vector2f(0.f, blurAmount / textureSize.y));
+			const sf::Glsl::Vec2 vBlur = sf::Glsl::Vec2(0.f, blurAmount / textureSize.y);
+			blurShader.setUniform("blur_radius", vBlur);
 			secondPass.draw(sf::Sprite(target.getTexture()), &blurShader);
 			secondPass.display();
-			blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
+			const sf::Glsl::Vec2 hBlur = sf::Glsl::Vec2(blurAmount / textureSize.x, 0.f);
+			blurShader.setUniform("blur_radius", hBlur);
 			thirdPass.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
 			thirdPass.display();
-			desaturateShader.setParameter("amount", UI.getDesaturateAmount());
+			desaturateShader.setUniform("amount", UI.getDesaturateAmount());
 			window.draw(sf::Sprite(thirdPass.getTexture()), &desaturateShader);
 			if (!stashed && (UI.getState() == ui::Backend::State::statsScreen
 							 || UI.getState() == ui::Backend::State::menuScreen) && !camera.moving()) {
@@ -207,10 +209,12 @@ void Game::draw(sf::RenderWindow & window) {
 			sf::Vector2u textureSize = target.getSize();
 			// Get the blur amount from the UI controller
 			float blurAmount = UI.getBlurAmount();
-			blurShader.setParameter("blur_radius", sf::Vector2f(0.f, blurAmount / textureSize.y));
+			const sf::Glsl::Vec2 vBlur = sf::Glsl::Vec2(0.f, blurAmount / textureSize.y);
+			blurShader.setUniform("blur_radius", vBlur);
 			secondPass.draw(sf::Sprite(target.getTexture()), &blurShader);
 			secondPass.display();
-			blurShader.setParameter("blur_radius", sf::Vector2f(blurAmount / textureSize.x, 0.f));
+			const sf::Glsl::Vec2 hBlur = sf::Glsl::Vec2(blurAmount / textureSize.x, 0.f);
+			blurShader.setUniform("blur_radius", hBlur);
 			window.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
 			if (!stashed && (UI.getState() == ui::Backend::State::statsScreen
 							 || UI.getState() == ui::Backend::State::menuScreen) && !camera.moving()) {
@@ -223,7 +227,7 @@ void Game::draw(sf::RenderWindow & window) {
 		}
 	} else if (!UI.blurEnabled() && UI.desaturateEnabled()) {
 		sf::Shader & desaturateShader = global::resHandlerPtr->getShader(ResHandler::Shader::desaturate);
-		desaturateShader.setParameter("amount", UI.getDesaturateAmount());
+		desaturateShader.setUniform("amount", UI.getDesaturateAmount());
 		window.draw(sf::Sprite(target.getTexture()), &desaturateShader);
 	} else {
 		window.draw(sf::Sprite(target.getTexture()));
@@ -327,18 +331,39 @@ void Game::drawTransitions(sf::RenderWindow & window) {
 		glowSprs1.push_back(beamGlowSpr);
 		break;
 
+		// This isn't stateless, but only because it can't be. Reseting the level
+		// involves texture creation, which is graphics code and therefore needs to
+		// happen on the main thread for portability reasons.
 	case TransitionState::TransitionOut:
 		if (level != 0) {
 			if (timer > 100000) {
+				uint8_t alpha = math::smoothstep(0.f, 900000, timer - 100000) * 255;
+				transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
 				window.draw(transitionShape);
+			}
+			if (timer > 1000000) {
+				transitionState = TransitionState::TransitionIn;
+				timer = 0;
+				transitionShape.setFillColor(sf::Color(0, 0, 0, 255));
+				beamGlowSpr.setColor(sf::Color::Black);
+				Reset(); // Creates textures, needs to happen on main thread
 			}
 		} else {
 			if (timer > 1600000) {
+				uint8_t alpha = math::smoothstep(0.f, 1400000, timer - 1600000) * 255;
+				transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
 				window.draw(transitionShape);
-				uint8_t alpha = Easing::easeOut<1>(timer - 1600000, static_cast<int_fast64_t>(600000)) * 255;
-				pUiFrontend->drawTitle(alpha, window);
+				uint8_t textAlpha = Easing::easeOut<1>(timer - 1600000, static_cast<int_fast64_t>(600000)) * 255;
+				pUiFrontend->drawTitle(textAlpha, window);
 			} else {
 				pUiFrontend->drawTitle(255, window);
+			}
+			if (timer > 3000000) {
+				transitionState = TransitionState::TransitionIn;
+				beamGlowSpr.setColor(sf::Color::Black);
+				timer = 0;
+				transitionShape.setFillColor(sf::Color(0, 0, 0, 255));
+				Reset();
 			}
 		}
 		break;
@@ -364,7 +389,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 	switch (transitionState) {
 	case TransitionState::None:
 		{
-			// If the player is near the teleporter, snap to its center and deactivate the player
+			// If the player is near the teleporter, snap to its center and deactivate.
 			static const std::size_t teleporterIdx = 0;
 			float teleporterX = details.get<teleporterIdx>().back().getPosition().x;
 			float teleporterY = details.get<teleporterIdx>().back().getPosition().y;
@@ -436,31 +461,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 
 	case TransitionState::TransitionOut:
 		timer += elapsedTime.asMicroseconds();
-		if (level != 0) {
-			if (timer > 100000) {
-				uint8_t alpha = math::smoothstep(0.f, 900000, timer - 100000) * 255;
-				transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
-			}
-			if (timer >= 1000000) {
-				transitionState = TransitionState::TransitionIn;
-				timer = 0;
-				transitionShape.setFillColor(sf::Color(0, 0, 0, 255));
-				beamGlowSpr.setColor(sf::Color::Black);
-				Reset();
-			}
-		} else {
-			if (timer > 1600000) {
-				uint8_t alpha = math::smoothstep(0.f, 1400000, timer - 1600000) * 255;
-				transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
-			}
-			if (timer > 3000000) {
-				transitionState = TransitionState::TransitionIn;
-				beamGlowSpr.setColor(sf::Color::Black);
-				timer = 0;
-				transitionShape.setFillColor(sf::Color(0, 0, 0, 255));
-				Reset();
-			}
-		}
+		// Logic updates instead when drawing transitions, see above comment.
 		break;
 
 	case TransitionState::TransitionIn:

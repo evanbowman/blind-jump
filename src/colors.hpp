@@ -5,7 +5,8 @@
 
 #pragma once
 
-#define MAKE_COLOR(color, name) static const sf::Vector3f name(color::R, color::G, color::B)
+#define STATIC_GLSL_COLOR(color, name)\
+	static const sf::Glsl::Vec3 name(color::R, color::G, color::B)
 
 namespace colors {
 	namespace Ruby { 
