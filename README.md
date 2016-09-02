@@ -6,7 +6,7 @@ Blind Jump is a procedurally generated space adventure game that I've been worki
 
 ## Installation
 
-For mac users, there is a pre-compiled app package in targets/macOS, you can simply click and drag that into your Applications/ directory. For Linux users, there is a .deb package in targets/Linux, or you can try compiling from the source if your distro doesn't support debian packages.
+For mac users, there is a pre-compiled app package in targets/macOS, you can simply click and drag that into your Applications/ directory. For Linux users, see instructions below for compiling from the source files. Windows steps tba.
 
 ## Building
 
