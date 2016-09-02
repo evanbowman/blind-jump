@@ -23,40 +23,62 @@ using EffectGroup = Framework::Group<TurretFlashEffect, // - 0
 									 SmallExplosion, // ---- 1
 									 FireExplosion, // ----- 2
 									 ShotPuff, // ---------- 3 
-									 Item, // ----------- 4
-									 Item, // ----------- 5
+									 Item, // -------------- 4
+									 Item, // -------------- 5
 									 EnemyShot, // --------- 6
 									 DasherShot, // -------- 7
 									 TurretShot, // -------- 8
 									 PlayerShot>; // ------- 9
-	
 
 using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
 
 template<std::size_t indx, int8_t yOffset = 0>
-void drawVec(EffectGroup & eg, drawableVec & vec) {
+void drawVec(EffectGroup & eg,
+			 drawableVec & vec,
+			 const sf::Vector2f viewCenter,
+			 const sf::Vector2f viewSize) {
 	for (auto & element : eg.get<indx>()) {
-		vec.emplace_back(element.getSprite(), element.getPosition().y + yOffset, Rendertype::shadeNone, 0.f);
+		const Framework::Point elemPos = element.getPosition();
+		if (elemPos.x > viewCenter.x - viewSize.x / 2 - 48 &&
+			elemPos.x < viewCenter.x + viewSize.x / 2 + 48 &&
+			elemPos.y > viewCenter.y - viewSize.y / 2 - 48 &&
+			elemPos.y < viewCenter.y + viewSize.y / 2 + 48) {
+			vec.emplace_back(element.getSprite(), elemPos.y + yOffset, Rendertype::shadeNone, 0.f);
+		}
 	}
 }
 
 template<std::size_t indx, int8_t yOffset = 0>
-void drawVecGlow(EffectGroup & eg, drawableVec & vec, std::vector<Sprite> & glowSprs) {
+void drawVecGlow(EffectGroup & eg,
+				 drawableVec & vec,
+				 std::vector<Sprite> & glowSprs,
+				 const sf::Vector2f viewCenter,
+				 const sf::Vector2f viewSize) {
 	for (auto & element : eg.get<indx>()) {
-		glowSprs.push_back(element.getGlow());
-		vec.emplace_back(element.getSprite(), element.getPosition().y + yOffset, Rendertype::shadeNone, 0.f);
+		const Framework::Point elemPos = element.getPosition();
+		if (elemPos.x > viewCenter.x - viewSize.x / 2 - 48 &&
+			elemPos.x < viewCenter.x + viewSize.x / 2 + 48 &&
+			elemPos.y > viewCenter.y - viewSize.y / 2 - 48 &&
+			elemPos.y < viewCenter.y + viewSize.y / 2 + 48) {
+			glowSprs.push_back(element.getGlow());
+			vec.emplace_back(element.getSprite(), elemPos.y + yOffset, Rendertype::shadeNone, 0.f);
+		}
 	}
 }
 
-inline void drawGroup(EffectGroup & eg, drawableVec & vec, std::vector<Sprite> & glowSprs) {
-	drawVec<0, 11>(eg, vec);
-	drawVec<3>(eg, vec);
-	drawVecGlow<1>(eg, vec, glowSprs);
-	drawVecGlow<2>(eg, vec, glowSprs);
-	drawVecGlow<4, -16>(eg, vec, glowSprs);
-	drawVecGlow<5, -16>(eg, vec, glowSprs);
-	drawVecGlow<6, 11>(eg, vec, glowSprs);
-	drawVecGlow<7, 11>(eg, vec, glowSprs);
-	drawVecGlow<8, 11>(eg, vec, glowSprs);
-	drawVecGlow<9>(eg, vec, glowSprs);
+inline void drawGroup(EffectGroup & eg,
+					  drawableVec & vec,
+					  std::vector<Sprite> & glowSprs,
+					  const sf::Vector2f viewCenter,
+					  const sf::Vector2f viewSize) {
+	drawVec<0, 11>(eg, vec, viewCenter, viewSize);
+	drawVec<3>(eg, vec, viewCenter, viewSize);
+	drawVecGlow<1>(eg, vec, glowSprs, viewCenter, viewSize);
+	drawVecGlow<2>(eg, vec, glowSprs, viewCenter, viewSize);
+	drawVecGlow<4, -16>(eg, vec, glowSprs, viewCenter, viewSize);
+	drawVecGlow<5, -16>(eg, vec, glowSprs, viewCenter, viewSize);
+	drawVecGlow<6, 11>(eg, vec, glowSprs, viewCenter, viewSize);
+	drawVecGlow<7, 11>(eg, vec, glowSprs, viewCenter, viewSize);
+	drawVecGlow<8, 11>(eg, vec, glowSprs, viewCenter, viewSize);
+	drawVecGlow<9>(eg, vec, glowSprs, viewCenter, viewSize);
 }

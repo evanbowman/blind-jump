@@ -5,6 +5,8 @@
 
 #pragma once
 
+#define MAKE_COLOR(color, name) static const sf::Vector3f name(color::R, color::G, color::B)
+
 namespace colors {
 	namespace Ruby { 
 	   	constexpr float R = 0.93f;

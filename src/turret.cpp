@@ -57,16 +57,16 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 	if (hp == 0) {
 		killFlag = true;
 		if (rng::random<4>() == 0) {
-			effects.add<4>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-						   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
+			effects.add<4>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+						   global::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
 						   xPos + 8, yPos + 10, Item::Type::Heart);
 		} else {
-		    effects.add<5>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-						   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::blueglow),
+		    effects.add<5>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+						   global::resHandlerPtr->getTexture(ResHandler::Texture::blueglow),
 						   xPos + 8, yPos + 10, Item::Type::Coin);
 		}
-		effects.add<2>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-					   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::fireExplosionGlow),
+		effects.add<2>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+					   global::resHandlerPtr->getTexture(ResHandler::Texture::fireExplosionGlow),
 					   xPos + 12, yPos + 12);
 	}
 	switch (state) {
@@ -93,9 +93,9 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 	case State::shoot1:
 		timer += elapsedTime.asMicroseconds();
 		if (timer > 200000) {
-			effects.add<0>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos + 8);
-			effects.add<6>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-						   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
+			effects.add<0>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xPos, yPos + 8);
+			effects.add<6>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+						   global::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
 						   xPos, yPos + 6, angleFunction(playerPosX + 16, playerPosY + 8, xPos + 18, yPos + 8));
 			timer = 0;
 			state = State::shoot2;
@@ -105,9 +105,9 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 	case State::shoot2:
 		timer += elapsedTime.asMicroseconds();
 		if (timer > 200000) {
-			effects.add<0>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos + 8);
-			effects.add<6>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-						   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
+			effects.add<0>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xPos, yPos + 8);
+			effects.add<6>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+						   global::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
 						   xPos, yPos + 8, angleFunction(playerPosX + 16, playerPosY + 8, xPos + 18, yPos + 6));
 			timer = 0;
 			state = State::shoot3;
@@ -117,9 +117,9 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 	case State::shoot3:
 		timer += elapsedTime.asMicroseconds();
 		if (timer > 200000) {
-			effects.add<0>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects), xPos, yPos + 8);
-			effects.add<6>(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::gameObjects),
-						   global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::redglow),
+			effects.add<0>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xPos, yPos + 8);
+			effects.add<6>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+						   global::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
 						   xPos, yPos + 8, angleFunction(playerPosX + 16, playerPosY + 8, xPos + 18, yPos + 6));
 			timer = 0;
 			state = State::rest;

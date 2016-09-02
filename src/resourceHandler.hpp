@@ -15,7 +15,7 @@
 #include <stdexcept>
 #include "ResourcePath.hpp"
 
-class ResourceHandler {	
+class ResHandler {	
 public:	
     enum class Texture {
 		gameObjects,
@@ -54,12 +54,12 @@ public:
 	enum class Music {
 		// TODO...
 	};
-	const sf::Texture & getTexture(ResourceHandler::Texture) const;
+	const sf::Texture & getTexture(ResHandler::Texture) const;
 	const sf::Texture & getTexture(int) const;
-	const sf::Font & getFont(ResourceHandler::Font) const;
-	const sf::Image & getImage(ResourceHandler::Image) const;
-	const sf::SoundBuffer & getSound(ResourceHandler::Sound) const;
-	sf::Shader & getShader(ResourceHandler::Shader) const; // Exception: shader cannot be a constant reference
+	const sf::Font & getFont(ResHandler::Font) const;
+	const sf::Image & getImage(ResHandler::Image) const;
+	const sf::SoundBuffer & getSound(ResHandler::Sound) const;
+	sf::Shader & getShader(ResHandler::Shader) const; // Exception: shader cannot be a constant reference
 	void load();
 	
 private:
@@ -78,7 +78,7 @@ private:
 };
 
 namespace global {
-	extern ResourceHandler * resourceHandlerPtr;
+	extern ResHandler * resHandlerPtr;
 }
 
 #endif

@@ -16,7 +16,7 @@ void loadResource(const char * fname, E id, T & array) {
 }
 
 template<>
-void loadResource(const char * fname, ResourceHandler::Shader id, std::array<sf::Shader, 3> & shaders) {
+void loadResource(const char * fname, ResHandler::Shader id, std::array<sf::Shader, 3> & shaders) {
 	std::size_t index = static_cast<int>(id);
 	if (!shaders[index].loadFromFile(resourcePath() + fname, sf::Shader::Fragment)) {
 		throw std::runtime_error(std::string(failurePrefix) + fname + "]");
@@ -24,7 +24,7 @@ void loadResource(const char * fname, ResourceHandler::Shader id, std::array<sf:
 	shaders[index].setParameter("texture", sf::Shader::CurrentTexture);
 }
 
-void ResourceHandler::load() {
+void ResHandler::load() {
 	loadResource("teleporterBeamGlow.png", Texture::teleporterBeamGlow, textures);
 	loadResource("fireExplosionGlow.png", Texture::fireExplosionGlow, textures);
 	loadResource("charger_enemy_shadow.png", Texture::scootShadow, textures);
@@ -54,26 +54,26 @@ void ResourceHandler::load() {
     loadResource("gunshot.ogg", Sound::gunShot, sounds);
 }
 
-const sf::Image & ResourceHandler::getImage(Image id) const {
+const sf::Image & ResHandler::getImage(Image id) const {
 	return images[static_cast<int>(id)];
 }
 
-const sf::Texture & ResourceHandler::getTexture(Texture id) const {
+const sf::Texture & ResHandler::getTexture(Texture id) const {
 	return textures[static_cast<int>(id)];
 }
 
-const sf::Texture & ResourceHandler::getTexture(int id) const {
+const sf::Texture & ResHandler::getTexture(int id) const {
 	return textures[id];
 }
 
-const sf::Font & ResourceHandler::getFont(Font id) const {
+const sf::Font & ResHandler::getFont(Font id) const {
 	return fonts[static_cast<int>(id)];
 }
 
-sf::Shader & ResourceHandler::getShader(Shader id) const {
+sf::Shader & ResHandler::getShader(Shader id) const {
 	return shaders[static_cast<int>(id)];
 }
 
-const sf::SoundBuffer & ResourceHandler::getSound(Sound id) const {
+const sf::SoundBuffer & ResHandler::getSound(Sound id) const {
 	return sounds[static_cast<int>(id)];
 }

@@ -8,7 +8,7 @@
 void SoundController::poll() {
 	if (!soundIdxQueue.empty()) {
 		for (auto & element : soundIdxQueue) {
-			sounds.emplace_back(global::resourceHandlerPtr->getSound(element));
+			sounds.emplace_back(global::resHandlerPtr->getSound(element));
 			sounds.back().play();
 		}
 		soundIdxQueue.clear();
@@ -22,6 +22,6 @@ void SoundController::poll() {
 	}
 }
 
-void SoundController::play(ResourceHandler::Sound indx) {
+void SoundController::play(ResHandler::Sound indx) {
 	soundIdxQueue.push_back(indx);
 }

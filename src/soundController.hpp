@@ -18,10 +18,10 @@ public:
 	// require graphics and sound related stuff to happen on the main
 	// thread, it may not be necessary, but just to be safe...
 	void poll();
-	void play(ResourceHandler::Music);
-	void play(ResourceHandler::Sound);
+	void play(ResHandler::Music);
+	void play(ResHandler::Sound);
 
 private:
 	std::vector<sf::Sound> sounds;
-	std::vector<ResourceHandler::Sound> soundIdxQueue;
+	std::vector<ResHandler::Sound> soundIdxQueue;
 };

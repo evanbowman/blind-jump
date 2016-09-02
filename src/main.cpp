@@ -27,17 +27,17 @@
 #include "shutdownSignal.hpp"
 
 namespace global {
-	ResourceHandler * resourceHandlerPtr = nullptr;
+	ResHandler * resHandlerPtr = nullptr;
 	std::exception_ptr pWorkerException = nullptr;
 }
 
 int main() {
 	rng::seed();
-	ResourceHandler resourceHandler;
+	ResHandler resourceHandler;
 	sf::Vector2f drawableRegionSize = getDrawableRegionSize();
 	try {
 		resourceHandler.load();
-		global::resourceHandlerPtr = &resourceHandler;
+		global::resHandlerPtr = &resourceHandler;
 		sf::ContextSettings settings;
 		settings.antialiasingLevel = 6;
 		sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Blind Jump", sf::Style::Fullscreen, settings);
