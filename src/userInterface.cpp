@@ -341,7 +341,7 @@ bool ui::Backend::desaturateEnabled() {
 
 void ui::PowerupBubble::init(float scale) {
     bubble.setOutlineThickness(0.0065f * scale);
-	bubble.setFillColor(sf::Color(40, 48, 81, 180));
+	bubble.setFillColor(sf::Color(40, 48, 81, 170));
 	bubble.setOutlineColor(sf::Color::White);
 	bubble.setPointCount(60);
 	powerupSheet.setTexture(global::resourceHandlerPtr->getTexture(ResourceHandler::Texture::powerupSheet));
@@ -647,16 +647,16 @@ void ui::Frontend::draw(sf::RenderWindow & window) {
 		break;
 
 	case Powerup::health:
-		powerupBubble.setFrame(static_cast<int>(powerupAdded) - 2);
+		powerupBubble.setFrame(static_cast<int>(powerupAdded) - 1); // Powerup::nil has no frame
 		powerupAdded = Powerup::nil;
 		barWidth = 0;
 		powerupText.setString(std::string("LIFE JAR"));
 		break;
 
 	case Powerup::rapidFire:
-		powerupBubble.setFrame(static_cast<int>(powerupAdded) - 2);
+		powerupBubble.setFrame(static_cast<int>(powerupAdded) - 1);
 		powerupAdded = Powerup::nil;
-		powerupText.setString(std::string("RAPID FIRE"));
+		powerupText.setString(std::string("SUPERCHARGER"));
 		break;
 	}
 	// Slowly fade out the  waypoint text

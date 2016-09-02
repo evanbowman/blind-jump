@@ -23,8 +23,5 @@ Thumbs.db
 # Project executable
 BlindJump
 
-# Mac app release
-*.app
-
 # Makedepend files
 Makefile.bak

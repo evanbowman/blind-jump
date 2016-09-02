@@ -7,6 +7,6 @@
 
 enum class Powerup {
 	nil,
-	rapidFire,
-	health
+    health,
+	rapidFire
 };
