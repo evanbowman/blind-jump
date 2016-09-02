@@ -56,8 +56,8 @@ int main() {
 				while (pWindow->isOpen()) {
 					time_point start = high_resolution_clock::now();
 					sf::Time elapsedTime = gameClock.restart();
-					// If the game went into extended sleep or froze for some reason, dt would be very high--reset clk
-					if (util::isAsleep || elapsedTime.asMilliseconds() > 20) {
+					// TODO: what if the game freezes? Elapsed time will be large...
+					if (util::isAsleep) {
 						elapsedTime = gameClock.restart();
 						util::isAsleep = false;
 					}
