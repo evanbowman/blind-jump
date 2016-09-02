@@ -121,28 +121,28 @@ void Game::draw(sf::RenderWindow & window) {
 			    break;
 					
 			case Rendertype::shadeWhite: {
-				STATIC_GLSL_COLOR(colors::White, White);
+				DEF_GLSL_COLOR(colors::White, White);
 				colorShader.setUniform("amount", std::get<shaderIdx>(element));
 				colorShader.setUniform("targetColor", White);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
 			    } break;
 					
 			case Rendertype::shadeGldnGt: {
-				STATIC_GLSL_COLOR(colors::GldnGt, GldnGt);
+				DEF_GLSL_COLOR(colors::GldnGt, GldnGt);
 				colorShader.setUniform("amount", std::get<shaderIdx>(element));
 				colorShader.setUniform("targetColor", GldnGt);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
 			    } break;
 					
 			case Rendertype::shadeRuby: {
-				STATIC_GLSL_COLOR(colors::Ruby, Ruby);
+				DEF_GLSL_COLOR(colors::Ruby, Ruby);
 				colorShader.setUniform("amount", std::get<shaderIdx>(element));
 				colorShader.setUniform("targetColor", Ruby);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
 			    } break;
 					
 			case Rendertype::shadeElectric: {
-				STATIC_GLSL_COLOR(colors::Electric, Electric);
+				DEF_GLSL_COLOR(colors::Electric, Electric);
 				colorShader.setUniform("amount", std::get<shaderIdx>(element));
 				colorShader.setUniform("targetColor", Electric);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);

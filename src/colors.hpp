@@ -5,7 +5,7 @@
 
 #pragma once
 
-#define STATIC_GLSL_COLOR(color, name)\
+#define DEF_GLSL_COLOR(color, name)\
 	static const sf::Glsl::Vec3 name(color::R, color::G, color::B)
 
 namespace colors {
