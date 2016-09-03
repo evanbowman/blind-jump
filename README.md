@@ -10,7 +10,7 @@ For mac users, there is a pre-compiled app package in targets/macOS, you can sim
 
 ## Building
 
-(Dependencies: SFML 2.3 and a C++14 compiler)
+(Dependencies: SFML 2.4 and a C++14 compiler)
 
 Navigate into src/
 ```bash
@@ -36,4 +36,4 @@ This places an executable in src/. It looks for resource files in ../Resources, 
 
 ## Bugs
 
-Please report any bugs that you find. I want the application to feel well polished, so if there are any legitiment runtime issues I'd appreciate being notified of them. The only one I know of currently: the mac version of the game issues a crash report when returning from main, due to bad access when attempting to call some destructors. I am currently working on fixing this.
+Please report any bugs that you find. I want the application to feel well polished, so if there are any legitiment runtime issues I'd appreciate being notified of them. Thanks!
