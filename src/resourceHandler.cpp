@@ -17,7 +17,7 @@ void loadResource(const char * fname, E id, T & array) {
 
 template<>
 void loadResource(const char * fname, ResHandler::Shader id, std::array<sf::Shader, 3> & shaders) {
-	std::size_t index = static_cast<int>(id);
+	size_t index = static_cast<int>(id);
 	if (!shaders[index].loadFromFile(resourcePath() + fname, sf::Shader::Fragment)) {
 		throw std::runtime_error(std::string(failurePrefix) + fname + "]");
 	}

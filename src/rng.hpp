@@ -10,12 +10,12 @@
 namespace rng {
 	extern std::mt19937 RNG;
 
-	template <std::size_t upper, int lower = 0>
+	template <size_t upper, int lower = 0>
 	int random() {
 		return std::abs(static_cast<int>(RNG())) % upper + lower;
 	}
 	
-	inline int random(std::size_t upper, int lower = 0) {
+	inline int random(size_t upper, int lower = 0) {
 		return std::abs(static_cast<int>(RNG())) % upper + lower;
 	}
 

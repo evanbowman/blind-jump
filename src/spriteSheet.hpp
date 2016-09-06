@@ -19,7 +19,7 @@ public:
 		setTexture(txtr);
 	}
 	
-	const sf::Sprite & operator[](const std::size_t idx) {
+	const sf::Sprite & operator[](const size_t idx) {
 		sprite.setTextureRect(sf::IntRect(x + idx * w, y, w, h));
 		return sprite;
 	}

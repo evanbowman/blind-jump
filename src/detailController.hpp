@@ -31,7 +31,7 @@ using DetailGroup = Framework::Group<Teleporter, // ----- 0
 using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
 using glowVec = std::vector<Sprite>;
 
-template<std::size_t indx, int8_t yOffset = 0>
+template<size_t indx, int8_t yOffset = 0>
 void drawVec(DetailGroup & dg,
 			 drawableVec & gameObjects,
 			 const sf::Vector2f viewCenter,
@@ -47,7 +47,7 @@ void drawVec(DetailGroup & dg,
 	}
 }
 
-template<std::size_t indx, int8_t yOffset = 0>
+template<size_t indx, int8_t yOffset = 0>
 void drawVecShadowed(DetailGroup & dg,
 					 drawableVec & gameObjects,
 					 drawableVec & gameShadows,

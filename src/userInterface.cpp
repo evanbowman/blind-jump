@@ -364,7 +364,7 @@ void ui::PowerupBubble::init(float scale) {
 	powerupSheet.setTexture(global::resHandlerPtr->getTexture(ResHandler::Texture::powerupSheet));
 }
 
-void ui::PowerupBubble::setFrame(std::size_t idx) {
+void ui::PowerupBubble::setFrame(size_t idx) {
 	powerupSheet[idx];
 }
 

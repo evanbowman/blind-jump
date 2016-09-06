@@ -31,7 +31,7 @@ namespace ui {
 		void setAlpha(uint8_t);
 		const sf::CircleShape & getShape() const;
 		const sf::Sprite & getSprite();
-		void setFrame(std::size_t);
+		void setFrame(size_t);
 	private:
 		sf::CircleShape bubble;
 	    SpriteSheet<0, 0, 46, 46> powerupSheet;

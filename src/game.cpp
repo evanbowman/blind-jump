@@ -100,14 +100,14 @@ void Game::draw(sf::RenderWindow & window) {
 		target.setView(worldView);
 		lightingMap.clear(sf::Color::Transparent);
 		// Sort the game objects based on y-position for z-ordering
-		static const std::size_t zOrderIdx = 1;
+		static const size_t zOrderIdx = 1;
 		std::sort(gameObjects.begin(), gameObjects.end(), [](const drawableMetadata & arg1,
 															 const drawableMetadata & arg2) {
 				return (std::get<zOrderIdx>(arg1) < std::get<zOrderIdx>(arg2));
 			});
 		window.setView(worldView);
-		static const std::size_t sprIdx = 0;
-		static const std::size_t shaderIdx = 3;
+		static const size_t sprIdx = 0;
+		static const size_t shaderIdx = 3;
 		sf::Shader & colorShader = global::resHandlerPtr->getShader(ResHandler::Shader::color);
 		for (auto & element : gameObjects) {
 			switch (std::get<2>(element)) {
@@ -390,7 +390,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 	case TransitionState::None:
 		{
 			// If the player is near the teleporter, snap to its center and deactivate.
-			static const std::size_t teleporterIdx = 0;
+			static const size_t teleporterIdx = 0;
 			float teleporterX = details.get<teleporterIdx>().back().getPosition().x;
 			float teleporterY = details.get<teleporterIdx>().back().getPosition().y;
 			if ((std::abs(player.getXpos() - teleporterX) < 8 &&
@@ -546,9 +546,10 @@ void Game::Reset() {
 		emptyLocations.pop_back();
 		return c;
 	};
+	static const size_t lampIdx = 2;
 	if (level != 0) {
 		Coordinate c = tiles.getTeleporterLoc();
-		static const std::size_t teleporterIdx = 0;
+		static const size_t teleporterIdx = 0;
 		details.add<teleporterIdx>(tiles.posX + c.x * 32 + 2, tiles.posY + c.y * 26 - 4,
 								   global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
 								   global::resHandlerPtr->getTexture(ResHandler::Texture::teleporterGlow));
@@ -556,7 +557,7 @@ void Game::Reset() {
 		// Place 0-2 powerup chests on the map
 		c = pickLocation(tiles.emptyMapLocations);
 		Powerup chestContents = static_cast<Powerup>(rng::random<2, 1>());
-		static const std::size_t chestIdx = 1;
+		static const size_t chestIdx = 1;
 		details.add<chestIdx>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
 							  global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), chestContents);
 		if (rng::random<2>()) {
@@ -575,7 +576,8 @@ void Game::Reset() {
 		if (set == tileController::Tileset::regular) {
 			getRockPositions(tiles.mapArray, detailPositions, teleporterFootprint);
 			for (auto element : detailPositions) {
-				details.add<3>(tiles.posX + 32 * element.x, tiles.posY + 26 * element.y - 35,
+				static const size_t rockIdx = 3;
+				details.add<rockIdx>(tiles.posX + 32 * element.x, tiles.posY + 26 * element.y - 35,
 							   global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
 			}
 			detailPositions.clear();
@@ -583,16 +585,16 @@ void Game::Reset() {
 		getLightingPositions(tiles.mapArray, detailPositions, teleporterFootprint);
 		size_t len = detailPositions.size();
 		for (size_t i = 0; i < len; i++) {
-			details.add<2>(tiles.posX + 16 + (detailPositions[i].x * 32), tiles.posY - 3 + (detailPositions[i].y * 26),
-						   global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-						   global::resHandlerPtr->getTexture(ResHandler::Texture::lamplight));
+			details.add<lampIdx>(tiles.posX + 16 + (detailPositions[i].x * 32),
+								 tiles.posY - 3 + (detailPositions[i].y * 26),
+								 global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+								 global::resHandlerPtr->getTexture(ResHandler::Texture::lamplight));
 		}
 		detailPositions.clear();
 	} else if (set == tileController::Tileset::intro) {
-		static const std::size_t lampIdx = 2;
-		static const std::size_t doorIdx = 4;
-		static const std::size_t podIdx = 6;
-		static const std::size_t teleporterIdx = 0;
+		static const size_t doorIdx = 4;
+		static const size_t podIdx = 6;
+		static const size_t teleporterIdx = 0;
 		details.add<lampIdx>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (6 * 26),
 							 global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
 							 global::resHandlerPtr->getTexture(ResHandler::Texture::lamplight));

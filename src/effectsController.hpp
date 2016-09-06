@@ -32,7 +32,7 @@ using EffectGroup = Framework::Group<TurretFlashEffect, // - 0
 
 using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
 
-template<std::size_t indx, int8_t yOffset = 0>
+template<size_t indx, int8_t yOffset = 0>
 void drawVec(EffectGroup & eg,
 			 drawableVec & vec,
 			 const sf::Vector2f viewCenter,
@@ -48,7 +48,7 @@ void drawVec(EffectGroup & eg,
 	}
 }
 
-template<std::size_t indx, int8_t yOffset = 0>
+template<size_t indx, int8_t yOffset = 0>
 void drawVecGlow(EffectGroup & eg,
 				 drawableVec & vec,
 				 std::vector<Sprite> & glowSprs,

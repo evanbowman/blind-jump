@@ -637,7 +637,7 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, Effect
 	}
 }
 
-template<std::size_t indx, typename F >
+template<size_t indx, typename F >
 void checkEffectCollision(EffectGroup & effects, Player * pPlayer, const F & policy) {
 	for (auto & element : effects.get<indx>()) {
 		if (pPlayer->getHitBox().overlapping(element.getHitBox())) {
