@@ -414,7 +414,7 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & 
 	case Sheet::stillUp:
 		break;
 
-case Sheet::stillLeft:
+	case Sheet::stillLeft:
 		if (gun.timeout > 0) {
 			gun.gunSpr.setPosition(xPos + 2, yPos + 13);
 		}
@@ -596,6 +596,10 @@ void Player::reset() {
 	health = 4;
 	sheetIndex = Sheet::stillDown;
 	frameIndex = 5;
+	upPrevious = false;
+	downPrevious = false;
+	leftPrevious = false;
+	rightPrevious = false;
 }
 
 void Player::setHealth(Health value) {

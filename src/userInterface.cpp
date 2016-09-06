@@ -340,6 +340,8 @@ void ui::Backend::reset() {
 	blurAmount = 0.f;
 	timer = 0;
 	powerup = Powerup::nil;
+	dispPowerupBar = false;
+	powerupTimer = 0;
 }
 
 float ui::Backend::getDesaturateAmount() {
