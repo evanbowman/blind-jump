@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include "Teleporter.hpp"
 #include "treasureChest.hpp"
 #include "tileController.hpp"

@@ -6,7 +6,7 @@
 #pragma once
 
 #include "detailParent.hpp"
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include "spriteSheet.hpp"
 #include "rng.hpp"
 

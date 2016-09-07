@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include "wall.hpp"
 #include "effectsController.hpp"
 #include <vector>

@@ -5,23 +5,23 @@
 
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <mutex>
+#include <SFML/Audio.hpp>
 #include <atomic>
-#include "player.hpp"
+#include <mutex>
 #include "backgroundHandler.hpp"
 #include "effectsController.hpp"
 #include "detailController.hpp"
-#include "tileController.hpp"
-#include "userInterface.hpp"
 #include "enemyController.hpp"
-#include "SFML/Audio.hpp"
 #include "soundController.hpp"
 #include "inputController.hpp"
-#include "RenderType.hpp"
 #include "resourceHandler.hpp"
+#include "tileController.hpp"
+#include "userInterface.hpp"
+#include "RenderType.hpp"
 #include "camera.hpp"
-#include "alias.hpp"
+#include "player.hpp"
 #include "colors.hpp"
+#include "alias.hpp"
 
 class Game {
 public:

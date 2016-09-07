@@ -182,12 +182,12 @@ void InputController::update(sf::RenderWindow & window) {
 			}
 		} else if (event.type == sf::Event::JoystickConnected) {
 			if (event.joystickConnect.joystickId == 0) {
-			    mapJsById();
+				this->mapJsById();
 				joystickMask = 0x0000;
 			}
 		} else if (event.type == sf::Event::JoystickDisconnected) {
 			if (event.joystickConnect.joystickId == 0) {
-				joystickMask = 0x0000;
+				joystickMask = 0x0000; // In case buttons pressed when disconnected
 			}
 		}
 	}

@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include "spriteSheet.hpp"
 #include "Effect.hpp"
 #include "rng.hpp"

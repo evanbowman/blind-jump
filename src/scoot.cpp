@@ -58,12 +58,12 @@ void Scoot::update(float playerPosX,
 	shadow.setPosition(xPos - 6, yPos + 2);
 
 	// Face the player
-	if (xPos > playerPosX)
+	if (xPos > playerPosX) {
 		spriteSheet.setScale(1, 1);
-	else 
+	} else {
 		spriteSheet.setScale(-1, 1);
+	}
 	
-	// Enemies behave as state machines
 	switch(state) {
 	case State::drift1:
 		timer += elapsedTime.asMilliseconds();
