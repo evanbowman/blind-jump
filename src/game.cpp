@@ -32,10 +32,10 @@ Game::Game(const sf::Vector2f & viewPort, InputController * _pInput, ui::Fronten
 	  worldView(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
 	  timer(0)
 {
-	Init();
+	init();
 }
 
-void Game::Init() {
+void Game::init() {
 	target.create(windowW, windowH);
 	secondPass.create(windowW, windowH);
 	secondPass.setSmooth(true);
@@ -62,7 +62,7 @@ void Game::Init() {
 	transitionShape.setFillColor(sf::Color(0, 0, 0, 0));
 	vignetteSprite.setColor(sf::Color::White);
 	level = -1;
-	Reset();
+	this->nextLevel();
 }
 
 void Game::draw(sf::RenderWindow & window) {
@@ -291,9 +291,9 @@ void Game::update(sf::Time & elapsedTime) {
 			if (UI.isComplete()) {
 				UI.reset();
 				player.reset();
-				// Reset the map. Reset() increments level, set to -1 so that it will be zero
+				// Game::nextLevel() increments level, set to -1 so that it will be zero
 				level = -1;
-				Reset();
+				this->nextLevel();
 				pUiFrontend->reset();
 				static const char playerStartingHealth = 4;
 				pUiFrontend->updateHealth(playerStartingHealth);
@@ -346,7 +346,7 @@ void Game::drawTransitions(sf::RenderWindow & window) {
 				timer = 0;
 				transitionShape.setFillColor(sf::Color(0, 0, 0, 255));
 				beamGlowSpr.setColor(sf::Color::Black);
-				Reset(); // Creates textures, needs to happen on main thread
+				this->nextLevel(); // Creates textures, needs to happen on main thread
 			}
 		} else {
 			if (timer > 1600000) {
@@ -363,7 +363,7 @@ void Game::drawTransitions(sf::RenderWindow & window) {
 				beamGlowSpr.setColor(sf::Color::Black);
 				timer = 0;
 				transitionShape.setFillColor(sf::Color(0, 0, 0, 255));
-				Reset();
+				this->nextLevel();
 			}
 		}
 		break;
@@ -432,15 +432,16 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 	case TransitionState::ExitBeamInflate:
 		timer += elapsedTime.asMicroseconds();
 		{
-			float beamWidth = std::max(2.f, Easing::easeIn<2>(timer, static_cast<int_fast64_t>(250000)) * 20.f);
+		    static const int64_t transitionTime = 250000;
+			float beamWidth = std::max(2.f, Easing::easeIn<2>(timer, transitionTime) * 20.f);
 			float beamHeight = beamShape.getSize().y;
 			beamShape.setSize(sf::Vector2f(beamWidth, beamHeight));
-			beamShape.setPosition(windowW / 2 - 0.5f - beamWidth / 2.f, windowH / 2 + 36);
-		}
-		if (timer > 250000) {
-			timer = 0;
-			transitionState = TransitionState::ExitBeamDeflate;
-			player.visible = false;
+			beamShape.setPosition(windowW / 2 - 0.5f - beamWidth / 2.f, windowH / 2 + 36);	
+			if (timer > transitionTime) {
+				timer = 0;
+				transitionState = TransitionState::ExitBeamDeflate;
+				player.visible = false;
+			}
 		}
 		break;
 
@@ -482,38 +483,40 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 	case TransitionState::EntryBeamDrop:
 		timer += elapsedTime.asMicroseconds();
 		{
-			float beamHeight = Easing::easeIn<2>(timer, static_cast<int_fast64_t>(350000)) * (windowH / 2 + 26);
-			uint8_t brightness = Easing::easeIn<1>(timer, static_cast<int_fast64_t>(350000)) * 255;
+			static const int64_t transitionTime = 350000;
+			float beamHeight = Easing::easeIn<2>(timer, transitionTime) * (windowH / 2 + 26);
+			uint8_t brightness = Easing::easeIn<1>(timer, transitionTime) * 255;
 			beamGlowSpr.setColor(sf::Color(brightness, brightness, brightness, 255));
-			beamShape.setSize(sf::Vector2f(4, beamHeight));
-		}
-		if (timer > 350000) {
-			transitionState = TransitionState::EntryBeamFade;
-			timer = 0;
-			player.visible = true;
-			util::sleep(milliseconds(20));
-			camera.shake(0.15f);
+			beamShape.setSize(sf::Vector2f(4, beamHeight));			
+			if (timer > transitionTime) {
+				transitionState = TransitionState::EntryBeamFade;
+				timer = 0;
+				player.visible = true;
+				util::sleep(milliseconds(20));
+				camera.shake(0.15f);
+			}
 		}
 		break;
 
 	case TransitionState::EntryBeamFade:
 		timer += elapsedTime.asMicroseconds();
 		{
-			uint8_t alpha = Easing::easeOut<1>(timer, static_cast<int_fast64_t>(300000)) * 240;
+			static const int64_t transitionTime = 300000;
+			uint8_t alpha = Easing::easeOut<1>(timer, transitionTime) * 240;
 			beamShape.setFillColor(sf::Color(114, 255, 229, alpha));
-			uint8_t brightness = Easing::easeOut<2>(timer, static_cast<int_fast64_t>(300000)) * 255;
+			uint8_t brightness = Easing::easeOut<2>(timer, transitionTime) * 255;
 			beamGlowSpr.setColor(sf::Color(brightness, brightness, brightness, 255));
-		}
-		if (timer > 300000) {
-			transitionState = TransitionState::None;
-			player.setState(Player::State::nominal);
-			timer = 0;
+			if (timer > transitionTime) {
+				transitionState = TransitionState::None;
+				player.setState(Player::State::nominal);
+				timer = 0;
+			}
 		}
 		break;
 	}
 }
 
-void Game::Reset() {
+void Game::nextLevel() {
 	level += 1;
 	pUiFrontend->setWaypointText(level);
 	tiles.clear();
@@ -583,7 +586,7 @@ void Game::Reset() {
 			detailPositions.clear();
     	}
 		getLightingPositions(tiles.mapArray, detailPositions, teleporterFootprint);
-		size_t len = detailPositions.size();
+		const size_t len = detailPositions.size();
 		for (size_t i = 0; i < len; i++) {
 			details.add<lampIdx>(tiles.posX + 16 + (detailPositions[i].x * 32),
 								 tiles.posY - 3 + (detailPositions[i].y * 26),

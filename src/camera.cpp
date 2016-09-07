@@ -24,10 +24,11 @@ void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f
 		state = State::followPlayer;
 		trackingTimer = 0;
 	}
-	if (pTarget->getState() != Player::State::deactivated && pTarget->getState() != Player::State::dead) {
+	if (pTarget->getState() != Player::State::deactivated &&
+		pTarget->getState() != Player::State::dead) {
 		switch (state) {
 		case State::followPlayer:
-			lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000025f);
+			lerpSpeed = math::clamp(elapsedTime.asMicroseconds() * 0.0000025f, 0.f, 1.f);
 			cameraPos = math::lerp(pTarget->getPosition(), view.getCenter(), lerpSpeed);
 			if (!targets.empty()) {
 				state = State::foundEnemy;
@@ -37,10 +38,10 @@ void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f
 
 		case State::trackMidpoint:
 			{
-				lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000025f);
+				lerpSpeed = math::clamp(elapsedTime.asMicroseconds() * 0.0000025f, 0.f, 1.f);
 				sf::Vector2f aggregate;
 				float divisor = 0;
-				for (auto & vec : targets) {
+				for (const auto & vec : targets) {
 					aggregate += vec;
 					++divisor;
 				}
@@ -55,10 +56,10 @@ void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f
 
 		case State::foundEnemy:
 			{
-				lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000025f);
+				lerpSpeed = math::clamp(elapsedTime.asMicroseconds() * 0.0000025f, 0.f, 1.f);
 				sf::Vector2f aggregate;
 				float divisor = 0;
-				for (auto & vec : targets) {
+				for (const auto & vec : targets) {
 					aggregate += vec;
 					++divisor;
 				}
@@ -76,7 +77,7 @@ void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f
 		}
 	} else {
 		state = State::followPlayer;
-		lerpSpeed = std::min(1.f, elapsedTime.asMicroseconds() * 0.0000055f);
+		lerpSpeed = math::clamp(elapsedTime.asMicroseconds() * 0.0000055f, 0.f, 1.f);
 		cameraPos = math::lerp(pTarget->getPosition(), view.getCenter(), lerpSpeed);
 	}
 	if (isShaking) {
@@ -119,7 +120,8 @@ void Camera::setView(const sf::View & _view) {
 bool Camera::moving() const {
 	const sf::Vector2f playerPos = pTarget->getPosition();
 	const sf::Vector2f & cameraPos = view.getCenter();			
-	if (std::abs(playerPos.x - cameraPos.x) < 1.f && std::abs(playerPos.y - cameraPos.y) < 1.f) {
+	if (std::abs(playerPos.x - cameraPos.x) < 1.f &&
+		std::abs(playerPos.y - cameraPos.y) < 1.f) {
 		return false;
 	}
 	return true;

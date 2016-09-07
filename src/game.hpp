@@ -38,7 +38,7 @@ public:
 	Game(const sf::Vector2f & viewPort, InputController *, ui::Frontend *);
 	void update(sf::Time &);
 	void draw(sf::RenderWindow &);
-	void Reset();
+	void nextLevel();
 	int getLevel();
 	DetailGroup & getDetails();
 	enemyController & getEnemyController();
@@ -54,7 +54,7 @@ public:
 	TransitionState transitionState;
 
 private:
-	void Init();
+	void init();
 	InputController * pInput;
 	SoundController sounds;
 	Player player;
