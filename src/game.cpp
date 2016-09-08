@@ -93,7 +93,7 @@ void Game::draw(sf::RenderWindow & window) {
 			sounds.poll();
 		}
 		if (!gameShadows.empty()) {
-			for (auto & element : gameShadows) {
+			for (const auto & element : gameShadows) {
 				target.draw(std::get<0>(element));
 			}
 		}
@@ -151,7 +151,7 @@ void Game::draw(sf::RenderWindow & window) {
 		}
 		static const sf::Color blendAmount(185, 185, 185);
 		sf::Sprite tempSprite;
-		for (auto element : glowSprs2) {
+		for (const auto & element : glowSprs2) {
 			element.setColor(blendAmount);
 			lightingMap.draw(element, sf::BlendMode(sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One,
 																	 sf::BlendMode::Add, sf::BlendMode::DstAlpha,
@@ -175,7 +175,7 @@ void Game::draw(sf::RenderWindow & window) {
 			sf::Shader & desaturateShader = global::resHandlerPtr->getShader(ResHandler::Shader::desaturate);
 			secondPass.clear(sf::Color::Transparent);
 			thirdPass.clear(sf::Color::Transparent);
-			sf::Vector2u textureSize = target.getSize();
+			const sf::Vector2u textureSize = target.getSize();
 			// Get the blur amount from the UI controller
 			float blurAmount = UI.getBlurAmount();
 			const sf::Glsl::Vec2 vBlur = sf::Glsl::Vec2(0.f, blurAmount / textureSize.y);

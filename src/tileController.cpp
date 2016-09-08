@@ -176,7 +176,7 @@ void tileController::update() {
 	mapSprite2.setPosition(posX, posY);
 }
 
-void tileController::draw(sf::RenderTexture& window, std::vector<sf::Sprite>* glowSprites, int level, const sf::View & worldView, const sf::View & cameraView) {
+void tileController::draw(sf::RenderTexture & window, std::vector<sf::Sprite> * glowSprites, int level, const sf::View & worldView, const sf::View & cameraView) {
 	// Clear out the RenderTexture
 	rt.setView(cameraView);
 	rt.clear(sf::Color::Transparent);
