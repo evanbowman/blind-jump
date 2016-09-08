@@ -24,7 +24,6 @@
 #include "aspectScaling.hpp"
 #include "alias.hpp"
 #include "util.hpp"
-#include "shutdownSignal.hpp"
 
 namespace global {
 	ResHandler * resHandlerPtr = nullptr;

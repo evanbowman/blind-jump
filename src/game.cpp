@@ -151,7 +151,7 @@ void Game::draw(sf::RenderWindow & window) {
 		}
 		static const sf::Color blendAmount(185, 185, 185);
 		sf::Sprite tempSprite;
-		for (const auto & element : glowSprs2) {
+		for (auto & element : glowSprs2) {
 			element.setColor(blendAmount);
 			lightingMap.draw(element, sf::BlendMode(sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One,
 																	 sf::BlendMode::Add, sf::BlendMode::DstAlpha,
