@@ -5,7 +5,6 @@
 
 #include "mappingFunctions.hpp"
 #include "initMapVectors.hpp"
-#include <cmath>
 #include "ResourcePath.hpp"
 #include "enemyPlacementFn.hpp"
 #include "lightingMap.h"
@@ -103,8 +102,8 @@ void Game::draw(sf::RenderWindow & window) {
 		static const size_t zOrderIdx = 1;
 		std::sort(gameObjects.begin(), gameObjects.end(), [](const drawableMetadata & arg1,
 															 const drawableMetadata & arg2) {
-				return (std::get<zOrderIdx>(arg1) < std::get<zOrderIdx>(arg2));
-			});
+					  return (std::get<zOrderIdx>(arg1) < std::get<zOrderIdx>(arg2));
+				  });
 		window.setView(worldView);
 		static const size_t sprIdx = 0;
 		static const size_t shaderIdx = 3;
@@ -125,28 +124,28 @@ void Game::draw(sf::RenderWindow & window) {
 				colorShader.setUniform("amount", std::get<shaderIdx>(element));
 				colorShader.setUniform("targetColor", White);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-			    } break;
+			} break;
 					
 			case Rendertype::shadeGldnGt: {
 				DEF_GLSL_COLOR(colors::GldnGt, GldnGt);
 				colorShader.setUniform("amount", std::get<shaderIdx>(element));
 				colorShader.setUniform("targetColor", GldnGt);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-			    } break;
+			} break;
 					
 			case Rendertype::shadeRuby: {
 				DEF_GLSL_COLOR(colors::Ruby, Ruby);
 				colorShader.setUniform("amount", std::get<shaderIdx>(element));
 				colorShader.setUniform("targetColor", Ruby);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-			    } break;
+			} break;
 					
 			case Rendertype::shadeElectric: {
 				DEF_GLSL_COLOR(colors::Electric, Electric);
 				colorShader.setUniform("amount", std::get<shaderIdx>(element));
 				colorShader.setUniform("targetColor", Electric);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-			    } break;
+			} break;
 			}
 		}
 		static const sf::Color blendAmount(185, 185, 185);
@@ -154,8 +153,8 @@ void Game::draw(sf::RenderWindow & window) {
 		for (auto & element : glowSprs2) {
 			element.setColor(blendAmount);
 			lightingMap.draw(element, sf::BlendMode(sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One,
-																	 sf::BlendMode::Add, sf::BlendMode::DstAlpha,
-																	 sf::BlendMode::Zero, sf::BlendMode::Add)));
+																  sf::BlendMode::Add, sf::BlendMode::DstAlpha,
+																  sf::BlendMode::Zero, sf::BlendMode::Add)));
 		}
 		lightingMap.display();
 		target.draw(sf::Sprite(lightingMap.getTexture()));
@@ -315,22 +314,22 @@ void Game::drawTransitions(sf::RenderWindow & window) {
 	switch (transitionState) {
 	case TransitionState::None:
     	break;
-
+		
 	case TransitionState::ExitBeamEnter:
     	window.draw(beamShape);
 		glowSprs1.push_back(beamGlowSpr);
 		break;
-
+		
 	case TransitionState::ExitBeamInflate:
     	window.draw(beamShape);
 		glowSprs1.push_back(beamGlowSpr);
 		break;
-
+		
 	case TransitionState::ExitBeamDeflate:
     	window.draw(beamShape);
 		glowSprs1.push_back(beamGlowSpr);
 		break;
-
+		
 		// This isn't stateless, but only because it can't be. Reseting the level
 		// involves texture creation, which is graphics code and therefore needs to
 		// happen on the main thread for portability reasons.
@@ -367,16 +366,16 @@ void Game::drawTransitions(sf::RenderWindow & window) {
 			}
 		}
 		break;
-
+		
 	case TransitionState::TransitionIn:
     	window.draw(transitionShape);
 		break;
-
+		
 	case TransitionState::EntryBeamDrop:
     	window.draw(beamShape);
 		glowSprs1.push_back(beamGlowSpr);
 		break;
-
+		
 	case TransitionState::EntryBeamFade:
     	window.draw(beamShape);
 		glowSprs1.push_back(beamGlowSpr);
@@ -407,7 +406,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 			beamGlowSpr.setPosition(windowW / 2 - 200, windowH / 2 - 200 + 36);
 		}
 		break;
-
+		
 	case TransitionState::ExitBeamEnter:
 		timer += elapsedTime.asMicroseconds();
 		{
@@ -581,7 +580,7 @@ void Game::nextLevel() {
 			for (auto element : detailPositions) {
 				static const size_t rockIdx = 3;
 				details.add<rockIdx>(tiles.posX + 32 * element.x, tiles.posY + 26 * element.y - 35,
-							   global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
+									 global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
 			}
 			detailPositions.clear();
     	}

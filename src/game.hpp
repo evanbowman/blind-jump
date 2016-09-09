@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <atomic>
+#include <cmath>
 #include <mutex>
 #include "backgroundHandler.hpp"
 #include "effectsController.hpp"

@@ -48,11 +48,11 @@ int main() {
 		sf::View worldView(drawableRegionSize / 2.f, drawableRegionSize);
 		ui::Frontend uIFrontEnd(hudView, drawableRegionSize.x / 2, drawableRegionSize.y / 2);
 		Game game(drawableRegionSize, &input, &uIFrontEnd);
-		SmartThread logicThread([](Game * pGame, sf::RenderWindow * pWindow) {
+		SmartThread logicThread([& game, & window]() {
 			duration logicUpdateDelta;
 			sf::Clock gameClock;
 			try {
-				while (pWindow->isOpen()) {
+				while (window.isOpen()) {
 					time_point start = high_resolution_clock::now();
 					sf::Time elapsedTime = gameClock.restart();
 					// TODO: what if the game freezes? Elapsed time will be large...
@@ -60,7 +60,7 @@ int main() {
 						elapsedTime = gameClock.restart();
 						util::isAsleep = false;
 					}
-				    pGame->update(elapsedTime);
+				    game.update(elapsedTime);
 					time_point stop = high_resolution_clock::now();
 					logicUpdateDelta = std::chrono::duration_cast<nanoseconds>(stop - start);
 					static const microseconds logicUpdateLimit(2000);
@@ -70,7 +70,7 @@ int main() {
 				global::pWorkerException = std::current_exception();
 				return;
 			}
-		}, &game, &window);
+		});
 		while (window.isOpen()) {
 			input.update(window);
 			window.clear();
