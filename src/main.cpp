@@ -6,24 +6,24 @@
 // Start Date: 10/9/15
 // End Date:
 
-#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
-#include <cmath>
 #include <SFML/Window.hpp>
+#include <SFML/Audio.hpp>
 #include <exception>
-#include <iostream>
 #include <stdexcept>
-#include "smartThread.hpp"
-#include "player.hpp"
+#include <iostream>
+#include <cmath>
 #include "backgroundHandler.hpp"
-#include "game.hpp"
-#include "ResourcePath.hpp"
 #include "inputController.hpp"
 #include "resourceHandler.hpp"
-#include "rng.hpp"
 #include "aspectScaling.hpp"
+#include "ResourcePath.hpp"
+#include "smartThread.hpp"
+#include "player.hpp"
 #include "alias.hpp"
+#include "game.hpp"
 #include "util.hpp"
+#include "rng.hpp"
 
 namespace global {
 	ResHandler * resHandlerPtr = nullptr;

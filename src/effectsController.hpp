@@ -6,18 +6,18 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "turretFlashEffect.hpp"
-#include "bulletType1.hpp"
-#include "shotPuff.hpp"
-#include "FireExplosion.hpp"
-#include "smallExplosion.hpp"
-#include "Item.hpp"
-#include "resourceHandler.hpp"
-#include "RenderType.hpp"
 #include "Framework/framework.hpp"
-#include "enemyShot.hpp"
+#include "turretFlashEffect.hpp"
+#include "resourceHandler.hpp"
+#include "smallExplosion.hpp"
+#include "FireExplosion.hpp"
+#include "bulletType1.hpp"
 #include "dasherShot.hpp"
 #include "turretShot.hpp"
+#include "RenderType.hpp"
+#include "enemyShot.hpp"
+#include "shotPuff.hpp"
+#include "Item.hpp"
 
 using EffectGroup = Framework::Group<TurretFlashEffect, // - 0
 									 SmallExplosion, // ---- 1

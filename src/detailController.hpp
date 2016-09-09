@@ -6,19 +6,19 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "Teleporter.hpp"
-#include "treasureChest.hpp"
-#include "tileController.hpp"
-#include "coordinate.hpp"
-#include "generalDetail.hpp"
-#include "lampLight.hpp"
-#include "userInterface.hpp"
-#include "damagedRobot.hpp"
-#include "rock.hpp"
-#include "IntroDoor.hpp"
 #include <array>
-#include "RenderType.hpp"
 #include "resourceHandler.hpp"
+#include "tileController.hpp"
+#include "userInterface.hpp"
+#include "treasureChest.hpp"
+#include "generalDetail.hpp"
+#include "damagedRobot.hpp"
+#include "RenderType.hpp"
+#include "Teleporter.hpp"
+#include "coordinate.hpp"
+#include "lampLight.hpp"
+#include "IntroDoor.hpp"
+#include "rock.hpp"
 
 using DetailGroup = Framework::Group<Teleporter, // ----- 0
 									 TreasureChest, // -- 1

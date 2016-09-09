@@ -4,14 +4,14 @@
 //========================================================================//
 
 #include "mappingFunctions.hpp"
-#include "initMapVectors.hpp"
-#include "ResourcePath.hpp"
 #include "enemyPlacementFn.hpp"
-#include "lightingMap.h"
-#include "pillarPlacement.h"
-#include "math.h"
-#include "game.hpp"
 #include "easingTemplates.hpp"
+#include "initMapVectors.hpp"
+#include "pillarPlacement.h"
+#include "ResourcePath.hpp"
+#include "lightingMap.h"
+#include "game.hpp"
+#include "math.h"
 
 namespace global {
 	std::mutex overworldMutex, UIMutex, transitionMutex;
