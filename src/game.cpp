@@ -124,28 +124,28 @@ void Game::draw(sf::RenderWindow & window) {
 				colorShader.setUniform("amount", std::get<shaderIdx>(element));
 				colorShader.setUniform("targetColor", White);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-			} break;
+			    } break;
 					
 			case Rendertype::shadeGldnGt: {
 				DEF_GLSL_COLOR(colors::GldnGt, GldnGt);
 				colorShader.setUniform("amount", std::get<shaderIdx>(element));
 				colorShader.setUniform("targetColor", GldnGt);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-			} break;
+			    } break;
 					
 			case Rendertype::shadeRuby: {
 				DEF_GLSL_COLOR(colors::Ruby, Ruby);
 				colorShader.setUniform("amount", std::get<shaderIdx>(element));
 				colorShader.setUniform("targetColor", Ruby);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-			} break;
+			    } break;
 					
 			case Rendertype::shadeElectric: {
 				DEF_GLSL_COLOR(colors::Electric, Electric);
 				colorShader.setUniform("amount", std::get<shaderIdx>(element));
 				colorShader.setUniform("targetColor", Electric);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-			} break;
+			    } break;
 			}
 		}
 		static const sf::Color blendAmount(185, 185, 185);
