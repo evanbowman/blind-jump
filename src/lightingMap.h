@@ -11,12 +11,6 @@
 
 #define CIRC_RADIUS 200
 
-typedef struct __circle {
-	int x;
-	int y;
-	int r;
-} Circle;
-
 bool checkOverlap(Circle c1, Circle c2) {
 	double centerDifference = sqrt((double) (32 * (c1.x - c2.x)) * (32 * (c1.x - c2.x)) + (26 * (c1.y - c2.y)) * (26 * (c1.y - c2.y)));
 	if (centerDifference <= (double) c1.r || centerDifference <= (double) c2.r) {

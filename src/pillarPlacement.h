@@ -9,6 +9,12 @@
 
 #define PILLAR_RADIUS 180
 
+struct Circle {
+	int x;
+	int y;
+	int r;
+};
+
 void getRockPositions(uint8_t gameMap[61][61], std::vector<Coordinate>& availableLocations, Circle & teleporterFootprint) {
 	// First create a temporary map containing only the surfaces from the game map
 	std::vector<Circle> pillarMap;

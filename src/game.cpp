@@ -303,6 +303,8 @@ void Game::update(sf::Time & elapsedTime) {
 		} else {
 			if (transitionState == TransitionState::None) {
 				UI.update(player, *pUiFrontend, pInput, elapsedTime);
+			} else if (UI.powerupBubbleVisible()) {
+				UI.hidePowerupBubble(*pUiFrontend);
 			}
 		}
 	}

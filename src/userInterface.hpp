@@ -128,6 +128,8 @@ namespace ui {
 		float getBlurAmount();
 		void setPowerup(Powerup);
 		Powerup getCurrentPowerup() const;
+		bool powerupBubbleVisible() const;
+		void hidePowerupBubble(ui::Frontend &);
 	private:
 		State state;
 		PowerupBubbleState powerupBubbleState;
