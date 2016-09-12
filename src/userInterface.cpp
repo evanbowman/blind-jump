@@ -109,29 +109,6 @@ Powerup ui::Backend::getCurrentPowerup() const {
 	return powerup;
 }
 
-bool ui::Backend::powerupBubbleVisible() const {
-	return powerupBubbleState != PowerupBubbleState::dormant;
-}
-
-void ui::Backend::hidePowerupBubble(ui::Frontend & uIFrontEnd) {
-	uIFrontEnd.setBubbleAlpha(0);
-	uIFrontEnd.setTextAlpha(0, ui::Frontend::Text::powerupText);
-	switch (powerup) {
-	case Powerup::nil:
-		break;
-		
-	case Powerup::health:
-		uIFrontEnd.updateMaxHealth(uIFrontEnd.getMaxHealth() + 1);
-		break;
-		
-	case Powerup::rapidFire:
-		dispPowerupBar = true;
-		powerupTimer = 0;
-		break;
-	}
-	powerupBubbleState = PowerupBubbleState::dormant;
-}
-
 void ui::Backend::update(Player & player,
 						 ui::Frontend & uIFrontEnd,
 						 InputController * pInput,

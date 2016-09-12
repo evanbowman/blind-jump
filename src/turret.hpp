@@ -19,7 +19,7 @@ private:
 		closed, opening, shoot1, shoot2, shoot3, rest, closing
     };
 	State state;	
-	using HBox = Framework::HitBox<16, 32>;
+	using HBox = framework::HitBox<16, 32>;
 	HBox hitBox;
 	float xPos, yPos;
 	int8_t frameIndex;

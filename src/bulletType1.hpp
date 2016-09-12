@@ -11,7 +11,7 @@
 
 class PlayerShot : public Effect {
 public:
-	using HBox = Framework::HitBox<12, 12, 2, 2>;
+	using HBox = framework::HitBox<12, 12, 2, 2>;
 	PlayerShot(const sf::Texture &, const sf::Texture &, char, float, float);
 	const sf::Sprite & getSprite();
 	const sf::Sprite & getGlow();

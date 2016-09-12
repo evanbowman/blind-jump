@@ -26,7 +26,7 @@ class Player {
 public:
 	using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
 	using Health = int8_t;
-	using HBox = Framework::HitBox<8, 16, 12, 12>;
+	using HBox = framework::HitBox<8, 16, 12, 12>;
 	enum class Sheet {
 		stillDown,
 		stillUp,

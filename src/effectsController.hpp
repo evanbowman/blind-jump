@@ -19,7 +19,7 @@
 #include "shotPuff.hpp"
 #include "Item.hpp"
 
-using EffectGroup = Framework::Group<TurretFlashEffect, // - 0
+using EffectGroup = framework::Group<TurretFlashEffect, // - 0
 									 SmallExplosion, // ---- 1
 									 FireExplosion, // ----- 2
 									 ShotPuff, // ---------- 3 
@@ -38,7 +38,7 @@ void drawVec(EffectGroup & eg,
 			 const sf::Vector2f viewCenter,
 			 const sf::Vector2f viewSize) {
 	for (auto & element : eg.get<indx>()) {
-		const Framework::Point elemPos = element.getPosition();
+		const framework::Point elemPos = element.getPosition();
 		if (elemPos.x > viewCenter.x - viewSize.x / 2 - 48 &&
 			elemPos.x < viewCenter.x + viewSize.x / 2 + 48 &&
 			elemPos.y > viewCenter.y - viewSize.y / 2 - 48 &&
@@ -55,7 +55,7 @@ void drawVecGlow(EffectGroup & eg,
 				 const sf::Vector2f viewCenter,
 				 const sf::Vector2f viewSize) {
 	for (auto & element : eg.get<indx>()) {
-		const Framework::Point elemPos = element.getPosition();
+		const framework::Point elemPos = element.getPosition();
 		if (elemPos.x > viewCenter.x - viewSize.x / 2 - 48 &&
 			elemPos.x < viewCenter.x + viewSize.x / 2 + 48 &&
 			elemPos.y > viewCenter.y - viewSize.y / 2 - 48 &&

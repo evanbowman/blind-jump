@@ -20,7 +20,7 @@
 #include "IntroDoor.hpp"
 #include "rock.hpp"
 
-using DetailGroup = Framework::Group<Teleporter, // ----- 0
+using DetailGroup = framework::Group<Teleporter, // ----- 0
 									 TreasureChest, // -- 1
 									 LampLight, // ------ 2
 									 Rock, // ----------- 3
@@ -37,7 +37,7 @@ void drawVec(DetailGroup & dg,
 			 const sf::Vector2f viewCenter,
 			 const sf::Vector2f viewSize) {
 	for (auto & element : dg.get<indx>()) {
-		const Framework::Point elemPos = element.getPosition();
+		const framework::Point elemPos = element.getPosition();
 		if (elemPos.x > viewCenter.x - viewSize.x / 2 - 64 &&
 			elemPos.x < viewCenter.x + viewSize.x / 2 + 64 &&
 			elemPos.y > viewCenter.y - viewSize.y / 2 - 64 &&
@@ -54,7 +54,7 @@ void drawVecShadowed(DetailGroup & dg,
 					 const sf::Vector2f viewCenter,
 					 const sf::Vector2f viewSize) {
 	for (auto & element : dg.get<indx>()) {
-		const Framework::Point elemPos = element.getPosition();
+		const framework::Point elemPos = element.getPosition();
 		if (elemPos.x > viewCenter.x - viewSize.x / 2 - 64 &&
 			elemPos.x < viewCenter.x + viewSize.x / 2 + 64 &&
 			elemPos.y > viewCenter.y - viewSize.y / 2 - 64 &&

@@ -13,12 +13,12 @@
 #include <stdexcept>
 #include <iostream>
 #include <cmath>
+#include "framework/smartThread.hpp"
 #include "backgroundHandler.hpp"
 #include "inputController.hpp"
 #include "resourceHandler.hpp"
 #include "aspectScaling.hpp"
 #include "ResourcePath.hpp"
-#include "smartThread.hpp"
 #include "player.hpp"
 #include "alias.hpp"
 #include "game.hpp"
@@ -48,7 +48,7 @@ int main() {
 		sf::View worldView(drawableRegionSize / 2.f, drawableRegionSize);
 		ui::Frontend uIFrontEnd(hudView, drawableRegionSize.x / 2, drawableRegionSize.y / 2);
 		Game game(drawableRegionSize, &input, &uIFrontEnd);
-		SmartThread logicThread([& game, & window]() {
+		framework::SmartThread logicThread([& game, & window]() {
 			duration logicUpdateDelta;
 			sf::Clock gameClock;
 			try {

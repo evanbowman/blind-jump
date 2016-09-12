@@ -13,7 +13,7 @@
 
 using Sprite = sf::Sprite;
 
-namespace Framework {
+namespace framework {
 	//===========================================================//
 	// Framework::Point simply encapsulates x,y coordinates      //
 	//===========================================================//

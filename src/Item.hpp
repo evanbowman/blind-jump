@@ -13,7 +13,7 @@
 class Item : public Effect {
 public:
 	enum class Type { Heart, Coin };
-	using HBox = Framework::HitBox<13, 13, -8, -8>;
+	using HBox = framework::HitBox<13, 13, -8, -8>;
 	Item(const sf::Texture &, const sf::Texture &, float, float, Type);
 	const sf::Sprite & getSprite();
 	const HBox & getHitBox() const;

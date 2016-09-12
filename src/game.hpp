@@ -12,6 +12,7 @@
 #include "backgroundHandler.hpp"
 #include "effectsController.hpp"
 #include "detailController.hpp"
+#include "framework/option.hpp"
 #include "enemyController.hpp"
 #include "soundController.hpp"
 #include "inputController.hpp"

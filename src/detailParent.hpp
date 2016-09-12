@@ -8,7 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include "Framework/framework.hpp"
 
-class Detail : public Framework::Object {
+class Detail : public framework::Object {
 public:
 	Detail(float xInit, float yInit) : Object{xInit, yInit} {}
 };

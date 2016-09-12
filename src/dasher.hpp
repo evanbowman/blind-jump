@@ -11,7 +11,7 @@
 
 class Dasher : public Enemy {
 public:
-	using HBox = Framework::HitBox<20, 32, -6, -4>;
+	using HBox = framework::HitBox<20, 32, -6, -4>;
 	struct Blur {
 		Blur(sf::Sprite *, float, float);
 		sf::Sprite * getSprite();

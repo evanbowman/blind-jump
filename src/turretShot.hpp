@@ -12,7 +12,7 @@
 
 class TurretShot : public Effect {
 public:
-	using HBox = Framework::HitBox<10, 10, -5, -5>;
+	using HBox = framework::HitBox<10, 10, -5, -5>;
 	const HBox & getHitBox() const;
 	TurretShot(const sf::Texture &, const sf::Texture &, float, float, float);
 	const sf::Sprite & getGlow();

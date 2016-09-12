@@ -8,7 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include "Framework/framework.hpp"
 
-class Effect : public Framework::Object {
+class Effect : public framework::Object {
 protected:
 	int64_t timer;
 	uint8_t frameIndex;

@@ -13,7 +13,7 @@
 
 class EnemyShot : public Effect {
 public:
-	using HBox = Framework::HitBox<14, 14, 0, 0>;
+	using HBox = framework::HitBox<14, 14, 0, 0>;
 	EnemyShot(const sf::Texture &, const sf::Texture &, float, float, float);
 	void update(sf::Time &);
 	const sf::Sprite & getSprite();

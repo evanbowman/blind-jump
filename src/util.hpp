@@ -7,9 +7,7 @@
 #include <SFML/System.hpp>
 #include <chrono>
 #include <thread>
-#include <cmath>
 #include "alias.hpp"
-#include "easingTemplates.hpp"
 
 class Player;
 

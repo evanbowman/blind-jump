@@ -303,8 +303,6 @@ void Game::update(sf::Time & elapsedTime) {
 		} else {
 			if (transitionState == TransitionState::None) {
 				UI.update(player, *pUiFrontend, pInput, elapsedTime);
-			} else if (UI.powerupBubbleVisible()) {
-				UI.hidePowerupBubble(*pUiFrontend);
 			}
 		}
 	}
@@ -543,12 +541,16 @@ void Game::nextLevel() {
 	bkg.setBkg(tiles.getWorkingSet());
 	tiles.setPosition((windowW / 2) - 16, (windowH / 2));
 	bkg.setPosition((tiles.posX / 2) + 206, tiles.posY / 2);
-	auto pickLocation = [](std::vector<Coordinate> & emptyLocations) {
-		int locationSelect = rng::random(emptyLocations.size());
-		Coordinate c = emptyLocations[locationSelect];
-		emptyLocations[locationSelect] = emptyLocations.back();
-		emptyLocations.pop_back();
-		return c;
+	auto pickLocation = [](std::vector<Coordinate> & emptyLocations) -> framework::option<Coordinate> {
+		if (emptyLocations.size() > 0) {
+			int locationSelect = rng::random(emptyLocations.size());
+			Coordinate c = emptyLocations[locationSelect];
+			emptyLocations[locationSelect] = emptyLocations.back();
+			emptyLocations.pop_back();
+			return framework::option<Coordinate>(c);
+		} else {
+			return {};
+		}
 	};
 	static const size_t lampIdx = 2;
 	if (level != 0) {
@@ -559,16 +561,15 @@ void Game::nextLevel() {
 								   global::resHandlerPtr->getTexture(ResHandler::Texture::teleporterGlow));
 		initEnemies(this);
 		// Place 0-2 powerup chests on the map
-		c = pickLocation(tiles.emptyMapLocations);
-		Powerup chestContents = static_cast<Powerup>(rng::random<2, 1>());
-		static const size_t chestIdx = 1;
-		details.add<chestIdx>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
-							  global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), chestContents);
-		if (rng::random<2>()) {
-			c = pickLocation(tiles.emptyMapLocations);
-			chestContents = static_cast<Powerup>(rng::random<2, 1>());
-			details.add<chestIdx>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
-								  global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), chestContents);
+		int iters = rng::random<2, 1>();
+		for (int i = 0; i < iters; i++) {
+			auto optCoord = pickLocation(tiles.emptyMapLocations);
+			if (optCoord) {
+				Powerup chestContents = static_cast<Powerup>(rng::random<2, 1>());
+				static const size_t chestIdx = 1;
+				details.add<chestIdx>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
+									  global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), chestContents);
+			}
 		}
 		glowSprs1.clear();
 		glowSprs2.clear();
