@@ -567,7 +567,7 @@ void Game::nextLevel() {
 			if (optCoord) {
 				Powerup chestContents = static_cast<Powerup>(rng::random<2, 1>());
 				static const size_t chestIdx = 1;
-				details.add<chestIdx>(c.x * 32 + tiles.posX, c.y * 26 + tiles.posY,
+				details.add<chestIdx>(optCoord.value().x * 32 + tiles.posX, optCoord.value().y * 26 + tiles.posY,
 									  global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), chestContents);
 			}
 		}
