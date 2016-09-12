@@ -115,6 +115,7 @@ bool ui::Backend::powerupBubbleVisible() const {
 
 void ui::Backend::hidePowerupBubble(ui::Frontend & uIFrontEnd) {
 	uIFrontEnd.setBubbleAlpha(0);
+	uIFrontEnd.setTextAlpha(0, ui::Frontend::Text::powerupText);
 	switch (powerup) {
 	case Powerup::nil:
 		break;
