@@ -530,7 +530,7 @@ void Game::nextLevel() {
 		camera.panDown();
 		set = tileController::Tileset::regular;
 	}
-	vignetteSprite.setColor(sf::Color::White); // TODO: See if this line is actually benificial
+	// vignetteSprite.setColor(sf::Color::White); // TODO: See if this line is actually benificial
 	if (set != tileController::Tileset::intro) {
 		int count;
 		do {
