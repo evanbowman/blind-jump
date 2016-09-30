@@ -1,6 +1,6 @@
 //========================================================================//
-// Copyright (C) 2016 Evan Bowman                                         //
-// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
+// Copyright (C) 2016 Evan Bowman										  //
+// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.			  //
 //========================================================================//
 
 #include "mappingFunctions.hpp"
@@ -113,39 +113,39 @@ void Game::draw(sf::RenderWindow & window) {
 			case Rendertype::shadeDefault:
 				std::get<0>(element).setColor(sf::Color(190, 190, 210, std::get<sprIdx>(element).getColor().a));
 				lightingMap.draw(std::get<sprIdx>(element));
-			    break;
+				break;
 					
 			case Rendertype::shadeNone:
 				lightingMap.draw(std::get<sprIdx>(element));
-			    break;
+				break;
 					
 			case Rendertype::shadeWhite: {
 				DEF_GLSL_COLOR(colors::White, White);
 				colorShader.setUniform("amount", std::get<shaderIdx>(element));
 				colorShader.setUniform("targetColor", White);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-			    } break;
+				} break;
 					
 			case Rendertype::shadeGldnGt: {
 				DEF_GLSL_COLOR(colors::GldnGt, GldnGt);
 				colorShader.setUniform("amount", std::get<shaderIdx>(element));
 				colorShader.setUniform("targetColor", GldnGt);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-			    } break;
+				} break;
 					
 			case Rendertype::shadeRuby: {
 				DEF_GLSL_COLOR(colors::Ruby, Ruby);
 				colorShader.setUniform("amount", std::get<shaderIdx>(element));
 				colorShader.setUniform("targetColor", Ruby);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-			    } break;
+				} break;
 					
 			case Rendertype::shadeElectric: {
 				DEF_GLSL_COLOR(colors::Electric, Electric);
 				colorShader.setUniform("amount", std::get<shaderIdx>(element));
 				colorShader.setUniform("targetColor", Electric);
 				lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-			    } break;
+				} break;
 			}
 		}
 		static const sf::Color blendAmount(185, 185, 185);
@@ -313,20 +313,20 @@ void Game::drawTransitions(sf::RenderWindow & window) {
 	std::lock_guard<std::mutex> grd(global::transitionMutex);
 	switch (transitionState) {
 	case TransitionState::None:
-    	break;
+		break;
 		
 	case TransitionState::ExitBeamEnter:
-    	window.draw(beamShape);
+		window.draw(beamShape);
 		glowSprs1.push_back(beamGlowSpr);
 		break;
 		
 	case TransitionState::ExitBeamInflate:
-    	window.draw(beamShape);
+		window.draw(beamShape);
 		glowSprs1.push_back(beamGlowSpr);
 		break;
 		
 	case TransitionState::ExitBeamDeflate:
-    	window.draw(beamShape);
+		window.draw(beamShape);
 		glowSprs1.push_back(beamGlowSpr);
 		break;
 		
@@ -368,16 +368,16 @@ void Game::drawTransitions(sf::RenderWindow & window) {
 		break;
 		
 	case TransitionState::TransitionIn:
-    	window.draw(transitionShape);
+		window.draw(transitionShape);
 		break;
 		
 	case TransitionState::EntryBeamDrop:
-    	window.draw(beamShape);
+		window.draw(beamShape);
 		glowSprs1.push_back(beamGlowSpr);
 		break;
 		
 	case TransitionState::EntryBeamFade:
-    	window.draw(beamShape);
+		window.draw(beamShape);
 		glowSprs1.push_back(beamGlowSpr);
 		break;
 	}
@@ -431,7 +431,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 	case TransitionState::ExitBeamInflate:
 		timer += elapsedTime.asMicroseconds();
 		{
-		    static const int64_t transitionTime = 250000;
+			static const int64_t transitionTime = 250000;
 			float beamWidth = std::max(2.f, Easing::easeIn<2>(timer, transitionTime) * 20.f);
 			float beamHeight = beamShape.getSize().y;
 			beamShape.setSize(sf::Vector2f(beamWidth, beamHeight));
@@ -448,7 +448,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 		timer += elapsedTime.asMilliseconds();
 		{
 			// beamWidth is carefully calibrated, be sure to recalculate the regression based on the timer if you change it...
-		    float beamWidth = 0.9999995 * std::exp(-0.0050125355 * static_cast<double>(timer)) * 20.f;
+			float beamWidth = 0.9999995 * std::exp(-0.0050125355 * static_cast<double>(timer)) * 20.f;
 			float beamHeight = beamShape.getSize().y;
 			beamShape.setSize(sf::Vector2f(beamWidth, beamHeight));
 			beamShape.setPosition(windowW / 2 - 0.5f - beamWidth / 2.f, windowH / 2 + 36);
@@ -465,7 +465,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 		break;
 
 	case TransitionState::TransitionIn:
-	    timer += elapsedTime.asMicroseconds();
+		timer += elapsedTime.asMicroseconds();
 		{
 			uint8_t alpha = 255 - math::smoothstep(0.f, 800000, timer) * 255;
 			transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
@@ -586,7 +586,7 @@ void Game::nextLevel() {
 									 global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
 			}
 			detailPositions.clear();
-    	}
+		}
 		getLightingPositions(tiles.mapArray, detailPositions, teleporterFootprint);
 		const size_t len = detailPositions.size();
 		for (size_t i = 0; i < len; i++) {
@@ -674,3 +674,25 @@ int Game::getLevel() {
 	return level;
 }
 
+const std::array<std::pair<float, float>, 59> global_levelZeroWalls {
+	{ std::make_pair(-20, 500), std::make_pair(-20, 526), std::make_pair(-20, 474),
+	  std::make_pair(-20, 448), std::make_pair(-20, 422), std::make_pair(-20, 396),
+	  std::make_pair(-20, 370), std::make_pair(-20, 552), std::make_pair(-20, 578),
+	  std::make_pair(196, 500), std::make_pair(196, 526), std::make_pair(196, 474),
+      std::make_pair(196, 448), std::make_pair(196, 422), std::make_pair(196, 396),
+	  std::make_pair(196, 370), std::make_pair(196, 552), std::make_pair(196, 578),
+	  std::make_pair(12, 604),  std::make_pair(44, 604),  std::make_pair(76, 604),
+	  std::make_pair(108, 604), std::make_pair(140, 604), std::make_pair(172, 604),
+	  std::make_pair(12, 370),  std::make_pair(34, 370),  std::make_pair(120, 370),
+	  std::make_pair(152, 370), std::make_pair(184, 370), std::make_pair(34, 344),
+	  std::make_pair(120, 344), std::make_pair(34, 318),  std::make_pair(120, 318),
+	  std::make_pair(34, 292),  std::make_pair(120, 292), std::make_pair(34, 266),
+	  std::make_pair(120, 266),	std::make_pair(12, 266),  std::make_pair(-20, 266),
+	  std::make_pair(152, 266), std::make_pair(-20, 240), std::make_pair(172, 240),
+	  std::make_pair(-20, 214), std::make_pair(172, 214), std::make_pair(-20, 188),
+	  std::make_pair(172, 188), std::make_pair(-20, 162), std::make_pair(172, 162),
+      std::make_pair(-20, 136), std::make_pair(172, 136), std::make_pair(-20, 110),
+	  std::make_pair(172, 110), std::make_pair(-20, 84),  std::make_pair(172, 84),
+	  std::make_pair(12, 58),   std::make_pair(44, 58),   std::make_pair(76, 58),
+	  std::make_pair(108, 58),  std::make_pair(140, 58)}
+    };

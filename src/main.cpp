@@ -1,6 +1,6 @@
 //========================================================================//
-// Copyright (C) 2016 Evan Bowman                                         //
-// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
+// Copyright (C) 2016 Evan Bowman										  //
+// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.			  //
 //========================================================================//
 
 // Start Date: 10/9/15
@@ -60,7 +60,7 @@ int main() {
 						elapsedTime = gameClock.restart();
 						util::isAsleep = false;
 					}
-				    game.update(elapsedTime);
+					game.update(elapsedTime);
 					time_point stop = high_resolution_clock::now();
 					logicUpdateDelta = std::chrono::duration_cast<nanoseconds>(stop - start);
 					static const microseconds logicUpdateLimit(2000);
