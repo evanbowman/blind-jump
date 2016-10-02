@@ -2,7 +2,7 @@
 
 Blind Jump is a procedurally generated space adventure game that I've been working on for fun in my free time. The object of the game is to get to the teleporter at the end of each level, while battling monsters and evil robots.
 
-<p align="center"><a href="default.asp"><img src="https://youtu.be/jQRcmj-kvgc"/></a></p>
+<p align="center"><a href="https://youtu.be/jQRcmj-kvgc"><img src="screenshot.png"/></a></p>
 
 ## Installation
 
