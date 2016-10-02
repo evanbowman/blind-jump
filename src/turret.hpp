@@ -10,7 +10,7 @@
 #include "turret.hpp"
 #include "effectsController.hpp"
 #include "resourceHandler.hpp"
-#include "Framework/framework.hpp"
+#include "framework/framework.hpp"
 #include "spriteSheet.hpp"
 
 class Turret {

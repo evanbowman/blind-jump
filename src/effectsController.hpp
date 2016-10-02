@@ -6,7 +6,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "Framework/framework.hpp"
+#include "framework/framework.hpp"
 #include "turretFlashEffect.hpp"
 #include "resourceHandler.hpp"
 #include "smallExplosion.hpp"

@@ -10,7 +10,7 @@
 #include "effectsController.hpp"
 #include <vector>
 #include <cmath>
-#include "Framework/framework.hpp"
+#include "framework/framework.hpp"
 
 class Enemy {
 protected:

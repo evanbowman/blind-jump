@@ -6,7 +6,7 @@
 #include "initMapVectors.hpp"
 #include <cmath>
 #include "tileController.hpp"
-#include "Framework/framework.hpp"
+#include "framework/framework.hpp"
 
 void initMapVectors(tileController * pTiles) {
 	int playerX, playerY, transporterX, transporterY;

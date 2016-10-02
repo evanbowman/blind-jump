@@ -6,7 +6,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "Framework/framework.hpp"
+#include "framework/framework.hpp"
 
 class Effect : public framework::Object {
 protected:
