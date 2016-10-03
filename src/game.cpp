@@ -14,6 +14,7 @@
 #include "math.h"
 
 namespace global {
+	// NOTE: game class is meant to be instantiated only once, so this is ok
 	std::mutex overworldMutex, UIMutex, transitionMutex;
 }
 
