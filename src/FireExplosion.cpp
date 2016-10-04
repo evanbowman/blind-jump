@@ -20,11 +20,11 @@ FireExplosion::FireExplosion(const sf::Texture & mainTxtr, const sf::Texture & g
 void FireExplosion::update(const sf::Time & elapsedTime) {
 	timer += elapsedTime.asMicroseconds();
 	glowFadeTimer += elapsedTime.asMicroseconds();
-	static const frameTransitionTime = 70000;
+	static const int frameTransitionTime = 70000;
 	if (timer > frameTransitionTime) {
 		timer -= frameTransitionTime;
 		frameIndex++;
-		static const maxFrame = 8;
+		static const int maxFrame = 8;
 		if (frameIndex > maxFrame) {
 			frameIndex = maxFrame;
 			killFlag = true;
