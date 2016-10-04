@@ -1,6 +1,6 @@
 //========================================================================//
-// Copyright (C) 2016 Evan Bowman                                         //
-// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
+// Copyright (C) 2016 Evan Bowman										  //
+// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.			  //
 //========================================================================//
 
 #pragma once
@@ -17,7 +17,7 @@ public:
 	EnemyShot(const sf::Texture &, const sf::Texture &, float, float, float);
 	void update(sf::Time &);
 	const sf::Sprite & getSprite();
-    const HBox & getHitBox() const;
+	const HBox & getHitBox() const;
 	const sf::Sprite & getGlow() const;
 	
 private:

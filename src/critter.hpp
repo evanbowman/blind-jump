@@ -1,6 +1,6 @@
 //========================================================================//
-// Copyright (C) 2016 Evan Bowman                                         //
-// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
+// Copyright (C) 2016 Evan Bowman										  //
+// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.			  //
 //========================================================================//
 
 #pragma once
@@ -29,7 +29,7 @@ public:
 private:
 	float xInit, yInit;
 	void onDeath(EffectGroup &);
-    float currentDir;
+	float currentDir;
 	float jumpTargetx, jumpTargety;
 	void newPath(tileController &);
 	mutable SpriteSheet<0, 57, 18, 18> spriteSheet;

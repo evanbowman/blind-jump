@@ -10,8 +10,8 @@
 
 namespace colors {
 	namespace Ruby { 
-	   	constexpr float R = 0.93f;
-	    constexpr float G = 0.09f;
+		constexpr float R = 0.93f;
+		constexpr float G = 0.09f;
 		constexpr float B = 0.36f;
 	}
 	namespace GldnGt {

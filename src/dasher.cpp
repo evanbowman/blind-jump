@@ -1,6 +1,6 @@
 //========================================================================//
-// Copyright (C) 2016 Evan Bowman                                         //
-// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
+// Copyright (C) 2016 Evan Bowman										  //
+// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.			  //
 //========================================================================//
 
 #include "dasher.hpp"
@@ -177,7 +177,7 @@ void Dasher::update(float playerPosX, float playerPosY, const std::vector<wall> 
 		break;
 
 	case State::dashBegin:
-    begin:
+	begin:
 		facePlayer();
 		if (timer > 352) {
 			timer -= 352;
@@ -190,7 +190,7 @@ void Dasher::update(float playerPosX, float playerPosY, const std::vector<wall> 
 				if (tries > 254) {
 					state = State::shootBegin;
 					frameIndex = 3;
-				    goto begin;
+					goto begin;
 				}
 				dir += 12;
 			} while (wallInPath(walls, dir, xPos, yPos));
@@ -272,15 +272,15 @@ void Dasher::onDeath(EffectGroup & effects) {
 	killFlag = true;
 	unsigned long int temp = rng::random<4>();
 	if (temp == 0) {
-	    effects.add<4>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+		effects.add<4>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
 					   global::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
 					   xPos, yPos + 4, Item::Type::Heart);
 	} else {
-	    effects.add<5>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+		effects.add<5>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
 					   global::resHandlerPtr->getTexture(ResHandler::Texture::blueglow),
 					   xPos, yPos + 4, Item::Type::Coin);
 	}
-    effects.add<1>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+	effects.add<1>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
 				   global::resHandlerPtr->getTexture(ResHandler::Texture::fireExplosionGlow),
 				   xPos, yPos - 2);
 	blurEffects.clear();

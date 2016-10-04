@@ -1,6 +1,6 @@
 //========================================================================//
-// Copyright (C) 2016 Evan Bowman                                         //
-// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
+// Copyright (C) 2016 Evan Bowman										  //
+// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.			  //
 //========================================================================//
 
 #pragma once
@@ -14,7 +14,7 @@ class Player;
 namespace util {
 	extern bool isAsleep;
 	inline void sleep(const milliseconds & time) {
-	    isAsleep = true;
+		isAsleep = true;
 		std::this_thread::sleep_for(time);
 	}
 }

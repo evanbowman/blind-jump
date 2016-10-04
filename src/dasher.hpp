@@ -1,6 +1,6 @@
 //========================================================================//
-// Copyright (C) 2016 Evan Bowman                                         //
-// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
+// Copyright (C) 2016 Evan Bowman										  //
+// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.			  //
 //========================================================================//
 
 #pragma once
@@ -29,7 +29,7 @@ public:
 	Dasher(const sf::Texture &, float, float);
 	const sf::Sprite & getSprite() const;
 	const sf::Sprite & getShadow() const;
-    void update(float, float, const std::vector<wall> &, EffectGroup & ef, const sf::Time &);
+	void update(float, float, const std::vector<wall> &, EffectGroup & ef, const sf::Time &);
 	std::vector<Dasher::Blur> * getBlurEffects();
 	State getState() const;
 	const sf::Vector2f & getScale() const;

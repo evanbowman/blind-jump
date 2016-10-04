@@ -1,6 +1,6 @@
 //========================================================================//
-// Copyright (C) 2016 Evan Bowman                                         //
-// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
+// Copyright (C) 2016 Evan Bowman										  //
+// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.			  //
 //========================================================================//
 
 #include "enemyController.hpp"
@@ -97,7 +97,7 @@ void enemyController::update(Game * pGame,
 							 bool enabled,
 							 sf::Time & elapsedTime,
 							 std::vector<sf::Vector2f> & cameraTargets) {
-    EffectGroup & effectGroup = pGame->getEffects();
+	EffectGroup & effectGroup = pGame->getEffects();
 	tileController & tileController = pGame->getTileController();
 	Camera & camera = pGame->getCamera();
 	const sf::View & cameraView = camera.getView();

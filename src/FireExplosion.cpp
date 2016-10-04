@@ -1,6 +1,6 @@
 //========================================================================//
-// Copyright (C) 2016 Evan Bowman                                         //
-// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
+// Copyright (C) 2016 Evan Bowman										  //
+// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.			  //
 //========================================================================//
 
 #include "FireExplosion.hpp"
@@ -29,7 +29,7 @@ void FireExplosion::update(const sf::Time & elapsedTime) {
 		}
 	}
 	uint8_t color = Easing::easeOut<1>(glowFadeTimer, static_cast<int64_t>(560000)) * 230;
-    glow.setColor(sf::Color(color, color, color, 255));
+	glow.setColor(sf::Color(color, color, color, 255));
 }
 
 const Sprite & FireExplosion::getGlow() const {

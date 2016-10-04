@@ -14,7 +14,7 @@ class FireExplosion : public Effect {
 private:
 	mutable SpriteSheet<208, 173, 58, 51> spriteSheet;
 	sf::Sprite glow;
-    int64_t glowFadeTimer;
+	int64_t glowFadeTimer;
 	
 public:
 	FireExplosion(const sf::Texture &, const sf::Texture &, float, float);
