@@ -32,11 +32,11 @@ public:
 	bool actionPressed() const;
 	void update(sf::RenderWindow &);
 	void mapKeyboardKey(sf::Keyboard::Key, uint8_t);
-	void mapJoystickButton(unsigned int, uint8_t);
+	void mapJoystickButton(uint32_t, uint8_t);
 	
 private:
 	uint32_t keyMask;
 	uint32_t joystickMask;
-	std::array<unsigned int, 3> joystickMappings;
+	std::array<uint32_t, 3> joystickMappings;
 	std::array<sf::Keyboard::Key, 7> keyboardMappings;
 };

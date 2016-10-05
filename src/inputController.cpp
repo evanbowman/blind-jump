@@ -57,7 +57,7 @@ void InputController::mapKeyboardKey(sf::Keyboard::Key key, uint8_t indx) {
 	keyboardMappings[indx] = key;
 }
 
-void InputController::mapJoystickButton(unsigned int button, uint8_t indx) {
+void InputController::mapJoystickButton(uint32_t button, uint8_t indx) {
 	joystickMappings[indx] = button;
 }
 

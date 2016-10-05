@@ -280,7 +280,8 @@ void Game::update(sf::Time & elapsedTime) {
 		en.update(this, player.getXpos(), player.getYpos(), !UI.isOpen(), elapsedTime, cameraTargets);
 		camera.update(elapsedTime, cameraTargets);
 		if (player.visible) player.update(this, elapsedTime, sounds);
-		if (!UI.isOpen() || (UI.isOpen() && player.getState() == Player::State::dead)) {
+		if (!UI.isOpen() //|| (UI.isOpen() && player.getState() == Player::State::dead)
+			) {
 			effectGroup.apply(groupUpdatePolicy);
 		}
 	}
