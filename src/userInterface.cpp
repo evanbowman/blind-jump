@@ -142,7 +142,7 @@ void ui::Backend::update(Player & player,
 		
 	case State::menuScreenEntry:
 		timer += elapsedTime.asMilliseconds();
-		blurAmount = Easing::easeIn<3>(timer, 280);
+		blurAmount = math::smoothstep(0.f, 280, timer);
 		if (blurAmount == 1.f) {
 			state = State::menuScreen;
 			uIFrontEnd.setTextAlpha(255, ui::Frontend::Text::resumeText);
@@ -185,7 +185,7 @@ void ui::Backend::update(Player & player,
 		
 	case State::menuScreenExit:
 		timer += elapsedTime.asMilliseconds();
-		blurAmount = Easing::easeOut<3>(timer, 280);
+		blurAmount = 1 - math::smoothstep(0, 280, timer);
 		if (blurAmount == 0.f) {
 			state = State::closed;
 			timer = 0;
