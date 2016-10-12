@@ -13,10 +13,8 @@
 #include "game.hpp"
 #include "math.h"
 
-namespace global {
-	// NOTE: game class is meant to be instantiated only once, so this is ok
-	std::mutex overworldMutex, UIMutex, transitionMutex;
-}
+// NOTE: game class is meant to be instantiated only once, so this is ok
+std::mutex overworldMutex, UIMutex, transitionMutex;
 
 Game::Game(const sf::Vector2f & viewPort, InputController * _pInput, ui::Frontend * _pUiFrontend)
 	: windowW(viewPort.x),
@@ -44,9 +42,9 @@ void Game::init() {
 	stash.create(windowW, windowH);
 	stash.setSmooth(true);
 	lightingMap.create(windowW, windowH);
-	vignetteSprite.setTexture(global::resHandlerPtr->getTexture(ResHandler::Texture::vignette));
-	vignetteShadowSpr.setTexture(global::resHandlerPtr->getTexture(ResHandler::Texture::vignetteShadow));
-	beamGlowSpr.setTexture(global::resHandlerPtr->getTexture(ResHandler::Texture::teleporterBeamGlow));
+	vignetteSprite.setTexture(::resHandlerPtr->getTexture(ResHandler::Texture::vignette));
+	vignetteShadowSpr.setTexture(::resHandlerPtr->getTexture(ResHandler::Texture::vignetteShadow));
+	beamGlowSpr.setTexture(::resHandlerPtr->getTexture(ResHandler::Texture::teleporterBeamGlow));
 	vignetteSprite.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setScale(windowW / 450, windowH / 450);
 	vignetteShadowSpr.setColor(sf::Color(255,255,255,100));
@@ -73,7 +71,7 @@ void Game::draw(sf::RenderWindow & window) {
 	target.clear(sf::Color::Transparent);
 	if (!stashed || preload) {
 		{
-			std::lock_guard<std::mutex> overworldLock(global::overworldMutex);
+			std::lock_guard<std::mutex> overworldLock(::overworldMutex);
 			lightingMap.setView(camera.getView());
 			bkg.drawBackground(target, worldView, camera);
 			tiles.draw(target, &glowSprs1, level, worldView, camera.getView());
@@ -108,7 +106,7 @@ void Game::draw(sf::RenderWindow & window) {
 		window.setView(worldView);
 		static const size_t sprIdx = 0;
 		static const size_t shaderIdx = 3;
-		sf::Shader & colorShader = global::resHandlerPtr->getShader(ResHandler::Shader::color);
+		sf::Shader & colorShader = ::resHandlerPtr->getShader(ResHandler::Shader::color);
 		for (auto & element : gameObjects) {
 			switch (std::get<2>(element)) {
 			case Rendertype::shadeDefault:
@@ -171,8 +169,8 @@ void Game::draw(sf::RenderWindow & window) {
 			window.setView(worldView);
 			window.draw(sf::Sprite(stash.getTexture()));
 		} else {
-			sf::Shader & blurShader = global::resHandlerPtr->getShader(ResHandler::Shader::blur);
-			sf::Shader & desaturateShader = global::resHandlerPtr->getShader(ResHandler::Shader::desaturate);
+			sf::Shader & blurShader = ::resHandlerPtr->getShader(ResHandler::Shader::blur);
+			sf::Shader & desaturateShader = ::resHandlerPtr->getShader(ResHandler::Shader::desaturate);
 			secondPass.clear(sf::Color::Transparent);
 			thirdPass.clear(sf::Color::Transparent);
 			const sf::Vector2u textureSize = target.getSize();
@@ -204,7 +202,7 @@ void Game::draw(sf::RenderWindow & window) {
 			window.setView(worldView);
 			window.draw(sf::Sprite(stash.getTexture()));
 		} else {
-			sf::Shader & blurShader = global::resHandlerPtr->getShader(ResHandler::Shader::blur);
+			sf::Shader & blurShader = ::resHandlerPtr->getShader(ResHandler::Shader::blur);
 			secondPass.clear(sf::Color::Transparent);
 			sf::Vector2u textureSize = target.getSize();
 			// Get the blur amount from the UI controller
@@ -226,14 +224,14 @@ void Game::draw(sf::RenderWindow & window) {
 			}
 		}
 	} else if (!UI.blurEnabled() && UI.desaturateEnabled()) {
-		sf::Shader & desaturateShader = global::resHandlerPtr->getShader(ResHandler::Shader::desaturate);
+		sf::Shader & desaturateShader = ::resHandlerPtr->getShader(ResHandler::Shader::desaturate);
 		desaturateShader.setUniform("amount", UI.getDesaturateAmount());
 		window.draw(sf::Sprite(target.getTexture()), &desaturateShader);
 	} else {
 		window.draw(sf::Sprite(target.getTexture()));
 	}
 	{
-		std::lock_guard<std::mutex> UILock(global::UIMutex);
+		std::lock_guard<std::mutex> UILock(::UIMutex);
 		if (player.getState() == Player::State::dead) {
 			UI.draw(window, *pUiFrontend);
 		} else {
@@ -257,7 +255,7 @@ void Game::update(sf::Time & elapsedTime) {
 		stashed = false;
 	}
 	if (!stashed || preload) {
-		std::lock_guard<std::mutex> overworldLock(global::overworldMutex);
+		std::lock_guard<std::mutex> overworldLock(::overworldMutex);
 		if (level != 0) {
 			const sf::Vector2f & cameraOffset = camera.getOffset();
 			bkg.setOffset(cameraOffset.x, cameraOffset.y);
@@ -286,7 +284,7 @@ void Game::update(sf::Time & elapsedTime) {
 		}
 	}
 	{
-		std::lock_guard<std::mutex> UILock(global::UIMutex);
+		std::lock_guard<std::mutex> UILock(::UIMutex);
 		if (player.getState() == Player::State::dead) {
 			UI.dispDeathSeq();
 			if (UI.isComplete()) {
@@ -312,7 +310,7 @@ void Game::update(sf::Time & elapsedTime) {
 }
 
 void Game::drawTransitions(sf::RenderWindow & window) {
-	std::lock_guard<std::mutex> grd(global::transitionMutex);
+	std::lock_guard<std::mutex> grd(::transitionMutex);
 	switch (transitionState) {
 	case TransitionState::None:
 		break;
@@ -386,7 +384,7 @@ void Game::drawTransitions(sf::RenderWindow & window) {
 }
 
 void Game::updateTransitions(const sf::Time & elapsedTime) {
-	std::lock_guard<std::mutex> grd(global::transitionMutex);
+	std::lock_guard<std::mutex> grd(::transitionMutex);
 	switch (transitionState) {
 	case TransitionState::None:
 		{
@@ -559,8 +557,8 @@ void Game::nextLevel() {
 		Coordinate c = tiles.getTeleporterLoc();
 		static const size_t teleporterIdx = 0;
 		details.add<teleporterIdx>(tiles.posX + c.x * 32 + 2, tiles.posY + c.y * 26 - 4,
-								   global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-								   global::resHandlerPtr->getTexture(ResHandler::Texture::teleporterGlow));
+								   ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+								   ::resHandlerPtr->getTexture(ResHandler::Texture::teleporterGlow));
 		initEnemies(this);
 		// Place 0-2 powerup chests on the map
 		int iters = rng::random<2, 1>();
@@ -570,7 +568,7 @@ void Game::nextLevel() {
 				Powerup chestContents = static_cast<Powerup>(rng::random<2, 1>());
 				static const size_t chestIdx = 1;
 				details.add<chestIdx>(optCoord.value().x * 32 + tiles.posX, optCoord.value().y * 26 + tiles.posY,
-									  global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), chestContents);
+									  ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), chestContents);
 			}
 		}
 		glowSprs1.clear();
@@ -585,7 +583,7 @@ void Game::nextLevel() {
 			for (auto element : detailPositions) {
 				static const size_t rockIdx = 3;
 				details.add<rockIdx>(tiles.posX + 32 * element.x, tiles.posY + 26 * element.y - 35,
-									 global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
+									 ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
 			}
 			detailPositions.clear();
 		}
@@ -594,8 +592,8 @@ void Game::nextLevel() {
 		for (size_t i = 0; i < len; i++) {
 			details.add<lampIdx>(tiles.posX + 16 + (detailPositions[i].x * 32),
 								 tiles.posY - 3 + (detailPositions[i].y * 26),
-								 global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-								 global::resHandlerPtr->getTexture(ResHandler::Texture::lamplight));
+								 ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+								 ::resHandlerPtr->getTexture(ResHandler::Texture::lamplight));
 		}
 		detailPositions.clear();
 	} else if (set == tileController::Tileset::intro) {
@@ -603,21 +601,21 @@ void Game::nextLevel() {
 		static const size_t podIdx = 6;
 		static const size_t teleporterIdx = 0;
 		details.add<lampIdx>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (6 * 26),
-							 global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-							 global::resHandlerPtr->getTexture(ResHandler::Texture::lamplight));
+							 ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+							 ::resHandlerPtr->getTexture(ResHandler::Texture::lamplight));
 		details.add<lampIdx>(tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (0 * 26),
-							 global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-							 global::resHandlerPtr->getTexture(ResHandler::Texture::lamplight));
+							 ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+							 ::resHandlerPtr->getTexture(ResHandler::Texture::lamplight));
 		details.add<lampIdx>(tiles.posX - 180 + 16 + (11 * 32), tiles.posY + 200 - 3 + (11 * 26),
-							 global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-							 global::resHandlerPtr->getTexture(ResHandler::Texture::lamplight));
+							 ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+							 ::resHandlerPtr->getTexture(ResHandler::Texture::lamplight));
 		details.add<lampIdx>(tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 204 + 8 + (-9 * 26),
-							 global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-							 global::resHandlerPtr->getTexture(ResHandler::Texture::lamplight));
+							 ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+							 ::resHandlerPtr->getTexture(ResHandler::Texture::lamplight));
 		details.add<doorIdx>(tiles.posX - 192 + 6 * 32, tiles.posY + 301,
-							 global::resHandlerPtr->getTexture(ResHandler::Texture::introWall));
+							 ::resHandlerPtr->getTexture(ResHandler::Texture::introWall));
 		sf::Sprite podSpr;
-		podSpr.setTexture(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
+		podSpr.setTexture(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
 		podSpr.setTextureRect(sf::IntRect(164, 145, 44, 50));
 		details.add<podIdx>(tiles.posX + 3 * 32, tiles.posY + 4 + 17 * 26, podSpr);
 		static const int initTeleporterLocX = 8;
@@ -625,9 +623,9 @@ void Game::nextLevel() {
 		tiles.teleporterLocation.x = initTeleporterLocX;
 		tiles.teleporterLocation.y = initTeleporterLocY;
 		details.add<teleporterIdx>(tiles.posX - 178 + 8 * 32, tiles.posY + 284 + -7 * 26,
-								   global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-								   global::resHandlerPtr->getTexture(ResHandler::Texture::teleporterGlow));
-		for (auto it = global::levelZeroWalls.begin(); it != global::levelZeroWalls.end(); ++it) {
+								   ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+								   ::resHandlerPtr->getTexture(ResHandler::Texture::teleporterGlow));
+		for (auto it = ::levelZeroWalls.begin(); it != ::levelZeroWalls.end(); ++it) {
 			wall w;
 			w.setXinit(it->first);
 			w.setYinit(it->second);
@@ -676,27 +674,25 @@ int Game::getLevel() {
 	return level;
 }
 
-namespace global {
-	const std::array<std::pair<float, float>, 59> levelZeroWalls {
-		{ std::make_pair(-20, 500), std::make_pair(-20, 526), std::make_pair(-20, 474),
-		  std::make_pair(-20, 448), std::make_pair(-20, 422), std::make_pair(-20, 396),
-		  std::make_pair(-20, 370), std::make_pair(-20, 552), std::make_pair(-20, 578),
-		  std::make_pair(196, 500), std::make_pair(196, 526), std::make_pair(196, 474),
-		  std::make_pair(196, 448), std::make_pair(196, 422), std::make_pair(196, 396),
-		  std::make_pair(196, 370), std::make_pair(196, 552), std::make_pair(196, 578),
-		  std::make_pair(12, 604),  std::make_pair(44, 604),  std::make_pair(76, 604),
-		  std::make_pair(108, 604), std::make_pair(140, 604), std::make_pair(172, 604),
-		  std::make_pair(12, 370),  std::make_pair(34, 370),  std::make_pair(120, 370),
-		  std::make_pair(152, 370), std::make_pair(184, 370), std::make_pair(34, 344),
-		  std::make_pair(120, 344), std::make_pair(34, 318),  std::make_pair(120, 318),
-		  std::make_pair(34, 292),  std::make_pair(120, 292), std::make_pair(34, 266),
-		  std::make_pair(120, 266),	std::make_pair(12, 266),  std::make_pair(-20, 266),
-		  std::make_pair(152, 266), std::make_pair(-20, 240), std::make_pair(172, 240),
-		  std::make_pair(-20, 214), std::make_pair(172, 214), std::make_pair(-20, 188),
-		  std::make_pair(172, 188), std::make_pair(-20, 162), std::make_pair(172, 162),
-		  std::make_pair(-20, 136), std::make_pair(172, 136), std::make_pair(-20, 110),
-		  std::make_pair(172, 110), std::make_pair(-20, 84),  std::make_pair(172, 84),
-		  std::make_pair(12, 58),   std::make_pair(44, 58),   std::make_pair(76, 58),
-		  std::make_pair(108, 58),  std::make_pair(140, 58)}
-    };
-}
+const std::array<std::pair<float, float>, 59> levelZeroWalls {
+	{ std::make_pair(-20, 500), std::make_pair(-20, 526), std::make_pair(-20, 474),
+	  std::make_pair(-20, 448), std::make_pair(-20, 422), std::make_pair(-20, 396),
+	  std::make_pair(-20, 370), std::make_pair(-20, 552), std::make_pair(-20, 578),
+	  std::make_pair(196, 500), std::make_pair(196, 526), std::make_pair(196, 474),
+	  std::make_pair(196, 448), std::make_pair(196, 422), std::make_pair(196, 396),
+	  std::make_pair(196, 370), std::make_pair(196, 552), std::make_pair(196, 578),
+	  std::make_pair(12, 604),  std::make_pair(44, 604),  std::make_pair(76, 604),
+	  std::make_pair(108, 604), std::make_pair(140, 604), std::make_pair(172, 604),
+	  std::make_pair(12, 370),  std::make_pair(34, 370),  std::make_pair(120, 370),
+	  std::make_pair(152, 370), std::make_pair(184, 370), std::make_pair(34, 344),
+	  std::make_pair(120, 344), std::make_pair(34, 318),  std::make_pair(120, 318),
+	  std::make_pair(34, 292),  std::make_pair(120, 292), std::make_pair(34, 266),
+	  std::make_pair(120, 266),	std::make_pair(12, 266),  std::make_pair(-20, 266),
+	  std::make_pair(152, 266), std::make_pair(-20, 240), std::make_pair(172, 240),
+	  std::make_pair(-20, 214), std::make_pair(172, 214), std::make_pair(-20, 188),
+	  std::make_pair(172, 188), std::make_pair(-20, 162), std::make_pair(172, 162),
+	  std::make_pair(-20, 136), std::make_pair(172, 136), std::make_pair(-20, 110),
+	  std::make_pair(172, 110), std::make_pair(-20, 84),  std::make_pair(172, 84),
+	  std::make_pair(12, 58),   std::make_pair(44, 58),   std::make_pair(76, 58),
+	  std::make_pair(108, 58),  std::make_pair(140, 58)}
+};

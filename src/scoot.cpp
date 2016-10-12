@@ -87,9 +87,9 @@ void Scoot::update(float playerPosX,
 		break;
 		
 	case State::shoot:
-		effects.add<0>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xPos - 8, yPos - 12);
-		effects.add<8>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-					   global::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
+		effects.add<0>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xPos - 8, yPos - 12);
+		effects.add<8>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+					   ::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
 					   xPos - 8, yPos - 12, angleFunction(playerPosX + 16, playerPosY + 8, xPos - 8, yPos - 8));
 		state = State::recoil;
 		changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
@@ -155,16 +155,16 @@ const sf::Sprite & Scoot::getShadow() const {
 void Scoot::onDeath(EffectGroup & effects) {
 	int select = rng::random<5>();
 	if (select == 0) {
-		effects.add<4>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-					   global::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
+		effects.add<4>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+					   ::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
 					   xPos, yPos + 4, Item::Type::Heart);
 	} else {
-		effects.add<5>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-					   global::resHandlerPtr->getTexture(ResHandler::Texture::blueglow),
+		effects.add<5>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+					   ::resHandlerPtr->getTexture(ResHandler::Texture::blueglow),
 					   xPos, yPos + 4, Item::Type::Coin);
 	}
-	effects.add<2>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-				   global::resHandlerPtr->getTexture(ResHandler::Texture::fireExplosionGlow),
+	effects.add<2>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+				   ::resHandlerPtr->getTexture(ResHandler::Texture::fireExplosionGlow),
 				   xPos, yPos - 2);
 	killFlag = true;
 	return;

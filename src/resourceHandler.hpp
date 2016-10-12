@@ -4,8 +4,6 @@
 //========================================================================//
 
 #pragma once
-#ifndef TEXTUREMANAGER_HPP
-#define TEXTUREMANAGER_HPP
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
@@ -77,8 +75,4 @@ private:
 	std::array<sf::SoundBuffer, numSounds> sounds;
 };
 
-namespace global {
-	extern ResHandler * resHandlerPtr;
-}
-
-#endif
+extern ResHandler * resHandlerPtr;

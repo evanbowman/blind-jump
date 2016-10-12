@@ -34,11 +34,11 @@ Player::Player(float _xPos, float _yPos)
 }
 
 void Player::init() {
-	deathSheet.setTexture(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
-	walkDown.setTexture(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
-	walkUp.setTexture(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
-	walkLeft.setTexture(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
-	walkRight.setTexture(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
+	deathSheet.setTexture(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
+	walkDown.setTexture(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
+	walkUp.setTexture(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
+	walkLeft.setTexture(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
+	walkRight.setTexture(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
 	walkDown.setPosition(xPos, yPos);
 	walkUp.setPosition(xPos, yPos);
 	walkLeft.setPosition(xPos, yPos);
@@ -46,12 +46,12 @@ void Player::init() {
 	shadowSprite.setPosition(xPos + 7, yPos + 24);
 	dashSheet.setPosition(xPos, yPos);
 	deathSheet.setPosition(xPos - 13, yPos - 1);
-	dashSheet.setTexture(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
+	dashSheet.setTexture(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
 	dashSheet.setOrigin(0, 1);
-	shadowSprite.setTexture(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
+	shadowSprite.setTexture(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
 	shadowSprite.setTextureRect(sf::IntRect(0, 100, 18, 16));
 	gun.gunSpr.setPosition(xPos, yPos);
-	gun.gunSpr.setTexture(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
+	gun.gunSpr.setTexture(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
 }
 
 sf::Vector2f Player::getPosition() {
@@ -624,8 +624,8 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, Effect
 			gun.timeout = 1671000;
 			if (gun.bulletTimer == 0) {
 				// TODO: sounds.play(ResHandler::Sound::gunShot);
-				effects.add<9>(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-							   global::resHandlerPtr->getTexture(ResHandler::Texture::whiteGlow),
+				effects.add<9>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+							   ::resHandlerPtr->getTexture(ResHandler::Texture::whiteGlow),
 							   static_cast<int>(sheetIndex), xPos, yPos);
 				if (UI.getCurrentPowerup() == Powerup::rapidFire) {
 					gun.bulletTimer = 220000;

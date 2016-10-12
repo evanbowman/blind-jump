@@ -26,10 +26,9 @@
 #include "util.hpp"
 #include "rng.hpp"
 
-namespace global {
-	ResHandler * resHandlerPtr = nullptr;
-	std::exception_ptr pWorkerException = nullptr;
-}
+
+ResHandler * resHandlerPtr = nullptr;
+std::exception_ptr pWorkerException = nullptr;
 
 int main() {
 	rng::seed();
@@ -37,7 +36,7 @@ int main() {
 	sf::Vector2f drawableRegionSize = getDrawableRegionSize();
 	try {
 		resourceHandler.load();
-		global::resHandlerPtr = &resourceHandler;
+	    ::resHandlerPtr = &resourceHandler;
 		sf::ContextSettings settings;
 		settings.antialiasingLevel = 6;
 		sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Blind Jump", sf::Style::Fullscreen, settings);
@@ -68,7 +67,7 @@ int main() {
 					std::this_thread::sleep_for(logicUpdateLimit - logicUpdateDelta);
 				}
 			} catch (...) {
-				global::pWorkerException = std::current_exception();
+				::pWorkerException = std::current_exception();
 				return;
 			}
 		});
@@ -77,9 +76,9 @@ int main() {
 			window.clear();
 			game.draw(window);
 			window.display();
-			if (global::pWorkerException) {
+			if (::pWorkerException) {
 				window.close();
-				std::rethrow_exception(global::pWorkerException);
+				std::rethrow_exception(::pWorkerException);
 			}
 		}
 	} catch (const std::exception & ex) {

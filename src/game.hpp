@@ -92,6 +92,4 @@ private:
 
 // The first room is not procedurally generated so the positions of the walls need to be hard coded
 // There may be a more efficient way to store this, but at O2 optimization clang and gcc convert the whole thing to an array of ints
-namespace global {
-	extern const std::array<std::pair<float, float>, 59> levelZeroWalls;
-}
+extern const std::array<std::pair<float, float>, 59> levelZeroWalls;

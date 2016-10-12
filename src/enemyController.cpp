@@ -218,7 +218,7 @@ void enemyController::addTurret(tileController * pTiles) {
 	int locationSelect = rng::random<2>() ? rng::random(pCoordVec->size() / 2) : rng::random(pCoordVec->size());
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-	turrets.emplace_back(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xInit, yInit);
+	turrets.emplace_back(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xInit, yInit);
 	(*pCoordVec)[locationSelect] = pCoordVec->back();
 	pCoordVec->pop_back();
 }
@@ -228,8 +228,8 @@ void enemyController::addScoot(tileController * pTiles) {
 	int locationSelect = rng::random<2>() ? rng::random(pCoordVec->size() / 2) : rng::random(pCoordVec->size());
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-	scoots.emplace_back(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-						global::resHandlerPtr->getTexture(ResHandler::Texture::scootShadow),
+	scoots.emplace_back(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+						::resHandlerPtr->getTexture(ResHandler::Texture::scootShadow),
 						xInit, yInit);
 	(*pCoordVec)[locationSelect] = pCoordVec->back();
 	pCoordVec->pop_back();
@@ -240,7 +240,7 @@ void enemyController::addDasher(tileController * pTiles) {
 	int locationSelect = rng::random<2>() ? rng::random(pCoordVec->size() / 2) : rng::random(pCoordVec->size() / 2);
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-	dashers.emplace_back(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+	dashers.emplace_back(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
 						 xInit, yInit);
 	(*pCoordVec)[locationSelect] = pCoordVec->back();
 	pCoordVec->pop_back();
@@ -251,7 +251,7 @@ void enemyController::addCritter(tileController * pTiles) {
 	int locationSelect = rng::random(pCoordVec->size());
 	float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
 	float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-	critters.emplace_back(global::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+	critters.emplace_back(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
 						  pTiles->mapArray, xInit, yInit);
 	(*pCoordVec)[locationSelect] = pCoordVec->back();
 	pCoordVec->pop_back();
