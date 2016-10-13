@@ -18,7 +18,7 @@ public:
 	const sf::Sprite & getSprite();
 	const HBox & getHitBox() const;
 	const sf::Sprite & getGlow();
-	void update(sf::Time &);
+	void update(const sf::Time &);
 	
 protected:
 	HBox hitBox;

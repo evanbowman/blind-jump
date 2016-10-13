@@ -18,7 +18,7 @@ TurretShot::TurretShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxt
 	animationTimer = 0;
 }
 
-void TurretShot::update(sf::Time & elapsedTime) {
+void TurretShot::update(const sf::Time & elapsedTime) {
 	position.x += scale * 1.5 * (elapsedTime.asMicroseconds() * 0.00005f) * (cos(direction));
     position.y += scale * 1.5 * (elapsedTime.asMicroseconds() * 0.00005f) * (sin(direction));
 	hitBox.setPosition(position);

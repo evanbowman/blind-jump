@@ -38,7 +38,7 @@ public:
 		EntryBeamFade
 	};
 	Game(const sf::Vector2f & viewPort, InputController *, ui::Frontend *);
-	void update(sf::Time &);
+	void update(const sf::Time &);
 	void draw(sf::RenderWindow &);
 	void nextLevel();
 	int getLevel();

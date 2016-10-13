@@ -9,13 +9,14 @@
 #include <cmath>
 #include "spriteSheet.hpp"
 #include "Effect.hpp"
+#include "math.hpp"
 #include "rng.hpp"
 
 class EnemyShot : public Effect {
 public:
 	using HBox = framework::HitBox<14, 14, 0, 0>;
 	EnemyShot(const sf::Texture &, const sf::Texture &, float, float, float);
-	void update(sf::Time &);
+	void update(const sf::Time &);
 	const sf::Sprite & getSprite();
 	const HBox & getHitBox() const;
 	const sf::Sprite & getGlow() const;

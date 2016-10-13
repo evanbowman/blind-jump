@@ -34,7 +34,7 @@ private:
 	
 public:
 	enemyController();
-	void update(Game *, float, float, bool, sf::Time &, std::vector<sf::Vector2f> &);
+	void update(Game *, float, float, bool, const sf::Time &, std::vector<sf::Vector2f> &);
 	void draw(drawableVec &, drawableVec &, Camera &);
 	void clear();
 	void addTurret(tileController *);

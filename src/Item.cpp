@@ -21,7 +21,7 @@ Item::Item(const sf::Texture & bodyTxtr, const sf::Texture & glowTxtr, float xIn
 	hitBox.setPosition(position);
 }
 
-void Item::update(sf::Time & elapsedTime) {
+void Item::update(const sf::Time & elapsedTime) {
 	timer += elapsedTime.asMilliseconds();
 	const float offset = (3 * sinf(2 * PI * 0.001 * timer + 180));
 	// Make the sprite float up and down

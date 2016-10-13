@@ -15,7 +15,7 @@ EnemyShot::EnemyShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr,
 	direction = dir * (3.14 / 180);
 }
 
-void EnemyShot::update(sf::Time & elapsedTime) {
+void EnemyShot::update(const sf::Time & elapsedTime) {
 	position.x += 4.4 * (elapsedTime.asMicroseconds() * 0.00005f) * (cos(direction));
 	position.y += 4.4 * (elapsedTime.asMicroseconds() * 0.00005f) * (sin(direction));
 	hitBox.setPosition(position);

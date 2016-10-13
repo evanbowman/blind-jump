@@ -245,7 +245,7 @@ void Game::draw(sf::RenderWindow & window) {
 	drawTransitions(window);
 }
 
-void Game::update(sf::Time & elapsedTime) {
+void Game::update(const sf::Time & elapsedTime) {
 	if (!pInput->isFocused()) {
 		util::sleep(milliseconds(200));
 		return;

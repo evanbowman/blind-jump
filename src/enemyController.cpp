@@ -95,7 +95,7 @@ void enemyController::update(Game * pGame,
 							 float x,
 							 float y,
 							 bool enabled,
-							 sf::Time & elapsedTime,
+							 const sf::Time & elapsedTime,
 							 std::vector<sf::Vector2f> & cameraTargets) {
 	EffectGroup & effectGroup = pGame->getEffects();
 	tileController & tileController = pGame->getTileController();
