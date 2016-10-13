@@ -41,7 +41,6 @@ namespace ui {
 	public:
 		enum class Text {
 			resumeText,
-			settingsText,
 			quitText,
 			healthNumText,
 			scoreText,
@@ -79,7 +78,7 @@ namespace ui {
 		sf::Texture texture;
 		sf::View fontView;
 		sf::Text waypointText, titleText, deathText, scoreText, healthNumText;
-		sf::Text resumeText, settingsText, quitText, powerupText;
+		sf::Text resumeText, quitText, powerupText;
 		char maxHealth, health;
 		bool healthModified, scoreModified;
 		Powerup powerupAdded;
@@ -104,10 +103,8 @@ namespace ui {
 			complete,
 			menuScreenEntry,
 			menuScreenExit,
-			menuScreen,
-			customizeKeyboardScreen,
-			customizeJoystickScreen,
-			settingsScreen
+			menuSelectionTransition,
+			menuScreen
 		};
 		enum class PowerupBubbleState {
 			triggered, opening, open, closing, closed, dormant
@@ -132,7 +129,8 @@ namespace ui {
 		State state;
 		PowerupBubbleState powerupBubbleState;
 		Powerup powerup;
-		int selectorPosition;
+		int menuItemSelected;
+		int menuItemTarget;
 		int32_t timer, timerAlt;
 		int64_t powerupTimer, powerupBubbleTimer;
 		bool dispPowerupBar;

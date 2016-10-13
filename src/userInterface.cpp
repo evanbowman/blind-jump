@@ -10,7 +10,8 @@
 ui::Backend::Backend() :
 	state(State::closed),
 	powerupBubbleState(PowerupBubbleState::dormant),
-	selectorPosition(0),
+	menuItemSelected(0),
+	menuItemTarget(0),
 	timer(0),
 	timerAlt(0),
 	powerupTimer(0),
@@ -39,19 +40,15 @@ void ui::Backend::draw(sf::RenderWindow & window, ui::Frontend & uIFrontEnd) {
 
 	case State::menuScreenEntry:
 		uIFrontEnd.setTextAlpha(255 * blurAmount, ui::Frontend::Text::resumeText);
-		uIFrontEnd.setTextAlpha(255 * blurAmount, ui::Frontend::Text::settingsText);
 		uIFrontEnd.setTextAlpha(255 * blurAmount, ui::Frontend::Text::quitText);
 		uIFrontEnd.setTextOffset(0, -0.01 * blurAmount, ui::Frontend::Text::resumeText);
-		uIFrontEnd.setTextOffset(0, -0.01 * blurAmount, ui::Frontend::Text::settingsText);
 		uIFrontEnd.setTextOffset(0, -0.01 * blurAmount, ui::Frontend::Text::quitText);
 		break;
 
 	case State::menuScreenExit:
 		uIFrontEnd.setTextAlpha(255 * blurAmount, ui::Frontend::Text::resumeText);
-		uIFrontEnd.setTextAlpha(255 * blurAmount, ui::Frontend::Text::settingsText);
 		uIFrontEnd.setTextAlpha(255 * blurAmount, ui::Frontend::Text::quitText);
 		uIFrontEnd.setTextOffset(0, -0.01 * blurAmount, ui::Frontend::Text::resumeText);
-		uIFrontEnd.setTextOffset(0, -0.01 * blurAmount, ui::Frontend::Text::settingsText);
 		uIFrontEnd.setTextOffset(0, -0.01 * blurAmount, ui::Frontend::Text::quitText);
 		break;
 		
@@ -146,7 +143,6 @@ void ui::Backend::update(Player & player,
 		if (blurAmount == 1.f) {
 			state = State::menuScreen;
 			uIFrontEnd.setTextAlpha(255, ui::Frontend::Text::resumeText);
-			uIFrontEnd.setTextAlpha(255, ui::Frontend::Text::settingsText);
 			uIFrontEnd.setTextAlpha(255, ui::Frontend::Text::quitText);
 		}
 		break;
@@ -154,33 +150,37 @@ void ui::Backend::update(Player & player,
 	case State::menuScreen:
 		if (pause) {
 			timer = 0;
-			selectorPosition = 0;
+			menuItemSelected = 0;
 			state = State::menuScreenExit;
 		} else if (up) {
-			if (selectorPosition > 0) {
-				--selectorPosition;
+			if (menuItemSelected == 1) {
+				menuItemTarget = 0;
+				state = State::menuSelectionTransition;
 			}
 		} else if (down) {
-		    if (selectorPosition < 2) {
-				++selectorPosition;
+		    if (menuItemSelected == 0) {
+			    menuItemTarget = 1;
+				state = State::menuSelectionTransition;
 			}
 		} else if (action) {
-			switch (selectorPosition) {
+			switch (menuItemSelected) {
 			case 0:
-				selectorPosition = 0;
+			    menuItemSelected = 0;
 				state = State::menuScreenExit;
 				timer = 0;
 				break;
 
 			case 1:
-				// TODO: settings screen
-				break;
-
-			case 2:
 				throw ShutdownSignal();
 				break;
 			}
 		}
+		break;
+
+	case State::menuSelectionTransition:
+		// TODO: actually implement!!!
+		menuItemSelected = menuItemTarget;
+		state = State::menuScreen;
 		break;
 		
 	case State::menuScreenExit:
@@ -191,7 +191,6 @@ void ui::Backend::update(Player & player,
 			timer = 0;
 			player.activate();
 			uIFrontEnd.setTextAlpha(0, ui::Frontend::Text::resumeText);
-			uIFrontEnd.setTextAlpha(0, ui::Frontend::Text::settingsText);
 			uIFrontEnd.setTextAlpha(0, ui::Frontend::Text::quitText);
 		}
 		break;
@@ -240,20 +239,6 @@ void ui::Backend::update(Player & player,
 		break;
 			
 	case State::complete:
-		break;
-
-	case State::settingsScreen:
-		// TODO: Display various settings, go to customization screens...
-		// if (...) -> selectorPosition = 0, state := customizeKeyboardScreen
-		// if (...) -> selectorposition = 0, state := customizeJoystickScreen
-		break;
-
-	case State::customizeKeyboardScreen:
-		// TODO: while in this state display text and select each heading accordingly
-		break;
-
-	case State::customizeJoystickScreen:
-		// TODO: while in this state display text and select each heading accordingly
 		break;
 	}
 	switch (powerupBubbleState) {
@@ -482,9 +467,6 @@ ui::Frontend::Frontend(sf::View fontView, float x, float y) :
 	powerupText.setFont(cornerstone);
 	powerupText.setCharacterSize(0.065 * scale);
 	
-	initText(settingsText, std::string("SETTINGS"), 0.085 * scale);
-	settingsText.setFillColor(sf::Color(255, 255, 255, 0));
-	
 	initText(quitText, std::string("QUIT"), 0.085 * scale);
 	quitText.setFillColor(sf::Color(255, 255, 255, 0));
 	
@@ -528,14 +510,9 @@ void ui::Frontend::setTextOffset(float xOffset, float yOffset, ui::Frontend::Tex
 							   viewSize.y / 2.8f - resumeText.getLocalBounds().height / 2 + yOffset * scale);
 		break;
 
-	case Text::settingsText:
-		settingsText.setPosition(xOffset * scale + viewSize.x / 2 - settingsText.getLocalBounds().width / 2,
-								 resumeText.getPosition().y + settingsText.getLocalBounds().height * 2 + yOffset * scale);
-		break;
-
 	case Text::quitText:
 		quitText.setPosition(xOffset * scale + viewSize.x / 2 - quitText.getLocalBounds().width / 2,
-							 settingsText.getPosition().y + quitText.getLocalBounds().height * 2 + yOffset * scale);
+							 resumeText.getPosition().y + quitText.getLocalBounds().height * 2 + yOffset * scale);
 		break;
 
 	case Text::powerupText:
@@ -552,10 +529,6 @@ void ui::Frontend::setTextAlpha(uint8_t alpha, ui::Frontend::Text text) {
 	switch (text) {
 	case Text::resumeText:
 		resumeText.setFillColor(sf::Color(255, 255, 255, alpha));
-		break;
-
-	case Text::settingsText:
-		settingsText.setFillColor(sf::Color(255, 255, 255, alpha));
 		break;
 
 	case Text::quitText:
@@ -715,10 +688,6 @@ void ui::Frontend::draw(sf::RenderWindow & window) {
 	c = resumeText.getFillColor();
 	if (c.a > 0) {
 		window.draw(resumeText);
-	}
-	c = settingsText.getFillColor();
-	if (c.a > 0) {
-		window.draw(settingsText);
 	}
 	c = quitText.getFillColor();
 	if (c.a > 0) {
