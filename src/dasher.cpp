@@ -98,6 +98,11 @@ void Dasher::update(float playerPosX, float playerPosY, const std::vector<wall> 
 			}
 		}
 		if (health == 0) {
+			if (xPos > playerPosX) {
+				deathSheet.setScale(1, 1);
+			} else {
+			    deathSheet.setScale(-1, 1);
+			}
 			onDeath(effects);
 		}
 	}
