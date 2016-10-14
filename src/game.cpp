@@ -9,7 +9,7 @@
 #include "initMapVectors.hpp"
 #include "pillarPlacement.h"
 #include "ResourcePath.hpp"
-#include "lightingMap.h"
+#include "lightingMap.hpp"
 #include "game.hpp"
 #include "math.h"
 

@@ -21,7 +21,11 @@ Thumbs.db
 *.#*
 
 # Project executable
-BlindJump
+blindjump
 
-# Makedepend files
-Makefile.bak
+# CMake generated files
+CMakeCache.txt
+CMakeFiles
+cmake_install.cmake
+config.h
+Makefile

@@ -1,0 +1,2 @@
+#define blindjump_VERSION_MAJOR @blindjump_VERSION_MAJOR@
+#define blindjump_VERSION_MINOR @blindjump_VERSION_MINOR@
