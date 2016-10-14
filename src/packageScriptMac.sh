@@ -29,7 +29,7 @@ if [ $# == 2 ]; then
     printf "Done!"
 
     printf "\nCompressing sources... "
-    tar -czf ../targets/macOS/$2.app/Contents/src.tar.gz ../targets/macOS/$2.app/Contents/src
+    tar -cJf ../targets/macOS/$2.app/Contents/src.tar.xz ../targets/macOS/$2.app/Contents/src
     rm -rf ../targets/macOS/$2.app/Contents/src
     printf "Done!"
     
