@@ -46,7 +46,6 @@ if (SFML_FOUND)
     # TODO
     add_executable(blindjump WIN32 ${blindjump_SOURCES})
   elseif (UNIX)
-    add_executable(blindjump ${blindjump_SOURCES})
     target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
     find_package(Threads)
     target_link_libraries(blindjump ${CMAKE_THREAD_LIBS_INIT})
