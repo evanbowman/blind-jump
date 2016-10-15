@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 file(GLOB_RECURSE blindjump_SOURCES "../src/*.cpp")
 file(GLOB_RECURSE blindjump_HEADERS "../src/*.hpp")
 
-add_executable(blindjump ${blindjump_SOURCES})
+add_executable(blindjump WIN32 MACOSX_BUNDLE ${blindjump_SOURCES})
 
 set(blindjump_VERSION_MAJOR 0)
 set(blindjump_VERSION_MINOR 2)
