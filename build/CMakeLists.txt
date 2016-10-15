@@ -53,8 +53,10 @@ if(SFML_FOUND)
 	COMMAND mkdir -p temp/usr/bin
 	COMMAND mkdir -p temp/usr/share/blindjump
 	COMMAND mkdir -p temp/usr/lib
-	COMMAND cp debian/libsfml/*.so.2.4 temp/usr/lib
+	COMMAND mkdir temp/usr/share/applications
+	COMMAND cp debian/libsfml/*.so* temp/usr/lib
 	COMMAND cp ../res/* temp/usr/share/blindjump
+	COMMAND cp debian/blindjump.desktop temp/usr/share/applications
 	COMMAND mv ${EXECUTABLE_NAME} temp/usr/bin
 	COMMAND mv temp ${EXECUTABLE_NAME}
 	COMMAND dpkg-deb --build ${EXECUTABLE_NAME}
