@@ -1,5 +1,5 @@
 
-		      BLIND JUMP -- 0.2 -- 2016
+			  BLIND JUMP -- 0.2
 	
 	     	      	     
 			       OVERVIEW
@@ -14,8 +14,8 @@ action: https://youtu.be/jQRcmj-kvgc
 			       BUILDING	  
 
 If you're not interested in messing  with the source code, and you run
-Windows, macOS, or  Linux, skip to the steps below  for installing the
-apropriate pre-compiled binaries.
+macOS or Linux, skip to the  steps below for installing the apropriate
+pre-compiled binaries.
 
 If you're still  reading this section, it's time to  set up your build
 environment for compiling locally! If  you don't have CMake installed,
@@ -38,6 +38,12 @@ After cloning this repository, navigate to the build directory in your
 terminal and  type "cmake .". Now  run "make". This should  produce an
 executable called blindjump in the current directory.
 
+
+			PRE-COMPILED BINARIES
+			
+macOS:
+debian:
+		 
 
 			   TROUBLESHOOTING
 
