@@ -5,13 +5,13 @@
 
 #include "resourceHandler.hpp"
 
-static const char * failurePrefix = "[Failed to load ";
+static const char * LOAD_FAILURE_MSG = "blindjump [crash]: missing resource";
 
 template<typename T, typename E>
 void loadResource(const char * fname, E id, T & array) {
 	int idx = static_cast<int>(id);
 	if (!array[idx].loadFromFile(resourcePath() + fname)) {
-		throw std::runtime_error(std::string(failurePrefix) + fname + "]");
+		throw std::runtime_error(LOAD_FAILURE_MSG);
 	}
 }
 
@@ -19,7 +19,7 @@ template<>
 void loadResource(const char * fname, ResHandler::Shader id, std::array<sf::Shader, 3> & shaders) {
 	size_t index = static_cast<int>(id);
 	if (!shaders[index].loadFromFile(resourcePath() + fname, sf::Shader::Fragment)) {
-		throw std::runtime_error(std::string(failurePrefix) + fname + "]");
+		throw std::runtime_error(LOAD_FAILURE_MSG);
 	}
 	shaders[index].setUniform("texture", sf::Shader::CurrentTexture);
 }

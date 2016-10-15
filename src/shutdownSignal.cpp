@@ -5,7 +5,7 @@
 
 #include "shutdownSignal.hpp"
 
-ShutdownSignal::ShutdownSignal() : msg("[Shutdown Signal]") {}
+ShutdownSignal::ShutdownSignal() : msg("blindjump: goodbye") {}
 
 const char * ShutdownSignal::what() const noexcept {
 	return msg.c_str();

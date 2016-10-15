@@ -52,6 +52,8 @@ if(SFML_FOUND)
 	COMMAND cp debian/control temp/DEBIAN
 	COMMAND mkdir -p temp/usr/bin
 	COMMAND mkdir -p temp/usr/share/blindjump
+	COMMAND mkdir -p temp/usr/lib
+	COMMAND cp debian/libsfml/*.so.2.4 temp/usr/lib
 	COMMAND cp ../res/* temp/usr/share/blindjump
 	COMMAND mv ${EXECUTABLE_NAME} temp/usr/bin
 	COMMAND mv temp ${EXECUTABLE_NAME}
