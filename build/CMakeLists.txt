@@ -7,12 +7,11 @@ endif()
 project(blindjump)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-file(GLOB_RECURSE blindjump_SOURCES "src/*.cpp")
-file(GLOB_RECURSE blindjump_HEADERS "src/*.hpp")
+file(GLOB_RECURSE blindjump_SOURCES "../src/*.cpp")
+file(GLOB_RECURSE blindjump_HEADERS "../src/*.hpp")
 
 add_executable(blindjump ${blindjump_SOURCES})
 
-# Set version information
 set(blindjump_VERSION_MAJOR 0)
 set(blindjump_VERSION_MINOR 2)
 configure_file(
@@ -30,5 +29,13 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 find_package(SFML 2 REQUIRED system window graphics audio)
 if (SFML_FOUND)
   include_directories(${SFML_INCLUDE_DIR})
-  target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
+  if (APPLE)
+    target_link_libraries(${EXECUTABLE_NAME} "-framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio -Xlinker -rpath -Xlinker @loader_path/../Frameworks -fobjc-link-runtime")
+  elseif (WIN32)
+    # Probably need something specific here because it's windows
+  elseif (UNIX)
+    target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
+  endif()
 endif()
+
+# set(CMAKE_SHARED_LINKER_FLAGS "-Xlinker -rpath -Xlinker @loader_path/../Frameworks -fobjc-link-runtime")
