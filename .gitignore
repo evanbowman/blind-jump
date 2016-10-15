@@ -21,7 +21,9 @@ Thumbs.db
 *.#*
 
 # Project executable
+blindjump.app
 blindjump
+blindjump.exe
 
 # CMake generated files
 CMakeCache.txt
