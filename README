@@ -1,0 +1,45 @@
+
+		      BLIND JUMP -- 0.2 -- 2016
+	
+	     	      	     
+			       OVERVIEW
+		 
+Blind Jump  is a  simple procedurally  generated space  adventure game
+that I've been working on for fun  in my free time.  The object of the
+game is  to get  to the  teleporter at  the end  of each  level, while
+battling monsters  and evil robots. Check  out this clip to  see it in
+action: https://youtu.be/jQRcmj-kvgc
+
+
+			       BUILDING	  
+
+If you're not interested in messing  with the source code, and you run
+Windows, macOS, or  Linux, skip to the steps below  for installing the
+apropriate pre-compiled binaries.
+
+If you're still  reading this section, it's time to  set up your build
+environment for compiling locally! If  you don't have CMake installed,
+or your  version of CMake is  older than v3.5, get  the newest version
+with your  favorite package manager  (CMake version can be  checked by
+running cmake --version).
+
+Next, you should  set up the SFML library (version  2.4 or newer). You
+can download it here: http://www.sfml-dev.org/download/sfml/2.4.0/
+
+Finally, you'll need a C++14  compatible compiler. On linux you should
+have gotten a copy of the gnu toolchain packaged with your distro (but
+you may need to update gcc).  For macOS, install Command Line Tools if
+you haven't already, which should get you an up-to-date copy of clang.
+In Windows, I personally would recommend installing MinGW, as it would
+make the  steps below easier  to follow, but  if you know  what you're
+doing Visual Studio may well be enough.
+
+After cloning this repository, navigate to the build directory in your
+terminal and  type "cmake .". Now  run "make". This should  produce an
+executable called blindjump in the current directory.
+
+
+			   TROUBLESHOOTING
+
+If  you   run  into  any  problems,   feel  free  to  contact   me  at
+evan.a.bowman@gmail.com.
