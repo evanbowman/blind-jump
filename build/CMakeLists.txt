@@ -12,7 +12,6 @@ if (APPLE)
   set(RESOURCE_PATH "macos/ResourcePath.mm")
 elseif (WIN32)
   # TODO
-  set(RESOURCE_PATH "debian/ResourcePath.cpp")
 elseif (UNIX)
   set(RESOURCE_PATH "debian/ResourcePath.cpp")
 endif()
@@ -37,23 +36,24 @@ if (SFML_FOUND)
     target_link_libraries(${EXECUTABLE_NAME} "-framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio -Xlinker -rpath -Xlinker @loader_path/../Frameworks -fobjc-link-runtime")
     set(MACOSX_BUNDLE_BUNDLE_NAME ${EXECUTABLE_NAME})
     set(MACOSX_BUNDLE_ICON_FILE icon.icns)
-    add_custom_target(package ALL mkdir -p ${EXECUTABLE_NAME}.app/Contents/Resources
+    add_custom_target(pkg ALL mkdir -p ${EXECUTABLE_NAME}.app/Contents/Resources
       COMMAND mkdir -p ${EXECUTABLE_NAME}.app/Contents/Frameworks
-      COMMAND cp ../res/* ${EXECUTABLE_NAME}.app/Contents/Resources/
-      COMMAND cp macos/icon.icns ${EXECUTABLE_NAME}.app/Contents/Resources/
-      COMMAND cp -r macos/Frameworks/* ${EXECUTABLE_NAME}.app/Contents/Frameworks/)
+      COMMAND cp ../res/* ${EXECUTABLE_NAME}.app/Contents/Resources
+      COMMAND cp macos/icon.icns ${EXECUTABLE_NAME}.app/Contents/Resources
+      COMMAND cp -r macos/Frameworks/* ${EXECUTABLE_NAME}.app/Contents/Frameworks)
   elseif (WIN32)
     # TODO
-    add_executable(${EXECUTABLE_NAME} WIN32 ${blindjump_SOURCES})
   elseif (UNIX)
     target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
     find_package(Threads)
     target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_THREAD_LIBS_INIT})
     if (EXISTS "/etc/debian_version")
-      add_custom_target(package mkdir -p temp/DEBIAN
-	COMMAND cp debian/control temp/DEBIAN/
-	COMMAND mkdir -p temp/usr/bin/
-	COMMAND mv ${EXECUTABLE_NAME} temp/usr/bin/
+      add_custom_target(pkg mkdir -p temp/DEBIAN
+	COMMAND cp debian/control temp/DEBIAN
+	COMMAND mkdir -p temp/usr/bin
+	COMMAND mkdir temp/usr/Resources
+	COMMAND cp ../res/* temp/usr/Resources
+	COMMAND mv ${EXECUTABLE_NAME} temp/usr/bin
 	COMMAND mv temp ${EXECUTABLE_NAME}
 	COMMAND dpkg-deb --build ${EXECUTABLE_NAME}
 	COMMAND rm -rf ${EXECUTABLE_NAME})
