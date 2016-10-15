@@ -37,5 +37,3 @@ if (SFML_FOUND)
     target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
   endif()
 endif()
-
-# set(CMAKE_SHARED_LINKER_FLAGS "-Xlinker -rpath -Xlinker @loader_path/../Frameworks -fobjc-link-runtime")
