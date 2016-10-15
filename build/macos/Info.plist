@@ -5,11 +5,11 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
-	<string>BlindJump</string>
+	<string>blindjump</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>BlindJump</string>
+	<string>blindjump</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
@@ -27,7 +27,7 @@
 	<key>DTSDKBuild</key>
 	<string>15E60</string>
 	<key>DTSDKName</key>
-	<string>macosx10.11</string>
+	<string>macosx10.12</string>
 	<key>CFBundleIconFile</key>
 	<string>icon</string>
 	<key>NSHighResolutionCapable</key>

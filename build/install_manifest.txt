@@ -1,0 +1,5 @@
+/usr/local/./blindjump.app/Contents/Frameworks/freetype.framework/freetype
+/usr/local/./blindjump.app/Contents/Frameworks/freetype.framework/Resources
+/usr/local/./blindjump.app/Contents/Frameworks/freetype.framework/Versions/A/freetype
+/usr/local/./blindjump.app/Contents/Frameworks/freetype.framework/Versions/A/Resources/Info.plist
+/usr/local/./blindjump.app/Contents/Frameworks/freetype.framework/Versions/Current
