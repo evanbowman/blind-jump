@@ -8,11 +8,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 file(GLOB_RECURSE blindjump_SOURCES "../src/*.cpp")
 file(GLOB_RECURSE blindjump_HEADERS "../src/*.hpp")
 
-if (APPLE)
+if(APPLE)
   set(RESOURCE_PATH "macos/ResourcePath.mm")
-elseif (WIN32)
+elseif(WIN32)
   # TODO
-elseif (UNIX)
+elseif(UNIX)
   set(RESOURCE_PATH "debian/ResourcePath.cpp")
 endif()
 
@@ -30,9 +30,9 @@ add_executable(${EXECUTABLE_NAME} WIN32 MACOSX_BUNDLE ${blindjump_SOURCES} ${RES
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 find_package(SFML 2 REQUIRED system window graphics audio)
-if (SFML_FOUND)
+if(SFML_FOUND)
   include_directories(${SFML_INCLUDE_DIR})
-  if (APPLE)
+  if(APPLE)
     target_link_libraries(${EXECUTABLE_NAME} "-framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio -Xlinker -rpath -Xlinker @loader_path/../Frameworks -fobjc-link-runtime")
     set(MACOSX_BUNDLE_BUNDLE_NAME ${EXECUTABLE_NAME})
     set(MACOSX_BUNDLE_ICON_FILE icon.icns)
@@ -41,24 +41,24 @@ if (SFML_FOUND)
       COMMAND cp ../res/* ${EXECUTABLE_NAME}.app/Contents/Resources
       COMMAND cp macos/icon.icns ${EXECUTABLE_NAME}.app/Contents/Resources
       COMMAND cp -r macos/Frameworks/* ${EXECUTABLE_NAME}.app/Contents/Frameworks)
-  elseif (WIN32)
+  elseif(WIN32)
     # TODO
-  elseif (UNIX)
+  elseif(UNIX)
     target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
     find_package(Threads)
     target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_THREAD_LIBS_INIT})
-    if (EXISTS "/etc/debian_version")
+    if(EXISTS "/etc/debian_version")
       add_custom_target(pkg mkdir -p temp/DEBIAN
 	COMMAND cp debian/control temp/DEBIAN
 	COMMAND mkdir -p temp/usr/bin
-	COMMAND mkdir temp/usr/Resources
-	COMMAND cp ../res/* temp/usr/Resources
+	COMMAND mkdir -p temp/usr/share/blindjump
+	COMMAND cp ../res/* temp/usr/share/blindjump
 	COMMAND mv ${EXECUTABLE_NAME} temp/usr/bin
 	COMMAND mv temp ${EXECUTABLE_NAME}
 	COMMAND dpkg-deb --build ${EXECUTABLE_NAME}
 	COMMAND rm -rf ${EXECUTABLE_NAME})
     endif()
-    if (EXISTS "/etc/redhat-release")
+    if(EXISTS "/etc/redhat-release")
       # create rpm TODO: install centos in a vm and get this working!
     endif()
   endif()
