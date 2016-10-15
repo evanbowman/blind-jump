@@ -56,6 +56,7 @@ if(SFML_FOUND)
 	COMMAND mkdir temp/usr/share/applications
 	COMMAND cp debian/libsfml/*.so* temp/usr/lib
 	COMMAND cp ../res/* temp/usr/share/blindjump
+	COMMAND cp debian/icon.png temp/usr/share/blindjump
 	COMMAND cp debian/blindjump.desktop temp/usr/share/applications
 	COMMAND mv ${EXECUTABLE_NAME} temp/usr/bin
 	COMMAND mv temp ${EXECUTABLE_NAME}
