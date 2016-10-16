@@ -7,10 +7,11 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include <map>
+#include <stdexcept>
+#include <assert.h>
 #include <utility>
 #include <array>
-#include <stdexcept>
+
 #include "ResourcePath.hpp"
 
 class ResHandler {	

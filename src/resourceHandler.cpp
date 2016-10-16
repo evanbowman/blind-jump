@@ -27,11 +27,8 @@ void loadResource(const char * fname, ResHandler::Shader id, std::array<sf::Shad
 static bool hasResources;
 
 void ResHandler::load() {
-	if (hasResources) {
-		throw std::runtime_error(std::string("[ResHandler::Load() cannot be called twice]"));
-	} else {
-		hasResources = true;
-	}
+    assert(!hasResources);
+	hasResources = true;
 	loadResource("teleporterBeamGlow.png", Texture::teleporterBeamGlow, textures);
 	loadResource("fireExplosionGlow.png", Texture::fireExplosionGlow, textures);
 	loadResource("charger_enemy_shadow.png", Texture::scootShadow, textures);
