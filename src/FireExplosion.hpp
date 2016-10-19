@@ -13,12 +13,12 @@
 class FireExplosion : public Effect {
 private:
 	mutable SpriteSheet<208, 173, 58, 51> spriteSheet;
-	sf::Sprite glow;
+	framework::Sprite glow;
 	int64_t glowFadeTimer;
 	
 public:
 	FireExplosion(const sf::Texture &, const sf::Texture &, float, float);
 	void update(const sf::Time &);
-	const sf::Sprite & getSprite() const;
-	const sf::Sprite & getGlow() const;
+	const framework::Sprite & getSprite() const;
+	const framework::Sprite & getGlow() const;
 };

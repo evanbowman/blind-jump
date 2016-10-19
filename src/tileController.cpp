@@ -176,7 +176,7 @@ void tileController::update() {
 	mapSprite2.setPosition(posX, posY);
 }
 
-void tileController::draw(sf::RenderTexture & window, std::vector<sf::Sprite> * glowSprites, int level, const sf::View & worldView, const sf::View & cameraView) {
+void tileController::draw(sf::RenderTexture & window, std::vector<framework::Sprite> * glowSprites, int level, const sf::View & worldView, const sf::View & cameraView) {
 	// Clear out the RenderTexture
 	rt.setView(cameraView);
 	rt.clear(sf::Color::Transparent);
@@ -206,8 +206,8 @@ void tileController::draw(sf::RenderTexture & window, std::vector<sf::Sprite> * 
 	re.draw(shadow, sf::BlendMultiply);
 	re.display();
 	// Draw the whole thing to the window
-	window.draw(sf::Sprite(rt.getTexture()));
-	window.draw(sf::Sprite(re.getTexture()));
+	window.draw(framework::Sprite(rt.getTexture()));
+	window.draw(framework::Sprite(re.getTexture()));
 }
 
 //Set the center position according to the window width and height

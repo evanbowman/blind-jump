@@ -27,6 +27,6 @@ void TurretFlashEffect::update(const sf::Time & elapsedTime) {
 	}
 }
 
-const Sprite & TurretFlashEffect::getSprite() const {
+const framework::Sprite & TurretFlashEffect::getSprite() const {
 	return spriteSheet[frameIndex];
 }

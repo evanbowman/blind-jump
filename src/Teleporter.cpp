@@ -21,11 +21,11 @@ Teleporter::Teleporter(float _xInit, float _yInit, const sf::Texture & mainTxtr,
 	TeleporterSprites[1].setPosition(position.x - 3, position.y + 4);
 }
 
-const sf::Sprite & Teleporter::getShadow() const {
+const framework::Sprite & Teleporter::getShadow() const {
 	return TeleporterSprites[1];
 }
 
-const sf::Sprite & Teleporter::getSprite() const {
+const framework::Sprite & Teleporter::getSprite() const {
 	return TeleporterSprites[0];
 }
 
@@ -33,7 +33,7 @@ void Teleporter::update(const sf::Time &) {
 	// nil
 }
 
-const sf::Sprite & Teleporter::getGlow() const {
+const framework::Sprite & Teleporter::getGlow() const {
 	return glowSprite;
 }
 

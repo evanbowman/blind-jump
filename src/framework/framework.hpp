@@ -11,23 +11,8 @@
 #include <SFML/Graphics.hpp>
 #include "utilities.hpp"
 
-using Sprite = sf::Sprite;
-
 namespace framework {
-	//===========================================================//
-	// Framework::Point simply encapsulates x,y coordinates      //
-	//===========================================================//
-	struct Point {
-		float x, y;
-	};
-	
-	//===========================================================//
-	// Returns the degrees in radians of the line formed by two  //
-	// instances of Framework::Point                             //
-	//===========================================================//
-	inline float angle(const Point & p1, const Point & p2) {
-		return std::atan2(p1.y - p2.y, p1.x - p2.x);
-	}
+	using Sprite = sf::Sprite;
 	
 	//===========================================================//
 	// Framework::Object is a building block that other classes  //
@@ -37,19 +22,19 @@ namespace framework {
 	//===========================================================//
 	class Object {
 	protected:
-		Point position{};
+		sf::Vector2f position{};
 		bool killFlag = false;
 		bool visible = false;
 	public:
-		Object(float x, float y) : position{Point{x, y}} {}
-		inline void setPosition(Point _position) {
+		Object(float x, float y) : position{sf::Vector2f{x, y}} {}
+		inline void setPosition(sf::Vector2f _position) {
 			position = _position;
 		}
 		inline void setPosition(float x, float y) {
 			position.x = x;
 			position.y = y;
 		}
-		inline const Point & getPosition() const {
+		inline const sf::Vector2f & getPosition() const {
 			return position;
 		}
 		inline bool getKillFlag() {
@@ -76,7 +61,7 @@ namespace framework {
 	template<int16_t w, int16_t h, int16_t xOff = 0, int16_t yOff = 0>
 	class HitBox {
 		static_assert(w > 0 && h > 0, "Zero and negative values are not valid Hitbox side length parameters");
-		Point position{};
+		sf::Vector2f position{};
         #ifdef DEBUG
 		sf::RectangleShape rect; // If in debug mode provide visual representations for hitBoxes
         #endif
@@ -89,7 +74,7 @@ namespace framework {
 			rect.setSize(sf::Vector2f(w, h));
             #endif
 		}
-		void setPosition(const Point & _position) {
+		void setPosition(const sf::Vector2f & _position) {
 			position.x = _position.x;
 			position.y = _position.y;
             #ifdef DEBUG
@@ -108,7 +93,7 @@ namespace framework {
 			rect.setPosition(x + xOff, y + yOff);
 			#endif
 		}
-	    const Point & getPosition() const {
+	    const sf::Vector2f & getPosition() const {
 			return position;
 		}
 	    constexpr uint16_t getWidth() const {

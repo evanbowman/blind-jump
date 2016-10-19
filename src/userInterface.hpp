@@ -30,7 +30,7 @@ namespace ui {
 		float getRadius();
 		void setAlpha(uint8_t);
 		const sf::CircleShape & getShape() const;
-		const sf::Sprite & getSprite();
+		const framework::Sprite & getSprite();
 		void setFrame(size_t);
 	private:
 		sf::CircleShape bubble;

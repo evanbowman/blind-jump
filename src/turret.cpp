@@ -3,9 +3,10 @@
 // Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
 //========================================================================//
 
-#include "turret.hpp"
 #include <cmath>
 #include "angleFunction.hpp"
+#include "player.hpp"
+#include "turret.hpp"
 
 Turret::Turret(const sf::Texture & gameObjects, float _xPos, float _yPos) :
 	state(State::closed),
@@ -27,11 +28,11 @@ Turret::Turret(const sf::Texture & gameObjects, float _xPos, float _yPos) :
 	hitBox.setPosition(xPos, yPos);
 }
 
-const sf::Sprite & Turret::getSprite() {
+const framework::Sprite & Turret::getSprite() {
 	return turretSheet[frameIndex];
 }
 
-void Turret::update(const sf::Time & elapsedTime, float playerPosX, float playerPosY, EffectGroup & effects) {
+void Turret::update(const sf::Time & elapsedTime, const Player * player, EffectGroup & effects) {
 	if (isColored) {
 		colorTimer += elapsedTime.asMilliseconds();
 		if (colorTimer > 20.f) {
@@ -71,7 +72,7 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 	}
 	switch (state) {
 	case State::closed:
-		if (std::sqrt(std::pow((xPos - playerPosX + 8), 2) + std::pow((yPos - playerPosY + 16), 2)) < 174) {
+		if (std::sqrt(std::pow((xPos - player->getXpos() + 8), 2) + std::pow((yPos - player->getYpos() + 16), 2)) < 174) {
 			state = State::opening;
 			timer = 0;
 			frameIndex = 0;
@@ -91,12 +92,13 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 		break;
 
 	case State::shoot1:
+		target = player->requestFuturePos(TurretShot::lifetime * 1000);
 		timer += elapsedTime.asMicroseconds();
 		if (timer > 200000) {
 			effects.add<0>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xPos, yPos + 8);
 			effects.add<6>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
 						   ::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
-						   xPos, yPos + 6, angleFunction(playerPosX + 16, playerPosY + 8, xPos + 18, yPos + 8));
+						   xPos, yPos + 6, angleFunction(target.x + 16, target.y + 8, xPos + 18, yPos + 8));
 			timer = 0;
 			state = State::shoot2;
 		}
@@ -108,7 +110,7 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 			effects.add<0>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xPos, yPos + 8);
 			effects.add<6>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
 						   ::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
-						   xPos, yPos + 8, angleFunction(playerPosX + 16, playerPosY + 8, xPos + 18, yPos + 6));
+						   xPos, yPos + 8, angleFunction(target.x + 16, target.y + 8, xPos + 18, yPos + 6));
 			timer = 0;
 			state = State::shoot3;
 		}
@@ -120,7 +122,7 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 			effects.add<0>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xPos, yPos + 8);
 			effects.add<6>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
 						   ::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
-						   xPos, yPos + 8, angleFunction(playerPosX + 16, playerPosY + 8, xPos + 18, yPos + 6));
+						   xPos, yPos + 8, angleFunction(target.x + 16, target.y + 8, xPos + 18, yPos + 6));
 			timer = 0;
 			state = State::rest;
 		}
@@ -129,7 +131,7 @@ void Turret::update(const sf::Time & elapsedTime, float playerPosX, float player
 	case State::rest:
 		timer += elapsedTime.asMicroseconds();
 		if (timer > 1200000) {
-			if (std::sqrt(std::pow((xPos - playerPosX + 8), 2) + std::pow((yPos - playerPosY + 16), 2)) < 174) {
+			if (std::sqrt(std::pow((xPos - player->getXpos() + 8), 2) + std::pow((yPos - player->getYpos() + 16), 2)) < 174) {
 				state = State::shoot1;
 			} else {
 				state = State::closing;
@@ -157,7 +159,7 @@ const Turret::HBox & Turret::getHitBox() const {
 }
 
 //Returns the turret's shadow sprite
-const sf::Sprite & Turret::getShadow() {
+const framework::Sprite & Turret::getShadow() {
 	return shadowSheet[frameIndex];
 }
 

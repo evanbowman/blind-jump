@@ -16,6 +16,6 @@ void DamagedRobot::update(const sf::Time &) {
 	// ...
 }
 
-const sf::Sprite & DamagedRobot::getSprite() const {
+const framework::Sprite & DamagedRobot::getSprite() const {
 	return robotSheet.getSprite();
 }

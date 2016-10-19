@@ -24,7 +24,7 @@ PlayerShot::PlayerShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxt
 	}
 }
 
-const sf::Sprite & PlayerShot::getSprite() {
+const framework::Sprite & PlayerShot::getSprite() {
 	switch (state) {
 	case State::poof:
 		return puffSheet[frameIndex];
@@ -36,7 +36,7 @@ const sf::Sprite & PlayerShot::getSprite() {
 	}
 }
 
-const sf::Sprite & PlayerShot::getGlow() {
+const framework::Sprite & PlayerShot::getGlow() {
 	return glow;
 }
 

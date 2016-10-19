@@ -6,6 +6,8 @@
 #include "player.hpp"
 #include "game.hpp"
 
+static const float MOVEMENT_RATE_CONSTANT = 0.000054f;
+
 Player::Player(float _xPos, float _yPos)
 	: gun{},
 	  health(4),
@@ -391,8 +393,8 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & 
 		sheetIndex = Player::Sheet::deathSheet;
 		frameIndex = 0;
 	}
-	xPos -= (lSpeed + -rSpeed) * (elapsedTime.asMicroseconds() * 0.000054f);
-    yPos -= (uSpeed + -dSpeed) * (elapsedTime.asMicroseconds() * 0.000054f);
+	xPos -= (lSpeed + -rSpeed) * (elapsedTime.asMicroseconds() * MOVEMENT_RATE_CONSTANT);
+    yPos -= (uSpeed + -dSpeed) * (elapsedTime.asMicroseconds() * MOVEMENT_RATE_CONSTANT);
 	setPosition(xPos, yPos);
 	if (!blurs.empty()) {
 		for (auto it = blurs.begin(); it != blurs.end();) {
@@ -734,4 +736,11 @@ void Player::updateColor(const sf::Time & elapsedTime) {
 
 const Player::Weapon & Player::getGun() const {
 	return gun;
+}
+
+sf::Vector2f Player::requestFuturePos(const uint32_t uTime) const {
+	sf::Vector2f futurePos;
+	futurePos.x = uTime * (-lSpeed + rSpeed) * MOVEMENT_RATE_CONSTANT + xPos;
+	futurePos.y = uTime * (-uSpeed + dSpeed) * MOVEMENT_RATE_CONSTANT + yPos;
+	return futurePos;
 }

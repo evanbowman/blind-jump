@@ -32,10 +32,10 @@ void SmallExplosion::update(const sf::Time & elapsedTime) {
     glow.setColor(sf::Color(color, color, color, 255));
 }
 
-const sf::Sprite & SmallExplosion::getGlow() const {
+const framework::Sprite & SmallExplosion::getGlow() const {
 	return glow;
 }
 
-const sf::Sprite & SmallExplosion::getSprite() const {
+const framework::Sprite & SmallExplosion::getSprite() const {
 	return spriteSheet[frameIndex];
 }

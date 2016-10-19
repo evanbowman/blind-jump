@@ -21,6 +21,6 @@ void Rock::update(const sf::Time &) {
 	// nil
 }
 
-const sf::Sprite & Rock::getSprite() const {
+const framework::Sprite & Rock::getSprite() const {
 	return rockSheet.getSprite();
 }

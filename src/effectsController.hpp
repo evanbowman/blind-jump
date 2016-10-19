@@ -30,7 +30,7 @@ using EffectGroup = framework::Group<TurretFlashEffect, // - 0
 									 TurretShot, // -------- 8
 									 PlayerShot>; // ------- 9
 
-using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
+using drawableVec = std::vector<std::tuple<framework::Sprite, float, Rendertype, float>>;
 
 template<size_t indx, int8_t yOffset = 0>
 void drawVec(EffectGroup & eg,
@@ -38,7 +38,7 @@ void drawVec(EffectGroup & eg,
 			 const sf::Vector2f viewCenter,
 			 const sf::Vector2f viewSize) {
 	for (auto & element : eg.get<indx>()) {
-		const framework::Point elemPos = element.getPosition();
+		const sf::Vector2f elemPos = element.getPosition();
 		if (elemPos.x > viewCenter.x - viewSize.x / 2 - 48 &&
 			elemPos.x < viewCenter.x + viewSize.x / 2 + 48 &&
 			elemPos.y > viewCenter.y - viewSize.y / 2 - 48 &&
@@ -51,11 +51,11 @@ void drawVec(EffectGroup & eg,
 template<size_t indx, int8_t yOffset = 0>
 void drawVecGlow(EffectGroup & eg,
 				 drawableVec & vec,
-				 std::vector<Sprite> & glowSprs,
+				 std::vector<framework::Sprite> & glowSprs,
 				 const sf::Vector2f viewCenter,
 				 const sf::Vector2f viewSize) {
 	for (auto & element : eg.get<indx>()) {
-		const framework::Point elemPos = element.getPosition();
+		const sf::Vector2f elemPos = element.getPosition();
 		if (elemPos.x > viewCenter.x - viewSize.x / 2 - 48 &&
 			elemPos.x < viewCenter.x + viewSize.x / 2 + 48 &&
 			elemPos.y > viewCenter.y - viewSize.y / 2 - 48 &&
@@ -68,7 +68,7 @@ void drawVecGlow(EffectGroup & eg,
 
 inline void drawGroup(EffectGroup & eg,
 					  drawableVec & vec,
-					  std::vector<Sprite> & glowSprs,
+					  std::vector<framework::Sprite> & glowSprs,
 					  const sf::Vector2f viewCenter,
 					  const sf::Vector2f viewSize) {
 	drawVec<0, 11>(eg, vec, viewCenter, viewSize);

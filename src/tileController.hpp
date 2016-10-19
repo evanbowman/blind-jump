@@ -19,19 +19,19 @@ public:
 	enum class Tileset {
 		intro, regular
 	};
-	sf::Sprite transitionLvSpr;
+	framework::Sprite transitionLvSpr;
 	sf::Image tileImg[2];
 	sf::Image grassSet[2];
 	sf::Image grassSetEdge[2];
 	tileController();
 	void update();
-	void draw(sf::RenderTexture&, std::vector<sf::Sprite>*, int level, const sf::View &, const sf::View &);
+	void draw(sf::RenderTexture&, std::vector<framework::Sprite>*, int level, const sf::View &, const sf::View &);
 	float posX;
 	float posY;
 	void setPosition(float, float);
 	sf::RectangleShape shadow;
 	sf::Texture mapTexture[2];
-	sf::Sprite mapSprite1, mapSprite2;
+	framework::Sprite mapSprite1, mapSprite2;
 	sf::RenderTexture rt, re;
 	uint8_t mapArray[61][61];
 	std::vector <wall> walls;

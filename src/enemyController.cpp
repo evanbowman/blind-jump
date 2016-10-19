@@ -24,10 +24,10 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
 			element.getYpos() > viewCenter.y - viewSize.y / 2 - 48 &&
 			element.getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 			// Get the enemy's shadow
-			std::tuple<sf::Sprite, float, Rendertype, float> shadow;
+			std::tuple<framework::Sprite, float, Rendertype, float> shadow;
 			std::get<0>(shadow) = element.getShadow();
 			gameShadows.push_back(shadow);
-			std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
+			std::tuple<framework::Sprite, float, Rendertype, float> tSpr;
 			std::get<0>(tSpr) = element.getSprite();
 			std::get<1>(tSpr) = element.getYpos();
 			if (element.colored()) {
@@ -40,7 +40,7 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
 	}
 	for (auto & element : critters) {
 		gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
-		std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
+		std::tuple<framework::Sprite, float, Rendertype, float> tSpr;
 		std::get<0>(tSpr) = element.getSprite();
 		std::get<1>(tSpr) = element.getYpos() - 16;
 		// If the enemy should be colored, let the rendering code know to pass it through a fragment shader
@@ -92,14 +92,13 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
 }
 
 void enemyController::update(Game * pGame,
-							 float x,
-							 float y,
 							 bool enabled,
 							 const sf::Time & elapsedTime,
 							 std::vector<sf::Vector2f> & cameraTargets) {
 	EffectGroup & effectGroup = pGame->getEffects();
 	tileController & tileController = pGame->getTileController();
 	Camera & camera = pGame->getCamera();
+	Player * player = &pGame->getPlayer();
 	const sf::View & cameraView = camera.getView();
 	sf::Vector2f viewCenter = cameraView.getCenter();
 	sf::Vector2f viewSize = cameraView.getSize();
@@ -115,7 +114,7 @@ void enemyController::update(Game * pGame,
 					it->getYpos() > viewCenter.y - viewSize.y / 2 - 48 &&
 					it->getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 					if (enabled) {
-						it->update(elapsedTime, x, y, effectGroup);
+						it->update(elapsedTime, player, effectGroup);
 					}
 					cameraTargets.emplace_back(it->getXpos(), it->getYpos());
 				}
@@ -135,7 +134,7 @@ void enemyController::update(Game * pGame,
 					it->getYpos() > viewCenter.y - viewSize.y / 2 - 48 &&
 					it->getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 					if (enabled) {
-						it->update(x, y, tileController.walls, effectGroup, elapsedTime);
+						it->update(player, tileController.walls, effectGroup, elapsedTime);
 					}
 					cameraTargets.emplace_back(it->getXpos(), it->getYpos());
 				}
@@ -172,7 +171,7 @@ void enemyController::update(Game * pGame,
 					cameraTargets.emplace_back(it->getXpos(), it->getYpos());
 				}
 				if (enabled) {
-					it->critterUpdate(x, y, effectGroup, elapsedTime, tileController);
+					it->update(player, effectGroup, elapsedTime, tileController);
 				}
 				++it;
 			}
@@ -191,7 +190,7 @@ void enemyController::update(Game * pGame,
 				element.getYpos() > viewCenter.y - viewSize.y / 2 - 48 &&
 				element.getYpos() < viewCenter.y + viewSize.y / 2 + 48) {
 				if (enabled) {
-					element.update(x, y, tileController.walls, effectGroup, elapsedTime);
+					element.update(player, tileController.walls, effectGroup, elapsedTime);
 					if (element.getState() != Dasher::State::dead) {
 						cameraTargets.emplace_back(element.getXpos(), element.getYpos());
 					}
