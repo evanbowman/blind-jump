@@ -742,6 +742,6 @@ sf::Vector2f Player::requestFuturePos(const uint32_t uTime) const {
 	sf::Vector2f futurePos;
 	futurePos.x = uTime * (-lSpeed + rSpeed) * MOVEMENT_RATE_CONSTANT + xPos;
 	futurePos.y = uTime * (-uSpeed + dSpeed) * MOVEMENT_RATE_CONSTANT + yPos;
-	futurePos = math::lerp(futurePos, sf::Vector2f(xPos, yPos), 1 - 1 / rng::random<15, 8>());
+	futurePos = math::lerp(futurePos, sf::Vector2f(xPos, yPos), 1 - 1 / rng::random<30, 1>());
 	return futurePos;
 }
