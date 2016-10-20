@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(blindjump)
+project(BlindJump)
 set(EXECUTABLE_NAME ${PROJECT_NAME})
+set(PROJECT_SOURCE_DIR "../src/")
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-file(GLOB_RECURSE blindjump_SOURCES "../src/*.cpp")
-file(GLOB_RECURSE blindjump_HEADERS "../src/*.hpp")
+file(GLOB_RECURSE blindjump_SOURCES "${PROJECT_SOURCE_DIR}/*.cpp")
+file(GLOB_RECURSE blindjump_HEADERS "${PROJECT_SOURCE_DIR}/*.hpp")
 
 if(APPLE)
   set(RESOURCE_PATH "macos/ResourcePath.mm")
@@ -18,11 +19,11 @@ endif()
 
 set(CMAKE_BUILD_TYPE Release)
 
-set(blindjump_VERSION_MAJOR 0)
-set(blindjump_VERSION_MINOR 2)
+set(VERSION_MAJOR 0)
+set(VERSION_MINOR 2)
 configure_file(
-  "${PROJECT_SOURCE_DIR}/config.h.in"
-  "${PROJECT_BINARY_DIR}/config.h"
+  "${PROJECT_BINARY_DIR}/config.h.in"
+  "${PROJECT_SOURCE_DIR}/config.h"
   )
 include_directories("${PROJECT_BINARY_DIR}")
 

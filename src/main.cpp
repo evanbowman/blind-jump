@@ -1,4 +1,3 @@
-
 //========================================================================//
 // Copyright (C) 2016 Evan Bowman										  //
 // Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.			  //
@@ -23,9 +22,9 @@
 #include "player.hpp"
 #include "alias.hpp"
 #include "game.hpp"
+#include "config.h"
 #include "util.hpp"
 #include "rng.hpp"
-
 
 ResHandler * resHandlerPtr = nullptr;
 std::exception_ptr pWorkerException = nullptr;
@@ -39,7 +38,7 @@ int main() {
 	    ::resHandlerPtr = &resourceHandler;
 		sf::ContextSettings settings;
 		settings.antialiasingLevel = 6;
-		sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Blind Jump", sf::Style::Fullscreen, settings);
+		sf::RenderWindow window(sf::VideoMode::getDesktopMode(), EXECUTABLE_NAME, sf::Style::Fullscreen, settings);
 		window.setMouseCursorVisible(false);
 		window.setVerticalSyncEnabled(true);
 		window.setFramerateLimit(120);

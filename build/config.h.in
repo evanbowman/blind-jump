@@ -1,2 +1,4 @@
-#define blindjump_VERSION_MAJOR @blindjump_VERSION_MAJOR@
-#define blindjump_VERSION_MINOR @blindjump_VERSION_MINOR@
+#define VERSION_MAJOR @VERSION_MAJOR@
+#define VERSION_MINOR @VERSION_MINOR@
+#define STRING(s) #s
+#define EXECUTABLE_NAME STRING(@EXECUTABLE_NAME@)
