@@ -49,7 +49,7 @@ int initEnemies(Game * gm) {
 		collector += diff;
 		intervals[i] = collector;
 	}
-	int iters = 2 + pow(currentLevel, 1.1f);
+	int iters = 3 + pow(currentLevel, 1.05f);
 	if (iters > 15) {
 		iters = 15;
 	}
