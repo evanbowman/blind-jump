@@ -125,6 +125,8 @@ namespace ui {
 		float getBlurAmount();
 		void setPowerup(Powerup);
 		Powerup getCurrentPowerup() const;
+		const PowerupBubbleState getPowerupBubbleState() const;
+		
 	private:
 		State state;
 		PowerupBubbleState powerupBubbleState;

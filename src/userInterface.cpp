@@ -106,6 +106,10 @@ Powerup ui::Backend::getCurrentPowerup() const {
 	return powerup;
 }
 
+const ui::Backend::PowerupBubbleState ui::Backend::getPowerupBubbleState() const {
+	return powerupBubbleState;
+}
+
 void ui::Backend::update(Player & player,
 						 ui::Frontend & uIFrontEnd,
 						 InputController * pInput,

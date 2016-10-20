@@ -278,8 +278,7 @@ void Game::update(const sf::Time & elapsedTime) {
 		en.update(this, !UI.isOpen(), elapsedTime, cameraTargets);
 		camera.update(elapsedTime, cameraTargets);
 		if (player.visible) player.update(this, elapsedTime, sounds);
-		if (!UI.isOpen() //|| (UI.isOpen() && player.getState() == Player::State::dead)
-			) {
+		if (!UI.isOpen()) {
 			effectGroup.apply(groupUpdatePolicy);
 		}
 	}
@@ -396,7 +395,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 				 std::abs(player.getYpos() - teleporterY + 12) < 8)) {
 				player.setPosition(teleporterX - 2.f, teleporterY - 16.f);
 				player.setState(Player::State::deactivated);
-				if (!camera.moving()) {
+				if (!camera.moving() && UI.getPowerupBubbleState() != ui::Backend::PowerupBubbleState::closed) {
 					transitionState = TransitionState::ExitBeamEnter;
 				}
 			}

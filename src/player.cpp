@@ -608,7 +608,7 @@ void Player::setHealth(Health value) {
 	health = value;
 }
 
-void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, EffectGroup & effects, SoundController & /*TODO: sounds*/, ui::Backend & UI) {
+void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, EffectGroup & effects, SoundController & sounds, ui::Backend & UI) {
 	gun.timeout -= elapsedTime.asMicroseconds();
 	if (gun.bulletTimer != 0) {
 		gun.bulletTimer -= elapsedTime.asMicroseconds();
@@ -625,7 +625,7 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, Effect
 		} else if (gun.timeout < 1671000) {
 			gun.timeout = 1671000;
 			if (gun.bulletTimer == 0) {
-				// TODO: sounds.play(ResHandler::Sound::gunShot);
+				// sounds.play(ResHandler::Sound::gunShot);
 				effects.add<9>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
 							   ::resHandlerPtr->getTexture(ResHandler::Texture::whiteGlow),
 							   static_cast<int>(sheetIndex), xPos, yPos);
@@ -639,7 +639,7 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, Effect
 	}
 }
 
-template<size_t indx, typename F >
+template<size_t indx, typename F>
 void checkEffectCollision(EffectGroup & effects, Player * pPlayer, const F & policy) {
 	for (auto & element : effects.get<indx>()) {
 		if (pPlayer->getHitBox().overlapping(element.getHitBox())) {
