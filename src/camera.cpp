@@ -120,8 +120,8 @@ void Camera::setView(const sf::View & _view) {
 bool Camera::moving() const {
 	const sf::Vector2f playerPos = pTarget->getPosition();
 	const sf::Vector2f & cameraPos = view.getCenter();			
-	if (std::abs(playerPos.x - cameraPos.x) < 1.f &&
-		std::abs(playerPos.y - cameraPos.y) < 1.f) {
+	if (std::abs(playerPos.x - cameraPos.x) < 0.5f &&
+		std::abs(playerPos.y - cameraPos.y) < 0.5f) {
 		return false;
 	}
 	return true;
