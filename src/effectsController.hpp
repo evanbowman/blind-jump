@@ -39,10 +39,10 @@ void drawVec(EffectGroup & eg,
 			 const sf::Vector2f viewSize) {
 	for (auto & element : eg.get<indx>()) {
 		const sf::Vector2f elemPos = element.getPosition();
-		if (elemPos.x > viewCenter.x - viewSize.x / 2 - 48 &&
-			elemPos.x < viewCenter.x + viewSize.x / 2 + 48 &&
-			elemPos.y > viewCenter.y - viewSize.y / 2 - 48 &&
-			elemPos.y < viewCenter.y + viewSize.y / 2 + 48) {
+		if (elemPos.x > viewCenter.x - viewSize.x / 2 &&
+			elemPos.x < viewCenter.x + viewSize.x / 2 &&
+			elemPos.y > viewCenter.y - viewSize.y / 2 &&
+			elemPos.y < viewCenter.y + viewSize.y / 2) {
 			vec.emplace_back(element.getSprite(), elemPos.y + yOffset, Rendertype::shadeNone, 0.f);
 		}
 	}
@@ -56,10 +56,10 @@ void drawVecGlow(EffectGroup & eg,
 				 const sf::Vector2f viewSize) {
 	for (auto & element : eg.get<indx>()) {
 		const sf::Vector2f elemPos = element.getPosition();
-		if (elemPos.x > viewCenter.x - viewSize.x / 2 - 48 &&
-			elemPos.x < viewCenter.x + viewSize.x / 2 + 48 &&
-			elemPos.y > viewCenter.y - viewSize.y / 2 - 48 &&
-			elemPos.y < viewCenter.y + viewSize.y / 2 + 48) {
+		if (elemPos.x > viewCenter.x - viewSize.x / 2 &&
+			elemPos.x < viewCenter.x + viewSize.x / 2 &&
+			elemPos.y > viewCenter.y - viewSize.y / 2 &&
+			elemPos.y < viewCenter.y + viewSize.y / 2) {
 			glowSprs.push_back(element.getGlow());
 			vec.emplace_back(element.getSprite(), elemPos.y + yOffset, Rendertype::shadeNone, 0.f);
 		}

@@ -38,10 +38,10 @@ void drawVec(DetailGroup & dg,
 			 const sf::Vector2f viewSize) {
 	for (auto & element : dg.get<indx>()) {
 		const sf::Vector2f elemPos = element.getPosition();
-		if (elemPos.x > viewCenter.x - viewSize.x / 2 - 64 &&
-			elemPos.x < viewCenter.x + viewSize.x / 2 + 64 &&
-			elemPos.y > viewCenter.y - viewSize.y / 2 - 64 &&
-			elemPos.y < viewCenter.y + viewSize.y / 2 + 64) {
+		if (elemPos.x > viewCenter.x - viewSize.x / 2 &&
+			elemPos.x < viewCenter.x + viewSize.x / 2 &&
+			elemPos.y > viewCenter.y - viewSize.y / 2 &&
+			elemPos.y < viewCenter.y + viewSize.y / 2) {
 			gameObjects.emplace_back(element.getSprite(), element.getPosition().y + yOffset, Rendertype::shadeDefault, 0.f);
 		}
 	}
@@ -55,10 +55,10 @@ void drawVecShadowed(DetailGroup & dg,
 					 const sf::Vector2f viewSize) {
 	for (auto & element : dg.get<indx>()) {
 		const sf::Vector2f elemPos = element.getPosition();
-		if (elemPos.x > viewCenter.x - viewSize.x / 2 - 64 &&
-			elemPos.x < viewCenter.x + viewSize.x / 2 + 64 &&
-			elemPos.y > viewCenter.y - viewSize.y / 2 - 64 &&
-			elemPos.y < viewCenter.y + viewSize.y / 2 + 64) {
+		if (elemPos.x > viewCenter.x - viewSize.x / 2 &&
+			elemPos.x < viewCenter.x + viewSize.x / 2 &&
+			elemPos.y > viewCenter.y - viewSize.y / 2 &&
+			elemPos.y < viewCenter.y + viewSize.y / 2) {
 			gameObjects.emplace_back(element.getSprite(), element.getPosition().y + yOffset, Rendertype::shadeDefault, 0.f);
 			gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeNone, 0.f);
 		}

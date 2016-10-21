@@ -15,6 +15,7 @@ class Camera {
 	Player * pTarget;
 	sf::View overworldView, windowView;
 	sf::Vector2f startPosition, midpoint, buffer, currentPosition;
+	sf::Vector2u windowSize;
 	bool isShaking;
 	uint8_t shakeIndex;
 	int64_t shakeTimer, trackingTimer;
@@ -26,7 +27,7 @@ class Camera {
 	void upscaleWindowView();
 	
 public:
-	Camera(Player * _pTarget, const sf::Vector2f & viewPort);
+	Camera(Player * _pTarget, const sf::Vector2f & viewPort, const sf::Vector2u &);
 	void update(const sf::Time &, const std::vector<sf::Vector2f> &);
 	void snapToTarget();
 	void panDown();

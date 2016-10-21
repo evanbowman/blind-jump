@@ -5,11 +5,12 @@
 
 #include "camera.hpp"
 
-Camera::Camera(Player * _pTarget, const sf::Vector2f & viewPort)  :
+Camera::Camera(Player * _pTarget, const sf::Vector2f & viewPort, const sf::Vector2u & _windowSize)  :
 		pTarget(_pTarget),
 		overworldView(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
 		startPosition(overworldView.getCenter()),
 		currentPosition(startPosition),
+		windowSize(_windowSize),
 		isShaking(false),
 		shakeIndex(0),
 		shakeTimer(0),
@@ -101,7 +102,7 @@ void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f
 	const sf::Vector2f overworldViewSize = overworldView.getSize();
 	const sf::Vector2f scaleVec(windowViewSize.x / overworldViewSize.x, windowViewSize.y / overworldViewSize.y);
 	const sf::Vector2f scaledCameraOffset(cameraTargetOffset.x * scaleVec.x, cameraTargetOffset.y * scaleVec.y);
-	windowView.setCenter(windowViewSize.x / 2.f + scaledCameraOffset.x, windowViewSize.y / 2.f + scaledCameraOffset.y);
+	windowView.setCenter(windowSize.x / 2.f + scaledCameraOffset.x, windowSize.y / 2.f + scaledCameraOffset.y);
 }
 
 const sf::View & Camera::getOverworldView() const {

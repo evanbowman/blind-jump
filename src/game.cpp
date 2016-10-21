@@ -21,7 +21,7 @@ Game::Game(const sf::Vector2f & _viewPort, const sf::Vector2u & windowSize, Inpu
 	  transitionState(TransitionState::None),
 	  pInput(_pInput),
 	  player(viewPort.x / 2, viewPort.y / 2),
-	  camera(&player, viewPort),
+	  camera(&player, viewPort, windowSize),
 	  pUiFrontend(_pUiFrontend),
 	  level(0),
 	  stashed(false),
@@ -30,10 +30,11 @@ Game::Game(const sf::Vector2f & _viewPort, const sf::Vector2u & windowSize, Inpu
 	  timer(0)
 {
     sf::View windowView;
-	const sf::Vector2f vignetteMaskScale(viewPort.x / 450, viewPort.y / 450);
+	const sf::Vector2f vignetteMaskScale((viewPort.x * 0.77) / 450, (viewPort.y * 0.77) / 450);
 	vignetteSprite.setScale(vignetteMaskScale);
 	vignetteShadowSpr.setScale(vignetteMaskScale);
 	windowView.setSize(windowSize.x, windowSize.y);
+	windowView.zoom(0.75);
 	camera.setWindowView(windowView);
 	init();
 }
@@ -163,7 +164,8 @@ void Game::draw(sf::RenderWindow & window) {
 		target.setView(camera.getOverworldView());
 		bkg.drawForeground(target);
 		target.setView(worldView);
-	    sf::Vector2f fgMaskPos(camera.getOffsetFromTarget().x - 1, camera.getOffsetFromTarget().y - 1);
+	    sf::Vector2f fgMaskPos(viewPort.x * 0.115f + camera.getOffsetFromTarget().x * 0.75f,
+							   viewPort.y * 0.115f + camera.getOffsetFromTarget().y * 0.75f);
 		vignetteSprite.setPosition(fgMaskPos);
 		vignetteShadowSpr.setPosition(fgMaskPos);
 		target.draw(vignetteSprite, sf::BlendMultiply);
@@ -174,7 +176,10 @@ void Game::draw(sf::RenderWindow & window) {
 	const sf::Vector2f scaleVec(windowSize.x / viewPort.x, windowSize.y / viewPort.y);
 	if (UI.blurEnabled() && UI.desaturateEnabled()) {
 		if (stashed) {
-			window.draw(framework::Sprite(stash.getTexture()));
+			sf::Sprite targetSprite(stash.getTexture());
+			window.setView(camera.getWindowView());
+			targetSprite.setScale(scaleVec);
+			window.draw(targetSprite);
 		} else {
 			sf::Shader & blurShader = ::resHandlerPtr->getShader(ResHandler::Shader::blur);
 			sf::Shader & desaturateShader = ::resHandlerPtr->getShader(ResHandler::Shader::desaturate);
