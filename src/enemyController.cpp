@@ -15,7 +15,7 @@
 enemyController::enemyController() {}
 
 void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows, Camera & camera) {
-	const sf::View & cameraView = camera.getView();
+	const sf::View & cameraView = camera.getOverworldView();
 	sf::Vector2f viewCenter = cameraView.getCenter();
 	sf::Vector2f viewSize = cameraView.getSize();
 	for (auto & element : turrets) {
@@ -99,7 +99,7 @@ void enemyController::update(Game * pGame,
 	tileController & tileController = pGame->getTileController();
 	Camera & camera = pGame->getCamera();
 	Player * player = &pGame->getPlayer();
-	const sf::View & cameraView = camera.getView();
+	const sf::View & cameraView = camera.getOverworldView();
 	sf::Vector2f viewCenter = cameraView.getCenter();
 	sf::Vector2f viewSize = cameraView.getSize();
 	if (!turrets.empty()) {

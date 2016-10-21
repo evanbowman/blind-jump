@@ -37,7 +37,7 @@ public:
 		EntryBeamDrop,
 		EntryBeamFade
 	};
-	Game(const sf::Vector2f & viewPort, InputController *, ui::Frontend *);
+	Game(const sf::Vector2f & viewPort, const sf::Vector2u &, InputController *, ui::Frontend *);
 	void update(const sf::Time &);
 	void draw(sf::RenderWindow &);
 	void nextLevel();

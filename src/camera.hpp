@@ -13,8 +13,8 @@
 
 class Camera {
 	Player * pTarget;
-	sf::View view;
-	sf::Vector2f startPosition, midpoint, buffer;
+	sf::View overworldView, windowView;
+	sf::Vector2f startPosition, midpoint, buffer, currentPosition;
 	bool isShaking;
 	uint8_t shakeIndex;
 	int64_t shakeTimer, trackingTimer;
@@ -23,15 +23,19 @@ class Camera {
 		trackMidpoint, followPlayer, foundEnemy
     };
 	State state;
+	void upscaleWindowView();
 	
 public:
 	Camera(Player * _pTarget, const sf::Vector2f & viewPort);
 	void update(const sf::Time &, const std::vector<sf::Vector2f> &);
 	void snapToTarget();
 	void panDown();
-	const sf::View & getView() const;
+	const sf::View & getOverworldView() const;
+	const sf::View & getWindowView() const;
 	void shake(float);
-	void setView(const sf::View &);
+	void setOverworldView(const sf::View &);
+	void setWindowView(const sf::View &);
 	bool moving() const;
-	sf::Vector2f getOffset() const;
+	sf::Vector2f getOffsetFromStart() const;
+	sf::Vector2f getOffsetFromTarget() const;
 };

@@ -53,39 +53,39 @@ void backgroundHandler::drawBackground(sf::RenderTexture & target, const sf::Vie
 		    target.draw(bkgSprite);
 			break;
 	}
-	target.setView(camera.getView());
+	target.setView(camera.getOverworldView());
 	if (workingSet != 0) {
 		for (int i = 0; i < STARMAP_SIZE; i++) {
 			for (int j = 0; j < STARMAP_SIZE; j++) {
-				if (stars[i][j].getPosition().x < camera.getView().getCenter().x - camera.getView().getSize().x / 2 - 128) {
+				if (stars[i][j].getPosition().x < camera.getOverworldView().getCenter().x - camera.getOverworldView().getSize().x / 2 - 128) {
 					stars[i][j].setPosition(stars[i][j].getPosition().x + 128 * STARMAP_SIZE, stars[i][j].getPosition().y);
 				}
 				
-				if (stars[i][j].getPosition().x > camera.getView().getCenter().x + camera.getView().getSize().x / 2 + 128) {
+				if (stars[i][j].getPosition().x > camera.getOverworldView().getCenter().x + camera.getOverworldView().getSize().x / 2 + 128) {
 					stars[i][j].setPosition(stars[i][j].getPosition().x - 128 * STARMAP_SIZE, stars[i][j].getPosition().y);
 				}
 				
-				if (stars[i][j].getPosition().y > camera.getView().getCenter().y + camera.getView().getSize().y / 2 + 128) {
+				if (stars[i][j].getPosition().y > camera.getOverworldView().getCenter().y + camera.getOverworldView().getSize().y / 2 + 128) {
 					stars[i][j].setPosition(stars[i][j].getPosition().x, stars[i][j].getPosition().y - 128 * STARMAP_SIZE);
 				}
 				
-				if (stars[i][j].getPosition().y < camera.getView().getCenter().y - camera.getView().getSize().y / 2 - 128) {
+				if (stars[i][j].getPosition().y < camera.getOverworldView().getCenter().y - camera.getOverworldView().getSize().y / 2 - 128) {
 					stars[i][j].setPosition(stars[i][j].getPosition().x, stars[i][j].getPosition().y + 128 * STARMAP_SIZE);
 				}
 				
-				if (starsFar[i][j].getPosition().x < camera.getView().getCenter().x - camera.getView().getSize().x / 2 - 128) {
+				if (starsFar[i][j].getPosition().x < camera.getOverworldView().getCenter().x - camera.getOverworldView().getSize().x / 2 - 128) {
 					starsFar[i][j].setPosition(starsFar[i][j].getPosition().x + 128 * STARMAP_SIZE, starsFar[i][j].getPosition().y);
 				}
 				
-				if (starsFar[i][j].getPosition().x > camera.getView().getCenter().x + camera.getView().getSize().x / 2 + 128) {
+				if (starsFar[i][j].getPosition().x > camera.getOverworldView().getCenter().x + camera.getOverworldView().getSize().x / 2 + 128) {
 					starsFar[i][j].setPosition(starsFar[i][j].getPosition().x - 128 * STARMAP_SIZE, starsFar[i][j].getPosition().y);
 				}
 				
-				if (starsFar[i][j].getPosition().y > camera.getView().getCenter().y + camera.getView().getSize().y / 2 + 128) {
+				if (starsFar[i][j].getPosition().y > camera.getOverworldView().getCenter().y + camera.getOverworldView().getSize().y / 2 + 128) {
 					starsFar[i][j].setPosition(starsFar[i][j].getPosition().x, starsFar[i][j].getPosition().y - 128 * STARMAP_SIZE);
 				}
 				
-				if (starsFar[i][j].getPosition().y < camera.getView().getCenter().y - camera.getView().getSize().y / 2 - 128) {
+				if (starsFar[i][j].getPosition().y < camera.getOverworldView().getCenter().y - camera.getOverworldView().getSize().y / 2 - 128) {
 					starsFar[i][j].setPosition(starsFar[i][j].getPosition().x, starsFar[i][j].getPosition().y + 128 * STARMAP_SIZE);
 				}
 				

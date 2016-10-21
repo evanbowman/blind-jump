@@ -16,7 +16,7 @@
 // NOTE: game class is meant to be instantiated only once, so this is ok
 std::mutex overworldMutex, UIMutex, transitionMutex;
 
-Game::Game(const sf::Vector2f & viewPort, InputController * _pInput, ui::Frontend * _pUiFrontend)
+Game::Game(const sf::Vector2f & viewPort, const sf::Vector2u & windowSize, InputController * _pInput, ui::Frontend * _pUiFrontend)
 	: windowW(viewPort.x),
 	  windowH(viewPort.y),
 	  transitionState(TransitionState::None),
@@ -30,6 +30,9 @@ Game::Game(const sf::Vector2f & viewPort, InputController * _pInput, ui::Fronten
 	  worldView(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
 	  timer(0)
 {
+    sf::View windowView;
+	windowView.setSize(windowSize.x, windowSize.y);
+	camera.setWindowView(windowView);
 	init();
 }
 
@@ -72,16 +75,16 @@ void Game::draw(sf::RenderWindow & window) {
 	if (!stashed || preload) {
 		{
 			std::lock_guard<std::mutex> overworldLock(::overworldMutex);
-			lightingMap.setView(camera.getView());
+			lightingMap.setView(camera.getOverworldView());
 			bkg.drawBackground(target, worldView, camera);
-			tiles.draw(target, &glowSprs1, level, worldView, camera.getView());
+			tiles.draw(target, &glowSprs1, level, worldView, camera.getOverworldView());
 			glowSprs2.clear();
 			glowSprs1.clear();
 			gameShadows.clear();
 			gameObjects.clear();
-			target.setView(camera.getView());
-			const sf::Vector2f viewCenter = camera.getView().getCenter();
-			const sf::Vector2f viewSize = camera.getView().getSize();
+			target.setView(camera.getOverworldView());
+			const sf::Vector2f viewCenter = camera.getOverworldView().getCenter();
+			const sf::Vector2f viewSize = camera.getOverworldView().getSize();
 			drawGroup(details, gameObjects, gameShadows, glowSprs1, glowSprs2, target, viewCenter, viewSize);
 			if (player.visible) {
 				player.draw(gameObjects, gameShadows);
@@ -103,7 +106,7 @@ void Game::draw(sf::RenderWindow & window) {
 															 const drawableMetadata & arg2) {
 					  return (std::get<zOrderIdx>(arg1) < std::get<zOrderIdx>(arg2));
 				  });
-		window.setView(worldView);
+		// window.setView(worldView);
 		static const size_t sprIdx = 0;
 		static const size_t shaderIdx = 3;
 		sf::Shader & colorShader = ::resHandlerPtr->getShader(ResHandler::Shader::color);
@@ -157,7 +160,7 @@ void Game::draw(sf::RenderWindow & window) {
 		}
 		lightingMap.display();
 		target.draw(framework::Sprite(lightingMap.getTexture()));
-		target.setView(camera.getView());
+		target.setView(camera.getOverworldView());
 		bkg.drawForeground(target);
 		target.setView(worldView);
 		target.draw(vignetteSprite, sf::BlendMultiply);
@@ -166,7 +169,6 @@ void Game::draw(sf::RenderWindow & window) {
 	}
 	if (UI.blurEnabled() && UI.desaturateEnabled()) {
 		if (stashed) {
-			window.setView(worldView);
 			window.draw(framework::Sprite(stash.getTexture()));
 		} else {
 			sf::Shader & blurShader = ::resHandlerPtr->getShader(ResHandler::Shader::blur);
@@ -199,7 +201,6 @@ void Game::draw(sf::RenderWindow & window) {
 			if (pInput->pausePressed()) {
 				preload = true;
 			}
-			window.setView(worldView);
 			window.draw(framework::Sprite(stash.getTexture()));
 		} else {
 			sf::Shader & blurShader = ::resHandlerPtr->getShader(ResHandler::Shader::blur);
@@ -228,7 +229,12 @@ void Game::draw(sf::RenderWindow & window) {
 		desaturateShader.setUniform("amount", UI.getDesaturateAmount());
 		window.draw(framework::Sprite(target.getTexture()), &desaturateShader);
 	} else {
-		window.draw(framework::Sprite(target.getTexture()));
+		sf::Sprite targetSprite(target.getTexture());
+		window.setView(camera.getWindowView());
+		sf::Vector2u windowSize = window.getSize();
+		sf::Vector2f scaleVec(windowSize.x / windowW, windowSize.y / windowH);
+		targetSprite.setScale(scaleVec);
+		window.draw(targetSprite);
 	}
 	{
 		std::lock_guard<std::mutex> UILock(::UIMutex);
@@ -241,7 +247,7 @@ void Game::draw(sf::RenderWindow & window) {
 			pUiFrontend->draw(window);
 		}
 	}
-	window.setView(worldView);
+	// window.setView(worldView);
 	drawTransitions(window);
 }
 
@@ -257,7 +263,7 @@ void Game::update(const sf::Time & elapsedTime) {
 	if (!stashed || preload) {
 		std::lock_guard<std::mutex> overworldLock(::overworldMutex);
 		if (level != 0) {
-			const sf::Vector2f & cameraOffset = camera.getOffset();
+			const sf::Vector2f & cameraOffset = camera.getOffsetFromStart();
 			bkg.setOffset(cameraOffset.x, cameraOffset.y);
 		} else { // TODO: why is this necessary...?
 			bkg.setOffset(0, 0);
