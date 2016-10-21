@@ -92,7 +92,7 @@ void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f
 				shakeTimer = 0;
 			}
 		}
-		const static std::array<int, 5> shakeConstants = {{3, -5, 3, -2, 1}};
+		static const std::array<int, 5> shakeConstants = {{3, -5, 3, -2, 1}};
 		float shakeOffset = shakeConstants[shakeIndex];
 		currentPosition.y += shakeOffset * shakeIntensity;
 	}
@@ -103,8 +103,6 @@ void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f
 	const sf::Vector2f scaledCameraOffset(cameraTargetOffset.x * scaleVec.x, cameraTargetOffset.y * scaleVec.y);
 	windowView.setCenter(windowViewSize.x / 2.f + scaledCameraOffset.x, windowViewSize.y / 2.f + scaledCameraOffset.y);
 }
-
-
 
 const sf::View & Camera::getOverworldView() const {
 	return overworldView;
@@ -136,10 +134,9 @@ void Camera::setWindowView(const sf::View & _windowView) {
 }
 
 bool Camera::moving() const {
-	const sf::Vector2f playerPos = pTarget->getPosition();
-	const sf::Vector2f & cameraPos = overworldView.getCenter();			
-	if (std::abs(playerPos.x - cameraPos.x) < 0.5f &&
-		std::abs(playerPos.y - cameraPos.y) < 0.5f) {
+	const sf::Vector2f playerPos = pTarget->getPosition();			
+	if (std::abs(playerPos.x - currentPosition.x) < 0.5f &&
+		std::abs(playerPos.y - currentPosition.y) < 0.5f) {
 		return false;
 	}
 	return true;

@@ -51,8 +51,7 @@ public:
 	ui::Backend & getUI();
 	ui::Frontend * getPUIFrontend();
 	Camera & getCamera();
-	float windowW;
-	float windowH;
+	sf::Vector2f viewPort;
 	TransitionState transitionState;
 
 private:
