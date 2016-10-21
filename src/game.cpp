@@ -422,7 +422,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 					transitionState = TransitionState::ExitBeamEnter;
 				}
 			}
-			beamShape.setPosition(viewPort.x / 2 - 1.5, viewPort.y / 2 + 36);
+			beamShape.setPosition(viewPort.x / 2 - 1.5, viewPort.y / 2 + 48);
 			beamShape.setFillColor(sf::Color(114, 255, 229, 6));
 			beamShape.setSize(sf::Vector2f(2, 0));
 			beamGlowSpr.setPosition(viewPort.x / 2 - 200, viewPort.y / 2 - 200 + 36);
@@ -434,7 +434,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 		{
 			static const int_fast64_t transitionTime = 500000;
 			static const int_fast64_t alphaTransitionTime = 450000;
-			const int beamTargetY = -(viewPort.y / 2 + 36);
+			const int beamTargetY = -(viewPort.y / 2 + 48);
 			float beamHeight = Easing::easeIn<1>(timer, transitionTime) * beamTargetY;
 			uint8_t brightness = Easing::easeIn<1>(timer, transitionTime) * 255;
 			uint_fast8_t alpha = Easing::easeIn<1>(timer, alphaTransitionTime) * 255;
@@ -443,7 +443,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 			beamShape.setSize(sf::Vector2f(2, beamHeight));
 			if (timer > transitionTime) {
 				timer = 0;
-				beamShape.setSize(sf::Vector2f(2, -(viewPort.y / 2 + 36)));
+				beamShape.setSize(sf::Vector2f(2, -(viewPort.y / 2 + 48)));
 				beamShape.setFillColor(sf::Color(114, 255, 229, 255));
 				transitionState = TransitionState::ExitBeamInflate;
 			}
@@ -457,7 +457,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 			float beamWidth = std::max(2.f, Easing::easeIn<2>(timer, transitionTime) * 20.f);
 			float beamHeight = beamShape.getSize().y;
 			beamShape.setSize(sf::Vector2f(beamWidth, beamHeight));
-			beamShape.setPosition(viewPort.x / 2 - 0.5f - beamWidth / 2.f, viewPort.y / 2 + 36);	
+			beamShape.setPosition(viewPort.x / 2 - 0.5f - beamWidth / 2.f, viewPort.y / 2 + 48);	
 			if (timer > transitionTime) {
 				timer = 0;
 				transitionState = TransitionState::ExitBeamDeflate;
@@ -473,7 +473,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 			float beamWidth = 0.9999995 * std::exp(-0.0050125355 * static_cast<double>(timer)) * 20.f;
 			float beamHeight = beamShape.getSize().y;
 			beamShape.setSize(sf::Vector2f(beamWidth, beamHeight));
-			beamShape.setPosition(viewPort.x / 2 - 0.5f - beamWidth / 2.f, viewPort.y / 2 + 36);
+			beamShape.setPosition(viewPort.x / 2 - 0.5f - beamWidth / 2.f, viewPort.y / 2 + 48);
 			if (timer >= 640) {
 				timer = 0;
 				transitionState = TransitionState::TransitionOut;
@@ -505,7 +505,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 		timer += elapsedTime.asMicroseconds();
 		{
 			static const int64_t transitionTime = 350000;
-			float beamHeight = Easing::easeIn<2>(timer, transitionTime) * (viewPort.y / 2 + 26);
+			float beamHeight = Easing::easeIn<2>(timer, transitionTime) * (viewPort.y / 2 + 36);
 			uint8_t brightness = Easing::easeIn<1>(timer, transitionTime) * 255;
 			beamGlowSpr.setColor(sf::Color(brightness, brightness, brightness, 255));
 			beamShape.setSize(sf::Vector2f(4, beamHeight));			
