@@ -514,7 +514,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 				timer = 0;
 				player.visible = true;
 				util::sleep(milliseconds(20));
-				camera.shake(0.15f);
+				camera.shake(0.19f);
 			}
 		}
 		break;

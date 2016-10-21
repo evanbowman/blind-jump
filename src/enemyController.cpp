@@ -19,10 +19,10 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
 	sf::Vector2f viewCenter = cameraView.getCenter();
 	sf::Vector2f viewSize = cameraView.getSize();
 	for (auto & element : turrets) {
-		if (element.getXpos() > viewCenter.x - viewSize.x / 2 &&
-			element.getXpos() < viewCenter.x + viewSize.x / 2 &&
-			element.getYpos() > viewCenter.y - viewSize.y / 2 &&
-			element.getYpos() < viewCenter.y + viewSize.y / 2) {
+		if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 32 &&
+			element.getXpos() < viewCenter.x + viewSize.x / 2 + 32 &&
+			element.getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
+			element.getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
 			// Get the enemy's shadow
 			std::tuple<framework::Sprite, float, Rendertype, float> shadow;
 			std::get<0>(shadow) = element.getShadow();
@@ -53,10 +53,10 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
 		}		
 	}
 	for (auto & element : scoots) {
-		if (element.getXpos() > viewCenter.x - viewSize.x / 2 &&
-			element.getXpos() < viewCenter.x + viewSize.x / 2 &&
-			element.getYpos() > viewCenter.y - viewSize.y / 2 &&
-			element.getYpos() < viewCenter.y + viewSize.y / 2) {
+		if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 32 &&
+			element.getXpos() < viewCenter.x + viewSize.x / 2 + 32 &&
+			element.getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
+			element.getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
 			gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
 			if (element.isColored()) {
 				gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16,
@@ -68,10 +68,10 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
 		}
 	}
 	for (auto & element : dashers) {
-		if (element.getXpos() > viewCenter.x - viewSize.x / 2 &&
-			element.getXpos() < viewCenter.x + viewSize.x / 2 &&
-			element.getYpos() > viewCenter.y - viewSize.y / 2 &&
-			element.getYpos() < viewCenter.y + viewSize.y / 2) {
+		if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 32 &&
+			element.getXpos() < viewCenter.x + viewSize.x / 2 + 32 &&
+			element.getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
+			element.getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
 			auto state = element.getState();
 			if (state != Dasher::State::dying && state != Dasher::State::dead) {
 				gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
@@ -105,14 +105,14 @@ void enemyController::update(Game * pGame,
 	if (!turrets.empty()) {
 		for (auto it = turrets.begin(); it != turrets.end();) {
 			if (it->getKillFlag() == 1) {
-				util::sleep(milliseconds(45));
-				camera.shake(0.13f);
+				util::sleep(milliseconds(60));
+				camera.shake(0.17f);
 				it = turrets.erase(it);
 			} else {
-				if (it->getXpos() > viewCenter.x - viewSize.x / 2 &&
-					it->getXpos() < viewCenter.x + viewSize.x / 2 &&
-					it->getYpos() > viewCenter.y - viewSize.y / 2 &&
-					it->getYpos() < viewCenter.y + viewSize.y / 2) {
+				if (it->getXpos() > viewCenter.x - viewSize.x / 2 - 32 &&
+					it->getXpos() < viewCenter.x + viewSize.x / 2 + 32 &&
+					it->getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
+					it->getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
 					if (enabled) {
 						it->update(elapsedTime, player, effectGroup);
 					}
@@ -125,14 +125,14 @@ void enemyController::update(Game * pGame,
 	if (!scoots.empty()) {
 		for (auto it = scoots.begin(); it != scoots.end();) {
 			if (it->getKillFlag()) {
-				util::sleep(milliseconds(45));
-				camera.shake(0.13f);
+				util::sleep(milliseconds(60));
+				camera.shake(0.17f);
 				it = scoots.erase(it);
 			} else {
-				if (it->getXpos() > viewCenter.x - viewSize.x / 2 &&
-					it->getXpos() < viewCenter.x + viewSize.x / 2 &&
-					it->getYpos() > viewCenter.y - viewSize.y / 2 &&
-					it->getYpos() < viewCenter.y + viewSize.y / 2) {
+				if (it->getXpos() > viewCenter.x - viewSize.x / 2 - 32 &&
+					it->getXpos() < viewCenter.x + viewSize.x / 2 + 32 &&
+					it->getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
+					it->getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
 					if (enabled) {
 						it->update(player, tileController.walls, effectGroup, elapsedTime);
 					}
@@ -160,14 +160,14 @@ void enemyController::update(Game * pGame,
 		}
 		for (auto it = critters.begin(); it != critters.end();) {
 			if (it->getKillFlag()) {
-				util::sleep(milliseconds(45));
-				camera.shake(0.13f);
+				util::sleep(milliseconds(60));
+				camera.shake(0.17f);
 				it = critters.erase(it);
 			} else {
-				if (it->getXpos() > viewCenter.x - viewSize.x / 2 &&
-					it->getXpos() < viewCenter.x + viewSize.x / 2 &&
-					it->getYpos() > viewCenter.y - viewSize.y / 2 &&
-					it->getYpos() < viewCenter.y + viewSize.y / 2) {
+				if (it->getXpos() > viewCenter.x - viewSize.x / 2 - 32 &&
+					it->getXpos() < viewCenter.x + viewSize.x / 2 + 32 &&
+					it->getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
+					it->getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
 					cameraTargets.emplace_back(it->getXpos(), it->getYpos());
 				}
 				if (enabled) {
@@ -185,10 +185,10 @@ void enemyController::update(Game * pGame,
 	
 	if (!dashers.empty()) {
 		for (auto & element : dashers) {
-			if (element.getXpos() > viewCenter.x - viewSize.x / 2 &&
-				element.getXpos() < viewCenter.x + viewSize.x / 2 &&
-				element.getYpos() > viewCenter.y - viewSize.y / 2 &&
-				element.getYpos() < viewCenter.y + viewSize.y / 2) {
+			if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 32 &&
+				element.getXpos() < viewCenter.x + viewSize.x / 2 + 32 &&
+				element.getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
+				element.getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
 				if (enabled) {
 					element.update(player, tileController.walls, effectGroup, elapsedTime);
 					if (element.getState() != Dasher::State::dead) {
@@ -196,8 +196,8 @@ void enemyController::update(Game * pGame,
 					}
 				}
 				if (element.getKillFlag()) {
-					util::sleep(milliseconds(45));
-					camera.shake(0.13f);
+					util::sleep(milliseconds(60));
+					camera.shake(0.17f);
 					element.setKillFlag(false);
 				}
 			}

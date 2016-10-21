@@ -669,14 +669,14 @@ void Player::checkEffectCollisions(EffectGroup & effects, ui::Frontend * pUiFron
 			renderType = Rendertype::shadeRuby;
 			colorAmount = 1.f;
 			colorTimer = 0;
-			util::sleep(milliseconds(20));
+			util::sleep(milliseconds(40));
 		});
 	checkEffectCollision<5>(effects, this, [&]() {
 			pUiFrontend->updateScore(1);
 			renderType = Rendertype::shadeElectric;
 			colorAmount = 1.f;
 			colorTimer = 0;
-			util::sleep(milliseconds(20));
+			util::sleep(milliseconds(40));
 		});
 }
 
