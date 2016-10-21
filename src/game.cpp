@@ -395,7 +395,9 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 				 std::abs(player.getYpos() - teleporterY + 12) < 8)) {
 				player.setPosition(teleporterX - 2.f, teleporterY - 16.f);
 				player.setState(Player::State::deactivated);
-				if (!camera.moving() && UI.getPowerupBubbleState() != ui::Backend::PowerupBubbleState::closed) {
+				if (!camera.moving() &&
+					(UI.getPowerupBubbleState() == ui::Backend::PowerupBubbleState::closed
+					 || UI.getPowerupBubbleState() == ui::Backend::PowerupBubbleState::dormant)) {
 					transitionState = TransitionState::ExitBeamEnter;
 				}
 			}

@@ -177,7 +177,7 @@ void Dasher::update(const Player * player, const std::vector<wall> & walls, Effe
 		if (timer > 80) {
 			timer -= 80;
 			frameTimer = 0;
-			target = player->requestFuturePos(EnemyShot::lifetime * 1000);
+			target = player->getPosition();
 			state = State::shooting;
 			frameIndex = 4;
 		}
