@@ -28,11 +28,11 @@ void Item::update(const sf::Time & elapsedTime) {
 	powerupSheet.setPosition(position.x, position.y + offset);
 }
 
-const sf::Sprite & Item::getSprite() {
+const framework::Sprite & Item::getSprite() {
 	return powerupSheet.getSprite();
 }
 
-const sf::Sprite & Item::getGlow() {
+const framework::Sprite & Item::getGlow() {
 	glow.setPosition(position.x, position.y + 10);
 	return glow;
 }

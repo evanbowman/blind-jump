@@ -5,10 +5,12 @@
 
 #include "camera.hpp"
 
-Camera::Camera(Player * _pTarget, const sf::Vector2f & viewPort)  :
+Camera::Camera(Player * _pTarget, const sf::Vector2f & viewPort, const sf::Vector2u & _windowSize)  :
 		pTarget(_pTarget),
-		view(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
-		startPosition(view.getCenter()),
+		overworldView(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
+		startPosition(overworldView.getCenter()),
+		currentPosition(startPosition),
+		windowSize(_windowSize),
 		isShaking(false),
 		shakeIndex(0),
 		shakeTimer(0),
@@ -18,8 +20,8 @@ Camera::Camera(Player * _pTarget, const sf::Vector2f & viewPort)  :
 {}
 
 void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f> & targets) {
+	overworldView.setCenter(pTarget->getPosition());
 	float lerpSpeed;
-	sf::Vector2f cameraPos;
 	if ((state == State::trackMidpoint || state == State::foundEnemy) && targets.empty()) {
 		state = State::followPlayer;
 		trackingTimer = 0;
@@ -29,7 +31,7 @@ void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f
 		switch (state) {
 		case State::followPlayer:
 			lerpSpeed = math::clamp(elapsedTime.asMicroseconds() * 0.0000025f, 0.f, 1.f);
-			cameraPos = math::lerp(pTarget->getPosition(), view.getCenter(), lerpSpeed);
+			currentPosition = math::lerp(pTarget->getPosition(), currentPosition, lerpSpeed);
 			if (!targets.empty()) {
 				state = State::foundEnemy;
 				trackingTimer = 0;
@@ -50,7 +52,7 @@ void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f
 				// so I'm using a buffer of the average enemy positions
 				buffer = math::lerp(buffer, aggregate, lerpSpeed * 0.1f);
 				midpoint = math::lerp(pTarget->getPosition(), buffer, 0.78);
-				cameraPos = math::lerp(midpoint, view.getCenter(), lerpSpeed);
+				currentPosition = math::lerp(midpoint, currentPosition, lerpSpeed);
 			}
 			break;
 
@@ -67,7 +69,7 @@ void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f
 				trackingTimer += elapsedTime.asMicroseconds();
 				float targetWeight = 1.f - 0.22f * Easing::easeIn<1>(trackingTimer, static_cast<int64_t>(900000));
 				midpoint = math::lerp(pTarget->getPosition(), aggregate, targetWeight);
-				cameraPos = math::lerp(midpoint, view.getCenter(), lerpSpeed);
+				currentPosition = math::lerp(midpoint, currentPosition, lerpSpeed);
 				if (trackingTimer > 900000) {
 					state = State::trackMidpoint;
 					buffer = aggregate;
@@ -78,7 +80,7 @@ void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f
 	} else {
 		state = State::followPlayer;
 		lerpSpeed = math::clamp(elapsedTime.asMicroseconds() * 0.0000055f, 0.f, 1.f);
-		cameraPos = math::lerp(pTarget->getPosition(), view.getCenter(), lerpSpeed);
+		currentPosition = math::lerp(pTarget->getPosition(), currentPosition, lerpSpeed);
 	}
 	if (isShaking) {
 		shakeTimer += elapsedTime.asMicroseconds();
@@ -91,37 +93,51 @@ void Camera::update(const sf::Time & elapsedTime, const std::vector<sf::Vector2f
 				shakeTimer = 0;
 			}
 		}
-		const static std::array<int, 5> shakeConstants = {{3, -5, 3, -2, 1}};
+		static const std::array<int, 5> shakeConstants = {{3, -5, 3, -2, 1}};
 		float shakeOffset = shakeConstants[shakeIndex];
-		cameraPos.y += shakeOffset * shakeIntensity;
+		currentPosition.y += shakeOffset * shakeIntensity;
 	}
-	view.setCenter(cameraPos);
+	const sf::Vector2f cameraTargetOffset = getOffsetFromTarget();
+	const sf::Vector2f windowViewSize = windowView.getSize();
+	const sf::Vector2f overworldViewSize = overworldView.getSize();
+	const sf::Vector2f scaleVec(windowViewSize.x / overworldViewSize.x, windowViewSize.y / overworldViewSize.y);
+	const sf::Vector2f scaledCameraOffset(cameraTargetOffset.x * scaleVec.x, cameraTargetOffset.y * scaleVec.y);
+	windowView.setCenter(windowSize.x / 2.f + scaledCameraOffset.x, windowSize.y / 2.f + scaledCameraOffset.y);
 }
 
-const sf::View & Camera::getView() const {
-	return view;
+const sf::View & Camera::getOverworldView() const {
+	return overworldView;
+}
+
+const sf::View & Camera::getWindowView() const {
+	return windowView;
 }
 
 void Camera::panDown() {
 	float placementOffset = pTarget->getPosition().y / 2;
-	view.setCenter(sf::Vector2f(pTarget->getPosition().x, placementOffset));
-	startPosition = view.getCenter();
+	overworldView.setCenter(sf::Vector2f(pTarget->getPosition().x, placementOffset));
+	startPosition = overworldView.getCenter();
+	currentPosition = startPosition;
 }
 
 void Camera::snapToTarget() {
-	view.setCenter(pTarget->getPosition());
-	startPosition = view.getCenter();
+	overworldView.setCenter(pTarget->getPosition());
+	startPosition = overworldView.getCenter();
+	currentPosition = startPosition;
 }
 
-void Camera::setView(const sf::View & _view) {
-	view = _view;
+void Camera::setOverworldView(const sf::View & _overworldView) {
+	overworldView = _overworldView;
+}
+
+void Camera::setWindowView(const sf::View & _windowView) {
+	windowView = _windowView;
 }
 
 bool Camera::moving() const {
-	const sf::Vector2f playerPos = pTarget->getPosition();
-	const sf::Vector2f & cameraPos = view.getCenter();			
-	if (std::abs(playerPos.x - cameraPos.x) < 1.f &&
-		std::abs(playerPos.y - cameraPos.y) < 1.f) {
+	const sf::Vector2f playerPos = pTarget->getPosition();			
+	if (std::abs(playerPos.x - currentPosition.x) < 0.5f &&
+		std::abs(playerPos.y - currentPosition.y) < 0.5f) {
 		return false;
 	}
 	return true;
@@ -135,6 +151,10 @@ void Camera::shake(float _shakeIntensity) {
 	}
 }
 
-sf::Vector2f Camera::getOffset() const {
-	return view.getCenter() - startPosition;
+sf::Vector2f Camera::getOffsetFromStart() const {
+	return currentPosition - startPosition;
+}
+
+sf::Vector2f Camera::getOffsetFromTarget() const {
+	return currentPosition - pTarget->getPosition();
 }

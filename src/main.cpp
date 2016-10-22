@@ -1,4 +1,3 @@
-
 //========================================================================//
 // Copyright (C) 2016 Evan Bowman										  //
 // Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.			  //
@@ -23,9 +22,9 @@
 #include "player.hpp"
 #include "alias.hpp"
 #include "game.hpp"
+#include "config.h"
 #include "util.hpp"
 #include "rng.hpp"
-
 
 ResHandler * resHandlerPtr = nullptr;
 std::exception_ptr pWorkerException = nullptr;
@@ -39,15 +38,14 @@ int main() {
 	    ::resHandlerPtr = &resourceHandler;
 		sf::ContextSettings settings;
 		settings.antialiasingLevel = 6;
-		sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Blind Jump", sf::Style::Fullscreen, settings);
+		sf::RenderWindow window(sf::VideoMode::getDesktopMode(), EXECUTABLE_NAME, sf::Style::Fullscreen, settings);
 		window.setMouseCursorVisible(false);
 		window.setVerticalSyncEnabled(true);
 		window.setFramerateLimit(120);
 		InputController input;
 		sf::View hudView(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
-		sf::View worldView(drawableRegionSize / 2.f, drawableRegionSize);
 		ui::Frontend uIFrontEnd(hudView, drawableRegionSize.x / 2, drawableRegionSize.y / 2);
-		Game game(drawableRegionSize, &input, &uIFrontEnd);
+		Game game(drawableRegionSize, window.getSize(), &input, &uIFrontEnd);
 		framework::SmartThread logicThread([& game, & window]() {
 			duration logicUpdateDelta;
 			sf::Clock gameClock;

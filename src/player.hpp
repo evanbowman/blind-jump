@@ -24,7 +24,7 @@ class Game;
 
 class Player {
 public:
-	using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
+	using drawableVec = std::vector<std::tuple<framework::Sprite, float, Rendertype, float>>;
 	using Health = int8_t;
 	using HBox = framework::HitBox<8, 16, 12, 12>;
 	enum class Sheet {
@@ -69,6 +69,10 @@ public:
 	void setHealth(Health);
 	const HBox & getHitBox() const;
 	const Weapon & getGun() const;
+	const float getXVelocity() const;
+	const float getYVeclocty() const;
+	sf::Vector2f requestFuturePos(const uint32_t) const;
+	sf::Vector2f getPosition() const;
 	
 private:
 	void init();
@@ -77,14 +81,14 @@ private:
 	Weapon gun;
 	void checkEffectCollisions(EffectGroup &, ui::Frontend *);
 	void checkEnemyCollisions(enemyController &, ui::Frontend *);
-	std::vector<Dasher::Blur> blurs; // I could have designed this better...
+	std::vector<Dasher::Blur> blurs; // TODO: Move blur subclass out of Dasher, and into its own file...
 	Health health;
 	void updateAnimation(const sf::Time &, uint8_t, uint32_t);
 	float xPos, yPos;
 	uint8_t frameIndex;
 	Sheet sheetIndex, cachedSheet;
 	float lSpeed, rSpeed, uSpeed, dSpeed;
-	sf::Sprite shadowSprite;
+	framework::Sprite shadowSprite;
 	SpriteSheet<400, 108, 32, 32> walkDown;
 	SpriteSheet<208, 108, 32, 32> walkUp;
 	SpriteSheet<208, 76, 32, 32> walkLeft;
@@ -92,7 +96,7 @@ private:
 	SpriteSheet<208, 38, 40, 38> deathSheet;
 	SpriteSheet<208, 140, 32, 33> dashSheet;
 	int64_t animationTimer, dashTimer;
-	bool invulnerable; // TODO: player invlunerable when on teleporter pads
+	bool invulnerable;
 	State state;
 	float colorAmount;
 	int32_t colorTimer;

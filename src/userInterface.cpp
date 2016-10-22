@@ -106,6 +106,10 @@ Powerup ui::Backend::getCurrentPowerup() const {
 	return powerup;
 }
 
+const ui::Backend::PowerupBubbleState ui::Backend::getPowerupBubbleState() const {
+	return powerupBubbleState;
+}
+
 void ui::Backend::update(Player & player,
 						 ui::Frontend & uIFrontEnd,
 						 InputController * pInput,
@@ -139,7 +143,7 @@ void ui::Backend::update(Player & player,
 		
 	case State::menuScreenEntry:
 		timer += elapsedTime.asMilliseconds();
-		blurAmount = math::smoothstep(0.f, 280, timer);
+		blurAmount = math::smootherstep(0.f, 280, timer);
 		if (blurAmount == 1.f) {
 			state = State::menuScreen;
 			uIFrontEnd.setTextAlpha(255, ui::Frontend::Text::resumeText);
@@ -359,7 +363,7 @@ void ui::PowerupBubble::setAlpha(uint8_t alpha) {
 	powerupSheet.setColor(sf::Color(255, 255, 255, alpha));
 }
 
-const sf::Sprite & ui::PowerupBubble::getSprite() {
+const framework::Sprite & ui::PowerupBubble::getSprite() {
 	return powerupSheet.getSprite();
 }
 

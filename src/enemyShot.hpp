@@ -15,17 +15,18 @@
 class EnemyShot : public Effect {
 public:
 	using HBox = framework::HitBox<14, 14, 0, 0>;
+	enum { lifetime = 600 };
 	EnemyShot(const sf::Texture &, const sf::Texture &, float, float, float);
 	void update(const sf::Time &);
-	const sf::Sprite & getSprite();
+	const framework::Sprite & getSprite();
 	const HBox & getHitBox() const;
-	const sf::Sprite & getGlow() const;
+	const framework::Sprite & getGlow() const;
 	
 private:
 	HBox hitBox;
 	SpriteSheet<50, 91, 14, 14> spriteSheet;
 	int32_t frameTimer;
 	float direction;
-	sf::Sprite glowSprite;
+	framework::Sprite glowSprite;
 	
 };

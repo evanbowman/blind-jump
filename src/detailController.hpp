@@ -28,8 +28,8 @@ using DetailGroup = framework::Group<Teleporter, // ----- 0
 									 DamagedRobot, // --- 5
 									 GeneralDetail>; // - 6
 
-using drawableVec = std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
-using glowVec = std::vector<Sprite>;
+using drawableVec = std::vector<std::tuple<framework::Sprite, float, Rendertype, float>>;
+using glowVec = std::vector<framework::Sprite>;
 
 template<size_t indx, int8_t yOffset = 0>
 void drawVec(DetailGroup & dg,
@@ -37,11 +37,11 @@ void drawVec(DetailGroup & dg,
 			 const sf::Vector2f viewCenter,
 			 const sf::Vector2f viewSize) {
 	for (auto & element : dg.get<indx>()) {
-		const framework::Point elemPos = element.getPosition();
-		if (elemPos.x > viewCenter.x - viewSize.x / 2 - 64 &&
-			elemPos.x < viewCenter.x + viewSize.x / 2 + 64 &&
-			elemPos.y > viewCenter.y - viewSize.y / 2 - 64 &&
-			elemPos.y < viewCenter.y + viewSize.y / 2 + 64) {
+		const sf::Vector2f elemPos = element.getPosition();
+		if (elemPos.x > viewCenter.x - viewSize.x / 2 - 48 &&
+			elemPos.x < viewCenter.x + viewSize.x / 2 + 48 &&
+			elemPos.y > viewCenter.y - viewSize.y / 2 - 48 &&
+			elemPos.y < viewCenter.y + viewSize.y / 2 + 48) {
 			gameObjects.emplace_back(element.getSprite(), element.getPosition().y + yOffset, Rendertype::shadeDefault, 0.f);
 		}
 	}
@@ -54,11 +54,11 @@ void drawVecShadowed(DetailGroup & dg,
 					 const sf::Vector2f viewCenter,
 					 const sf::Vector2f viewSize) {
 	for (auto & element : dg.get<indx>()) {
-		const framework::Point elemPos = element.getPosition();
-		if (elemPos.x > viewCenter.x - viewSize.x / 2 - 64 &&
-			elemPos.x < viewCenter.x + viewSize.x / 2 + 64 &&
-			elemPos.y > viewCenter.y - viewSize.y / 2 - 64 &&
-			elemPos.y < viewCenter.y + viewSize.y / 2 + 64) {
+		const sf::Vector2f elemPos = element.getPosition();
+		if (elemPos.x > viewCenter.x - viewSize.x / 2 - 48 &&
+			elemPos.x < viewCenter.x + viewSize.x / 2 + 48 &&
+			elemPos.y > viewCenter.y - viewSize.y / 2 - 48 &&
+			elemPos.y < viewCenter.y + viewSize.y / 2 + 48) {
 			gameObjects.emplace_back(element.getSprite(), element.getPosition().y + yOffset, Rendertype::shadeDefault, 0.f);
 			gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeNone, 0.f);
 		}

@@ -9,27 +9,29 @@
 #include "enemy.hpp"
 #include "resourceHandler.hpp"
 
+class Player;
+
 class Dasher : public Enemy {
 public:
 	using HBox = framework::HitBox<20, 32, -6, -4>;
 	struct Blur {
-		Blur(sf::Sprite *, float, float);
-		sf::Sprite * getSprite();
+		Blur(framework::Sprite *, float, float);
+		framework::Sprite * getSprite();
 		void update(const sf::Time &);
 		bool getKillFlag();
 		int32_t timer;
 		float xInit;
 		float yInit;
-		sf::Sprite spr;
+		framework::Sprite spr;
 		bool killflag;
 	};
 	enum class State {
 		idle, shooting, dashBegin, dashing, dashEnd, dying, dead, shootBegin, pause
 	};
 	Dasher(const sf::Texture &, float, float);
-	const sf::Sprite & getSprite() const;
-	const sf::Sprite & getShadow() const;
-	void update(float, float, const std::vector<wall> &, EffectGroup & ef, const sf::Time &);
+	const framework::Sprite & getSprite() const;
+	const framework::Sprite & getShadow() const;
+	void update(const Player *, const std::vector<wall> &, EffectGroup & ef, const sf::Time &);
 	std::vector<Dasher::Blur> * getBlurEffects();
 	State getState() const;
 	const sf::Vector2f & getScale() const;
@@ -41,7 +43,8 @@ private:
 	State state;
 	mutable SpriteSheet<648, 38, 29, 38> dasherSheet;
 	mutable SpriteSheet<80, 0, 47, 38> deathSheet;
-	sf::Sprite shadow;
+	framework::Sprite shadow;
+	sf::Vector2f target;
 	float hSpeed, vSpeed;
 	int32_t timer;
 	std::vector<Dasher::Blur> blurEffects;

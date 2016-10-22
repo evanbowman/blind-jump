@@ -5,9 +5,10 @@
 
 #pragma once
 
+#include <SFML/Graphics.hpp>
 #include <chrono>
 #include <tuple>
-#include <SFML/Graphics.hpp>
+#include "framework/framework.hpp"
 #include "RenderType.hpp"
 
 using high_resolution_clock = std::chrono::high_resolution_clock;
@@ -16,4 +17,4 @@ using microseconds = std::chrono::microseconds;
 using milliseconds = std::chrono::milliseconds;
 using time_point = std::chrono::high_resolution_clock::time_point;
 using duration = std::chrono::duration<double>;
-using drawableMetadata = std::tuple<sf::Sprite, float, Rendertype, float>;
+using drawableMetadata = std::tuple<framework::Sprite, float, Rendertype, float>;

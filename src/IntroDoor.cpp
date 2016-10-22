@@ -16,7 +16,7 @@ IntroDoor::IntroDoor(float _xInit, float _yInit, const sf::Texture & inpTxtr)
 	doorSheet.setPosition(position.x, position.y);
 }
  
-const sf::Sprite & IntroDoor::getSprite() const {
+const framework::Sprite & IntroDoor::getSprite() const {
 	return doorSheet[frameIndex];
 }
 

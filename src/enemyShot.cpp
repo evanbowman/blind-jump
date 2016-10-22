@@ -30,7 +30,7 @@ void EnemyShot::update(const sf::Time & elapsedTime) {
 			frameIndex = 0;
 		}
 	}
-	if (timer > 600) {
+	if (timer > lifetime) {
 		setKillFlag();
 	}
 	float offset = rng::random<20>();
@@ -38,7 +38,7 @@ void EnemyShot::update(const sf::Time & elapsedTime) {
 	spriteSheet.setPosition(position.x, position.y);
 }
 
-const sf::Sprite & EnemyShot::getGlow() const {
+const framework::Sprite & EnemyShot::getGlow() const {
 	return glowSprite;
 }
 
@@ -46,6 +46,6 @@ const EnemyShot::HBox & EnemyShot::getHitBox() const {
 	return hitBox;
 }
 
-const Sprite & EnemyShot::getSprite() {
+const framework::Sprite & EnemyShot::getSprite() {
 	return spriteSheet[frameIndex];
 }

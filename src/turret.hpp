@@ -13,6 +13,8 @@
 #include "framework/framework.hpp"
 #include "spriteSheet.hpp"
 
+class Player;
+
 class Turret {
 private:
 	enum class State {
@@ -37,9 +39,10 @@ public:
 	Turret(const sf::Texture &, float, float);
 	const HBox & getHitBox() const;
 	void setPosition(float, float);
-	const sf::Sprite & getShadow();
-	const sf::Sprite & getSprite();
-	void update(const sf::Time &, float, float, EffectGroup &);
+	const framework::Sprite & getShadow();
+	const framework::Sprite & getSprite();
+	sf::Vector2f target;
+	void update(const sf::Time &, const Player *, EffectGroup &);
 	bool getKillFlag();
 	float getXpos();
 	float getYpos();

@@ -24,11 +24,11 @@ Powerup TreasureChest::getPowerup() const {
 	return powerup;
 }
 
-const sf::Sprite & TreasureChest::getShadow() const {
+const framework::Sprite & TreasureChest::getShadow() const {
 	return chestShadow;
 }
 
-const sf::Sprite & TreasureChest::getSprite() const {
+const framework::Sprite & TreasureChest::getSprite() const {
 	return chestSheet[frameIndex];
 }
 

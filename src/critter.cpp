@@ -3,10 +3,11 @@
 // Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.			  //
 //========================================================================//
 
-#include "critter.hpp"
-#include "tileController.hpp"
-#include "math.h"
 #include <cmath>
+#include "tileController.hpp"
+#include "critter.hpp"
+#include "player.hpp"
+#include "math.h"
 
 Critter::Critter(const sf::Texture & txtr, uint8_t _map[61][61], float _xInit, float _yInit) :
 	Enemy(_xInit, _yInit),
@@ -37,9 +38,7 @@ void Critter::updatePlayerDead() {
 	frameIndex = 0;
 }
 
-void Critter::update(float, float, const std::vector<wall> &, EffectGroup &, const sf::Time &) {}
-
-void Critter::critterUpdate(float playerPosX, float playerPosY, EffectGroup & effects, const sf::Time & elapsedTime, tileController & tiles) {
+void Critter::update(const Player * player, EffectGroup & effects, const sf::Time & elapsedTime, tileController & tiles) {
 	xPos = xInit + 12;
 	yPos = yInit;
 	for (auto & element : effects.get<9>()) {
@@ -77,8 +76,8 @@ void Critter::critterUpdate(float playerPosX, float playerPosY, EffectGroup & ef
 			aStrCoordinate origin, target;
 			origin.x = (xPos - tilePosX) / 32;
 			origin.y = (yPos - tilePosY) / 26;
-			target.x = (tilePosX - playerPosX - 12) / -32;
-			target.y = (tilePosY - playerPosY - 32) / -26;
+			target.x = (tilePosX - player->getXpos() - 12) / -32;
+			target.y = (tilePosY - player->getYpos() - 32) / -26;
 			if (map[target.x][target.y] == 3 || map[target.x][target.y] == 4 || map[target.x][target.y] == 5 || map[target.x][target.y] == 11 || map[target.x][target.y] == 8) {
 				path = astar_path(target, origin, map);
 				previous = path.back();
@@ -116,7 +115,7 @@ void Critter::critterUpdate(float playerPosX, float playerPosY, EffectGroup & ef
 		}
 		
 		// Flip the sprite to face the player
-		if (xPos > playerPosX) {
+		if (xPos > player->getXpos()) {
 			spriteSheet.setScale(1.f, 1.f);
 			shadow.setScale(1.f, 1.f);
 		} else {
@@ -126,7 +125,7 @@ void Critter::critterUpdate(float playerPosX, float playerPosY, EffectGroup & ef
 	}
 	
 	else {
-		if (fabsf(playerPosX - xPos) < 300 && fabsf(playerPosY - yPos) < 300)
+		if (fabsf(player->getXpos() - xPos) < 300 && fabsf(player->getYpos() - yPos) < 300)
 			awake = true;
 	}
 
@@ -134,11 +133,11 @@ void Critter::critterUpdate(float playerPosX, float playerPosY, EffectGroup & ef
 	spriteSheet.setPosition(xPos + 12, yPos);
 }
 
-const sf::Sprite & Critter::getShadow() const {
+const framework::Sprite & Critter::getShadow() const {
 	return shadow;
 }
 
-const sf::Sprite & Critter::getSprite() const {
+const framework::Sprite & Critter::getSprite() const {
 	return spriteSheet[frameIndex];
 }
 

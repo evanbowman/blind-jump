@@ -17,5 +17,5 @@ private:
 public:
 	void update(const sf::Time &);
 	Rock(float, float, const sf::Texture &);
-	const sf::Sprite & getSprite() const;
+	const framework::Sprite & getSprite() const;
 };

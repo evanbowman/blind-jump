@@ -15,13 +15,13 @@ public:
 	enum class Type { Heart, Coin };
 	using HBox = framework::HitBox<13, 13, -8, -8>;
 	Item(const sf::Texture &, const sf::Texture &, float, float, Type);
-	const sf::Sprite & getSprite();
+	const framework::Sprite & getSprite();
 	const HBox & getHitBox() const;
-	const sf::Sprite & getGlow();
+	const framework::Sprite & getGlow();
 	void update(const sf::Time &);
 	
 protected:
 	HBox hitBox;
-	Sprite glow;
+	framework::Sprite glow;
 	SpriteSheet<0, 75, 13, 13> powerupSheet;
 };

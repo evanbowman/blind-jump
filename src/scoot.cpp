@@ -3,9 +3,10 @@
 // Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
 //========================================================================//
 
-#include "scoot.hpp"
 #include <cmath>
 #include "angleFunction.hpp"
+#include "player.hpp"
+#include "scoot.hpp"
 
 Scoot::Scoot(const sf::Texture & mainTxtr, const sf::Texture & shadowTxtr, float _xPos, float _yPos)
 	: Enemy(_xPos, _yPos),
@@ -32,8 +33,7 @@ void Scoot::changeDir(float dir) {
 	vSpeed = std::sin(dir);	
 }
 
-void Scoot::update(float playerPosX,
-				   float playerPosY,
+void Scoot::update(const Player * player,
 				   const std::vector<wall> & w,
 				   EffectGroup & effects,
 				   const sf::Time & elapsedTime) {
@@ -58,7 +58,7 @@ void Scoot::update(float playerPosX,
 	shadow.setPosition(xPos - 6, yPos + 2);
 
 	// Face the player
-	if (xPos > playerPosX) {
+	if (xPos > player->getXpos()) {
 		spriteSheet.setScale(1, 1);
 	} else {
 		spriteSheet.setScale(-1, 1);
@@ -71,7 +71,7 @@ void Scoot::update(float playerPosX,
 			timer -= 1800;;
 			state = State::drift2;
 			if (rng::random<2>()) {
-				changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
+				changeDir(atan((yPos - player->getYpos()) / (xPos - player->getXpos())));
 			} else {
 				changeDir(static_cast<float>(rng::random<359>()));
 			}
@@ -87,20 +87,23 @@ void Scoot::update(float playerPosX,
 		break;
 		
 	case State::shoot:
-		effects.add<0>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xPos - 8, yPos - 12);
-		effects.add<8>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-					   ::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
-					   xPos - 8, yPos - 12, angleFunction(playerPosX + 16, playerPosY + 8, xPos - 8, yPos - 8));
-		state = State::recoil;
-		changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
-		hSpeed *= -1;
-		vSpeed *= -1;
-		// Correct for negative values in arctan calculation
-		if (xPos > playerPosX) {
+		{
+			const sf::Vector2f playerPos = player->getPosition();
+			effects.add<0>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xPos - 8, yPos - 12);
+			effects.add<8>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+						   ::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
+						   xPos - 8, yPos - 12, angleFunction(playerPos.x + 16, playerPos.y + 8, xPos - 8, yPos - 8));
+			state = State::recoil;
+			changeDir(atan((yPos - player->getYpos()) / (xPos - player->getXpos())));
 			hSpeed *= -1;
 			vSpeed *= -1;
-		}
-		speedScale = 2.f;
+			// Correct for negative values in arctan calculation
+			if (xPos > player->getXpos()) {
+				hSpeed *= -1;
+				vSpeed *= -1;
+			}
+			speedScale = 2.f;
+	    }
 		break;
 
 	case State::recoil:
@@ -111,7 +114,7 @@ void Scoot::update(float playerPosX,
 			state = State::drift1;
 			speedScale = 0.5f;
 			if (rng::random<2>()) {
-				changeDir(atan((yPos - playerPosY) / (xPos - playerPosX)));
+				changeDir(atan((yPos - player->getYpos()) / (xPos - player->getXpos())));
 			} else {
 				changeDir(rng::random<359>());
 			}
@@ -144,11 +147,11 @@ void Scoot::update(float playerPosX,
 	}
 }
 
-const sf::Sprite & Scoot::getSprite() const {
+const framework::Sprite & Scoot::getSprite() const {
 	return spriteSheet[frameIndex];
 }
 
-const sf::Sprite & Scoot::getShadow() const {
+const framework::Sprite & Scoot::getShadow() const {
 	return shadow;
 }
 

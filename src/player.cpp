@@ -6,6 +6,8 @@
 #include "player.hpp"
 #include "game.hpp"
 
+static const float MOVEMENT_RATE_CONSTANT = 0.000054f;
+
 Player::Player(float _xPos, float _yPos)
 	: gun{},
 	  health(4),
@@ -391,8 +393,8 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & 
 		sheetIndex = Player::Sheet::deathSheet;
 		frameIndex = 0;
 	}
-	xPos -= (lSpeed + -rSpeed) * (elapsedTime.asMicroseconds() * 0.000054f);
-    yPos -= (uSpeed + -dSpeed) * (elapsedTime.asMicroseconds() * 0.000054f);
+	xPos -= (lSpeed + -rSpeed) * (elapsedTime.asMicroseconds() * MOVEMENT_RATE_CONSTANT);
+    yPos -= (uSpeed + -dSpeed) * (elapsedTime.asMicroseconds() * MOVEMENT_RATE_CONSTANT);
 	setPosition(xPos, yPos);
 	if (!blurs.empty()) {
 		for (auto it = blurs.begin(); it != blurs.end();) {
@@ -606,7 +608,7 @@ void Player::setHealth(Health value) {
 	health = value;
 }
 
-void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, EffectGroup & effects, SoundController & /*TODO: sounds*/, ui::Backend & UI) {
+void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, EffectGroup & effects, SoundController & sounds, ui::Backend & UI) {
 	gun.timeout -= elapsedTime.asMicroseconds();
 	if (gun.bulletTimer != 0) {
 		gun.bulletTimer -= elapsedTime.asMicroseconds();
@@ -623,7 +625,7 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, Effect
 		} else if (gun.timeout < 1671000) {
 			gun.timeout = 1671000;
 			if (gun.bulletTimer == 0) {
-				// TODO: sounds.play(ResHandler::Sound::gunShot);
+				// sounds.play(ResHandler::Sound::gunShot);
 				effects.add<9>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
 							   ::resHandlerPtr->getTexture(ResHandler::Texture::whiteGlow),
 							   static_cast<int>(sheetIndex), xPos, yPos);
@@ -637,7 +639,7 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey, Effect
 	}
 }
 
-template<size_t indx, typename F >
+template<size_t indx, typename F>
 void checkEffectCollision(EffectGroup & effects, Player * pPlayer, const F & policy) {
 	for (auto & element : effects.get<indx>()) {
 		if (pPlayer->getHitBox().overlapping(element.getHitBox())) {
@@ -667,14 +669,14 @@ void Player::checkEffectCollisions(EffectGroup & effects, ui::Frontend * pUiFron
 			renderType = Rendertype::shadeRuby;
 			colorAmount = 1.f;
 			colorTimer = 0;
-			util::sleep(milliseconds(20));
+			util::sleep(milliseconds(40));
 		});
 	checkEffectCollision<5>(effects, this, [&]() {
 			pUiFrontend->updateScore(1);
 			renderType = Rendertype::shadeElectric;
 			colorAmount = 1.f;
 			colorTimer = 0;
-			util::sleep(milliseconds(20));
+			util::sleep(milliseconds(40));
 		});
 }
 
@@ -734,4 +736,15 @@ void Player::updateColor(const sf::Time & elapsedTime) {
 
 const Player::Weapon & Player::getGun() const {
 	return gun;
+}
+
+sf::Vector2f Player::requestFuturePos(const uint32_t uTime) const {
+	sf::Vector2f futurePos;
+	futurePos.x = uTime * (-lSpeed + rSpeed) * MOVEMENT_RATE_CONSTANT + xPos;
+	futurePos.y = uTime * (-uSpeed + dSpeed) * MOVEMENT_RATE_CONSTANT + yPos;
+	return futurePos;
+}
+
+sf::Vector2f Player::getPosition() const {
+	return sf::Vector2f(xPos, yPos);
 }

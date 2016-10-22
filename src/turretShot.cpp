@@ -25,7 +25,7 @@ void TurretShot::update(const sf::Time & elapsedTime) {
 	spriteSheet.setPosition(position.x, position.y);
 	glowSprite.setPosition(position.x, position.y + 18);
 	timer += elapsedTime.asMilliseconds();
-	if (timer > 600) {
+	if (timer > lifetime) {
 	    setKillFlag();
 	}
 	float offset = rng::random<20>();
@@ -41,11 +41,11 @@ const TurretShot::HBox & TurretShot::getHitBox() const {
 	return hitBox;
 }
 
-const sf::Sprite & TurretShot::getSprite() {
+const framework::Sprite & TurretShot::getSprite() {
 	return spriteSheet[frameIndex];
 }
 
-const sf::Sprite & TurretShot::getGlow() {
+const framework::Sprite & TurretShot::getGlow() {
 	return glowSprite;
 }
 
