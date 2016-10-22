@@ -174,12 +174,12 @@ void Game::draw(sf::RenderWindow & window) {
 		target.display();
 	}
 	const sf::Vector2u windowSize = window.getSize();
-	const sf::Vector2f scaleVec(windowSize.x / viewPort.x, windowSize.y / viewPort.y);
+	const sf::Vector2f upscaleVec(windowSize.x / viewPort.x, windowSize.y / viewPort.y);
 	if (UI.blurEnabled() && UI.desaturateEnabled()) {
 		if (stashed) {
 			sf::Sprite targetSprite(stash.getTexture());
 			window.setView(camera.getWindowView());
-			targetSprite.setScale(scaleVec);
+			targetSprite.setScale(upscaleVec);
 			window.draw(targetSprite);
 		} else {
 			sf::Shader & blurShader = ::resHandlerPtr->getShader(ResHandler::Shader::blur);
@@ -199,7 +199,7 @@ void Game::draw(sf::RenderWindow & window) {
 			desaturateShader.setUniform("amount", UI.getDesaturateAmount());
 			sf::Sprite targetSprite(thirdPass.getTexture());
 			window.setView(camera.getWindowView());
-			targetSprite.setScale(scaleVec);
+			targetSprite.setScale(upscaleVec);
 			window.draw(targetSprite, &desaturateShader);
 			if (!stashed && (UI.getState() == ui::Backend::State::statsScreen
 							 || UI.getState() == ui::Backend::State::menuScreen) && !camera.moving()) {
@@ -214,7 +214,10 @@ void Game::draw(sf::RenderWindow & window) {
 			if (pInput->pausePressed()) {
 				preload = true;
 			}
-			window.draw(framework::Sprite(stash.getTexture()));
+			sf::Sprite targetSprite(stash.getTexture());
+			window.setView(camera.getWindowView());
+			targetSprite.setScale(upscaleVec);
+			window.draw(targetSprite);
 		} else {
 			sf::Shader & blurShader = ::resHandlerPtr->getShader(ResHandler::Shader::blur);
 			secondPass.clear(sf::Color::Transparent);
@@ -228,7 +231,7 @@ void Game::draw(sf::RenderWindow & window) {
 			blurShader.setUniform("blur_radius", hBlur);
 			sf::Sprite targetSprite(secondPass.getTexture());
 			window.setView(camera.getWindowView());
-			targetSprite.setScale(scaleVec);
+			targetSprite.setScale(upscaleVec);
 			window.draw(targetSprite, &blurShader);
 			if (!stashed && (UI.getState() == ui::Backend::State::statsScreen
 							 || UI.getState() == ui::Backend::State::menuScreen) && !camera.moving()) {
@@ -244,12 +247,12 @@ void Game::draw(sf::RenderWindow & window) {
 		desaturateShader.setUniform("amount", UI.getDesaturateAmount());
 		sf::Sprite targetSprite(target.getTexture());
 		window.setView(camera.getWindowView());
-		targetSprite.setScale(scaleVec);
+		targetSprite.setScale(upscaleVec);
 		window.draw(targetSprite, &desaturateShader);
 	} else {
 		sf::Sprite targetSprite(target.getTexture());
 		window.setView(camera.getWindowView());
-		targetSprite.setScale(scaleVec);
+		targetSprite.setScale(upscaleVec);
 		window.draw(targetSprite);
 	}
 	{
