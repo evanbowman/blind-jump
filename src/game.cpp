@@ -31,7 +31,7 @@ Game::Game(const sf::Vector2f & _viewPort, const sf::Vector2u & windowSize, Inpu
 {
     sf::View windowView;
 	static const float visibleArea = 0.75f;
-	const sf::Vector2f vignetteMaskScale((viewPort.x * (visibleArea + 0.2)) / 450, (viewPort.y * (visibleArea + 0.2)) / 450);
+	const sf::Vector2f vignetteMaskScale((viewPort.x * (visibleArea + 0.02)) / 450, (viewPort.y * (visibleArea + 0.02)) / 450);
 	vignetteSprite.setScale(vignetteMaskScale);
 	vignetteShadowSpr.setScale(vignetteMaskScale);
 	windowView.setSize(windowSize.x, windowSize.y);
