@@ -30,11 +30,12 @@ Game::Game(const sf::Vector2f & _viewPort, const sf::Vector2u & windowSize, Inpu
 	  timer(0)
 {
     sf::View windowView;
-	const sf::Vector2f vignetteMaskScale((viewPort.x * 0.77) / 450, (viewPort.y * 0.77) / 450);
+	static const float visibleArea = 0.75f;
+	const sf::Vector2f vignetteMaskScale((viewPort.x * (visibleArea + 0.2)) / 450, (viewPort.y * (visibleArea + 0.2)) / 450);
 	vignetteSprite.setScale(vignetteMaskScale);
 	vignetteShadowSpr.setScale(vignetteMaskScale);
 	windowView.setSize(windowSize.x, windowSize.y);
-	windowView.zoom(0.75);
+	windowView.zoom(visibleArea);
 	camera.setWindowView(windowView);
 	init();
 }

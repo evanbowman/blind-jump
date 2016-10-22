@@ -52,7 +52,10 @@ void backgroundHandler::drawBackground(sf::RenderTexture & target, const sf::Vie
 	default:
 		{
 		    const sf::Vector2f cameraOffset = camera.getOffsetFromTarget();
-			bkgSprite.setPosition(windowW * 0.115f + cameraOffset.x * 0.75f, windowH * 0.115f + cameraOffset.y * 0.75f);
+			static const float visibleArea = 0.75f;
+			static const float borderAmt = 0.115f;
+			bkgSprite.setPosition(windowW * borderAmt + cameraOffset.x * visibleArea,
+								  windowH * borderAmt + cameraOffset.y * visibleArea);
 			target.draw(bkgSprite);
 		}
 		break;
