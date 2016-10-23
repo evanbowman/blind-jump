@@ -598,12 +598,14 @@ void Game::nextLevel() {
 			}
 		}
 		if (!rng::random<2>()) {
-			auto optCoord = pickLocation(tiles.emptyMapLocations);
-			if (optCoord) {
-				static const size_t terminalIdx = 7;
-				details.add<terminalIdx>(optCoord.value().x * 32 + tiles.posX, optCoord.value().y * 26 + tiles.posY,
-										 ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
-			}
+			static const size_t terminalIdx = 7;
+			auto pCoordVec = tiles.getEmptyLocations();
+			const size_t vecSize = pCoordVec->size();
+			const int locationSel = rng::random(vecSize / 3);
+			const float xInit = (*pCoordVec)[vecSize - 1 - locationSel].x;
+			const float yInit = (*pCoordVec)[vecSize - 1 - locationSel].y;
+			details.add<terminalIdx>(xInit * 32 + tiles.posX, yInit * 26 + tiles.posY,
+									 ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
 		}
 		glowSprs1.clear();
 		glowSprs2.clear();

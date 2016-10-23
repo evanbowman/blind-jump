@@ -281,6 +281,19 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & 
 				}
 			}
 		}
+		for (auto & term : details.get<7>()) {
+			const sf::Vector2f termPos = term.getPosition();
+			const Terminal::State termState = term.getState();
+			if (std::sqrt(std::pow(xPos - termPos.x, 2) + std::pow(yPos - termPos.y, 2)) < 80.f) {
+				if (termState == Terminal::State::dormant) {
+					term.setState(Terminal::State::wakeup);
+				}
+			} else {
+				if (termState == Terminal::State::awake) {
+					term.setState(Terminal::State::poweroff);
+				}
+			}
+		}
 		break;
 
 	case State::prepdash:
@@ -381,20 +394,6 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & 
 		uSpeed = 0.f;
 		dSpeed = 0.f;
 		break;
-	}
-	std::vector<Terminal> & terms = details.get<7>();
-	for (auto & term : terms) {
-		const sf::Vector2f termPos = term.getPosition();
-		const Terminal::State termState = term.getState();
-		if (std::abs(xPos - termPos.x) < 80 && std::abs(yPos - termPos.y) < 74) {
-			if (termState == Terminal::State::dormant) {
-				term.setState(Terminal::State::wakeup);
-			}
-		} else {
-			if (termState == Terminal::State::awake) {
-				term.setState(Terminal::State::poweroff);
-			}
-		}
 	}
 	updateColor(elapsedTime);
 	if (health > 0 && state != Player::State::deactivated) {

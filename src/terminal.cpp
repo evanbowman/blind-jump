@@ -53,7 +53,7 @@ void Terminal::update(const sf::Time & elapsedTime) {
 		
 	case State::wakeup:
 		{
-			static const int WAKEUP_USECS = 120000;
+			static const int WAKEUP_USECS = 150000;
 			stateTimer += elapsedTime.asMicroseconds();
 			const uint8_t alpha = math::smootherstep(0.f, WAKEUP_USECS, stateTimer) * 255;
 			screenSheet.setColor(sf::Color(255, 255, 255, alpha));
@@ -69,7 +69,7 @@ void Terminal::update(const sf::Time & elapsedTime) {
 		
 	case State::poweroff:
 		{
-			static const int POWEROFF_USECS = 340000;
+			static const int POWEROFF_USECS = 400000;
 			stateTimer += elapsedTime.asMicroseconds();
 			const uint8_t alpha = (1 - math::smoothstep(0.f, POWEROFF_USECS, stateTimer)) * 255;
 			screenSheet.setColor(sf::Color(255, 255, 255, alpha));
