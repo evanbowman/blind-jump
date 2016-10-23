@@ -89,8 +89,6 @@ inline void drawGroup(DetailGroup & dg,
 			gameObjects.emplace_back(element.getScreen(), element.getPosition().y - 16,
 									 Rendertype::shadeNone, 0.f);
 			gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeNone, 0.f);
-			glowSprs1.push_back(element.getGlow());
-			glowSprs2.push_back(element.getGlow());
 		}
 	}
 	drawVec<3, 24>(dg, gameObjects, viewCenter, viewSize);
