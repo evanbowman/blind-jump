@@ -18,6 +18,7 @@
 #include "coordinate.hpp"
 #include "lampLight.hpp"
 #include "IntroDoor.hpp"
+#include "terminal.hpp"
 #include "rock.hpp"
 
 using DetailGroup = framework::Group<Teleporter, // ----- 0
@@ -26,7 +27,8 @@ using DetailGroup = framework::Group<Teleporter, // ----- 0
 									 Rock, // ----------- 3
 									 IntroDoor, // ------ 4
 									 DamagedRobot, // --- 5
-									 GeneralDetail>; // - 6
+									 GeneralDetail, // -- 6
+									 Terminal>; // ------ 7
 
 using drawableVec = std::vector<std::tuple<framework::Sprite, float, Rendertype, float>>;
 using glowVec = std::vector<framework::Sprite>;
@@ -42,7 +44,8 @@ void drawVec(DetailGroup & dg,
 			elemPos.x < viewCenter.x + viewSize.x / 2 + 48 &&
 			elemPos.y > viewCenter.y - viewSize.y / 2 - 48 &&
 			elemPos.y < viewCenter.y + viewSize.y / 2 + 48) {
-			gameObjects.emplace_back(element.getSprite(), element.getPosition().y + yOffset, Rendertype::shadeDefault, 0.f);
+			gameObjects.emplace_back(element.getSprite(), element.getPosition().y + yOffset,
+									 Rendertype::shadeDefault, 0.f);
 		}
 	}
 }
@@ -59,7 +62,8 @@ void drawVecShadowed(DetailGroup & dg,
 			elemPos.x < viewCenter.x + viewSize.x / 2 + 48 &&
 			elemPos.y > viewCenter.y - viewSize.y / 2 - 48 &&
 			elemPos.y < viewCenter.y + viewSize.y / 2 + 48) {
-			gameObjects.emplace_back(element.getSprite(), element.getPosition().y + yOffset, Rendertype::shadeDefault, 0.f);
+			gameObjects.emplace_back(element.getSprite(), element.getPosition().y + yOffset,
+									 Rendertype::shadeDefault, 0.f);
 			gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeNone, 0.f);
 		}
 	}
@@ -74,6 +78,21 @@ inline void drawGroup(DetailGroup & dg,
 					  const sf::Vector2f viewCenter,
 					  const sf::Vector2f viewSize) {
 	drawVecShadowed<1, -16>(dg, gameObjects, gameShadows, viewCenter, viewSize);
+	for (auto & element : dg.get<7>()) {
+		const sf::Vector2f elemPos = element.getPosition();
+		if (elemPos.x > viewCenter.x - viewSize.x / 2 - 48 &&
+			elemPos.x < viewCenter.x + viewSize.x / 2 + 48 &&
+			elemPos.y > viewCenter.y - viewSize.y / 2 - 48 &&
+			elemPos.y < viewCenter.y + viewSize.y / 2 + 48) {
+			gameObjects.emplace_back(element.getSprite(), element.getPosition().y - 16,
+									 Rendertype::shadeDefault, 0.f);
+			gameObjects.emplace_back(element.getScreen(), element.getPosition().y - 16,
+									 Rendertype::shadeNone, 0.f);
+			gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeNone, 0.f);
+			glowSprs1.push_back(element.getGlow());
+			glowSprs2.push_back(element.getGlow());
+		}
+	}
 	drawVec<3, 24>(dg, gameObjects, viewCenter, viewSize);
 	drawVec<4, 60>(dg, gameObjects, viewCenter, viewSize);
 	drawVec<5>(dg, gameObjects, viewCenter, viewSize);

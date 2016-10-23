@@ -56,6 +56,10 @@ public:
 	void setPosition(float xPos, float yPos) {
 		sprite.setPosition(xPos, yPos);
 	}
+
+	void setPosition(const sf::Vector2f & position) {
+		sprite.setPosition(position);
+	}
 	
 	float getYpos() const {
 		return sprite.getPosition().y;

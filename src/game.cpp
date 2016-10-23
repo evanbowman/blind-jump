@@ -597,6 +597,15 @@ void Game::nextLevel() {
 									  ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), chestContents);
 			}
 		}
+		if (!rng::random<4>()) {
+			auto optCoord = pickLocation(tiles.emptyMapLocations);
+			if (optCoord) {
+				static const size_t terminalIdx = 7;
+				details.add<terminalIdx>(optCoord.value().x * 32 + tiles.posX, optCoord.value().y * 26 + tiles.posY,
+										 ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+										 ::resHandlerPtr->getTexture(ResHandler::Texture::teleporterGlow));
+			}
+		}
 		glowSprs1.clear();
 		glowSprs2.clear();
 		Circle teleporterFootprint;
