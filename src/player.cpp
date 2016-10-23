@@ -284,7 +284,7 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime, SoundController & 
 		for (auto & term : details.get<7>()) {
 			const sf::Vector2f termPos = term.getPosition();
 			const Terminal::State termState = term.getState();
-			if (std::sqrt(std::pow(xPos - termPos.x, 2) + std::pow(yPos - termPos.y, 2)) < 80.f) {
+			if (std::sqrt(std::pow(xPos - termPos.x, 2) + std::pow(yPos - termPos.y, 2)) < 38.f) {
 				if (termState == Terminal::State::dormant) {
 					term.setState(Terminal::State::wakeup);
 				}

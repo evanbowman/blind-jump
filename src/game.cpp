@@ -586,26 +586,23 @@ void Game::nextLevel() {
 								   ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
 								   ::resHandlerPtr->getTexture(ResHandler::Texture::teleporterGlow));
 		initEnemies(this);
-		// Place 0-2 powerup chests on the map
-		int iters = rng::random<2, 1>();
-		for (int i = 0; i < iters; i++) {
-			auto optCoord = pickLocation(tiles.emptyMapLocations);
-			if (optCoord) {
-				Powerup chestContents = static_cast<Powerup>(rng::random<2, 1>());
-				static const size_t chestIdx = 1;
-				details.add<chestIdx>(optCoord.value().x * 32 + tiles.posX, optCoord.value().y * 26 + tiles.posY,
-									  ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), chestContents);
-			}
+		auto optCoord = pickLocation(tiles.emptyMapLocations);
+		if (optCoord) {
+			Powerup chestContents = static_cast<Powerup>(rng::random<2, 1>());
+			static const size_t chestIdx = 1;
+			details.add<chestIdx>(optCoord.value().x * 32 + tiles.posX, optCoord.value().y * 26 + tiles.posY,
+								  ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), chestContents);
 		}
 		if (!rng::random<2>()) {
 			static const size_t terminalIdx = 7;
 			auto pCoordVec = tiles.getEmptyLocations();
 			const size_t vecSize = pCoordVec->size();
 			const int locationSel = rng::random(vecSize / 3);
-			const float xInit = (*pCoordVec)[vecSize - 1 - locationSel].x;
-			const float yInit = (*pCoordVec)[vecSize - 1 - locationSel].y;
+			const int xInit = (*pCoordVec)[vecSize - 1 - locationSel].x;
+			const int yInit = (*pCoordVec)[vecSize - 1 - locationSel].y;
 			details.add<terminalIdx>(xInit * 32 + tiles.posX, yInit * 26 + tiles.posY,
-									 ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
+									 ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+									 tiles.mapArray[xInit][yInit]);
 		}
 		glowSprs1.clear();
 		glowSprs2.clear();

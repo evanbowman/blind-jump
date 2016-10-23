@@ -10,7 +10,7 @@ public:
 	enum class State {
 		dormant, wakeup, awake, poweroff
 	};
-	Terminal(const float, const float, const sf::Texture &);
+	Terminal(const float, const float, const sf::Texture &, const uint8_t);
 	const sf::Sprite & getSprite() const;
 	const sf::Sprite & getShadow() const;
 	const sf::Sprite & getScreen() const;

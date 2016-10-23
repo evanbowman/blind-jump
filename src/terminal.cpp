@@ -1,7 +1,7 @@
 #include "terminal.hpp"
 
-Terminal::Terminal(const float _xInit, const float _yInit, const sf::Texture & mainTxtr)
-	: Detail(_xInit + rng::random<4, -2>(), _yInit),
+Terminal::Terminal(const float _xInit, const float _yInit, const sf::Texture & mainTxtr, const uint8_t tile)
+	: Detail(_xInit + rng::random<4, -2>(), _yInit - rng::random<2, 1>()),
 	  animationTimer(0),
 	  stateTimer(0),
 	  frameIndex(0),
@@ -11,7 +11,11 @@ Terminal::Terminal(const float _xInit, const float _yInit, const sf::Texture & m
 	  shadow(mainTxtr)
 {
 	shadow.setTextureRect(sf::IntRect(0, 159, 21, 12));
-	mainSprite.setTextureRect(sf::IntRect(0, 132, 21, 27));
+	if (tile == 3 || tile == 4) {
+		mainSprite.setTextureRect(sf::IntRect(0, 132, 21, 27));
+	} else {
+		mainSprite.setTextureRect(sf::IntRect(21, 143, 21, 27));
+	}
 	mainSprite.setPosition(position);
 	screenSheet.setPosition(position.x + 1, position.y + 2);
 	screenSheet.setColor(sf::Color::Transparent);
