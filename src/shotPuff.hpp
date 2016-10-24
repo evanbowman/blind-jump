@@ -12,10 +12,10 @@
 
 class ShotPuff : public Effect {
 private:
-	mutable SpriteSheet<88, 145, 16, 16> spriteSheet;
+    mutable SpriteSheet<88, 145, 16, 16> spriteSheet;
 
 public:
-	ShotPuff(const sf::Texture &, float, float);
-	void update(const sf::Time &);
-	const framework::Sprite & getSprite() const;
+    ShotPuff(const sf::Texture &, float, float);
+    void update(const sf::Time &);
+    const framework::Sprite & getSprite() const;
 };

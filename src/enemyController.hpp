@@ -24,26 +24,26 @@ class Camera;
 
 class enemyController {
 private:
-	using drawableVec = std::vector<std::tuple<framework::Sprite, float, Rendertype, float>>;
-	std::vector<Turret> turrets;
-	std::vector<Scoot> scoots;
-	std::vector<Dasher> dashers;
-	std::vector<Critter> critters;
-	float windowW;
-	float windowH;
-	
+    using drawableVec = std::vector<std::tuple<framework::Sprite, float, Rendertype, float>>;
+    std::vector<Turret> turrets;
+    std::vector<Scoot> scoots;
+    std::vector<Dasher> dashers;
+    std::vector<Critter> critters;
+    float windowW;
+    float windowH;
+    
 public:
-	enemyController();
-	void update(Game *, bool, const sf::Time &, std::vector<sf::Vector2f> &);
-	void draw(drawableVec &, drawableVec &, Camera &);
-	void clear();
-	void addTurret(tileController *);
-	void addScoot(tileController *);
-	void addDasher(tileController *);
-	void addCritter(tileController *);
-	void setWindowSize(float, float);
-	std::vector<Critter> & getCritters();
-	std::vector<Scoot> & getScoots();
-	std::vector<Dasher> & getDashers();
-	std::vector<Turret> & getTurrets();
+    enemyController();
+    void update(Game *, bool, const sf::Time &, std::vector<sf::Vector2f> &);
+    void draw(drawableVec &, drawableVec &, Camera &);
+    void clear();
+    void addTurret(tileController *);
+    void addScoot(tileController *);
+    void addDasher(tileController *);
+    void addCritter(tileController *);
+    void setWindowSize(float, float);
+    std::vector<Critter> & getCritters();
+    std::vector<Scoot> & getScoots();
+    std::vector<Dasher> & getDashers();
+    std::vector<Turret> & getTurrets();
 };

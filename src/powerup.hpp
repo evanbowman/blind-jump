@@ -6,7 +6,7 @@
 #pragma once
 
 enum class Powerup {
-	nil,
+    nil,
     health,
-	rapidFire
+    rapidFire
 };

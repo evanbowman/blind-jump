@@ -12,10 +12,10 @@
 
 class Rock : public Detail {
 private:
-	mutable SpriteSheet<80, 38, 32, 64> rockSheet;
-	
+    mutable SpriteSheet<80, 38, 32, 64> rockSheet;
+    
 public:
-	void update(const sf::Time &);
-	Rock(float, float, const sf::Texture &);
-	const framework::Sprite & getSprite() const;
+    void update(const sf::Time &);
+    Rock(float, float, const sf::Texture &);
+    const framework::Sprite & getSprite() const;
 };

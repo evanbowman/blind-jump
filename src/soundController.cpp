@@ -6,22 +6,22 @@
 #include "soundController.hpp"
 
 void SoundController::poll() {
-	if (!soundIdxQueue.empty()) {
-		for (auto & element : soundIdxQueue) {
-			sounds.emplace_back(::resHandlerPtr->getSound(element));
-			sounds.back().play();
-		}
-		soundIdxQueue.clear();
-	}
-	for (auto it = sounds.begin(); it != sounds.end();) {
-		if (it->getStatus() == sf::Sound::Status::Stopped) {
-			it = sounds.erase(it);
-		} else {
-			++it;
-		}
-	}
+    if (!soundIdxQueue.empty()) {
+        for (auto & element : soundIdxQueue) {
+            sounds.emplace_back(::resHandlerPtr->getSound(element));
+            sounds.back().play();
+        }
+        soundIdxQueue.clear();
+    }
+    for (auto it = sounds.begin(); it != sounds.end();) {
+        if (it->getStatus() == sf::Sound::Status::Stopped) {
+            it = sounds.erase(it);
+        } else {
+            ++it;
+        }
+    }
 }
 
 void SoundController::play(ResHandler::Sound indx) {
-	soundIdxQueue.push_back(indx);
+    soundIdxQueue.push_back(indx);
 }

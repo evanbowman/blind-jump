@@ -1,6 +1,6 @@
 //========================================================================//
-// Copyright (C) 2016 Evan Bowman										  //
-// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.			  //
+// Copyright (C) 2016 Evan Bowman                                         //
+// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
 //========================================================================//
 
 #pragma once
@@ -14,19 +14,19 @@
 
 class EnemyShot : public Effect {
 public:
-	using HBox = framework::HitBox<14, 14, 0, 0>;
-	enum { lifetime = 600 };
-	EnemyShot(const sf::Texture &, const sf::Texture &, float, float, float);
-	void update(const sf::Time &);
-	const framework::Sprite & getSprite();
-	const HBox & getHitBox() const;
-	const framework::Sprite & getGlow() const;
-	
+    using HBox = framework::HitBox<14, 14, 0, 0>;
+    enum { lifetime = 600 };
+    EnemyShot(const sf::Texture &, const sf::Texture &, float, float, float);
+    void update(const sf::Time &);
+    const framework::Sprite & getSprite();
+    const HBox & getHitBox() const;
+    const framework::Sprite & getGlow() const;
+    
 private:
-	HBox hitBox;
-	SpriteSheet<50, 91, 14, 14> spriteSheet;
-	int32_t frameTimer;
-	float direction;
-	framework::Sprite glowSprite;
-	
+    HBox hitBox;
+    SpriteSheet<50, 91, 14, 14> spriteSheet;
+    int32_t frameTimer;
+    float direction;
+    framework::Sprite glowSprite;
+    
 };

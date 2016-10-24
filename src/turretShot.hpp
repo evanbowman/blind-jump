@@ -12,20 +12,20 @@
 
 class TurretShot : public Effect {
 public:
-	using HBox = framework::HitBox<10, 10, -5, -5>;
-	const HBox & getHitBox() const;
-	enum { lifetime = 600 };
-	TurretShot(const sf::Texture &, const sf::Texture &, float, float, float);
-	const framework::Sprite & getGlow();
-	const framework::Sprite & getSprite();
-	void update(const sf::Time&);
-	void speedFactor(float);
-	int32_t animationTimer;
-	
+    using HBox = framework::HitBox<10, 10, -5, -5>;
+    const HBox & getHitBox() const;
+    enum { lifetime = 600 };
+    TurretShot(const sf::Texture &, const sf::Texture &, float, float, float);
+    const framework::Sprite & getGlow();
+    const framework::Sprite & getSprite();
+    void update(const sf::Time&);
+    void speedFactor(float);
+    int32_t animationTimer;
+    
 private:
-	SpriteSheet<26, 75, 9, 16> spriteSheet;
-	HBox hitBox;
-	framework::Sprite glowSprite;
-	float direction;
-	float scale;	
+    SpriteSheet<26, 75, 9, 16> spriteSheet;
+    HBox hitBox;
+    framework::Sprite glowSprite;
+    float direction;
+    float scale;    
 };

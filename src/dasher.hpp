@@ -1,6 +1,6 @@
 //========================================================================//
-// Copyright (C) 2016 Evan Bowman										  //
-// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.			  //
+// Copyright (C) 2016 Evan Bowman                                         //
+// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
 //========================================================================//
 
 #pragma once
@@ -13,41 +13,41 @@ class Player;
 
 class Dasher : public Enemy {
 public:
-	using HBox = framework::HitBox<20, 32, -6, -4>;
-	struct Blur {
-		Blur(framework::Sprite *, float, float);
-		framework::Sprite * getSprite();
-		void update(const sf::Time &);
-		bool getKillFlag();
-		int32_t timer;
-		float xInit;
-		float yInit;
-		framework::Sprite spr;
-		bool killflag;
-	};
-	enum class State {
-		idle, shooting, dashBegin, dashing, dashEnd, dying, dead, shootBegin, pause
-	};
-	Dasher(const sf::Texture &, float, float);
-	const framework::Sprite & getSprite() const;
-	const framework::Sprite & getShadow() const;
-	void update(const Player *, const std::vector<wall> &, EffectGroup & ef, const sf::Time &);
-	std::vector<Dasher::Blur> * getBlurEffects();
-	State getState() const;
-	const sf::Vector2f & getScale() const;
-	const HBox & getHitBox() const;
-	
+    using HBox = framework::HitBox<20, 32, -6, -4>;
+    struct Blur {
+        Blur(framework::Sprite *, float, float);
+        framework::Sprite * getSprite();
+        void update(const sf::Time &);
+        bool getKillFlag();
+        int32_t timer;
+        float xInit;
+        float yInit;
+        framework::Sprite spr;
+        bool killflag;
+    };
+    enum class State {
+        idle, shooting, dashBegin, dashing, dashEnd, dying, dead, shootBegin, pause
+    };
+    Dasher(const sf::Texture &, float, float);
+    const framework::Sprite & getSprite() const;
+    const framework::Sprite & getShadow() const;
+    void update(const Player *, const std::vector<wall> &, EffectGroup & ef, const sf::Time &);
+    std::vector<Dasher::Blur> * getBlurEffects();
+    State getState() const;
+    const sf::Vector2f & getScale() const;
+    const HBox & getHitBox() const;
+    
 private:
-	HBox hitBox;
-	uint8_t shotCount;
-	State state;
-	mutable SpriteSheet<648, 38, 29, 38> dasherSheet;
-	mutable SpriteSheet<80, 0, 47, 38> deathSheet;
-	framework::Sprite shadow;
-	sf::Vector2f target;
-	float hSpeed, vSpeed;
-	int32_t timer;
-	std::vector<Dasher::Blur> blurEffects;
-	void onDeath(EffectGroup &);
-	void facePlayer();
+    HBox hitBox;
+    uint8_t shotCount;
+    State state;
+    mutable SpriteSheet<648, 38, 29, 38> dasherSheet;
+    mutable SpriteSheet<80, 0, 47, 38> deathSheet;
+    framework::Sprite shadow;
+    sf::Vector2f target;
+    float hSpeed, vSpeed;
+    int32_t timer;
+    std::vector<Dasher::Blur> blurEffects;
+    void onDeath(EffectGroup &);
+    void facePlayer();
 };

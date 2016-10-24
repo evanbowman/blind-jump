@@ -8,5 +8,5 @@
 ShutdownSignal::ShutdownSignal() : msg("blindjump: goodbye") {}
 
 const char * ShutdownSignal::what() const noexcept {
-	return msg.c_str();
+    return msg.c_str();
 }

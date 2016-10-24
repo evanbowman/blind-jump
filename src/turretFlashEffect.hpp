@@ -12,10 +12,10 @@
 
 class TurretFlashEffect : public Effect {
 private:
-	mutable SpriteSheet<0, 116, 16, 16> spriteSheet;
-	
+    mutable SpriteSheet<0, 116, 16, 16> spriteSheet;
+    
 public:
-	TurretFlashEffect(const sf::Texture &, float, float);
-	void update(const sf::Time &);
-	const framework::Sprite & getSprite() const;
+    TurretFlashEffect(const sf::Texture &, float, float);
+    void update(const sf::Time &);
+    const framework::Sprite & getSprite() const;
 };

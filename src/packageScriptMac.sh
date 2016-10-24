@@ -38,10 +38,10 @@ if [ $# == 2 ]; then
     printf "Done!"
     
     if [ $? -eq 0 ]; then
-	printf "\nBundling complete!"
+        printf "\nBundling complete!"
     else
-	printf "\nFailed to create app bundle"
-	rm -rf ../targets/macOS/$2.app/Contents/MacOS
+        printf "\nFailed to create app bundle"
+        rm -rf ../targets/macOS/$2.app/Contents/MacOS
     fi
 else
     printf "\nUsage: packageScriptMac <executable> <name>"

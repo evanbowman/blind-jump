@@ -10,15 +10,15 @@
 
 class Teleporter : public Detail {
 public:
-	Teleporter(float, float, const sf::Texture &, const sf::Texture &);
-	const framework::Sprite & getShadow() const;
-	const framework::Sprite & getSprite() const;
-	bool smokeReady();
-	void update(const sf::Time &);
-	const framework::Sprite & getGlow() const;
-	
+    Teleporter(float, float, const sf::Texture &, const sf::Texture &);
+    const framework::Sprite & getShadow() const;
+    const framework::Sprite & getSprite() const;
+    bool smokeReady();
+    void update(const sf::Time &);
+    const framework::Sprite & getGlow() const;
+    
 private:
-	mutable framework::Sprite glowSprite;
-	mutable framework::Sprite TeleporterSprites[2];
-	int32_t smokeTimer;
+    mutable framework::Sprite glowSprite;
+    mutable framework::Sprite TeleporterSprites[2];
+    int32_t smokeTimer;
 };

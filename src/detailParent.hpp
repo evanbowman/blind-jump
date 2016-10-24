@@ -10,5 +10,5 @@
 
 class Detail : public framework::Object {
 public:
-	Detail(float xInit, float yInit) : Object{xInit, yInit} {}
+    Detail(float xInit, float yInit) : Object{xInit, yInit} {}
 };
