@@ -84,9 +84,9 @@ inline void drawGroup(DetailGroup & dg,
 			elemPos.x < viewCenter.x + viewSize.x / 2 + 48 &&
 			elemPos.y > viewCenter.y - viewSize.y / 2 - 48 &&
 			elemPos.y < viewCenter.y + viewSize.y / 2 + 48) {
-			gameObjects.emplace_back(element.getSprite(), element.getPosition().y - 14,
+			gameObjects.emplace_back(element.getSprite(), element.getPosition().y - 10,
 									 Rendertype::shadeDefault, 0.f);
-			gameObjects.emplace_back(element.getScreen(), element.getPosition().y - 13,
+			gameObjects.emplace_back(element.getScreen(), element.getPosition().y - 9,
 									 Rendertype::shadeNone, 0.f);
 			gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeNone, 0.f);
 		}
