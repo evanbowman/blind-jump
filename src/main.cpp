@@ -18,7 +18,7 @@
 #include "inputController.hpp"
 #include "resourceHandler.hpp"
 #include "aspectScaling.hpp"
-#include "ResourcePath.hpp"
+#include "introSequence.hpp"
 #include "player.hpp"
 #include "alias.hpp"
 #include "game.hpp"
@@ -43,6 +43,7 @@ int main() {
         window.setVerticalSyncEnabled(true);
         window.setFramerateLimit(120);
         InputController input;
+        dispIntroSequence(window, input);
         sf::View hudView(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
         ui::Frontend uIFrontEnd(hudView, drawableRegionSize.x / 2, drawableRegionSize.y / 2);
         Game game(drawableRegionSize, window.getSize(), &input, &uIFrontEnd);
@@ -69,6 +70,7 @@ int main() {
                 return;
             }
         });
+        game.getCamera().panDown();
         while (window.isOpen()) {
             input.update(window);
             window.clear();

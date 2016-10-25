@@ -18,7 +18,7 @@ std::mutex overworldMutex, UIMutex, transitionMutex;
 
 Game::Game(const sf::Vector2f & _viewPort, const sf::Vector2u & windowSize, InputController * _pInput, ui::Frontend * _pUiFrontend)
     : viewPort(_viewPort),
-      transitionState(TransitionState::None),
+      transitionState(TransitionState::TransitionIn),
       pInput(_pInput),
       player(viewPort.x / 2, viewPort.y / 2),
       camera(&player, viewPort, windowSize),
@@ -497,7 +497,11 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
             transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
         }
         if (timer >= 800000) {
-            transitionState = TransitionState::EntryBeamDrop;
+            if (level != 0) {
+                transitionState = TransitionState::EntryBeamDrop;
+            } else {
+                transitionState = TransitionState::None;
+            }
             timer = 0;
             beamShape.setSize(sf::Vector2f(4, 0));
             beamShape.setPosition(viewPort.x / 2 - 2, 0);

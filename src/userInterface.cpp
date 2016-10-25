@@ -457,6 +457,7 @@ ui::Frontend::Frontend(sf::View fontView, float x, float y) :
     };
     initText(waypointText, std::string("WAYPOINT-1"), 0.055f * scale);
     waypointText.setPosition(16, 0);
+    waypointText.setFillColor(sf::Color::Transparent);
 
     initText(scoreText, std::string("0: "), 0.032f * scale);
     
@@ -592,10 +593,9 @@ void ui::Frontend::setWaypointText(int level) {
     std::string str = "WAYPOINT-";
     str += std::to_string(level);
     waypointText.setString(str);
-    // Reset the color, it will fade out
-    waypointText.setFillColor(sf::Color::White);
     scoreText.setFillColor(sf::Color(255, 255, 255, 4));
     if (level != 0) {
+        waypointText.setFillColor(sf::Color::White);
         wpTextDisplayTimer.restart();
         if (health != 1) {
             healthDisplayTimer.restart();
