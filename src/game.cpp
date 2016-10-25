@@ -593,17 +593,17 @@ void Game::nextLevel() {
             details.add<chestIdx>(optCoord.value().x * 32 + tiles.posX, optCoord.value().y * 26 + tiles.posY,
                                   ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), chestContents);
         }
-        // if (!rng::random<2>()) {
-        //  static const size_t terminalIdx = 7;
-        //  auto pCoordVec = tiles.getEmptyLocations();
-        //  const size_t vecSize = pCoordVec->size();
-        //  const int locationSel = rng::random(vecSize / 3);
-        //  const int xInit = (*pCoordVec)[vecSize - 1 - locationSel].x;
-        //  const int yInit = (*pCoordVec)[vecSize - 1 - locationSel].y;
-        //  details.add<terminalIdx>(xInit * 32 + tiles.posX, yInit * 26 + tiles.posY,
-        //                           ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-        //                           tiles.mapArray[xInit][yInit]);
-        // }
+        if (!rng::random<2>()) {
+            static const size_t terminalIdx = 7;
+            auto pCoordVec = tiles.getEmptyLocations();
+            const size_t vecSize = pCoordVec->size();
+            const int locationSel = rng::random(vecSize / 3);
+            const int xInit = (*pCoordVec)[vecSize - 1 - locationSel].x;
+            const int yInit = (*pCoordVec)[vecSize - 1 - locationSel].y;
+            details.add<terminalIdx>(xInit * 32 + tiles.posX, yInit * 26 + tiles.posY,
+                                     ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+                                     tiles.mapArray[xInit][yInit]);
+        }
         glowSprs1.clear();
         glowSprs2.clear();
         Circle teleporterFootprint;
