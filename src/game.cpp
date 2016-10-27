@@ -13,9 +13,6 @@
 #include "game.hpp"
 #include "math.h"
 
-// NOTE: game class is meant to be instantiated only once, so this is ok
-std::mutex overworldMutex, UIMutex, transitionMutex;
-
 Game::Game(const sf::Vector2f & _viewPort, const sf::Vector2u & windowSize, InputController * _pInput, ui::Frontend * _pUiFrontend)
     : viewPort(_viewPort),
       transitionState(TransitionState::TransitionIn),
@@ -76,7 +73,7 @@ void Game::draw(sf::RenderWindow & window) {
     target.clear(sf::Color::Transparent);
     if (!stashed || preload) {
         {
-            std::lock_guard<std::mutex> overworldLock(::overworldMutex);
+            std::lock_guard<std::mutex> overworldLock(overworldMutex);
             lightingMap.setView(camera.getOverworldView());
             bkg.drawBackground(target, worldView, camera);
             tiles.draw(target, &glowSprs1, level, worldView, camera.getOverworldView());
@@ -256,7 +253,7 @@ void Game::draw(sf::RenderWindow & window) {
         window.draw(targetSprite);
     }
     {
-        std::lock_guard<std::mutex> UILock(::UIMutex);
+        std::lock_guard<std::mutex> UILock(UIMutex);
         if (player.getState() == Player::State::dead) {
             UI.draw(window, *pUiFrontend);
         } else {
@@ -280,7 +277,7 @@ void Game::update(const sf::Time & elapsedTime) {
         stashed = false;
     }
     if (!stashed || preload) {
-        std::lock_guard<std::mutex> overworldLock(::overworldMutex);
+        std::lock_guard<std::mutex> overworldLock(overworldMutex);
         if (level != 0) {
             const sf::Vector2f & cameraOffset = camera.getOffsetFromStart();
             bkg.setOffset(cameraOffset.x, cameraOffset.y);
@@ -308,7 +305,7 @@ void Game::update(const sf::Time & elapsedTime) {
         }
     }
     {
-        std::lock_guard<std::mutex> UILock(::UIMutex);
+        std::lock_guard<std::mutex> UILock(UIMutex);
         if (player.getState() == Player::State::dead) {
             UI.dispDeathSeq();
             if (UI.isComplete()) {
@@ -334,7 +331,7 @@ void Game::update(const sf::Time & elapsedTime) {
 }
 
 void Game::drawTransitions(sf::RenderWindow & window) {
-    std::lock_guard<std::mutex> grd(::transitionMutex);
+    std::lock_guard<std::mutex> grd(transitionMutex);
     switch (transitionState) {
     case TransitionState::None:
         break;
@@ -408,7 +405,7 @@ void Game::drawTransitions(sf::RenderWindow & window) {
 }
 
 void Game::updateTransitions(const sf::Time & elapsedTime) {
-    std::lock_guard<std::mutex> grd(::transitionMutex);
+    std::lock_guard<std::mutex> grd(transitionMutex);
     switch (transitionState) {
     case TransitionState::None:
         {

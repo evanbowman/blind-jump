@@ -66,6 +66,7 @@ private:
     DetailGroup details;
     enemyController en;
     ui::Frontend * pUiFrontend;
+    std::mutex overworldMutex, UIMutex, transitionMutex;
     int level;
     // Stash static rendered frames for efficiency. Preload is for recovery from stash
     bool stashed, preload;
