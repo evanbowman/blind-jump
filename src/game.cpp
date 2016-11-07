@@ -285,7 +285,7 @@ void Game::update(const sf::Time & elapsedTime) {
             bkg.setOffset(0, 0);
         }
         tiles.update();
-        auto groupUpdatePolicy = [& elapsedTime](auto & vec) {
+        const auto groupUpdatePolicy = [& elapsedTime](auto & vec) {
             for (auto it = vec.begin(); it != vec.end();) {
                 if (it->getKillFlag()) {
                     it = vec.erase(it);
