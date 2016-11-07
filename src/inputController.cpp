@@ -8,9 +8,7 @@
 #include <iostream>
 
 InputController::InputController()
-    : keyMask{0},
-      joystickMask{0}, 
-      keyboardMappings{
+    : keyboardMappings{
           { sf::Keyboard::X,
             sf::Keyboard::Z,
             sf::Keyboard::Escape,
@@ -37,60 +35,60 @@ void InputController::mapJsById() {
     };
     sf::Joystick::Identification ident = sf::Joystick::getIdentification(0);
     if (ident.vendorId == Sony && ident.productId == PS3Controller) {
-        joystickMappings[ButtonShoot] = 11;
-        joystickMappings[ButtonAction] = 14;
-        joystickMappings[ButtonPause] = 16;
+        joystickMappings[indexShoot] = 11;
+        joystickMappings[indexAction] = 14;
+        joystickMappings[indexPause] = 16;
     } else if (ident.vendorId == Sony && ident.productId == PS4Controller) {
-        joystickMappings[ButtonShoot] = 5;
-        joystickMappings[ButtonAction] = 1;
-        joystickMappings[ButtonPause] = 12;
+        joystickMappings[indexShoot] = 5;
+        joystickMappings[indexAction] = 1;
+        joystickMappings[indexPause] = 12;
     } else if (ident.vendorId == Microsoft && ident.productId == XBOneController) {
         // TODO: Test XBOne Controller
     } else {
-        joystickMappings[ButtonShoot] = 0;
-        joystickMappings[ButtonAction] = 1;
-        joystickMappings[ButtonPause] = 2;
+        joystickMappings[indexShoot] = 0;
+        joystickMappings[indexAction] = 1;
+        joystickMappings[indexPause] = 2;
     }
 }
 
-void InputController::mapKeyboardKey(sf::Keyboard::Key key, uint8_t indx) {
+void InputController::mapKeyboardKey(const sf::Keyboard::Key key, const uint8_t indx) {
     keyboardMappings[indx] = key;
 }
 
-void InputController::mapJoystickButton(uint32_t button, uint8_t indx) {
+void InputController::mapJoystickButton(const uint32_t button, const uint8_t indx) {
     joystickMappings[indx] = button;
 }
 
 bool InputController::isFocused() const {
-    return keyMask & 0x0080;
+    return keyMask[indexFocused];
 }
 
 bool InputController::pausePressed() const {
-    return keyMask & 0x0100 || joystickMask & 0x0100;
+    return keyMask[indexPause] || joystickMask[indexPause];
 }
 
 bool InputController::shootPressed() const {
-    return keyMask & 0x0010 || joystickMask & 0x0010;
+    return keyMask[indexShoot] || joystickMask[indexShoot];
 }
 
 bool InputController::actionPressed() const {
-    return keyMask & 0x0020 || joystickMask & 0x0020;
+    return keyMask[indexAction] || joystickMask[indexAction];
 }
 
 bool InputController::leftPressed() const {
-    return keyMask & 0x0001 || joystickMask & 0x0001;
+    return keyMask[indexLeft] || joystickMask[indexLeft];
 }
 
 bool InputController::rightPressed() const {
-    return keyMask & 0x0002 || joystickMask & 0x0002;
+    return keyMask[indexRight] || joystickMask[indexRight];
 }
 
 bool InputController::upPressed() const {
-    return keyMask & 0x0004 || joystickMask & 0x0004;
+    return keyMask[indexUp] || joystickMask[indexUp];
 }
 
 bool InputController::downPressed() const {
-    return keyMask & 0x0008 || joystickMask & 0x0008;
+    return keyMask[indexDown] || joystickMask[indexDown];
 }
 
 void InputController::update(sf::RenderWindow & window) {
@@ -100,36 +98,36 @@ void InputController::update(sf::RenderWindow & window) {
             window.close();
             throw ShutdownSignal();
         } else if (event.type == sf::Event::KeyPressed) {
-            if (event.key.code == keyboardMappings[ButtonPause]) {
-                keyMask |= 0x0100;
-            } else if (event.key.code == keyboardMappings[ButtonLeft]) {
-                keyMask |= 0x0001;
-            } else if (event.key.code == keyboardMappings[ButtonRight]) {
-                keyMask |= 0x0002;
-            } else if (event.key.code == keyboardMappings[ButtonUp]) {
-                keyMask |= 0x0004;
-            } else if (event.key.code == keyboardMappings[ButtonDown]) {
-                keyMask |= 0x0008;
-            } else if (event.key.code == keyboardMappings[ButtonShoot]) {
-                keyMask |= 0x0010;
-            } else if (event.key.code == keyboardMappings[ButtonAction]) {
-                keyMask |= 0x0020;
+            if (event.key.code == keyboardMappings[indexPause]) {
+                keyMask[indexPause] = true;
+            } else if (event.key.code == keyboardMappings[indexLeft]) {
+                keyMask[indexLeft] = true;
+            } else if (event.key.code == keyboardMappings[indexRight]) {
+                keyMask[indexRight] = true;
+            } else if (event.key.code == keyboardMappings[indexUp]) {
+                keyMask[indexUp] = true;
+            } else if (event.key.code == keyboardMappings[indexDown]) {
+                keyMask[indexDown] = true;
+            } else if (event.key.code == keyboardMappings[indexShoot]) {
+                keyMask[indexShoot] = true;
+            } else if (event.key.code == keyboardMappings[indexAction]) {
+                keyMask[indexAction] = true;
             }
         } else if (event.type == sf::Event::KeyReleased) {
-            if (event.key.code == keyboardMappings[ButtonPause]) {
-                keyMask &= 0xFEFF;
-            } else if (event.key.code == keyboardMappings[ButtonLeft]) {
-                keyMask &= 0xFFFE;
-            } else if (event.key.code == keyboardMappings[ButtonRight]) {
-                keyMask &= 0xFFFD;
-            } else if (event.key.code == keyboardMappings[ButtonUp]) {
-                keyMask &= 0xFFFB;
-            } else if (event.key.code == keyboardMappings[ButtonDown]) {
-                keyMask &= 0xFFF7;
-            } else if (event.key.code == keyboardMappings[ButtonShoot]) {
-                keyMask &= 0xFFEF;
-            } else if (event.key.code == keyboardMappings[ButtonAction]) {
-                keyMask &= 0xFFDF;
+            if (event.key.code == keyboardMappings[indexPause]) {
+                keyMask[indexPause] = false;
+            } else if (event.key.code == keyboardMappings[indexLeft]) {
+                keyMask[indexLeft] = false;
+            } else if (event.key.code == keyboardMappings[indexRight]) {
+                keyMask[indexRight] = false;
+            } else if (event.key.code == keyboardMappings[indexUp]) {
+                keyMask[indexUp] = false;
+            } else if (event.key.code == keyboardMappings[indexDown]) {
+                keyMask[indexDown] = false;
+            } else if (event.key.code == keyboardMappings[indexShoot]) {
+                keyMask[indexShoot] = false;
+            } else if (event.key.code == keyboardMappings[indexAction]) {
+                keyMask[indexAction] = false;
             }
         } else if (event.type == sf::Event::GainedFocus) {
             keyMask |= 0x0080;
@@ -137,22 +135,22 @@ void InputController::update(sf::RenderWindow & window) {
             keyMask &= 0xFF7F;
         } else if (event.type == sf::Event::JoystickButtonPressed) {
             if (event.joystickButton.joystickId == 0) {
-                if (event.joystickButton.button == joystickMappings[ButtonShoot]) {
-                    joystickMask |= 0x0010;
-                } else if (event.joystickButton.button == joystickMappings[ButtonAction]) {
-                    joystickMask |= 0x0020;
-                } else if (event.joystickButton.button == joystickMappings[ButtonPause]) {
-                    joystickMask |= 0x0100;
+                if (event.joystickButton.button == joystickMappings[indexShoot]) {
+                    joystickMask[indexShoot] = true;
+                } else if (event.joystickButton.button == joystickMappings[indexAction]) {
+                    joystickMask[indexAction] = true;
+                } else if (event.joystickButton.button == joystickMappings[indexPause]) {
+                    joystickMask[indexPause] = true;
                 }
             }
         } else if (event.type == sf::Event::JoystickButtonReleased) {
             if (event.joystickButton.joystickId == 0) {
-                if (event.joystickButton.button == joystickMappings[ButtonShoot]) {
-                    joystickMask &= 0xFFEF;
-                } else if (event.joystickButton.button == joystickMappings[ButtonAction]) {
-                    joystickMask &= 0xFFDF;
-                } else if (event.joystickButton.button == joystickMappings[ButtonPause]) {
-                    joystickMask &= 0xFEFF;
+                if (event.joystickButton.button == joystickMappings[indexShoot]) {
+                    joystickMask[indexShoot] = false;
+                } else if (event.joystickButton.button == joystickMappings[indexAction]) {
+                    joystickMask[indexAction] = false;
+                } else if (event.joystickButton.button == joystickMappings[indexPause]) {
+                    joystickMask[indexPause] = false;
                 }
             }
         } else if (event.type == sf::Event::JoystickMoved) {
@@ -160,34 +158,36 @@ void InputController::update(sf::RenderWindow & window) {
             if (event.joystickMove.axis == sf::Joystick::Axis::X) {
                 float position = event.joystickMove.position;
                 if (position > deadZone) {
-                    joystickMask &= 0xFFFE;
-                    joystickMask |= 0x0002;
+                    joystickMask[indexRight] = true;
+                    joystickMask[indexLeft] = false;
                 } else if (-position > deadZone) {
-                    joystickMask &= 0xFFFD;
-                    joystickMask |= 0x0001;
+                    joystickMask[indexLeft] = true;
+                    joystickMask[indexRight] = false;
                 } else {
-                    joystickMask &= 0xFFFC;
+                    joystickMask[indexLeft] = false;
+                    joystickMask[indexRight] = false;
                 }
             } else if (event.joystickMove.axis == sf::Joystick::Axis::Y) {
                 float position = event.joystickMove.position;
                 if (-position > deadZone) {
-                    joystickMask &= 0xFFF7;
-                    joystickMask |= 0x0004;
+                    joystickMask[indexUp] = true;
+                    joystickMask[indexDown] = false;
                 } else if (position > deadZone) {
-                    joystickMask &= 0xFFFB;
-                    joystickMask |= 0x0008;
+                    joystickMask[indexDown] = true;
+                    joystickMask[indexUp] = false;
                 } else {
-                    joystickMask &= 0xFFF3;
+                    joystickMask[indexDown] = true;
+                    joystickMask[indexUp] = true;
                 }
             }
         } else if (event.type == sf::Event::JoystickConnected) {
             if (event.joystickConnect.joystickId == 0) {
                 this->mapJsById();
-                joystickMask = 0x0000;
+                joystickMask.reset();
             }
         } else if (event.type == sf::Event::JoystickDisconnected) {
             if (event.joystickConnect.joystickId == 0) {
-                joystickMask = 0x0000; // In case buttons pressed when disconnected
+                joystickMask.reset();
             }
         }
     }
