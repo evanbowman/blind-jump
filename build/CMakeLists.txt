@@ -12,7 +12,7 @@ file(GLOB_RECURSE blindjump_HEADERS "${PROJECT_SOURCE_DIR}/*.hpp")
 if(APPLE)
   set(RESOURCE_PATH "macos/ResourcePath.mm")
 elseif(WIN32)
-  # TODO
+  set(RESOURCE_PATH "windows/ResourcePath.cpp")
 elseif(UNIX)
   set(RESOURCE_PATH "debian/ResourcePath.cpp")
 endif()
@@ -49,23 +49,10 @@ if(SFML_FOUND)
     find_package(Threads)
     target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_THREAD_LIBS_INIT})
     if(EXISTS "/etc/debian_version")
-      add_custom_target(pkg mkdir -p temp/DEBIAN
-	COMMAND cp debian/control temp/DEBIAN
-	COMMAND mkdir -p temp/usr/bin
-	COMMAND mkdir -p temp/usr/share/blindjump
-	COMMAND mkdir -p temp/usr/lib
-	COMMAND mkdir temp/usr/share/applications
-	COMMAND cp debian/libsfml/*.so* temp/usr/lib
-	COMMAND cp ../res/* temp/usr/share/blindjump
-	COMMAND cp debian/icon.png temp/usr/share/blindjump
-	COMMAND cp debian/blindjump.desktop temp/usr/share/applications
-	COMMAND mv ${EXECUTABLE_NAME} temp/usr/bin
-	COMMAND mv temp ${EXECUTABLE_NAME}
-	COMMAND dpkg-deb --build ${EXECUTABLE_NAME}
-	COMMAND rm -rf ${EXECUTABLE_NAME})
+      # TODO create deb package
     endif()
     if(EXISTS "/etc/redhat-release")
-      # create rpm TODO: install centos in a vm and get this working!
+      # TODO create rpm: install centos in a vm and get this working!
     endif()
   endif()
 endif()
