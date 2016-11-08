@@ -45,7 +45,7 @@ if(SFML_FOUND)
       COMMAND cp macos/icon.icns ${EXECUTABLE_NAME}.app/Contents/Resources
       COMMAND cp -r macos/Frameworks/* ${EXECUTABLE_NAME}.app/Contents/Frameworks)
   elseif(WIN32)
-    # TODO
+    target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
   elseif(UNIX)
     target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
     find_package(Threads)
