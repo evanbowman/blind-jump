@@ -176,8 +176,8 @@ void InputController::update(sf::RenderWindow & window) {
                     joystickMask[indexDown] = true;
                     joystickMask[indexUp] = false;
                 } else {
-                    joystickMask[indexDown] = true;
-                    joystickMask[indexUp] = true;
+                    joystickMask[indexDown] = false;
+                    joystickMask[indexUp] = false;
                 }
             }
         } else if (event.type == sf::Event::JoystickConnected) {
