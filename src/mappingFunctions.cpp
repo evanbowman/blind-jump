@@ -3,20 +3,23 @@
 // Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
 //========================================================================//
 
-#include "tileController.hpp"
 #include "mappingFunctions.hpp"
+#include "tileController.hpp"
 #include <cstring>
 
 // This code is not so readable... TODO: make map type a scoped enum
 
-void floodFillspread(uint8_t screen[61][61], uint8_t x, uint8_t y, uint8_t prevC, uint8_t newC) {
+void floodFillspread(uint8_t screen[61][61], uint8_t x, uint8_t y,
+                     uint8_t prevC, uint8_t newC) {
     // Base cases
-    if (x <= 2 || x >= 59 || y <= 2 || y >= 59) return;
-    if (screen[x][y] != prevC) return;
-    
+    if (x <= 2 || x >= 59 || y <= 2 || y >= 59)
+        return;
+    if (screen[x][y] != prevC)
+        return;
+
     // Replace replace the old element with the desired new one
     screen[x][y] = newC;
-    
+
     // Continue in four directions
     floodFillspread(screen, x + 1, y, prevC, newC);
     floodFillspread(screen, x - 1, y, prevC, newC);
@@ -32,7 +35,8 @@ void floodFill(uint8_t screen[61][61], uint8_t x, uint8_t y, uint8_t newC) {
 inline void cleanUp(uint8_t map[61][61]) {
     for (int i = 1; i < 60; i++) {
         for (int j = 1; j < 60; j++) {
-            if (map[i][j] == 1 && map[i - 1][j] < 2 && map[i + 1][j] < 2 && map[i][j - 1] < 2 && map[i][j + 1] < 2) {
+            if (map[i][j] == 1 && map[i - 1][j] < 2 && map[i + 1][j] < 2 &&
+                map[i][j - 1] < 2 && map[i][j + 1] < 2) {
                 map[i][j] = 0;
             }
         }
@@ -72,7 +76,14 @@ inline void addEdges(uint8_t map[61][61]) {
 inline void addCenterTiles(uint8_t map[61][61]) {
     for (int i = 0; i < 61; i++) {
         for (int j = 0; j < 61; j++) {
-            if ((map[i - 1][j] == 5 || map[i - 1][j] == 3 || map[i - 1][j] == 4) && (map[i + 1][j] == 5 || map[i + 1][j] == 3 || map[i + 1][j] == 4) && (map[i][j - 1] == 5 || map[i][j - 1] == 3 || map[i][j - 1] == 4) && (map[i][j + 1] == 5 || map[i][j + 1] == 3 || map[i][j + 1] == 4)) {
+            if ((map[i - 1][j] == 5 || map[i - 1][j] == 3 ||
+                 map[i - 1][j] == 4) &&
+                (map[i + 1][j] == 5 || map[i + 1][j] == 3 ||
+                 map[i + 1][j] == 4) &&
+                (map[i][j - 1] == 5 || map[i][j - 1] == 3 ||
+                 map[i][j - 1] == 4) &&
+                (map[i][j + 1] == 5 || map[i][j + 1] == 3 ||
+                 map[i][j + 1] == 4)) {
                 if (rng::random<12>() > 2) {
                     map[i][j] = 3;
                 } else {
@@ -151,8 +162,7 @@ int initMapOverlay(uint8_t map[61][61]) {
     do {
         xindex = rng::random<61>();
         yindex = rng::random<61>();
-    }
-    while (map[xindex][yindex] != 1);
+    } while (map[xindex][yindex] != 1);
     floodFill(map, xindex, yindex, 5);
     int count = 0;
     for (int i = 0; i < 59; i++) {
@@ -168,7 +178,8 @@ int initMapOverlay(uint8_t map[61][61]) {
 void combine(uint8_t map[61][61], uint8_t overlay[61][61]) {
     for (int i = 0; i < 61; i++) {
         for (int j = 0; j < 61; j++) {
-            if ((overlay[i][j] == 5 && map[i][j] != 0) && (overlay[i][j] == 5 && map[i][j] != 1)) {
+            if ((overlay[i][j] == 5 && map[i][j] != 0) &&
+                (overlay[i][j] == 5 && map[i][j] != 1)) {
                 if (map[i][j] == 2) {
                     map[i][j] = 9;
                 } else if (map[i][j] == 6) {
@@ -211,8 +222,7 @@ int generateMap(uint8_t map[61][61]) {
     do {
         xindex = rng::random<61>();
         yindex = rng::random<61>();
-    }
-    while (map[xindex][yindex] != 7);
+    } while (map[xindex][yindex] != 7);
     floodFill(map, xindex, yindex, 5);
     for (int i = 2; i < 59; i++) {
         for (int j = 2; j < 59; j++) {
@@ -221,7 +231,7 @@ int generateMap(uint8_t map[61][61]) {
             }
         }
     }
-    addEdges(map);  //Adds the top and bottom edges for the platforms
+    addEdges(map); // Adds the top and bottom edges for the platforms
     cleanUp(map);
     addCenterTiles(map);
     int count = 0;
@@ -230,11 +240,12 @@ int generateMap(uint8_t map[61][61]) {
             if (map[i][j] == 3 || map[i][j] == 4) {
                 count += 1;
             }
-            if (map[i + 1][j] == 5 && map[i - 1][j] == 5 && map[i][j + 1] == 5 && map[i][j - 1] == 5) {
+            if (map[i + 1][j] == 5 && map[i - 1][j] == 5 &&
+                map[i][j + 1] == 5 && map[i][j - 1] == 5) {
                 map[i][j] = 5;
             }
         }
-    }   
+    }
     uint8_t mapOverlay[61][61];
     int count2;
     do {

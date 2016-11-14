@@ -5,26 +5,27 @@
 
 #pragma once
 
+#include "RenderType.hpp"
+#include "detailController.hpp"
+#include "inputController.hpp"
+#include "playerAnimationFunctions.hpp"
+#include "playerCollisionFunctions.hpp"
+#include "resourceHandler.hpp"
+#include "soundController.hpp"
+#include "spriteSheet.hpp"
+#include "tileController.hpp"
+#include "util.hpp"
+#include "wall.hpp"
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include <tuple>
-#include "playerAnimationFunctions.hpp"
-#include "playerCollisionFunctions.hpp"
-#include "detailController.hpp"
-#include "soundController.hpp"
-#include "inputController.hpp"
-#include "resourceHandler.hpp"
-#include "tileController.hpp"
-#include "spriteSheet.hpp"
-#include "RenderType.hpp"
-#include "util.hpp"
-#include "wall.hpp"
 
 class Game;
 
 class Player {
-public:
-    using drawableVec = std::vector<std::tuple<framework::Sprite, float, Rendertype, float>>;
+  public:
+    using drawableVec =
+        std::vector<std::tuple<framework::Sprite, float, Rendertype, float>>;
     using Health = int8_t;
     using HBox = framework::HitBox<8, 16, 12, 12>;
     enum class Sheet {
@@ -63,7 +64,7 @@ public:
     sf::Vector2f getPosition();
     sf::Vector2f getCameraTarget(const sf::View &);
     Health getHealth() const;
-    bool visible = true;    
+    bool visible = true;
     void reset();
     void updateColor(const sf::Time &);
     void setHealth(Health);
@@ -73,15 +74,17 @@ public:
     const float getYVeclocty() const;
     sf::Vector2f requestFuturePos(const uint32_t) const;
     sf::Vector2f getPosition() const;
-    
-private:
+
+  private:
     void init();
     HBox hitBox;
-    void updateGun(const sf::Time &, const bool, EffectGroup &, SoundController &, ui::Backend &);
+    void updateGun(const sf::Time &, const bool, EffectGroup &,
+                   SoundController &, ui::Backend &);
     Weapon gun;
     void checkEffectCollisions(EffectGroup &, ui::Frontend *);
     void checkEnemyCollisions(enemyController &, ui::Frontend *);
-    std::vector<Dasher::Blur> blurs; // TODO: Move blur subclass out of Dasher, and into its own file...
+    std::vector<Dasher::Blur> blurs; // TODO: Move blur subclass out of Dasher,
+                                     // and into its own file...
     Health health;
     void updateAnimation(const sf::Time &, uint8_t, uint32_t);
     float xPos, yPos;

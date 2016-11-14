@@ -3,10 +3,10 @@
 // Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
 //========================================================================//
 
-#include <cmath>
+#include "dasher.hpp"
 #include "angleFunction.hpp"
 #include "player.hpp"
-#include "dasher.hpp"
+#include <cmath>
 
 Dasher::Blur::Blur(framework::Sprite * spr, float xInit, float yInit) {
     this->spr = *spr;
@@ -23,9 +23,7 @@ Dasher::Blur::Blur(framework::Sprite * spr, float xInit, float yInit) {
     this->spr.setPosition(xInit, yInit);
 }
 
-framework::Sprite * Dasher::Blur::getSprite() {
-    return &spr;
-}
+framework::Sprite * Dasher::Blur::getSprite() { return &spr; }
 
 void Dasher::Blur::update(const sf::Time & elapsedTime) {
     timer += elapsedTime.asMilliseconds();
@@ -41,24 +39,14 @@ void Dasher::Blur::update(const sf::Time & elapsedTime) {
     }
 }
 
-bool Dasher::Blur::getKillFlag() {
-    return killflag;
-}
+bool Dasher::Blur::getKillFlag() { return killflag; }
 
-const Dasher::HBox & Dasher::getHitBox() const {
-    return hitBox;
-}
+const Dasher::HBox & Dasher::getHitBox() const { return hitBox; }
 
 Dasher::Dasher(const sf::Texture & mainTxtr, float _xPos, float _yPos)
-    : Enemy(_xPos, _yPos),
-      shotCount(0),
-      state(State::idle),
-      dasherSheet(mainTxtr),
-      deathSheet(mainTxtr),
-      hSpeed(0.f),
-      vSpeed(0.f),
-      timer(0)
-{
+    : Enemy(_xPos, _yPos), shotCount(0), state(State::idle),
+      dasherSheet(mainTxtr), deathSheet(mainTxtr), hSpeed(0.f), vSpeed(0.f),
+      timer(0) {
     dasherSheet.setOrigin(14, 8);
     deathSheet.setOrigin(14, 8);
     shadow.setTexture(mainTxtr);
@@ -68,10 +56,10 @@ Dasher::Dasher(const sf::Texture & mainTxtr, float _xPos, float _yPos)
 }
 
 const framework::Sprite & Dasher::getSprite() const {
-    switch(state) {
+    switch (state) {
     case State::dying:
         return deathSheet[frameIndex];
-            
+
     case State::dead:
         return deathSheet[14];
 
@@ -80,14 +68,14 @@ const framework::Sprite & Dasher::getSprite() const {
     }
 }
 
-const framework::Sprite & Dasher::getShadow() const {
-    return shadow;
-}
+const framework::Sprite & Dasher::getShadow() const { return shadow; }
 
-void Dasher::update(const Player * player, const std::vector<wall> & walls, EffectGroup & effects, const sf::Time & elapsedTime) {
+void Dasher::update(const Player * player, const std::vector<wall> & walls,
+                    EffectGroup & effects, const sf::Time & elapsedTime) {
     if (health > 0) {
         for (auto & element : effects.get<9>()) {
-            if (hitBox.overlapping(element.getHitBox()) && element.checkCanPoof()) {
+            if (hitBox.overlapping(element.getHitBox()) &&
+                element.checkCanPoof()) {
                 if (health == 1) {
                     element.disablePuff();
                     element.setKillFlag();
@@ -123,7 +111,7 @@ void Dasher::update(const Player * player, const std::vector<wall> & walls, Effe
             this->dasherSheet.setScale(-1, 1);
         }
     };
-    switch(state) {
+    switch (state) {
     case State::idle:
         if (timer >= 200) {
             timer -= 200;
@@ -153,15 +141,25 @@ void Dasher::update(const Player * player, const std::vector<wall> & walls, Effe
             frameTimer -= 80;
             shotCount++;
             if (xPos > player->getXpos()) {
-                effects.add<0>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xPos - 14, yPos + 2);
-                effects.add<7>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-                               ::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
-                               xPos - 12, yPos, angleFunction(target.x + 8, target.y + 8, xPos, yPos));
+                effects.add<0>(::resHandlerPtr->getTexture(
+                                   ResHandler::Texture::gameObjects),
+                               xPos - 14, yPos + 2);
+                effects.add<7>(
+                    ::resHandlerPtr->getTexture(
+                        ResHandler::Texture::gameObjects),
+                    ::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
+                    xPos - 12, yPos,
+                    angleFunction(target.x + 8, target.y + 8, xPos, yPos));
             } else {
-                effects.add<0>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xPos + 6, yPos + 2);
-                effects.add<7>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-                               ::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
-                               xPos + 4, yPos, angleFunction(target.x, target.y + 8, xPos, yPos));
+                effects.add<0>(::resHandlerPtr->getTexture(
+                                   ResHandler::Texture::gameObjects),
+                               xPos + 6, yPos + 2);
+                effects.add<7>(
+                    ::resHandlerPtr->getTexture(
+                        ResHandler::Texture::gameObjects),
+                    ::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
+                    xPos + 4, yPos,
+                    angleFunction(target.x, target.y + 8, xPos, yPos));
             }
         }
 
@@ -226,7 +224,7 @@ void Dasher::update(const Player * player, const std::vector<wall> & walls, Effe
             hSpeed = 0.f;
             vSpeed = 0.f;
         }
-        
+
         if (Enemy::checkWallCollision(walls, xPos, yPos)) {
             hSpeed *= -1.f;
             vSpeed *= -1.f;
@@ -266,7 +264,7 @@ void Dasher::update(const Player * player, const std::vector<wall> & walls, Effe
             }
         }
     }
-    
+
     xPos += hSpeed * (elapsedTime.asMicroseconds() * 0.00005f);
     yPos += vSpeed * (elapsedTime.asMicroseconds() * 0.00005f);
 }
@@ -279,28 +277,25 @@ void Dasher::onDeath(EffectGroup & effects) {
     killFlag = true;
     unsigned long int temp = rng::random<4>();
     if (temp == 0) {
-        effects.add<4>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-                       ::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
-                       xPos, yPos + 4, Item::Type::Heart);
+        effects.add<4>(
+            ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+            ::resHandlerPtr->getTexture(ResHandler::Texture::redglow), xPos,
+            yPos + 4, Item::Type::Heart);
     } else {
-        effects.add<5>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-                       ::resHandlerPtr->getTexture(ResHandler::Texture::blueglow),
-                       xPos, yPos + 4, Item::Type::Coin);
+        effects.add<5>(
+            ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+            ::resHandlerPtr->getTexture(ResHandler::Texture::blueglow), xPos,
+            yPos + 4, Item::Type::Coin);
     }
-    effects.add<1>(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-                   ::resHandlerPtr->getTexture(ResHandler::Texture::fireExplosionGlow),
-                   xPos, yPos - 2);
+    effects.add<1>(
+        ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+        ::resHandlerPtr->getTexture(ResHandler::Texture::fireExplosionGlow),
+        xPos, yPos - 2);
     blurEffects.clear();
 }
 
-Dasher::State Dasher::getState() const {
-    return state;
-}
+Dasher::State Dasher::getState() const { return state; }
 
-std::vector<Dasher::Blur> * Dasher::getBlurEffects() {
-    return &blurEffects;
-}
+std::vector<Dasher::Blur> * Dasher::getBlurEffects() { return &blurEffects; }
 
-const sf::Vector2f & Dasher::getScale() const {
-    return deathSheet.getScale();
-}
+const sf::Vector2f & Dasher::getScale() const { return deathSheet.getScale(); }

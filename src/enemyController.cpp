@@ -5,16 +5,17 @@
 
 #include "enemyController.hpp"
 #include "ResourcePath.hpp"
-#include <cmath>
-#include "wall.hpp"
-#include "tileController.hpp"
-#include "detailController.hpp"
 #include "camera.hpp"
+#include "detailController.hpp"
 #include "game.hpp"
+#include "tileController.hpp"
+#include "wall.hpp"
+#include <cmath>
 
 enemyController::enemyController() {}
 
-void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows, Camera & camera) {
+void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
+                           Camera & camera) {
     const sf::View & cameraView = camera.getOverworldView();
     sf::Vector2f viewCenter = cameraView.getCenter();
     sf::Vector2f viewSize = cameraView.getSize();
@@ -39,30 +40,37 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
         }
     }
     for (auto & element : critters) {
-        gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
+        gameShadows.emplace_back(element.getShadow(), 0.f,
+                                 Rendertype::shadeDefault, 0.f);
         std::tuple<framework::Sprite, float, Rendertype, float> tSpr;
         std::get<0>(tSpr) = element.getSprite();
         std::get<1>(tSpr) = element.getYpos() - 16;
-        // If the enemy should be colored, let the rendering code know to pass it through a fragment shader
+        // If the enemy should be colored, let the rendering code know to pass
+        // it through a fragment shader
         if (element.isColored()) {
-            gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16,
-                                     Rendertype::shadeWhite, element.getColorAmount());
+            gameObjects.emplace_back(
+                element.getSprite(), element.getYpos() - 16,
+                Rendertype::shadeWhite, element.getColorAmount());
         } else {
-            gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16,
+            gameObjects.emplace_back(element.getSprite(),
+                                     element.getYpos() - 16,
                                      Rendertype::shadeDefault, 0.f);
-        }       
+        }
     }
     for (auto & element : scoots) {
         if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 32 &&
             element.getXpos() < viewCenter.x + viewSize.x / 2 + 32 &&
             element.getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
             element.getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
-            gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
+            gameShadows.emplace_back(element.getShadow(), 0.f,
+                                     Rendertype::shadeDefault, 0.f);
             if (element.isColored()) {
-                gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16,
-                                         Rendertype::shadeWhite, element.getColorAmount());
+                gameObjects.emplace_back(
+                    element.getSprite(), element.getYpos() - 16,
+                    Rendertype::shadeWhite, element.getColorAmount());
             } else {
-                gameObjects.emplace_back(element.getSprite(), element.getYpos() - 16,
+                gameObjects.emplace_back(element.getSprite(),
+                                         element.getYpos() - 16,
                                          Rendertype::shadeDefault, 0.f);
             }
         }
@@ -74,15 +82,17 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
             element.getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
             auto state = element.getState();
             if (state != Dasher::State::dying && state != Dasher::State::dead) {
-                gameShadows.emplace_back(element.getShadow(), 0.f, Rendertype::shadeDefault, 0.f);
-            }       
+                gameShadows.emplace_back(element.getShadow(), 0.f,
+                                         Rendertype::shadeDefault, 0.f);
+            }
             for (auto & blur : *element.getBlurEffects()) {
                 gameObjects.emplace_back(*blur.getSprite(), blur.yInit + 200,
                                          Rendertype::shadeDefault, 0.f);
-            }           
+            }
             if (element.isColored()) {
                 gameObjects.emplace_back(element.getSprite(), element.getYpos(),
-                                         Rendertype::shadeWhite, element.getColorAmount());
+                                         Rendertype::shadeWhite,
+                                         element.getColorAmount());
             } else {
                 gameObjects.emplace_back(element.getSprite(), element.getYpos(),
                                          Rendertype::shadeDefault, 0.f);
@@ -91,8 +101,7 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
     }
 }
 
-void enemyController::update(Game * pGame,
-                             bool enabled,
+void enemyController::update(Game * pGame, bool enabled,
                              const sf::Time & elapsedTime,
                              std::vector<sf::Vector2f> & cameraTargets) {
     EffectGroup & effectGroup = pGame->getEffects();
@@ -134,7 +143,8 @@ void enemyController::update(Game * pGame,
                     it->getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
                     it->getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
                     if (enabled) {
-                        it->update(player, tileController.walls, effectGroup, elapsedTime);
+                        it->update(player, tileController.walls, effectGroup,
+                                   elapsedTime);
                     }
                     cameraTargets.emplace_back(it->getXpos(), it->getYpos());
                 }
@@ -143,16 +153,19 @@ void enemyController::update(Game * pGame,
         }
     }
     if (!critters.empty()) {
-        // Need to check if each enemy overlaps with any other enemies so that they don't bunch up
+        // Need to check if each enemy overlaps with any other enemies so that
+        // they don't bunch up
         for (size_t i = 0; i < critters.size(); i++) {
             for (size_t j = 0; j < critters.size(); j++) {
                 // Obviously it would be bad to compare an object to itself.
                 if (i != j) {
-                    // If the enemy at index i is active and overlaps with another enemy that is also active...
-                    if (fabs(critters[i].getXpos() - critters[j].getXpos()) < 12 &&
-                        fabs(critters[i].getYpos() - critters[j].getYpos()) < 12 &&
-                        critters[i].isActive() &&
-                        critters[j].isActive()) {
+                    // If the enemy at index i is active and overlaps with
+                    // another enemy that is also active...
+                    if (fabs(critters[i].getXpos() - critters[j].getXpos()) <
+                            12 &&
+                        fabs(critters[i].getYpos() - critters[j].getYpos()) <
+                            12 &&
+                        critters[i].isActive() && critters[j].isActive()) {
                         critters[i].deActivate();
                     }
                 }
@@ -171,18 +184,20 @@ void enemyController::update(Game * pGame,
                     cameraTargets.emplace_back(it->getXpos(), it->getYpos());
                 }
                 if (enabled) {
-                    it->update(player, effectGroup, elapsedTime, tileController);
+                    it->update(player, effectGroup, elapsedTime,
+                               tileController);
                 }
                 ++it;
             }
         }
-        
-        // Now we have to reactivate all of the objects. Perhaps there is a smarter way than this brute force approach...
+
+        // Now we have to reactivate all of the objects. Perhaps there is a
+        // smarter way than this brute force approach...
         for (auto & element : critters) {
             element.activate();
         }
     }
-    
+
     if (!dashers.empty()) {
         for (auto & element : dashers) {
             if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 32 &&
@@ -190,9 +205,11 @@ void enemyController::update(Game * pGame,
                 element.getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
                 element.getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
                 if (enabled) {
-                    element.update(player, tileController.walls, effectGroup, elapsedTime);
+                    element.update(player, tileController.walls, effectGroup,
+                                   elapsedTime);
                     if (element.getState() != Dasher::State::dead) {
-                        cameraTargets.emplace_back(element.getXpos(), element.getYpos());
+                        cameraTargets.emplace_back(element.getXpos(),
+                                                   element.getYpos());
                     }
                 }
                 if (element.getKillFlag()) {
@@ -214,33 +231,40 @@ void enemyController::clear() {
 
 void enemyController::addTurret(tileController * pTiles) {
     auto pCoordVec = pTiles->getEmptyLocations();
-    int locationSelect = rng::random<2>() ? rng::random(pCoordVec->size() / 2) : rng::random(pCoordVec->size());
+    int locationSelect = rng::random<2>() ? rng::random(pCoordVec->size() / 2)
+                                          : rng::random(pCoordVec->size());
     float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
     float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-    turrets.emplace_back(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xInit, yInit);
+    turrets.emplace_back(
+        ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xInit,
+        yInit);
     (*pCoordVec)[locationSelect] = pCoordVec->back();
     pCoordVec->pop_back();
 }
 
 void enemyController::addScoot(tileController * pTiles) {
     auto pCoordVec = pTiles->getEmptyLocations();
-    int locationSelect = rng::random<2>() ? rng::random(pCoordVec->size() / 2) : rng::random(pCoordVec->size());
+    int locationSelect = rng::random<2>() ? rng::random(pCoordVec->size() / 2)
+                                          : rng::random(pCoordVec->size());
     float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
     float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-    scoots.emplace_back(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-                        ::resHandlerPtr->getTexture(ResHandler::Texture::scootShadow),
-                        xInit, yInit);
+    scoots.emplace_back(
+        ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+        ::resHandlerPtr->getTexture(ResHandler::Texture::scootShadow), xInit,
+        yInit);
     (*pCoordVec)[locationSelect] = pCoordVec->back();
     pCoordVec->pop_back();
 }
 
 void enemyController::addDasher(tileController * pTiles) {
     auto pCoordVec = pTiles->getEmptyLocations();
-    int locationSelect = rng::random<2>() ? rng::random(pCoordVec->size() / 2) : rng::random(pCoordVec->size() / 2);
+    int locationSelect = rng::random<2>() ? rng::random(pCoordVec->size() / 2)
+                                          : rng::random(pCoordVec->size() / 2);
     float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
     float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-    dashers.emplace_back(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-                         xInit, yInit);
+    dashers.emplace_back(
+        ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xInit,
+        yInit);
     (*pCoordVec)[locationSelect] = pCoordVec->back();
     pCoordVec->pop_back();
 }
@@ -250,8 +274,9 @@ void enemyController::addCritter(tileController * pTiles) {
     int locationSelect = rng::random(pCoordVec->size());
     float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
     float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-    critters.emplace_back(::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-                          pTiles->mapArray, xInit, yInit);
+    critters.emplace_back(
+        ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+        pTiles->mapArray, xInit, yInit);
     (*pCoordVec)[locationSelect] = pCoordVec->back();
     pCoordVec->pop_back();
 }
@@ -261,18 +286,10 @@ void enemyController::setWindowSize(float windowW, float windowH) {
     this->windowH = windowH;
 }
 
-std::vector<Critter> & enemyController::getCritters() {
-    return critters;
-}
+std::vector<Critter> & enemyController::getCritters() { return critters; }
 
-std::vector<Dasher> & enemyController::getDashers() {
-    return dashers;
-}
+std::vector<Dasher> & enemyController::getDashers() { return dashers; }
 
-std::vector<Scoot> & enemyController::getScoots() {
-    return scoots;
-}
+std::vector<Scoot> & enemyController::getScoots() { return scoots; }
 
-std::vector<Turret> & enemyController::getTurrets() {
-    return turrets;
-}
+std::vector<Turret> & enemyController::getTurrets() { return turrets; }

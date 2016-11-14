@@ -6,8 +6,6 @@
 #pragma once
 
 enum class Music {
-        // TODO...
+    // TODO...
 };
-enum class Sound {
-    Gunshot
-};
+enum class Sound { Gunshot };

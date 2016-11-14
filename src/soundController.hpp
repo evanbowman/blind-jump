@@ -5,13 +5,13 @@
 
 #pragma once
 
-#include <SFML/Audio.hpp>
-#include <vector>
-#include <deque>
 #include "resourceHandler.hpp"
+#include <SFML/Audio.hpp>
+#include <deque>
+#include <vector>
 
 class SoundController {
-public:
+  public:
     // The function that updates the sound controller is called poll and
     // not update because it does not run in the game's update function
     // like a lot of the other controller code. Some operating systems
@@ -21,7 +21,7 @@ public:
     void play(ResHandler::Music);
     void play(ResHandler::Sound);
 
-private:
+  private:
     std::vector<sf::Sound> sounds;
     std::vector<ResHandler::Sound> soundIdxQueue;
 };

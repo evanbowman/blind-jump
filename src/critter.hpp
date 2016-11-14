@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include "enemy.hpp"
-#include "effectsController.hpp"
 #include "aStar.hpp"
+#include "effectsController.hpp"
+#include "enemy.hpp"
 #include "spriteSheet.hpp"
 
 class tileController;
@@ -15,10 +15,11 @@ class tileController;
 class Player;
 
 class Critter : public Enemy {
-public:
+  public:
     using HBox = framework::HitBox<12, 12, 4, -3>;
     Critter(const sf::Texture &, uint8_t map[61][61], float, float);
-    void update(const Player *, EffectGroup & ef, const sf::Time &, tileController & tiles);
+    void update(const Player *, EffectGroup & ef, const sf::Time &,
+                tileController & tiles);
     const framework::Sprite & getSprite() const;
     const framework::Sprite & getShadow() const;
     void activate();
@@ -26,8 +27,8 @@ public:
     bool isActive();
     void updatePlayerDead();
     const HBox & getHitBox() const;
-    
-private:
+
+  private:
     float xInit, yInit;
     void onDeath(EffectGroup &);
     float currentDir;
@@ -41,5 +42,6 @@ private:
     bool awake;
     bool active;
     int recalc;
-    uint8_t (*map)[61]; //*** I know this is a nasty solution, perhaps there's a better way to not store it locally...
+    uint8_t (*map)[61]; //*** I know this is a nasty solution, perhaps there's a
+                        // better way to not store it locally...
 };

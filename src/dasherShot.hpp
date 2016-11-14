@@ -5,15 +5,15 @@
 
 #pragma once
 
+#include "Effect.hpp"
+#include "easingTemplates.hpp"
+#include "rng.hpp"
+#include "spriteSheet.hpp"
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include "spriteSheet.hpp"
-#include "Effect.hpp"
-#include "rng.hpp"
-#include "easingTemplates.hpp"
 
 class DasherShot : public Effect {
-public:
+  public:
     using HBox = framework::HitBox<12, 12, -6, -6>;
     DasherShot(const sf::Texture &, const sf::Texture &, float, float, float);
     SpriteSheet<0, 88, 12, 12> spriteSheet;
@@ -23,8 +23,8 @@ public:
     bool driftSel;
     const framework::Sprite & getGlow() const;
     const HBox & getHitBox() const;
-    
-private:
+
+  private:
     int64_t timeout;
     float initialVelocity;
     HBox hitBox;

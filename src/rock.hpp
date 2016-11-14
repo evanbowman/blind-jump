@@ -6,15 +6,15 @@
 #pragma once
 
 #include "detailParent.hpp"
-#include <SFML/Graphics.hpp>
-#include "spriteSheet.hpp"
 #include "rng.hpp"
+#include "spriteSheet.hpp"
+#include <SFML/Graphics.hpp>
 
 class Rock : public Detail {
-private:
+  private:
     mutable SpriteSheet<80, 38, 32, 64> rockSheet;
-    
-public:
+
+  public:
     void update(const sf::Time &);
     Rock(float, float, const sf::Texture &);
     const framework::Sprite & getSprite() const;

@@ -5,10 +5,9 @@
 
 #include "Teleporter.hpp"
 
-Teleporter::Teleporter(float _xInit, float _yInit, const sf::Texture & mainTxtr, const sf::Texture & glowTxtr)
-    : Detail{_xInit, _yInit},
-      smokeTimer{0}
-{
+Teleporter::Teleporter(float _xInit, float _yInit, const sf::Texture & mainTxtr,
+                       const sf::Texture & glowTxtr)
+    : Detail{_xInit, _yInit}, smokeTimer{0} {
     for (int i = 0; i < 2; i++) {
         TeleporterSprites[i].setTexture(mainTxtr);
     }
@@ -33,9 +32,7 @@ void Teleporter::update(const sf::Time &) {
     // nil
 }
 
-const framework::Sprite & Teleporter::getGlow() const {
-    return glowSprite;
-}
+const framework::Sprite & Teleporter::getGlow() const { return glowSprite; }
 
 bool Teleporter::smokeReady() {
     if (smokeTimer > 264) {

@@ -5,22 +5,20 @@
 
 #pragma once
 
-#include <stdio.h>
-#include <SFML/Graphics.hpp>
-#include "turret.hpp"
 #include "effectsController.hpp"
-#include "resourceHandler.hpp"
 #include "framework/framework.hpp"
+#include "resourceHandler.hpp"
 #include "spriteSheet.hpp"
+#include "turret.hpp"
+#include <SFML/Graphics.hpp>
+#include <stdio.h>
 
 class Player;
 
 class Turret {
-private:
-    enum class State {
-        closed, opening, shoot1, shoot2, shoot3, rest, closing
-    };
-    State state;    
+  private:
+    enum class State { closed, opening, shoot1, shoot2, shoot3, rest, closing };
+    State state;
     using HBox = framework::HitBox<16, 32>;
     HBox hitBox;
     float xPos, yPos;
@@ -34,8 +32,8 @@ private:
     char colorTimer;
     bool isColored;
     float colorAmount;
-    
-public:
+
+  public:
     Turret(const sf::Texture &, float, float);
     const HBox & getHitBox() const;
     void setPosition(float, float);

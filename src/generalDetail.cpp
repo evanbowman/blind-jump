@@ -5,9 +5,9 @@
 
 #include "generalDetail.hpp"
 
-GeneralDetail::GeneralDetail(float _xInit, float _yInit, framework::Sprite & _spr):
-    Detail{_xInit, _yInit}
-{
+GeneralDetail::GeneralDetail(float _xInit, float _yInit,
+                             framework::Sprite & _spr)
+    : Detail{_xInit, _yInit} {
     spr = _spr;
     spr.setPosition(position.x, position.y);
 }
@@ -16,6 +16,4 @@ void GeneralDetail::update(const sf::Time &) {
     // ...
 }
 
-const framework::Sprite & GeneralDetail::getSprite() const {
-    return spr;
-}
+const framework::Sprite & GeneralDetail::getSprite() const { return spr; }

@@ -7,7 +7,7 @@
 
 static const char * LOAD_FAILURE_MSG = "blindjump [crash]: missing resource";
 
-template<typename T, typename E>
+template <typename T, typename E>
 void loadResource(const std::string & str, E id, T & array) {
     int idx = static_cast<int>(id);
     if (!array[idx].loadFromFile(str)) {
@@ -15,8 +15,9 @@ void loadResource(const std::string & str, E id, T & array) {
     }
 }
 
-template<>
-void loadResource(const std::string & str, ResHandler::Shader id, std::array<sf::Shader, 3> & shaders) {
+template <>
+void loadResource(const std::string & str, ResHandler::Shader id,
+                  std::array<sf::Shader, 3> & shaders) {
     size_t index = static_cast<int>(id);
     if (!shaders[index].loadFromFile(str, sf::Shader::Fragment)) {
         throw std::runtime_error(LOAD_FAILURE_MSG);
@@ -30,13 +31,20 @@ void ResHandler::load() {
     assert(!hasResources);
     hasResources = true;
     const std::string resPath = resourcePath();
-    loadResource(resPath + "teleporterBeamGlow.png", Texture::teleporterBeamGlow, textures);
-    loadResource(resPath + "fireExplosionGlow.png", Texture::fireExplosionGlow, textures);
-    loadResource(resPath + "charger_enemy_shadow.png", Texture::scootShadow, textures);
-    loadResource(resPath + "vignetteShadow.png", Texture::vignetteShadow, textures);
-    loadResource(resPath + "teleporterGlow.png", Texture::teleporterGlow, textures);
-    loadResource(resPath + "bkg_stars_distant.png", Texture::bkgStarsFar, textures);
-    loadResource(resPath + "introLevelMask.png", Texture::introLevelMask, textures);
+    loadResource(resPath + "teleporterBeamGlow.png",
+                 Texture::teleporterBeamGlow, textures);
+    loadResource(resPath + "fireExplosionGlow.png", Texture::fireExplosionGlow,
+                 textures);
+    loadResource(resPath + "charger_enemy_shadow.png", Texture::scootShadow,
+                 textures);
+    loadResource(resPath + "vignetteShadow.png", Texture::vignetteShadow,
+                 textures);
+    loadResource(resPath + "teleporterGlow.png", Texture::teleporterGlow,
+                 textures);
+    loadResource(resPath + "bkg_stars_distant.png", Texture::bkgStarsFar,
+                 textures);
+    loadResource(resPath + "introLevelMask.png", Texture::introLevelMask,
+                 textures);
     loadResource(resPath + "powerupSheet.png", Texture::powerupSheet, textures);
     loadResource(resPath + "whiteFloorGlow.png", Texture::whiteGlow, textures);
     loadResource(resPath + "gameObjects.png", Texture::gameObjects, textures);

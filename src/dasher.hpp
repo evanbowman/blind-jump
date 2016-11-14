@@ -12,7 +12,7 @@
 class Player;
 
 class Dasher : public Enemy {
-public:
+  public:
     using HBox = framework::HitBox<20, 32, -6, -4>;
     struct Blur {
         Blur(framework::Sprite *, float, float);
@@ -26,18 +26,27 @@ public:
         bool killflag;
     };
     enum class State {
-        idle, shooting, dashBegin, dashing, dashEnd, dying, dead, shootBegin, pause
+        idle,
+        shooting,
+        dashBegin,
+        dashing,
+        dashEnd,
+        dying,
+        dead,
+        shootBegin,
+        pause
     };
     Dasher(const sf::Texture &, float, float);
     const framework::Sprite & getSprite() const;
     const framework::Sprite & getShadow() const;
-    void update(const Player *, const std::vector<wall> &, EffectGroup & ef, const sf::Time &);
+    void update(const Player *, const std::vector<wall> &, EffectGroup & ef,
+                const sf::Time &);
     std::vector<Dasher::Blur> * getBlurEffects();
     State getState() const;
     const sf::Vector2f & getScale() const;
     const HBox & getHitBox() const;
-    
-private:
+
+  private:
     HBox hitBox;
     uint8_t shotCount;
     State state;

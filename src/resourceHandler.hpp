@@ -5,17 +5,17 @@
 
 #pragma once
 
-#include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include <stdexcept>
-#include <assert.h>
-#include <utility>
+#include <SFML/Graphics.hpp>
 #include <array>
+#include <assert.h>
+#include <stdexcept>
+#include <utility>
 
 #include "ResourcePath.hpp"
 
-class ResHandler {  
-public: 
+class ResHandler {
+  public:
     enum class Texture {
         gameObjects,
         vignette,
@@ -36,20 +36,10 @@ public:
         introLevelMask,
         powerupSheet
     };
-    enum class Shader {
-        color,
-        blur,
-        desaturate
-    };
-    enum class Font {
-        cornerstone
-    };
-    enum class Image {
-        soilTileset, grassSet1, grassSet2, icon
-    };
-    enum class Sound {
-        gunShot
-    };
+    enum class Shader { color, blur, desaturate };
+    enum class Font { cornerstone };
+    enum class Image { soilTileset, grassSet1, grassSet2, icon };
+    enum class Sound { gunShot };
     enum class Music {
         // TODO...
     };
@@ -58,10 +48,11 @@ public:
     const sf::Font & getFont(ResHandler::Font) const;
     const sf::Image & getImage(ResHandler::Image) const;
     const sf::SoundBuffer & getSound(ResHandler::Sound) const;
-    sf::Shader & getShader(ResHandler::Shader) const; // Exception: shader cannot be a constant reference
+    sf::Shader & getShader(ResHandler::Shader)
+        const; // Exception: shader cannot be a constant reference
     void load();
-    
-private:
+
+  private:
     enum resrcCnts {
         numTextures = 18,
         numShaders = 3,

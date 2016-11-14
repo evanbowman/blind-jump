@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include <SFML/Graphics.hpp>
 #include "framework/framework.hpp"
+#include <SFML/Graphics.hpp>
 
 class Detail : public framework::Object {
-public:
+  public:
     Detail(float xInit, float yInit) : Object{xInit, yInit} {}
 };

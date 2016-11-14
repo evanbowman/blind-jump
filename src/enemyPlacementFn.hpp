@@ -8,4 +8,3 @@
 class Game;
 
 int initEnemies(Game *);
-

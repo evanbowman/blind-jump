@@ -7,13 +7,14 @@
 
 const static float PI{3.1415926535};
 
-Item::Item(const sf::Texture & bodyTxtr, const sf::Texture & glowTxtr, float xInit, float yInit, Type id) :
-    Effect(xInit, yInit)
-{
+Item::Item(const sf::Texture & bodyTxtr, const sf::Texture & glowTxtr,
+           float xInit, float yInit, Type id)
+    : Effect(xInit, yInit) {
     glow.setTexture(glowTxtr);
     glow.setOrigin(22.5, 22.5);
     powerupSheet.setTexture(bodyTxtr);
-    // Square brace overloads provide access, but in doing so also set the working frame
+    // Square brace overloads provide access, but in doing so also set the
+    // working frame
     powerupSheet[static_cast<int>(id)];
     powerupSheet.setOrigin(7, 7);
     timer = 0;
@@ -28,15 +29,11 @@ void Item::update(const sf::Time & elapsedTime) {
     powerupSheet.setPosition(position.x, position.y + offset);
 }
 
-const framework::Sprite & Item::getSprite() {
-    return powerupSheet.getSprite();
-}
+const framework::Sprite & Item::getSprite() { return powerupSheet.getSprite(); }
 
 const framework::Sprite & Item::getGlow() {
     glow.setPosition(position.x, position.y + 10);
     return glow;
 }
 
-const Item::HBox & Item::getHitBox() const {
-    return hitBox;
-}
+const Item::HBox & Item::getHitBox() const { return hitBox; }

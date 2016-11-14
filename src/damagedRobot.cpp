@@ -5,9 +5,9 @@
 
 #include "damagedRobot.hpp"
 
-DamagedRobot::DamagedRobot(float _xInit, float _yInit, const sf::Texture & inpTxtr)
-    : Detail{_xInit, _yInit}, robotSheet{inpTxtr}
-{
+DamagedRobot::DamagedRobot(float _xInit, float _yInit,
+                           const sf::Texture & inpTxtr)
+    : Detail{_xInit, _yInit}, robotSheet{inpTxtr} {
     robotSheet[rng::random<2>()]; // Randomly pick one of the textures...
     robotSheet.setPosition(position.x, position.y);
 }

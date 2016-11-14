@@ -6,8 +6,7 @@
 #include "rock.hpp"
 
 Rock::Rock(float _xPos, float _yPos, const sf::Texture & inpTxtr)
-    : Detail{_xPos, _yPos}
-{
+    : Detail{_xPos, _yPos} {
     rockSheet.setTexture(inpTxtr);
     if (rng::random<2>()) {
         rockSheet.setScale(-1, 1);

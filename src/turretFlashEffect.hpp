@@ -5,16 +5,16 @@
 
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include "spriteSheet.hpp"
 #include "Effect.hpp"
 #include "rng.hpp"
+#include "spriteSheet.hpp"
+#include <SFML/Graphics.hpp>
 
 class TurretFlashEffect : public Effect {
-private:
+  private:
     mutable SpriteSheet<0, 116, 16, 16> spriteSheet;
-    
-public:
+
+  public:
     TurretFlashEffect(const sf::Texture &, float, float);
     void update(const sf::Time &);
     const framework::Sprite & getSprite() const;

@@ -12,14 +12,14 @@
 class ScreenShakeController;
 
 class IntroDoor : public Detail {
-private:
+  private:
     enum class State { dormant, opening, opened };
     mutable SpriteSheet<0, 0, 200, 95> doorSheet;
     uint8_t frameIndex;
     // int32_t timer;
     // State state;
-    
-public:
+
+  public:
     void update(const sf::Time &);
     IntroDoor(float, float, const sf::Texture &);
     const framework::Sprite & getSprite() const;

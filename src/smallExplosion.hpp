@@ -5,18 +5,18 @@
 
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include "spriteSheet.hpp"
 #include "Effect.hpp"
 #include "easingTemplates.hpp"
+#include "spriteSheet.hpp"
+#include <SFML/Graphics.hpp>
 
 class SmallExplosion : public Effect {
-private:
+  private:
     mutable SpriteSheet<174, 224, 36, 36> spriteSheet;
     framework::Sprite glow;
     int64_t glowFadeTimer;
-    
-public:
+
+  public:
     SmallExplosion(const sf::Texture &, const sf::Texture &, float, float);
     void update(const sf::Time &);
     const framework::Sprite & getSprite() const;

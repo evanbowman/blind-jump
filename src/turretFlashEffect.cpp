@@ -5,7 +5,8 @@
 
 #include "turretFlashEffect.hpp"
 
-TurretFlashEffect::TurretFlashEffect(const sf::Texture & txtr, float x, float y) : Effect(x, y) {
+TurretFlashEffect::TurretFlashEffect(const sf::Texture & txtr, float x, float y)
+    : Effect(x, y) {
     spriteSheet.setTexture(txtr);
     bool select = rng::random<2>();
     if (select) {

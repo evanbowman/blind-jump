@@ -5,14 +5,10 @@
 
 #include "bulletType1.hpp"
 
-PlayerShot::PlayerShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, char dir, float x, float y) :
-    Effect{x, y},
-    xInit{x},
-    yInit{y},
-    direction{dir},
-    canPoof{true},
-    state{State::travelling}
-{
+PlayerShot::PlayerShot(const sf::Texture & mainTxtr,
+                       const sf::Texture & glowTxtr, char dir, float x, float y)
+    : Effect{x, y}, xInit{x}, yInit{y}, direction{dir}, canPoof{true},
+      state{State::travelling} {
     spriteSheet.setTexture(mainTxtr);
     puffSheet.setTexture(mainTxtr);
     glow.setTexture(glowTxtr);
@@ -36,9 +32,7 @@ const framework::Sprite & PlayerShot::getSprite() {
     }
 }
 
-const framework::Sprite & PlayerShot::getGlow() {
-    return glow;
-}
+const framework::Sprite & PlayerShot::getGlow() { return glow; }
 
 void PlayerShot::poof() {
     if (canPoof) {
@@ -57,16 +51,16 @@ void PlayerShot::update(const sf::Time & elapsedTime) {
     case State::travelling:
         if (direction == 0 || direction == 4) {
             yInit += movementRate * elapsedTime.asMicroseconds();
-            setPosition(xInit + 6, yInit + 12); 
+            setPosition(xInit + 6, yInit + 12);
         } else if (direction == 1 || direction == 5) {
             yInit -= movementRate * elapsedTime.asMicroseconds();
-            setPosition(xInit + 6, yInit);  
+            setPosition(xInit + 6, yInit);
         } else if (direction == 2 || direction == 6) {
             xInit -= movementRate * elapsedTime.asMicroseconds();
-            setPosition(xInit - 5, yInit + 8);  
+            setPosition(xInit - 5, yInit + 8);
         } else if (direction == 3 || direction == 7) {
             xInit += movementRate * elapsedTime.asMicroseconds();
-            setPosition(xInit + 22, yInit + 8); 
+            setPosition(xInit + 22, yInit + 8);
         }
         spriteSheet.setPosition(position.x, position.y);
         glow.setPosition(position.x - 16, position.y - 11);
@@ -84,13 +78,13 @@ void PlayerShot::update(const sf::Time & elapsedTime) {
 
     case State::poof:
         if (direction == 0 || direction == 4) {
-            setPosition(xInit + 6, yInit + 12); 
+            setPosition(xInit + 6, yInit + 12);
         } else if (direction == 1 || direction == 5) {
-            setPosition(xInit + 6, yInit);  
+            setPosition(xInit + 6, yInit);
         } else if (direction == 2 || direction == 6) {
-            setPosition(xInit - 5, yInit + 8);  
+            setPosition(xInit - 5, yInit + 8);
         } else if (direction == 3 || direction == 7) {
-            setPosition(xInit + 22, yInit + 8); 
+            setPosition(xInit + 22, yInit + 8);
         }
         if (timer > 50) {
             timer -= 50;
@@ -110,18 +104,10 @@ void PlayerShot::update(const sf::Time & elapsedTime) {
     }
 }
 
-char PlayerShot::getDirection() {
-    return direction;
-}
+char PlayerShot::getDirection() { return direction; }
 
-bool PlayerShot::checkCanPoof() {
-    return canPoof;
-}
+bool PlayerShot::checkCanPoof() { return canPoof; }
 
-void PlayerShot::disablePuff() {
-    canPoof = false;
-}
+void PlayerShot::disablePuff() { canPoof = false; }
 
-const PlayerShot::HBox & PlayerShot::getHitBox() const {
-    return hitBox;
-}
+const PlayerShot::HBox & PlayerShot::getHitBox() const { return hitBox; }

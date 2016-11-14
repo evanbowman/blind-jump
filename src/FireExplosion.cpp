@@ -5,10 +5,9 @@
 
 #include "FireExplosion.hpp"
 
-FireExplosion::FireExplosion(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, float x, float y) :
-    Effect(x, y),
-    glowFadeTimer(0)
-{
+FireExplosion::FireExplosion(const sf::Texture & mainTxtr,
+                             const sf::Texture & glowTxtr, float x, float y)
+    : Effect(x, y), glowFadeTimer(0) {
     spriteSheet.setTexture(mainTxtr);
     spriteSheet.setOrigin(29, 25);
     glow.setTexture(glowTxtr);
@@ -30,13 +29,12 @@ void FireExplosion::update(const sf::Time & elapsedTime) {
             killFlag = true;
         }
     }
-    uint8_t color = Easing::easeOut<1>(glowFadeTimer, static_cast<int64_t>(560000)) * 230;
+    uint8_t color =
+        Easing::easeOut<1>(glowFadeTimer, static_cast<int64_t>(560000)) * 230;
     glow.setColor(sf::Color(color, color, color, 255));
 }
 
-const framework::Sprite & FireExplosion::getGlow() const {
-    return glow;
-}
+const framework::Sprite & FireExplosion::getGlow() const { return glow; }
 
 const framework::Sprite & FireExplosion::getSprite() const {
     return spriteSheet[frameIndex];

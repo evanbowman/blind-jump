@@ -4,92 +4,82 @@
 //========================================================================//
 
 #include "userInterface.hpp"
-#include <cmath>
 #include "player.hpp"
+#include <cmath>
 
-ui::Backend::Backend() :
-    state(State::closed),
-    powerupBubbleState(PowerupBubbleState::dormant),
-    menuItemSelected(0),
-    menuItemTarget(0),
-    timer(0),
-    timerAlt(0),
-    powerupTimer(0),
-    powerupBubbleTimer(0),
-    dispPowerupBar(false),
-    blurAmount(0.f),
-    desaturateAmount(0.f)
-{}
+ui::Backend::Backend()
+    : state(State::closed), powerupBubbleState(PowerupBubbleState::dormant),
+      menuItemSelected(0), menuItemTarget(0), timer(0), timerAlt(0),
+      powerupTimer(0), powerupBubbleTimer(0), dispPowerupBar(false),
+      blurAmount(0.f), desaturateAmount(0.f) {}
 
-bool ui::Backend::isOpen() const {
-    return state != State::closed;
-}
+bool ui::Backend::isOpen() const { return state != State::closed; }
 
-ui::Backend::State ui::Backend::getState() const {
-    return state;
-}
+ui::Backend::State ui::Backend::getState() const { return state; }
 
 void ui::Backend::draw(sf::RenderWindow & window, ui::Frontend & uIFrontEnd) {
     switch (state) {
-    case State::deathScreenEntry:
-        {
-            uint8_t textAlpha = desaturateAmount * 255 + 38.25f;
-            uIFrontEnd.drawDeathText(static_cast<unsigned char>(textAlpha), window);
-        }
-        break;
+    case State::deathScreenEntry: {
+        uint8_t textAlpha = desaturateAmount * 255 + 38.25f;
+        uIFrontEnd.drawDeathText(static_cast<unsigned char>(textAlpha), window);
+    } break;
 
     case State::menuScreenEntry:
-        uIFrontEnd.setTextAlpha(255 * blurAmount, ui::Frontend::Text::resumeText);
+        uIFrontEnd.setTextAlpha(255 * blurAmount,
+                                ui::Frontend::Text::resumeText);
         uIFrontEnd.setTextAlpha(255 * blurAmount, ui::Frontend::Text::quitText);
-        uIFrontEnd.setTextOffset(0, -0.01 * blurAmount, ui::Frontend::Text::resumeText);
-        uIFrontEnd.setTextOffset(0, -0.01 * blurAmount, ui::Frontend::Text::quitText);
+        uIFrontEnd.setTextOffset(0, -0.01 * blurAmount,
+                                 ui::Frontend::Text::resumeText);
+        uIFrontEnd.setTextOffset(0, -0.01 * blurAmount,
+                                 ui::Frontend::Text::quitText);
         break;
 
     case State::menuScreenExit:
-        uIFrontEnd.setTextAlpha(255 * blurAmount, ui::Frontend::Text::resumeText);
+        uIFrontEnd.setTextAlpha(255 * blurAmount,
+                                ui::Frontend::Text::resumeText);
         uIFrontEnd.setTextAlpha(255 * blurAmount, ui::Frontend::Text::quitText);
-        uIFrontEnd.setTextOffset(0, -0.01 * blurAmount, ui::Frontend::Text::resumeText);
-        uIFrontEnd.setTextOffset(0, -0.01 * blurAmount, ui::Frontend::Text::quitText);
+        uIFrontEnd.setTextOffset(0, -0.01 * blurAmount,
+                                 ui::Frontend::Text::resumeText);
+        uIFrontEnd.setTextOffset(0, -0.01 * blurAmount,
+                                 ui::Frontend::Text::quitText);
         break;
-        
+
     case State::deathScreen:
         uIFrontEnd.drawDeathText(255, window);
         break;
 
-    case State::deathScreenExit:
-        {
-            uint8_t textAlpha = Easing::easeOut<3>(timer, 300) * 255;
-            if (textAlpha > 0) {
-                uIFrontEnd.drawDeathText(textAlpha, window);
-            }
+    case State::deathScreenExit: {
+        uint8_t textAlpha = Easing::easeOut<3>(timer, 300) * 255;
+        if (textAlpha > 0) {
+            uIFrontEnd.drawDeathText(textAlpha, window);
         }
-        break;
+    } break;
 
     default:
         break;
     }
     switch (powerupBubbleState) {
-    case PowerupBubbleState::opening:
-        {
-            static const int transitionTime = 500000;
-            const float deg = math::smoothstep(0, transitionTime, powerupBubbleTimer);
-            uIFrontEnd.setBubbleAlpha(deg * 255);
-            uIFrontEnd.setBubbleRadius(deg * 0.06f);
-            uIFrontEnd.setTextAlpha(deg * 255, ui::Frontend::Text::powerupText);
-            uIFrontEnd.setTextOffset(0, -0.001f * deg, ui::Frontend::Text::powerupText);
-        }
-        break;
+    case PowerupBubbleState::opening: {
+        static const int transitionTime = 500000;
+        const float deg =
+            math::smoothstep(0, transitionTime, powerupBubbleTimer);
+        uIFrontEnd.setBubbleAlpha(deg * 255);
+        uIFrontEnd.setBubbleRadius(deg * 0.06f);
+        uIFrontEnd.setTextAlpha(deg * 255, ui::Frontend::Text::powerupText);
+        uIFrontEnd.setTextOffset(0, -0.001f * deg,
+                                 ui::Frontend::Text::powerupText);
+    } break;
 
-    case PowerupBubbleState::closing:
-        {
-            static const int transitionTime = 300000;
-            const float deg = math::smootherstep(0, transitionTime, powerupBubbleTimer);
-            uIFrontEnd.setBubbleAlpha(255 - deg * 255);
-            uIFrontEnd.setBubbleRadius(0.06f - deg * 0.06f);
-            uIFrontEnd.setTextAlpha(255 - deg * 255, ui::Frontend::Text::powerupText);
-        }
-        break;
-        
+    case PowerupBubbleState::closing: {
+        static const int transitionTime = 300000;
+        const float deg =
+            math::smootherstep(0, transitionTime, powerupBubbleTimer);
+        uIFrontEnd.setBubbleAlpha(255 - deg * 255);
+        uIFrontEnd.setBubbleRadius(0.06f - deg * 0.06f);
+        uIFrontEnd.setTextAlpha(255 - deg * 255,
+                                ui::Frontend::Text::powerupText);
+    } break;
+
     default:
         break;
     }
@@ -102,16 +92,14 @@ void ui::Backend::setPowerup(Powerup _powerup) {
     powerupBubbleState = PowerupBubbleState::triggered;
 }
 
-Powerup ui::Backend::getCurrentPowerup() const {
-    return powerup;
-}
+Powerup ui::Backend::getCurrentPowerup() const { return powerup; }
 
-const ui::Backend::PowerupBubbleState ui::Backend::getPowerupBubbleState() const {
+const ui::Backend::PowerupBubbleState
+ui::Backend::getPowerupBubbleState() const {
     return powerupBubbleState;
 }
 
-void ui::Backend::update(Player & player,
-                         ui::Frontend & uIFrontEnd,
+void ui::Backend::update(Player & player, ui::Frontend & uIFrontEnd,
                          InputController * pInput,
                          const sf::Time & elapsedTime) {
     bool action = pInput->actionPressed();
@@ -140,7 +128,7 @@ void ui::Backend::update(Player & player,
             uIFrontEnd.setTextAlpha(0, ui::Frontend::Text::coin);
         }
         break;
-        
+
     case State::menuScreenEntry:
         timer += elapsedTime.asMilliseconds();
         blurAmount = math::smootherstep(0.f, 280, timer);
@@ -150,7 +138,7 @@ void ui::Backend::update(Player & player,
             uIFrontEnd.setTextAlpha(255, ui::Frontend::Text::quitText);
         }
         break;
-        
+
     case State::menuScreen:
         if (pause) {
             timer = 0;
@@ -186,7 +174,7 @@ void ui::Backend::update(Player & player,
         menuItemSelected = menuItemTarget;
         state = State::menuScreen;
         break;
-        
+
     case State::menuScreenExit:
         timer += elapsedTime.asMilliseconds();
         blurAmount = 1 - math::smoothstep(0, 280, timer);
@@ -198,7 +186,7 @@ void ui::Backend::update(Player & player,
             uIFrontEnd.setTextAlpha(0, ui::Frontend::Text::quitText);
         }
         break;
-            
+
     case State::deathScreenEntry:
         timer += elapsedTime.asMilliseconds();
         if (timer > 20) {
@@ -211,7 +199,7 @@ void ui::Backend::update(Player & player,
             timerAlt = 0;
         }
         break;
-            
+
     case State::deathScreen:
         timer += elapsedTime.asMilliseconds();
         timerAlt += elapsedTime.asMilliseconds();
@@ -225,7 +213,7 @@ void ui::Backend::update(Player & player,
             }
         }
         break;
-            
+
     case State::deathScreenExit:
         timer += elapsedTime.asMilliseconds();
         blurAmount = Easing::easeIn<3>(timer, 300);
@@ -235,13 +223,13 @@ void ui::Backend::update(Player & player,
             state = State::statsScreen;
         }
         break;
-            
+
     case State::statsScreen:
         if (action) {
             state = State::complete;
         }
         break;
-            
+
     case State::complete:
         break;
     }
@@ -250,7 +238,7 @@ void ui::Backend::update(Player & player,
         uIFrontEnd.addPowerup(powerup);
         powerupBubbleState = PowerupBubbleState::opening;
         break;
-        
+
     case PowerupBubbleState::opening:
         powerupBubbleTimer += elapsedTime.asMicroseconds();
         {
@@ -302,7 +290,7 @@ void ui::Backend::update(Player & player,
         }
         powerupBubbleState = PowerupBubbleState::dormant;
         break;
-        
+
     case PowerupBubbleState::dormant:
         break;
     }
@@ -315,13 +303,9 @@ void ui::Backend::dispDeathSeq() {
     }
 }
 
-bool ui::Backend::isComplete() {
-    return state == State::complete;
-}
+bool ui::Backend::isComplete() { return state == State::complete; }
 
-float ui::Backend::getBlurAmount() {
-    return blurAmount;
-}
+float ui::Backend::getBlurAmount() { return blurAmount; }
 
 void ui::Backend::reset() {
     state = State::closed;
@@ -333,29 +317,22 @@ void ui::Backend::reset() {
     powerupTimer = 0;
 }
 
-float ui::Backend::getDesaturateAmount() {
-    return desaturateAmount;
-}
+float ui::Backend::getDesaturateAmount() { return desaturateAmount; }
 
-bool ui::Backend::blurEnabled() {
-    return blurAmount != 0.f;
-}
+bool ui::Backend::blurEnabled() { return blurAmount != 0.f; }
 
-bool ui::Backend::desaturateEnabled() {
-    return desaturateAmount > 0.f;
-}
+bool ui::Backend::desaturateEnabled() { return desaturateAmount > 0.f; }
 
 void ui::PowerupBubble::init(float scale) {
     bubble.setOutlineThickness(0.0065f * scale);
     bubble.setFillColor(sf::Color(40, 48, 81, 170));
     bubble.setOutlineColor(sf::Color::White);
     bubble.setPointCount(60);
-    powerupSheet.setTexture(::resHandlerPtr->getTexture(ResHandler::Texture::powerupSheet));
+    powerupSheet.setTexture(
+        ::resHandlerPtr->getTexture(ResHandler::Texture::powerupSheet));
 }
 
-void ui::PowerupBubble::setFrame(size_t idx) {
-    powerupSheet[idx];
-}
+void ui::PowerupBubble::setFrame(size_t idx) { powerupSheet[idx]; }
 
 void ui::PowerupBubble::setAlpha(uint8_t alpha) {
     bubble.setFillColor(sf::Color(40, 48, 81, alpha * 0.7));
@@ -382,28 +359,19 @@ void ui::PowerupBubble::setPosition(float xpos, float ypos) {
     powerupSheet.setPosition(xpos, ypos);
 }
 
-sf::Vector2f ui::PowerupBubble::getPosition() {
-    return bubble.getPosition();
-}
+sf::Vector2f ui::PowerupBubble::getPosition() { return bubble.getPosition(); }
 
-float ui::PowerupBubble::getRadius() {
-    return bubble.getRadius();
-}
+float ui::PowerupBubble::getRadius() { return bubble.getRadius(); }
 
-const sf::CircleShape & ui::PowerupBubble::getShape() const {
-    return bubble;
-}
+const sf::CircleShape & ui::PowerupBubble::getShape() const { return bubble; }
 
 #define HEALTH_TEXT_FADE_SECONDS 3
 #define SCORE_TEXT_FADE_SECONDS 3
 #define WAYPOINT_TEXT_FADE_SECONDS 3
 
-ui::Frontend::Frontend(sf::View fontView, float x, float y) :
-    healthModified(false),
-    scoreModified(false),
-    powerupAdded(Powerup::nil),
-    barWidth(0.f)
-{
+ui::Frontend::Frontend(sf::View fontView, float x, float y)
+    : healthModified(false), scoreModified(false), powerupAdded(Powerup::nil),
+      barWidth(0.f) {
     // Store the view to use when drawing fonts
     this->fontView = fontView;
     windowCenterX = x;
@@ -443,14 +411,18 @@ ui::Frontend::Frontend(sf::View fontView, float x, float y) :
     heart.setPoint(18, sf::Vector2f(72, 38));
     heart.setPoint(19, sf::Vector2f(68, 44));
     heart.setScale(0.0005f * scale, 0.0005f * scale);
-    heart.setOrigin(heart.getLocalBounds().width / 2, heart.getLocalBounds().height / 2);
+    heart.setOrigin(heart.getLocalBounds().width / 2,
+                    heart.getLocalBounds().height / 2);
     coin.setFillColor(sf::Color::White);
     coin.setPointCount(20);
     coin.setRadius(0.018f * scale);
-    coin.setOrigin(coin.getLocalBounds().width / 2, coin.getLocalBounds().height / 2);
-    const sf::Font & cornerstone = ::resHandlerPtr->getFont(ResHandler::Font::cornerstone);
+    coin.setOrigin(coin.getLocalBounds().width / 2,
+                   coin.getLocalBounds().height / 2);
+    const sf::Font & cornerstone =
+        ::resHandlerPtr->getFont(ResHandler::Font::cornerstone);
 
-    auto initText = [& cornerstone](sf::Text & text, const std::string string, float size) {
+    auto initText = [&cornerstone](sf::Text & text, const std::string string,
+                                   float size) {
         text.setFont(cornerstone);
         text.setCharacterSize(size);
         text.setString(string);
@@ -460,8 +432,9 @@ ui::Frontend::Frontend(sf::View fontView, float x, float y) :
     waypointText.setFillColor(sf::Color::Transparent);
 
     initText(scoreText, std::string("0: "), 0.032f * scale);
-    
-    healthNumText.setString(std::to_string(4) + " / " + std::to_string(static_cast<int>(maxHealth)) + ": ");
+
+    healthNumText.setString(std::to_string(4) + " / " +
+                            std::to_string(static_cast<int>(maxHealth)) + ": ");
     healthNumText.setCharacterSize(0.032 * scale);
     healthNumText.setFont(cornerstone);
 
@@ -471,19 +444,21 @@ ui::Frontend::Frontend(sf::View fontView, float x, float y) :
     powerupText.setFillColor(sf::Color(255, 255, 255, 0));
     powerupText.setFont(cornerstone);
     powerupText.setCharacterSize(0.065 * scale);
-    
+
     initText(quitText, std::string("QUIT"), 0.085 * scale);
     quitText.setFillColor(sf::Color(255, 255, 255, 0));
-    
+
     initText(titleText, std::string("BLIND JUMP"), 0.115f * scale);
     titleText.setPosition(viewSize.x / 2 - titleText.getLocalBounds().width / 2,
-                          viewSize.y / 8 - titleText.getLocalBounds().height / 2);
+                          viewSize.y / 8 -
+                              titleText.getLocalBounds().height / 2);
     titleText.setFillColor(sf::Color(255, 255, 255, 0));
 
     initText(deathText, std::string("YOU DIED"), 0.115 * scale);
     deathText.setFillColor(sf::Color(231, 26, 83));
     deathText.setPosition(viewSize.x / 2 - deathText.getLocalBounds().width / 2,
-                          viewSize.y / 12 - deathText.getLocalBounds().height / 2);
+                          viewSize.y / 12 -
+                              deathText.getLocalBounds().height / 2);
 
     const sf::Vector2f barPosition(0.f, viewSize.y - viewSize.y * 0.008f);
     powerupBarFront.setPosition(barPosition);
@@ -501,7 +476,8 @@ void ui::Frontend::setBubbleRadius(float rad) {
     powerupBubble.setRadius(rad, scale);
 }
 
-void ui::Frontend::setTextOffset(float xOffset, float yOffset, ui::Frontend::Text text) {
+void ui::Frontend::setTextOffset(float xOffset, float yOffset,
+                                 ui::Frontend::Text text) {
     float scale;
     const sf::Vector2f viewSize = fontView.getSize();
     if (viewSize.y < viewSize.x) {
@@ -511,17 +487,28 @@ void ui::Frontend::setTextOffset(float xOffset, float yOffset, ui::Frontend::Tex
     }
     switch (text) {
     case Text::resumeText:
-        resumeText.setPosition(xOffset * scale + viewSize.x / 2 - resumeText.getLocalBounds().width / 2,
-                               viewSize.y / 2.8f - resumeText.getLocalBounds().height / 2 + yOffset * scale);
+        resumeText.setPosition(xOffset * scale + viewSize.x / 2 -
+                                   resumeText.getLocalBounds().width / 2,
+                               viewSize.y / 2.8f -
+                                   resumeText.getLocalBounds().height / 2 +
+                                   yOffset * scale);
         break;
 
     case Text::quitText:
-        quitText.setPosition(xOffset * scale + viewSize.x / 2 - quitText.getLocalBounds().width / 2,
-                             resumeText.getPosition().y + quitText.getLocalBounds().height * 2 + yOffset * scale);
+        quitText.setPosition(xOffset * scale + viewSize.x / 2 -
+                                 quitText.getLocalBounds().width / 2,
+                             resumeText.getPosition().y +
+                                 quitText.getLocalBounds().height * 2 +
+                                 yOffset * scale);
         break;
 
     case Text::powerupText:
-        powerupText.setPosition(xOffset * scale + viewSize.x / 2 - powerupText.getLocalBounds().width / 2, yOffset * scale + powerupBubble.getPosition().y - powerupBubble.getRadius() - powerupText.getLocalBounds().height * 1.8f);
+        powerupText.setPosition(xOffset * scale + viewSize.x / 2 -
+                                    powerupText.getLocalBounds().width / 2,
+                                yOffset * scale +
+                                    powerupBubble.getPosition().y -
+                                    powerupBubble.getRadius() -
+                                    powerupText.getLocalBounds().height * 1.8f);
         break;
 
     default:
@@ -571,25 +558,29 @@ void ui::Frontend::reset() {
     barWidth = 0;
 }
 
-void ui::Frontend::addPowerup(Powerup powerup) {
-    powerupAdded = powerup;
-}
+void ui::Frontend::addPowerup(Powerup powerup) { powerupAdded = powerup; }
 
 void ui::Frontend::setWaypointText(int level) {
-    heart.setPosition(fontView.getSize().x - heart.getLocalBounds().width / 2, heart.getLocalBounds().height / 1.8);
-    //coin.setPosition(fontView.getSize().x - coin.getLocalBounds().width, heart.getPosition().y + coin.getLocalBounds().height);
-    coin.setPosition(heart.getPosition().x, heart.getPosition().y + coin.getLocalBounds().height * 1.25);
+    heart.setPosition(fontView.getSize().x - heart.getLocalBounds().width / 2,
+                      heart.getLocalBounds().height / 1.8);
+    // coin.setPosition(fontView.getSize().x - coin.getLocalBounds().width,
+    // heart.getPosition().y + coin.getLocalBounds().height);
+    coin.setPosition(heart.getPosition().x,
+                     heart.getPosition().y +
+                         coin.getLocalBounds().height * 1.25);
     coin.setFillColor(sf::Color(255, 255, 255, 0));
-    healthNumText.setPosition(fontView.getSize().x - healthNumText.getLocalBounds().width - heart.getLocalBounds().width,
+    healthNumText.setPosition(fontView.getSize().x -
+                                  healthNumText.getLocalBounds().width -
+                                  heart.getLocalBounds().width,
                               healthNumText.getLocalBounds().height);
     if (health != 1) {
         healthNumText.setFillColor(sf::Color(255, 255, 255, 0));
         heart.setFillColor(sf::Color(255, 255, 255, 0));
     }
-    scoreText.setPosition(fontView.getSize().x
-                          - scoreText.getLocalBounds().width
-                          - fontView.getSize().x * 0.015
-                          - heart.getLocalBounds().width, scoreText.getLocalBounds().height * 3);
+    scoreText.setPosition(
+        fontView.getSize().x - scoreText.getLocalBounds().width -
+            fontView.getSize().x * 0.015 - heart.getLocalBounds().width,
+        scoreText.getLocalBounds().height * 3);
     std::string str = "WAYPOINT-";
     str += std::to_string(level);
     waypointText.setString(str);
@@ -604,9 +595,7 @@ void ui::Frontend::setWaypointText(int level) {
     }
 }
 
-int ui::Frontend::getScore() {
-    return score;
-}
+int ui::Frontend::getScore() { return score; }
 
 void ui::Frontend::draw(sf::RenderWindow & window) {
     // Set the correct view, so not to blur the fonts
@@ -619,29 +608,29 @@ void ui::Frontend::draw(sf::RenderWindow & window) {
     }
     if (healthModified) {
         healthModified = false;
-        healthNumText.setString(std::to_string(static_cast<int>(health))
-                                + " / "
-                                + std::to_string(static_cast<int>(maxHealth))
-                                + " :");
-        healthNumText.setPosition(fontView.getSize().x
-                                  - healthNumText.getLocalBounds().width
-                                  - fontView.getSize().x * 0.015
-                                  - heart.getLocalBounds().width, healthNumText.getLocalBounds().height);
+        healthNumText.setString(
+            std::to_string(static_cast<int>(health)) + " / " +
+            std::to_string(static_cast<int>(maxHealth)) + " :");
+        healthNumText.setPosition(
+            fontView.getSize().x - healthNumText.getLocalBounds().width -
+                fontView.getSize().x * 0.015 - heart.getLocalBounds().width,
+            healthNumText.getLocalBounds().height);
     }
     if (scoreModified) {
         scoreModified = false;
         scoreText.setString(std::to_string(score) + " :");
-        scoreText.setPosition(fontView.getSize().x
-                              - scoreText.getLocalBounds().width
-                              - fontView.getSize().x * 0.015
-                              - heart.getLocalBounds().width, scoreText.getLocalBounds().height * 3);
+        scoreText.setPosition(
+            fontView.getSize().x - scoreText.getLocalBounds().width -
+                fontView.getSize().x * 0.015 - heart.getLocalBounds().width,
+            scoreText.getLocalBounds().height * 3);
     }
     switch (powerupAdded) {
     case Powerup::nil:
         break;
 
     case Powerup::health:
-        powerupBubble.setFrame(static_cast<int>(powerupAdded) - 1); // Powerup::nil has no frame
+        powerupBubble.setFrame(static_cast<int>(powerupAdded) -
+                               1); // Powerup::nil has no frame
         powerupAdded = Powerup::nil;
         barWidth = 0;
         powerupText.setString(std::string("LIFE JAR"));
@@ -656,7 +645,8 @@ void ui::Frontend::draw(sf::RenderWindow & window) {
     // Slowly fade out the  waypoint text
     sf::Color c = waypointText.getFillColor();
     if (c.a > 5) {
-        if (wpTextDisplayTimer.getElapsedTime().asSeconds() > WAYPOINT_TEXT_FADE_SECONDS) {
+        if (wpTextDisplayTimer.getElapsedTime().asSeconds() >
+            WAYPOINT_TEXT_FADE_SECONDS) {
             c.a -= 4;
             waypointText.setFillColor(c);
         }
@@ -666,7 +656,8 @@ void ui::Frontend::draw(sf::RenderWindow & window) {
     if (health != 1) {
         c = healthNumText.getFillColor();
         if (c.a > 5) {
-            if (healthDisplayTimer.getElapsedTime().asSeconds() > HEALTH_TEXT_FADE_SECONDS) {
+            if (healthDisplayTimer.getElapsedTime().asSeconds() >
+                HEALTH_TEXT_FADE_SECONDS) {
                 c.a -= 4;
                 healthNumText.setFillColor(c);
                 heart.setFillColor(c);
@@ -681,7 +672,8 @@ void ui::Frontend::draw(sf::RenderWindow & window) {
     }
     c = scoreText.getFillColor();
     if (c.a > 5) {
-        if (scoreDisplayTimer.getElapsedTime().asSeconds() > SCORE_TEXT_FADE_SECONDS) {
+        if (scoreDisplayTimer.getElapsedTime().asSeconds() >
+            SCORE_TEXT_FADE_SECONDS) {
             c.a -= 4;
             scoreText.setFillColor(c);
             coin.setFillColor(c);
@@ -732,25 +724,27 @@ void ui::Frontend::resetHPText() {
     healthDisplayTimer.restart();
 }
 
-void ui::Frontend::drawTitle(unsigned char alpha, sf::RenderWindow& window) {
+void ui::Frontend::drawTitle(unsigned char alpha, sf::RenderWindow & window) {
     titleText.setFillColor(sf::Color(255, 255, 255, alpha));
     window.setView(fontView);
     window.draw(titleText);
 }
 
-void ui::Frontend::drawDeathText(unsigned char alpha, sf::RenderWindow & window) {
-    deathText.setFillColor(sf::Color(colors::Ruby::R * 255, colors::Ruby::G * 255, colors::Ruby::B * 255, alpha));
+void ui::Frontend::drawDeathText(unsigned char alpha,
+                                 sf::RenderWindow & window) {
+    deathText.setFillColor(sf::Color(colors::Ruby::R * 255,
+                                     colors::Ruby::G * 255,
+                                     colors::Ruby::B * 255, alpha));
     window.setView(fontView);
     window.draw(deathText);
 }
 
-sf::Text * ui::Frontend::getTitle() {
-    return &titleText;
-}
+sf::Text * ui::Frontend::getTitle() { return &titleText; }
 
 void ui::Frontend::updateHealth(char _health) {
     health = _health;
-    // Can't update the actual text from here, since it needs to happen on the main thread.
+    // Can't update the actual text from here, since it needs to happen on the
+    // main thread.
     // Instead mark it as modifed and handle it later
     healthModified = true;
     resetHPText();
@@ -762,14 +756,8 @@ void ui::Frontend::updateMaxHealth(char _maxHealth) {
     resetHPText();
 }
 
-char ui::Frontend::getMaxHealth() const {
-    return maxHealth;
-}
+char ui::Frontend::getMaxHealth() const { return maxHealth; }
 
-sf::Text * ui::Frontend::getDeathText() {
-    return &deathText;
-}
+sf::Text * ui::Frontend::getDeathText() { return &deathText; }
 
-void ui::Frontend::setBarWidth(float _barWidth) {
-    barWidth = _barWidth;
-}
+void ui::Frontend::setBarWidth(float _barWidth) { barWidth = _barWidth; }

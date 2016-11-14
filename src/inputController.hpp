@@ -6,13 +6,13 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <bitset>
 #include <array>
+#include <bitset>
 
 #include "shutdownSignal.hpp"
 
 class InputController {
-public:
+  public:
     InputController();
     void mapJsById();
     bool isFocused() const;
@@ -26,8 +26,8 @@ public:
     void update(sf::RenderWindow &);
     void mapKeyboardKey(const sf::Keyboard::Key, const uint8_t);
     void mapJoystickButton(const uint32_t, const uint8_t);
-    
-private:
+
+  private:
     enum {
         indexShoot,
         indexAction,

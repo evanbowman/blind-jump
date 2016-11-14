@@ -7,15 +7,13 @@
 
 #include "detailParent.hpp"
 #include "inputController.hpp"
-#include "spriteSheet.hpp"
-#include "rng.hpp"
 #include "powerup.hpp"
+#include "rng.hpp"
+#include "spriteSheet.hpp"
 
 class TreasureChest : public Detail {
-public:
-    enum class State {
-        closed, opening, ready, complete
-    };
+  public:
+    enum class State { closed, opening, ready, complete };
     TreasureChest(float, float, const sf::Texture &, Powerup);
     const framework::Sprite & getShadow() const;
     const framework::Sprite & getSprite() const;
@@ -23,8 +21,8 @@ public:
     State getState() const;
     void setState(const State);
     Powerup getPowerup() const;
-    
-private:
+
+  private:
     State state;
     Powerup powerup;
     int64_t animationTimer;

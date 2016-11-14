@@ -5,10 +5,9 @@
 
 #include "smallExplosion.hpp"
 
-SmallExplosion::SmallExplosion(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, float x, float y) :
-    Effect(x, y),
-    glowFadeTimer(0)
-{
+SmallExplosion::SmallExplosion(const sf::Texture & mainTxtr,
+                               const sf::Texture & glowTxtr, float x, float y)
+    : Effect(x, y), glowFadeTimer(0) {
     spriteSheet.setTexture(mainTxtr);
     spriteSheet.setOrigin(18, 18);
     glow.setTexture(glowTxtr);
@@ -28,13 +27,12 @@ void SmallExplosion::update(const sf::Time & elapsedTime) {
             killFlag = true;
         }
     }
-    uint8_t color = Easing::easeOut<2>(glowFadeTimer, static_cast<int64_t>(300000)) * 230;
+    uint8_t color =
+        Easing::easeOut<2>(glowFadeTimer, static_cast<int64_t>(300000)) * 230;
     glow.setColor(sf::Color(color, color, color, 255));
 }
 
-const framework::Sprite & SmallExplosion::getGlow() const {
-    return glow;
-}
+const framework::Sprite & SmallExplosion::getGlow() const { return glow; }
 
 const framework::Sprite & SmallExplosion::getSprite() const {
     return spriteSheet[frameIndex];

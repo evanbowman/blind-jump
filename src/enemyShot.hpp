@@ -5,15 +5,15 @@
 
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include <cmath>
-#include "spriteSheet.hpp"
 #include "Effect.hpp"
 #include "math.hpp"
 #include "rng.hpp"
+#include "spriteSheet.hpp"
+#include <SFML/Graphics.hpp>
+#include <cmath>
 
 class EnemyShot : public Effect {
-public:
+  public:
     using HBox = framework::HitBox<14, 14, 0, 0>;
     enum { lifetime = 600 };
     EnemyShot(const sf::Texture &, const sf::Texture &, float, float, float);
@@ -21,12 +21,11 @@ public:
     const framework::Sprite & getSprite();
     const HBox & getHitBox() const;
     const framework::Sprite & getGlow() const;
-    
-private:
+
+  private:
     HBox hitBox;
     SpriteSheet<50, 91, 14, 14> spriteSheet;
     int32_t frameTimer;
     float direction;
     framework::Sprite glowSprite;
-    
 };

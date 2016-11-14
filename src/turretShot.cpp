@@ -5,9 +5,10 @@
 
 #include "turretShot.hpp"
 
-TurretShot::TurretShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr, float x, float y, float dir) :
-    Effect{x, y}
-{
+TurretShot::TurretShot(const sf::Texture & mainTxtr,
+                       const sf::Texture & glowTxtr, float x, float y,
+                       float dir)
+    : Effect{x, y} {
     spriteSheet.setTexture(mainTxtr);
     glowSprite.setTexture(glowTxtr);
     spriteSheet.setRotation(dir + 270);
@@ -19,8 +20,10 @@ TurretShot::TurretShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxt
 }
 
 void TurretShot::update(const sf::Time & elapsedTime) {
-    position.x += scale * 1.5 * (elapsedTime.asMicroseconds() * 0.00005f) * (cos(direction));
-    position.y += scale * 1.5 * (elapsedTime.asMicroseconds() * 0.00005f) * (sin(direction));
+    position.x += scale * 1.5 * (elapsedTime.asMicroseconds() * 0.00005f) *
+                  (cos(direction));
+    position.y += scale * 1.5 * (elapsedTime.asMicroseconds() * 0.00005f) *
+                  (sin(direction));
     hitBox.setPosition(position);
     spriteSheet.setPosition(position.x, position.y);
     glowSprite.setPosition(position.x, position.y + 18);
@@ -29,7 +32,8 @@ void TurretShot::update(const sf::Time & elapsedTime) {
         setKillFlag();
     }
     float offset = rng::random<20>();
-    glowSprite.setColor(sf::Color(230 + offset, 230 + offset, 230 + offset, 255));
+    glowSprite.setColor(
+        sf::Color(230 + offset, 230 + offset, 230 + offset, 255));
     animationTimer += elapsedTime.asMilliseconds();
     if (animationTimer > 50) {
         animationTimer -= 50;
@@ -37,18 +41,12 @@ void TurretShot::update(const sf::Time & elapsedTime) {
     }
 }
 
-const TurretShot::HBox & TurretShot::getHitBox() const {
-    return hitBox;
-}
+const TurretShot::HBox & TurretShot::getHitBox() const { return hitBox; }
 
 const framework::Sprite & TurretShot::getSprite() {
     return spriteSheet[frameIndex];
 }
 
-const framework::Sprite & TurretShot::getGlow() {
-    return glowSprite;
-}
+const framework::Sprite & TurretShot::getGlow() { return glowSprite; }
 
-void TurretShot::speedFactor(float factor) {
-    scale = factor;
-}
+void TurretShot::speedFactor(float factor) { scale = factor; }

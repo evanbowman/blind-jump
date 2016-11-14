@@ -8,20 +8,16 @@
 #include <stdint.h>
 
 class wall {
-private:
-    float xPosInitial, yPosInitial,  xPos, yPos;
+  private:
+    float xPosInitial, yPosInitial, xPos, yPos;
 
-public:
+  public:
     float getPosX() const;
     float getPosY() const;
-    
-    inline int8_t getWidth() const {
-        return 32;
-    }
 
-    inline int8_t getHeight() const {
-        return 26;
-    }
+    inline int8_t getWidth() const { return 32; }
+
+    inline int8_t getHeight() const { return 26; }
 
     wall();
     void setPosition(float, float);

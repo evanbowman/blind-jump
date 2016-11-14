@@ -8,26 +8,16 @@
 #include <iostream>
 
 InputController::InputController()
-    : keyboardMappings{
-          { sf::Keyboard::X,
-            sf::Keyboard::Z,
-            sf::Keyboard::Escape,
-            sf::Keyboard::Left,
-            sf::Keyboard::Right,
-            sf::Keyboard::Up,
-            sf::Keyboard::Down }
-      }
-{
+    : keyboardMappings{{sf::Keyboard::X, sf::Keyboard::Z, sf::Keyboard::Escape,
+                        sf::Keyboard::Left, sf::Keyboard::Right,
+                        sf::Keyboard::Up, sf::Keyboard::Down}} {
     if (sf::Joystick::isConnected(0)) {
         mapJsById();
     }
 }
 
 void InputController::mapJsById() {
-    enum Vendor {
-        Sony = 0x054C,
-        Microsoft = 0x045E
-    };
+    enum Vendor { Sony = 0x054C, Microsoft = 0x045E };
     enum Product {
         PS3Controller = 0x0268,
         PS4Controller = 0x05C4,
@@ -42,7 +32,8 @@ void InputController::mapJsById() {
         joystickMappings[indexShoot] = 5;
         joystickMappings[indexAction] = 1;
         joystickMappings[indexPause] = 12;
-    } else if (ident.vendorId == Microsoft && ident.productId == XBOneController) {
+    } else if (ident.vendorId == Microsoft &&
+               ident.productId == XBOneController) {
         // TODO: Test XBOne Controller
     } else {
         joystickMappings[indexShoot] = 0;
@@ -51,17 +42,17 @@ void InputController::mapJsById() {
     }
 }
 
-void InputController::mapKeyboardKey(const sf::Keyboard::Key key, const uint8_t indx) {
+void InputController::mapKeyboardKey(const sf::Keyboard::Key key,
+                                     const uint8_t indx) {
     keyboardMappings[indx] = key;
 }
 
-void InputController::mapJoystickButton(const uint32_t button, const uint8_t indx) {
+void InputController::mapJoystickButton(const uint32_t button,
+                                        const uint8_t indx) {
     joystickMappings[indx] = button;
 }
 
-bool InputController::isFocused() const {
-    return keyMask[indexFocused];
-}
+bool InputController::isFocused() const { return keyMask[indexFocused]; }
 
 bool InputController::pausePressed() const {
     return keyMask[indexPause] || joystickMask[indexPause];
@@ -135,21 +126,27 @@ void InputController::update(sf::RenderWindow & window) {
             keyMask &= 0xFF7F;
         } else if (event.type == sf::Event::JoystickButtonPressed) {
             if (event.joystickButton.joystickId == 0) {
-                if (event.joystickButton.button == joystickMappings[indexShoot]) {
+                if (event.joystickButton.button ==
+                    joystickMappings[indexShoot]) {
                     joystickMask[indexShoot] = true;
-                } else if (event.joystickButton.button == joystickMappings[indexAction]) {
+                } else if (event.joystickButton.button ==
+                           joystickMappings[indexAction]) {
                     joystickMask[indexAction] = true;
-                } else if (event.joystickButton.button == joystickMappings[indexPause]) {
+                } else if (event.joystickButton.button ==
+                           joystickMappings[indexPause]) {
                     joystickMask[indexPause] = true;
                 }
             }
         } else if (event.type == sf::Event::JoystickButtonReleased) {
             if (event.joystickButton.joystickId == 0) {
-                if (event.joystickButton.button == joystickMappings[indexShoot]) {
+                if (event.joystickButton.button ==
+                    joystickMappings[indexShoot]) {
                     joystickMask[indexShoot] = false;
-                } else if (event.joystickButton.button == joystickMappings[indexAction]) {
+                } else if (event.joystickButton.button ==
+                           joystickMappings[indexAction]) {
                     joystickMask[indexAction] = false;
-                } else if (event.joystickButton.button == joystickMappings[indexPause]) {
+                } else if (event.joystickButton.button ==
+                           joystickMappings[indexPause]) {
                     joystickMask[indexPause] = false;
                 }
             }

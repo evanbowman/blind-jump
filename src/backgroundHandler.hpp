@@ -4,14 +4,14 @@
 //========================================================================//
 
 #pragma once
-#include <SFML/Graphics.hpp>
 #include "camera.hpp"
 #include "resourceHandler.hpp"
+#include <SFML/Graphics.hpp>
 
 #define STARMAP_SIZE 7
 
 class backgroundHandler {
-private:
+  private:
     sf::Texture foregroundTreesTxtr;
     framework::Sprite foregroundTreesSpr;
     sf::Texture bkgStars;
@@ -29,11 +29,11 @@ private:
     float windowH;
     unsigned char workingSet;
     sf::RenderTexture rt;
-    
-public:
+
+  public:
     backgroundHandler();
-    void drawBackground(sf::RenderTexture&, const sf::View &, const Camera &);
-    void drawForeground(sf::RenderTexture&);
+    void drawBackground(sf::RenderTexture &, const sf::View &, const Camera &);
+    void drawForeground(sf::RenderTexture &);
     void setOffset(float, float);
     void setPosition(float, float);
     void giveWindowSize(float, float);

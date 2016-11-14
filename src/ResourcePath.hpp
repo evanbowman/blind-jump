@@ -7,8 +7,8 @@
 #if WIN32 != 0
 #include <Windows.h>
 #elif APPLE != 0
-#include <sys/syslimits.h>
 #include <mach-o/dyld.h>
+#include <sys/syslimits.h>
 #elif UNIX != 0
 #include <linux/limits.h>
 #include <unistd.h>

@@ -26,8 +26,7 @@ std::string resourcePath() {
 #elif UNIX != 0
 std::string resourcePath() {
     char buffer[PATH_MAX];
-    [[gnu::unused]]
-    const std::size_t bytesRead =
+    [[gnu::unused]] const std::size_t bytesRead =
         readlink("/proc/self/exe", buffer, sizeof(buffer));
     const std::string path(buffer);
     const std::size_t lastFwdSlash = path.find_last_of("/");
