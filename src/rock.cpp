@@ -6,21 +6,20 @@
 #include "rock.hpp"
 
 Rock::Rock(float _xPos, float _yPos, const sf::Texture & inpTxtr)
-	: Detail{_xPos, _yPos}
-{
-	rockSheet.setTexture(inpTxtr);
+    : Detail{_xPos, _yPos} {
+    rockSheet.setTexture(inpTxtr);
     if (rng::random<2>()) {
-		rockSheet.setScale(-1, 1);
-	    position.x += 32;
-	}
-	rockSheet[rng::random<4>()];
-	rockSheet.setPosition(position.x, position.y);
+        rockSheet.setScale(-1, 1);
+        position.x += 32;
+    }
+    rockSheet[rng::random<4>()];
+    rockSheet.setPosition(position.x, position.y);
 }
 
 void Rock::update(const sf::Time &) {
-	// nil
+    // nil
 }
 
 const framework::Sprite & Rock::getSprite() const {
-	return rockSheet.getSprite();
+    return rockSheet.getSprite();
 }

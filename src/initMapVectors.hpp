@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include "wall.hpp"
 #include "coordinate.hpp"
+#include "wall.hpp"
+#include <SFML/Graphics.hpp>
 
 class tileController;
 

@@ -17,9 +17,10 @@
 // simplifies the logic of closing the app.
 
 class ShutdownSignal : public std::exception {
-	std::string msg;
-public:
-	ShutdownSignal();
-	const char * what() const noexcept override;
-	virtual ~ShutdownSignal() {}
+    std::string msg;
+
+  public:
+    ShutdownSignal();
+    const char * what() const noexcept override;
+    virtual ~ShutdownSignal() {}
 };

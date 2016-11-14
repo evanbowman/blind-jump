@@ -9,12 +9,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 file(GLOB_RECURSE blindjump_SOURCES "${PROJECT_SOURCE_DIR}/*.cpp")
 file(GLOB_RECURSE blindjump_HEADERS "${PROJECT_SOURCE_DIR}/*.hpp")
 
-if(APPLE)
-  set(RESOURCE_PATH "macos/ResourcePath.mm")
-elseif(WIN32)
-  # TODO
+# This bit is so that the CMAKE platform variables can map directly
+# to preprocessor macros in config.h (CMAKE vars don't default to 0)
+if(WIN32)
+  set(SFML_STATIC_LIBRARIES ON)
+  set(APPLE 0)
+  set(UNIX 0)
+elseif(APPLE)
+  set(WIN32 0)
+  set(UNIX 0)
 elseif(UNIX)
-  set(RESOURCE_PATH "debian/ResourcePath.cpp")
+  set(WIN32 0)
+  set(APPLE 0)
 endif()
 
 set(CMAKE_BUILD_TYPE Release)
@@ -30,11 +36,12 @@ include_directories("${PROJECT_BINARY_DIR}")
 add_executable(${EXECUTABLE_NAME} WIN32 MACOSX_BUNDLE ${blindjump_SOURCES} ${RESOURCE_PATH})
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
-find_package(SFML 2 REQUIRED system window graphics audio)
+
+find_package(SFML 2.4 REQUIRED graphics window network audio system)
 if(SFML_FOUND)
   include_directories(${SFML_INCLUDE_DIR})
   if(APPLE)
-    target_link_libraries(${EXECUTABLE_NAME} "-framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio -Xlinker -rpath -Xlinker @loader_path/../Frameworks -fobjc-link-runtime")
+    target_link_libraries(${EXECUTABLE_NAME} "-framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio -Xlinker -rpath -Xlinker @loader_path/../Frameworks")
     set(MACOSX_BUNDLE_BUNDLE_NAME ${EXECUTABLE_NAME})
     set(MACOSX_BUNDLE_ICON_FILE icon.icns)
     add_custom_target(pkg ALL mkdir -p ${EXECUTABLE_NAME}.app/Contents/Resources
@@ -43,29 +50,16 @@ if(SFML_FOUND)
       COMMAND cp macos/icon.icns ${EXECUTABLE_NAME}.app/Contents/Resources
       COMMAND cp -r macos/Frameworks/* ${EXECUTABLE_NAME}.app/Contents/Frameworks)
   elseif(WIN32)
-    # TODO
+    target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
   elseif(UNIX)
     target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
     find_package(Threads)
     target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_THREAD_LIBS_INIT})
     if(EXISTS "/etc/debian_version")
-      add_custom_target(pkg mkdir -p temp/DEBIAN
-	COMMAND cp debian/control temp/DEBIAN
-	COMMAND mkdir -p temp/usr/bin
-	COMMAND mkdir -p temp/usr/share/blindjump
-	COMMAND mkdir -p temp/usr/lib
-	COMMAND mkdir temp/usr/share/applications
-	COMMAND cp debian/libsfml/*.so* temp/usr/lib
-	COMMAND cp ../res/* temp/usr/share/blindjump
-	COMMAND cp debian/icon.png temp/usr/share/blindjump
-	COMMAND cp debian/blindjump.desktop temp/usr/share/applications
-	COMMAND mv ${EXECUTABLE_NAME} temp/usr/bin
-	COMMAND mv temp ${EXECUTABLE_NAME}
-	COMMAND dpkg-deb --build ${EXECUTABLE_NAME}
-	COMMAND rm -rf ${EXECUTABLE_NAME})
+      # TODO create deb package
     endif()
     if(EXISTS "/etc/redhat-release")
-      # create rpm TODO: install centos in a vm and get this working!
+      # TODO create rpm: install centos in a vm and get this working!
     endif()
   endif()
 endif()

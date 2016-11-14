@@ -7,19 +7,17 @@
 #include <cmath>
 
 IntroDoor::IntroDoor(float _xInit, float _yInit, const sf::Texture & inpTxtr)
-	: Detail{_xInit, _yInit},
-	  doorSheet{inpTxtr},
-	  frameIndex{3}/*,
-	  timer{0},
-	  state{State::dormant}*/
+    : Detail{_xInit, _yInit}, doorSheet{inpTxtr}, frameIndex{3} /*,
+                                                   timer{0},
+                                                   state{State::dormant}*/
 {
-	doorSheet.setPosition(position.x, position.y);
+    doorSheet.setPosition(position.x, position.y);
 }
- 
+
 const framework::Sprite & IntroDoor::getSprite() const {
-	return doorSheet[frameIndex];
+    return doorSheet[frameIndex];
 }
 
 void IntroDoor::update(const sf::Time &) {
-	// ...
+    // ...
 }

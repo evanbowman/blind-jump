@@ -5,17 +5,17 @@
 
 #pragma once
 
+#include "Effect.hpp"
+#include "spriteSheet.hpp"
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include "spriteSheet.hpp"
-#include "Effect.hpp"
 
 class ShotPuff : public Effect {
-private:
-	mutable SpriteSheet<88, 145, 16, 16> spriteSheet;
+  private:
+    mutable SpriteSheet<88, 145, 16, 16> spriteSheet;
 
-public:
-	ShotPuff(const sf::Texture &, float, float);
-	void update(const sf::Time &);
-	const framework::Sprite & getSprite() const;
+  public:
+    ShotPuff(const sf::Texture &, float, float);
+    void update(const sf::Time &);
+    const framework::Sprite & getSprite() const;
 };

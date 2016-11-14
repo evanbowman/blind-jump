@@ -13,36 +13,36 @@ SOURCES = $(shell find . -name "*.cpp" | awk '{print length, $$0;}' | sort -nr |
 OBJECTS = $(SOURCES:.cpp=.o)
 
 all:
-	@echo Specify a platform to build for, options:
-	@echo make macOS
-	@echo make Linux CPPFLAGS=-DLINUX
+        @echo Specify a platform to build for, options:
+        @echo make macOS
+        @echo make Linux CPPFLAGS=-DLINUX
 
 .cpp.o:
-	$(CC) $(CPPFLAGS) -c $< -o $@
+        $(CC) $(CPPFLAGS) -c $< -o $@
 
 macOS: $(OBJECTS) packageScriptMac.sh ResourcePath.mm ResourcePath.hpp
-	$(CC) ResourcePath.mm -c -o ResourcePath.o
-	$(CC) $(OBJECTS) ResourcePath.o -o $(EXECUTABLE) $(LDFLAGS_MAC)
-	bash packageScriptMac.sh $(EXECUTABLE) BlindJump
+        $(CC) ResourcePath.mm -c -o ResourcePath.o
+        $(CC) $(OBJECTS) ResourcePath.o -o $(EXECUTABLE) $(LDFLAGS_MAC)
+        bash packageScriptMac.sh $(EXECUTABLE) BlindJump
 
 Linux: $(OBJECTS) ResourcePath.hpp ResourcePath.cxx
-	$(CC) -c ResourcePath.cxx -o ResourcePath.o
-	$(CC) $(OBJECTS) ResourcePath.o -o $(EXECUTABLE) $(LDFLAGS_LINUX)
-	bash packageScriptDebian.sh $(EXECUTABLE) BlindJump
+        $(CC) -c ResourcePath.cxx -o ResourcePath.o
+        $(CC) $(OBJECTS) ResourcePath.o -o $(EXECUTABLE) $(LDFLAGS_LINUX)
+        bash packageScriptDebian.sh $(EXECUTABLE) BlindJump
 
 Windows: $(OBJECTS)
-	$(CC) -c ResourcePath.cxx -o ResourcePath.o
-	$(CC) $(OBJECTS) ResourcePath.o -o $(EXECUTABLE) $(LDFLAGS_WINDOWS)
+        $(CC) -c ResourcePath.cxx -o ResourcePath.o
+        $(CC) $(OBJECTS) ResourcePath.o -o $(EXECUTABLE) $(LDFLAGS_WINDOWS)
 
 clean:
-	rm *.o
+        rm *.o
 
 analyze:
-	rm ../test/cppcheck_results.txt
-	cppcheck --enable=warning --enable=performance --enable=information . > ../test/cppcheck_results.txt
+        rm ../test/cppcheck_results.txt
+        cppcheck --enable=warning --enable=performance --enable=information . > ../test/cppcheck_results.txt
 
 depend:
-	makedepend -- $(CPPFLAGS) -- $(SOURCES)
+        makedepend -- $(CPPFLAGS) -- $(SOURCES)
 
 # DO NOT DELETE
 
