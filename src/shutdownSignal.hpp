@@ -19,7 +19,7 @@
 class ShutdownSignal : public std::exception {
     std::string msg;
 
-  public:
+public:
     ShutdownSignal();
     const char * what() const noexcept override;
     virtual ~ShutdownSignal() {}

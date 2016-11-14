@@ -10,7 +10,7 @@
 #include <SFML/Graphics.hpp>
 
 class PlayerShot : public Effect {
-  public:
+public:
     using HBox = framework::HitBox<12, 12, 2, 2>;
     PlayerShot(const sf::Texture &, const sf::Texture &, char, float, float);
     const framework::Sprite & getSprite();
@@ -22,7 +22,7 @@ class PlayerShot : public Effect {
     void disablePuff();
     const HBox & getHitBox() const;
 
-  private:
+private:
     float xInit, yInit;
     HBox hitBox;
     SpriteSheet<44, 75, 16, 16> spriteSheet; // This could easily be a plain

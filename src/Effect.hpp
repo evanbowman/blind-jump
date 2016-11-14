@@ -9,11 +9,11 @@
 #include <SFML/Graphics.hpp>
 
 class Effect : public framework::Object {
-  protected:
+protected:
     int64_t timer;
     uint8_t frameIndex;
 
-  public:
+public:
     Effect(float _xInit, float _yInit)
         : Object{_xInit, _yInit}, timer{0}, frameIndex{0} {}
 };

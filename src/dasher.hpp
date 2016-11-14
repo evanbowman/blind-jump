@@ -12,7 +12,7 @@
 class Player;
 
 class Dasher : public Enemy {
-  public:
+public:
     using HBox = framework::HitBox<20, 32, -6, -4>;
     struct Blur {
         Blur(framework::Sprite *, float, float);
@@ -46,7 +46,7 @@ class Dasher : public Enemy {
     const sf::Vector2f & getScale() const;
     const HBox & getHitBox() const;
 
-  private:
+private:
     HBox hitBox;
     uint8_t shotCount;
     State state;

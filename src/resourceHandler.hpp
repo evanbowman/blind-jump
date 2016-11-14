@@ -15,7 +15,7 @@
 #include "ResourcePath.hpp"
 
 class ResHandler {
-  public:
+public:
     enum class Texture {
         gameObjects,
         vignette,
@@ -52,7 +52,7 @@ class ResHandler {
         const; // Exception: shader cannot be a constant reference
     void load();
 
-  private:
+private:
     enum resrcCnts {
         numTextures = 18,
         numShaders = 3,

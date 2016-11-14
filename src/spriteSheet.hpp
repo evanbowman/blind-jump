@@ -9,10 +9,10 @@
 #include <SFML/Graphics.hpp>
 
 template <uint16_t x, uint16_t y, uint16_t w, uint16_t h> class SpriteSheet {
-  private:
+private:
     framework::Sprite sprite;
 
-  public:
+public:
     SpriteSheet() {}
 
     SpriteSheet(const sf::Texture & txtr) { setTexture(txtr); }

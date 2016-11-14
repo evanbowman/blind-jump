@@ -8,10 +8,10 @@
 #include <stdint.h>
 
 class wall {
-  private:
+private:
     float xPosInitial, yPosInitial, xPos, yPos;
 
-  public:
+public:
     float getPosX() const;
     float getPosY() const;
 

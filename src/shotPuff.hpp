@@ -11,10 +11,10 @@
 #include <cmath>
 
 class ShotPuff : public Effect {
-  private:
+private:
     mutable SpriteSheet<88, 145, 16, 16> spriteSheet;
 
-  public:
+public:
     ShotPuff(const sf::Texture &, float, float);
     void update(const sf::Time &);
     const framework::Sprite & getSprite() const;

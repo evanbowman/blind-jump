@@ -13,7 +13,7 @@
 #include <cmath>
 
 class EnemyShot : public Effect {
-  public:
+public:
     using HBox = framework::HitBox<14, 14, 0, 0>;
     enum { lifetime = 600 };
     EnemyShot(const sf::Texture &, const sf::Texture &, float, float, float);
@@ -22,7 +22,7 @@ class EnemyShot : public Effect {
     const HBox & getHitBox() const;
     const framework::Sprite & getGlow() const;
 
-  private:
+private:
     HBox hitBox;
     SpriteSheet<50, 91, 14, 14> spriteSheet;
     int32_t frameTimer;

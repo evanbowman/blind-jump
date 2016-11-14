@@ -23,7 +23,7 @@
 class Game;
 
 class Player {
-  public:
+public:
     using drawableVec =
         std::vector<std::tuple<framework::Sprite, float, Rendertype, float>>;
     using Health = int8_t;
@@ -75,7 +75,7 @@ class Player {
     sf::Vector2f requestFuturePos(const uint32_t) const;
     sf::Vector2f getPosition() const;
 
-  private:
+private:
     void init();
     HBox hitBox;
     void updateGun(const sf::Time &, const bool, EffectGroup &,

@@ -15,7 +15,7 @@ class tileController;
 class Player;
 
 class Critter : public Enemy {
-  public:
+public:
     using HBox = framework::HitBox<12, 12, 4, -3>;
     Critter(const sf::Texture &, uint8_t map[61][61], float, float);
     void update(const Player *, EffectGroup & ef, const sf::Time &,
@@ -28,7 +28,7 @@ class Critter : public Enemy {
     void updatePlayerDead();
     const HBox & getHitBox() const;
 
-  private:
+private:
     float xInit, yInit;
     void onDeath(EffectGroup &);
     float currentDir;

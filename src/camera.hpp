@@ -24,7 +24,7 @@ class Camera {
     State state;
     void upscaleWindowView();
 
-  public:
+public:
     Camera(Player * _pTarget, const sf::Vector2f & viewPort,
            const sf::Vector2u &);
     void update(const sf::Time &, const std::vector<sf::Vector2f> &);

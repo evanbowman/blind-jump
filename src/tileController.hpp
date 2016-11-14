@@ -15,7 +15,7 @@
 #include <stack>
 
 class tileController {
-  public:
+public:
     enum class Tileset { intro, regular };
     framework::Sprite transitionLvSpr;
     sf::Image tileImg[2];

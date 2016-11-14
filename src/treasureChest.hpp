@@ -12,7 +12,7 @@
 #include "spriteSheet.hpp"
 
 class TreasureChest : public Detail {
-  public:
+public:
     enum class State { closed, opening, ready, complete };
     TreasureChest(float, float, const sf::Texture &, Powerup);
     const framework::Sprite & getShadow() const;
@@ -22,7 +22,7 @@ class TreasureChest : public Detail {
     void setState(const State);
     Powerup getPowerup() const;
 
-  private:
+private:
     State state;
     Powerup powerup;
     int64_t animationTimer;

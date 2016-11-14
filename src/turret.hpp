@@ -16,7 +16,7 @@
 class Player;
 
 class Turret {
-  private:
+private:
     enum class State { closed, opening, shoot1, shoot2, shoot3, rest, closing };
     State state;
     using HBox = framework::HitBox<16, 32>;
@@ -33,7 +33,7 @@ class Turret {
     bool isColored;
     float colorAmount;
 
-  public:
+public:
     Turret(const sf::Texture &, float, float);
     const HBox & getHitBox() const;
     void setPosition(float, float);

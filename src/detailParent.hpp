@@ -9,6 +9,6 @@
 #include <SFML/Graphics.hpp>
 
 class Detail : public framework::Object {
-  public:
+public:
     Detail(float xInit, float yInit) : Object{xInit, yInit} {}
 };

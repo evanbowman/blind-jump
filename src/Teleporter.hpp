@@ -9,7 +9,7 @@
 #include "effectsController.hpp"
 
 class Teleporter : public Detail {
-  public:
+public:
     Teleporter(float, float, const sf::Texture &, const sf::Texture &);
     const framework::Sprite & getShadow() const;
     const framework::Sprite & getSprite() const;
@@ -17,7 +17,7 @@ class Teleporter : public Detail {
     void update(const sf::Time &);
     const framework::Sprite & getGlow() const;
 
-  private:
+private:
     mutable framework::Sprite glowSprite;
     mutable framework::Sprite TeleporterSprites[2];
     int32_t smokeTimer;

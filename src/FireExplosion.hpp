@@ -11,12 +11,12 @@
 #include <SFML/Graphics.hpp>
 
 class FireExplosion : public Effect {
-  private:
+private:
     mutable SpriteSheet<208, 173, 58, 51> spriteSheet;
     framework::Sprite glow;
     int64_t glowFadeTimer;
 
-  public:
+public:
     FireExplosion(const sf::Texture &, const sf::Texture &, float, float);
     void update(const sf::Time &);
     const framework::Sprite & getSprite() const;

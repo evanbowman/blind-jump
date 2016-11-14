@@ -26,7 +26,7 @@
 #include <mutex>
 
 class Game {
-  public:
+public:
     enum class TransitionState {
         None,
         ExitBeamEnter,
@@ -55,7 +55,7 @@ class Game {
     sf::Vector2f viewPort;
     TransitionState transitionState;
 
-  private:
+private:
     void init();
     InputController * pInput;
     SoundController sounds;

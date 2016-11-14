@@ -11,7 +11,7 @@
 #define STARMAP_SIZE 7
 
 class backgroundHandler {
-  private:
+private:
     sf::Texture foregroundTreesTxtr;
     framework::Sprite foregroundTreesSpr;
     sf::Texture bkgStars;
@@ -30,7 +30,7 @@ class backgroundHandler {
     unsigned char workingSet;
     sf::RenderTexture rt;
 
-  public:
+public:
     backgroundHandler();
     void drawBackground(sf::RenderTexture &, const sf::View &, const Camera &);
     void drawForeground(sf::RenderTexture &);

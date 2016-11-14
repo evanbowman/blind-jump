@@ -11,7 +11,7 @@
 #include <cmath>
 
 class TurretShot : public Effect {
-  public:
+public:
     using HBox = framework::HitBox<10, 10, -5, -5>;
     const HBox & getHitBox() const;
     enum { lifetime = 600 };
@@ -22,7 +22,7 @@ class TurretShot : public Effect {
     void speedFactor(float);
     int32_t animationTimer;
 
-  private:
+private:
     SpriteSheet<26, 75, 9, 16> spriteSheet;
     HBox hitBox;
     framework::Sprite glowSprite;
