@@ -8,7 +8,7 @@
 #include "player.hpp"
 #include <cmath>
 
-Dasher::Blur::Blur(framework::Sprite * spr, float xInit, float yInit) {
+Dasher::Blur::Blur(sf::Sprite * spr, float xInit, float yInit) {
     this->spr = *spr;
     this->xInit = xInit;
     this->yInit = yInit;
@@ -23,7 +23,7 @@ Dasher::Blur::Blur(framework::Sprite * spr, float xInit, float yInit) {
     this->spr.setPosition(xInit, yInit);
 }
 
-framework::Sprite * Dasher::Blur::getSprite() { return &spr; }
+sf::Sprite * Dasher::Blur::getSprite() { return &spr; }
 
 void Dasher::Blur::update(const sf::Time & elapsedTime) {
     timer += elapsedTime.asMilliseconds();
@@ -55,7 +55,7 @@ Dasher::Dasher(const sf::Texture & mainTxtr, float _xPos, float _yPos)
     hitBox.setPosition(xPos, yPos);
 }
 
-const framework::Sprite & Dasher::getSprite() const {
+const sf::Sprite & Dasher::getSprite() const {
     switch (state) {
     case State::dying:
         return deathSheet[frameIndex];
@@ -68,7 +68,7 @@ const framework::Sprite & Dasher::getSprite() const {
     }
 }
 
-const framework::Sprite & Dasher::getShadow() const { return shadow; }
+const sf::Sprite & Dasher::getShadow() const { return shadow; }
 
 void Dasher::update(const Player * player, const std::vector<wall> & walls,
                     EffectGroup & effects, const sf::Time & elapsedTime) {

@@ -19,14 +19,14 @@ public:
     Scoot(const sf::Texture &, const sf::Texture &, float, float);
     void update(const Player *, const std::vector<wall> &, EffectGroup & ef,
                 const sf::Time &);
-    const framework::Sprite & getSprite() const;
-    const framework::Sprite & getShadow() const;
+    const sf::Sprite & getSprite() const;
+    const sf::Sprite & getShadow() const;
     const HBox & getHitBox() const;
 
 private:
     enum class State { drift1, drift2, shoot, recoil };
     mutable SpriteSheet<88, 161, 12, 12> spriteSheet;
-    framework::Sprite shadow;
+    sf::Sprite shadow;
     float speedScale, hSpeed, vSpeed;
     State state;
     int32_t timer;

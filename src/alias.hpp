@@ -18,4 +18,4 @@ using milliseconds = std::chrono::milliseconds;
 using time_point = std::chrono::high_resolution_clock::time_point;
 using duration = std::chrono::duration<double>;
 using drawableMetadata =
-    std::tuple<framework::Sprite, float, Rendertype, float>;
+    std::tuple<sf::Sprite, float, Rendertype, float>;

@@ -9,10 +9,10 @@
 
 class GeneralDetail : public Detail {
 public:
-    GeneralDetail(float, float, framework::Sprite &);
-    const framework::Sprite & getSprite() const;
+    GeneralDetail(float, float, sf::Sprite &);
+    const sf::Sprite & getSprite() const;
     void update(const sf::Time & elapsedTime);
 
 private:
-    framework::Sprite spr;
+    sf::Sprite spr;
 };

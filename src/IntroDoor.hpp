@@ -22,5 +22,5 @@ private:
 public:
     void update(const sf::Time &);
     IntroDoor(float, float, const sf::Texture &);
-    const framework::Sprite & getSprite() const;
+    const sf::Sprite & getSprite() const;
 };

@@ -136,9 +136,9 @@ void Critter::update(const Player * player, EffectGroup & effects,
     spriteSheet.setPosition(xPos + 12, yPos);
 }
 
-const framework::Sprite & Critter::getShadow() const { return shadow; }
+const sf::Sprite & Critter::getShadow() const { return shadow; }
 
-const framework::Sprite & Critter::getSprite() const {
+const sf::Sprite & Critter::getSprite() const {
     return spriteSheet[frameIndex];
 }
 

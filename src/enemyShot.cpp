@@ -40,10 +40,10 @@ void EnemyShot::update(const sf::Time & elapsedTime) {
     spriteSheet.setPosition(position.x, position.y);
 }
 
-const framework::Sprite & EnemyShot::getGlow() const { return glowSprite; }
+const sf::Sprite & EnemyShot::getGlow() const { return glowSprite; }
 
 const EnemyShot::HBox & EnemyShot::getHitBox() const { return hitBox; }
 
-const framework::Sprite & EnemyShot::getSprite() {
+const sf::Sprite & EnemyShot::getSprite() {
     return spriteSheet[frameIndex];
 }

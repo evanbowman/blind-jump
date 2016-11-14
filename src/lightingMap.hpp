@@ -6,10 +6,17 @@
 #pragma once
 
 #include "coordinate.hpp"
+#include "rng.hpp"
 #include <cmath>
 #include <vector>
 
 #define CIRC_RADIUS 200
+
+struct Circle {
+    int x;
+    int y;
+    int r;
+};
 
 bool checkOverlap(Circle c1, Circle c2) {
     double centerDifference =

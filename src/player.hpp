@@ -25,7 +25,7 @@ class Game;
 class Player {
 public:
     using drawableVec =
-        std::vector<std::tuple<framework::Sprite, float, Rendertype, float>>;
+        std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
     using Health = int8_t;
     using HBox = framework::HitBox<8, 16, 12, 12>;
     enum class Sheet {
@@ -91,7 +91,7 @@ private:
     uint8_t frameIndex;
     Sheet sheetIndex, cachedSheet;
     float lSpeed, rSpeed, uSpeed, dSpeed;
-    framework::Sprite shadowSprite;
+    sf::Sprite shadowSprite;
     SpriteSheet<400, 108, 32, 32> walkDown;
     SpriteSheet<208, 108, 32, 32> walkUp;
     SpriteSheet<208, 76, 32, 32> walkLeft;

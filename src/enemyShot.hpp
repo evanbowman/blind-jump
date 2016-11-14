@@ -18,14 +18,14 @@ public:
     enum { lifetime = 600 };
     EnemyShot(const sf::Texture &, const sf::Texture &, float, float, float);
     void update(const sf::Time &);
-    const framework::Sprite & getSprite();
+    const sf::Sprite & getSprite();
     const HBox & getHitBox() const;
-    const framework::Sprite & getGlow() const;
+    const sf::Sprite & getGlow() const;
 
 private:
     HBox hitBox;
     SpriteSheet<50, 91, 14, 14> spriteSheet;
     int32_t frameTimer;
     float direction;
-    framework::Sprite glowSprite;
+    sf::Sprite glowSprite;
 };

@@ -17,5 +17,5 @@ private:
 public:
     ShotPuff(const sf::Texture &, float, float);
     void update(const sf::Time &);
-    const framework::Sprite & getSprite() const;
+    const sf::Sprite & getSprite() const;
 };

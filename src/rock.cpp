@@ -20,6 +20,6 @@ void Rock::update(const sf::Time &) {
     // nil
 }
 
-const framework::Sprite & Rock::getSprite() const {
+const sf::Sprite & Rock::getSprite() const {
     return rockSheet.getSprite();
 }

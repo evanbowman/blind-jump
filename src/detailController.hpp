@@ -31,8 +31,8 @@ using DetailGroup = framework::Group<Teleporter,    // ----- 0
                                      Terminal>;     // ------ 7
 
 using drawableVec =
-    std::vector<std::tuple<framework::Sprite, float, Rendertype, float>>;
-using glowVec = std::vector<framework::Sprite>;
+    std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
+using glowVec = std::vector<sf::Sprite>;
 
 template <size_t indx, int8_t yOffset = 0>
 void drawVec(DetailGroup & dg, drawableVec & gameObjects,

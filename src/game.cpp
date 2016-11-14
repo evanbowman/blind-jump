@@ -157,7 +157,7 @@ void Game::draw(sf::RenderWindow & window) {
             }
         }
         static const sf::Color blendAmount(185, 185, 185);
-        framework::Sprite tempSprite;
+        sf::Sprite tempSprite;
         for (auto & element : glowSprs2) {
             element.setColor(blendAmount);
             lightingMap.draw(element,
@@ -167,7 +167,7 @@ void Game::draw(sf::RenderWindow & window) {
                                  sf::BlendMode::Zero, sf::BlendMode::Add)));
         }
         lightingMap.display();
-        target.draw(framework::Sprite(lightingMap.getTexture()));
+        target.draw(sf::Sprite(lightingMap.getTexture()));
         target.setView(camera.getOverworldView());
         bkg.drawForeground(target);
         target.setView(worldView);
@@ -201,13 +201,13 @@ void Game::draw(sf::RenderWindow & window) {
             const sf::Glsl::Vec2 vBlur =
                 sf::Glsl::Vec2(0.f, blurAmount / textureSize.y);
             blurShader.setUniform("blur_radius", vBlur);
-            secondPass.draw(framework::Sprite(target.getTexture()),
+            secondPass.draw(sf::Sprite(target.getTexture()),
                             &blurShader);
             secondPass.display();
             const sf::Glsl::Vec2 hBlur =
                 sf::Glsl::Vec2(blurAmount / textureSize.x, 0.f);
             blurShader.setUniform("blur_radius", hBlur);
-            thirdPass.draw(framework::Sprite(secondPass.getTexture()),
+            thirdPass.draw(sf::Sprite(secondPass.getTexture()),
                            &blurShader);
             thirdPass.display();
             desaturateShader.setUniform("amount", UI.getDesaturateAmount());
@@ -219,7 +219,7 @@ void Game::draw(sf::RenderWindow & window) {
                              UI.getState() == ui::Backend::State::menuScreen) &&
                 !camera.moving()) {
                 stash.clear(sf::Color::Black);
-                stash.draw(framework::Sprite(thirdPass.getTexture()),
+                stash.draw(sf::Sprite(thirdPass.getTexture()),
                            &desaturateShader);
                 stash.display();
                 stashed = true;
@@ -243,7 +243,7 @@ void Game::draw(sf::RenderWindow & window) {
             const sf::Glsl::Vec2 vBlur =
                 sf::Glsl::Vec2(0.f, blurAmount / textureSize.y);
             blurShader.setUniform("blur_radius", vBlur);
-            secondPass.draw(framework::Sprite(target.getTexture()),
+            secondPass.draw(sf::Sprite(target.getTexture()),
                             &blurShader);
             secondPass.display();
             const sf::Glsl::Vec2 hBlur =
@@ -257,7 +257,7 @@ void Game::draw(sf::RenderWindow & window) {
                              UI.getState() == ui::Backend::State::menuScreen) &&
                 !camera.moving()) {
                 stash.clear(sf::Color::Black);
-                stash.draw(framework::Sprite(secondPass.getTexture()),
+                stash.draw(sf::Sprite(secondPass.getTexture()),
                            &blurShader);
                 stash.display();
                 stashed = true;
@@ -716,7 +716,7 @@ void Game::nextLevel() {
         details.add<doorIdx>(
             tiles.posX - 192 + 6 * 32, tiles.posY + 301,
             ::resHandlerPtr->getTexture(ResHandler::Texture::introWall));
-        framework::Sprite podSpr;
+        sf::Sprite podSpr;
         podSpr.setTexture(
             ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
         podSpr.setTextureRect(sf::IntRect(164, 145, 44, 50));

@@ -25,7 +25,7 @@ class Camera;
 class enemyController {
 private:
     using drawableVec =
-        std::vector<std::tuple<framework::Sprite, float, Rendertype, float>>;
+        std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
     std::vector<Turret> turrets;
     std::vector<Scoot> scoots;
     std::vector<Dasher> dashers;

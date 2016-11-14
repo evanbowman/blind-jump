@@ -5,11 +5,12 @@
 
 #pragma once
 #include "math.hpp"
-#include "player.hpp"
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <utility>
 #include <vector>
+
+class Player;
 
 class Camera {
     Player * pTarget;

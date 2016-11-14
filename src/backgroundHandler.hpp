@@ -13,12 +13,12 @@
 class backgroundHandler {
 private:
     sf::Texture foregroundTreesTxtr;
-    framework::Sprite foregroundTreesSpr;
+    sf::Sprite foregroundTreesSpr;
     sf::Texture bkgStars;
     sf::Texture bkgStarsFar;
-    framework::Sprite bkgSprite;
-    framework::Sprite stars[STARMAP_SIZE][STARMAP_SIZE];
-    framework::Sprite starsFar[STARMAP_SIZE][STARMAP_SIZE];
+    sf::Sprite bkgSprite;
+    sf::Sprite stars[STARMAP_SIZE][STARMAP_SIZE];
+    sf::Sprite starsFar[STARMAP_SIZE][STARMAP_SIZE];
     sf::CircleShape planet[2];
     sf::RectangleShape solidBkg;
     float xOffset, xOffPrev;

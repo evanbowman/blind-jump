@@ -22,6 +22,6 @@ void ShotPuff::update(const sf::Time & elapsedTime) {
     }
 }
 
-const framework::Sprite & ShotPuff::getSprite() const {
+const sf::Sprite & ShotPuff::getSprite() const {
     return spriteSheet[frameIndex];
 }

@@ -30,7 +30,7 @@ public:
     float getRadius();
     void setAlpha(uint8_t);
     const sf::CircleShape & getShape() const;
-    const framework::Sprite & getSprite();
+    const sf::Sprite & getSprite();
     void setFrame(size_t);
 
 private:
@@ -131,7 +131,7 @@ public:
     float getBlurAmount();
     void setPowerup(Powerup);
     Powerup getCurrentPowerup() const;
-    const PowerupBubbleState getPowerupBubbleState() const;
+    PowerupBubbleState getPowerupBubbleState() const;
 
 private:
     State state;

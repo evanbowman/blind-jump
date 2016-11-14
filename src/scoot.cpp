@@ -147,11 +147,11 @@ void Scoot::update(const Player * player, const std::vector<wall> & w,
     }
 }
 
-const framework::Sprite & Scoot::getSprite() const {
+const sf::Sprite & Scoot::getSprite() const {
     return spriteSheet[frameIndex];
 }
 
-const framework::Sprite & Scoot::getShadow() const { return shadow; }
+const sf::Sprite & Scoot::getShadow() const { return shadow; }
 
 void Scoot::onDeath(EffectGroup & effects) {
     int select = rng::random<5>();

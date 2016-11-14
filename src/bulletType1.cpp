@@ -20,7 +20,7 @@ PlayerShot::PlayerShot(const sf::Texture & mainTxtr,
     }
 }
 
-const framework::Sprite & PlayerShot::getSprite() {
+const sf::Sprite & PlayerShot::getSprite() {
     switch (state) {
     case State::poof:
         return puffSheet[frameIndex];
@@ -32,7 +32,7 @@ const framework::Sprite & PlayerShot::getSprite() {
     }
 }
 
-const framework::Sprite & PlayerShot::getGlow() { return glow; }
+const sf::Sprite & PlayerShot::getGlow() { return glow; }
 
 void PlayerShot::poof() {
     if (canPoof) {

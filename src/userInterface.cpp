@@ -94,8 +94,7 @@ void ui::Backend::setPowerup(Powerup _powerup) {
 
 Powerup ui::Backend::getCurrentPowerup() const { return powerup; }
 
-const ui::Backend::PowerupBubbleState
-ui::Backend::getPowerupBubbleState() const {
+ui::Backend::PowerupBubbleState ui::Backend::getPowerupBubbleState() const {
     return powerupBubbleState;
 }
 
