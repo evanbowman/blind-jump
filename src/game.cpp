@@ -201,14 +201,12 @@ void Game::draw(sf::RenderWindow & window) {
             const sf::Glsl::Vec2 vBlur =
                 sf::Glsl::Vec2(0.f, blurAmount / textureSize.y);
             blurShader.setUniform("blur_radius", vBlur);
-            secondPass.draw(sf::Sprite(target.getTexture()),
-                            &blurShader);
+            secondPass.draw(sf::Sprite(target.getTexture()), &blurShader);
             secondPass.display();
             const sf::Glsl::Vec2 hBlur =
                 sf::Glsl::Vec2(blurAmount / textureSize.x, 0.f);
             blurShader.setUniform("blur_radius", hBlur);
-            thirdPass.draw(sf::Sprite(secondPass.getTexture()),
-                           &blurShader);
+            thirdPass.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
             thirdPass.display();
             desaturateShader.setUniform("amount", UI.getDesaturateAmount());
             sf::Sprite targetSprite(thirdPass.getTexture());
@@ -243,8 +241,7 @@ void Game::draw(sf::RenderWindow & window) {
             const sf::Glsl::Vec2 vBlur =
                 sf::Glsl::Vec2(0.f, blurAmount / textureSize.y);
             blurShader.setUniform("blur_radius", vBlur);
-            secondPass.draw(sf::Sprite(target.getTexture()),
-                            &blurShader);
+            secondPass.draw(sf::Sprite(target.getTexture()), &blurShader);
             secondPass.display();
             const sf::Glsl::Vec2 hBlur =
                 sf::Glsl::Vec2(blurAmount / textureSize.x, 0.f);
@@ -257,8 +254,7 @@ void Game::draw(sf::RenderWindow & window) {
                              UI.getState() == ui::Backend::State::menuScreen) &&
                 !camera.moving()) {
                 stash.clear(sf::Color::Black);
-                stash.draw(sf::Sprite(secondPass.getTexture()),
-                           &blurShader);
+                stash.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
                 stash.display();
                 stashed = true;
                 preload = false;

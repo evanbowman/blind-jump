@@ -43,9 +43,7 @@ void TurretShot::update(const sf::Time & elapsedTime) {
 
 const TurretShot::HBox & TurretShot::getHitBox() const { return hitBox; }
 
-const sf::Sprite & TurretShot::getSprite() {
-    return spriteSheet[frameIndex];
-}
+const sf::Sprite & TurretShot::getSprite() { return spriteSheet[frameIndex]; }
 
 const sf::Sprite & TurretShot::getGlow() { return glowSprite; }
 

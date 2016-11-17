@@ -189,8 +189,8 @@ void tileController::update() {
 }
 
 void tileController::draw(sf::RenderTexture & window,
-                          std::vector<sf::Sprite> * glowSprites,
-                          int level, const sf::View & worldView,
+                          std::vector<sf::Sprite> * glowSprites, int level,
+                          const sf::View & worldView,
                           const sf::View & cameraView) {
     // Clear out the RenderTexture
     rt.setView(cameraView);

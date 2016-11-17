@@ -44,6 +44,4 @@ const sf::Sprite & EnemyShot::getGlow() const { return glowSprite; }
 
 const EnemyShot::HBox & EnemyShot::getHitBox() const { return hitBox; }
 
-const sf::Sprite & EnemyShot::getSprite() {
-    return spriteSheet[frameIndex];
-}
+const sf::Sprite & EnemyShot::getSprite() { return spriteSheet[frameIndex]; }

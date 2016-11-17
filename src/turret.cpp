@@ -19,9 +19,7 @@ Turret::Turret(const sf::Texture & gameObjects, float _xPos, float _yPos)
     hitBox.setPosition(xPos, yPos);
 }
 
-const sf::Sprite & Turret::getSprite() {
-    return turretSheet[frameIndex];
-}
+const sf::Sprite & Turret::getSprite() { return turretSheet[frameIndex]; }
 
 void Turret::update(const sf::Time & elapsedTime, const Player * player,
                     EffectGroup & effects) {
@@ -166,9 +164,7 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
 const Turret::HBox & Turret::getHitBox() const { return hitBox; }
 
 // Returns the turret's shadow sprite
-const sf::Sprite & Turret::getShadow() {
-    return shadowSheet[frameIndex];
-}
+const sf::Sprite & Turret::getShadow() { return shadowSheet[frameIndex]; }
 
 bool Turret::getKillFlag() { return killFlag; }
 

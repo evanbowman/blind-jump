@@ -85,10 +85,8 @@ private:
     sf::RectangleShape transitionShape, beamShape;
     sf::Texture titleTxtr;
     sf::Sprite titleSpr;
-    std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>
-        gameObjects;
-    std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>
-        gameShadows;
+    std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> gameObjects;
+    std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> gameShadows;
     void updateTransitions(const sf::Time &);
     void drawTransitions(sf::RenderWindow &);
     int_fast64_t timer;

@@ -49,9 +49,7 @@ void DasherShot::update(const sf::Time & elapsedTime) {
     spriteSheet.setPosition(position.x, position.y);
 }
 
-const sf::Sprite & DasherShot::getSprite() {
-    return spriteSheet[frameIndex];
-}
+const sf::Sprite & DasherShot::getSprite() { return spriteSheet[frameIndex]; }
 
 const sf::Sprite & DasherShot::getGlow() const { return glowSprite; }
 

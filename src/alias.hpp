@@ -17,5 +17,4 @@ using microseconds = std::chrono::microseconds;
 using milliseconds = std::chrono::milliseconds;
 using time_point = std::chrono::high_resolution_clock::time_point;
 using duration = std::chrono::duration<double>;
-using drawableMetadata =
-    std::tuple<sf::Sprite, float, Rendertype, float>;
+using drawableMetadata = std::tuple<sf::Sprite, float, Rendertype, float>;

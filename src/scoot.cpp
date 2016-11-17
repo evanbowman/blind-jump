@@ -147,9 +147,7 @@ void Scoot::update(const Player * player, const std::vector<wall> & w,
     }
 }
 
-const sf::Sprite & Scoot::getSprite() const {
-    return spriteSheet[frameIndex];
-}
+const sf::Sprite & Scoot::getSprite() const { return spriteSheet[frameIndex]; }
 
 const sf::Sprite & Scoot::getShadow() const { return shadow; }
 

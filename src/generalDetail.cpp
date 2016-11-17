@@ -5,8 +5,7 @@
 
 #include "generalDetail.hpp"
 
-GeneralDetail::GeneralDetail(float _xInit, float _yInit,
-                             sf::Sprite & _spr)
+GeneralDetail::GeneralDetail(float _xInit, float _yInit, sf::Sprite & _spr)
     : Detail{_xInit, _yInit} {
     spr = _spr;
     spr.setPosition(position.x, position.y);
