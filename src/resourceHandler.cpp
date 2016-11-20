@@ -90,3 +90,12 @@ sf::Shader & ResHandler::getShader(Shader id) const {
 const sf::SoundBuffer & ResHandler::getSound(Sound id) const {
     return sounds[static_cast<int>(id)];
 }
+
+static ResHandler * resHandlerPtr;
+
+void setgResHandlerPtr(ResHandler * addr) {
+    assert(!::resHandlerPtr);
+    ::resHandlerPtr = addr;
+}
+
+ResHandler * getgResHandlerPtr() noexcept { return ::resHandlerPtr; }

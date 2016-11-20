@@ -70,8 +70,8 @@ public:
     void setHealth(Health);
     const HBox & getHitBox() const;
     const Weapon & getGun() const;
-    const float getXVelocity() const;
-    const float getYVeclocty() const;
+    float getXVelocity() const;
+    float getYVeclocty() const;
     sf::Vector2f requestFuturePos(const uint32_t) const;
     sf::Vector2f getPosition() const;
 

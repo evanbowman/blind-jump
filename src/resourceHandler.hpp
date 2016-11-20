@@ -67,4 +67,6 @@ private:
     std::array<sf::SoundBuffer, numSounds> sounds;
 };
 
-extern ResHandler * resHandlerPtr;
+void setgResHandlerPtr(ResHandler *);
+
+ResHandler * getgResHandlerPtr() noexcept;

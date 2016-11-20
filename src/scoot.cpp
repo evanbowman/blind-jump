@@ -84,13 +84,14 @@ void Scoot::update(const Player * player, const std::vector<wall> & w,
     case State::shoot: {
         const sf::Vector2f playerPos = player->getPosition();
         effects.add<0>(
-            ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             xPos - 8, yPos - 12);
         effects.add<8>(
-            ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-            ::resHandlerPtr->getTexture(ResHandler::Texture::redglow), xPos - 8,
-            yPos - 12, angleFunction(playerPos.x + 16, playerPos.y + 8,
-                                     xPos - 8, yPos - 8));
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
+            xPos - 8, yPos - 12,
+            angleFunction(playerPos.x + 16, playerPos.y + 8, xPos - 8,
+                          yPos - 8));
         state = State::recoil;
         changeDir(
             atan((yPos - player->getYpos()) / (xPos - player->getXpos())));
@@ -155,18 +156,18 @@ void Scoot::onDeath(EffectGroup & effects) {
     int select = rng::random<5>();
     if (select == 0) {
         effects.add<4>(
-            ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-            ::resHandlerPtr->getTexture(ResHandler::Texture::redglow), xPos,
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow), xPos,
             yPos + 4, Item::Type::Heart);
     } else {
         effects.add<5>(
-            ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-            ::resHandlerPtr->getTexture(ResHandler::Texture::blueglow), xPos,
-            yPos + 4, Item::Type::Coin);
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
+            xPos, yPos + 4, Item::Type::Coin);
     }
     effects.add<2>(
-        ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-        ::resHandlerPtr->getTexture(ResHandler::Texture::fireExplosionGlow),
+        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+        getgResHandlerPtr()->getTexture(ResHandler::Texture::fireExplosionGlow),
         xPos, yPos - 2);
     killFlag = true;
     return;

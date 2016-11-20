@@ -153,18 +153,18 @@ void Critter::onDeath(EffectGroup & effects) {
     unsigned long int temp = rng::random<5>();
     if (temp == 0) {
         effects.add<4>(
-            ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-            ::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
             xInit + 10, yInit, Item::Type::Heart);
     } else {
         effects.add<5>(
-            ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-            ::resHandlerPtr->getTexture(ResHandler::Texture::blueglow),
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
             xInit + 10, yInit, Item::Type::Coin);
     }
     effects.add<1>(
-        ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-        ::resHandlerPtr->getTexture(ResHandler::Texture::fireExplosionGlow),
+        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+        getgResHandlerPtr()->getTexture(ResHandler::Texture::fireExplosionGlow),
         xInit + 8, yInit);
     killFlag = true;
 }
