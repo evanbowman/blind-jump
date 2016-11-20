@@ -21,11 +21,11 @@ Thumbs.db
 *.#*
 
 # Project executable/packages
-blindjump.app
-blindjump
-blindjump.exe
-blindjump.rpm
-blindjump.deb
+BlindJump.app
+BlindJump
+BlindJump.exe
+BlindJump.rpm
+BlindJump.deb
 
 # CMake generated files
 CMakeCache.txt
