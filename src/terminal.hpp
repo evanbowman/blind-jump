@@ -6,7 +6,7 @@
 #include "spriteSheet.hpp"
 
 class Terminal : public Detail {
-  public:
+public:
     enum class State { dormant, wakeup, awake, poweroff };
     Terminal(const float, const float, const sf::Texture &, const uint8_t);
     const sf::Sprite & getSprite() const;
@@ -17,7 +17,7 @@ class Terminal : public Detail {
     void setState(const State);
     const State getState() const;
 
-  private:
+private:
     int64_t animationTimer;
     int64_t stateTimer;
     uint8_t frameIndex;

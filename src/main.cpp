@@ -26,7 +26,6 @@
 #include <iostream>
 #include <stdexcept>
 
-ResHandler * resHandlerPtr = nullptr;
 std::exception_ptr pWorkerException = nullptr;
 
 int main() {
@@ -35,7 +34,7 @@ int main() {
     sf::Vector2f drawableRegionSize = getDrawableRegionSize();
     try {
         resourceHandler.load();
-        ::resHandlerPtr = &resourceHandler;
+        setgResHandlerPtr(&resourceHandler);
         sf::ContextSettings settings;
         settings.antialiasingLevel = 6;
         sf::RenderWindow window(sf::VideoMode::getDesktopMode(),

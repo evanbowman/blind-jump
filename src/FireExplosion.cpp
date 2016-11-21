@@ -34,8 +34,8 @@ void FireExplosion::update(const sf::Time & elapsedTime) {
     glow.setColor(sf::Color(color, color, color, 255));
 }
 
-const framework::Sprite & FireExplosion::getGlow() const { return glow; }
+const sf::Sprite & FireExplosion::getGlow() const { return glow; }
 
-const framework::Sprite & FireExplosion::getSprite() const {
+const sf::Sprite & FireExplosion::getSprite() const {
     return spriteSheet[frameIndex];
 }

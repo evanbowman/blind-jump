@@ -22,7 +22,7 @@ class Player;
 
 namespace ui {
 class PowerupBubble {
-  public:
+public:
     void init(float);
     void setRadius(float, float);
     void setPosition(float, float);
@@ -30,16 +30,16 @@ class PowerupBubble {
     float getRadius();
     void setAlpha(uint8_t);
     const sf::CircleShape & getShape() const;
-    const framework::Sprite & getSprite();
+    const sf::Sprite & getSprite();
     void setFrame(size_t);
 
-  private:
+private:
     sf::CircleShape bubble;
     SpriteSheet<0, 0, 46, 46> powerupSheet;
 };
 
 class Frontend {
-  public:
+public:
     enum class Text {
         resumeText,
         quitText,
@@ -74,7 +74,7 @@ class Frontend {
     int getScore();
     void setBarWidth(float);
 
-  private:
+private:
     float scale;
     sf::Texture texture;
     sf::View fontView;
@@ -94,7 +94,7 @@ class Frontend {
 };
 
 class Backend {
-  public:
+public:
     enum class State {
         closed,
         deathScreenEntry,
@@ -131,9 +131,9 @@ class Backend {
     float getBlurAmount();
     void setPowerup(Powerup);
     Powerup getCurrentPowerup() const;
-    const PowerupBubbleState getPowerupBubbleState() const;
+    PowerupBubbleState getPowerupBubbleState() const;
 
-  private:
+private:
     State state;
     PowerupBubbleState powerupBubbleState;
     Powerup powerup;

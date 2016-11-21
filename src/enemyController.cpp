@@ -25,10 +25,10 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
             element.getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
             element.getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
             // Get the enemy's shadow
-            std::tuple<framework::Sprite, float, Rendertype, float> shadow;
+            std::tuple<sf::Sprite, float, Rendertype, float> shadow;
             std::get<0>(shadow) = element.getShadow();
             gameShadows.push_back(shadow);
-            std::tuple<framework::Sprite, float, Rendertype, float> tSpr;
+            std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
             std::get<0>(tSpr) = element.getSprite();
             std::get<1>(tSpr) = element.getYpos();
             if (element.colored()) {
@@ -42,7 +42,7 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
     for (auto & element : critters) {
         gameShadows.emplace_back(element.getShadow(), 0.f,
                                  Rendertype::shadeDefault, 0.f);
-        std::tuple<framework::Sprite, float, Rendertype, float> tSpr;
+        std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
         std::get<0>(tSpr) = element.getSprite();
         std::get<1>(tSpr) = element.getYpos() - 16;
         // If the enemy should be colored, let the rendering code know to pass
@@ -236,8 +236,8 @@ void enemyController::addTurret(tileController * pTiles) {
     float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
     float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
     turrets.emplace_back(
-        ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xInit,
-        yInit);
+        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+        xInit, yInit);
     (*pCoordVec)[locationSelect] = pCoordVec->back();
     pCoordVec->pop_back();
 }
@@ -249,9 +249,9 @@ void enemyController::addScoot(tileController * pTiles) {
     float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
     float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
     scoots.emplace_back(
-        ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-        ::resHandlerPtr->getTexture(ResHandler::Texture::scootShadow), xInit,
-        yInit);
+        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+        getgResHandlerPtr()->getTexture(ResHandler::Texture::scootShadow),
+        xInit, yInit);
     (*pCoordVec)[locationSelect] = pCoordVec->back();
     pCoordVec->pop_back();
 }
@@ -263,8 +263,8 @@ void enemyController::addDasher(tileController * pTiles) {
     float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
     float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
     dashers.emplace_back(
-        ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects), xInit,
-        yInit);
+        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+        xInit, yInit);
     (*pCoordVec)[locationSelect] = pCoordVec->back();
     pCoordVec->pop_back();
 }
@@ -275,7 +275,7 @@ void enemyController::addCritter(tileController * pTiles) {
     float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
     float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
     critters.emplace_back(
-        ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
+        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
         pTiles->mapArray, xInit, yInit);
     (*pCoordVec)[locationSelect] = pCoordVec->back();
     pCoordVec->pop_back();

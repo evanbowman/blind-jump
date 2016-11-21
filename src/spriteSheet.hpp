@@ -9,26 +9,26 @@
 #include <SFML/Graphics.hpp>
 
 template <uint16_t x, uint16_t y, uint16_t w, uint16_t h> class SpriteSheet {
-  private:
-    framework::Sprite sprite;
+private:
+    sf::Sprite sprite;
 
-  public:
+public:
     SpriteSheet() {}
 
     SpriteSheet(const sf::Texture & txtr) { setTexture(txtr); }
 
-    const framework::Sprite & operator[](const size_t idx) {
+    const sf::Sprite & operator[](const size_t idx) {
         sprite.setTextureRect(sf::IntRect(x + idx * w, y, w, h));
         return sprite;
     }
 
     const sf::Vector2f & getScale() const { return sprite.getScale(); }
 
-    framework::Sprite * getSpritePtr() { return &sprite; }
+    sf::Sprite * getSpritePtr() { return &sprite; }
 
     void setColor(const sf::Color color) { sprite.setColor(color); }
 
-    const framework::Sprite & getSprite() { return sprite; }
+    const sf::Sprite & getSprite() { return sprite; }
 
     sf::FloatRect getSize() const { return sprite.getLocalBounds(); }
 

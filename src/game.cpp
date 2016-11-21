@@ -44,11 +44,11 @@ void Game::init() {
     stash.setSmooth(true);
     lightingMap.create(viewPort.x, viewPort.y);
     vignetteSprite.setTexture(
-        ::resHandlerPtr->getTexture(ResHandler::Texture::vignette));
+        getgResHandlerPtr()->getTexture(ResHandler::Texture::vignette));
     vignetteShadowSpr.setTexture(
-        ::resHandlerPtr->getTexture(ResHandler::Texture::vignetteShadow));
-    beamGlowSpr.setTexture(
-        ::resHandlerPtr->getTexture(ResHandler::Texture::teleporterBeamGlow));
+        getgResHandlerPtr()->getTexture(ResHandler::Texture::vignetteShadow));
+    beamGlowSpr.setTexture(getgResHandlerPtr()->getTexture(
+        ResHandler::Texture::teleporterBeamGlow));
     vignetteShadowSpr.setColor(sf::Color(255, 255, 255, 100));
     hudView.setSize(viewPort.x, viewPort.y);
     hudView.setCenter(viewPort.x / 2, viewPort.y / 2);
@@ -114,7 +114,7 @@ void Game::draw(sf::RenderWindow & window) {
         static const size_t sprIdx = 0;
         static const size_t shaderIdx = 3;
         sf::Shader & colorShader =
-            ::resHandlerPtr->getShader(ResHandler::Shader::color);
+            getgResHandlerPtr()->getShader(ResHandler::Shader::color);
         for (auto & element : gameObjects) {
             switch (std::get<2>(element)) {
             case Rendertype::shadeDefault:
@@ -157,7 +157,7 @@ void Game::draw(sf::RenderWindow & window) {
             }
         }
         static const sf::Color blendAmount(185, 185, 185);
-        framework::Sprite tempSprite;
+        sf::Sprite tempSprite;
         for (auto & element : glowSprs2) {
             element.setColor(blendAmount);
             lightingMap.draw(element,
@@ -167,7 +167,7 @@ void Game::draw(sf::RenderWindow & window) {
                                  sf::BlendMode::Zero, sf::BlendMode::Add)));
         }
         lightingMap.display();
-        target.draw(framework::Sprite(lightingMap.getTexture()));
+        target.draw(sf::Sprite(lightingMap.getTexture()));
         target.setView(camera.getOverworldView());
         bkg.drawForeground(target);
         target.setView(worldView);
@@ -191,9 +191,9 @@ void Game::draw(sf::RenderWindow & window) {
             window.draw(targetSprite);
         } else {
             sf::Shader & blurShader =
-                ::resHandlerPtr->getShader(ResHandler::Shader::blur);
+                getgResHandlerPtr()->getShader(ResHandler::Shader::blur);
             sf::Shader & desaturateShader =
-                ::resHandlerPtr->getShader(ResHandler::Shader::desaturate);
+                getgResHandlerPtr()->getShader(ResHandler::Shader::desaturate);
             secondPass.clear(sf::Color::Transparent);
             thirdPass.clear(sf::Color::Transparent);
             const sf::Vector2u textureSize = target.getSize();
@@ -201,14 +201,12 @@ void Game::draw(sf::RenderWindow & window) {
             const sf::Glsl::Vec2 vBlur =
                 sf::Glsl::Vec2(0.f, blurAmount / textureSize.y);
             blurShader.setUniform("blur_radius", vBlur);
-            secondPass.draw(framework::Sprite(target.getTexture()),
-                            &blurShader);
+            secondPass.draw(sf::Sprite(target.getTexture()), &blurShader);
             secondPass.display();
             const sf::Glsl::Vec2 hBlur =
                 sf::Glsl::Vec2(blurAmount / textureSize.x, 0.f);
             blurShader.setUniform("blur_radius", hBlur);
-            thirdPass.draw(framework::Sprite(secondPass.getTexture()),
-                           &blurShader);
+            thirdPass.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
             thirdPass.display();
             desaturateShader.setUniform("amount", UI.getDesaturateAmount());
             sf::Sprite targetSprite(thirdPass.getTexture());
@@ -219,7 +217,7 @@ void Game::draw(sf::RenderWindow & window) {
                              UI.getState() == ui::Backend::State::menuScreen) &&
                 !camera.moving()) {
                 stash.clear(sf::Color::Black);
-                stash.draw(framework::Sprite(thirdPass.getTexture()),
+                stash.draw(sf::Sprite(thirdPass.getTexture()),
                            &desaturateShader);
                 stash.display();
                 stashed = true;
@@ -236,15 +234,14 @@ void Game::draw(sf::RenderWindow & window) {
             window.draw(targetSprite);
         } else {
             sf::Shader & blurShader =
-                ::resHandlerPtr->getShader(ResHandler::Shader::blur);
+                getgResHandlerPtr()->getShader(ResHandler::Shader::blur);
             secondPass.clear(sf::Color::Transparent);
             sf::Vector2u textureSize = target.getSize();
             float blurAmount = UI.getBlurAmount();
             const sf::Glsl::Vec2 vBlur =
                 sf::Glsl::Vec2(0.f, blurAmount / textureSize.y);
             blurShader.setUniform("blur_radius", vBlur);
-            secondPass.draw(framework::Sprite(target.getTexture()),
-                            &blurShader);
+            secondPass.draw(sf::Sprite(target.getTexture()), &blurShader);
             secondPass.display();
             const sf::Glsl::Vec2 hBlur =
                 sf::Glsl::Vec2(blurAmount / textureSize.x, 0.f);
@@ -257,8 +254,7 @@ void Game::draw(sf::RenderWindow & window) {
                              UI.getState() == ui::Backend::State::menuScreen) &&
                 !camera.moving()) {
                 stash.clear(sf::Color::Black);
-                stash.draw(framework::Sprite(secondPass.getTexture()),
-                           &blurShader);
+                stash.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
                 stash.display();
                 stashed = true;
                 preload = false;
@@ -266,7 +262,7 @@ void Game::draw(sf::RenderWindow & window) {
         }
     } else if (!UI.blurEnabled() && UI.desaturateEnabled()) {
         sf::Shader & desaturateShader =
-            ::resHandlerPtr->getShader(ResHandler::Shader::desaturate);
+            getgResHandlerPtr()->getShader(ResHandler::Shader::desaturate);
         desaturateShader.setUniform("amount", UI.getDesaturateAmount());
         sf::Sprite targetSprite(target.getTexture());
         window.setView(camera.getWindowView());
@@ -638,18 +634,19 @@ void Game::nextLevel() {
         static const size_t teleporterIdx = 0;
         details.add<teleporterIdx>(
             tiles.posX + c.x * 32 + 2, tiles.posY + c.y * 26 - 4,
-            ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-            ::resHandlerPtr->getTexture(ResHandler::Texture::teleporterGlow));
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture(
+                ResHandler::Texture::teleporterGlow));
         initEnemies(this);
         auto optCoord = pickLocation(tiles.emptyMapLocations);
         if (optCoord) {
             Powerup chestContents = static_cast<Powerup>(rng::random<2, 1>());
             static const size_t chestIdx = 1;
-            details.add<chestIdx>(
-                optCoord.value().x * 32 + tiles.posX,
-                optCoord.value().y * 26 + tiles.posY,
-                ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-                chestContents);
+            details.add<chestIdx>(optCoord.value().x * 32 + tiles.posX,
+                                  optCoord.value().y * 26 + tiles.posY,
+                                  getgResHandlerPtr()->getTexture(
+                                      ResHandler::Texture::gameObjects),
+                                  chestContents);
         }
         if (!rng::random<2>()) {
             static const size_t terminalIdx = 7;
@@ -658,10 +655,11 @@ void Game::nextLevel() {
             const int locationSel = rng::random(vecSize / 3);
             const int xInit = (*pCoordVec)[vecSize - 1 - locationSel].x;
             const int yInit = (*pCoordVec)[vecSize - 1 - locationSel].y;
-            details.add<terminalIdx>(
-                xInit * 32 + tiles.posX, yInit * 26 + tiles.posY,
-                ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-                tiles.mapArray[xInit][yInit]);
+            details.add<terminalIdx>(xInit * 32 + tiles.posX,
+                                     yInit * 26 + tiles.posY,
+                                     getgResHandlerPtr()->getTexture(
+                                         ResHandler::Texture::gameObjects),
+                                     tiles.mapArray[xInit][yInit]);
         }
         glowSprs1.clear();
         glowSprs2.clear();
@@ -677,7 +675,7 @@ void Game::nextLevel() {
                 static const size_t rockIdx = 3;
                 details.add<rockIdx>(tiles.posX + 32 * element.x,
                                      tiles.posY + 26 * element.y - 35,
-                                     ::resHandlerPtr->getTexture(
+                                     getgResHandlerPtr()->getTexture(
                                          ResHandler::Texture::gameObjects));
             }
             detailPositions.clear();
@@ -686,11 +684,12 @@ void Game::nextLevel() {
                              teleporterFootprint);
         const size_t len = detailPositions.size();
         for (size_t i = 0; i < len; i++) {
-            details.add<lampIdx>(
-                tiles.posX + 16 + (detailPositions[i].x * 32),
-                tiles.posY - 3 + (detailPositions[i].y * 26),
-                ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-                ::resHandlerPtr->getTexture(ResHandler::Texture::lamplight));
+            details.add<lampIdx>(tiles.posX + 16 + (detailPositions[i].x * 32),
+                                 tiles.posY - 3 + (detailPositions[i].y * 26),
+                                 getgResHandlerPtr()->getTexture(
+                                     ResHandler::Texture::gameObjects),
+                                 getgResHandlerPtr()->getTexture(
+                                     ResHandler::Texture::lamplight));
         }
         detailPositions.clear();
     } else if (set == tileController::Tileset::intro) {
@@ -699,26 +698,26 @@ void Game::nextLevel() {
         static const size_t teleporterIdx = 0;
         details.add<lampIdx>(
             tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (6 * 26),
-            ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-            ::resHandlerPtr->getTexture(ResHandler::Texture::lamplight));
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::lamplight));
         details.add<lampIdx>(
             tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (0 * 26),
-            ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-            ::resHandlerPtr->getTexture(ResHandler::Texture::lamplight));
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::lamplight));
         details.add<lampIdx>(
             tiles.posX - 180 + 16 + (11 * 32), tiles.posY + 200 - 3 + (11 * 26),
-            ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-            ::resHandlerPtr->getTexture(ResHandler::Texture::lamplight));
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::lamplight));
         details.add<lampIdx>(
             tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 204 + 8 + (-9 * 26),
-            ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-            ::resHandlerPtr->getTexture(ResHandler::Texture::lamplight));
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::lamplight));
         details.add<doorIdx>(
             tiles.posX - 192 + 6 * 32, tiles.posY + 301,
-            ::resHandlerPtr->getTexture(ResHandler::Texture::introWall));
-        framework::Sprite podSpr;
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::introWall));
+        sf::Sprite podSpr;
         podSpr.setTexture(
-            ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects));
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects));
         podSpr.setTextureRect(sf::IntRect(164, 145, 44, 50));
         details.add<podIdx>(tiles.posX + 3 * 32, tiles.posY + 4 + 17 * 26,
                             podSpr);
@@ -728,8 +727,9 @@ void Game::nextLevel() {
         tiles.teleporterLocation.y = initTeleporterLocY;
         details.add<teleporterIdx>(
             tiles.posX - 178 + 8 * 32, tiles.posY + 284 + -7 * 26,
-            ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-            ::resHandlerPtr->getTexture(ResHandler::Texture::teleporterGlow));
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture(
+                ResHandler::Texture::teleporterGlow));
         for (auto it = ::levelZeroWalls.begin(); it != ::levelZeroWalls.end();
              ++it) {
             wall w;

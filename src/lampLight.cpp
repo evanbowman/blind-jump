@@ -19,6 +19,6 @@ void LampLight::update(const sf::Time &) {
     // ...
 }
 
-const framework::Sprite & LampLight::getSprite() const { return lampSprite; }
+const sf::Sprite & LampLight::getSprite() const { return lampSprite; }
 
-const framework::Sprite & LampLight::getGlow() const { return glowSprite; }
+const sf::Sprite & LampLight::getGlow() const { return glowSprite; }

@@ -94,8 +94,7 @@ void ui::Backend::setPowerup(Powerup _powerup) {
 
 Powerup ui::Backend::getCurrentPowerup() const { return powerup; }
 
-const ui::Backend::PowerupBubbleState
-ui::Backend::getPowerupBubbleState() const {
+ui::Backend::PowerupBubbleState ui::Backend::getPowerupBubbleState() const {
     return powerupBubbleState;
 }
 
@@ -329,7 +328,7 @@ void ui::PowerupBubble::init(float scale) {
     bubble.setOutlineColor(sf::Color::White);
     bubble.setPointCount(60);
     powerupSheet.setTexture(
-        ::resHandlerPtr->getTexture(ResHandler::Texture::powerupSheet));
+        getgResHandlerPtr()->getTexture(ResHandler::Texture::powerupSheet));
 }
 
 void ui::PowerupBubble::setFrame(size_t idx) { powerupSheet[idx]; }
@@ -419,7 +418,7 @@ ui::Frontend::Frontend(sf::View fontView, float x, float y)
     coin.setOrigin(coin.getLocalBounds().width / 2,
                    coin.getLocalBounds().height / 2);
     const sf::Font & cornerstone =
-        ::resHandlerPtr->getFont(ResHandler::Font::cornerstone);
+        getgResHandlerPtr()->getFont(ResHandler::Font::cornerstone);
 
     auto initText = [&cornerstone](sf::Text & text, const std::string string,
                                    float size) {

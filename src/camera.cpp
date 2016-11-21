@@ -5,6 +5,8 @@
 
 #include "camera.hpp"
 
+#include "player.hpp"
+
 Camera::Camera(Player * _pTarget, const sf::Vector2f & viewPort,
                const sf::Vector2u & _windowSize)
     : pTarget(_pTarget),

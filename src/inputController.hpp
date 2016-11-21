@@ -12,7 +12,7 @@
 #include "shutdownSignal.hpp"
 
 class InputController {
-  public:
+public:
     InputController();
     void mapJsById();
     bool isFocused() const;
@@ -27,7 +27,7 @@ class InputController {
     void mapKeyboardKey(const sf::Keyboard::Key, const uint8_t);
     void mapJoystickButton(const uint32_t, const uint8_t);
 
-  private:
+private:
     enum {
         indexShoot,
         indexAction,

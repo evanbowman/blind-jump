@@ -13,7 +13,7 @@
 #include <vector>
 
 class Enemy {
-  protected:
+protected:
     bool killFlag, colored;
     float xPos, yPos, colorAmount;
     uint8_t frameIndex, health;
@@ -24,7 +24,7 @@ class Enemy {
     void facePlayer();
     ~Enemy(){};
 
-  public:
+public:
     Enemy(float, float);
     bool getKillFlag() const;
     bool isColored() const;

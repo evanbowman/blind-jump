@@ -11,11 +11,11 @@
 #include <SFML/Graphics.hpp>
 
 class DamagedRobot : public Detail {
-  public:
+public:
     DamagedRobot(float, float, const sf::Texture &);
     void update(const sf::Time &);
-    const framework::Sprite & getSprite() const;
+    const sf::Sprite & getSprite() const;
 
-  private:
+private:
     mutable SpriteSheet<88, 102, 40, 43> robotSheet;
 };

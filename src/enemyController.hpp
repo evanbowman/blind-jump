@@ -23,9 +23,9 @@ class Game;
 class Camera;
 
 class enemyController {
-  private:
+private:
     using drawableVec =
-        std::vector<std::tuple<framework::Sprite, float, Rendertype, float>>;
+        std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
     std::vector<Turret> turrets;
     std::vector<Scoot> scoots;
     std::vector<Dasher> dashers;
@@ -33,7 +33,7 @@ class enemyController {
     float windowW;
     float windowH;
 
-  public:
+public:
     enemyController();
     void update(Game *, bool, const sf::Time &, std::vector<sf::Vector2f> &);
     void draw(drawableVec &, drawableVec &, Camera &);

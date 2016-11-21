@@ -10,11 +10,11 @@
 #include <SFML/Graphics.hpp>
 
 class PlayerShot : public Effect {
-  public:
+public:
     using HBox = framework::HitBox<12, 12, 2, 2>;
     PlayerShot(const sf::Texture &, const sf::Texture &, char, float, float);
-    const framework::Sprite & getSprite();
-    const framework::Sprite & getGlow();
+    const sf::Sprite & getSprite();
+    const sf::Sprite & getGlow();
     void update(const sf::Time &);
     char getDirection();
     bool checkCanPoof();
@@ -22,14 +22,14 @@ class PlayerShot : public Effect {
     void disablePuff();
     const HBox & getHitBox() const;
 
-  private:
+private:
     float xInit, yInit;
     HBox hitBox;
     SpriteSheet<44, 75, 16, 16> spriteSheet; // This could easily be a plain
                                              // sprite, but the memory usage
                                              // would be the same
     SpriteSheet<88, 145, 16, 16> puffSheet;
-    framework::Sprite glow;
+    sf::Sprite glow;
     char direction;
     bool canPoof;
     enum class State { travelling, poof };

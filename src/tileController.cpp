@@ -174,7 +174,7 @@ void createMapImage(const sf::Image & tileImage, uint8_t mapArray[61][61],
 tileController::tileController()
     : posX(-72), posY(-476), windowH(0), windowW(0) {
     transitionLvSpr.setTexture(
-        ::resHandlerPtr->getTexture(ResHandler::Texture::introLevel));
+        getgResHandlerPtr()->getTexture(ResHandler::Texture::introLevel));
     shadow.setFillColor(sf::Color(188, 188, 198, 255));
 }
 
@@ -189,8 +189,8 @@ void tileController::update() {
 }
 
 void tileController::draw(sf::RenderTexture & window,
-                          std::vector<framework::Sprite> * glowSprites,
-                          int level, const sf::View & worldView,
+                          std::vector<sf::Sprite> * glowSprites, int level,
+                          const sf::View & worldView,
                           const sf::View & cameraView) {
     // Clear out the RenderTexture
     rt.setView(cameraView);
@@ -222,8 +222,8 @@ void tileController::draw(sf::RenderTexture & window,
     re.draw(shadow, sf::BlendMultiply);
     re.display();
     // Draw the whole thing to the window
-    window.draw(framework::Sprite(rt.getTexture()));
-    window.draw(framework::Sprite(re.getTexture()));
+    window.draw(sf::Sprite(rt.getTexture()));
+    window.draw(sf::Sprite(re.getTexture()));
 }
 
 // Set the center position according to the window width and height
@@ -253,9 +253,10 @@ void tileController::rebuild(Tileset set) {
         workingSet = 1;
         shadow.setFillColor(sf::Color(188, 188, 198, 255));
         createMapImage(
-            ::resHandlerPtr->getImage(ResHandler::Image::soilTileset), mapArray,
-            mapTexture, ::resHandlerPtr->getImage(ResHandler::Image::grassSet1),
-            ::resHandlerPtr->getImage(ResHandler::Image::grassSet2));
+            getgResHandlerPtr()->getImage(ResHandler::Image::soilTileset),
+            mapArray, mapTexture,
+            getgResHandlerPtr()->getImage(ResHandler::Image::grassSet1),
+            getgResHandlerPtr()->getImage(ResHandler::Image::grassSet2));
         initMapVectors(this);
         mapSprite1.setTexture(mapTexture[0]);
         mapSprite2.setTexture(mapTexture[1]);

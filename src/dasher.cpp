@@ -8,7 +8,7 @@
 #include "player.hpp"
 #include <cmath>
 
-Dasher::Blur::Blur(framework::Sprite * spr, float xInit, float yInit) {
+Dasher::Blur::Blur(sf::Sprite * spr, float xInit, float yInit) {
     this->spr = *spr;
     this->xInit = xInit;
     this->yInit = yInit;
@@ -23,7 +23,7 @@ Dasher::Blur::Blur(framework::Sprite * spr, float xInit, float yInit) {
     this->spr.setPosition(xInit, yInit);
 }
 
-framework::Sprite * Dasher::Blur::getSprite() { return &spr; }
+sf::Sprite * Dasher::Blur::getSprite() { return &spr; }
 
 void Dasher::Blur::update(const sf::Time & elapsedTime) {
     timer += elapsedTime.asMilliseconds();
@@ -55,7 +55,7 @@ Dasher::Dasher(const sf::Texture & mainTxtr, float _xPos, float _yPos)
     hitBox.setPosition(xPos, yPos);
 }
 
-const framework::Sprite & Dasher::getSprite() const {
+const sf::Sprite & Dasher::getSprite() const {
     switch (state) {
     case State::dying:
         return deathSheet[frameIndex];
@@ -68,7 +68,7 @@ const framework::Sprite & Dasher::getSprite() const {
     }
 }
 
-const framework::Sprite & Dasher::getShadow() const { return shadow; }
+const sf::Sprite & Dasher::getShadow() const { return shadow; }
 
 void Dasher::update(const Player * player, const std::vector<wall> & walls,
                     EffectGroup & effects, const sf::Time & elapsedTime) {
@@ -141,23 +141,25 @@ void Dasher::update(const Player * player, const std::vector<wall> & walls,
             frameTimer -= 80;
             shotCount++;
             if (xPos > player->getXpos()) {
-                effects.add<0>(::resHandlerPtr->getTexture(
+                effects.add<0>(getgResHandlerPtr()->getTexture(
                                    ResHandler::Texture::gameObjects),
                                xPos - 14, yPos + 2);
                 effects.add<7>(
-                    ::resHandlerPtr->getTexture(
+                    getgResHandlerPtr()->getTexture(
                         ResHandler::Texture::gameObjects),
-                    ::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
+                    getgResHandlerPtr()->getTexture(
+                        ResHandler::Texture::redglow),
                     xPos - 12, yPos,
                     angleFunction(target.x + 8, target.y + 8, xPos, yPos));
             } else {
-                effects.add<0>(::resHandlerPtr->getTexture(
+                effects.add<0>(getgResHandlerPtr()->getTexture(
                                    ResHandler::Texture::gameObjects),
                                xPos + 6, yPos + 2);
                 effects.add<7>(
-                    ::resHandlerPtr->getTexture(
+                    getgResHandlerPtr()->getTexture(
                         ResHandler::Texture::gameObjects),
-                    ::resHandlerPtr->getTexture(ResHandler::Texture::redglow),
+                    getgResHandlerPtr()->getTexture(
+                        ResHandler::Texture::redglow),
                     xPos + 4, yPos,
                     angleFunction(target.x, target.y + 8, xPos, yPos));
             }
@@ -278,18 +280,18 @@ void Dasher::onDeath(EffectGroup & effects) {
     unsigned long int temp = rng::random<4>();
     if (temp == 0) {
         effects.add<4>(
-            ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-            ::resHandlerPtr->getTexture(ResHandler::Texture::redglow), xPos,
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow), xPos,
             yPos + 4, Item::Type::Heart);
     } else {
         effects.add<5>(
-            ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-            ::resHandlerPtr->getTexture(ResHandler::Texture::blueglow), xPos,
-            yPos + 4, Item::Type::Coin);
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
+            xPos, yPos + 4, Item::Type::Coin);
     }
     effects.add<1>(
-        ::resHandlerPtr->getTexture(ResHandler::Texture::gameObjects),
-        ::resHandlerPtr->getTexture(ResHandler::Texture::fireExplosionGlow),
+        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+        getgResHandlerPtr()->getTexture(ResHandler::Texture::fireExplosionGlow),
         xPos, yPos - 2);
     blurEffects.clear();
 }

@@ -23,9 +23,9 @@
 class Game;
 
 class Player {
-  public:
+public:
     using drawableVec =
-        std::vector<std::tuple<framework::Sprite, float, Rendertype, float>>;
+        std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
     using Health = int8_t;
     using HBox = framework::HitBox<8, 16, 12, 12>;
     enum class Sheet {
@@ -70,12 +70,12 @@ class Player {
     void setHealth(Health);
     const HBox & getHitBox() const;
     const Weapon & getGun() const;
-    const float getXVelocity() const;
-    const float getYVeclocty() const;
+    float getXVelocity() const;
+    float getYVeclocty() const;
     sf::Vector2f requestFuturePos(const uint32_t) const;
     sf::Vector2f getPosition() const;
 
-  private:
+private:
     void init();
     HBox hitBox;
     void updateGun(const sf::Time &, const bool, EffectGroup &,
@@ -91,7 +91,7 @@ class Player {
     uint8_t frameIndex;
     Sheet sheetIndex, cachedSheet;
     float lSpeed, rSpeed, uSpeed, dSpeed;
-    framework::Sprite shadowSprite;
+    sf::Sprite shadowSprite;
     SpriteSheet<400, 108, 32, 32> walkDown;
     SpriteSheet<208, 108, 32, 32> walkUp;
     SpriteSheet<208, 76, 32, 32> walkLeft;

@@ -8,11 +8,11 @@
 #include "detailParent.hpp"
 
 class GeneralDetail : public Detail {
-  public:
-    GeneralDetail(float, float, framework::Sprite &);
-    const framework::Sprite & getSprite() const;
+public:
+    GeneralDetail(float, float, sf::Sprite &);
+    const sf::Sprite & getSprite() const;
     void update(const sf::Time & elapsedTime);
 
-  private:
-    framework::Sprite spr;
+private:
+    sf::Sprite spr;
 };
