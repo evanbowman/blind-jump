@@ -698,7 +698,6 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey,
         } else if (gun.timeout < 1671000) {
             gun.timeout = 1671000;
             if (gun.bulletTimer == 0) {
-                // sounds.play(ResHandler::Sound::gunShot);
                 effects.add<9>(getgResHandlerPtr()->getTexture(
                                    ResHandler::Texture::gameObjects),
                                getgResHandlerPtr()->getTexture(
@@ -707,6 +706,7 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey,
                 if (UI.getCurrentPowerup() == Powerup::rapidFire) {
                     gun.bulletTimer = 220000;
                 } else {
+                    sounds.play(ResHandler::Sound::gunShot);
                     gun.bulletTimer = 440000;
                 }
             }
