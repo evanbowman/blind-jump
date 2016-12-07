@@ -34,15 +34,13 @@ public:
         bkgStarsFar,
         bkgOrbit,
         introLevelMask,
-        powerupSheet
+        powerupSheet,
+        count
     };
-    enum class Shader { color, blur, desaturate };
-    enum class Font { cornerstone };
-    enum class Image { soilTileset, grassSet1, grassSet2, icon };
-    enum class Sound { gunShot };
-    enum class Music {
-        // TODO...
-    };
+    enum class Shader { color, blur, desaturate, count };
+    enum class Font { cornerstone, count };
+    enum class Image { soilTileset, grassSet1, grassSet2, icon, count };
+    enum class Sound { gunShot, click, count };
     const sf::Texture & getTexture(ResHandler::Texture) const;
     const sf::Texture & getTexture(int) const;
     const sf::Font & getFont(ResHandler::Font) const;
@@ -53,18 +51,16 @@ public:
     void load();
 
 private:
-    enum resrcCnts {
-        numTextures = 18,
-        numShaders = 3,
-        numFonts = 1,
-        numImages = 4,
-        numSounds = 1
-    };
-    mutable std::array<sf::Shader, numShaders> shaders;
-    std::array<sf::Texture, numTextures> textures;
-    std::array<sf::Font, numFonts> fonts;
-    std::array<sf::Image, numImages> images;
-    std::array<sf::SoundBuffer, numSounds> sounds;
+    mutable std::array<sf::Shader, static_cast<int>(Shader::count)> shaders;
+    std::array<sf::Texture, static_cast<int>(Texture::count)> textures;
+    std::array<sf::Font, static_cast<int>(Font::count)> fonts;
+    std::array<sf::Image, static_cast<int>(Image::count)> images;
+    std::array<sf::SoundBuffer, static_cast<int>(Sound::count)> sounds;
+    void loadShaders(const std::string &);
+    void loadTextures(const std::string &);
+    void loadFonts(const std::string &);
+    void loadImages(const std::string &);
+    void loadSounds(const std::string &);
 };
 
 void setgResHandlerPtr(ResHandler *);

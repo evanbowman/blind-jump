@@ -18,7 +18,6 @@ public:
     // require graphics and sound related stuff to happen on the main
     // thread, it may not be necessary, but just to be safe...
     void poll();
-    void play(ResHandler::Music);
     void play(ResHandler::Sound);
 
 private:

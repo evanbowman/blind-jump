@@ -31,6 +31,20 @@ void ResHandler::load() {
     assert(!hasResources);
     hasResources = true;
     const std::string resPath = resourcePath();
+    loadShaders(resPath);
+    loadTextures(resPath);
+    loadFonts(resPath);
+    loadImages(resPath);
+    loadSounds(resPath);
+}
+
+void ResHandler::loadShaders(const std::string & resPath) {
+    loadResource(resPath + "desaturate.frag", Shader::desaturate, shaders);
+    loadResource(resPath + "color.frag", Shader::color, shaders);
+    loadResource(resPath + "blur.frag", Shader::blur, shaders);
+}
+
+void ResHandler::loadTextures(const std::string & resPath) {
     loadResource(resPath + "teleporterBeamGlow.png",
                  Texture::teleporterBeamGlow, textures);
     loadResource(resPath + "fireExplosionGlow.png", Texture::fireExplosionGlow,
@@ -56,14 +70,20 @@ void ResHandler::load() {
     loadResource(resPath + "lampLight.png", Texture::lamplight, textures);
     loadResource(resPath + "introWall.png", Texture::introWall, textures);
     loadResource(resPath + "bkg_orbit2.png", Texture::bkgOrbit, textures);
-    loadResource(resPath + "desaturate.frag", Shader::desaturate, shaders);
-    loadResource(resPath + "color.frag", Shader::color, shaders);
-    loadResource(resPath + "blur.frag", Shader::blur, shaders);
+}
+
+void ResHandler::loadFonts(const std::string & resPath) {
     loadResource(resPath + "Cornerstone.ttf", Font::cornerstone, fonts);
+}
+
+void ResHandler::loadImages(const std::string & resPath) {
     loadResource(resPath + "soilTileset.png", Image::soilTileset, images);
     loadResource(resPath + "grassSetEdge.png", Image::grassSet2, images);
     loadResource(resPath + "grassSet.png", Image::grassSet1, images);
-    loadResource(resPath + "gameIcon.png", Image::icon, images);
+    loadResource(resPath + "gameIcon.png", Image::icon, images);    
+}
+
+void ResHandler::loadSounds(const std::string & resPath) {
     loadResource(resPath + "gunshot.ogg", Sound::gunShot, sounds);
 }
 
