@@ -12,7 +12,7 @@ DamagedRobot::DamagedRobot(float _xInit, float _yInit,
     robotSheet.setPosition(position.x, position.y);
 }
 
-void DamagedRobot::update(const sf::Time &) {
+void DamagedRobot::update(const sf::Time &, Game *) {
     // ...
 }
 

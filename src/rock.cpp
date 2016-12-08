@@ -16,7 +16,7 @@ Rock::Rock(float _xPos, float _yPos, const sf::Texture & inpTxtr)
     rockSheet.setPosition(position.x, position.y);
 }
 
-void Rock::update(const sf::Time &) {
+void Rock::update(const sf::Time &, Game *) {
     // nil
 }
 

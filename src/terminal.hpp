@@ -5,6 +5,8 @@
 #include "rng.hpp"
 #include "spriteSheet.hpp"
 
+class Game;
+
 class Terminal : public Detail {
 public:
     enum class State { dormant, wakeup, awake, poweroff };
@@ -13,7 +15,7 @@ public:
     const sf::Sprite & getShadow() const;
     const sf::Sprite & getScreen() const;
     const sf::Sprite & getGlow() const;
-    void update(const sf::Time &);
+    void update(const sf::Time &, Game *);
     void setState(const State);
     const State getState() const;
 

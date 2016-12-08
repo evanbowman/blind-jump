@@ -81,8 +81,10 @@ private:
     void updateGun(const sf::Time &, const bool, EffectGroup &,
                    SoundController &, ui::Backend &);
     Weapon gun;
-    void checkEffectCollisions(EffectGroup &, ui::Frontend *);
-    void checkEnemyCollisions(enemyController &, ui::Frontend *);
+    void checkEffectCollisions(EffectGroup &, ui::Frontend *,
+                               SoundController &);
+    void checkEnemyCollisions(enemyController &, ui::Frontend *,
+                              SoundController &);
     std::vector<Dasher::Blur> blurs; // TODO: Move blur subclass out of Dasher,
                                      // and into its own file...
     Health health;

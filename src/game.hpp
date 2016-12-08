@@ -48,6 +48,7 @@ public:
     tileController & getTileController();
     Player & getPlayer();
     EffectGroup & getEffects();
+    SoundController & getSounds();
     InputController * getPInput();
     ui::Backend & getUI();
     ui::Frontend * getPUIFrontend();

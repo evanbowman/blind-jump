@@ -8,13 +8,15 @@
 #include "detailParent.hpp"
 #include "effectsController.hpp"
 
+class Game;
+
 class Teleporter : public Detail {
 public:
     Teleporter(float, float, const sf::Texture &, const sf::Texture &);
     const sf::Sprite & getShadow() const;
     const sf::Sprite & getSprite() const;
     bool smokeReady();
-    void update(const sf::Time &);
+    void update(const sf::Time &, Game *);
     const sf::Sprite & getGlow() const;
 
 private:

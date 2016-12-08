@@ -16,8 +16,10 @@ void loadResource(const std::string & str, E id, T & array) {
 }
 
 template <>
-void loadResource(const std::string & str, ResHandler::Shader id,
-                  std::array<sf::Shader, 3> & shaders) {
+void loadResource(
+    const std::string & str, ResHandler::Shader id,
+    std::array<sf::Shader, static_cast<int>(ResHandler::Shader::count)> &
+        shaders) {
     size_t index = static_cast<int>(id);
     if (!shaders[index].loadFromFile(str, sf::Shader::Fragment)) {
         throw std::runtime_error(LOAD_FAILURE_MSG);
@@ -80,11 +82,14 @@ void ResHandler::loadImages(const std::string & resPath) {
     loadResource(resPath + "soilTileset.png", Image::soilTileset, images);
     loadResource(resPath + "grassSetEdge.png", Image::grassSet2, images);
     loadResource(resPath + "grassSet.png", Image::grassSet1, images);
-    loadResource(resPath + "gameIcon.png", Image::icon, images);    
+    loadResource(resPath + "gameIcon.png", Image::icon, images);
 }
 
 void ResHandler::loadSounds(const std::string & resPath) {
     loadResource(resPath + "gunshot.ogg", Sound::gunShot, sounds);
+    loadResource(resPath + "creak.wav", Sound::creak, sounds);
+    loadResource(resPath + "bite-small.wav", Sound::bite1, sounds);
+    loadResource(resPath + "bite-small3.wav", Sound::bite2, sounds);
 }
 
 const sf::Image & ResHandler::getImage(Image id) const {

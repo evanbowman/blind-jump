@@ -11,6 +11,8 @@
 
 class ScreenShakeController;
 
+class Game;
+
 class IntroDoor : public Detail {
 private:
     enum class State { dormant, opening, opened };
@@ -20,7 +22,7 @@ private:
     // State state;
 
 public:
-    void update(const sf::Time &);
+    void update(const sf::Time &, Game *);
     IntroDoor(float, float, const sf::Texture &);
     const sf::Sprite & getSprite() const;
 };

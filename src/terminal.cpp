@@ -29,7 +29,7 @@ void Terminal::setState(const Terminal::State _state) { state = _state; }
 
 const Terminal::State Terminal::getState() const { return state; }
 
-void Terminal::update(const sf::Time & elapsedTime) {
+void Terminal::update(const sf::Time & elapsedTime, Game *) {
     animationTimer += elapsedTime.asMicroseconds();
     if (state != State::dormant) {
         static const int FLICKER_FREQUENCY = 30000;

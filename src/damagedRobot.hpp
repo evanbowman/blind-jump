@@ -10,10 +10,12 @@
 #include "spriteSheet.hpp"
 #include <SFML/Graphics.hpp>
 
+class Game;
+
 class DamagedRobot : public Detail {
 public:
     DamagedRobot(float, float, const sf::Texture &);
-    void update(const sf::Time &);
+    void update(const sf::Time &, Game *);
     const sf::Sprite & getSprite() const;
 
 private:

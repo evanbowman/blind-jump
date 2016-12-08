@@ -18,6 +18,6 @@ const sf::Sprite & IntroDoor::getSprite() const {
     return doorSheet[frameIndex];
 }
 
-void IntroDoor::update(const sf::Time &) {
+void IntroDoor::update(const sf::Time &, Game *) {
     // ...
 }

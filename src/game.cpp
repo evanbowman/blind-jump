@@ -309,24 +309,32 @@ void Game::update(const sf::Time & elapsedTime) {
             bkg.setOffset(0, 0);
         }
         tiles.update();
-        const auto groupUpdatePolicy = [&elapsedTime](auto & vec) {
-            for (auto it = vec.begin(); it != vec.end();) {
-                if (it->getKillFlag()) {
-                    it = vec.erase(it);
-                } else {
-                    it->update(elapsedTime);
-                    ++it;
+        details.apply([&elapsedTime, this](auto & vec) {
+                for (auto it = vec.begin(); it != vec.end();) {
+                    if (it->getKillFlag()) {
+                        it = vec.erase(it);
+                    } else {
+                        it->update(elapsedTime, this);
+                        ++it;
+                    }
                 }
-            }
-        };
-        details.apply(groupUpdatePolicy);
+            });
         std::vector<sf::Vector2f> cameraTargets;
         en.update(this, !UI.isOpen(), elapsedTime, cameraTargets);
         camera.update(elapsedTime, cameraTargets);
         if (player.visible)
             player.update(this, elapsedTime, sounds);
         if (!UI.isOpen()) {
-            effectGroup.apply(groupUpdatePolicy);
+            effectGroup.apply([&elapsedTime](auto & vec) {
+                    for (auto it = vec.begin(); it != vec.end();) {
+                        if (it->getKillFlag()) {
+                            it = vec.erase(it);
+                        } else {
+                            it->update(elapsedTime);
+                            ++it;
+                        }
+                    }
+                });
         }
     }
     {
@@ -757,6 +765,8 @@ InputController * Game::getPInput() { return pInput; }
 ui::Backend & Game::getUI() { return UI; }
 
 ui::Frontend * Game::getPUIFrontend() { return pUiFrontend; }
+
+SoundController & Game::getSounds() { return sounds; }
 
 int Game::getLevel() { return level; }
 

@@ -156,13 +156,13 @@ void setSpeed(bool key1, bool key2, bool key3, bool collision, float & speed) {
     }
 }
 
-void Player::update(Game * pGM, const sf::Time & elapsedTime,
+void Player::update(Game * pGame, const sf::Time & elapsedTime,
                     SoundController & sounds) {
-    InputController * pInput(pGM->getPInput());
-    tileController & tiles(pGM->getTileController());
-    DetailGroup & details(pGM->getDetails());
-    EffectGroup & effects(pGM->getEffects());
-    ui::Frontend * pUiFrontend(pGM->getPUIFrontend());
+    InputController * pInput(pGame->getPInput());
+    tileController & tiles(pGame->getTileController());
+    DetailGroup & details(pGame->getDetails());
+    EffectGroup & effects(pGame->getEffects());
+    ui::Frontend * pUiFrontend(pGame->getPUIFrontend());
     bool shoot(pInput->shootPressed());
     bool action(pInput->actionPressed());
     bool up(pInput->upPressed());
@@ -203,7 +203,7 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime,
         break;
 
     case State::nominal:
-        updateGun(elapsedTime, shoot, effects, sounds, pGM->getUI());
+        updateGun(elapsedTime, shoot, effects, sounds, pGame->getUI());
         if (!shoot) {
             regKeyResponse<Sheet::walkUp>(up, down, left, right, sheetIndex,
                                           uSpeed, collisionUp);
@@ -301,8 +301,8 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime,
                     chest.getState() == TreasureChest::State::closed &&
                     action) {
                     util::sleep(milliseconds(40));
+                    pGame->getSounds().play(ResHandler::Sound::creak);
                     chest.setState(TreasureChest::State::opening);
-                    pGM->getUI().setPowerup(chest.getPowerup());
                 }
             }
         }
@@ -432,9 +432,9 @@ void Player::update(Game * pGM, const sf::Time & elapsedTime,
     }
     updateColor(elapsedTime);
     if (health > 0 && state != Player::State::deactivated) {
-        checkEffectCollisions(effects, pUiFrontend);
-        enemyController & enemies = pGM->getEnemyController();
-        checkEnemyCollisions(enemies, pUiFrontend);
+        checkEffectCollisions(effects, pUiFrontend, sounds);
+        enemyController & enemies = pGame->getEnemyController();
+        checkEnemyCollisions(enemies, pUiFrontend, sounds);
     }
     if (health <= 0 && state != Player::State::dead) {
         state = Player::State::dead;
@@ -726,7 +726,8 @@ void checkEffectCollision(EffectGroup & effects, Player * pPlayer,
 }
 
 void Player::checkEffectCollisions(EffectGroup & effects,
-                                   ui::Frontend * pUiFrontend) {
+                                   ui::Frontend * pUiFrontend,
+                                   SoundController & sounds) {
     auto hitPolicy = [&]() {
         if (colorAmount == 0.f) {
             health -= 1;
@@ -780,22 +781,36 @@ void checkEnemyCollision(const std::vector<Dasher> & dashers, Player * pPlayer,
 }
 
 void Player::checkEnemyCollisions(enemyController & enemies,
-                                  ui::Frontend * pUiFrontend) {
+                                  ui::Frontend * pUiFrontend,
+                                  SoundController & sounds) {
     auto collisionPolicy = [&]() {
-        if (colorAmount == 0.f) {
-            health -= 1;
-            pUiFrontend->updateHealth(health);
-            renderType = Rendertype::shadeGldnGt;
-            colorAmount = 1.f;
-            colorTimer = 0;
-            util::sleep(milliseconds(40));
-        }
+        health -= 1;
+        pUiFrontend->updateHealth(health);
+        renderType = Rendertype::shadeGldnGt;
+        colorAmount = 1.f;
+        colorTimer = 0;
+        util::sleep(milliseconds(40));
     };
-    checkEnemyCollision(enemies.getCritters(), this, collisionPolicy);
-    checkEnemyCollision(enemies.getDashers(), this, collisionPolicy);
-    // TODO: why is this buggy? checkEnemyCollision(enemies.getTurrets(), this,
-    // collisionPolicy);
-    checkEnemyCollision(enemies.getScoots(), this, collisionPolicy);
+    checkEnemyCollision(enemies.getCritters(), this, [&] {
+            if (colorAmount == 0.f) {
+                collisionPolicy();
+                if (rng::random<1>()) {
+                    sounds.play(ResHandler::Sound::bite1);
+                } else {
+                    sounds.play(ResHandler::Sound::bite2);
+                }
+            }
+        });
+    checkEnemyCollision(enemies.getDashers(), this, [&] {
+            if (colorAmount == 0.f) {
+                collisionPolicy();
+            }
+        });
+    checkEnemyCollision(enemies.getScoots(), this, [&] {
+            if (colorAmount == 0.f) {
+                collisionPolicy();
+            }
+        });
 }
 
 const Player::HBox & Player::getHitBox() const { return hitBox; }

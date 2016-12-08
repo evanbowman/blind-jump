@@ -15,7 +15,7 @@ LampLight::LampLight(float _xInit, float _yInit, const sf::Texture & txtr,
     glowSprite.setPosition(position.x - 250 + 16, position.y - 250 + 16);
 }
 
-void LampLight::update(const sf::Time &) {
+void LampLight::update(const sf::Time &, Game *) {
     // ...
 }
 

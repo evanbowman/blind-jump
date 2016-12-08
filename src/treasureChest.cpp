@@ -4,6 +4,7 @@
 //========================================================================//
 
 #include "treasureChest.hpp"
+#include "game.hpp"
 #include <cmath>
 
 TreasureChest::TreasureChest(float _xInit, float _yInit,
@@ -25,7 +26,7 @@ const sf::Sprite & TreasureChest::getSprite() const {
     return chestSheet[frameIndex];
 }
 
-void TreasureChest::update(const sf::Time & elapsedTime) {
+void TreasureChest::update(const sf::Time & elapsedTime, Game * pGame) {
     switch (state) {
     case State::opening:
         animationTimer += elapsedTime.asMicroseconds();
@@ -37,6 +38,12 @@ void TreasureChest::update(const sf::Time & elapsedTime) {
                 state = State::ready;
             }
         }
+        break;
+
+    case State::ready:
+        // TODO: play reward sound
+        pGame->getUI().setPowerup(powerup);
+        state = State::complete;
         break;
 
     default:

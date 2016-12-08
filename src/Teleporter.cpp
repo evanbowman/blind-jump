@@ -28,7 +28,7 @@ const sf::Sprite & Teleporter::getSprite() const {
     return TeleporterSprites[0];
 }
 
-void Teleporter::update(const sf::Time &) {
+void Teleporter::update(const sf::Time &, Game *) {
     // nil
 }
 

@@ -10,12 +10,14 @@
 #include "spriteSheet.hpp"
 #include <SFML/Graphics.hpp>
 
+class Game;
+
 class Rock : public Detail {
 private:
     mutable SpriteSheet<80, 38, 32, 64> rockSheet;
 
 public:
-    void update(const sf::Time &);
+    void update(const sf::Time &, Game *);
     Rock(float, float, const sf::Texture &);
     const sf::Sprite & getSprite() const;
 };
