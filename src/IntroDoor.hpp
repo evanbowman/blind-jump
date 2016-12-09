@@ -11,17 +11,9 @@
 
 namespace detail {
     template <typename DrawPolicy>
-    class IntroDoor : private DrawPolicy, public framework::Object {
-    private:
-        enum class State { dormant, opening, opened };
-        mutable SpriteSheet<0, 0, 200, 95> doorSheet;
-        uint8_t frameIndex;
-
+    class IntroDoor : public Drawable<IntroDoor<DrawPolicy>, DrawPolicy>, public framework::Object {
     public:
         static const int drawOffset = 60;
-        void draw(GfxContext & gfxContext, const sf::View & view) {
-            DrawPolicy::draw(*this, gfxContext, view);
-        }
         template <typename Game>
         void update(const sf::Time &, Game *) {}
         IntroDoor(float _xInit, float _yInit, const sf::Texture & inpTxtr)
@@ -31,5 +23,10 @@ namespace detail {
         const sf::Sprite & getSprite() const {
             return doorSheet[frameIndex];
         }
+        
+    private:
+        enum class State { dormant, opening, opened };
+        mutable SpriteSheet<0, 0, 200, 95> doorSheet;
+        uint8_t frameIndex;
     };
 }

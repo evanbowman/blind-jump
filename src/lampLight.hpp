@@ -9,12 +9,9 @@
 
 namespace detail {
     template <typename DrawPolicy>
-    class Lamp : private DrawPolicy, public framework::Object {
+    class Lamp : public Drawable<Lamp<DrawPolicy>, DrawPolicy>, public framework::Object {
     public:
         static const int drawOffset = 0;
-        void draw(GfxContext & gfxContext, const sf::View & view) {
-            DrawPolicy::draw(*this, gfxContext, view);
-        }
         Lamp(float _xInit, float _yInit, const sf::Texture & txtr,
                   const sf::Texture & glwTxtr)
             : Object(_xInit, _yInit) {

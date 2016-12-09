@@ -5,23 +5,11 @@
 #include "rng.hpp"
 #include "spriteSheet.hpp"
 
-// // Terminal draws specifically, the default draw policies do not apply
-// struct TerminalDraw {
-//     template <typename Base>
-//     void draw(Base b, GfxContext & gfx, const sf::View & view) {
-//         if (isWithinView(b, view)) {
-//         }
-//     }
-// };
-
 namespace detail {
     template <typename DrawPolicy>
-    class Terminal : private DrawPolicy, public framework::Object {
+    class Terminal : public Drawable<Terminal<DrawPolicy>, DrawPolicy>, public framework::Object {
     public:
         static const int drawOffset = 0;
-        void draw(GfxContext & gfxContext, const sf::View & view) {
-           DrawPolicy::draw(*this, gfxContext, view);
-        }
         enum class State { dormant, wakeup, awake, poweroff };
         Terminal(const float _xInit, const float _yInit,
                  const sf::Texture & mainTxtr, const uint8_t tile)

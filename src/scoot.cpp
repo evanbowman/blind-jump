@@ -83,10 +83,10 @@ void Scoot::update(const Player * player, const std::vector<wall> & w,
 
     case State::shoot: {
         const sf::Vector2f playerPos = player->getPosition();
-        effects.add<0>(
+        effects.add<EffectRef::TurretFlashEffect>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             xPos - 8, yPos - 12);
-        effects.add<8>(
+        effects.add<EffectRef::TurretShot>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
             xPos - 8, yPos - 12,
@@ -155,17 +155,17 @@ const sf::Sprite & Scoot::getShadow() const { return shadow; }
 void Scoot::onDeath(EffectGroup & effects) {
     int select = rng::random<5>();
     if (select == 0) {
-        effects.add<4>(
+        effects.add<EffectRef::Heart>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow), xPos,
             yPos + 4, Item::Type::Heart);
     } else {
-        effects.add<5>(
+        effects.add<EffectRef::Coin>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
             xPos, yPos + 4, Item::Type::Coin);
     }
-    effects.add<2>(
+    effects.add<EffectRef::FireExplosion>(
         getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
         getgResHandlerPtr()->getTexture(ResHandler::Texture::fireExplosionGlow),
         xPos, yPos - 2);

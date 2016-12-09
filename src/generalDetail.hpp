@@ -9,7 +9,7 @@
 
 namespace detail {
     template <typename DrawPolicy>
-    class StaticDrawable : private DrawPolicy, public framework::Object {
+    class StaticDrawable : public Drawable<StaticDrawable<DrawPolicy>, DrawPolicy>, public framework::Object {
     public:
         static const int drawOffset = 0;
         StaticDrawable(float xInit, float yInit, sf::Sprite & _spr) : Object(xInit, yInit) {
@@ -21,9 +21,6 @@ namespace detail {
         }
         template <typename Game>
         void update(const sf::Time & elapsedTime, Game *) {}
-        void draw(GfxContext & gfxContext, const sf::View & view) {
-            DrawPolicy::draw(*this, gfxContext, view);
-        }
         
     private:
         sf::Sprite spr;

@@ -86,16 +86,16 @@ void Game::draw(sf::RenderWindow & window) {
             const sf::Vector2f viewCenter =
                 camera.getOverworldView().getCenter();
             const sf::Vector2f viewSize = camera.getOverworldView().getSize();
-            detailGroup.apply([this](auto & vec) {
-                    for (auto it = vec.begin(); it != vec.end(); ++it) {
-                        it->draw(gfxContext, camera.getOverworldView());
-                    }
-                });
+            auto drawPolicy = [this](auto & vec) {
+                for (auto it = vec.begin(); it != vec.end(); ++it) {
+                    it->draw(gfxContext, camera.getOverworldView());
+                }
+            };
+            detailGroup.apply(drawPolicy);
             if (player.visible) {
                 player.draw(gfxContext.faces, gfxContext.shadows);
             }
-            drawGroup(effectGroup, gfxContext.faces, gfxContext.glowSprs1, viewCenter,
-                      viewSize);
+            effectGroup.apply(drawPolicy);
             en.draw(gfxContext.faces, gfxContext.shadows, camera);
             sounds.poll();
         }

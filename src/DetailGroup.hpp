@@ -22,8 +22,8 @@
 #include "GfxContext.hpp"
 
 using TreasureChest = detail::TreasureChest<RenderPolicy<DrawMain, DrawShadow>>;
-using Teleporter = detail::Teleporter<RenderPolicy<ForceShadow, ForceMain, DrawGlow>>;
-using Lamp = detail::Lamp<RenderPolicy<ForceMain, DrawGlow>>;
+using Teleporter = detail::Teleporter<RenderPolicy<ForceShadow, ForceMain, DrawGlowAll>>;
+using Lamp = detail::Lamp<RenderPolicy<ForceMain, DrawGlowAll>>;
 using Rock = detail::Rock<RenderPolicy<DrawMain>>;
 using IntroDoor = detail::IntroDoor<RenderPolicy<DrawMain>>;
 using StaticDrawable = detail::StaticDrawable<RenderPolicy<DrawMain>>;
@@ -37,7 +37,8 @@ struct DetailRef {
         Rock,
         IntroDoor,
         StaticDrawable,
-        Terminal
+        Terminal,
+        Count
     };
 };
 

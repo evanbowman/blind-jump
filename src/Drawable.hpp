@@ -34,6 +34,16 @@ struct ForceShadow {
     }
 };
 
+struct DrawMainRaw {
+    using value_type = int;
+    template <typename CallerType>
+    void run(CallerType & ct, GfxContext & gfx) {
+        gfx.faces.emplace_back(ct.getSprite(),
+                               ct.getPosition().y + CallerType::drawOffset,
+                               Rendertype::shadeNone, 0.f);
+    }
+};
+
 struct DrawMain {
     using value_type = int;
     template <typename CallerType>
@@ -53,7 +63,15 @@ struct DrawShadow {
     }
 };
 
-struct DrawGlow {
+struct DrawGlowFloor {
+    using value_type = int;
+    template <typename CallerType>
+    void run(CallerType & ct, GfxContext & gfx) {
+        gfx.glowSprs1.push_back(ct.getGlow());
+    }
+};
+
+struct DrawGlowAll {
     using value_type = int;
     template <typename CallerType>
     void run(CallerType & ct, GfxContext & gfx) {
@@ -86,4 +104,12 @@ struct RenderPolicy : public Wrapper<Args>... {
 	}
 	template <typename CallerType, typename... Ts>
 	auto call(const CallerType &, GfxContext &) -> typename std::enable_if<sizeof...(Ts) == 0>::type {}
+};
+
+template <typename Base, typename DrawPolicy>
+class Drawable : private DrawPolicy {
+ public:
+    void draw(GfxContext & gfxContext, const sf::View & view) {
+        DrawPolicy::draw(*static_cast<Base *>(this), gfxContext, view);
+    }
 };

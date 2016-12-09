@@ -152,17 +152,17 @@ void Critter::onDeath(EffectGroup & effects) {
     // With some random chance, add a heart item to the map
     unsigned long int temp = rng::random<5>();
     if (temp == 0) {
-        effects.add<4>(
+        effects.add<EffectRef::Heart>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
             xInit + 10, yInit, Item::Type::Heart);
     } else {
-        effects.add<5>(
+        effects.add<EffectRef::Coin>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
             xInit + 10, yInit, Item::Type::Coin);
     }
-    effects.add<1>(
+    effects.add<EffectRef::SmallExplosion>(
         getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
         getgResHandlerPtr()->getTexture(ResHandler::Texture::fireExplosionGlow),
         xInit + 8, yInit);

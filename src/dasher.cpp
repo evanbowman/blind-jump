@@ -141,10 +141,10 @@ void Dasher::update(const Player * player, const std::vector<wall> & walls,
             frameTimer -= 80;
             shotCount++;
             if (xPos > player->getXpos()) {
-                effects.add<0>(getgResHandlerPtr()->getTexture(
+                effects.add<EffectRef::TurretFlashEffect>(getgResHandlerPtr()->getTexture(
                                    ResHandler::Texture::gameObjects),
                                xPos - 14, yPos + 2);
-                effects.add<7>(
+                effects.add<EffectRef::DasherShot>(
                     getgResHandlerPtr()->getTexture(
                         ResHandler::Texture::gameObjects),
                     getgResHandlerPtr()->getTexture(
@@ -152,10 +152,10 @@ void Dasher::update(const Player * player, const std::vector<wall> & walls,
                     xPos - 12, yPos,
                     angleFunction(target.x + 8, target.y + 8, xPos, yPos));
             } else {
-                effects.add<0>(getgResHandlerPtr()->getTexture(
+                effects.add<EffectRef::TurretFlashEffect>(getgResHandlerPtr()->getTexture(
                                    ResHandler::Texture::gameObjects),
                                xPos + 6, yPos + 2);
-                effects.add<7>(
+                effects.add<EffectRef::DasherShot>(
                     getgResHandlerPtr()->getTexture(
                         ResHandler::Texture::gameObjects),
                     getgResHandlerPtr()->getTexture(
@@ -279,17 +279,17 @@ void Dasher::onDeath(EffectGroup & effects) {
     killFlag = true;
     unsigned long int temp = rng::random<4>();
     if (temp == 0) {
-        effects.add<4>(
+        effects.add<EffectRef::Heart>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow), xPos,
             yPos + 4, Item::Type::Heart);
     } else {
-        effects.add<5>(
+        effects.add<EffectRef::Coin>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
             xPos, yPos + 4, Item::Type::Coin);
     }
-    effects.add<1>(
+    effects.add<EffectRef::SmallExplosion>(
         getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
         getgResHandlerPtr()->getTexture(ResHandler::Texture::fireExplosionGlow),
         xPos, yPos - 2);

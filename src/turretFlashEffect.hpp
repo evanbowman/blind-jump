@@ -11,12 +11,37 @@
 #include <SFML/Graphics.hpp>
 #include "Drawable.hpp"
 
-class TurretFlashEffect : public Effect {
-private:
-    mutable SpriteSheet<0, 116, 16, 16> spriteSheet;
+namespace effect {
+    template <typename DrawPolicy>
+    class TurretFlashEffect : public Drawable<TurretFlashEffect<DrawPolicy>, DrawPolicy>, public Effect {
+    public:
+        static const int drawOffset = 11;
+        TurretFlashEffect(const sf::Texture & txtr, float x, float y)
+            : Effect(x, y) {
+            spriteSheet.setTexture(txtr);
+            bool select = rng::random<2>();
+            if (select) {
+                spriteSheet.setScale(-1.f, 1.f);
+                position.x += 17;
+            }
+            spriteSheet.setPosition(position.x, position.y);
+        }
+        void update(const sf::Time & elapsedTime) {
+            timer += elapsedTime.asMilliseconds();
+            if (timer > 40) {
+                timer -= 40;
+                frameIndex += 1;
+                if (frameIndex > 4) {
+                    setKillFlag();
+                    frameIndex = 4;
+                };
+            }
+        }
+        const sf::Sprite & getSprite() const {
+            return spriteSheet[frameIndex];
+        }
 
-public:
-    TurretFlashEffect(const sf::Texture &, float, float);
-    void update(const sf::Time &);
-    const sf::Sprite & getSprite() const;
-};
+    private:
+        mutable SpriteSheet<0, 116, 16, 16> spriteSheet;
+    };
+}

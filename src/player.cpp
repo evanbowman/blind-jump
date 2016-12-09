@@ -698,7 +698,7 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey,
         } else if (gun.timeout < 1671000) {
             gun.timeout = 1671000;
             if (gun.bulletTimer == 0) {
-                effects.add<9>(getgResHandlerPtr()->getTexture(
+                effects.add<EffectRef::PlayerShot>(getgResHandlerPtr()->getTexture(
                                    ResHandler::Texture::gameObjects),
                                getgResHandlerPtr()->getTexture(
                                    ResHandler::Texture::whiteGlow),

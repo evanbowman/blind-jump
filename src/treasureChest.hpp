@@ -11,15 +11,13 @@
 #include "rng.hpp"
 #include "spriteSheet.hpp"
 #include "GfxContext.hpp"
+#include "Drawable.hpp"
 
 namespace detail {
     template <typename DrawPolicy>
-    class TreasureChest : private DrawPolicy, public framework::Object {
+    class TreasureChest : public Drawable<TreasureChest<DrawPolicy>, DrawPolicy>, public framework::Object {
     public:
         static const int drawOffset = -16;
-        void draw(GfxContext & gfxContext, const sf::View & view) {
-            DrawPolicy::draw(*this, gfxContext, view);
-        }
         enum class State { closed, opening, ready, complete };
         TreasureChest(float _xInit, float _yInit,
                       const sf::Texture & mainTxtr, Powerup _powerup)

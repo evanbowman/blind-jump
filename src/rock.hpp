@@ -13,11 +13,8 @@
 
 namespace detail {
     template<typename DrawPolicy>
-    class Rock : private DrawPolicy, public framework::Object {
+    class Rock : public Drawable<Rock<DrawPolicy>, DrawPolicy>, public framework::Object {
     public:
-        void draw(GfxContext & gfxContext, const sf::View & view) {
-            DrawPolicy::draw(*this, gfxContext, view);
-        }
         static const int drawOffset = 24;
         Rock(float _xPos, float _yPos, const sf::Texture & inpTxtr)
             : Object(_xPos, _yPos) {

@@ -15,9 +15,9 @@ private:
 public:
     SpriteSheet() {}
 
-    SpriteSheet(const sf::Texture & txtr) { setTexture(txtr); }
+    explicit SpriteSheet(const sf::Texture & txtr) { setTexture(txtr); }
 
-    const sf::Sprite & operator[](const size_t idx) {
+    sf::Sprite & operator[](const size_t idx) {
         sprite.setTextureRect(sf::IntRect(x + idx * w, y, w, h));
         return sprite;
     }
@@ -28,7 +28,7 @@ public:
 
     void setColor(const sf::Color color) { sprite.setColor(color); }
 
-    const sf::Sprite & getSprite() { return sprite; }
+    const sf::Sprite & getSprite() const { return sprite; }
 
     sf::FloatRect getSize() const { return sprite.getLocalBounds(); }
 

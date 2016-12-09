@@ -8,14 +8,12 @@
 #include "Drawable.hpp"
 #include "effectsController.hpp"
 #include "GfxContext.hpp"
+#include "Drawable.hpp"
 
 namespace detail {
     template <typename DrawPolicy>
-    class Teleporter : private DrawPolicy, public framework::Object {
+    class Teleporter : public Drawable<Teleporter<DrawPolicy>, DrawPolicy>, public framework::Object {
     public:
-        void draw(GfxContext & gfxContext, const sf::View & view) {
-            DrawPolicy::draw(*this, gfxContext, view);
-        }
         static const int drawOffset = 0;
         Teleporter(float _xInit, float _yInit, const sf::Texture & mainTxtr,
                    const sf::Texture & glowTxtr)
