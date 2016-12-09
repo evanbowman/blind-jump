@@ -174,7 +174,7 @@ void Player::update(Game * pGame, const sf::Time & elapsedTime,
     bool collisionLeft(false);
     bool collisionRight(false);
     uint_fast8_t collisionMask = checkCollisionWall(tiles.walls, yPos, xPos);
-    collisionMask |= checkCollisionChest(details.get<1>(), yPos, xPos);
+    collisionMask |= checkCollisionChest(details.get<DetailRef::TreasureChest>(), yPos, xPos);
     if (collisionMask & 0x01) {
         collisionLeft = true;
     }
@@ -294,7 +294,7 @@ void Player::update(Game * pGame, const sf::Time & elapsedTime,
         rightPrevious = right;
         // If the action button is pressed, open nearby chests
         if (state == State::nominal) {
-            std::vector<TreasureChest> & chests = details.get<1>();
+            std::vector<TreasureChest> & chests = details.get<DetailRef::TreasureChest>();
             for (auto & chest : chests) {
                 if (std::abs(xPos - chest.getPosition().x) < 32 &&
                     std::abs(yPos - chest.getPosition().y) < 26 &&
@@ -306,7 +306,7 @@ void Player::update(Game * pGame, const sf::Time & elapsedTime,
                 }
             }
         }
-        for (auto & term : details.get<7>()) {
+        for (auto & term : details.get<DetailRef::Terminal>()) {
             const sf::Vector2f termPos = term.getPosition();
             const Terminal::State termState = term.getState();
             if (std::sqrt(std::pow(xPos - termPos.x, 2) +
@@ -629,7 +629,7 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows) {
             if (state == Player::State::dashing) {
                 if (animationTimer > 20000) {
                     animationTimer = 0;
-                    blurs.emplace_back(&std::get<0>(gameObjects.back()), xPos,
+                    blurs.emplace_back(&std::get<DetailRef::Teleporter>(gameObjects.back()), xPos,
                                        yPos);
                 }
             }

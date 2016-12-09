@@ -9,7 +9,7 @@
 #include "backgroundHandler.hpp"
 #include "camera.hpp"
 #include "colors.hpp"
-#include "detailController.hpp"
+#include "detailGroup.hpp"
 #include "effectsController.hpp"
 #include "enemyController.hpp"
 #include "framework/option.hpp"
@@ -21,6 +21,7 @@
 #include "userInterface.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
+#include "GfxContext.hpp"
 #include <atomic>
 #include <cmath>
 #include <mutex>
@@ -37,8 +38,7 @@ public:
         EntryBeamDrop,
         EntryBeamFade
     };
-    Game(const sf::Vector2f & viewPort, const sf::Vector2u &, InputController *,
-         ui::Frontend *);
+    Game(const sf::Vector2f & viewPort, InputController *, ui::Frontend *, sf::RenderWindow *);
     void update(const sf::Time &);
     void draw(sf::RenderWindow &);
     void nextLevel();
@@ -65,29 +65,22 @@ private:
     ui::Backend UI;
     tileController tiles;
     EffectGroup effectGroup;
-    DetailGroup details;
+    DetailGroup detailGroup;
     enemyController en;
     ui::Frontend * pUiFrontend;
     std::mutex overworldMutex, UIMutex, transitionMutex;
     int level;
-    // Stash static rendered frames for efficiency. Preload is for recovery from
-    // stash
     bool stashed, preload;
     sf::Sprite vignetteSprite;
     backgroundHandler bkg;
     sf::Sprite vignetteShadowSpr;
     tileController::Tileset set;
-    std::vector<sf::Sprite> glowSprs1, glowSprs2;
-    sf::Texture beamGlowTxr;
+    GfxContext gfxContext;
     sf::Sprite beamGlowSpr;
     sf::View worldView, hudView;
     sf::RenderTexture lightingMap;
     sf::RenderTexture target, secondPass, thirdPass, stash;
     sf::RectangleShape transitionShape, beamShape;
-    sf::Texture titleTxtr;
-    sf::Sprite titleSpr;
-    std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> gameObjects;
-    std::vector<std::tuple<sf::Sprite, float, Rendertype, float>> gameShadows;
     void updateTransitions(const sf::Time &);
     void drawTransitions(sf::RenderWindow &);
     int_fast64_t timer;
@@ -96,5 +89,5 @@ private:
 // The first room is not procedurally generated so the positions of the walls
 // need to be hard coded
 // There may be a more efficient way to store this, but at O2 optimization clang
-// and gcc convert the whole thing to an array of ints
+// and gcc convert the whole thing to an array of longs
 extern const std::array<std::pair<float, float>, 59> levelZeroWalls;

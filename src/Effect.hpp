@@ -15,5 +15,5 @@ protected:
 
 public:
     Effect(float _xInit, float _yInit)
-        : Object{_xInit, _yInit}, timer{0}, frameIndex{0} {}
+        : Object(_xInit, _yInit), timer(0), frameIndex(0) {}
 };

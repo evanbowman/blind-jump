@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "treasureChest.hpp"
+#include "detailGroup.hpp"
 #include "wall.hpp"
 #include <cmath>
 

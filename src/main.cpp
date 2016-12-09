@@ -49,7 +49,7 @@ int main() {
             sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
         ui::Frontend uIFrontEnd(hudView, drawableRegionSize.x / 2,
                                 drawableRegionSize.y / 2);
-        Game game(drawableRegionSize, window.getSize(), &input, &uIFrontEnd);
+        Game game(drawableRegionSize, &input, &uIFrontEnd, &window);
         framework::SmartThread logicThread([&game, &window]() {
             duration logicUpdateDelta;
             sf::Clock gameClock;

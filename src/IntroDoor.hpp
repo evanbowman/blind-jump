@@ -5,24 +5,31 @@
 
 #pragma once
 
-#include "detailParent.hpp"
+#include "Drawable.hpp"
 #include "effectsController.hpp"
 #include "spriteSheet.hpp"
 
-class ScreenShakeController;
+namespace detail {
+    template <typename DrawPolicy>
+    class IntroDoor : private DrawPolicy, public framework::Object {
+    private:
+        enum class State { dormant, opening, opened };
+        mutable SpriteSheet<0, 0, 200, 95> doorSheet;
+        uint8_t frameIndex;
 
-class Game;
-
-class IntroDoor : public Detail {
-private:
-    enum class State { dormant, opening, opened };
-    mutable SpriteSheet<0, 0, 200, 95> doorSheet;
-    uint8_t frameIndex;
-    // int32_t timer;
-    // State state;
-
-public:
-    void update(const sf::Time &, Game *);
-    IntroDoor(float, float, const sf::Texture &);
-    const sf::Sprite & getSprite() const;
-};
+    public:
+        static const int drawOffset = 60;
+        void draw(GfxContext & gfxContext, const sf::View & view) {
+            DrawPolicy::draw(*this, gfxContext, view);
+        }
+        template <typename Game>
+        void update(const sf::Time &, Game *) {}
+        IntroDoor(float _xInit, float _yInit, const sf::Texture & inpTxtr)
+            : Object{_xInit, _yInit}, doorSheet{inpTxtr}, frameIndex{3} {
+            doorSheet.setPosition(position.x, position.y);
+        }
+        const sf::Sprite & getSprite() const {
+            return doorSheet[frameIndex];
+        }
+    };
+}

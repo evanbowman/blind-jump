@@ -9,6 +9,7 @@
 #include "rng.hpp"
 #include "spriteSheet.hpp"
 #include <SFML/Graphics.hpp>
+#include "Drawable.hpp"
 
 class TurretFlashEffect : public Effect {
 private:

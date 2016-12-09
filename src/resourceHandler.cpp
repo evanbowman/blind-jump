@@ -87,7 +87,7 @@ void ResHandler::loadImages(const std::string & resPath) {
 
 void ResHandler::loadSounds(const std::string & resPath) {
     loadResource(resPath + "gunshot.ogg", Sound::gunShot, sounds);
-    loadResource(resPath + "creak.wav", Sound::creak, sounds);
+    loadResource(resPath + "creak.ogg", Sound::creak, sounds);
     loadResource(resPath + "bite-small.wav", Sound::bite1, sounds);
     loadResource(resPath + "bite-small3.wav", Sound::bite2, sounds);
 }

@@ -5,25 +5,20 @@
 
 #pragma once
 
-#include "drawable.hpp"
+#include "detailParent.hpp"
 
 namespace detail {
     template <typename DrawPolicy>
-    class StaticDrawable : private DrawPolicy, public framework::Object {
+    class StaticDrawable : public Drawable<DrawPolicy> {
     public:
-        static const int drawOffset = 0;
-        StaticDrawable(float xInit, float yInit, sf::Sprite & _spr) : Object(xInit, yInit) {
+        StaticDrawable(float _xInit, float _yInit, sf::Sprite & _spr)
+            : Drawable<DrawPolicy>{_xInit, _yInit} {
             spr = _spr;
-            spr.setPosition(position);
+            spr.setPosition(_xInit, _yInit);
         }
-        const sf::Sprite & getSprite() const {
-            return spr;
-        }
+        const sf::Sprite & getSprite() const { return spr; }
         template <typename Game>
         void update(const sf::Time & elapsedTime, Game *) {}
-        void draw(GfxContext & gfxContext, const sf::View & view) {
-            DrawPolicy::draw(*this, gfxContext, view);
-        }
         
     private:
         sf::Sprite spr;
