@@ -4,6 +4,7 @@
 //========================================================================//
 
 #pragma once
+#include "GfxContext.hpp"
 #include "RenderType.hpp"
 #include "alias.hpp"
 #include "backgroundHandler.hpp"
@@ -21,7 +22,6 @@
 #include "userInterface.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
-#include "GfxContext.hpp"
 #include <atomic>
 #include <cmath>
 #include <mutex>
@@ -38,7 +38,8 @@ public:
         EntryBeamDrop,
         EntryBeamFade
     };
-    Game(const sf::Vector2f & viewPort, InputController *, ui::Frontend *, sf::RenderWindow *);
+    Game(const sf::Vector2f & viewPort, InputController *, ui::Frontend *,
+         sf::RenderWindow *);
     void update(const sf::Time &);
     void draw(sf::RenderWindow &);
     void nextLevel();

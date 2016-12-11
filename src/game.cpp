@@ -13,7 +13,8 @@
 #include "math.h"
 #include "pillarPlacement.h"
 
-Game::Game(const sf::Vector2f & _viewPort, InputController * _pInput, ui::Frontend * _pUiFrontend, sf::RenderWindow * pWindow)
+Game::Game(const sf::Vector2f & _viewPort, InputController * _pInput,
+           ui::Frontend * _pUiFrontend, sf::RenderWindow * pWindow)
     : viewPort(_viewPort), transitionState(TransitionState::TransitionIn),
       pInput(_pInput), player(viewPort.x / 2, viewPort.y / 2),
       camera(&player, viewPort, pWindow->getSize()), pUiFrontend(_pUiFrontend),
@@ -97,7 +98,7 @@ void Game::draw(sf::RenderWindow & window) {
             }
             effectGroup.apply(drawPolicy);
             en.draw(gfxContext.faces, gfxContext.shadows, camera);
-            sounds.poll();
+            sounds.update();
         }
         if (!gfxContext.shadows.empty()) {
             for (const auto & element : gfxContext.shadows) {
@@ -311,15 +312,15 @@ void Game::update(const sf::Time & elapsedTime) {
         }
         tiles.update();
         detailGroup.apply([&elapsedTime, this](auto & vec) {
-                for (auto it = vec.begin(); it != vec.end();) {
-                    if (it->getKillFlag()) {
-                        it = vec.erase(it);
-                    } else {
-                        it->update(elapsedTime, this);
-                        ++it;
-                    }
+            for (auto it = vec.begin(); it != vec.end();) {
+                if (it->getKillFlag()) {
+                    it = vec.erase(it);
+                } else {
+                    it->update(elapsedTime, this);
+                    ++it;
                 }
-            });
+            }
+        });
         std::vector<sf::Vector2f> cameraTargets;
         en.update(this, !UI.isOpen(), elapsedTime, cameraTargets);
         camera.update(elapsedTime, cameraTargets);
@@ -327,15 +328,15 @@ void Game::update(const sf::Time & elapsedTime) {
             player.update(this, elapsedTime, sounds);
         if (!UI.isOpen()) {
             effectGroup.apply([&elapsedTime](auto & vec) {
-                    for (auto it = vec.begin(); it != vec.end();) {
-                        if (it->getKillFlag()) {
-                            it = vec.erase(it);
-                        } else {
-                            it->update(elapsedTime);
-                            ++it;
-                        }
+                for (auto it = vec.begin(); it != vec.end();) {
+                    if (it->getKillFlag()) {
+                        it = vec.erase(it);
+                    } else {
+                        it->update(elapsedTime);
+                        ++it;
                     }
-                });
+                }
+            });
         }
     }
     {
@@ -355,10 +356,10 @@ void Game::update(const sf::Time & elapsedTime) {
                 pUiFrontend->updateMaxHealth(playerStartingHealth);
                 pUiFrontend->setWaypointText(level);
             }
-            UI.update(player, *pUiFrontend, pInput, elapsedTime);
+            UI.update(this, elapsedTime);
         } else {
             if (transitionState == TransitionState::None) {
-                UI.update(player, *pUiFrontend, pInput, elapsedTime);
+                UI.update(this, elapsedTime);
             }
         }
     }
@@ -449,8 +450,10 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
     std::lock_guard<std::mutex> grd(transitionMutex);
     switch (transitionState) {
     case TransitionState::None: {
-        float teleporterX = detailGroup.get<DetailRef::Teleporter>().back().getPosition().x;
-        float teleporterY = detailGroup.get<DetailRef::Teleporter>().back().getPosition().y;
+        float teleporterX =
+            detailGroup.get<DetailRef::Teleporter>().back().getPosition().x;
+        float teleporterY =
+            detailGroup.get<DetailRef::Teleporter>().back().getPosition().y;
         if ((std::abs(player.getXpos() - teleporterX) < 8 &&
              std::abs(player.getYpos() - teleporterY + 12) < 8)) {
             player.setPosition(teleporterX - 2.f, teleporterY - 16.f);
@@ -645,11 +648,12 @@ void Game::nextLevel() {
         auto optCoord = pickLocation(tiles.emptyMapLocations);
         if (optCoord) {
             Powerup chestContents = static_cast<Powerup>(rng::random<2, 1>());
-            detailGroup.add<DetailRef::TreasureChest>(optCoord.value().x * 32 + tiles.posX,
-                                                  optCoord.value().y * 26 + tiles.posY,
-                                                  getgResHandlerPtr()->getTexture(
-                                                                                  ResHandler::Texture::gameObjects),
-                                                  chestContents);
+            detailGroup.add<DetailRef::TreasureChest>(
+                optCoord.value().x * 32 + tiles.posX,
+                optCoord.value().y * 26 + tiles.posY,
+                getgResHandlerPtr()->getTexture(
+                    ResHandler::Texture::gameObjects),
+                chestContents);
         }
         if (!rng::random<2>()) {
             auto pCoordVec = tiles.getEmptyLocations();
@@ -657,11 +661,11 @@ void Game::nextLevel() {
             const int locationSel = rng::random(vecSize / 3);
             const int xInit = (*pCoordVec)[vecSize - 1 - locationSel].x;
             const int yInit = (*pCoordVec)[vecSize - 1 - locationSel].y;
-            detailGroup.add<DetailRef::Terminal>(xInit * 32 + tiles.posX,
-                                             yInit * 26 + tiles.posY,
-                                             getgResHandlerPtr()->getTexture(
-                                                                             ResHandler::Texture::gameObjects),
-                                             tiles.mapArray[xInit][yInit]);
+            detailGroup.add<DetailRef::Terminal>(
+                xInit * 32 + tiles.posX, yInit * 26 + tiles.posY,
+                getgResHandlerPtr()->getTexture(
+                    ResHandler::Texture::gameObjects),
+                tiles.mapArray[xInit][yInit]);
         }
         gfxContext.glowSprs1.clear();
         gfxContext.glowSprs2.clear();
@@ -674,10 +678,11 @@ void Game::nextLevel() {
             getRockPositions(tiles.mapArray, detailPositions,
                              teleporterFootprint);
             for (auto element : detailPositions) {
-                detailGroup.add<DetailRef::Rock>(tiles.posX + 32 * element.x,
-                                             tiles.posY + 26 * element.y - 35,
-                                             getgResHandlerPtr()->getTexture(
-                                                                             ResHandler::Texture::gameObjects));
+                detailGroup.add<DetailRef::Rock>(
+                    tiles.posX + 32 * element.x,
+                    tiles.posY + 26 * element.y - 35,
+                    getgResHandlerPtr()->getTexture(
+                        ResHandler::Texture::gameObjects));
             }
             detailPositions.clear();
         }
@@ -685,12 +690,13 @@ void Game::nextLevel() {
                              teleporterFootprint);
         const size_t len = detailPositions.size();
         for (size_t i = 0; i < len; i++) {
-            detailGroup.add<DetailRef::Lamp>(tiles.posX + 16 + (detailPositions[i].x * 32),
-                                 tiles.posY - 3 + (detailPositions[i].y * 26),
-                                 getgResHandlerPtr()->getTexture(
-                                     ResHandler::Texture::gameObjects),
-                                 getgResHandlerPtr()->getTexture(
-                                     ResHandler::Texture::lamplight));
+            detailGroup.add<DetailRef::Lamp>(
+                tiles.posX + 16 + (detailPositions[i].x * 32),
+                tiles.posY - 3 + (detailPositions[i].y * 26),
+                getgResHandlerPtr()->getTexture(
+                    ResHandler::Texture::gameObjects),
+                getgResHandlerPtr()->getTexture(
+                    ResHandler::Texture::lamplight));
         }
         detailPositions.clear();
     } else if (set == tileController::Tileset::intro) {
@@ -717,8 +723,8 @@ void Game::nextLevel() {
         podSpr.setTexture(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects));
         podSpr.setTextureRect(sf::IntRect(164, 145, 44, 50));
-        detailGroup.add<DetailRef::StaticDrawable>(tiles.posX + 3 * 32, tiles.posY + 4 + 17 * 26,
-                            podSpr);
+        detailGroup.add<DetailRef::StaticDrawable>(
+            tiles.posX + 3 * 32, tiles.posY + 4 + 17 * 26, podSpr);
         static const int initTeleporterLocX = 8;
         static const int initTeleporterLocY = -7;
         tiles.teleporterLocation.x = initTeleporterLocX;

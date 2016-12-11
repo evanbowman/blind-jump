@@ -15,6 +15,7 @@
 #include <array>
 
 class Player;
+class Game;
 
 //
 // TODO: Combine ui frontend and ui backend into one class, neater that way?
@@ -116,7 +117,7 @@ public:
         dormant
     };
     Backend();
-    void update(Player &, ui::Frontend &, InputController *, const sf::Time &);
+    void update(Game * game, const sf::Time &);
     void draw(sf::RenderWindow &, ui::Frontend &);
     void dispDeathSeq();
     bool isComplete();

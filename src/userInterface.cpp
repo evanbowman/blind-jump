@@ -4,6 +4,7 @@
 //========================================================================//
 
 #include "userInterface.hpp"
+#include "game.hpp"
 #include "player.hpp"
 #include <cmath>
 
@@ -98,9 +99,10 @@ ui::Backend::PowerupBubbleState ui::Backend::getPowerupBubbleState() const {
     return powerupBubbleState;
 }
 
-void ui::Backend::update(Player & player, ui::Frontend & uIFrontEnd,
-                         InputController * pInput,
-                         const sf::Time & elapsedTime) {
+void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
+    InputController * pInput = pGame->getPInput();
+    Frontend & uIFrontEnd = *pGame->getPUIFrontend();
+    Player & player = pGame->getPlayer();
     bool action = pInput->actionPressed();
     bool up = pInput->upPressed();
     bool down = pInput->downPressed();

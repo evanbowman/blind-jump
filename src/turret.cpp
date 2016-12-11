@@ -92,9 +92,10 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
         target = player->requestFuturePos(TurretShot::lifetime * 1000);
         timer += elapsedTime.asMicroseconds();
         if (timer > 200000) {
-            effects.add<EffectRef::TurretFlashEffect>(getgResHandlerPtr()->getTexture(
-                               ResHandler::Texture::gameObjects),
-                           xPos, yPos + 8);
+            effects.add<EffectRef::TurretFlashEffect>(
+                getgResHandlerPtr()->getTexture(
+                    ResHandler::Texture::gameObjects),
+                xPos, yPos + 8);
             effects.add<EffectRef::EnemyShot>(
                 getgResHandlerPtr()->getTexture(
                     ResHandler::Texture::gameObjects),
@@ -109,9 +110,10 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
     case State::shoot2:
         timer += elapsedTime.asMicroseconds();
         if (timer > 200000) {
-            effects.add<EffectRef::TurretFlashEffect>(getgResHandlerPtr()->getTexture(
-                               ResHandler::Texture::gameObjects),
-                           xPos, yPos + 8);
+            effects.add<EffectRef::TurretFlashEffect>(
+                getgResHandlerPtr()->getTexture(
+                    ResHandler::Texture::gameObjects),
+                xPos, yPos + 8);
             effects.add<EffectRef::EnemyShot>(
                 getgResHandlerPtr()->getTexture(
                     ResHandler::Texture::gameObjects),
@@ -126,9 +128,10 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
     case State::shoot3:
         timer += elapsedTime.asMicroseconds();
         if (timer > 200000) {
-            effects.add<EffectRef::TurretFlashEffect>(getgResHandlerPtr()->getTexture(
-                               ResHandler::Texture::gameObjects),
-                           xPos, yPos + 8);
+            effects.add<EffectRef::TurretFlashEffect>(
+                getgResHandlerPtr()->getTexture(
+                    ResHandler::Texture::gameObjects),
+                xPos, yPos + 8);
             effects.add<EffectRef::EnemyShot>(
                 getgResHandlerPtr()->getTexture(
                     ResHandler::Texture::gameObjects),

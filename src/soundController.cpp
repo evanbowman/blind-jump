@@ -5,23 +5,23 @@
 
 #include "soundController.hpp"
 
-void SoundController::poll() {
-    if (!soundIdxQueue.empty()) {
-        for (auto & element : soundIdxQueue) {
-            sounds.emplace_back(getgResHandlerPtr()->getSound(element));
+void SoundController::update() {
+    if (!soundIdQueue.empty()) {
+        std::lock_guard<std::mutex> lk(soundsGuard);
+        for (auto soundId : soundIdQueue) {
+            sounds.emplace(getgResHandlerPtr()->getSound(soundId));
             sounds.back().play();
         }
-        soundIdxQueue.clear();
+        soundIdQueue.clear();
     }
-    for (auto it = sounds.begin(); it != sounds.end();) {
-        if (it->getStatus() == sf::Sound::Status::Stopped) {
-            it = sounds.erase(it);
-        } else {
-            ++it;
+    if (sounds.size() > 0) {
+        if (sounds.front().getStatus() == sf::Sound::Stopped) {
+            sounds.pop();
         }
     }
 }
 
 void SoundController::play(ResHandler::Sound indx) {
-    soundIdxQueue.push_back(indx);
+    std::lock_guard<std::mutex> lk(soundsGuard);
+    soundIdQueue.push_back(indx);
 }

@@ -174,7 +174,8 @@ void Player::update(Game * pGame, const sf::Time & elapsedTime,
     bool collisionLeft(false);
     bool collisionRight(false);
     uint_fast8_t collisionMask = checkCollisionWall(tiles.walls, yPos, xPos);
-    collisionMask |= checkCollisionChest(details.get<DetailRef::TreasureChest>(), yPos, xPos);
+    collisionMask |= checkCollisionChest(
+        details.get<DetailRef::TreasureChest>(), yPos, xPos);
     if (collisionMask & 0x01) {
         collisionLeft = true;
     }
@@ -294,7 +295,8 @@ void Player::update(Game * pGame, const sf::Time & elapsedTime,
         rightPrevious = right;
         // If the action button is pressed, open nearby chests
         if (state == State::nominal) {
-            std::vector<TreasureChest> & chests = details.get<DetailRef::TreasureChest>();
+            std::vector<TreasureChest> & chests =
+                details.get<DetailRef::TreasureChest>();
             for (auto & chest : chests) {
                 if (std::abs(xPos - chest.getPosition().x) < 32 &&
                     std::abs(yPos - chest.getPosition().y) < 26 &&
@@ -333,6 +335,7 @@ void Player::update(Game * pGame, const sf::Time & elapsedTime,
         dashTimer += elapsedTime.asMicroseconds();
         if (dashTimer > 80000) {
             dashTimer = 0;
+            sounds.play(ResHandler::Sound::woosh);
             state = State::dashing;
             switch (frameIndex) {
             case 6:
@@ -629,8 +632,9 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows) {
             if (state == Player::State::dashing) {
                 if (animationTimer > 20000) {
                     animationTimer = 0;
-                    blurs.emplace_back(&std::get<DetailRef::Teleporter>(gameObjects.back()), xPos,
-                                       yPos);
+                    blurs.emplace_back(
+                        &std::get<DetailRef::Teleporter>(gameObjects.back()),
+                        xPos, yPos);
                 }
             }
             break;
@@ -698,15 +702,16 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey,
         } else if (gun.timeout < 1671000) {
             gun.timeout = 1671000;
             if (gun.bulletTimer == 0) {
-                effects.add<EffectRef::PlayerShot>(getgResHandlerPtr()->getTexture(
-                                   ResHandler::Texture::gameObjects),
-                               getgResHandlerPtr()->getTexture(
-                                   ResHandler::Texture::whiteGlow),
-                               static_cast<int>(sheetIndex), xPos, yPos);
+                sounds.play(ResHandler::Sound::gunShot);
+                effects.add<EffectRef::PlayerShot>(
+                    getgResHandlerPtr()->getTexture(
+                        ResHandler::Texture::gameObjects),
+                    getgResHandlerPtr()->getTexture(
+                        ResHandler::Texture::whiteGlow),
+                    static_cast<int>(sheetIndex), xPos, yPos);
                 if (UI.getCurrentPowerup() == Powerup::rapidFire) {
                     gun.bulletTimer = 220000;
                 } else {
-                    sounds.play(ResHandler::Sound::gunShot);
                     gun.bulletTimer = 440000;
                 }
             }
@@ -792,25 +797,25 @@ void Player::checkEnemyCollisions(enemyController & enemies,
         util::sleep(milliseconds(40));
     };
     checkEnemyCollision(enemies.getCritters(), this, [&] {
-            if (colorAmount == 0.f) {
-                collisionPolicy();
-                if (rng::random<1>()) {
-                    sounds.play(ResHandler::Sound::bite1);
-                } else {
-                    sounds.play(ResHandler::Sound::bite2);
-                }
+        if (colorAmount == 0.f) {
+            collisionPolicy();
+            if (rng::random<1>()) {
+                sounds.play(ResHandler::Sound::bite1);
+            } else {
+                sounds.play(ResHandler::Sound::bite2);
             }
-        });
+        }
+    });
     checkEnemyCollision(enemies.getDashers(), this, [&] {
-            if (colorAmount == 0.f) {
-                collisionPolicy();
-            }
-        });
+        if (colorAmount == 0.f) {
+            collisionPolicy();
+        }
+    });
     checkEnemyCollision(enemies.getScoots(), this, [&] {
-            if (colorAmount == 0.f) {
-                collisionPolicy();
-            }
-        });
+        if (colorAmount == 0.f) {
+            collisionPolicy();
+        }
+    });
 }
 
 const Player::HBox & Player::getHitBox() const { return hitBox; }

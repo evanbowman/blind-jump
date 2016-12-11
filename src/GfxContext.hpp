@@ -1,7 +1,7 @@
 #pragma once
 
-#include <tuple>
 #include <SFML/Graphics.hpp>
+#include <tuple>
 
 #include "Rendertype.hpp"
 

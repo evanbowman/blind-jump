@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "GfxContext.hpp"
 #include "IntroDoor.hpp"
 #include "RenderType.hpp"
 #include "Teleporter.hpp"
@@ -19,15 +20,16 @@
 #include "userInterface.hpp"
 #include <SFML/Graphics.hpp>
 #include <array>
-#include "GfxContext.hpp"
 
 using TreasureChest = detail::TreasureChest<RenderPolicy<DrawMain, DrawShadow>>;
-using Teleporter = detail::Teleporter<RenderPolicy<ForceShadow, ForceMain, DrawGlowAll>>;
+using Teleporter =
+    detail::Teleporter<RenderPolicy<ForceShadow, ForceMain, DrawGlowAll>>;
 using Lamp = detail::Lamp<RenderPolicy<ForceMain, DrawGlowAll>>;
 using Rock = detail::Rock<RenderPolicy<DrawMain>>;
 using IntroDoor = detail::IntroDoor<RenderPolicy<DrawMain>>;
 using StaticDrawable = detail::StaticDrawable<RenderPolicy<DrawMain>>;
-using Terminal = detail::Terminal<RenderPolicy<DrawMain, DrawShadow>>;
+using Terminal =
+    detail::Terminal<RenderPolicy<DrawMain, DrawShadow, DrawScreen>>;
 
 struct DetailRef {
     enum {
@@ -42,10 +44,5 @@ struct DetailRef {
     };
 };
 
-using DetailGroup = framework::Group<Teleporter,
-                                     TreasureChest,
-                                     Lamp,
-                                     Rock,
-                                     IntroDoor,
-                                     StaticDrawable,
-                                     Terminal>;
+using DetailGroup = framework::Group<Teleporter, TreasureChest, Lamp, Rock,
+                                     IntroDoor, StaticDrawable, Terminal>;

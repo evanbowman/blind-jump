@@ -90,6 +90,7 @@ void ResHandler::loadSounds(const std::string & resPath) {
     loadResource(resPath + "creak.ogg", Sound::creak, sounds);
     loadResource(resPath + "bite-small.wav", Sound::bite1, sounds);
     loadResource(resPath + "bite-small3.wav", Sound::bite2, sounds);
+    loadResource(resPath + "woosh.ogg", Sound::woosh, sounds);
 }
 
 const sf::Image & ResHandler::getImage(Image id) const {

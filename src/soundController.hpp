@@ -7,7 +7,7 @@
 
 #include "resourceHandler.hpp"
 #include <SFML/Audio.hpp>
-#include <deque>
+#include <queue>
 #include <vector>
 
 class SoundController {
@@ -17,10 +17,12 @@ public:
     // like a lot of the other controller code. Some operating systems
     // require graphics and sound related stuff to happen on the main
     // thread, it may not be necessary, but just to be safe...
-    void poll();
+    void update();
     void play(ResHandler::Sound);
-
+    
 private:
-    std::vector<sf::Sound> sounds;
-    std::vector<ResHandler::Sound> soundIdxQueue;
+    std::mutex soundsGuard;
+    sf::Music currentSong;
+    std::queue<sf::Sound> sounds;
+    std::vector<ResHandler::Sound> soundIdQueue;
 };
