@@ -67,9 +67,6 @@ int main() {
                     time_point stop = high_resolution_clock::now();
                     logicUpdateDelta =
                         std::chrono::duration_cast<nanoseconds>(stop - start);
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
-                        std::cout << logicUpdateDelta.count() << "\n";
-                    }
                     static const microseconds logicUpdateLimit(2000);
                     std::this_thread::sleep_for(logicUpdateLimit -
                                                 logicUpdateDelta);
