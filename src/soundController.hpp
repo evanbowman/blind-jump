@@ -10,19 +10,25 @@
 #include <queue>
 #include <vector>
 
+struct reqInfo {
+    ResHandler::Sound soundIdx;
+    sf::Vector3f position;
+    float minDistance;
+    float attenuation;
+    bool relative;
+};
+
 class SoundController {
 public:
-    // The function that updates the sound controller is called poll and
-    // not update because it does not run in the game's update function
-    // like a lot of the other controller code. Some operating systems
-    // require graphics and sound related stuff to happen on the main
-    // thread, it may not be necessary, but just to be safe...
     void update();
-    void play(ResHandler::Sound);
-    
+    void play(ResHandler::Sound indx,
+              const sf::Vector3f & position = {0.f, 0.f, 0.f},
+              float minDistance = 1.f, float attenuation = 0.f,
+              bool relative = true);
+
 private:
     std::mutex soundsGuard;
     sf::Music currentSong;
-    std::queue<sf::Sound> sounds;
-    std::vector<ResHandler::Sound> soundIdQueue;
+    std::queue<sf::Sound> runningSounds;
+    std::vector<reqInfo> soundRequests;
 };

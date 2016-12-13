@@ -6,22 +6,29 @@
 #include "soundController.hpp"
 
 void SoundController::update() {
-    if (!soundIdQueue.empty()) {
+    if (!soundRequests.empty()) {
         std::lock_guard<std::mutex> lk(soundsGuard);
-        for (auto soundId : soundIdQueue) {
-            sounds.emplace(getgResHandlerPtr()->getSound(soundId));
-            sounds.back().play();
+        for (auto req : soundRequests) {
+            runningSounds.emplace(getgResHandlerPtr()->getSound(req.soundIdx));
+            runningSounds.back().setMinDistance(req.minDistance);
+            runningSounds.back().setAttenuation(req.attenuation);
+            runningSounds.back().setRelativeToListener(req.relative);
+            runningSounds.back().setPosition(req.position);
+            runningSounds.back().play();
         }
-        soundIdQueue.clear();
+        soundRequests.clear();
     }
-    if (sounds.size() > 0) {
-        if (sounds.front().getStatus() == sf::Sound::Stopped) {
-            sounds.pop();
+    if (runningSounds.size() > 0) {
+        if (runningSounds.front().getStatus() == sf::Sound::Stopped) {
+            runningSounds.pop();
         }
     }
 }
 
-void SoundController::play(ResHandler::Sound indx) {
+void SoundController::play(ResHandler::Sound indx,
+                           const sf::Vector3f & position, float minDistance,
+                           float attenuation, bool relative) {
     std::lock_guard<std::mutex> lk(soundsGuard);
-    soundIdQueue.push_back(indx);
+    soundRequests.push_back(
+        {indx, position, minDistance, attenuation, relative});
 }

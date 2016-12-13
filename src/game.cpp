@@ -324,8 +324,9 @@ void Game::update(const sf::Time & elapsedTime) {
         std::vector<sf::Vector2f> cameraTargets;
         en.update(this, !UI.isOpen(), elapsedTime, cameraTargets);
         camera.update(elapsedTime, cameraTargets);
-        if (player.visible)
+        if (player.visible) {
             player.update(this, elapsedTime, sounds);
+        }
         if (!UI.isOpen()) {
             effectGroup.apply([&elapsedTime](auto & vec) {
                 for (auto it = vec.begin(); it != vec.end();) {
