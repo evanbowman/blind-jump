@@ -4,8 +4,7 @@
 //========================================================================//
 
 #include "soundController.hpp"
-
-#include <iostream>
+#include "rng.hpp"
 
 void SoundController::update() {
     if (!soundRequests.empty()) {
@@ -23,7 +22,14 @@ void SoundController::update() {
             } else {
                 runningSounds.back().setRelativeToListener(true);
             }
-            runningSounds.back().setLoop(req.loop);
+            if (req.loop) {
+                // For some variety in looped sounds, set random playing offset
+                sf::Time loopedTrackLength = runningSounds.back().getBuffer()->getDuration();
+                auto randomOffset = rng::random(loopedTrackLength.asMilliseconds());
+                sf::Time playingOffset = sf::milliseconds(randomOffset);
+                runningSounds.back().setPlayingOffset(playingOffset);
+                runningSounds.back().setLoop(true);
+            }
             runningSounds.back().play();
         }
         soundRequests.clear();
