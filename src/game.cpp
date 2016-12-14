@@ -66,8 +66,34 @@ void Game::init() {
     this->nextLevel();
 }
 
-void Game::draw(sf::RenderWindow & window) {
-    if (!pInput->isFocused()) {
+extern bool gameHasFocus;
+
+void Game::eventLoop(sf::RenderWindow & window) {
+    sf::Event event;
+    while (window.pollEvent(event)) {
+        switch (event.type) {
+        case sf::Event::Closed:
+            window.close();
+            throw ShutdownSignal();
+            break;
+
+        case sf::Event::GainedFocus:
+            ::gameHasFocus = true;
+            break;
+
+        case sf::Event::LostFocus:
+            ::gameHasFocus = false;
+            break;
+
+        default:
+            pInput->recordEvent(event);
+            break;
+        }
+    }
+}
+
+void Game::updateGraphics(sf::RenderWindow & window) {
+    if (!::gameHasFocus) {
         util::sleep(milliseconds(200));
         return;
     }
@@ -84,12 +110,9 @@ void Game::draw(sf::RenderWindow & window) {
             gfxContext.shadows.clear();
             gfxContext.faces.clear();
             target.setView(camera.getOverworldView());
-            const sf::Vector2f viewCenter =
-                camera.getOverworldView().getCenter();
-            const sf::Vector2f viewSize = camera.getOverworldView().getSize();
             auto drawPolicy = [this](auto & vec) {
                 for (auto it = vec.begin(); it != vec.end(); ++it) {
-                    it->draw(gfxContext, camera.getOverworldView());
+                    it->get()->draw(gfxContext, camera.getOverworldView());
                 }
             };
             detailGroup.apply(drawPolicy);
@@ -291,8 +314,8 @@ void Game::draw(sf::RenderWindow & window) {
     drawTransitions(window);
 }
 
-void Game::update(const sf::Time & elapsedTime) {
-    if (!pInput->isFocused()) {
+void Game::updateLogic(const sf::Time & elapsedTime) {
+    if (!::gameHasFocus) {
         util::sleep(milliseconds(200));
         return;
     }
@@ -311,32 +334,27 @@ void Game::update(const sf::Time & elapsedTime) {
             bkg.setOffset(0, 0);
         }
         tiles.update();
-        detailGroup.apply([&elapsedTime, this](auto & vec) {
+        auto objUpdatePolicy = [&elapsedTime, this](auto & vec) {
             for (auto it = vec.begin(); it != vec.end();) {
-                if (it->getKillFlag()) {
+                if (it->get()->getKillFlag()) {
                     it = vec.erase(it);
                 } else {
-                    it->update(elapsedTime, this);
+                    it->get()->update(elapsedTime, this);
                     ++it;
                 }
             }
-        });
+        };
+        detailGroup.apply(objUpdatePolicy);
         std::vector<sf::Vector2f> cameraTargets;
         en.update(this, !UI.isOpen(), elapsedTime, cameraTargets);
         camera.update(elapsedTime, cameraTargets);
-        if (player.visible)
+        if (player.visible) {
             player.update(this, elapsedTime, sounds);
+            const sf::Vector2f playerPos = player.getPosition();
+            sf::Listener::setPosition(playerPos.x, playerPos.y, 35.f);
+        }
         if (!UI.isOpen()) {
-            effectGroup.apply([&elapsedTime](auto & vec) {
-                for (auto it = vec.begin(); it != vec.end();) {
-                    if (it->getKillFlag()) {
-                        it = vec.erase(it);
-                    } else {
-                        it->update(elapsedTime);
-                        ++it;
-                    }
-                }
-            });
+            effectGroup.apply(objUpdatePolicy);
         }
     }
     {
@@ -450,13 +468,11 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
     std::lock_guard<std::mutex> grd(transitionMutex);
     switch (transitionState) {
     case TransitionState::None: {
-        float teleporterX =
-            detailGroup.get<DetailRef::Teleporter>().back().getPosition().x;
-        float teleporterY =
-            detailGroup.get<DetailRef::Teleporter>().back().getPosition().y;
-        if ((std::abs(player.getXpos() - teleporterX) < 8 &&
-             std::abs(player.getYpos() - teleporterY + 12) < 8)) {
-            player.setPosition(teleporterX - 2.f, teleporterY - 16.f);
+        auto teleporterAddr = detailGroup.get<DetailRef::Teleporter>().back().get();
+        auto teleporterPos = teleporterAddr->getPosition();
+        if ((std::abs(player.getXpos() - teleporterPos.x) < 8 &&
+             std::abs(player.getYpos() - teleporterPos.y + 12) < 8)) {
+            player.setPosition(teleporterPos.x - 2.f, teleporterPos.y - 16.f);
             player.setState(Player::State::deactivated);
             if (!camera.moving() &&
                 (UI.getPowerupBubbleState() ==
@@ -637,6 +653,7 @@ void Game::nextLevel() {
             return {};
         }
     };
+    auto emptyOncreate = [](auto created) {};
     if (level != 0) {
         Coordinate c = tiles.getTeleporterLoc();
         detailGroup.add<DetailRef::Teleporter>(

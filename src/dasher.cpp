@@ -5,7 +5,7 @@
 
 #include "dasher.hpp"
 #include "angleFunction.hpp"
-#include "player.hpp"
+#include "game.hpp"
 #include <cmath>
 
 Dasher::Blur::Blur(sf::Sprite * spr, float xInit, float yInit) {
@@ -70,24 +70,26 @@ const sf::Sprite & Dasher::getSprite() const {
 
 const sf::Sprite & Dasher::getShadow() const { return shadow; }
 
-void Dasher::update(const Player * player, const std::vector<wall> & walls,
-                    EffectGroup & effects, const sf::Time & elapsedTime) {
+void Dasher::update(Game * pGame, const std::vector<wall> & walls, const sf::Time & elapsedTime) {
+    EffectGroup & effects = pGame->getEffects();
+    Player & player = pGame->getPlayer();
     if (health > 0) {
-        for (auto & element : effects.get<9>()) {
-            if (hitBox.overlapping(element.getHitBox()) &&
-                element.checkCanPoof()) {
+        for (auto & sharedElement : effects.get<9>()) {
+            auto addr = sharedElement.get();
+            if (hitBox.overlapping(addr->getHitBox()) &&
+                addr->checkCanPoof()) {
                 if (health == 1) {
-                    element.disablePuff();
-                    element.setKillFlag();
+                    addr->disablePuff();
+                    addr->setKillFlag();
                 }
-                element.poof();
+                addr->poof();
                 health -= 1;
                 colored = true;
                 colorAmount = 1.f;
             }
         }
         if (health == 0) {
-            if (xPos > player->getXpos()) {
+            if (xPos > player.getXpos()) {
                 deathSheet.setScale(1, 1);
             } else {
                 deathSheet.setScale(-1, 1);
@@ -95,17 +97,15 @@ void Dasher::update(const Player * player, const std::vector<wall> & walls,
             onDeath(effects);
         }
     }
+    SoundController & sounds = pGame->getSounds();
     Enemy::updateColor(elapsedTime);
-
     dasherSheet.setPosition(xPos + 4, yPos);
     deathSheet.setPosition(xPos + 4, yPos);
     shadow.setPosition(xPos - 4, yPos + 22);
     hitBox.setPosition(xPos, yPos);
-
     timer += elapsedTime.asMilliseconds();
-
     auto facePlayer = [this, player]() {
-        if (this->xPos > player->getXpos()) {
+        if (this->xPos > player.getXpos()) {
             this->dasherSheet.setScale(1, 1);
         } else {
             this->dasherSheet.setScale(-1, 1);
@@ -140,33 +140,20 @@ void Dasher::update(const Player * player, const std::vector<wall> & walls,
         if (frameTimer > 80 && shotCount < 3) {
             frameTimer -= 80;
             shotCount++;
-            if (xPos > player->getXpos()) {
+            if (xPos > player.getXpos()) {
                 effects.add<EffectRef::TurretFlashEffect>(
                     getgResHandlerPtr()->getTexture(
                         ResHandler::Texture::gameObjects),
                     xPos - 14, yPos + 2);
-                effects.add<EffectRef::DasherShot>(
-                    getgResHandlerPtr()->getTexture(
-                        ResHandler::Texture::gameObjects),
-                    getgResHandlerPtr()->getTexture(
-                        ResHandler::Texture::redglow),
-                    xPos - 12, yPos,
-                    angleFunction(target.x + 8, target.y + 8, xPos, yPos));
+                effects.add<EffectRef::DasherShot>(xPos - 12, yPos, angleFunction(target.x + 8, target.y + 8, xPos, yPos));
             } else {
                 effects.add<EffectRef::TurretFlashEffect>(
                     getgResHandlerPtr()->getTexture(
                         ResHandler::Texture::gameObjects),
                     xPos + 6, yPos + 2);
-                effects.add<EffectRef::DasherShot>(
-                    getgResHandlerPtr()->getTexture(
-                        ResHandler::Texture::gameObjects),
-                    getgResHandlerPtr()->getTexture(
-                        ResHandler::Texture::redglow),
-                    xPos + 4, yPos,
-                    angleFunction(target.x, target.y + 8, xPos, yPos));
+                effects.add<EffectRef::DasherShot>(xPos + 4, yPos, angleFunction(target.x, target.y + 8, xPos, yPos));
             }
         }
-
         if (timer > 300) {
             timer -= 300;
             shotCount = 0;
@@ -179,7 +166,7 @@ void Dasher::update(const Player * player, const std::vector<wall> & walls,
         if (timer > 80) {
             timer -= 80;
             frameTimer = 0;
-            target = player->getPosition();
+            target = player.getPosition();
             state = State::shooting;
             frameIndex = 4;
         }
@@ -191,6 +178,7 @@ void Dasher::update(const Player * player, const std::vector<wall> & walls,
         if (timer > 352) {
             timer -= 352;
             state = State::dashing;
+            // sounds.play(ResHandler::Sound::wooshMono, {xPos, yPos, 0.f}, 220.f, 110.f, false);
             frameIndex = 2;
             uint8_t tries{0};
             float dir{static_cast<float>(rng::random<359>())};

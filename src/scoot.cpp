@@ -5,6 +5,7 @@
 
 #include "scoot.hpp"
 #include "angleFunction.hpp"
+#include "game.hpp"
 #include "player.hpp"
 #include <cmath>
 
@@ -28,15 +29,17 @@ void Scoot::changeDir(float dir) {
     vSpeed = std::sin(dir);
 }
 
-void Scoot::update(const Player * player, const std::vector<wall> & w,
-                   EffectGroup & effects, const sf::Time & elapsedTime) {
-    for (auto & element : effects.get<9>()) {
-        if (hitBox.overlapping(element.getHitBox()) && element.checkCanPoof()) {
+void Scoot::update(Game * pGame, const std::vector<wall> & w,
+                   const sf::Time & elapsedTime) {
+    EffectGroup & effects = pGame->getEffects();
+    for (auto & sharedElement : effects.get<9>()) {
+        auto addr = sharedElement.get();
+        if (hitBox.overlapping(addr->getHitBox()) && addr->checkCanPoof()) {
             if (health == 1) {
-                element.disablePuff();
-                element.setKillFlag();
+                addr->disablePuff();
+                addr->setKillFlag();
             }
-            element.poof();
+            addr->poof();
             health -= 1;
             colored = true;
             colorAmount = 1.f;
@@ -49,14 +52,12 @@ void Scoot::update(const Player * player, const std::vector<wall> & w,
     hitBox.setPosition(xPos, yPos);
     spriteSheet.setPosition(xPos, yPos);
     shadow.setPosition(xPos - 6, yPos + 2);
-
-    // Face the player
-    if (xPos > player->getXpos()) {
+    Player & player = pGame->getPlayer();
+    if (xPos > player.getXpos()) {
         spriteSheet.setScale(1, 1);
     } else {
         spriteSheet.setScale(-1, 1);
     }
-
     switch (state) {
     case State::drift1:
         timer += elapsedTime.asMilliseconds();
@@ -65,8 +66,8 @@ void Scoot::update(const Player * player, const std::vector<wall> & w,
             ;
             state = State::drift2;
             if (rng::random<2>()) {
-                changeDir(atan((yPos - player->getYpos()) /
-                               (xPos - player->getXpos())));
+                changeDir(atan((yPos - player.getYpos()) /
+                               (xPos - player.getXpos())));
             } else {
                 changeDir(static_cast<float>(rng::random<359>()));
             }
@@ -82,23 +83,20 @@ void Scoot::update(const Player * player, const std::vector<wall> & w,
         break;
 
     case State::shoot: {
-        const sf::Vector2f playerPos = player->getPosition();
+        const sf::Vector2f playerPos = player.getPosition();
         effects.add<EffectRef::TurretFlashEffect>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             xPos - 8, yPos - 12);
-        effects.add<EffectRef::TurretShot>(
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
-            xPos - 8, yPos - 12,
+        effects.add<EffectRef::TurretShot>(xPos - 8, yPos - 12,
             angleFunction(playerPos.x + 16, playerPos.y + 8, xPos - 8,
                           yPos - 8));
         state = State::recoil;
         changeDir(
-            atan((yPos - player->getYpos()) / (xPos - player->getXpos())));
+            atan((yPos - player.getYpos()) / (xPos - player.getXpos())));
         hSpeed *= -1;
         vSpeed *= -1;
         // Correct for negative values in arctan calculation
-        if (xPos > player->getXpos()) {
+        if (xPos > player.getXpos()) {
             hSpeed *= -1;
             vSpeed *= -1;
         }
@@ -113,8 +111,8 @@ void Scoot::update(const Player * player, const std::vector<wall> & w,
             state = State::drift1;
             speedScale = 0.5f;
             if (rng::random<2>()) {
-                changeDir(atan((yPos - player->getYpos()) /
-                               (xPos - player->getXpos())));
+                changeDir(atan((yPos - player.getYpos()) /
+                               (xPos - player.getXpos())));
             } else {
                 changeDir(rng::random<359>());
             }

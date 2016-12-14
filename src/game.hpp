@@ -40,8 +40,9 @@ public:
     };
     Game(const sf::Vector2f & viewPort, InputController *, ui::Frontend *,
          sf::RenderWindow *);
-    void update(const sf::Time &);
-    void draw(sf::RenderWindow &);
+    void updateLogic(const sf::Time &);
+    void updateGraphics(sf::RenderWindow &);
+    void eventLoop(sf::RenderWindow &);
     void nextLevel();
     int getLevel();
     DetailGroup & getDetails();

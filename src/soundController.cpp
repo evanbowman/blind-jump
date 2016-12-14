@@ -4,24 +4,74 @@
 //========================================================================//
 
 #include "soundController.hpp"
+#include "rng.hpp"
 
 void SoundController::update() {
-    if (!soundIdQueue.empty()) {
+    if (!soundRequests.empty()) {
         std::lock_guard<std::mutex> lk(soundsGuard);
-        for (auto soundId : soundIdQueue) {
-            sounds.emplace(getgResHandlerPtr()->getSound(soundId));
-            sounds.back().play();
+        for (const auto req : soundRequests) {
+            runningSounds.emplace_back(getgResHandlerPtr()->getSound(req.soundIdx));
+            runningSounds.back().setMinDistance(req.minDistance);
+            runningSounds.back().setAttenuation(req.attenuation);
+            runningData.push_back({req.source, req.spatialized});
+            if (req.spatialized) {
+                if (auto sp = req.source.lock()) {
+                    const auto pos = sp.get()->getPosition();
+                    runningSounds.back().setPosition(pos.x, pos.y, 0.f);
+                }
+            } else {
+                runningSounds.back().setRelativeToListener(true);
+            }
+            if (req.loop) {
+                // For some variety in looped sounds, set random playing offset
+                sf::Time loopedTrackLength = runningSounds.back().getBuffer()->getDuration();
+                auto randomOffset = rng::random(loopedTrackLength.asMilliseconds());
+                sf::Time playingOffset = sf::milliseconds(randomOffset);
+                runningSounds.back().setPlayingOffset(playingOffset);
+                runningSounds.back().setLoop(true);
+            }
+            runningSounds.back().play();
         }
-        soundIdQueue.clear();
+        soundRequests.clear();
     }
-    if (sounds.size() > 0) {
-        if (sounds.front().getStatus() == sf::Sound::Stopped) {
-            sounds.pop();
+    while (true) {
+        if (runningSounds.size() > 0) {
+            if (runningSounds.front().getStatus() != sf::Sound::Playing) {
+                runningSounds.pop_front();
+                runningData.pop_front();
+            } else {
+                break;
+            }
+        } else {
+            break;
+        }
+    }
+    for (auto iters = std::make_pair(runningSounds.begin(), runningData.begin());
+         iters.first != runningSounds.end();
+         ++iters.first, ++iters.second) {
+        if (iters.second->spatialized) {
+            if (auto sp = iters.second->source.lock()) {
+                const auto pos = sp.get()->getPosition();
+                iters.first->setPosition(pos.x, pos.y, 0.f);
+            } else {
+                iters.second->spatialized = false;
+                iters.first->pause();
+            }
         }
     }
 }
 
 void SoundController::play(ResHandler::Sound indx) {
     std::lock_guard<std::mutex> lk(soundsGuard);
-    soundIdQueue.push_back(indx);
+    soundRequests.push_back({indx, 1.f, 0.f, false, false /*, nullptr not
+                                                            convertible to 
+                                                            weak_ptr*/});
+}
+
+void SoundController::play(ResHandler::Sound indx,
+                           std::shared_ptr<framework::Object> source,
+                           float minDistance,
+                           float attenuation, bool loop) {
+    std::lock_guard<std::mutex> lk(soundsGuard);
+    soundRequests.push_back({indx, minDistance, attenuation, true, loop, source});
 }

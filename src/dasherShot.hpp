@@ -13,20 +13,22 @@
 #include "spriteSheet.hpp"
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include "soundController.hpp"
+#include <memory>
 
 namespace effect {
 template <typename DrawPolicy>
 class DasherShot : public Drawable<DasherShot<DrawPolicy>, DrawPolicy>,
-                   public Effect {
+                   public Effect,
+                   public std::enable_shared_from_this<DasherShot<DrawPolicy>> {
 public:
     static const int drawOffset = 11;
     using HBox = framework::HitBox<12, 12, -6, -6>;
-    DasherShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr,
-               float x, float y, float dir)
-        : Effect(x, y) {
-        spriteSheet.setTexture(mainTxtr);
+    DasherShot(float x, float y, float dir) : Effect(x, y), soundsStarted(false) {
+        auto res = getgResHandlerPtr();
+        spriteSheet.setTexture(res->getTexture(ResHandler::Texture::gameObjects));
         spriteSheet.setOrigin(6, 6);
-        glowSprite.setTexture(glowTxtr);
+        glowSprite.setTexture(res->getTexture(ResHandler::Texture::redglow));
         glowSprite.setOrigin(22.5, 22.5);
         int diff = pow(-1, rng::random<2>() + rng::random<6, -3>());
         direction =
@@ -37,7 +39,15 @@ public:
         timeout = 0;
         driftSel = rng::random<2>();
     }
-    void update(const sf::Time & elapsedTime) {
+    void initSounds(SoundController & sounds) {
+        sounds.play(ResHandler::Sound::espark, this->shared_from_this(), 40.f, 5.f, true);
+    }
+    template <typename Game>
+    void update(const sf::Time & elapsedTime, Game * pGame) {
+        if (!soundsStarted) {
+            initSounds(pGame->getSounds());
+            soundsStarted = true;
+        }
         float scale = initialVelocity *
                       Easing::easeOut<2>(timeout, static_cast<int64_t>(830000));
         position.x += scale * (elapsedTime.asMicroseconds() * 0.00005f) *
@@ -75,5 +85,6 @@ private:
     float initialVelocity;
     HBox hitBox;
     sf::Sprite glowSprite;
+    bool soundsStarted;
 };
 }

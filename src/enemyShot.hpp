@@ -30,7 +30,8 @@ public:
         spriteSheet.setTexture(mainTxtr);
         direction = dir * (3.14 / 180);
     }
-    void update(const sf::Time & elapsedTime) {
+    template <typename Game>
+    void update(const sf::Time & elapsedTime, Game *) {
         position.x +=
             4.4 * (elapsedTime.asMicroseconds() * 0.00005f) * (cos(direction));
         position.y +=

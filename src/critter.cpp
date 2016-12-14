@@ -30,13 +30,14 @@ void Critter::update(const Player * player, EffectGroup & effects,
                      const sf::Time & elapsedTime, tileController & tiles) {
     xPos = xInit + 12;
     yPos = yInit;
-    for (auto & element : effects.get<9>()) {
-        if (element.getHitBox().overlapping(hitBox) && element.checkCanPoof()) {
+    for (auto & sharedElement : effects.get<9>()) {
+        auto addr = sharedElement.get();
+        if (addr->getHitBox().overlapping(hitBox) && addr->checkCanPoof()) {
             if (health == 1) {
-                element.disablePuff();
-                element.setKillFlag();
+                addr->disablePuff();
+                addr->setKillFlag();
             }
-            element.poof();
+            addr->poof();
             health -= 1;
             colored = true;
             colorAmount = 1.f;

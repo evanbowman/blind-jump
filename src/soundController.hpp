@@ -7,22 +7,35 @@
 
 #include "resourceHandler.hpp"
 #include <SFML/Audio.hpp>
-#include <queue>
+#include <list>
 #include <vector>
+#include <memory>
+#include "framework/framework.hpp"
+
+struct reqInfo {
+    ResHandler::Sound soundIdx;
+    float minDistance;
+    float attenuation;
+    bool spatialized;
+    bool loop;
+    std::weak_ptr<framework::Object> source;
+};
+
+struct runningData {
+    std::weak_ptr<framework::Object> source;
+    bool spatialized;
+};
 
 class SoundController {
 public:
-    // The function that updates the sound controller is called poll and
-    // not update because it does not run in the game's update function
-    // like a lot of the other controller code. Some operating systems
-    // require graphics and sound related stuff to happen on the main
-    // thread, it may not be necessary, but just to be safe...
     void update();
     void play(ResHandler::Sound);
+    void play(ResHandler::Sound indx, std::shared_ptr<framework::Object>, float minDistance, float attenuation, bool loop = false);
     
 private:
     std::mutex soundsGuard;
     sf::Music currentSong;
-    std::queue<sf::Sound> sounds;
-    std::vector<ResHandler::Sound> soundIdQueue;
+    std::deque<sf::Sound> runningSounds;
+    std::deque<runningData> runningData;
+    std::vector<reqInfo> soundRequests;
 };
