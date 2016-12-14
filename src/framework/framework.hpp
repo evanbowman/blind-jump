@@ -128,27 +128,19 @@ namespace framework {
 	//===========================================================//
 	template<typename ...Ts>
 	class Group {
+        using containerType = std::tuple<std::vector<std::shared_ptr<Ts>>...>;
 		template<std::size_t indx>
 		void checkBounds() {
-			static_assert(indx < std::tuple_size<std::tuple<std::vector<Ts>...>>::value,
+			static_assert(indx < std::tuple_size<containerType>::value,
 						  "Error: Index out of bounds");
 		}
-		std::tuple<std::vector<Ts>...> contents;
+	    containerType contents;
 	public:
 		template<std::size_t indx, typename ...Args>
 		void add(Args && ...args) {
 			checkBounds<indx>();
-			std::get<indx>(contents).emplace_back(std::forward<Args>(args)...);
-		}
-		template<std::size_t indx, typename T>
-		void add(T & value) {
-			checkBounds<indx>();
-			std::get<indx>(contents).push_back(value);
-		}
-		template<std::size_t indx, typename T>
-		void add(T && value) {
-			checkBounds<indx>();
-			std::get<indx>(contents).push_back(std::forward<T>(value));
+            using elementType = typename std::tuple_element<indx, containerType>::type::value_type::element_type; 
+			std::get<indx>(contents).emplace_back(std::make_shared<elementType>(std::forward<Args>(args)...));
 		}
 		template<std::size_t indx>
 		void clear() {

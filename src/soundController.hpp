@@ -7,28 +7,34 @@
 
 #include "resourceHandler.hpp"
 #include <SFML/Audio.hpp>
-#include <queue>
+#include <list>
 #include <vector>
+#include <memory>
+#include "framework/framework.hpp"
 
 struct reqInfo {
     ResHandler::Sound soundIdx;
-    sf::Vector3f position;
     float minDistance;
     float attenuation;
-    bool relative;
+    bool spatialized;
+    std::weak_ptr<framework::Object> source;
+};
+
+struct runningData {
+    std::weak_ptr<framework::Object> source;
+    bool spatialized;
 };
 
 class SoundController {
 public:
     void update();
-    void play(ResHandler::Sound indx,
-              const sf::Vector3f & position = {0.f, 0.f, 0.f},
-              float minDistance = 1.f, float attenuation = 0.f,
-              bool relative = true);
-
+    void play(ResHandler::Sound);
+    void play(ResHandler::Sound indx, std::shared_ptr<framework::Object>, float minDistance, float attenuation);
+    
 private:
     std::mutex soundsGuard;
     sf::Music currentSong;
-    std::queue<sf::Sound> runningSounds;
+    std::deque<sf::Sound> runningSounds;
+    std::deque<runningData> runningData;
     std::vector<reqInfo> soundRequests;
 };

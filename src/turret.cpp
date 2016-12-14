@@ -34,12 +34,13 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
         }
     }
     for (auto & element : effects.get<9>()) {
-        if (hitBox.overlapping(element.getHitBox()) && element.checkCanPoof()) {
+        auto addr = element.get();
+        if (hitBox.overlapping(addr->getHitBox()) && addr->checkCanPoof()) {
             if (hp == 1) {
-                element.disablePuff();
-                element.setKillFlag();
+                addr->disablePuff();
+                addr->setKillFlag();
             }
-            element.poof();
+            addr->poof();
             hp -= 1;
             isColored = true;
             colorAmount = 1.f;

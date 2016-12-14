@@ -197,26 +197,24 @@ void enemyController::update(Game * pGame, bool enabled,
             element.activate();
         }
     }
-
-    if (!dashers.empty()) {
-        for (auto & element : dashers) {
-            if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 32 &&
-                element.getXpos() < viewCenter.x + viewSize.x / 2 + 32 &&
-                element.getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
-                element.getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
-                if (enabled) {
-                    element.update(player, tileController.walls, effectGroup,
-                                   elapsedTime);
-                    if (element.getState() != Dasher::State::dead) {
-                        cameraTargets.emplace_back(element.getXpos(),
-                                                   element.getYpos());
-                    }
+    for (auto & element : dashers) {
+        if (element.getXpos() > viewCenter.x - viewSize.x / 2 - 32 &&
+            element.getXpos() < viewCenter.x + viewSize.x / 2 + 32 &&
+            element.getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
+            element.getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
+            if (enabled) {
+                SoundController & sounds = pGame->getSounds();
+                element.update(player, sounds, tileController.walls,
+                               effectGroup, elapsedTime);
+                if (element.getState() != Dasher::State::dead) {
+                    cameraTargets.emplace_back(element.getXpos(),
+                                               element.getYpos());
                 }
-                if (element.getKillFlag()) {
-                    util::sleep(milliseconds(60));
-                    camera.shake(0.17f);
-                    element.setKillFlag(false);
-                }
+            }
+            if (element.getKillFlag()) {
+                util::sleep(milliseconds(60));
+                camera.shake(0.17f);
+                element.setKillFlag(false);
             }
         }
     }

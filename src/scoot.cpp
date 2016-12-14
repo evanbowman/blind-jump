@@ -30,13 +30,14 @@ void Scoot::changeDir(float dir) {
 
 void Scoot::update(const Player * player, const std::vector<wall> & w,
                    EffectGroup & effects, const sf::Time & elapsedTime) {
-    for (auto & element : effects.get<9>()) {
-        if (hitBox.overlapping(element.getHitBox()) && element.checkCanPoof()) {
+    for (auto & sharedElement : effects.get<9>()) {
+        auto addr = sharedElement.get();
+        if (hitBox.overlapping(addr->getHitBox()) && addr->checkCanPoof()) {
             if (health == 1) {
-                element.disablePuff();
-                element.setKillFlag();
+                addr->disablePuff();
+                addr->setKillFlag();
             }
-            element.poof();
+            addr->poof();
             health -= 1;
             colored = true;
             colorAmount = 1.f;
@@ -49,14 +50,12 @@ void Scoot::update(const Player * player, const std::vector<wall> & w,
     hitBox.setPosition(xPos, yPos);
     spriteSheet.setPosition(xPos, yPos);
     shadow.setPosition(xPos - 6, yPos + 2);
-
     // Face the player
     if (xPos > player->getXpos()) {
         spriteSheet.setScale(1, 1);
     } else {
         spriteSheet.setScale(-1, 1);
     }
-
     switch (state) {
     case State::drift1:
         timer += elapsedTime.asMilliseconds();

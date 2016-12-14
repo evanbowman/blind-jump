@@ -8,6 +8,7 @@
 #include "effectsController.hpp"
 #include "enemy.hpp"
 #include "resourceHandler.hpp"
+#include "soundController.hpp"
 
 class Player;
 
@@ -39,7 +40,7 @@ public:
     Dasher(const sf::Texture &, float, float);
     const sf::Sprite & getSprite() const;
     const sf::Sprite & getShadow() const;
-    void update(const Player *, const std::vector<wall> &, EffectGroup & ef,
+    void update(const Player *, SoundController &, const std::vector<wall> &, EffectGroup & ef,
                 const sf::Time &);
     std::vector<Dasher::Blur> * getBlurEffects();
     State getState() const;

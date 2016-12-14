@@ -112,7 +112,7 @@ void Game::updateGraphics(sf::RenderWindow & window) {
             target.setView(camera.getOverworldView());
             auto drawPolicy = [this](auto & vec) {
                 for (auto it = vec.begin(); it != vec.end(); ++it) {
-                    it->draw(gfxContext, camera.getOverworldView());
+                    it->get()->draw(gfxContext, camera.getOverworldView());
                 }
             };
             detailGroup.apply(drawPolicy);
@@ -336,10 +336,10 @@ void Game::updateLogic(const sf::Time & elapsedTime) {
         tiles.update();
         detailGroup.apply([&elapsedTime, this](auto & vec) {
             for (auto it = vec.begin(); it != vec.end();) {
-                if (it->getKillFlag()) {
+                if (it->get()->getKillFlag()) {
                     it = vec.erase(it);
                 } else {
-                    it->update(elapsedTime, this);
+                    it->get()->update(elapsedTime, this);
                     ++it;
                 }
             }
@@ -355,10 +355,10 @@ void Game::updateLogic(const sf::Time & elapsedTime) {
         if (!UI.isOpen()) {
             effectGroup.apply([&elapsedTime](auto & vec) {
                 for (auto it = vec.begin(); it != vec.end();) {
-                    if (it->getKillFlag()) {
+                    if (it->get()->getKillFlag()) {
                         it = vec.erase(it);
                     } else {
-                        it->update(elapsedTime);
+                        it->get()->update(elapsedTime);
                         ++it;
                     }
                 }
@@ -476,13 +476,11 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
     std::lock_guard<std::mutex> grd(transitionMutex);
     switch (transitionState) {
     case TransitionState::None: {
-        float teleporterX =
-            detailGroup.get<DetailRef::Teleporter>().back().getPosition().x;
-        float teleporterY =
-            detailGroup.get<DetailRef::Teleporter>().back().getPosition().y;
-        if ((std::abs(player.getXpos() - teleporterX) < 8 &&
-             std::abs(player.getYpos() - teleporterY + 12) < 8)) {
-            player.setPosition(teleporterX - 2.f, teleporterY - 16.f);
+        auto teleporterAddr = detailGroup.get<DetailRef::Teleporter>().back().get();
+        auto teleporterPos = teleporterAddr->getPosition();
+        if ((std::abs(player.getXpos() - teleporterPos.x) < 8 &&
+             std::abs(player.getYpos() - teleporterPos.y + 12) < 8)) {
+            player.setPosition(teleporterPos.x - 2.f, teleporterPos.y - 16.f);
             player.setState(Player::State::deactivated);
             if (!camera.moving() &&
                 (UI.getPowerupBubbleState() ==

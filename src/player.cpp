@@ -295,30 +295,31 @@ void Player::update(Game * pGame, const sf::Time & elapsedTime,
         rightPrevious = right;
         // If the action button is pressed, open nearby chests
         if (state == State::nominal) {
-            std::vector<TreasureChest> & chests =
-                details.get<DetailRef::TreasureChest>();
-            for (auto & chest : chests) {
-                if (std::abs(xPos - chest.getPosition().x) < 32 &&
-                    std::abs(yPos - chest.getPosition().y) < 26 &&
-                    chest.getState() == TreasureChest::State::closed &&
+            auto chests = details.get<DetailRef::TreasureChest>();
+            for (auto & sharedChest : chests) {
+                const auto chestPosition = sharedChest.get()->getPosition();
+                if (std::abs(xPos - chestPosition.x) < 32 &&
+                    std::abs(yPos - chestPosition.y) < 26 &&
+                    sharedChest.get()->getState() == TreasureChest::State::closed &&
                     action) {
                     util::sleep(milliseconds(40));
-                    pGame->getSounds().play(ResHandler::Sound::creak, {chest.getPosition().x, chest.getPosition().y, 0.f}, 64.f, 15.f, false);
-                    chest.setState(TreasureChest::State::opening);
+                    pGame->getSounds().play(ResHandler::Sound::creak, sharedChest, 64.f, 15.f);
+                    sharedChest.get()->setState(TreasureChest::State::opening);
                 }
             }
         }
-        for (auto & term : details.get<DetailRef::Terminal>()) {
-            const sf::Vector2f termPos = term.getPosition();
-            const Terminal::State termState = term.getState();
+        for (auto & sharedTerm : details.get<DetailRef::Terminal>()) {
+            auto termAddr = sharedTerm.get();
+            const sf::Vector2f termPos = termAddr->getPosition();
+            const Terminal::State termState = termAddr->getState();
             if (std::sqrt(std::pow(xPos - termPos.x, 2) +
                           std::pow(yPos - termPos.y, 2)) < 48.f) {
                 if (termState == Terminal::State::dormant) {
-                    term.setState(Terminal::State::wakeup);
+                    termAddr->setState(Terminal::State::wakeup);
                 }
             } else {
                 if (termState == Terminal::State::awake) {
-                    term.setState(Terminal::State::poweroff);
+                    termAddr->setState(Terminal::State::poweroff);
                 }
             }
         }
@@ -723,8 +724,8 @@ template <size_t indx, typename F>
 void checkEffectCollision(EffectGroup & effects, Player * pPlayer,
                           const F & policy) {
     for (auto & element : effects.get<indx>()) {
-        if (pPlayer->getHitBox().overlapping(element.getHitBox())) {
-            element.setKillFlag();
+        if (pPlayer->getHitBox().overlapping(element.get()->getHitBox())) {
+            element.get()->setKillFlag();
             policy();
         }
     }

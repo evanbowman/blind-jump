@@ -70,17 +70,19 @@ const sf::Sprite & Dasher::getSprite() const {
 
 const sf::Sprite & Dasher::getShadow() const { return shadow; }
 
-void Dasher::update(const Player * player, const std::vector<wall> & walls,
-                    EffectGroup & effects, const sf::Time & elapsedTime) {
+void Dasher::update(const Player * player, SoundController & sounds,
+                    const std::vector<wall> & walls, EffectGroup & effects,
+                    const sf::Time & elapsedTime) {
     if (health > 0) {
-        for (auto & element : effects.get<9>()) {
-            if (hitBox.overlapping(element.getHitBox()) &&
-                element.checkCanPoof()) {
+        for (auto & sharedElement : effects.get<9>()) {
+            auto addr = sharedElement.get();
+            if (hitBox.overlapping(addr->getHitBox()) &&
+                addr->checkCanPoof()) {
                 if (health == 1) {
-                    element.disablePuff();
-                    element.setKillFlag();
+                    addr->disablePuff();
+                    addr->setKillFlag();
                 }
-                element.poof();
+                addr->poof();
                 health -= 1;
                 colored = true;
                 colorAmount = 1.f;
@@ -191,6 +193,7 @@ void Dasher::update(const Player * player, const std::vector<wall> & walls,
         if (timer > 352) {
             timer -= 352;
             state = State::dashing;
+            // sounds.play(ResHandler::Sound::wooshMono, {xPos, yPos, 0.f}, 220.f, 110.f, false);
             frameIndex = 2;
             uint8_t tries{0};
             float dir{static_cast<float>(rng::random<359>())};

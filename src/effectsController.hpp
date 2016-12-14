@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "FireExplosion.hpp"
 #include "Item.hpp"
 #include "RenderType.hpp"
@@ -46,13 +48,13 @@ struct EffectRef {
     };
 };
 
-using EffectGroup = framework::Group<TurretFlashEffect, // - 0
-                                     SmallExplosion,    // ---- 1
-                                     FireExplosion,     // ----- 2
-                                     ShotPuff,          // ---------- 3
-                                     Item,              // -------------- 4
-                                     Item,              // -------------- 5
-                                     EnemyShot,         // --------- 6
-                                     DasherShot,        // -------- 7
-                                     TurretShot,        // -------- 8
-                                     PlayerShot>;       // ------- 9
+using EffectGroup = framework::Group<TurretFlashEffect,
+                                     SmallExplosion,
+                                     FireExplosion,
+                                     ShotPuff,
+                                     Item,
+                                     Item,
+                                     EnemyShot,
+                                     DasherShot,
+                                     TurretShot,
+                                     PlayerShot>;
