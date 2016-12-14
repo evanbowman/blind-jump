@@ -6,6 +6,13 @@
 #include "soundController.hpp"
 #include "rng.hpp"
 
+SoundController::SoundController() {
+    currentSong.openFromFile(resourcePath() + "music/Frostellar.ogg");
+    currentSong.play();
+    currentSong.setLoop(true);
+    currentSong.setVolume(60);
+}
+
 void SoundController::update() {
     if (!soundRequests.empty()) {
         std::lock_guard<std::mutex> lk(soundsGuard);

@@ -32,9 +32,7 @@ public:
         glowSprite.setOrigin(22.5, 22.5);
         int diff = pow(-1, rng::random<2>() + rng::random<6, -3>());
         direction =
-            (dir + diff) * (3.14 / 180); // I added 270 previously to get
-        // the sprite to face in the right
-        // direction, so subract it
+            (dir + diff) * (3.14 / 180);
         initialVelocity = 5.8f + (0.8f * rng::random<3>());
         timeout = 0;
         driftSel = rng::random<2>();

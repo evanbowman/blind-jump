@@ -46,7 +46,7 @@ if(SFML_FOUND)
     set(MACOSX_BUNDLE_ICON_FILE icon.icns)
     add_custom_target(pkg ALL mkdir -p ${EXECUTABLE_NAME}.app/Contents/Resources
       COMMAND mkdir -p ${EXECUTABLE_NAME}.app/Contents/Frameworks
-      COMMAND cp ../res/* ${EXECUTABLE_NAME}.app/Contents/Resources
+      COMMAND cp -r ../res/* ${EXECUTABLE_NAME}.app/Contents/Resources
       COMMAND cp macos/icon.icns ${EXECUTABLE_NAME}.app/Contents/Resources
       COMMAND cp -r macos/Frameworks/* ${EXECUTABLE_NAME}.app/Contents/Frameworks)
   elseif(WIN32)

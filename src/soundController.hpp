@@ -28,6 +28,7 @@ struct runningData {
 
 class SoundController {
 public:
+    SoundController();
     void update();
     void play(ResHandler::Sound);
     void play(ResHandler::Sound indx, std::shared_ptr<framework::Object>, float minDistance, float attenuation, bool loop = false);

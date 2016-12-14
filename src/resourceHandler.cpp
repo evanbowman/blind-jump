@@ -41,58 +41,58 @@ void ResHandler::load() {
 }
 
 void ResHandler::loadShaders(const std::string & resPath) {
-    loadResource(resPath + "desaturate.frag", Shader::desaturate, shaders);
-    loadResource(resPath + "color.frag", Shader::color, shaders);
-    loadResource(resPath + "blur.frag", Shader::blur, shaders);
+    loadResource(resPath + "shaders/desaturate.frag", Shader::desaturate, shaders);
+    loadResource(resPath + "shaders/color.frag", Shader::color, shaders);
+    loadResource(resPath + "shaders/blur.frag", Shader::blur, shaders);
 }
 
 void ResHandler::loadTextures(const std::string & resPath) {
-    loadResource(resPath + "teleporterBeamGlow.png",
+    loadResource(resPath + "textures/teleporterBeamGlow.png",
                  Texture::teleporterBeamGlow, textures);
-    loadResource(resPath + "fireExplosionGlow.png", Texture::fireExplosionGlow,
+    loadResource(resPath + "textures/fireExplosionGlow.png", Texture::fireExplosionGlow,
                  textures);
-    loadResource(resPath + "charger_enemy_shadow.png", Texture::scootShadow,
+    loadResource(resPath + "textures/charger_enemy_shadow.png", Texture::scootShadow,
                  textures);
-    loadResource(resPath + "vignetteShadow.png", Texture::vignetteShadow,
+    loadResource(resPath + "textures/vignetteShadow.png", Texture::vignetteShadow,
                  textures);
-    loadResource(resPath + "teleporterGlow.png", Texture::teleporterGlow,
+    loadResource(resPath + "textures/teleporterGlow.png", Texture::teleporterGlow,
                  textures);
-    loadResource(resPath + "bkg_stars_distant.png", Texture::bkgStarsFar,
+    loadResource(resPath + "textures/bkg_stars_distant.png", Texture::bkgStarsFar,
                  textures);
-    loadResource(resPath + "introLevelMask.png", Texture::introLevelMask,
+    loadResource(resPath + "textures/introLevelMask.png", Texture::introLevelMask,
                  textures);
-    loadResource(resPath + "powerupSheet.png", Texture::powerupSheet, textures);
-    loadResource(resPath + "whiteFloorGlow.png", Texture::whiteGlow, textures);
-    loadResource(resPath + "gameObjects.png", Texture::gameObjects, textures);
-    loadResource(resPath + "blueFloorGlow.png", Texture::blueglow, textures);
-    loadResource(resPath + "bkg_stars.png", Texture::bkgStarsNear, textures);
-    loadResource(resPath + "vignetteMask.png", Texture::vignette, textures);
-    loadResource(resPath + "introLevel.png", Texture::introLevel, textures);
-    loadResource(resPath + "redFloorGlow.png", Texture::redglow, textures);
-    loadResource(resPath + "lampLight.png", Texture::lamplight, textures);
-    loadResource(resPath + "introWall.png", Texture::introWall, textures);
-    loadResource(resPath + "bkg_orbit2.png", Texture::bkgOrbit, textures);
+    loadResource(resPath + "textures/powerupSheet.png", Texture::powerupSheet, textures);
+    loadResource(resPath + "textures/whiteFloorGlow.png", Texture::whiteGlow, textures);
+    loadResource(resPath + "textures/gameObjects.png", Texture::gameObjects, textures);
+    loadResource(resPath + "textures/blueFloorGlow.png", Texture::blueglow, textures);
+    loadResource(resPath + "textures/bkg_stars.png", Texture::bkgStarsNear, textures);
+    loadResource(resPath + "textures/vignetteMask.png", Texture::vignette, textures);
+    loadResource(resPath + "textures/introLevel.png", Texture::introLevel, textures);
+    loadResource(resPath + "textures/redFloorGlow.png", Texture::redglow, textures);
+    loadResource(resPath + "textures/lampLight.png", Texture::lamplight, textures);
+    loadResource(resPath + "textures/introWall.png", Texture::introWall, textures);
+    loadResource(resPath + "textures/bkg_orbit2.png", Texture::bkgOrbit, textures);
 }
 
 void ResHandler::loadFonts(const std::string & resPath) {
-    loadResource(resPath + "Cornerstone.ttf", Font::cornerstone, fonts);
+    loadResource(resPath + "fonts/Cornerstone.ttf", Font::cornerstone, fonts);
 }
 
 void ResHandler::loadImages(const std::string & resPath) {
-    loadResource(resPath + "soilTileset.png", Image::soilTileset, images);
-    loadResource(resPath + "grassSetEdge.png", Image::grassSet2, images);
-    loadResource(resPath + "grassSet.png", Image::grassSet1, images);
-    loadResource(resPath + "gameIcon.png", Image::icon, images);
+    loadResource(resPath + "textures/soilTileset.png", Image::soilTileset, images);
+    loadResource(resPath + "textures/grassSetEdge.png", Image::grassSet2, images);
+    loadResource(resPath + "textures/grassSet.png", Image::grassSet1, images);
+    loadResource(resPath + "textures/gameIcon.png", Image::icon, images);
 }
 
 void ResHandler::loadSounds(const std::string & resPath) {
-    loadResource(resPath + "gunshot.ogg", Sound::gunShot, sounds);
-    loadResource(resPath + "creak.ogg", Sound::creak, sounds);
-    loadResource(resPath + "bite-small.wav", Sound::bite1, sounds);
-    loadResource(resPath + "bite-small3.wav", Sound::bite2, sounds);
-    loadResource(resPath + "woosh.ogg", Sound::woosh, sounds);
-    loadResource(resPath + "wooshMono.ogg", Sound::wooshMono, sounds);
-    loadResource(resPath + "espark.ogg", Sound::espark, sounds);
+    loadResource(resPath + "sounds/gunshot.ogg", Sound::gunShot, sounds);
+    loadResource(resPath + "sounds/creak.ogg", Sound::creak, sounds);
+    loadResource(resPath + "sounds/bite-small.wav", Sound::bite1, sounds);
+    loadResource(resPath + "sounds/bite-small3.wav", Sound::bite2, sounds);
+    loadResource(resPath + "sounds/woosh.ogg", Sound::woosh, sounds);
+    loadResource(resPath + "sounds/wooshMono.ogg", Sound::wooshMono, sounds);
+    loadResource(resPath + "sounds/espark.ogg", Sound::espark, sounds);
 }
 
 const sf::Image & ResHandler::getImage(Image id) const {
