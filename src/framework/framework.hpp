@@ -27,6 +27,7 @@ namespace framework {
 		bool visible = false;
 	public:
 		Object(float x, float y) : position{sf::Vector2f{x, y}} {}
+        virtual ~Object() {}
 		inline void setPosition(sf::Vector2f _position) {
 			position = _position;
 		}
@@ -129,22 +130,15 @@ namespace framework {
 	template<typename ...Ts>
 	class Group {
         using containerType = std::tuple<std::vector<std::shared_ptr<Ts>>...>;
-		template<std::size_t indx>
-		void checkBounds() {
-			static_assert(indx < std::tuple_size<containerType>::value,
-						  "Error: Index out of bounds");
-		}
 	    containerType contents;
 	public:
 		template<std::size_t indx, typename ...Args>
 		void add(Args && ...args) {
-			checkBounds<indx>();
             using elementType = typename std::tuple_element<indx, containerType>::type::value_type::element_type; 
 			std::get<indx>(contents).emplace_back(std::make_shared<elementType>(std::forward<Args>(args)...));
 		}
 		template<std::size_t indx>
 		void clear() {
-			checkBounds<indx>();
 			std::get<indx>(contents).clear();
 		}
 		void clear() {
@@ -154,12 +148,10 @@ namespace framework {
 		}
 		template<std::size_t indx>
 		auto & get() {
-			checkBounds<indx>();
 			return std::get<indx>(contents);
 		}
 		template<std::size_t indx>
 		const auto & get() const {
-			checkBounds<indx>();
 			return std::get<indx>(contents);
 		}
 		template<typename F>
@@ -168,7 +160,6 @@ namespace framework {
 		}
 		template<std::size_t indx, typename F>
 		void apply(const F & hook) {
-			checkBounds<indx>();
 			hook(std::get<indx>(contents));
 		}
 	};

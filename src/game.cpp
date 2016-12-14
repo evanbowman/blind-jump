@@ -334,7 +334,7 @@ void Game::updateLogic(const sf::Time & elapsedTime) {
             bkg.setOffset(0, 0);
         }
         tiles.update();
-        detailGroup.apply([&elapsedTime, this](auto & vec) {
+        auto objUpdatePolicy = [&elapsedTime, this](auto & vec) {
             for (auto it = vec.begin(); it != vec.end();) {
                 if (it->get()->getKillFlag()) {
                     it = vec.erase(it);
@@ -343,7 +343,8 @@ void Game::updateLogic(const sf::Time & elapsedTime) {
                     ++it;
                 }
             }
-        });
+        };
+        detailGroup.apply(objUpdatePolicy);
         std::vector<sf::Vector2f> cameraTargets;
         en.update(this, !UI.isOpen(), elapsedTime, cameraTargets);
         camera.update(elapsedTime, cameraTargets);
@@ -353,16 +354,7 @@ void Game::updateLogic(const sf::Time & elapsedTime) {
             sf::Listener::setPosition(playerPos.x, playerPos.y, 35.f);
         }
         if (!UI.isOpen()) {
-            effectGroup.apply([&elapsedTime](auto & vec) {
-                for (auto it = vec.begin(); it != vec.end();) {
-                    if (it->get()->getKillFlag()) {
-                        it = vec.erase(it);
-                    } else {
-                        it->get()->update(elapsedTime);
-                        ++it;
-                    }
-                }
-            });
+            effectGroup.apply(objUpdatePolicy);
         }
     }
     {
@@ -661,6 +653,7 @@ void Game::nextLevel() {
             return {};
         }
     };
+    auto emptyOncreate = [](auto created) {};
     if (level != 0) {
         Coordinate c = tiles.getTeleporterLoc();
         detailGroup.add<DetailRef::Teleporter>(

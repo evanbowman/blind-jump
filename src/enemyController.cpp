@@ -143,8 +143,7 @@ void enemyController::update(Game * pGame, bool enabled,
                     it->getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
                     it->getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
                     if (enabled) {
-                        it->update(player, tileController.walls, effectGroup,
-                                   elapsedTime);
+                        it->update(pGame, tileController.walls, elapsedTime);
                     }
                     cameraTargets.emplace_back(it->getXpos(), it->getYpos());
                 }
@@ -203,9 +202,7 @@ void enemyController::update(Game * pGame, bool enabled,
             element.getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
             element.getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
             if (enabled) {
-                SoundController & sounds = pGame->getSounds();
-                element.update(player, sounds, tileController.walls,
-                               effectGroup, elapsedTime);
+                element.update(pGame, tileController.walls,  elapsedTime);
                 if (element.getState() != Dasher::State::dead) {
                     cameraTargets.emplace_back(element.getXpos(),
                                                element.getYpos());

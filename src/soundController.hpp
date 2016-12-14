@@ -17,6 +17,7 @@ struct reqInfo {
     float minDistance;
     float attenuation;
     bool spatialized;
+    bool loop;
     std::weak_ptr<framework::Object> source;
 };
 
@@ -29,7 +30,7 @@ class SoundController {
 public:
     void update();
     void play(ResHandler::Sound);
-    void play(ResHandler::Sound indx, std::shared_ptr<framework::Object>, float minDistance, float attenuation);
+    void play(ResHandler::Sound indx, std::shared_ptr<framework::Object>, float minDistance, float attenuation, bool loop = false);
     
 private:
     std::mutex soundsGuard;

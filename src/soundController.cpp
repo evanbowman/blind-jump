@@ -10,7 +10,7 @@
 void SoundController::update() {
     if (!soundRequests.empty()) {
         std::lock_guard<std::mutex> lk(soundsGuard);
-        for (auto req : soundRequests) {
+        for (const auto req : soundRequests) {
             runningSounds.emplace_back(getgResHandlerPtr()->getSound(req.soundIdx));
             runningSounds.back().setMinDistance(req.minDistance);
             runningSounds.back().setAttenuation(req.attenuation);
@@ -23,14 +23,21 @@ void SoundController::update() {
             } else {
                 runningSounds.back().setRelativeToListener(true);
             }
+            runningSounds.back().setLoop(req.loop);
             runningSounds.back().play();
         }
         soundRequests.clear();
     }
-    if (runningSounds.size() > 0) {
-        if (runningSounds.front().getStatus() != sf::Sound::Playing) {
-            runningSounds.pop_front();
-            runningData.pop_front();
+    while (true) {
+        if (runningSounds.size() > 0) {
+            if (runningSounds.front().getStatus() != sf::Sound::Playing) {
+                runningSounds.pop_front();
+                runningData.pop_front();
+            } else {
+                break;
+            }
+        } else {
+            break;
         }
     }
     for (auto iters = std::make_pair(runningSounds.begin(), runningData.begin());
@@ -50,14 +57,15 @@ void SoundController::update() {
 
 void SoundController::play(ResHandler::Sound indx) {
     std::lock_guard<std::mutex> lk(soundsGuard);
-    soundRequests.push_back({indx, 1.f, 0.f, false /*, nullptr not convertible
-                                                     to weak_ptr*/});
+    soundRequests.push_back({indx, 1.f, 0.f, false, false /*, nullptr not
+                                                            convertible to 
+                                                            weak_ptr*/});
 }
 
 void SoundController::play(ResHandler::Sound indx,
                            std::shared_ptr<framework::Object> source,
                            float minDistance,
-                           float attenuation) {
+                           float attenuation, bool loop) {
     std::lock_guard<std::mutex> lk(soundsGuard);
-    soundRequests.push_back({indx, minDistance, attenuation, true, source});
+    soundRequests.push_back({indx, minDistance, attenuation, true, loop, source});
 }

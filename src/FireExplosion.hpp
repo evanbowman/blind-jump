@@ -28,7 +28,8 @@ public:
         spriteSheet.setPosition(position.x, position.y);
         glow.setPosition(position.x - 225, position.y - 225);
     }
-    void update(const sf::Time & elapsedTime) {
+    template <typename Game>
+    void update(const sf::Time & elapsedTime, Game *) {
         timer += elapsedTime.asMicroseconds();
         glowFadeTimer += elapsedTime.asMicroseconds();
         static const int frameTransitionTime = 70000;

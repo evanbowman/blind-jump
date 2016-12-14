@@ -11,14 +11,13 @@
 #include "resourceHandler.hpp"
 #include "wall.hpp"
 
-class Player;
+class Game;
 
 class Scoot : public Enemy {
 public:
     using HBox = framework::HitBox<12, 12, -6, -6>;
     Scoot(const sf::Texture &, const sf::Texture &, float, float);
-    void update(const Player *, const std::vector<wall> &, EffectGroup & ef,
-                const sf::Time &);
+    void update(Game *, const std::vector<wall> &, const sf::Time &);
     const sf::Sprite & getSprite() const;
     const sf::Sprite & getShadow() const;
     const HBox & getHitBox() const;
