@@ -27,6 +27,7 @@
 #include <stdexcept>
 
 std::exception_ptr pWorkerException = nullptr;
+bool gameHasFocus = false;
 
 int main() {
     rng::seed();
@@ -63,7 +64,7 @@ int main() {
                         elapsedTime = gameClock.restart();
                         util::isAsleep = false;
                     }
-                    game.update(elapsedTime);
+                    game.updateLogic(elapsedTime);
                     time_point stop = high_resolution_clock::now();
                     logicUpdateDelta =
                         std::chrono::duration_cast<nanoseconds>(stop - start);
@@ -78,9 +79,9 @@ int main() {
         });
         game.getCamera().panDown();
         while (window.isOpen()) {
-            input.update(window);
+            game.eventLoop(window);
             window.clear();
-            game.draw(window);
+            game.updateGraphics(window);
             window.display();
             if (::pWorkerException) {
                 window.close();

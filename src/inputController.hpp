@@ -15,7 +15,6 @@ class InputController {
 public:
     InputController();
     void mapJsById();
-    bool isFocused() const;
     bool pausePressed() const;
     bool leftPressed() const;
     bool rightPressed() const;
@@ -23,7 +22,7 @@ public:
     bool downPressed() const;
     bool shootPressed() const;
     bool actionPressed() const;
-    void update(sf::RenderWindow &);
+    void recordEvent(const sf::Event &);
     void mapKeyboardKey(const sf::Keyboard::Key, const uint8_t);
     void mapJoystickButton(const uint32_t, const uint8_t);
 
@@ -36,7 +35,6 @@ private:
         indexRight,
         indexUp,
         indexDown,
-        indexFocused,
         indexCount
     };
     std::bitset<indexCount> keyMask;

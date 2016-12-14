@@ -113,7 +113,6 @@ void Camera::update(const sf::Time & elapsedTime,
                          windowSize.y / 2.f + scaledCameraOffset.y);
     const sf::Vector2f & targetPos = pTarget->getPosition();
     static const float listenerDistFromScreen = 35.f;
-    sf::Listener::setPosition(targetPos.x, targetPos.y, listenerDistFromScreen);
 }
 
 const sf::View & Camera::getOverworldView() const { return overworldView; }

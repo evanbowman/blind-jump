@@ -66,8 +66,34 @@ void Game::init() {
     this->nextLevel();
 }
 
-void Game::draw(sf::RenderWindow & window) {
-    if (!pInput->isFocused()) {
+extern bool gameHasFocus;
+
+void Game::eventLoop(sf::RenderWindow & window) {
+    sf::Event event;
+    while (window.pollEvent(event)) {
+        switch (event.type) {
+        case sf::Event::Closed:
+            window.close();
+            throw ShutdownSignal();
+            break;
+
+        case sf::Event::GainedFocus:
+            ::gameHasFocus = true;
+            break;
+
+        case sf::Event::LostFocus:
+            ::gameHasFocus = false;
+            break;
+
+        default:
+            pInput->recordEvent(event);
+            break;
+        }
+    }
+}
+
+void Game::updateGraphics(sf::RenderWindow & window) {
+    if (!::gameHasFocus) {
         util::sleep(milliseconds(200));
         return;
     }
@@ -84,9 +110,6 @@ void Game::draw(sf::RenderWindow & window) {
             gfxContext.shadows.clear();
             gfxContext.faces.clear();
             target.setView(camera.getOverworldView());
-            const sf::Vector2f viewCenter =
-                camera.getOverworldView().getCenter();
-            const sf::Vector2f viewSize = camera.getOverworldView().getSize();
             auto drawPolicy = [this](auto & vec) {
                 for (auto it = vec.begin(); it != vec.end(); ++it) {
                     it->draw(gfxContext, camera.getOverworldView());
@@ -291,8 +314,8 @@ void Game::draw(sf::RenderWindow & window) {
     drawTransitions(window);
 }
 
-void Game::update(const sf::Time & elapsedTime) {
-    if (!pInput->isFocused()) {
+void Game::updateLogic(const sf::Time & elapsedTime) {
+    if (!::gameHasFocus) {
         util::sleep(milliseconds(200));
         return;
     }
@@ -326,6 +349,8 @@ void Game::update(const sf::Time & elapsedTime) {
         camera.update(elapsedTime, cameraTargets);
         if (player.visible) {
             player.update(this, elapsedTime, sounds);
+            const sf::Vector2f playerPos = player.getPosition();
+            sf::Listener::setPosition(playerPos.x, playerPos.y, 35.f);
         }
         if (!UI.isOpen()) {
             effectGroup.apply([&elapsedTime](auto & vec) {
