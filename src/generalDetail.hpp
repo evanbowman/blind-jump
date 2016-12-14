@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "drawable.hpp"
+#include "Drawable.hpp"
 
 namespace detail {
 template <typename DrawPolicy>

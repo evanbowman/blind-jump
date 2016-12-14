@@ -6,7 +6,7 @@
 #pragma once
 
 #include "RenderType.hpp"
-#include "detailGroup.hpp"
+#include "DetailGroup.hpp"
 #include "inputController.hpp"
 #include "playerAnimationFunctions.hpp"
 #include "playerCollisionFunctions.hpp"

@@ -10,7 +10,7 @@
 #include "backgroundHandler.hpp"
 #include "camera.hpp"
 #include "colors.hpp"
-#include "detailGroup.hpp"
+#include "DetailGroup.hpp"
 #include "effectsController.hpp"
 #include "enemyController.hpp"
 #include "framework/option.hpp"

@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "detailGroup.hpp"
+#include "DetailGroup.hpp"
 #include "wall.hpp"
 #include <cmath>
 

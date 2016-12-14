@@ -6,7 +6,7 @@
 #include "enemyController.hpp"
 #include "ResourcePath.hpp"
 #include "camera.hpp"
-#include "detailGroup.hpp"
+#include "DetailGroup.hpp"
 #include "game.hpp"
 #include "tileController.hpp"
 #include "wall.hpp"

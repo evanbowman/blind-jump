@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <tuple>
 
-#include "Rendertype.hpp"
+#include "RenderType.hpp"
 
 using drawContext = std::tuple<sf::Sprite, float, Rendertype, float>;
 
