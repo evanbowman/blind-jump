@@ -6,20 +6,11 @@
 #include "enemy.hpp"
 
 Enemy::Enemy(float _xPos, float _yPos)
-    : killFlag{false}, colored{false}, xPos{_xPos}, yPos{_yPos},
-      colorAmount{0.f}, frameIndex{0}, colorTimer{0}, frameTimer{0} {}
-
-bool Enemy::getKillFlag() const { return killFlag; }
+    : framework::Object(_xPos, _yPos), colored(false), colorAmount(0.f), frameIndex(0), colorTimer(0), frameTimer(0) {}
 
 float Enemy::getColorAmount() const { return colorAmount; }
 
-void Enemy::setKillFlag(bool _killFlag = true) { killFlag = _killFlag; }
-
 bool Enemy::isColored() const { return colored; }
-
-float Enemy::getXpos() const { return xPos; }
-
-float Enemy::getYpos() const { return yPos; }
 
 uint_fast8_t Enemy::checkWallCollision(const std::vector<wall> & w, float xPos,
                                        float yPos) {
@@ -59,7 +50,6 @@ bool Enemy::wallInPath(const std::vector<wall> & w, float dir, float xPos,
             return true;
         }
     }
-
     return false;
 }
 

@@ -12,7 +12,7 @@
 
 class Game;
 
-class Dasher : public Enemy {
+class Dasher : public Enemy, public std::enable_shared_from_this<Dasher> {
 public:
     using HBox = framework::HitBox<20, 32, -6, -4>;
     struct Blur {

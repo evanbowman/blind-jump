@@ -6,8 +6,10 @@
 #include "soundController.hpp"
 #include "rng.hpp"
 
+static const std::string musicPaths[] = {"music/Frostellar.ogg"};
+
 SoundController::SoundController() {
-    currentSong.openFromFile(resourcePath() + "music/Frostellar.ogg");
+    currentSong.openFromFile(resourcePath() + musicPaths[0]);
     currentSong.play();
     currentSong.setLoop(true);
     currentSong.setVolume(60);

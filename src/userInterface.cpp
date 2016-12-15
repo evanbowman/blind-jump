@@ -375,7 +375,7 @@ const sf::CircleShape & ui::PowerupBubble::getShape() const { return bubble; }
 #define WAYPOINT_TEXT_FADE_SECONDS 3
 
 ui::Frontend::Frontend(sf::View fontView, float x, float y)
-    : healthModified(false), scoreModified(false), powerupAdded(Powerup::nil),
+    : healthModified(true), scoreModified(true), powerupAdded(Powerup::nil),
       barWidth(0.f) {
     // Store the view to use when drawing fonts
     this->fontView = fontView;
@@ -573,23 +573,23 @@ void ui::Frontend::setWaypointText(int level) {
     coin.setPosition(heart.getPosition().x,
                      heart.getPosition().y +
                          coin.getLocalBounds().height * 1.25);
-    coin.setFillColor(sf::Color(255, 255, 255, 0));
-    healthNumText.setPosition(fontView.getSize().x -
-                                  healthNumText.getLocalBounds().width -
-                                  heart.getLocalBounds().width,
-                              healthNumText.getLocalBounds().height);
+    coin.setFillColor(sf::Color(255, 255, 255, 60));
+    // healthNumText.setPosition(fontView.getSize().x -
+    //                               healthNumText.getLocalBounds().width -
+    //                               heart.getLocalBounds().width,
+    //                           healthNumText.getLocalBounds().height);
     if (health != 1) {
-        healthNumText.setFillColor(sf::Color(255, 255, 255, 0));
-        heart.setFillColor(sf::Color(255, 255, 255, 0));
+        healthNumText.setFillColor(sf::Color(255, 255, 255, 60));
+        heart.setFillColor(sf::Color(255, 255, 255, 60));
     }
-    scoreText.setPosition(
-        fontView.getSize().x - scoreText.getLocalBounds().width -
-            fontView.getSize().x * 0.015 - heart.getLocalBounds().width,
-        scoreText.getLocalBounds().height * 3);
+    // scoreText.setPosition(
+    // 			  fontView.getSize().x - scoreText.getLocalBounds().width -
+    // 			  fontView.getSize().x * 0.015 - heart.getLocalBounds().width,
+    //         scoreText.getLocalBounds().height * 3);
     std::string str = "WAYPOINT-";
     str += std::to_string(level);
     waypointText.setString(str);
-    scoreText.setFillColor(sf::Color(255, 255, 255, 4));
+    scoreText.setFillColor(sf::Color(255, 255, 255, 60));
     if (level != 0) {
         waypointText.setFillColor(sf::Color::White);
         wpTextDisplayTimer.restart();
@@ -649,18 +649,17 @@ void ui::Frontend::draw(sf::RenderWindow & window) {
     }
     // Slowly fade out the  waypoint text
     sf::Color c = waypointText.getFillColor();
-    if (c.a > 5) {
+    if (c.a > 68) {
         if (wpTextDisplayTimer.getElapsedTime().asSeconds() >
             WAYPOINT_TEXT_FADE_SECONDS) {
             c.a -= 4;
             waypointText.setFillColor(c);
         }
-        window.draw(waypointText);
     }
-
+    window.draw(waypointText);
     if (health != 1) {
         c = healthNumText.getFillColor();
-        if (c.a > 5) {
+        if (c.a > 68) {
             if (healthDisplayTimer.getElapsedTime().asSeconds() >
                 HEALTH_TEXT_FADE_SECONDS) {
                 c.a -= 4;
@@ -668,24 +667,21 @@ void ui::Frontend::draw(sf::RenderWindow & window) {
                 heart.setFillColor(c);
                 heart.setOutlineColor(c);
             }
-            window.draw(healthNumText);
-            window.draw(heart);
         }
-    } else {
-        window.draw(healthNumText);
-        window.draw(heart);
     }
+    window.draw(healthNumText);
+    window.draw(heart);
     c = scoreText.getFillColor();
-    if (c.a > 5) {
+    if (c.a > 68) {
         if (scoreDisplayTimer.getElapsedTime().asSeconds() >
             SCORE_TEXT_FADE_SECONDS) {
             c.a -= 4;
             scoreText.setFillColor(c);
             coin.setFillColor(c);
         }
-        window.draw(scoreText);
-        window.draw(coin);
     }
+    window.draw(scoreText);
+    window.draw(coin);
     c = resumeText.getFillColor();
     if (c.a > 0) {
         window.draw(resumeText);

@@ -12,9 +12,9 @@
 Scoot::Scoot(const sf::Texture & mainTxtr, const sf::Texture & shadowTxtr,
              float _xPos, float _yPos)
     : Enemy(_xPos, _yPos), spriteSheet(mainTxtr), speedScale(0.5f),
-      state(State::drift1), timer(rng::random<250>()) {
+      state(State::drift1), timer(rng::random<1800>()) {
     spriteSheet.setOrigin(6, 6);
-    hitBox.setPosition(xPos, yPos);
+    hitBox.setPosition(position.x, position.y);
     shadow.setTexture(shadowTxtr);
     float dir = rng::random<359>();
     hSpeed = cos(dir) * 0.5;
@@ -48,11 +48,11 @@ void Scoot::update(Game * pGame, const std::vector<wall> & w,
         onDeath(effects);
     }
     Enemy::updateColor(elapsedTime);
-    hitBox.setPosition(xPos, yPos);
-    spriteSheet.setPosition(xPos, yPos);
-    shadow.setPosition(xPos - 6, yPos + 2);
+    hitBox.setPosition(position.x, position.y);
+    spriteSheet.setPosition(position.x, position.y);
+    shadow.setPosition(position.x - 6, position.y + 2);
     Player & player = pGame->getPlayer();
-    if (xPos > player.getXpos()) {
+    if (position.x > player.getXpos()) {
         spriteSheet.setScale(1, 1);
     } else {
         spriteSheet.setScale(-1, 1);
@@ -65,8 +65,8 @@ void Scoot::update(Game * pGame, const std::vector<wall> & w,
             ;
             state = State::drift2;
             if (rng::random<2>()) {
-                changeDir(atan((yPos - player.getYpos()) /
-                               (xPos - player.getXpos())));
+                changeDir(atan((position.y - player.getYpos()) /
+                               (position.x - player.getXpos())));
             } else {
                 changeDir(static_cast<float>(rng::random<359>()));
             }
@@ -85,17 +85,18 @@ void Scoot::update(Game * pGame, const std::vector<wall> & w,
         const sf::Vector2f playerPos = player.getPosition();
         effects.add<EffectRef::TurretFlashEffect>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-            xPos - 8, yPos - 12);
-        effects.add<EffectRef::TurretShot>(xPos - 8, yPos - 12,
-            angleFunction(playerPos.x + 16, playerPos.y + 8, xPos - 8,
-                          yPos - 8));
+            position.x - 8, position.y - 12);
+        effects.add<EffectRef::TurretShot>(position.x - 8, position.y - 12,
+            angleFunction(playerPos.x + 16, playerPos.y + 8, position.x - 8,
+                          position.y - 8));
+	pGame->getSounds().play(ResHandler::Sound::laser, this->shared_from_this(), 320.f, 30.f);
         state = State::recoil;
         changeDir(
-            atan((yPos - player.getYpos()) / (xPos - player.getXpos())));
+            atan((position.y - player.getYpos()) / (position.x - player.getXpos())));
         hSpeed *= -1;
         vSpeed *= -1;
         // Correct for negative values in arctan calculation
-        if (xPos > player.getXpos()) {
+        if (position.x > player.getXpos()) {
             hSpeed *= -1;
             vSpeed *= -1;
         }
@@ -110,8 +111,8 @@ void Scoot::update(Game * pGame, const std::vector<wall> & w,
             state = State::drift1;
             speedScale = 0.5f;
             if (rng::random<2>()) {
-                changeDir(atan((yPos - player.getYpos()) /
-                               (xPos - player.getXpos())));
+                changeDir(atan((position.y - player.getYpos()) /
+                               (position.x - player.getXpos())));
             } else {
                 changeDir(rng::random<359>());
             }
@@ -119,7 +120,7 @@ void Scoot::update(Game * pGame, const std::vector<wall> & w,
         break;
     }
     uint_fast8_t collisionMask =
-        Enemy::checkWallCollision(w, xPos - 8, yPos - 8);
+        Enemy::checkWallCollision(w, position.x - 8, position.y - 8);
     if (collisionMask) {
         hSpeed = 0;
         vSpeed = 0;
@@ -136,8 +137,8 @@ void Scoot::update(Game * pGame, const std::vector<wall> & w,
             vSpeed -= 1;
         }
     }
-    xPos += (elapsedTime.asMicroseconds() * 0.00006f) * hSpeed * speedScale;
-    yPos += (elapsedTime.asMicroseconds() * 0.00006f) * vSpeed * speedScale;
+    position.x += (elapsedTime.asMicroseconds() * 0.00006f) * hSpeed * speedScale;
+    position.y += (elapsedTime.asMicroseconds() * 0.00006f) * vSpeed * speedScale;
     frameTimer += elapsedTime.asMilliseconds();
     if (frameTimer > 87) {
         frameTimer -= 87;
@@ -154,18 +155,18 @@ void Scoot::onDeath(EffectGroup & effects) {
     if (select == 0) {
         effects.add<EffectRef::Heart>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow), xPos,
-            yPos + 4, Item::Type::Heart);
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow), position.x,
+            position.y + 4, Item::Type::Heart);
     } else {
         effects.add<EffectRef::Coin>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
-            xPos, yPos + 4, Item::Type::Coin);
+            position.x, position.y + 4, Item::Type::Coin);
     }
     effects.add<EffectRef::FireExplosion>(
         getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
         getgResHandlerPtr()->getTexture(ResHandler::Texture::fireExplosionGlow),
-        xPos, yPos - 2);
+        position.x, position.y - 2);
     killFlag = true;
     return;
 }

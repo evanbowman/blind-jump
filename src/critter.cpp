@@ -19,7 +19,7 @@ Critter::Critter(const sf::Texture & txtr, uint8_t _map[61][61], float _xInit,
     shadow.setOrigin(9, 9);
     shadow.setTexture(txtr);
     shadow.setTextureRect(sf::IntRect(54, 57, 18, 18));
-    hitBox.setPosition(xPos, yPos);
+    hitBox.setPosition(position.x, position.y);
 }
 
 const Critter::HBox & Critter::getHitBox() const { return hitBox; }
@@ -28,8 +28,8 @@ void Critter::updatePlayerDead() { frameIndex = 0; }
 
 void Critter::update(const Player * player, EffectGroup & effects,
                      const sf::Time & elapsedTime, tileController & tiles) {
-    xPos = xInit + 12;
-    yPos = yInit;
+    position.x = xInit + 12;
+    position.y = yInit;
     for (auto & element : effects.get<9>()) {
         if (element->getHitBox().overlapping(hitBox) && element->checkCanPoof()) {
             if (health == 1) {
@@ -45,9 +45,9 @@ void Critter::update(const Player * player, EffectGroup & effects,
     if (health == 0) {
         onDeath(effects);
     }
-    xPos -= 12; // Currently off-centered, this is just temporary work-around
+    position.x -= 12; // Currently off-centered, this is just temporary work-around
     Enemy::updateColor(elapsedTime);
-    hitBox.setPosition(xPos, yPos);
+    hitBox.setPosition(position.x, position.y);
     float tilePosX = tiles.posX;
     float tilePosY = tiles.posY;
 
@@ -63,8 +63,8 @@ void Critter::update(const Player * player, EffectGroup & effects,
             recalc = 8;
 
             aStrCoordinate origin, target;
-            origin.x = (xPos - tilePosX) / 32;
-            origin.y = (yPos - tilePosY) / 26;
+            origin.x = (position.x - tilePosX) / 32;
+            origin.y = (position.y - tilePosY) / 26;
             target.x = (tilePosX - player->getXpos() - 12) / -32;
             target.y = (tilePosY - player->getYpos() - 32) / -26;
             if (map[target.x][target.y] == 3 || map[target.x][target.y] == 4 ||
@@ -73,8 +73,8 @@ void Critter::update(const Player * player, EffectGroup & effects,
                 path = astar_path(target, origin, map);
                 previous = path.back();
                 path.pop_back();
-                xInit = ((xPos - tilePosX) / 32) * 32 + tilePosX;
-                yInit = ((yPos - tilePosY) / 26) * 26 + tilePosY;
+                xInit = ((position.x - tilePosX) / 32) * 32 + tilePosX;
+                yInit = ((position.y - tilePosY) / 26) * 26 + tilePosY;
                 // Calculate the direction to move in, based on the coordinate
                 // of the previous location and the coordinate of the next
                 // location
@@ -117,7 +117,7 @@ void Critter::update(const Player * player, EffectGroup & effects,
         }
 
         // Flip the sprite to face the player
-        if (xPos > player->getXpos()) {
+        if (position.x > player->getXpos()) {
             spriteSheet.setScale(1.f, 1.f);
             shadow.setScale(1.f, 1.f);
         } else {
@@ -127,13 +127,13 @@ void Critter::update(const Player * player, EffectGroup & effects,
     }
 
     else {
-        if (fabsf(player->getXpos() - xPos) < 300 &&
-            fabsf(player->getYpos() - yPos) < 300)
+        if (fabsf(player->getXpos() - position.x) < 300 &&
+            fabsf(player->getYpos() - position.y) < 300)
             awake = true;
     }
 
-    shadow.setPosition(xPos + 12, yPos + 1);
-    spriteSheet.setPosition(xPos + 12, yPos);
+    shadow.setPosition(position.x + 12, position.y + 1);
+    spriteSheet.setPosition(position.x + 12, position.y);
 }
 
 const sf::Sprite & Critter::getShadow() const { return shadow; }

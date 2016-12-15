@@ -764,7 +764,7 @@ void Player::checkEffectCollisions(EffectGroup & effects,
 }
 
 template <typename F, typename T>
-void checkEnemyCollision(const std::vector<T> & enemyGroup, Player * pPlayer,
+void checkEnemyCollision(const std::vector<std::shared_ptr<T>> & enemyGroup, Player * pPlayer,
                          const F & policy) {
     for (auto & enemy : enemyGroup) {
         if (pPlayer->getHitBox().overlapping(enemy->getHitBox())) {
@@ -774,12 +774,12 @@ void checkEnemyCollision(const std::vector<T> & enemyGroup, Player * pPlayer,
 }
 
 template <typename F>
-void checkEnemyCollision(const std::vector<Dasher> & dashers, Player * pPlayer,
+void checkEnemyCollision(const std::vector<std::shared_ptr<Dasher>> & dashers, Player * pPlayer,
                          const F & policy) {
     for (auto & enemy : dashers) {
-        if (pPlayer->getHitBox().overlapping(enemy.getHitBox()) &&
-            enemy.getState() != Dasher::State::dead &&
-            enemy.getState() != Dasher::State::dying) {
+        if (pPlayer->getHitBox().overlapping(enemy->getHitBox()) &&
+            enemy->getState() != Dasher::State::dead &&
+            enemy->getState() != Dasher::State::dying) {
             policy();
         }
     }

@@ -20,16 +20,16 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
     sf::Vector2f viewCenter = cameraView.getCenter();
     sf::Vector2f viewSize = cameraView.getSize();
     for (auto & element : turrets) {
-        if (element->getXpos() > viewCenter.x - viewSize.x / 2 - 32 &&
-            element->getXpos() < viewCenter.x + viewSize.x / 2 + 32 &&
-            element->getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
-            element->getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
+        if (element->getPosition().x > viewCenter.x - viewSize.x / 2 - 32 &&
+            element->getPosition().x < viewCenter.x + viewSize.x / 2 + 32 &&
+            element->getPosition().y > viewCenter.y - viewSize.y / 2 - 32 &&
+            element->getPosition().y < viewCenter.y + viewSize.y / 2 + 32) {
             std::tuple<sf::Sprite, float, Rendertype, float> shadow;
             std::get<0>(shadow) = element->getShadow();
             gameShadows.push_back(shadow);
             std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
             std::get<0>(tSpr) = element->getSprite();
-            std::get<1>(tSpr) = element->getYpos();
+            std::get<1>(tSpr) = element->getPosition().y;
             if (element->colored()) {
                 std::get<2>(tSpr) = Rendertype::shadeWhite;
             } else {
@@ -43,42 +43,42 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
                                  Rendertype::shadeDefault, 0.f);
         std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
         std::get<0>(tSpr) = element->getSprite();
-        std::get<1>(tSpr) = element->getYpos() - 16;
+        std::get<1>(tSpr) = element->getPosition().y - 16;
         // If the enemy should be colored, let the rendering code know to pass
         // it through a fragment shader
         if (element->isColored()) {
             gameObjects.emplace_back(
-                element->getSprite(), element->getYpos() - 16,
+				     element->getSprite(), element->getPosition().y - 16,
                 Rendertype::shadeWhite, element->getColorAmount());
         } else {
             gameObjects.emplace_back(element->getSprite(),
-                                     element->getYpos() - 16,
+                                     element->getPosition().y - 16,
                                      Rendertype::shadeDefault, 0.f);
         }
     }
     for (auto & element : scoots) {
-        if (element->getXpos() > viewCenter.x - viewSize.x / 2 - 32 &&
-            element->getXpos() < viewCenter.x + viewSize.x / 2 + 32 &&
-            element->getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
-            element->getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
+        if (element->getPosition().x > viewCenter.x - viewSize.x / 2 - 32 &&
+            element->getPosition().x < viewCenter.x + viewSize.x / 2 + 32 &&
+            element->getPosition().y > viewCenter.y - viewSize.y / 2 - 32 &&
+            element->getPosition().y < viewCenter.y + viewSize.y / 2 + 32) {
             gameShadows.emplace_back(element->getShadow(), 0.f,
                                      Rendertype::shadeDefault, 0.f);
             if (element->isColored()) {
                 gameObjects.emplace_back(
-                    element->getSprite(), element->getYpos() - 16,
+                    element->getSprite(), element->getPosition().y - 16,
                     Rendertype::shadeWhite, element->getColorAmount());
             } else {
                 gameObjects.emplace_back(element->getSprite(),
-                                         element->getYpos() - 16,
+                                         element->getPosition().y - 16,
                                          Rendertype::shadeDefault, 0.f);
             }
         }
     }
     for (auto & element : dashers) {
-        if (element->getXpos() > viewCenter.x - viewSize.x / 2 - 32 &&
-            element->getXpos() < viewCenter.x + viewSize.x / 2 + 32 &&
-            element->getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
-            element->getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
+        if (element->getPosition().x > viewCenter.x - viewSize.x / 2 - 32 &&
+            element->getPosition().x < viewCenter.x + viewSize.x / 2 + 32 &&
+            element->getPosition().y > viewCenter.y - viewSize.y / 2 - 32 &&
+            element->getPosition().y < viewCenter.y + viewSize.y / 2 + 32) {
             auto state = element->getState();
             if (state != Dasher::State::dying && state != Dasher::State::dead) {
                 gameShadows.emplace_back(element->getShadow(), 0.f,
@@ -89,11 +89,11 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
                                          Rendertype::shadeDefault, 0.f);
             }
             if (element->isColored()) {
-                gameObjects.emplace_back(element->getSprite(), element->getYpos(),
+                gameObjects.emplace_back(element->getSprite(), element->getPosition().y,
                                          Rendertype::shadeWhite,
                                          element->getColorAmount());
             } else {
-                gameObjects.emplace_back(element->getSprite(), element->getYpos(),
+                gameObjects.emplace_back(element->getSprite(), element->getPosition().y,
                                          Rendertype::shadeDefault, 0.f);
             }
         }
@@ -117,14 +117,14 @@ void enemyController::update(Game * pGame, bool enabled,
                 camera.shake(0.17f);
                 it = turrets.erase(it);
             } else {
-                if ((*it)->getXpos() > viewCenter.x - viewSize.x / 2 - 32 &&
-                    (*it)->getXpos() < viewCenter.x + viewSize.x / 2 + 32 &&
-                    (*it)->getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
-                    (*it)->getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
+                if ((*it)->getPosition().x > viewCenter.x - viewSize.x / 2 - 32 &&
+                    (*it)->getPosition().x < viewCenter.x + viewSize.x / 2 + 32 &&
+                    (*it)->getPosition().y > viewCenter.y - viewSize.y / 2 - 32 &&
+                    (*it)->getPosition().y < viewCenter.y + viewSize.y / 2 + 32) {
                     if (enabled) {
                         (*it)->update(elapsedTime, player, effectGroup);
                     }
-                    cameraTargets.emplace_back((*it)->getXpos(), (*it)->getYpos());
+                    cameraTargets.emplace_back((*it)->getPosition().x, (*it)->getPosition().y);
                 }
                 ++it;
             }
@@ -137,14 +137,14 @@ void enemyController::update(Game * pGame, bool enabled,
                 camera.shake(0.17f);
                 it = scoots.erase(it);
             } else {
-                if ((*it)->getXpos() > viewCenter.x - viewSize.x / 2 - 32 &&
-                    (*it)->getXpos() < viewCenter.x + viewSize.x / 2 + 32 &&
-                    (*it)->getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
-                    (*it)->getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
+                if ((*it)->getPosition().x > viewCenter.x - viewSize.x / 2 - 32 &&
+                    (*it)->getPosition().x < viewCenter.x + viewSize.x / 2 + 32 &&
+                    (*it)->getPosition().y > viewCenter.y - viewSize.y / 2 - 32 &&
+                    (*it)->getPosition().y < viewCenter.y + viewSize.y / 2 + 32) {
                     if (enabled) {
                         (*it)->update(pGame, tileController.walls, elapsedTime);
                     }
-                    cameraTargets.emplace_back((*it)->getXpos(), (*it)->getYpos());
+                    cameraTargets.emplace_back((*it)->getPosition().x, (*it)->getPosition().y);
                 }
                 ++it;
             }
@@ -159,9 +159,9 @@ void enemyController::update(Game * pGame, bool enabled,
                 if (i != j) {
                     // If the enemy at index i is active and overlaps with
                     // another enemy that is also active...
-                    if (fabs(critters[i]->getXpos() - critters[j]->getXpos()) <
+                    if (fabs(critters[i]->getPosition().x - critters[j]->getPosition().x) <
                             12 &&
-                        fabs(critters[i]->getYpos() - critters[j]->getYpos()) <
+                        fabs(critters[i]->getPosition().y - critters[j]->getPosition().y) <
                             12 &&
                         critters[i]->isActive() && critters[j]->isActive()) {
                         critters[i]->deActivate();
@@ -175,11 +175,11 @@ void enemyController::update(Game * pGame, bool enabled,
                 camera.shake(0.17f);
                 it = critters.erase(it);
             } else {
-                if ((*it)->getXpos() > viewCenter.x - viewSize.x / 2 - 32 &&
-                    (*it)->getXpos() < viewCenter.x + viewSize.x / 2 + 32 &&
-                    (*it)->getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
-                    (*it)->getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
-                    cameraTargets.emplace_back((*it)->getXpos(), (*it)->getYpos());
+                if ((*it)->getPosition().x > viewCenter.x - viewSize.x / 2 - 32 &&
+                    (*it)->getPosition().x < viewCenter.x + viewSize.x / 2 + 32 &&
+                    (*it)->getPosition().y > viewCenter.y - viewSize.y / 2 - 32 &&
+                    (*it)->getPosition().y < viewCenter.y + viewSize.y / 2 + 32) {
+                    cameraTargets.emplace_back((*it)->getPosition().x, (*it)->getPosition().y);
                 }
                 if (enabled) {
                     (*it)->update(player, effectGroup, elapsedTime,
@@ -196,15 +196,15 @@ void enemyController::update(Game * pGame, bool enabled,
         }
     }
     for (auto & element : dashers) {
-        if (element->getXpos() > viewCenter.x - viewSize.x / 2 - 32 &&
-            element->getXpos() < viewCenter.x + viewSize.x / 2 + 32 &&
-            element->getYpos() > viewCenter.y - viewSize.y / 2 - 32 &&
-            element->getYpos() < viewCenter.y + viewSize.y / 2 + 32) {
+        if (element->getPosition().x > viewCenter.x - viewSize.x / 2 - 32 &&
+            element->getPosition().x < viewCenter.x + viewSize.x / 2 + 32 &&
+            element->getPosition().y > viewCenter.y - viewSize.y / 2 - 32 &&
+            element->getPosition().y < viewCenter.y + viewSize.y / 2 + 32) {
             if (enabled) {
                 element->update(pGame, tileController.walls,  elapsedTime);
                 if (element->getState() != Dasher::State::dead) {
-                    cameraTargets.emplace_back(element->getXpos(),
-                                               element->getYpos());
+                    cameraTargets.emplace_back(element->getPosition().x,
+                                               element->getPosition().y);
                 }
             }
             if (element->getKillFlag()) {

@@ -9,14 +9,14 @@
 #include <cmath>
 
 Turret::Turret(const sf::Texture & gameObjects, float _xPos, float _yPos)
-    : state(State::closed), xPos(_xPos), yPos(_yPos), frameIndex(0), timer(0),
-      hp(6), killFlag(0), colorTimer(0), isColored(0), colorAmount(0) {
+    : Enemy(_xPos, _yPos), state(State::closed), frameIndex(0), timer(0),
+      hp(6), colorTimer(0), isColored(0), colorAmount(0) {
     turretSheet.setTexture(gameObjects);
     shadowSheet.setTexture(gameObjects);
-    hitBox.setPosition(xPos, yPos);
-    turretSheet.setPosition(xPos, yPos);
-    shadowSheet.setPosition(xPos, yPos + 18);
-    hitBox.setPosition(xPos, yPos);
+    hitBox.setPosition(position.x, position.y);
+    turretSheet.setPosition(position.x, position.y);
+    shadowSheet.setPosition(position.x, position.y + 18);
+    hitBox.setPosition(position.x, position.y);
 }
 
 const sf::Sprite & Turret::getSprite() { return turretSheet[frameIndex]; }
@@ -52,24 +52,24 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
                 getgResHandlerPtr()->getTexture(
                     ResHandler::Texture::gameObjects),
                 getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
-                xPos + 8, yPos + 10, Item::Type::Heart);
+                position.x + 8, position.y + 10, Item::Type::Heart);
         } else {
             effects.add<EffectRef::Coin>(
                 getgResHandlerPtr()->getTexture(
                     ResHandler::Texture::gameObjects),
                 getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
-                xPos + 8, yPos + 10, Item::Type::Coin);
+                position.x + 8, position.y + 10, Item::Type::Coin);
         }
         effects.add<EffectRef::FireExplosion>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             getgResHandlerPtr()->getTexture(
                 ResHandler::Texture::fireExplosionGlow),
-            xPos + 12, yPos + 12);
+            position.x + 12, position.y + 12);
     }
     switch (state) {
     case State::closed:
-        if (std::sqrt(std::pow((xPos - player->getXpos() + 8), 2) +
-                      std::pow((yPos - player->getYpos() + 16), 2)) < 174) {
+        if (std::sqrt(std::pow((position.x - player->getXpos() + 8), 2) +
+                      std::pow((position.y - player->getYpos() + 16), 2)) < 174) {
             state = State::opening;
             timer = 0;
             frameIndex = 0;
@@ -95,13 +95,13 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
             effects.add<EffectRef::TurretFlashEffect>(
                 getgResHandlerPtr()->getTexture(
                     ResHandler::Texture::gameObjects),
-                xPos, yPos + 8);
+                position.x, position.y + 8);
             effects.add<EffectRef::EnemyShot>(
                 getgResHandlerPtr()->getTexture(
                     ResHandler::Texture::gameObjects),
                 getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
-                xPos, yPos + 6, angleFunction(target.x + 16, target.y + 8,
-                                              xPos + 18, yPos + 8));
+                position.x, position.y + 6, angleFunction(target.x + 16, target.y + 8,
+                                              position.x + 18, position.y + 8));
             timer = 0;
             state = State::shoot2;
         }
@@ -113,13 +113,13 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
             effects.add<EffectRef::TurretFlashEffect>(
                 getgResHandlerPtr()->getTexture(
                     ResHandler::Texture::gameObjects),
-                xPos, yPos + 8);
+                position.x, position.y + 8);
             effects.add<EffectRef::EnemyShot>(
                 getgResHandlerPtr()->getTexture(
                     ResHandler::Texture::gameObjects),
                 getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
-                xPos, yPos + 8, angleFunction(target.x + 16, target.y + 8,
-                                              xPos + 18, yPos + 6));
+                position.x, position.y + 8, angleFunction(target.x + 16, target.y + 8,
+                                              position.x + 18, position.y + 6));
             timer = 0;
             state = State::shoot3;
         }
@@ -131,13 +131,13 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
             effects.add<EffectRef::TurretFlashEffect>(
                 getgResHandlerPtr()->getTexture(
                     ResHandler::Texture::gameObjects),
-                xPos, yPos + 8);
+                position.x, position.y + 8);
             effects.add<EffectRef::EnemyShot>(
                 getgResHandlerPtr()->getTexture(
                     ResHandler::Texture::gameObjects),
                 getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
-                xPos, yPos + 8, angleFunction(target.x + 16, target.y + 8,
-                                              xPos + 18, yPos + 6));
+                position.x, position.y + 8, angleFunction(target.x + 16, target.y + 8,
+                                              position.x + 18, position.y + 6));
             timer = 0;
             state = State::rest;
         }
@@ -146,8 +146,8 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
     case State::rest:
         timer += elapsedTime.asMicroseconds();
         if (timer > 1200000) {
-            if (std::sqrt(std::pow((xPos - player->getXpos() + 8), 2) +
-                          std::pow((yPos - player->getYpos() + 16), 2)) < 174) {
+            if (std::sqrt(std::pow((position.x - player->getXpos() + 8), 2) +
+                          std::pow((position.y - player->getYpos() + 16), 2)) < 174) {
                 state = State::shoot1;
             } else {
                 state = State::closing;
@@ -172,13 +172,6 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
 
 const Turret::HBox & Turret::getHitBox() const { return hitBox; }
 
-// Returns the turret's shadow sprite
 const sf::Sprite & Turret::getShadow() { return shadowSheet[frameIndex]; }
-
-bool Turret::getKillFlag() { return killFlag; }
-
-float Turret::getXpos() { return xPos; }
-
-float Turret::getYpos() { return yPos; }
 
 bool Turret::colored() { return isColored; }

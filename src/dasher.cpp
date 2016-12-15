@@ -52,7 +52,7 @@ Dasher::Dasher(const sf::Texture & mainTxtr, float _xPos, float _yPos)
     shadow.setTexture(mainTxtr);
     shadow.setTextureRect(sf::IntRect(0, 100, 18, 16));
     health = 5;
-    hitBox.setPosition(xPos, yPos);
+    hitBox.setPosition(position.x, position.y);
 }
 
 const sf::Sprite & Dasher::getSprite() const {
@@ -88,7 +88,7 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls, const sf::Tim
             }
         }
         if (health == 0) {
-            if (xPos > player.getXpos()) {
+            if (position.x > player.getXpos()) {
                 deathSheet.setScale(1, 1);
             } else {
                 deathSheet.setScale(-1, 1);
@@ -98,13 +98,13 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls, const sf::Tim
     }
     SoundController & sounds = pGame->getSounds();
     Enemy::updateColor(elapsedTime);
-    dasherSheet.setPosition(xPos + 4, yPos);
-    deathSheet.setPosition(xPos + 4, yPos);
-    shadow.setPosition(xPos - 4, yPos + 22);
-    hitBox.setPosition(xPos, yPos);
+    dasherSheet.setPosition(position.x + 4, position.y);
+    deathSheet.setPosition(position.x + 4, position.y);
+    shadow.setPosition(position.x - 4, position.y + 22);
+    hitBox.setPosition(position.x, position.y);
     timer += elapsedTime.asMilliseconds();
     auto facePlayer = [this, player]() {
-        if (this->xPos > player.getXpos()) {
+        if (this->position.x > player.getXpos()) {
             this->dasherSheet.setScale(1, 1);
         } else {
             this->dasherSheet.setScale(-1, 1);
@@ -139,18 +139,20 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls, const sf::Tim
         if (frameTimer > 80 && shotCount < 3) {
             frameTimer -= 80;
             shotCount++;
-            if (xPos > player.getXpos()) {
+            if (position.x > player.getXpos()) {
                 effects.add<EffectRef::TurretFlashEffect>(
                     getgResHandlerPtr()->getTexture(
                         ResHandler::Texture::gameObjects),
-                    xPos - 14, yPos + 2);
-                effects.add<EffectRef::DasherShot>(xPos - 12, yPos, angleFunction(target.x + 8, target.y + 8, xPos, yPos));
+                    position.x - 14, position.y + 2);
+                effects.add<EffectRef::DasherShot>(position.x - 12, position.y, angleFunction(target.x + 8, target.y + 8, position.x, position.y));
+		pGame->getSounds().play(ResHandler::Sound::silenced, this->shared_from_this(), 320.f, 30.f);
             } else {
                 effects.add<EffectRef::TurretFlashEffect>(
                     getgResHandlerPtr()->getTexture(
                         ResHandler::Texture::gameObjects),
-                    xPos + 6, yPos + 2);
-                effects.add<EffectRef::DasherShot>(xPos + 4, yPos, angleFunction(target.x, target.y + 8, xPos, yPos));
+                    position.x + 6, position.y + 2);
+                effects.add<EffectRef::DasherShot>(position.x + 4, position.y, angleFunction(target.x, target.y + 8, position.x, position.y));
+		pGame->getSounds().play(ResHandler::Sound::silenced, this->shared_from_this(), 320.f, 30.f);
             }
         }
         if (timer > 300) {
@@ -177,7 +179,7 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls, const sf::Tim
         if (timer > 352) {
             timer -= 352;
             state = State::dashing;
-            // sounds.play(ResHandler::Sound::wooshMono, {xPos, yPos, 0.f}, 220.f, 110.f, false);
+            sounds.play(ResHandler::Sound::wooshMono, this->shared_from_this(), 220.f, 30.f);
             frameIndex = 2;
             uint8_t tries{0};
             float dir{static_cast<float>(rng::random<359>())};
@@ -189,7 +191,7 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls, const sf::Tim
                     goto begin;
                 }
                 dir += 12;
-            } while (wallInPath(walls, dir, xPos, yPos));
+            } while (wallInPath(walls, dir, position.x, position.y));
             hSpeed = 5 * cos(dir);
             vSpeed = 5 * sin(dir);
             if (hSpeed > 0) {
@@ -206,7 +208,7 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls, const sf::Tim
         frameTimer += elapsedTime.asMilliseconds();
         if (frameTimer > 40) {
             frameTimer = 0;
-            blurEffects.emplace_back(dasherSheet.getSpritePtr(), xPos, yPos);
+            blurEffects.emplace_back(dasherSheet.getSpritePtr(), position.x, position.y);
         }
         if (timer > 250) {
             timer -= 250;
@@ -216,7 +218,7 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls, const sf::Tim
             vSpeed = 0.f;
         }
 
-        if (Enemy::checkWallCollision(walls, xPos, yPos)) {
+        if (Enemy::checkWallCollision(walls, position.x, position.y)) {
             hSpeed *= -1.f;
             vSpeed *= -1.f;
         }
@@ -256,8 +258,8 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls, const sf::Tim
         }
     }
 
-    xPos += hSpeed * (elapsedTime.asMicroseconds() * 0.00005f);
-    yPos += vSpeed * (elapsedTime.asMicroseconds() * 0.00005f);
+    position.x += hSpeed * (elapsedTime.asMicroseconds() * 0.00005f);
+    position.y += vSpeed * (elapsedTime.asMicroseconds() * 0.00005f);
 }
 
 void Dasher::onDeath(EffectGroup & effects) {
@@ -270,18 +272,18 @@ void Dasher::onDeath(EffectGroup & effects) {
     if (temp == 0) {
         effects.add<EffectRef::Heart>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow), xPos,
-            yPos + 4, Item::Type::Heart);
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow), position.x,
+            position.y + 4, Item::Type::Heart);
     } else {
         effects.add<EffectRef::Coin>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
-            xPos, yPos + 4, Item::Type::Coin);
+            position.x, position.y + 4, Item::Type::Coin);
     }
     effects.add<EffectRef::SmallExplosion>(
         getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
         getgResHandlerPtr()->getTexture(ResHandler::Texture::fireExplosionGlow),
-        xPos, yPos - 2);
+        position.x, position.y - 2);
     blurEffects.clear();
 }
 

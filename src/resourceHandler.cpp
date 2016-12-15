@@ -93,6 +93,8 @@ void ResHandler::loadSounds(const std::string & resPath) {
     loadResource(resPath + "sounds/woosh.ogg", Sound::woosh, sounds);
     loadResource(resPath + "sounds/wooshMono.ogg", Sound::wooshMono, sounds);
     loadResource(resPath + "sounds/espark.ogg", Sound::espark, sounds);
+    loadResource(resPath + "sounds/silenced.ogg", Sound::silenced, sounds);
+    loadResource(resPath + "sounds/laser.ogg", Sound::laser, sounds);
 }
 
 const sf::Image & ResHandler::getImage(Image id) const {
