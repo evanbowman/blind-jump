@@ -107,6 +107,7 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
     bool up = pInput->upPressed();
     bool down = pInput->downPressed();
     bool pause = pInput->pausePressed();
+    SoundController & sounds = pGame->getSounds();
     switch (state) {
     case State::closed:
         if (dispPowerupBar) {
@@ -135,6 +136,7 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
         blurAmount = math::smootherstep(0.f, 280, timer);
         if (blurAmount == 1.f) {
             state = State::menuScreen;
+	    sounds.pause(SoundController::Sound);
             uIFrontEnd.setTextAlpha(255, ui::Frontend::Text::resumeText);
             uIFrontEnd.setTextAlpha(255, ui::Frontend::Text::quitText);
         }
@@ -144,6 +146,7 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
         if (pause) {
             timer = 0;
             menuItemSelected = 0;
+	    sounds.unpause(SoundController::Sound);
             state = State::menuScreenExit;
         } else if (up) {
             if (menuItemSelected == 1) {
@@ -159,6 +162,7 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
             switch (menuItemSelected) {
             case 0:
                 menuItemSelected = 0;
+		sounds.unpause(SoundController::Sound);
                 state = State::menuScreenExit;
                 timer = 0;
                 break;

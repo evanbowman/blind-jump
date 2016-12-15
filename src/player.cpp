@@ -296,30 +296,29 @@ void Player::update(Game * pGame, const sf::Time & elapsedTime,
         // If the action button is pressed, open nearby chests
         if (state == State::nominal) {
             auto chests = details.get<DetailRef::TreasureChest>();
-            for (auto & sharedChest : chests) {
-                const auto chestPosition = sharedChest.get()->getPosition();
+            for (auto & chest : chests) {
+                const auto chestPosition = chest->getPosition();
                 if (std::abs(xPos - chestPosition.x) < 32 &&
                     std::abs(yPos - chestPosition.y) < 26 &&
-                    sharedChest.get()->getState() == TreasureChest::State::closed &&
+                    chest->getState() == TreasureChest::State::closed &&
                     action) {
                     util::sleep(milliseconds(40));
-                    pGame->getSounds().play(ResHandler::Sound::creak, sharedChest, 64.f, 15.f);
-                    sharedChest.get()->setState(TreasureChest::State::opening);
+                    pGame->getSounds().play(ResHandler::Sound::creak, chest, 64.f, 15.f);
+                    chest->setState(TreasureChest::State::opening);
                 }
             }
         }
-        for (auto & sharedTerm : details.get<DetailRef::Terminal>()) {
-            auto termAddr = sharedTerm.get();
-            const sf::Vector2f termPos = termAddr->getPosition();
-            const Terminal::State termState = termAddr->getState();
+        for (auto & term : details.get<DetailRef::Terminal>()) {
+            const sf::Vector2f termPos = term->getPosition();
+            const Terminal::State termState = term->getState();
             if (std::sqrt(std::pow(xPos - termPos.x, 2) +
                           std::pow(yPos - termPos.y, 2)) < 48.f) {
                 if (termState == Terminal::State::dormant) {
-                    termAddr->setState(Terminal::State::wakeup);
+                    term->setState(Terminal::State::wakeup);
                 }
             } else {
                 if (termState == Terminal::State::awake) {
-                    termAddr->setState(Terminal::State::poweroff);
+                    term->setState(Terminal::State::poweroff);
                 }
             }
         }
@@ -768,7 +767,7 @@ template <typename F, typename T>
 void checkEnemyCollision(const std::vector<T> & enemyGroup, Player * pPlayer,
                          const F & policy) {
     for (auto & enemy : enemyGroup) {
-        if (pPlayer->getHitBox().overlapping(enemy.getHitBox())) {
+        if (pPlayer->getHitBox().overlapping(enemy->getHitBox())) {
             policy();
         }
     }

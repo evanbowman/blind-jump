@@ -74,15 +74,14 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls, const sf::Tim
     EffectGroup & effects = pGame->getEffects();
     Player & player = pGame->getPlayer();
     if (health > 0) {
-        for (auto & sharedElement : effects.get<9>()) {
-            auto addr = sharedElement.get();
-            if (hitBox.overlapping(addr->getHitBox()) &&
-                addr->checkCanPoof()) {
+        for (auto & element : effects.get<9>()) {
+            if (hitBox.overlapping(element->getHitBox()) &&
+                element->checkCanPoof()) {
                 if (health == 1) {
-                    addr->disablePuff();
-                    addr->setKillFlag();
+                    element->disablePuff();
+                    element->setKillFlag();
                 }
-                addr->poof();
+                element->poof();
                 health -= 1;
                 colored = true;
                 colorAmount = 1.f;

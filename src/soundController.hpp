@@ -28,8 +28,14 @@ struct runningData {
 
 class SoundController {
 public:
+    enum {
+	Sound,
+	Music
+    };
     SoundController();
     void update();
+    void pause(int);
+    void unpause(int);
     void play(ResHandler::Sound);
     void play(ResHandler::Sound indx, std::shared_ptr<framework::Object>, float minDistance, float attenuation, bool loop = false);
     

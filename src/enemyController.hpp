@@ -15,6 +15,7 @@
 #include "util.hpp"
 #include <SFML/Graphics.hpp>
 #include <thread>
+#include <memory>
 
 class ScreenShakeController;
 class detailController;
@@ -26,10 +27,10 @@ class enemyController {
 private:
     using drawableVec =
         std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
-    std::vector<Turret> turrets;
-    std::vector<Scoot> scoots;
-    std::vector<Dasher> dashers;
-    std::vector<Critter> critters;
+    std::vector<std::shared_ptr<Turret>> turrets;
+    std::vector<std::shared_ptr<Scoot>> scoots;
+    std::vector<std::shared_ptr<Dasher>> dashers;
+    std::vector<std::shared_ptr<Critter>> critters;
     float windowW;
     float windowH;
 
@@ -43,8 +44,8 @@ public:
     void addDasher(tileController *);
     void addCritter(tileController *);
     void setWindowSize(float, float);
-    std::vector<Critter> & getCritters();
-    std::vector<Scoot> & getScoots();
-    std::vector<Dasher> & getDashers();
-    std::vector<Turret> & getTurrets();
+    std::vector<std::shared_ptr<Critter>> & getCritters();
+    std::vector<std::shared_ptr<Scoot>> & getScoots();
+    std::vector<std::shared_ptr<Dasher>> & getDashers();
+    std::vector<std::shared_ptr<Turret>> & getTurrets();
 };

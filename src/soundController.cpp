@@ -13,9 +13,36 @@ SoundController::SoundController() {
     currentSong.setVolume(60);
 }
 
+void SoundController::pause(int options) {
+    std::lock_guard<std::mutex> lk(soundsGuard);
+    if (options & Sound) {
+	for (auto & sound : runningSounds) {
+	    if (sound.getStatus() == sf::Sound::Playing) {
+		sound.pause();
+	    }
+	}
+    }
+    if (options & Music) {
+	currentSong.pause();
+    }
+}
+
+void SoundController::unpause(int options) {
+    std::lock_guard<std::mutex> lk(soundsGuard);
+    if (options & Sound) {
+	for (auto & sound : runningSounds) {
+	    if (sound.getStatus() == sf::Sound::Paused) {
+		sound.play();
+	    }
+	}
+    }
+    if (options & Music)
+    currentSong.play();
+}
+
 void SoundController::update() {
+    std::lock_guard<std::mutex> lk(soundsGuard);
     if (!soundRequests.empty()) {
-        std::lock_guard<std::mutex> lk(soundsGuard);
         for (const auto req : soundRequests) {
             runningSounds.emplace_back(getgResHandlerPtr()->getSound(req.soundIdx));
             runningSounds.back().setMinDistance(req.minDistance);
@@ -43,7 +70,7 @@ void SoundController::update() {
     }
     while (true) {
         if (runningSounds.size() > 0) {
-            if (runningSounds.front().getStatus() != sf::Sound::Playing) {
+            if (runningSounds.front().getStatus() == sf::Sound::Stopped) {
                 runningSounds.pop_front();
                 runningData.pop_front();
             } else {
@@ -62,7 +89,7 @@ void SoundController::update() {
                 iters.first->setPosition(pos.x, pos.y, 0.f);
             } else {
                 iters.second->spatialized = false;
-                iters.first->pause();
+                iters.first->stop();
             }
         }
     }

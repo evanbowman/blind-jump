@@ -78,10 +78,12 @@ void Game::eventLoop(sf::RenderWindow & window) {
             break;
 
         case sf::Event::GainedFocus:
+	    sounds.unpause(SoundController::Sound | SoundController::Music);
             ::gameHasFocus = true;
             break;
 
         case sf::Event::LostFocus:
+	    sounds.pause(SoundController::Sound | SoundController::Music);
             ::gameHasFocus = false;
             break;
 
@@ -336,10 +338,10 @@ void Game::updateLogic(const sf::Time & elapsedTime) {
         tiles.update();
         auto objUpdatePolicy = [&elapsedTime, this](auto & vec) {
             for (auto it = vec.begin(); it != vec.end();) {
-                if (it->get()->getKillFlag()) {
+                if ((*it)->getKillFlag()) {
                     it = vec.erase(it);
                 } else {
-                    it->get()->update(elapsedTime, this);
+                    (*it)->update(elapsedTime, this);
                     ++it;
                 }
             }

@@ -32,14 +32,13 @@ void Scoot::changeDir(float dir) {
 void Scoot::update(Game * pGame, const std::vector<wall> & w,
                    const sf::Time & elapsedTime) {
     EffectGroup & effects = pGame->getEffects();
-    for (auto & sharedElement : effects.get<9>()) {
-        auto addr = sharedElement.get();
-        if (hitBox.overlapping(addr->getHitBox()) && addr->checkCanPoof()) {
+    for (auto & element : effects.get<9>()) {
+        if (hitBox.overlapping(element->getHitBox()) && element->checkCanPoof()) {
             if (health == 1) {
-                addr->disablePuff();
-                addr->setKillFlag();
+                element->disablePuff();
+                element->setKillFlag();
             }
-            addr->poof();
+            element->poof();
             health -= 1;
             colored = true;
             colorAmount = 1.f;
