@@ -111,7 +111,7 @@ void Scoot::update(Game * pGame, const std::vector<wall> & w,
             angleFunction(playerPos.x + 16, playerPos.y + 8, position.x - 8,
                           position.y - 8));
         pGame->getSounds().play(ResHandler::Sound::laser,
-                                this->shared_from_this(), 320.f, 30.f);
+                                this->shared_from_this(), 220.f, 30.f);
         state = State::recoil;
         changeDir(atan((position.y - player.getYpos()) /
                        (position.x - player.getXpos())));

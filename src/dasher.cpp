@@ -150,7 +150,7 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls,
                     angleFunction(target.x + 8, target.y + 8, position.x,
                                   position.y));
                 pGame->getSounds().play(ResHandler::Sound::silenced,
-                                        this->shared_from_this(), 320.f, 5.f);
+                                        this->shared_from_this(), 220.f, 5.f);
             } else {
                 effects.add<EffectRef::TurretFlashEffect>(
                     getgResHandlerPtr()->getTexture(
@@ -161,7 +161,7 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls,
                     angleFunction(target.x, target.y + 8, position.x,
                                   position.y));
                 pGame->getSounds().play(ResHandler::Sound::silenced,
-                                        this->shared_from_this(), 320.f, 5.f);
+                                        this->shared_from_this(), 220.f, 5.f);
             }
         }
         if (timer > 300) {

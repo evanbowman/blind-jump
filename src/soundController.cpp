@@ -33,8 +33,9 @@ void SoundController::unpause(int options) {
             }
         }
     }
-    if (options & Music)
+    if (options & Music) {
         currentSong.play();
+    }
 }
 
 void SoundController::update() {
