@@ -303,7 +303,7 @@ void Player::update(Game * pGame, const sf::Time & elapsedTime,
                     chest->getState() == TreasureChest::State::closed &&
                     action) {
                     util::sleep(milliseconds(40));
-                    pGame->getSounds().play(ResHandler::Sound::creak, chest, 64.f, 15.f);
+                    pGame->getSounds().play(ResHandler::Sound::creak, chest, 64.f, 8.f);
                     chest->setState(TreasureChest::State::opening);
                 }
             }

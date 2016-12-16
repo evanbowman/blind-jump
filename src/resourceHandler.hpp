@@ -40,7 +40,7 @@ public:
     enum class Shader { color, blur, desaturate, count };
     enum class Font { cornerstone, count };
     enum class Image { soilTileset, grassSet1, grassSet2, icon, count };
-    enum class Sound { gunShot, creak, bite1, bite2, woosh, wooshMono, espark, silenced, laser, count };
+    enum class Sound { gunShot, creak, bite1, bite2, woosh, wooshMono, espark, silenced, laser, blast1, electricHum, count };
     const sf::Texture & getTexture(ResHandler::Texture) const;
     const sf::Texture & getTexture(int) const;
     const sf::Font & getFont(ResHandler::Font) const;

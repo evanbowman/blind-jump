@@ -182,7 +182,7 @@ void enemyController::update(Game * pGame, bool enabled,
                     cameraTargets.emplace_back((*it)->getPosition().x, (*it)->getPosition().y);
                 }
                 if (enabled) {
-                    (*it)->update(player, effectGroup, elapsedTime,
+                    (*it)->update(pGame, elapsedTime,
                                tileController);
                 }
                 ++it;

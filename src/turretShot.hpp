@@ -36,7 +36,7 @@ public:
         animationTimer = 0;
     }
     void initSounds(SoundController & sounds) {
-        sounds.play(ResHandler::Sound::espark, this->shared_from_this(), 32.f, 2.f, true);
+        sounds.play(ResHandler::Sound::espark, this->shared_from_this(), 38.f, 20.f, true);
     }
     template <typename Game>
     void update(const sf::Time & elapsedTime, Game * pGame) {

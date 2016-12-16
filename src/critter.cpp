@@ -5,7 +5,7 @@
 
 #include "critter.hpp"
 #include "math.h"
-#include "player.hpp"
+#include "game.hpp"
 #include "tileController.hpp"
 #include <cmath>
 
@@ -26,10 +26,12 @@ const Critter::HBox & Critter::getHitBox() const { return hitBox; }
 
 void Critter::updatePlayerDead() { frameIndex = 0; }
 
-void Critter::update(const Player * player, EffectGroup & effects,
+void Critter::update(Game * pGame,
                      const sf::Time & elapsedTime, tileController & tiles) {
     position.x = xInit + 12;
     position.y = yInit;
+    EffectGroup & effects = pGame->getEffects();
+    Player & player = pGame->getPlayer();
     for (auto & element : effects.get<9>()) {
         if (element->getHitBox().overlapping(hitBox) && element->checkCanPoof()) {
             if (health == 1) {
@@ -43,7 +45,24 @@ void Critter::update(const Player * player, EffectGroup & effects,
         }
     }
     if (health == 0) {
-        onDeath(effects);
+	unsigned long int temp = rng::random<5>();
+	if (temp == 0) {
+	    effects.add<EffectRef::Heart>(
+					  getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+					  getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
+					  xInit + 10, yInit, Item::Type::Heart);
+	} else {
+	    effects.add<EffectRef::Coin>(
+					 getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+					 getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
+					 xInit + 10, yInit, Item::Type::Coin);
+	}
+	effects.add<EffectRef::SmallExplosion>(
+					       getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+					       getgResHandlerPtr()->getTexture(ResHandler::Texture::fireExplosionGlow),
+					       xInit + 8, yInit);
+	pGame->getSounds().play(ResHandler::Sound::blast1, effects.get<EffectRef::SmallExplosion>().back(), 300, 4.f);
+	killFlag = true;
     }
     position.x -= 12; // Currently off-centered, this is just temporary work-around
     Enemy::updateColor(elapsedTime);
@@ -65,8 +84,8 @@ void Critter::update(const Player * player, EffectGroup & effects,
             aStrCoordinate origin, target;
             origin.x = (position.x - tilePosX) / 32;
             origin.y = (position.y - tilePosY) / 26;
-            target.x = (tilePosX - player->getXpos() - 12) / -32;
-            target.y = (tilePosY - player->getYpos() - 32) / -26;
+            target.x = (tilePosX - player.getXpos() - 12) / -32;
+            target.y = (tilePosY - player.getYpos() - 32) / -26;
             if (map[target.x][target.y] == 3 || map[target.x][target.y] == 4 ||
                 map[target.x][target.y] == 5 || map[target.x][target.y] == 11 ||
                 map[target.x][target.y] == 8) {
@@ -117,7 +136,7 @@ void Critter::update(const Player * player, EffectGroup & effects,
         }
 
         // Flip the sprite to face the player
-        if (position.x > player->getXpos()) {
+        if (position.x > player.getXpos()) {
             spriteSheet.setScale(1.f, 1.f);
             shadow.setScale(1.f, 1.f);
         } else {
@@ -127,8 +146,8 @@ void Critter::update(const Player * player, EffectGroup & effects,
     }
 
     else {
-        if (fabsf(player->getXpos() - position.x) < 300 &&
-            fabsf(player->getYpos() - position.y) < 300)
+        if (fabsf(player.getXpos() - position.x) < 300 &&
+            fabsf(player.getYpos() - position.y) < 300)
             awake = true;
     }
 
@@ -147,24 +166,3 @@ void Critter::activate() { active = true; }
 void Critter::deActivate() { active = false; }
 
 bool Critter::isActive() { return active; }
-
-void Critter::onDeath(EffectGroup & effects) {
-    // With some random chance, add a heart item to the map
-    unsigned long int temp = rng::random<5>();
-    if (temp == 0) {
-        effects.add<EffectRef::Heart>(
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
-            xInit + 10, yInit, Item::Type::Heart);
-    } else {
-        effects.add<EffectRef::Coin>(
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
-            xInit + 10, yInit, Item::Type::Coin);
-    }
-    effects.add<EffectRef::SmallExplosion>(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::fireExplosionGlow),
-        xInit + 8, yInit);
-    killFlag = true;
-}

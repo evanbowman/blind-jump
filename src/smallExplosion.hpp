@@ -32,8 +32,8 @@ public:
     void update(const sf::Time & elapsedTime, Game *) {
         timer += elapsedTime.asMicroseconds();
         glowFadeTimer += elapsedTime.asMicroseconds();
-        if (timer > 60000) {
-            timer -= 60000;
+        if (timer > 65000) {
+            timer -= 65000;
             frameIndex++;
             if (frameIndex > 5) {
                 frameIndex = 5;

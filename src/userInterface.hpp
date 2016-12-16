@@ -52,7 +52,7 @@ public:
         powerupText
     };
     Frontend(sf::View, float, float);
-    void setWaypointText(int);
+    void setWaypointText(const int);
     void setZoneText(char);
     void draw(sf::RenderWindow &);
     void setTextAlpha(uint8_t, Text);

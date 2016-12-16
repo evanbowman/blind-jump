@@ -432,9 +432,9 @@ ui::Frontend::Frontend(sf::View fontView, float x, float y)
         text.setCharacterSize(size);
         text.setString(string);
     };
-    initText(waypointText, std::string("WAYPOINT-1"), 0.055f * scale);
+    initText(waypointText, std::string("CRASH SITE"), 0.055f * scale);
     waypointText.setPosition(16, 0);
-    waypointText.setFillColor(sf::Color::Transparent);
+    waypointText.setFillColor(sf::Color(255, 255, 255, 60));
 
     initText(scoreText, std::string("0: "), 0.032f * scale);
 
@@ -565,38 +565,33 @@ void ui::Frontend::reset() {
 
 void ui::Frontend::addPowerup(Powerup powerup) { powerupAdded = powerup; }
 
-void ui::Frontend::setWaypointText(int level) {
+void ui::Frontend::setWaypointText(const int level) {
     heart.setPosition(fontView.getSize().x - heart.getLocalBounds().width / 2,
                       heart.getLocalBounds().height / 1.8);
-    // coin.setPosition(fontView.getSize().x - coin.getLocalBounds().width,
-    // heart.getPosition().y + coin.getLocalBounds().height);
     coin.setPosition(heart.getPosition().x,
                      heart.getPosition().y +
                          coin.getLocalBounds().height * 1.25);
     coin.setFillColor(sf::Color(255, 255, 255, 60));
-    // healthNumText.setPosition(fontView.getSize().x -
-    //                               healthNumText.getLocalBounds().width -
-    //                               heart.getLocalBounds().width,
-    //                           healthNumText.getLocalBounds().height);
     if (health != 1) {
         healthNumText.setFillColor(sf::Color(255, 255, 255, 60));
         heart.setFillColor(sf::Color(255, 255, 255, 60));
     }
-    // scoreText.setPosition(
-    // 			  fontView.getSize().x - scoreText.getLocalBounds().width -
-    // 			  fontView.getSize().x * 0.015 - heart.getLocalBounds().width,
-    //         scoreText.getLocalBounds().height * 3);
-    std::string str = "WAYPOINT-";
-    str += std::to_string(level);
-    waypointText.setString(str);
-    scoreText.setFillColor(sf::Color(255, 255, 255, 60));
     if (level != 0) {
-        waypointText.setFillColor(sf::Color::White);
-        wpTextDisplayTimer.restart();
-        if (health != 1) {
-            healthDisplayTimer.restart();
-        }
-        scoreDisplayTimer.restart();
+	std::string str = "WAYPOINT-";
+	str += std::to_string(level);
+	waypointText.setString(str);
+    } else {
+        static const std::string str = "CRASH SITE";
+	waypointText.setString(str);
+    }
+    scoreText.setFillColor(sf::Color(255, 255, 255, 60));
+    waypointText.setFillColor(sf::Color::White);
+    wpTextDisplayTimer.restart();
+    if (level != 0) {
+	if (health != 1) {
+	    healthDisplayTimer.restart();
+	}
+	scoreDisplayTimer.restart();
     }
 }
 

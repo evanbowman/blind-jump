@@ -45,7 +45,23 @@ void Scoot::update(Game * pGame, const std::vector<wall> & w,
         }
     }
     if (health == 0) {
-        onDeath(effects);
+	int select = rng::random<5>();
+	if (select == 0) {
+	    effects.add<EffectRef::Heart>(
+					  getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+					  getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow), position.x,
+					  position.y + 4, Item::Type::Heart);
+	} else {
+	    effects.add<EffectRef::Coin>(
+					 getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+					 getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
+					 position.x, position.y + 4, Item::Type::Coin);
+	}
+	effects.add<EffectRef::FireExplosion>(
+					      getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+					      getgResHandlerPtr()->getTexture(ResHandler::Texture::fireExplosionGlow),
+					      position.x, position.y - 2);
+	killFlag = true;
     }
     Enemy::updateColor(elapsedTime);
     hitBox.setPosition(position.x, position.y);
@@ -149,24 +165,3 @@ void Scoot::update(Game * pGame, const std::vector<wall> & w,
 const sf::Sprite & Scoot::getSprite() const { return spriteSheet[frameIndex]; }
 
 const sf::Sprite & Scoot::getShadow() const { return shadow; }
-
-void Scoot::onDeath(EffectGroup & effects) {
-    int select = rng::random<5>();
-    if (select == 0) {
-        effects.add<EffectRef::Heart>(
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow), position.x,
-            position.y + 4, Item::Type::Heart);
-    } else {
-        effects.add<EffectRef::Coin>(
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
-            position.x, position.y + 4, Item::Type::Coin);
-    }
-    effects.add<EffectRef::FireExplosion>(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::fireExplosionGlow),
-        position.x, position.y - 2);
-    killFlag = true;
-    return;
-}

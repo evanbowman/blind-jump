@@ -9,10 +9,13 @@
 static const std::string musicPaths[] = {"music/Frostellar.ogg"};
 
 SoundController::SoundController() {
-    currentSong.openFromFile(resourcePath() + musicPaths[0]);
-    currentSong.play();
-    currentSong.setLoop(true);
-    currentSong.setVolume(60);
+    
+}
+
+void SoundController::clear() {
+    std::lock_guard<std::mutex> lk(soundsGuard);
+    runningSounds.clear();
+    soundRequests.clear();
 }
 
 void SoundController::pause(int options) {
@@ -85,7 +88,7 @@ void SoundController::update() {
     for (auto iters = std::make_pair(runningSounds.begin(), runningData.begin());
          iters.first != runningSounds.end();
          ++iters.first, ++iters.second) {
-        if (iters.second->spatialized) {
+         if (iters.second->spatialized) {
             if (auto sp = iters.second->source.lock()) {
                 const auto pos = sp.get()->getPosition();
                 iters.first->setPosition(pos.x, pos.y, 0.f);

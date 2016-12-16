@@ -57,7 +57,6 @@ void Game::init() {
     tiles.setPosition((viewPort.x / 2) - 16, (viewPort.y / 2));
     tiles.setWindowSize(viewPort.x, viewPort.y);
     en.setWindowSize(viewPort.x, viewPort.y);
-    pUiFrontend->setWaypointText(level);
     beamGlowSpr.setColor(sf::Color(0, 0, 0, 255));
     transitionShape.setSize(sf::Vector2f(viewPort.x, viewPort.y));
     transitionShape.setFillColor(sf::Color(0, 0, 0, 0));
@@ -617,6 +616,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 }
 
 void Game::nextLevel() {
+    sounds.clear();
     level += 1;
     pUiFrontend->setWaypointText(level);
     tiles.clear();
@@ -663,6 +663,7 @@ void Game::nextLevel() {
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             getgResHandlerPtr()->getTexture(
                 ResHandler::Texture::teleporterGlow));
+	// sounds.play(ResHandler::Sound::electricHum, detailGroup.get<DetailRef::Teleporter>().back(), 72.f, 3.f, true);
         initEnemies(this);
         auto optCoord = pickLocation(tiles.emptyMapLocations);
         if (optCoord) {
@@ -753,6 +754,7 @@ void Game::nextLevel() {
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             getgResHandlerPtr()->getTexture(
                 ResHandler::Texture::teleporterGlow));
+	// sounds.play(ResHandler::Sound::electricHum, detailGroup.get<DetailRef::Teleporter>().back(), 72.f, 3.f, true);
         for (auto it = ::levelZeroWalls.begin(); it != ::levelZeroWalls.end();
              ++it) {
             wall w;
