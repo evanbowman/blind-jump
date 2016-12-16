@@ -116,8 +116,7 @@ void InputController::recordEvent(const sf::Event & event) {
         }
     } else if (event.type == sf::Event::JoystickButtonPressed) {
         if (event.joystickButton.joystickId == 0) {
-            if (event.joystickButton.button ==
-                joystickMappings[indexShoot]) {
+            if (event.joystickButton.button == joystickMappings[indexShoot]) {
                 joystickMask[indexShoot] = true;
             } else if (event.joystickButton.button ==
                        joystickMappings[indexAction]) {
@@ -129,8 +128,7 @@ void InputController::recordEvent(const sf::Event & event) {
         }
     } else if (event.type == sf::Event::JoystickButtonReleased) {
         if (event.joystickButton.joystickId == 0) {
-            if (event.joystickButton.button ==
-                joystickMappings[indexShoot]) {
+            if (event.joystickButton.button == joystickMappings[indexShoot]) {
                 joystickMask[indexShoot] = false;
             } else if (event.joystickButton.button ==
                        joystickMappings[indexAction]) {
@@ -178,4 +176,3 @@ void InputController::recordEvent(const sf::Event & event) {
         }
     }
 }
-

@@ -303,7 +303,8 @@ void Player::update(Game * pGame, const sf::Time & elapsedTime,
                     chest->getState() == TreasureChest::State::closed &&
                     action) {
                     util::sleep(milliseconds(40));
-                    pGame->getSounds().play(ResHandler::Sound::creak, chest, 64.f, 8.f);
+                    pGame->getSounds().play(ResHandler::Sound::creak, chest,
+                                            64.f, 8.f);
                     chest->setState(TreasureChest::State::opening);
                 }
             }
@@ -764,8 +765,8 @@ void Player::checkEffectCollisions(EffectGroup & effects,
 }
 
 template <typename F, typename T>
-void checkEnemyCollision(const std::vector<std::shared_ptr<T>> & enemyGroup, Player * pPlayer,
-                         const F & policy) {
+void checkEnemyCollision(const std::vector<std::shared_ptr<T>> & enemyGroup,
+                         Player * pPlayer, const F & policy) {
     for (auto & enemy : enemyGroup) {
         if (pPlayer->getHitBox().overlapping(enemy->getHitBox())) {
             policy();
@@ -774,8 +775,8 @@ void checkEnemyCollision(const std::vector<std::shared_ptr<T>> & enemyGroup, Pla
 }
 
 template <typename F>
-void checkEnemyCollision(const std::vector<std::shared_ptr<Dasher>> & dashers, Player * pPlayer,
-                         const F & policy) {
+void checkEnemyCollision(const std::vector<std::shared_ptr<Dasher>> & dashers,
+                         Player * pPlayer, const F & policy) {
     for (auto & enemy : dashers) {
         if (pPlayer->getHitBox().overlapping(enemy->getHitBox()) &&
             enemy->getState() != Dasher::State::dead &&

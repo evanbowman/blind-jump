@@ -4,9 +4,9 @@
 //========================================================================//
 
 #include "enemyController.hpp"
+#include "DetailGroup.hpp"
 #include "ResourcePath.hpp"
 #include "camera.hpp"
-#include "DetailGroup.hpp"
 #include "game.hpp"
 #include "tileController.hpp"
 #include "wall.hpp"
@@ -48,7 +48,7 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
         // it through a fragment shader
         if (element->isColored()) {
             gameObjects.emplace_back(
-				     element->getSprite(), element->getPosition().y - 16,
+                element->getSprite(), element->getPosition().y - 16,
                 Rendertype::shadeWhite, element->getColorAmount());
         } else {
             gameObjects.emplace_back(element->getSprite(),
@@ -89,11 +89,12 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
                                          Rendertype::shadeDefault, 0.f);
             }
             if (element->isColored()) {
-                gameObjects.emplace_back(element->getSprite(), element->getPosition().y,
-                                         Rendertype::shadeWhite,
-                                         element->getColorAmount());
+                gameObjects.emplace_back(
+                    element->getSprite(), element->getPosition().y,
+                    Rendertype::shadeWhite, element->getColorAmount());
             } else {
-                gameObjects.emplace_back(element->getSprite(), element->getPosition().y,
+                gameObjects.emplace_back(element->getSprite(),
+                                         element->getPosition().y,
                                          Rendertype::shadeDefault, 0.f);
             }
         }
@@ -117,14 +118,19 @@ void enemyController::update(Game * pGame, bool enabled,
                 camera.shake(0.17f);
                 it = turrets.erase(it);
             } else {
-                if ((*it)->getPosition().x > viewCenter.x - viewSize.x / 2 - 32 &&
-                    (*it)->getPosition().x < viewCenter.x + viewSize.x / 2 + 32 &&
-                    (*it)->getPosition().y > viewCenter.y - viewSize.y / 2 - 32 &&
-                    (*it)->getPosition().y < viewCenter.y + viewSize.y / 2 + 32) {
+                if ((*it)->getPosition().x >
+                        viewCenter.x - viewSize.x / 2 - 32 &&
+                    (*it)->getPosition().x <
+                        viewCenter.x + viewSize.x / 2 + 32 &&
+                    (*it)->getPosition().y >
+                        viewCenter.y - viewSize.y / 2 - 32 &&
+                    (*it)->getPosition().y <
+                        viewCenter.y + viewSize.y / 2 + 32) {
                     if (enabled) {
                         (*it)->update(elapsedTime, player, effectGroup);
                     }
-                    cameraTargets.emplace_back((*it)->getPosition().x, (*it)->getPosition().y);
+                    cameraTargets.emplace_back((*it)->getPosition().x,
+                                               (*it)->getPosition().y);
                 }
                 ++it;
             }
@@ -137,14 +143,19 @@ void enemyController::update(Game * pGame, bool enabled,
                 camera.shake(0.17f);
                 it = scoots.erase(it);
             } else {
-                if ((*it)->getPosition().x > viewCenter.x - viewSize.x / 2 - 32 &&
-                    (*it)->getPosition().x < viewCenter.x + viewSize.x / 2 + 32 &&
-                    (*it)->getPosition().y > viewCenter.y - viewSize.y / 2 - 32 &&
-                    (*it)->getPosition().y < viewCenter.y + viewSize.y / 2 + 32) {
+                if ((*it)->getPosition().x >
+                        viewCenter.x - viewSize.x / 2 - 32 &&
+                    (*it)->getPosition().x <
+                        viewCenter.x + viewSize.x / 2 + 32 &&
+                    (*it)->getPosition().y >
+                        viewCenter.y - viewSize.y / 2 - 32 &&
+                    (*it)->getPosition().y <
+                        viewCenter.y + viewSize.y / 2 + 32) {
                     if (enabled) {
                         (*it)->update(pGame, tileController.walls, elapsedTime);
                     }
-                    cameraTargets.emplace_back((*it)->getPosition().x, (*it)->getPosition().y);
+                    cameraTargets.emplace_back((*it)->getPosition().x,
+                                               (*it)->getPosition().y);
                 }
                 ++it;
             }
@@ -159,10 +170,10 @@ void enemyController::update(Game * pGame, bool enabled,
                 if (i != j) {
                     // If the enemy at index i is active and overlaps with
                     // another enemy that is also active...
-                    if (fabs(critters[i]->getPosition().x - critters[j]->getPosition().x) <
-                            12 &&
-                        fabs(critters[i]->getPosition().y - critters[j]->getPosition().y) <
-                            12 &&
+                    if (fabs(critters[i]->getPosition().x -
+                             critters[j]->getPosition().x) < 12 &&
+                        fabs(critters[i]->getPosition().y -
+                             critters[j]->getPosition().y) < 12 &&
                         critters[i]->isActive() && critters[j]->isActive()) {
                         critters[i]->deActivate();
                     }
@@ -175,15 +186,19 @@ void enemyController::update(Game * pGame, bool enabled,
                 camera.shake(0.17f);
                 it = critters.erase(it);
             } else {
-                if ((*it)->getPosition().x > viewCenter.x - viewSize.x / 2 - 32 &&
-                    (*it)->getPosition().x < viewCenter.x + viewSize.x / 2 + 32 &&
-                    (*it)->getPosition().y > viewCenter.y - viewSize.y / 2 - 32 &&
-                    (*it)->getPosition().y < viewCenter.y + viewSize.y / 2 + 32) {
-                    cameraTargets.emplace_back((*it)->getPosition().x, (*it)->getPosition().y);
+                if ((*it)->getPosition().x >
+                        viewCenter.x - viewSize.x / 2 - 32 &&
+                    (*it)->getPosition().x <
+                        viewCenter.x + viewSize.x / 2 + 32 &&
+                    (*it)->getPosition().y >
+                        viewCenter.y - viewSize.y / 2 - 32 &&
+                    (*it)->getPosition().y <
+                        viewCenter.y + viewSize.y / 2 + 32) {
+                    cameraTargets.emplace_back((*it)->getPosition().x,
+                                               (*it)->getPosition().y);
                 }
                 if (enabled) {
-                    (*it)->update(pGame, elapsedTime,
-                               tileController);
+                    (*it)->update(pGame, elapsedTime, tileController);
                 }
                 ++it;
             }
@@ -201,7 +216,7 @@ void enemyController::update(Game * pGame, bool enabled,
             element->getPosition().y > viewCenter.y - viewSize.y / 2 - 32 &&
             element->getPosition().y < viewCenter.y + viewSize.y / 2 + 32) {
             if (enabled) {
-                element->update(pGame, tileController.walls,  elapsedTime);
+                element->update(pGame, tileController.walls, elapsedTime);
                 if (element->getState() != Dasher::State::dead) {
                     cameraTargets.emplace_back(element->getPosition().x,
                                                element->getPosition().y);
@@ -280,10 +295,18 @@ void enemyController::setWindowSize(float windowW, float windowH) {
     this->windowH = windowH;
 }
 
-std::vector<std::shared_ptr<Critter>> & enemyController::getCritters() { return critters; }
+std::vector<std::shared_ptr<Critter>> & enemyController::getCritters() {
+    return critters;
+}
 
-std::vector<std::shared_ptr<Dasher>> & enemyController::getDashers() { return dashers; }
+std::vector<std::shared_ptr<Dasher>> & enemyController::getDashers() {
+    return dashers;
+}
 
-std::vector<std::shared_ptr<Scoot>> & enemyController::getScoots() { return scoots; }
+std::vector<std::shared_ptr<Scoot>> & enemyController::getScoots() {
+    return scoots;
+}
 
-std::vector<std::shared_ptr<Turret>> & enemyController::getTurrets() { return turrets; }
+std::vector<std::shared_ptr<Turret>> & enemyController::getTurrets() {
+    return turrets;
+}

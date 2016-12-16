@@ -5,12 +5,12 @@
 
 #pragma once
 
+#include "framework/framework.hpp"
 #include "resourceHandler.hpp"
 #include <SFML/Audio.hpp>
 #include <list>
-#include <vector>
 #include <memory>
-#include "framework/framework.hpp"
+#include <vector>
 
 struct reqInfo {
     ResHandler::Sound soundIdx;
@@ -28,18 +28,22 @@ struct runningData {
 
 class SoundController {
 public:
-    enum {
-	Sound,
-	Music
-    };
+    enum { Sound, Music };
     SoundController();
     void update();
     void pause(int);
     void unpause(int);
     void play(ResHandler::Sound);
-    void play(ResHandler::Sound indx, std::shared_ptr<framework::Object>, float minDistance, float attenuation, bool loop = false);
+    // Note: sounds MUST be transient. Although this member function
+    // has a loop parameter, this is designed for sounds that should
+    // loop for the duration of a SHORT LIVED visual effect. Deallocation
+    // of running sounds works like a queue, so if you play a long running
+    // looping one, sounds behind it will not be deallocated, and adding
+    // new ones will eventually use up all available sound resources.
+    void play(ResHandler::Sound indx, std::shared_ptr<framework::Object>,
+              float minDistance, float attenuation, bool loop = false);
     void clear();
-    
+
 private:
     std::mutex soundsGuard;
     sf::Music currentSong;

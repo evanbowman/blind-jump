@@ -28,8 +28,7 @@ public:
         }
         spriteSheet.setPosition(position.x, position.y);
     }
-    template <typename Game>
-    void update(const sf::Time & elapsedTime, Game *) {
+    template <typename Game> void update(const sf::Time & elapsedTime, Game *) {
         timer += elapsedTime.asMilliseconds();
         if (timer > 40) {
             timer -= 40;

@@ -77,12 +77,12 @@ void Game::eventLoop(sf::RenderWindow & window) {
             break;
 
         case sf::Event::GainedFocus:
-	    sounds.unpause(SoundController::Sound | SoundController::Music);
+            sounds.unpause(SoundController::Sound | SoundController::Music);
             ::gameHasFocus = true;
             break;
 
         case sf::Event::LostFocus:
-	    sounds.pause(SoundController::Sound | SoundController::Music);
+            sounds.pause(SoundController::Sound | SoundController::Music);
             ::gameHasFocus = false;
             break;
 
@@ -469,7 +469,8 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
     std::lock_guard<std::mutex> grd(transitionMutex);
     switch (transitionState) {
     case TransitionState::None: {
-        auto teleporterAddr = detailGroup.get<DetailRef::Teleporter>().back().get();
+        auto teleporterAddr =
+            detailGroup.get<DetailRef::Teleporter>().back().get();
         auto teleporterPos = teleporterAddr->getPosition();
         if ((std::abs(player.getXpos() - teleporterPos.x) < 8 &&
              std::abs(player.getYpos() - teleporterPos.y + 12) < 8)) {
@@ -663,7 +664,8 @@ void Game::nextLevel() {
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             getgResHandlerPtr()->getTexture(
                 ResHandler::Texture::teleporterGlow));
-	// sounds.play(ResHandler::Sound::electricHum, detailGroup.get<DetailRef::Teleporter>().back(), 72.f, 3.f, true);
+        // sounds.play(ResHandler::Sound::electricHum,
+        // detailGroup.get<DetailRef::Teleporter>().back(), 72.f, 3.f, true);
         initEnemies(this);
         auto optCoord = pickLocation(tiles.emptyMapLocations);
         if (optCoord) {
@@ -754,7 +756,8 @@ void Game::nextLevel() {
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             getgResHandlerPtr()->getTexture(
                 ResHandler::Texture::teleporterGlow));
-	// sounds.play(ResHandler::Sound::electricHum, detailGroup.get<DetailRef::Teleporter>().back(), 72.f, 3.f, true);
+        // sounds.play(ResHandler::Sound::electricHum,
+        // detailGroup.get<DetailRef::Teleporter>().back(), 72.f, 3.f, true);
         for (auto it = ::levelZeroWalls.begin(); it != ::levelZeroWalls.end();
              ++it) {
             wall w;

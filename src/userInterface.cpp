@@ -136,7 +136,7 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
         blurAmount = math::smootherstep(0.f, 280, timer);
         if (blurAmount == 1.f) {
             state = State::menuScreen;
-	    sounds.pause(SoundController::Sound);
+            sounds.pause(SoundController::Sound);
             uIFrontEnd.setTextAlpha(255, ui::Frontend::Text::resumeText);
             uIFrontEnd.setTextAlpha(255, ui::Frontend::Text::quitText);
         }
@@ -146,7 +146,7 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
         if (pause) {
             timer = 0;
             menuItemSelected = 0;
-	    sounds.unpause(SoundController::Sound);
+            sounds.unpause(SoundController::Sound);
             state = State::menuScreenExit;
         } else if (up) {
             if (menuItemSelected == 1) {
@@ -162,7 +162,7 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
             switch (menuItemSelected) {
             case 0:
                 menuItemSelected = 0;
-		sounds.unpause(SoundController::Sound);
+                sounds.unpause(SoundController::Sound);
                 state = State::menuScreenExit;
                 timer = 0;
                 break;
@@ -577,21 +577,21 @@ void ui::Frontend::setWaypointText(const int level) {
         heart.setFillColor(sf::Color(255, 255, 255, 60));
     }
     if (level != 0) {
-	std::string str = "WAYPOINT-";
-	str += std::to_string(level);
-	waypointText.setString(str);
+        std::string str = "WAYPOINT-";
+        str += std::to_string(level);
+        waypointText.setString(str);
     } else {
         static const std::string str = "CRASH SITE";
-	waypointText.setString(str);
+        waypointText.setString(str);
     }
     scoreText.setFillColor(sf::Color(255, 255, 255, 60));
     waypointText.setFillColor(sf::Color::White);
     wpTextDisplayTimer.restart();
     if (level != 0) {
-	if (health != 1) {
-	    healthDisplayTimer.restart();
-	}
-	scoreDisplayTimer.restart();
+        if (health != 1) {
+            healthDisplayTimer.restart();
+        }
+        scoreDisplayTimer.restart();
     }
 }
 

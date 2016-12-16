@@ -52,8 +52,7 @@ public:
             puffSheet.setPosition(position.x, position.y);
         }
     }
-    template <typename Game>
-    void update(const sf::Time & elapsedTime, Game *) {
+    template <typename Game> void update(const sf::Time & elapsedTime, Game *) {
         const static float movementRate = 0.00038;
         timer += elapsedTime.asMilliseconds();
         hitBox.setPosition(position);

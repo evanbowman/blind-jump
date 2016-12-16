@@ -4,8 +4,8 @@
 //========================================================================//
 
 #include "critter.hpp"
-#include "math.h"
 #include "game.hpp"
+#include "math.h"
 #include "tileController.hpp"
 #include <cmath>
 
@@ -26,14 +26,15 @@ const Critter::HBox & Critter::getHitBox() const { return hitBox; }
 
 void Critter::updatePlayerDead() { frameIndex = 0; }
 
-void Critter::update(Game * pGame,
-                     const sf::Time & elapsedTime, tileController & tiles) {
+void Critter::update(Game * pGame, const sf::Time & elapsedTime,
+                     tileController & tiles) {
     position.x = xInit + 12;
     position.y = yInit;
     EffectGroup & effects = pGame->getEffects();
     Player & player = pGame->getPlayer();
     for (auto & element : effects.get<9>()) {
-        if (element->getHitBox().overlapping(hitBox) && element->checkCanPoof()) {
+        if (element->getHitBox().overlapping(hitBox) &&
+            element->checkCanPoof()) {
             if (health == 1) {
                 element->disablePuff();
                 element->setKillFlag();
@@ -45,26 +46,32 @@ void Critter::update(Game * pGame,
         }
     }
     if (health == 0) {
-	unsigned long int temp = rng::random<5>();
-	if (temp == 0) {
-	    effects.add<EffectRef::Heart>(
-					  getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-					  getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
-					  xInit + 10, yInit, Item::Type::Heart);
-	} else {
-	    effects.add<EffectRef::Coin>(
-					 getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-					 getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
-					 xInit + 10, yInit, Item::Type::Coin);
-	}
-	effects.add<EffectRef::SmallExplosion>(
-					       getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-					       getgResHandlerPtr()->getTexture(ResHandler::Texture::fireExplosionGlow),
-					       xInit + 8, yInit);
-	pGame->getSounds().play(ResHandler::Sound::blast1, effects.get<EffectRef::SmallExplosion>().back(), 300, 4.f);
-	killFlag = true;
+        unsigned long int temp = rng::random<5>();
+        if (temp == 0) {
+            effects.add<EffectRef::Heart>(
+                getgResHandlerPtr()->getTexture(
+                    ResHandler::Texture::gameObjects),
+                getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
+                xInit + 10, yInit, Item::Type::Heart);
+        } else {
+            effects.add<EffectRef::Coin>(
+                getgResHandlerPtr()->getTexture(
+                    ResHandler::Texture::gameObjects),
+                getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
+                xInit + 10, yInit, Item::Type::Coin);
+        }
+        effects.add<EffectRef::SmallExplosion>(
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture(
+                ResHandler::Texture::fireExplosionGlow),
+            xInit + 8, yInit);
+        pGame->getSounds().play(ResHandler::Sound::blast1,
+                                effects.get<EffectRef::SmallExplosion>().back(),
+                                300, 4.f);
+        killFlag = true;
     }
-    position.x -= 12; // Currently off-centered, this is just temporary work-around
+    position.x -=
+        12; // Currently off-centered, this is just temporary work-around
     Enemy::updateColor(elapsedTime);
     hitBox.setPosition(position.x, position.y);
     float tilePosX = tiles.posX;

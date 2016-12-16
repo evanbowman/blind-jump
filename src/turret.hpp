@@ -6,13 +6,13 @@
 #pragma once
 
 #include "effectsController.hpp"
+#include "enemy.hpp"
 #include "framework/framework.hpp"
 #include "resourceHandler.hpp"
 #include "spriteSheet.hpp"
 #include "turret.hpp"
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
-#include "enemy.hpp"
 
 class Player;
 

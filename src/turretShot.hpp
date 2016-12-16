@@ -9,9 +9,9 @@
 #include "Effect.hpp"
 #include "GfxContext.hpp"
 #include "rng.hpp"
+#include "soundController.hpp"
 #include "spriteSheet.hpp"
 #include <cmath>
-#include "soundController.hpp"
 #include <memory>
 
 namespace effect {
@@ -26,7 +26,8 @@ public:
     TurretShot(float x, float y, float dir)
         : Effect(x, y), soundsStarted(false) {
         auto res = getgResHandlerPtr();
-        spriteSheet.setTexture(res->getTexture(ResHandler::Texture::gameObjects));
+        spriteSheet.setTexture(
+            res->getTexture(ResHandler::Texture::gameObjects));
         glowSprite.setTexture(res->getTexture(ResHandler::Texture::redglow));
         spriteSheet.setRotation(dir + 270);
         spriteSheet.setOrigin(4, 6);
@@ -36,7 +37,8 @@ public:
         animationTimer = 0;
     }
     void initSounds(SoundController & sounds) {
-        sounds.play(ResHandler::Sound::espark, this->shared_from_this(), 38.f, 20.f, true);
+        sounds.play(ResHandler::Sound::espark, this->shared_from_this(), 38.f,
+                    20.f, true);
     }
     template <typename Game>
     void update(const sf::Time & elapsedTime, Game * pGame) {

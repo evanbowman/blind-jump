@@ -9,8 +9,8 @@
 #include <cmath>
 
 Turret::Turret(const sf::Texture & gameObjects, float _xPos, float _yPos)
-    : Enemy(_xPos, _yPos), state(State::closed), frameIndex(0), timer(0),
-      hp(6), colorTimer(0), isColored(0), colorAmount(0) {
+    : Enemy(_xPos, _yPos), state(State::closed), frameIndex(0), timer(0), hp(6),
+      colorTimer(0), isColored(0), colorAmount(0) {
     turretSheet.setTexture(gameObjects);
     shadowSheet.setTexture(gameObjects);
     hitBox.setPosition(position.x, position.y);
@@ -34,7 +34,8 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
         }
     }
     for (auto & element : effects.get<9>()) {
-        if (hitBox.overlapping(element->getHitBox()) && element->checkCanPoof()) {
+        if (hitBox.overlapping(element->getHitBox()) &&
+            element->checkCanPoof()) {
             if (hp == 1) {
                 element->disablePuff();
                 element->setKillFlag();
@@ -69,7 +70,8 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
     switch (state) {
     case State::closed:
         if (std::sqrt(std::pow((position.x - player->getXpos() + 8), 2) +
-                      std::pow((position.y - player->getYpos() + 16), 2)) < 174) {
+                      std::pow((position.y - player->getYpos() + 16), 2)) <
+            174) {
             state = State::opening;
             timer = 0;
             frameIndex = 0;
@@ -100,8 +102,9 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
                 getgResHandlerPtr()->getTexture(
                     ResHandler::Texture::gameObjects),
                 getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
-                position.x, position.y + 6, angleFunction(target.x + 16, target.y + 8,
-                                              position.x + 18, position.y + 8));
+                position.x, position.y + 6,
+                angleFunction(target.x + 16, target.y + 8, position.x + 18,
+                              position.y + 8));
             timer = 0;
             state = State::shoot2;
         }
@@ -118,8 +121,9 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
                 getgResHandlerPtr()->getTexture(
                     ResHandler::Texture::gameObjects),
                 getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
-                position.x, position.y + 8, angleFunction(target.x + 16, target.y + 8,
-                                              position.x + 18, position.y + 6));
+                position.x, position.y + 8,
+                angleFunction(target.x + 16, target.y + 8, position.x + 18,
+                              position.y + 6));
             timer = 0;
             state = State::shoot3;
         }
@@ -136,8 +140,9 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
                 getgResHandlerPtr()->getTexture(
                     ResHandler::Texture::gameObjects),
                 getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
-                position.x, position.y + 8, angleFunction(target.x + 16, target.y + 8,
-                                              position.x + 18, position.y + 6));
+                position.x, position.y + 8,
+                angleFunction(target.x + 16, target.y + 8, position.x + 18,
+                              position.y + 6));
             timer = 0;
             state = State::rest;
         }
@@ -147,7 +152,8 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
         timer += elapsedTime.asMicroseconds();
         if (timer > 1200000) {
             if (std::sqrt(std::pow((position.x - player->getXpos() + 8), 2) +
-                          std::pow((position.y - player->getYpos() + 16), 2)) < 174) {
+                          std::pow((position.y - player->getYpos() + 16), 2)) <
+                174) {
                 state = State::shoot1;
             } else {
                 state = State::closing;

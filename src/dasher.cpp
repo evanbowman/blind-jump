@@ -70,7 +70,8 @@ const sf::Sprite & Dasher::getSprite() const {
 
 const sf::Sprite & Dasher::getShadow() const { return shadow; }
 
-void Dasher::update(Game * pGame, const std::vector<wall> & walls, const sf::Time & elapsedTime) {
+void Dasher::update(Game * pGame, const std::vector<wall> & walls,
+                    const sf::Time & elapsedTime) {
     EffectGroup & effects = pGame->getEffects();
     Player & player = pGame->getPlayer();
     if (health > 0) {
@@ -144,15 +145,23 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls, const sf::Tim
                     getgResHandlerPtr()->getTexture(
                         ResHandler::Texture::gameObjects),
                     position.x - 14, position.y + 2);
-                effects.add<EffectRef::DasherShot>(position.x - 12, position.y, angleFunction(target.x + 8, target.y + 8, position.x, position.y));
-		pGame->getSounds().play(ResHandler::Sound::silenced, this->shared_from_this(), 320.f, 5.f);
+                effects.add<EffectRef::DasherShot>(
+                    position.x - 12, position.y,
+                    angleFunction(target.x + 8, target.y + 8, position.x,
+                                  position.y));
+                pGame->getSounds().play(ResHandler::Sound::silenced,
+                                        this->shared_from_this(), 320.f, 5.f);
             } else {
                 effects.add<EffectRef::TurretFlashEffect>(
                     getgResHandlerPtr()->getTexture(
                         ResHandler::Texture::gameObjects),
                     position.x + 6, position.y + 2);
-                effects.add<EffectRef::DasherShot>(position.x + 4, position.y, angleFunction(target.x, target.y + 8, position.x, position.y));
-		pGame->getSounds().play(ResHandler::Sound::silenced, this->shared_from_this(), 320.f, 5.f);
+                effects.add<EffectRef::DasherShot>(
+                    position.x + 4, position.y,
+                    angleFunction(target.x, target.y + 8, position.x,
+                                  position.y));
+                pGame->getSounds().play(ResHandler::Sound::silenced,
+                                        this->shared_from_this(), 320.f, 5.f);
             }
         }
         if (timer > 300) {
@@ -179,7 +188,8 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls, const sf::Tim
         if (timer > 352) {
             timer -= 352;
             state = State::dashing;
-            sounds.play(ResHandler::Sound::wooshMono, this->shared_from_this(), 220.f, 5.f);
+            sounds.play(ResHandler::Sound::wooshMono, this->shared_from_this(),
+                        220.f, 5.f);
             frameIndex = 2;
             uint8_t tries{0};
             float dir{static_cast<float>(rng::random<359>())};
@@ -208,7 +218,8 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls, const sf::Tim
         frameTimer += elapsedTime.asMilliseconds();
         if (frameTimer > 40) {
             frameTimer = 0;
-            blurEffects.emplace_back(dasherSheet.getSpritePtr(), position.x, position.y);
+            blurEffects.emplace_back(dasherSheet.getSpritePtr(), position.x,
+                                     position.y);
         }
         if (timer > 250) {
             timer -= 250;
@@ -272,8 +283,8 @@ void Dasher::onDeath(EffectGroup & effects) {
     if (temp == 0) {
         effects.add<EffectRef::Heart>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow), position.x,
-            position.y + 4, Item::Type::Heart);
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
+            position.x, position.y + 4, Item::Type::Heart);
     } else {
         effects.add<EffectRef::Coin>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),

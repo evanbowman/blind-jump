@@ -14,8 +14,8 @@
 #include "turret.hpp"
 #include "util.hpp"
 #include <SFML/Graphics.hpp>
-#include <thread>
 #include <memory>
+#include <thread>
 
 class ScreenShakeController;
 class detailController;

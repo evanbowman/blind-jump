@@ -10,10 +10,10 @@
 #include "GfxContext.hpp"
 #include "easingTemplates.hpp"
 #include "rng.hpp"
+#include "soundController.hpp"
 #include "spriteSheet.hpp"
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include "soundController.hpp"
 #include <memory>
 
 namespace effect {
@@ -24,21 +24,23 @@ class DasherShot : public Drawable<DasherShot<DrawPolicy>, DrawPolicy>,
 public:
     static const int drawOffset = 11;
     using HBox = framework::HitBox<12, 12, -6, -6>;
-    DasherShot(float x, float y, float dir) : Effect(x, y), soundsStarted(false) {
+    DasherShot(float x, float y, float dir)
+        : Effect(x, y), soundsStarted(false) {
         auto res = getgResHandlerPtr();
-        spriteSheet.setTexture(res->getTexture(ResHandler::Texture::gameObjects));
+        spriteSheet.setTexture(
+            res->getTexture(ResHandler::Texture::gameObjects));
         spriteSheet.setOrigin(6, 6);
         glowSprite.setTexture(res->getTexture(ResHandler::Texture::redglow));
         glowSprite.setOrigin(22.5, 22.5);
         int diff = pow(-1, rng::random<2>() + rng::random<6, -3>());
-        direction =
-            (dir + diff) * (3.14 / 180);
+        direction = (dir + diff) * (3.14 / 180);
         initialVelocity = 5.8f + (0.8f * rng::random<3>());
         timeout = 0;
         driftSel = rng::random<2>();
     }
     void initSounds(SoundController & sounds) {
-        sounds.play(ResHandler::Sound::espark, this->shared_from_this(), 38.f, 20.f, true);
+        sounds.play(ResHandler::Sound::espark, this->shared_from_this(), 38.f,
+                    20.f, true);
     }
     template <typename Game>
     void update(const sf::Time & elapsedTime, Game * pGame) {

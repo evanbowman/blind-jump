@@ -18,8 +18,7 @@ class Critter : public Enemy {
 public:
     using HBox = framework::HitBox<12, 12, 4, -3>;
     Critter(const sf::Texture &, uint8_t map[61][61], float, float);
-    void update(Game *, const sf::Time &,
-                tileController & tiles);
+    void update(Game *, const sf::Time &, tileController & tiles);
     const sf::Sprite & getSprite() const;
     const sf::Sprite & getShadow() const;
     void activate();

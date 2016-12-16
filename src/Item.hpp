@@ -39,8 +39,7 @@ public:
     const sf::Sprite & getSprite() const { return powerupSheet.getSprite(); }
     const sf::Sprite & getGlow() const { return glow; }
     const Item::HBox & getHitBox() const { return hitBox; }
-    template <typename Game>
-    void update(const sf::Time & elapsedTime, Game *) {
+    template <typename Game> void update(const sf::Time & elapsedTime, Game *) {
         timer += elapsedTime.asMilliseconds();
         const float offset = (3 * sinf(2 * PI * 0.001 * timer + 180));
         // Make the sprite float up and down

@@ -33,7 +33,8 @@ void Scoot::update(Game * pGame, const std::vector<wall> & w,
                    const sf::Time & elapsedTime) {
     EffectGroup & effects = pGame->getEffects();
     for (auto & element : effects.get<9>()) {
-        if (hitBox.overlapping(element->getHitBox()) && element->checkCanPoof()) {
+        if (hitBox.overlapping(element->getHitBox()) &&
+            element->checkCanPoof()) {
             if (health == 1) {
                 element->disablePuff();
                 element->setKillFlag();
@@ -45,23 +46,26 @@ void Scoot::update(Game * pGame, const std::vector<wall> & w,
         }
     }
     if (health == 0) {
-	int select = rng::random<5>();
-	if (select == 0) {
-	    effects.add<EffectRef::Heart>(
-					  getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-					  getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow), position.x,
-					  position.y + 4, Item::Type::Heart);
-	} else {
-	    effects.add<EffectRef::Coin>(
-					 getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-					 getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
-					 position.x, position.y + 4, Item::Type::Coin);
-	}
-	effects.add<EffectRef::FireExplosion>(
-					      getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-					      getgResHandlerPtr()->getTexture(ResHandler::Texture::fireExplosionGlow),
-					      position.x, position.y - 2);
-	killFlag = true;
+        int select = rng::random<5>();
+        if (select == 0) {
+            effects.add<EffectRef::Heart>(
+                getgResHandlerPtr()->getTexture(
+                    ResHandler::Texture::gameObjects),
+                getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
+                position.x, position.y + 4, Item::Type::Heart);
+        } else {
+            effects.add<EffectRef::Coin>(
+                getgResHandlerPtr()->getTexture(
+                    ResHandler::Texture::gameObjects),
+                getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
+                position.x, position.y + 4, Item::Type::Coin);
+        }
+        effects.add<EffectRef::FireExplosion>(
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture(
+                ResHandler::Texture::fireExplosionGlow),
+            position.x, position.y - 2);
+        killFlag = true;
     }
     Enemy::updateColor(elapsedTime);
     hitBox.setPosition(position.x, position.y);
@@ -102,13 +106,15 @@ void Scoot::update(Game * pGame, const std::vector<wall> & w,
         effects.add<EffectRef::TurretFlashEffect>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             position.x - 8, position.y - 12);
-        effects.add<EffectRef::TurretShot>(position.x - 8, position.y - 12,
+        effects.add<EffectRef::TurretShot>(
+            position.x - 8, position.y - 12,
             angleFunction(playerPos.x + 16, playerPos.y + 8, position.x - 8,
                           position.y - 8));
-	pGame->getSounds().play(ResHandler::Sound::laser, this->shared_from_this(), 320.f, 30.f);
+        pGame->getSounds().play(ResHandler::Sound::laser,
+                                this->shared_from_this(), 320.f, 30.f);
         state = State::recoil;
-        changeDir(
-            atan((position.y - player.getYpos()) / (position.x - player.getXpos())));
+        changeDir(atan((position.y - player.getYpos()) /
+                       (position.x - player.getXpos())));
         hSpeed *= -1;
         vSpeed *= -1;
         // Correct for negative values in arctan calculation
@@ -153,8 +159,10 @@ void Scoot::update(Game * pGame, const std::vector<wall> & w,
             vSpeed -= 1;
         }
     }
-    position.x += (elapsedTime.asMicroseconds() * 0.00006f) * hSpeed * speedScale;
-    position.y += (elapsedTime.asMicroseconds() * 0.00006f) * vSpeed * speedScale;
+    position.x +=
+        (elapsedTime.asMicroseconds() * 0.00006f) * hSpeed * speedScale;
+    position.y +=
+        (elapsedTime.asMicroseconds() * 0.00006f) * vSpeed * speedScale;
     frameTimer += elapsedTime.asMilliseconds();
     if (frameTimer > 87) {
         frameTimer -= 87;

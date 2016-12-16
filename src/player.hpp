@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "RenderType.hpp"
 #include "DetailGroup.hpp"
+#include "RenderType.hpp"
 #include "inputController.hpp"
 #include "playerAnimationFunctions.hpp"
 #include "playerCollisionFunctions.hpp"
