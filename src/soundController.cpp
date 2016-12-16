@@ -10,12 +10,6 @@ static const std::string musicPaths[] = {"music/Frostellar.ogg"};
 
 SoundController::SoundController() {}
 
-void SoundController::clear() {
-    std::lock_guard<std::mutex> lk(soundsGuard);
-    runningSounds.clear();
-    soundRequests.clear();
-}
-
 void SoundController::pause(int options) {
     std::lock_guard<std::mutex> lk(soundsGuard);
     if (options & Sound) {

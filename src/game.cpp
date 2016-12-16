@@ -617,7 +617,6 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 }
 
 void Game::nextLevel() {
-    sounds.clear();
     level += 1;
     pUiFrontend->setWaypointText(level);
     tiles.clear();

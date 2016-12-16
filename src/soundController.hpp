@@ -42,7 +42,6 @@ public:
     // new ones will eventually use up all available sound resources.
     void play(ResHandler::Sound indx, std::shared_ptr<framework::Object>,
               float minDistance, float attenuation, bool loop = false);
-    void clear();
 
 private:
     std::mutex soundsGuard;
