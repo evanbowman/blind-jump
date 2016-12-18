@@ -112,6 +112,11 @@ void ResHandler::loadSounds(const std::string & resPath) {
     loadResource(resPath + "sounds/blast1.ogg", Sound::blast1, sounds);
     loadResource(resPath + "sounds/electricHum.ogg", Sound::electricHum,
                  sounds);
+    loadResource(resPath + "sounds/footstepDirt1.ogg", Sound::footstepDirt1, sounds);
+    loadResource(resPath + "sounds/footstepDirt2.ogg", Sound::footstepDirt2, sounds);
+    loadResource(resPath + "sounds/footstepDirt3.ogg", Sound::footstepDirt3, sounds);
+    loadResource(resPath + "sounds/footstepDirt4.ogg", Sound::footstepDirt4, sounds);
+    loadResource(resPath + "sounds/footstepDirt5.ogg", Sound::footstepDirt5, sounds);
 }
 
 const sf::Image & ResHandler::getImage(Image id) const {

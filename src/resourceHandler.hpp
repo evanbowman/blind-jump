@@ -52,6 +52,11 @@ public:
         laser,
         blast1,
         electricHum,
+	footstepDirt1,
+	footstepDirt2,
+	footstepDirt3,
+	footstepDirt4,
+	footstepDirt5,
         count
     };
     const sf::Texture & getTexture(ResHandler::Texture) const;

@@ -88,7 +88,7 @@ private:
     std::vector<Dasher::Blur> blurs; // TODO: Move blur subclass out of Dasher,
                                      // and into its own file...
     Health health;
-    void updateAnimation(const sf::Time &, uint8_t, uint32_t);
+    void updateAnimation(const sf::Time &, uint8_t, uint32_t, SoundController &);
     float xPos, yPos;
     uint8_t frameIndex;
     Sheet sheetIndex, cachedSheet;

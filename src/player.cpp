@@ -486,25 +486,25 @@ void Player::update(Game * pGame, const sf::Time & elapsedTime,
         if (gun.timeout > 0) {
             gun.gunSpr.setPosition(xPos + 12, yPos + 15);
         }
-        updateAnimation(elapsedTime, 9, 100000);
+        updateAnimation(elapsedTime, 9, 100000, sounds);
         break;
 
     case Sheet::walkUp:
-        updateAnimation(elapsedTime, 9, 100000);
+        updateAnimation(elapsedTime, 9, 100000, sounds);
         break;
 
     case Sheet::walkLeft:
         if (gun.timeout > 0) {
             gun.gunSpr.setPosition(xPos + 2, yPos + 13);
         }
-        updateAnimation(elapsedTime, 5, 100000);
+        updateAnimation(elapsedTime, 5, 100000, sounds);
         break;
 
     case Sheet::walkRight:
         if (gun.timeout > 0) {
             gun.gunSpr.setPosition(xPos + 19, yPos + 13);
         }
-        updateAnimation(elapsedTime, 5, 100000);
+        updateAnimation(elapsedTime, 5, 100000, sounds);
         break;
 
     case Sheet::deathSheet:
@@ -647,12 +647,36 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows) {
     }
 }
 
+template <ResHandler::Sound StepBase, int NumSteps>
+int getRandomStep() {
+    int choice = rng::random<NumSteps, 0>();
+    choice += static_cast<int>(StepBase);
+    return choice;
+}
+
 void Player::updateAnimation(const sf::Time & elapsedTime, uint8_t maxIndex,
-                             uint32_t count) {
+                             uint32_t count, SoundController & sounds) {
     animationTimer += elapsedTime.asMicroseconds();
     if (animationTimer > count) {
-        frameIndex++;
         animationTimer -= count;
+	switch (maxIndex) {
+	case 9:
+	    if (frameIndex == 0 || frameIndex == 4) {
+	        int whichStep = getRandomStep<ResHandler::Sound::footstepDirt1, 5>();
+		std::cout << whichStep << std::endl;
+		sounds.play(static_cast<ResHandler::Sound>(whichStep));
+	    }
+	    break;
+
+	case 5:
+	    if (frameIndex == 0) {
+		int whichStep = getRandomStep<ResHandler::Sound::footstepDirt1, 5>();
+		std::cout << whichStep << std::endl;
+		sounds.play(static_cast<ResHandler::Sound>(whichStep));
+	    }
+	    break;
+	}
+	++frameIndex;
     }
     if (frameIndex > maxIndex) {
         frameIndex = 0;
