@@ -47,7 +47,8 @@ if(APPLE)
     COMMAND mkdir -p ${EXECUTABLE_NAME}.app/Contents/Frameworks
     COMMAND cp -r ../res/* ${EXECUTABLE_NAME}.app/Contents/Resources
     COMMAND cp macos/icon.icns ${EXECUTABLE_NAME}.app/Contents/Resources
-    COMMAND cp -r macos/Frameworks/* ${EXECUTABLE_NAME}.app/Contents/Frameworks)
+    COMMAND cp -r ${SFML_DIR}/lib/* ${EXECUTABLE_NAME}.app/Contents/Frameworks
+    COMMAND cp -r ${SFML_DIR}/extlibs/libs-osx/Frameworks/* ${EXECUTABLE_NAME}.app/Contents/Frameworks)
 elseif(WIN32)
   target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
 elseif(UNIX)
@@ -58,7 +59,6 @@ elseif(UNIX)
     # TODO create deb package
   endif()
   if(EXISTS "/etc/redhat-release")
-      # TODO create rpm: install centos in a vm and get this working!
-    endif()
+    # TODO create rpm: install centos in a vm and get this working!
   endif()
 endif()

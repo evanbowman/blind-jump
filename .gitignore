@@ -34,3 +34,6 @@ cmake_install.cmake
 config.h
 Makefile
 install_manifest.txt
+deps/SFML-2.4.1/SFML.framework/
+deps/SFML-2.4.1/dummy.cpp
+deps/SFML-2.4.1/lib/
