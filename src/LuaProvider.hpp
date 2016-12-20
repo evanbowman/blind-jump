@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cassert>
 extern "C" {
 #include <lauxlib.h>
@@ -7,6 +9,7 @@ extern "C" {
 #include "ResourcePath.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <iostream>
 
 struct ConfigData {
     sf::Vector2f drawableArea;

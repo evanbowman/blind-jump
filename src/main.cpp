@@ -37,21 +37,22 @@ int main() {
         setgResHandlerPtr(&resourceHandler);
         LuaProvider luaProv;
         Game game(luaProv.getConf());
-        game.init();
+	setgGamePtr(&game);
+	luaProv.runFromFile(resourcePath() + "scripts/enemies.lua");
         framework::SmartThread logicThread([&game]() {
             duration logicUpdateDelta;
             sf::Clock gameClock;
             try {
                 while (game.getWindow().isOpen()) {
                     time_point start = high_resolution_clock::now();
-                    sf::Time elapsedTime = gameClock.restart();
+                    game.setElapsedTime(gameClock.restart());
                     // TODO: what if the game freezes? Elapsed time will be
                     // large...
                     if (util::isAsleep) {
-                        elapsedTime = gameClock.restart();
+                        game.setElapsedTime(gameClock.restart());
                         util::isAsleep = false;
                     }
-                    game.updateLogic(elapsedTime);
+                    game.updateLogic();
                     time_point stop = high_resolution_clock::now();
                     logicUpdateDelta =
                         std::chrono::duration_cast<nanoseconds>(stop - start);

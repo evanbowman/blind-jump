@@ -437,8 +437,8 @@ void Player::update(Game * pGame, const sf::Time & elapsedTime,
     updateColor(elapsedTime);
     if (health > 0 && state != Player::State::deactivated) {
         checkEffectCollisions(effects, uiFrontend, sounds);
-        enemyController & enemies = pGame->getEnemyController();
-        checkEnemyCollisions(enemies, uiFrontend, sounds);
+        // enemyController & enemies = pGame->getEnemyController();
+        // checkEnemyCollisions(enemies, uiFrontend, sounds);
     }
     if (health <= 0 && state != Player::State::dead) {
         state = Player::State::dead;

@@ -52,3 +52,4 @@ public:
         sprite.setOrigin(xCenter, yCenter);
     }
 };
+

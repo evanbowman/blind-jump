@@ -40,6 +40,7 @@ Game::Game(const ConfigData & conf)
     window.setMouseCursorVisible(conf.showMouse);
     window.setFramerateLimit(conf.framerateLimit);
     window.setVerticalSyncEnabled(conf.enableVsync);
+    this->init();
 }
 
 void Game::init() {
@@ -63,7 +64,7 @@ void Game::init() {
     bkg.giveWindowSize(viewPort.x, viewPort.y);
     tiles.setPosition((viewPort.x / 2) - 16, (viewPort.y / 2));
     tiles.setWindowSize(viewPort.x, viewPort.y);
-    en.setWindowSize(viewPort.x, viewPort.y);
+    // en.setWindowSize(viewPort.x, viewPort.y);
     beamGlowSpr.setColor(sf::Color(0, 0, 0, 255));
     transitionShape.setSize(sf::Vector2f(viewPort.x, viewPort.y));
     transitionShape.setFillColor(sf::Color(0, 0, 0, 0));
@@ -129,7 +130,7 @@ void Game::updateGraphics() {
                 player.draw(gfxContext.faces, gfxContext.shadows);
             }
             effectGroup.apply(drawPolicy);
-            en.draw(gfxContext.faces, gfxContext.shadows, camera);
+            // en.draw(gfxContext.faces, gfxContext.shadows, camera);
             sounds.update();
         }
         if (!gfxContext.shadows.empty()) {
@@ -324,7 +325,7 @@ void Game::updateGraphics() {
     window.display();
 }
 
-void Game::updateLogic(const sf::Time & elapsedTime) {
+void Game::updateLogic() {
     if (!::gameHasFocus) {
         util::sleep(milliseconds(200));
         return;
@@ -344,19 +345,19 @@ void Game::updateLogic(const sf::Time & elapsedTime) {
             bkg.setOffset(0, 0);
         }
         tiles.update();
-        auto objUpdatePolicy = [&elapsedTime, this](auto & vec) {
+        auto objUpdatePolicy = [this](auto & vec) {
             for (auto it = vec.begin(); it != vec.end();) {
                 if ((*it)->getKillFlag()) {
                     it = vec.erase(it);
                 } else {
-                    (*it)->update(elapsedTime, this);
+                    (*it)->update(this->elapsedTime, this);
                     ++it;
                 }
             }
         };
         detailGroup.apply(objUpdatePolicy);
         std::vector<sf::Vector2f> cameraTargets;
-        en.update(this, !UI.isOpen(), elapsedTime, cameraTargets);
+        // en.update(this, !UI.isOpen(), elapsedTime, cameraTargets);
         camera.update(elapsedTime, cameraTargets);
         if (player.visible) {
             player.update(this, elapsedTime, sounds);
@@ -632,7 +633,7 @@ void Game::nextLevel() {
     effectGroup.clear();
     detailGroup.clear();
     player.setPosition(viewPort.x / 2 - 17, viewPort.y / 2);
-    en.clear();
+    // en.clear();
     if (level == 0) {
         camera.snapToTarget();
         set = tileController::Tileset::intro;
@@ -778,7 +779,7 @@ void Game::nextLevel() {
 
 DetailGroup & Game::getDetails() { return detailGroup; }
 
-enemyController & Game::getEnemyController() { return en; }
+// enemyController & Game::getEnemyController() { return en; }
 
 tileController & Game::getTileController() { return tiles; }
 
@@ -831,3 +832,21 @@ const std::array<std::pair<float, float>, 59> levelZeroWalls{
      std::make_pair(12, 58),   std::make_pair(44, 58),
      std::make_pair(76, 58),   std::make_pair(108, 58),
      std::make_pair(140, 58)}};
+
+const sf::Time & Game::getElapsedTime() {
+    return elapsedTime;
+}
+
+void Game::setElapsedTime(const sf::Time & elapsedTime) {
+    this->elapsedTime = elapsedTime;
+}
+
+static Game * pGame;
+
+void setgGamePtr(Game * pGame) {
+    ::pGame = pGame;
+}
+
+Game * getgGamePtr() {
+    return ::pGame;
+}

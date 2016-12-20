@@ -40,13 +40,12 @@ public:
         EntryBeamFade
     };
     Game(const ConfigData &);
-    void updateLogic(const sf::Time &);
+    void updateLogic();
     void updateGraphics();
     void eventLoop();
     void nextLevel();
     int getLevel();
     DetailGroup & getDetails();
-    enemyController & getEnemyController();
     tileController & getTileController();
     Player & getPlayer();
     EffectGroup & getEffects();
@@ -58,10 +57,13 @@ public:
     sf::Vector2f viewPort;
     TransitionState transitionState;
     sf::RenderWindow & getWindow();
-    void init();
+    const sf::Time & getElapsedTime();
+    void setElapsedTime(const sf::Time &);
 
 private:
+    void init();
     sf::RenderWindow window;
+    sf::Time elapsedTime;
     InputController input;
     SoundController sounds;
     Player player;
@@ -70,7 +72,6 @@ private:
     tileController tiles;
     EffectGroup effectGroup;
     DetailGroup detailGroup;
-    enemyController en;
     ui::Frontend uiFrontend;
     std::mutex overworldMutex, UIMutex, transitionMutex;
     int level;
@@ -95,3 +96,8 @@ private:
 // There may be a more efficient way to store this, but at O2 optimization clang
 // and gcc convert the whole thing to an array of longs
 extern const std::array<std::pair<float, float>, 59> levelZeroWalls;
+
+// Foreign function interface for lua requires a pointer
+// to an instance of the game to be accessible...
+void setgGamePtr(Game *);
+Game * getgGamePtr();

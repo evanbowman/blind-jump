@@ -37,3 +37,6 @@ install_manifest.txt
 deps/SFML-2.4.1/SFML.framework/
 deps/SFML-2.4.1/dummy.cpp
 deps/SFML-2.4.1/lib/
+deps/lua-5.3.3/src/liblua.a
+deps/lua-5.3.3/src/lua
+deps/lua-5.3.3/src/luac
