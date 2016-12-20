@@ -7,18 +7,15 @@ TURRET
 ===============================================]]
 
 Enemies["Turret"] = {
-   -- OnCreate
-   function(this)
+   OnCreate = function(this)
+      local TODO = true
+   end,
+   
+   OnUpdate = function(this)
       local TODO = true
    end,
 
-   -- OnUpdate
-   function(this)
-      local TODO = true
-   end,
-
-   -- OnDestroy
-   function(this)
+   OnDestroy = function(this)
       local TODO = true
    end
 }
@@ -34,18 +31,15 @@ DASHER
 ===============================================]]
 
 Enemies["Dasher"] = {
-   -- OnCreate
-   function(this)
+   OnCreate = function(this)
       local TODO = true
    end,
 
-   -- OnUpdate
-   function(this)
+   OnUpdate = function(this)
       local TODO = true
    end,
 
-   -- OnDestroy
-   function(this)
+   OnDestroy = function(this)
       local TODO = true
    end
 }
@@ -60,18 +54,15 @@ DRONE
 ===============================================]]
 
 Enemies["Drone"] = {
-   -- OnCreate
-   function(this)
+   OnCreate = function(this)
       local TODO = true
    end,
 
-   -- OnUpdate
-   function(this)
+   OnUpdate = function(this)
       local TODO = true
    end,
 
-   -- OnDestroy
-   function(this)
+   OnDestroy = function(this)
       local TODO = true
    end
 }
@@ -86,18 +77,15 @@ CRITTER
 ===============================================]]
 
 Enemies["Critter"] = {
-   -- OnCreate
-   function(this)
+   OnCreate = function(this)
       local TODO = true
    end,
 
-   -- OnUpdate
-   function(this)
+   OnUpdate = function(this)
       local TODO = true
    end,
 
-   -- OnDestroy
-   function(this)
+   OnDestroy = function(this)
       local TODO = true
    end
 }
