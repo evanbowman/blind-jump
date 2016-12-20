@@ -647,8 +647,7 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows) {
     }
 }
 
-template <ResHandler::Sound StepBase, int NumSteps>
-int getRandomStep() {
+template <ResHandler::Sound StepBase, int NumSteps> int getRandomStep() {
     int choice = rng::random<NumSteps, 0>();
     choice += static_cast<int>(StepBase);
     return choice;
@@ -659,22 +658,24 @@ void Player::updateAnimation(const sf::Time & elapsedTime, uint8_t maxIndex,
     animationTimer += elapsedTime.asMicroseconds();
     if (animationTimer > count) {
         animationTimer -= count;
-	switch (maxIndex) {
-	case 9:
-	    if (frameIndex == 0 || frameIndex == 4) {
-	        int whichStep = getRandomStep<ResHandler::Sound::footstepDirt1, 5>();
-		sounds.play(static_cast<ResHandler::Sound>(whichStep));
-	    }
-	    break;
+        switch (maxIndex) {
+        case 9:
+            if (frameIndex == 0 || frameIndex == 4) {
+                int whichStep =
+                    getRandomStep<ResHandler::Sound::footstepDirt1, 5>();
+                sounds.play(static_cast<ResHandler::Sound>(whichStep));
+            }
+            break;
 
-	case 5:
-	    if (frameIndex == 0) {
-		int whichStep = getRandomStep<ResHandler::Sound::footstepDirt1, 5>();
-		sounds.play(static_cast<ResHandler::Sound>(whichStep));
-	    }
-	    break;
-	}
-	++frameIndex;
+        case 5:
+            if (frameIndex == 0) {
+                int whichStep =
+                    getRandomStep<ResHandler::Sound::footstepDirt1, 5>();
+                sounds.play(static_cast<ResHandler::Sound>(whichStep));
+            }
+            break;
+        }
+        ++frameIndex;
     }
     if (frameIndex > maxIndex) {
         frameIndex = 0;

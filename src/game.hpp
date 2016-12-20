@@ -6,6 +6,7 @@
 #pragma once
 #include "DetailGroup.hpp"
 #include "GfxContext.hpp"
+#include "LuaProvider.hpp"
 #include "RenderType.hpp"
 #include "alias.hpp"
 #include "backgroundHandler.hpp"
@@ -25,7 +26,6 @@
 #include <atomic>
 #include <cmath>
 #include <mutex>
-#include "LuaProvider.hpp"
 
 class Game {
 public:
@@ -39,7 +39,7 @@ public:
         EntryBeamDrop,
         EntryBeamFade
     };
-    Game(const ConfigResults &);
+    Game(const ConfigData &);
     void updateLogic(const sf::Time &);
     void updateGraphics();
     void eventLoop();
@@ -59,7 +59,7 @@ public:
     TransitionState transitionState;
     sf::RenderWindow & getWindow();
     void init();
-    
+
 private:
     sf::RenderWindow window;
     InputController input;

@@ -13,12 +13,12 @@
 //     return ConfigResults{{width, height}};
 // }
 
-ConfigResults LuaProvider::getConf() {
+ConfigData LuaProvider::getConf() {
     const std::string path = resourcePath() + "scripts/conf.lua";
     this->runFromFile(path);
     lua_getglobal(m_state, "getConf");
     if (lua_pcall(m_state, 0, 1, 0) != 0) {
-	throw std::runtime_error(lua_tostring(m_state, -1));
+        throw std::runtime_error(lua_tostring(m_state, -1));
     }
     lua_pushstring(m_state, "width");
     lua_gettable(m_state, -2);
@@ -44,17 +44,16 @@ ConfigResults LuaProvider::getConf() {
     lua_gettable(m_state, -2);
     int framerateLimit = lua_tointeger(m_state, -1);
     lua_pop(m_state, 1);
-    return ConfigResults{{width, height}, vsync, showCursor, framerateLimit};
+    return ConfigData{{width, height}, vsync, showCursor, framerateLimit};
 }
 
-
 extern "C" {
-    static int getScreenSize(lua_State * state) {
-	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-	lua_pushnumber(state, desktop.width);
-	lua_pushnumber(state, desktop.height);
-	return 2;
-    }
+static int getScreenSize(lua_State * state) {
+    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    lua_pushnumber(state, desktop.width);
+    lua_pushnumber(state, desktop.height);
+    return 2;
+}
 }
 
 LuaProvider::LuaProvider() : m_state(luaL_newstate()) {
@@ -66,12 +65,10 @@ LuaProvider::LuaProvider() : m_state(luaL_newstate()) {
     lua_setglobal(m_state, "getScreenSize");
 }
 
-LuaProvider::~LuaProvider() {
-    lua_close(m_state);
-}
+LuaProvider::~LuaProvider() { lua_close(m_state); }
 
 void LuaProvider::runFromFile(const std::string & path) {
     if (luaL_loadfile(m_state, path.c_str()) || lua_pcall(m_state, 0, 0, 0)) {
-	throw std::runtime_error(lua_tostring(m_state, -1));
+        throw std::runtime_error(lua_tostring(m_state, -1));
     }
 }

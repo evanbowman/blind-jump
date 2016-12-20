@@ -13,9 +13,16 @@
 #include "math.h"
 #include "pillarPlacement.h"
 
-Game::Game(const ConfigResults & res)
-    : viewPort(res.drawableArea), transitionState(TransitionState::TransitionIn), player(viewPort.x / 2, viewPort.y / 2), window(sf::VideoMode::getDesktopMode(), EXECUTABLE_NAME, sf::Style::Fullscreen, sf::ContextSettings(0, 0, 6)),
-      camera(&player, viewPort, window.getSize()), uiFrontend(sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y)), viewPort.x / 2, viewPort.y / 2),
+Game::Game(const ConfigData & conf)
+    : viewPort(conf.drawableArea),
+      transitionState(TransitionState::TransitionIn),
+      player(viewPort.x / 2, viewPort.y / 2),
+      window(sf::VideoMode::getDesktopMode(), EXECUTABLE_NAME,
+             sf::Style::Fullscreen, sf::ContextSettings(0, 0, 6)),
+      camera(&player, viewPort, window.getSize()),
+      uiFrontend(
+          sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y)),
+          viewPort.x / 2, viewPort.y / 2),
       level(0), stashed(false), preload(false),
       worldView(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
       timer(0) {
@@ -30,6 +37,9 @@ Game::Game(const ConfigResults & res)
     windowView.zoom(visibleArea);
     camera.setWindowView(windowView);
     gfxContext.targetRef = &target;
+    window.setMouseCursorVisible(conf.showMouse);
+    window.setFramerateLimit(conf.framerateLimit);
+    window.setVerticalSyncEnabled(conf.enableVsync);
 }
 
 void Game::init() {

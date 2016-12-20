@@ -46,4 +46,3 @@ function getConf()
    conf["framerateLimit"] = 120
    return conf
 end
-   

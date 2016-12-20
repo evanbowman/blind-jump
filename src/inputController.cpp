@@ -12,36 +12,36 @@ InputController::InputController()
                         sf::Keyboard::Left, sf::Keyboard::Right,
                         sf::Keyboard::Up, sf::Keyboard::Down}} {
     if (sf::Joystick::isConnected(0)) {
-        mapJsById();
+        // mapJsById();
     }
 }
 
-void InputController::mapJsById() {
-    // TODO: move this metadata stuff to JSON config files?
-    enum Vendor { Sony = 0x054C, Microsoft = 0x045E };
-    enum Product {
-        PS3Controller = 0x0268,
-        PS4Controller = 0x05C4,
-        XBOneController = 0x02D1
-    };
-    sf::Joystick::Identification ident = sf::Joystick::getIdentification(0);
-    if (ident.vendorId == Sony && ident.productId == PS3Controller) {
-        joystickMappings[indexShoot] = 11;
-        joystickMappings[indexAction] = 14;
-        joystickMappings[indexPause] = 16;
-    } else if (ident.vendorId == Sony && ident.productId == PS4Controller) {
-        joystickMappings[indexShoot] = 5;
-        joystickMappings[indexAction] = 1;
-        joystickMappings[indexPause] = 12;
-    } else if (ident.vendorId == Microsoft &&
-               ident.productId == XBOneController) {
-        // TODO: Test XBOne Controller
-    } else {
-        joystickMappings[indexShoot] = 0;
-        joystickMappings[indexAction] = 1;
-        joystickMappings[indexPause] = 2;
-    }
-}
+// void InputController::mapJsById() {
+//     // TODO: move this metadata stuff to JSON config files?
+//     enum Vendor { Sony = 0x054C, Microsoft = 0x045E };
+//     enum Product {
+//         PS3Controller = 0x0268,
+//         PS4Controller = 0x05C4,
+//         XBOneController = 0x02D1
+//     };
+//     sf::Joystick::Identification ident = sf::Joystick::getIdentification(0);
+//     if (ident.vendorId == Sony && ident.productId == PS3Controller) {
+//         joystickMappings[indexShoot] = 11;
+//         joystickMappings[indexAction] = 14;
+//         joystickMappings[indexPause] = 16;
+//     } else if (ident.vendorId == Sony && ident.productId == PS4Controller) {
+//         joystickMappings[indexShoot] = 5;
+//         joystickMappings[indexAction] = 1;
+//         joystickMappings[indexPause] = 12;
+//     } else if (ident.vendorId == Microsoft &&
+//                ident.productId == XBOneController) {
+//         // TODO: Test XBOne Controller
+//     } else {
+//         joystickMappings[indexShoot] = 0;
+//         joystickMappings[indexAction] = 1;
+//         joystickMappings[indexPause] = 2;
+//     }
+// }
 
 void InputController::mapKeyboardKey(const sf::Keyboard::Key key,
                                      const uint8_t indx) {
@@ -167,7 +167,7 @@ void InputController::recordEvent(const sf::Event & event) {
         }
     } else if (event.type == sf::Event::JoystickConnected) {
         if (event.joystickConnect.joystickId == 0) {
-            this->mapJsById();
+            // this->mapJsById();
             joystickMask.reset();
         }
     } else if (event.type == sf::Event::JoystickDisconnected) {

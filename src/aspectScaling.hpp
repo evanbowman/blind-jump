@@ -15,7 +15,8 @@
 //     // The ideal area of the region is something near 389000 pixels
 //     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 //     float aspectRatio =
-//         static_cast<float>(desktop.width) / static_cast<float>(desktop.height);
+//         static_cast<float>(desktop.width) /
+//         static_cast<float>(desktop.height);
 //     if (aspectRatio == 16.f / 9.f) { // 16:9
 //         // return sf::Vector2f(832.f, 468.f);
 //     } else if (aspectRatio == 16.f / 10.f) { // 16:10

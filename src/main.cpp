@@ -33,11 +33,11 @@ int main() {
     rng::seed();
     ResHandler resourceHandler;
     try {
-	resourceHandler.load();
+        resourceHandler.load();
         setgResHandlerPtr(&resourceHandler);
-	LuaProvider luaProv;
+        LuaProvider luaProv;
         Game game(luaProv.getConf());
-	game.init();
+        game.init();
         framework::SmartThread logicThread([&game]() {
             duration logicUpdateDelta;
             sf::Clock gameClock;
