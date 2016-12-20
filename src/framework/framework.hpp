@@ -26,6 +26,7 @@ namespace framework {
 		bool killFlag = false;
 		bool visible = false;
 	public:
+	    Object() : position{} {}
 		Object(float x, float y) : position{sf::Vector2f{x, y}} {}
         virtual ~Object() {}
 		inline void setPosition(sf::Vector2f _position) {

@@ -18,17 +18,21 @@ int initEnemies(Game * gm) {
     // enemyController & enemies = gm->getEnemyController();
     // tileController & tiles = gm->getTileController();
 
-    // // Count sum of energy values for all enemies, used in health station cost
+    // // Count sum of energy values for all enemies, used in health station
+    // cost
     // // calculations
     // int count = 0;
     // std::vector<std::pair<int, int>> enemySelectVec;
     // if (currentLevel >= 1) {
-    //     enemySelectVec.emplace_back(1, std::abs(currentLevel - targetLevel[0]));
-    //     enemySelectVec.emplace_back(1, std::abs(currentLevel - targetLevel[1]));
+    //     enemySelectVec.emplace_back(1, std::abs(currentLevel -
+    //     targetLevel[0]));
+    //     enemySelectVec.emplace_back(1, std::abs(currentLevel -
+    //     targetLevel[1]));
     //     if (currentLevel >= 2) {
     //         enemySelectVec.emplace_back(2, currentLevel - targetLevel[2]);
     //         if (currentLevel >= 4) {
-    //             enemySelectVec.emplace_back(3, currentLevel - targetLevel[3]);
+    //             enemySelectVec.emplace_back(3, currentLevel -
+    //             targetLevel[3]);
     //         }
     //     }
     // }
@@ -38,10 +42,12 @@ int initEnemies(Game * gm) {
     // int collector = 0;
     // int diff;
     // std::vector<int> intervals(enemyVecLen);
-    // // First loop through all enemies and update their probability values based
+    // // First loop through all enemies and update their probability values
+    // based
     // // on current level
     // for (size_t i = 0; i < enemyVecLen; i++) {
-    //     // Set the weight to 100 divided by the difference between the current
+    //     // Set the weight to 100 divided by the difference between the
+    //     current
     //     // level and the ideal level
     //     // Max function to prevent divide by 0
     //     diff = (100 + currentLevel) /
@@ -58,7 +64,8 @@ int initEnemies(Game * gm) {
     //     // Generate a random number on the range of 0 to the sum of all enemy
     //     // weights
     //     int select = rng::random(std::max(collector, 1));
-    //     // Find the interval that the selected value falls into in intervals[]
+    //     // Find the interval that the selected value falls into in
+    //     intervals[]
     //     int selectedIndex = 0;
     //     for (size_t i = 0; i < enemyVecLen; i++) {
     //         if (i == 0) {

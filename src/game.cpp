@@ -325,7 +325,7 @@ void Game::updateGraphics() {
     window.display();
 }
 
-void Game::updateLogic() {
+void Game::updateLogic(LuaProvider & luaProv) {
     if (!::gameHasFocus) {
         util::sleep(milliseconds(200));
         return;
@@ -345,11 +345,39 @@ void Game::updateLogic() {
             bkg.setOffset(0, 0);
         }
         tiles.update();
-	for (auto & kvp : enemyTable) {
-	    for (auto it = kvp.second.begin(); it != kvp.second.end(); ++it) {
-	        
-	    }
-	}
+        luaProv.applyHook([this](lua_State * state) {
+            lua_getglobal(state, "classes");
+            if (!lua_istable(state, -1)) {
+                throw std::runtime_error("Error: missing classtable");
+            }
+            for (auto & kvp : this->entityTable) {
+                lua_getfield(state, -1, kvp.first.c_str());
+                if (!lua_istable(state, -1)) {
+                    throw std::runtime_error(
+                        "Error: classtable entry is not table");
+                }
+                for (auto it = kvp.second.begin(); it != kvp.second.end();
+                     ++it) {
+                    time_point start = high_resolution_clock::now();
+                    lua_getfield(state, -1, "OnUpdate");
+                    if (!lua_isfunction(state, -1)) {
+                        const std::string err =
+                            "Error: missing or malformed OnUpdate for class" +
+                            kvp.first;
+                    }
+                    lua_pushlightuserdata(state, (void *)(&(*it)));
+                    if (lua_pcall(state, 1, 0, 9)) {
+                        throw std::runtime_error(lua_tostring(state, -1));
+                    }
+                    time_point stop = high_resolution_clock::now();
+                    duration diff =
+                        std::chrono::duration_cast<nanoseconds>(stop - start);
+                    std::cout << diff.count() << "\n";
+                }
+                lua_pop(state, 1);
+            }
+            lua_pop(state, 1);
+        });
         auto objUpdatePolicy = [this](auto & vec) {
             for (auto it = vec.begin(); it != vec.end();) {
                 if ((*it)->getKillFlag()) {
@@ -838,9 +866,7 @@ const std::array<std::pair<float, float>, 59> levelZeroWalls{
      std::make_pair(76, 58),   std::make_pair(108, 58),
      std::make_pair(140, 58)}};
 
-const sf::Time & Game::getElapsedTime() {
-    return elapsedTime;
-}
+const sf::Time & Game::getElapsedTime() { return elapsedTime; }
 
 void Game::setElapsedTime(const sf::Time & elapsedTime) {
     this->elapsedTime = elapsedTime;
@@ -848,14 +874,8 @@ void Game::setElapsedTime(const sf::Time & elapsedTime) {
 
 static Game * pGame;
 
-void setgGamePtr(Game * pGame) {
-    ::pGame = pGame;
-}
+void setgGamePtr(Game * pGame) { ::pGame = pGame; }
 
-Game * getgGamePtr() {
-    return ::pGame;
-}
+Game * getgGamePtr() { return ::pGame; }
 
-EnemyTable & Game::getEnemyTable() {
-    return enemyTable;
-}
+EntityTable & Game::getEntityTable() { return entityTable; }

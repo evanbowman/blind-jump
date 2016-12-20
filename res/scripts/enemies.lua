@@ -1,4 +1,5 @@
-Enemies = {}
+
+classes = {}
 
 --[[=============================================
 TURRET
@@ -6,13 +7,15 @@ TURRET
    super fast.
 ===============================================]]
 
-Enemies["Turret"] = {
+classes["Turret"] = {
    OnCreate = function(this)
       local TODO = true
    end,
-   
+
    OnUpdate = function(this)
-      deltaT = game.getDeltaTime()
+      -- deltaT = game.getDeltaTime()
+      -- print(deltaT)
+      local TODO = true
    end,
 
    OnDestroy = function(this)
@@ -20,74 +23,6 @@ Enemies["Turret"] = {
    end
 }
 
-game.registerEnemyClass("Turret")
+game.registerClass("Turret")
 
-
---[[=============================================
-DASHER
-   Fast and pretty deadly, they jump
-   all over the place and have a powerful
-   laser-shotgun.
-===============================================]]
-
-Enemies["Dasher"] = {
-   OnCreate = function(this)
-      local TODO = true
-   end,
-
-   OnUpdate = function(this)
-      deltaT = game.getDeltaTime()
-   end,
-
-   OnDestroy = function(this)
-      local TODO = true
-   end
-}
-
-game.registerEnemyClass("Dasher")
-
-
---[[=============================================
-DRONE
-   Lightweight easy enemy, but they can
-   sneak up on you.
-===============================================]]
-
-Enemies["Drone"] = {
-   OnCreate = function(this)
-      local TODO = true
-   end,
-
-   OnUpdate = function(this)
-      deltaT = game.getDeltaTime()
-   end,
-
-   OnDestroy = function(this)
-      local TODO = true
-   end
-}
-
-game.registerEnemyClass("Drone")
-
-
---[[=============================================
-CRITTER
-   Persistent guys that follow you around,
-   can be dangerous in large numbers.
-===============================================]]
-
-Enemies["Critter"] = {
-   OnCreate = function(this)
-      local TODO = true
-   end,
-
-   OnUpdate = function(this)
-      deltaT = game.getDeltaTime()
-   end,
-
-   OnDestroy = function(this)
-      local TODO = true
-   end
-}
-
-game.registerEnemyClass("Critter")
+local created = game.createInstance("Turret")

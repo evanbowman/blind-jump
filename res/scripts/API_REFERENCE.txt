@@ -1,0 +1,33 @@
+
+BLIND JUMP API REFRENCE 0.0.1
+
+The Blind Jump core engine exposes a bunch of functions on the Lua
+side of things, their scemantics and calling conventions are provided
+here for your convenience.
+
+
+game.getScreenSize() -> number, number
+
+Returns the width and height of the monitor displaying the game
+visuals.
+
+
+game.registerEnemyClass(classname) -> none
+
+Registers an enemy class with the engine. Enemy classes are tables
+that are expected to implement three functions: OnCreate, OnUpdata,
+and OnDestroy. Each of these functions should take one parameter, to
+which the game will bind the address of the caller on the engine side
+of things so that a specific instance of the class can be mutated.
+
+
+game.getDeltaTime() -> number
+
+Returns the time elapsed since the last logic update, in microseconds.
+
+
+game.createInstance(classname) -> light userdata
+
+Takes the name of a class previously declared with
+game.registerEnemyClass(), and returns a reference to the newly
+instanciated instance of that class.

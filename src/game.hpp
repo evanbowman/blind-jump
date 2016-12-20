@@ -27,7 +27,7 @@
 #include <cmath>
 #include <mutex>
 
-using EnemyTable = std::map<std::string, std::vector<framework::Object>>;
+using EntityTable = std::map<std::string, std::vector<framework::Object>>;
 
 struct ConfigData {
     sf::Vector2f drawableArea;
@@ -49,7 +49,7 @@ public:
         EntryBeamFade
     };
     Game(const ConfigData &);
-    void updateLogic();
+    void updateLogic(LuaProvider &);
     void updateGraphics();
     void eventLoop();
     void nextLevel();
@@ -64,7 +64,7 @@ public:
     ui::Frontend & getUIFrontend();
     Camera & getCamera();
     sf::Vector2f viewPort;
-    EnemyTable & getEnemyTable();
+    EntityTable & getEntityTable();
     TransitionState transitionState;
     sf::RenderWindow & getWindow();
     const sf::Time & getElapsedTime();
@@ -72,7 +72,7 @@ public:
 
 private:
     void init();
-    EnemyTable enemyTable;
+    EntityTable entityTable;
     sf::RenderWindow window;
     sf::Time elapsedTime;
     InputController input;
@@ -116,7 +116,7 @@ Game * getgGamePtr();
 inline ConfigData getConfig(lua_State * state) {
     lua_getglobal(state, "getConf");
     if (lua_pcall(state, 0, 1, 0) != 0) {
-	throw std::runtime_error(lua_tostring(state, -1));
+        throw std::runtime_error(lua_tostring(state, -1));
     }
     lua_pushstring(state, "width");
     lua_gettable(state, -2);
@@ -134,9 +134,9 @@ inline ConfigData getConfig(lua_State * state) {
     lua_gettable(state, -2);
     bool showCursor = lua_toboolean(state, -1);
     lua_pop(state, 1);
-    lua_pushstring(state, "framerateLimit");
+    lua_pushstring(state, "frameratestateimit");
     lua_gettable(state, -2);
-    int framerateLimit = lua_tointeger(state, -1);
+    int frameratestateimit = lua_tointeger(state, -1);
     lua_pop(state, 2);
-    return ConfigData{{width, height}, vsync, showCursor, framerateLimit};
+    return ConfigData{{width, height}, vsync, showCursor, frameratestateimit};
 }

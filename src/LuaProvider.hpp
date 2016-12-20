@@ -16,9 +16,8 @@ public:
     LuaProvider();
     ~LuaProvider();
     void runScriptFromFile(const std::string & path);
-    template <typename F>
-    decltype(auto) applyHook(F && functor) {
-	return functor(m_state);
+    template <typename F> decltype(auto) applyHook(F && functor) {
+        return functor(m_state);
     }
     LuaProvider(const LuaProvider &) = delete;
     LuaProvider & operator=(const LuaProvider &) = delete;

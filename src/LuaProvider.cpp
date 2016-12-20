@@ -4,39 +4,49 @@
 // GAME API
 //     Provides access to Game data from lua scripts.
 extern "C" {
-    static int getScreenSize(lua_State * state) {
-	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-	lua_pushnumber(state, desktop.width);
-	lua_pushnumber(state, desktop.height);
-	return 2;
-    }
-    
-    static int registerEnemyClass(lua_State * state) {
-	std::string classname = lua_tostring(state, 1);
-	Game * pGame = getgGamePtr();
-	pGame->getEnemyTable()[classname] = {};
-	return 0;
-    }
+static const luaL_Reg gameModFuncs[] = {
+    {"getScreenSize",
+     [](lua_State * state) -> int {
+         auto desktop = sf::VideoMode::getDesktopMode();
+         lua_pushnumber(state, desktop.width);
+         lua_pushnumber(state, desktop.height);
+         return 2;
+     }},
+    {"registerClass",
+     [](lua_State * state) -> int {
+         const std::string classname = lua_tostring(state, 1);
+         Game * pGame = getgGamePtr();
+         pGame->getEntityTable()[classname] = {};
+         return 0;
+     }},
+    {"getDeltaTime",
+     [](lua_State * state) -> int {
+         Game * pGame = getgGamePtr();
+         const sf::Time & elapsed = pGame->getElapsedTime();
+         lua_pushnumber(state, elapsed.asMicroseconds());
+         return 1;
+     }},
+    {"createInstance", [](lua_State * state) -> int {
+         const std::string classname = lua_tostring(state, 1);
+         Game * pGame = getgGamePtr();
+         auto & entityTable = pGame->getEntityTable();
+         if (entityTable.find(classname) == entityTable.end()) {
+             std::string errorMsg =
+                 "Error: unregistered classname " + classname;
+             throw std::runtime_error(errorMsg);
+         }
+         auto & vec = pGame->getEntityTable()[classname];
+         vec.emplace_back();
+         lua_pushlightuserdata(state, (void *)(&(*vec.end())));
+         return 1;
+     }}};
 
-    static int getDeltaTime(lua_State * state) {
-	Game * pGame = getgGamePtr();
-	const sf::Time & elapsed = pGame->getElapsedTime();
-	lua_pushnumber(state, elapsed.asMicroseconds());
-	return 1;
-    }
-
-    static const luaL_Reg gameModFuncs[] = {
-	{"getScreenSize", getScreenSize},
-	{"registerEnemyClass", registerEnemyClass},
-	{"getDeltaTime", getDeltaTime}
-    };
-
-    static int luaopen_game(lua_State * state) {
-	lua_newtable(state);
-	luaL_setfuncs(state, gameModFuncs, 0);
-	lua_setglobal(state, "game");
-	return 1;
-    }
+static int luaopen_game(lua_State * state) {
+    lua_newtable(state);
+    luaL_setfuncs(state, gameModFuncs, 0);
+    lua_setglobal(state, "game");
+    return 1;
+}
 }
 
 LuaProvider::LuaProvider() : m_state(luaL_newstate()) {
