@@ -11,19 +11,15 @@ extern "C" {
 #include <SFML/Window.hpp>
 #include <iostream>
 
-struct ConfigData {
-    sf::Vector2f drawableArea;
-    bool enableVsync;
-    bool showMouse;
-    int framerateLimit;
-}; 
-
 class LuaProvider {
 public:
     LuaProvider();
     ~LuaProvider();
-    void runFromFile(const std::string & path);
-    ConfigData getConf();
+    void runScriptFromFile(const std::string & path);
+    template <typename F>
+    decltype(auto) applyHook(F && functor) {
+	return functor(m_state);
+    }
     LuaProvider(const LuaProvider &) = delete;
     LuaProvider & operator=(const LuaProvider &) = delete;
 

@@ -9,7 +9,7 @@ The optimal area returned from this function
 is a value nearest to 400,000 square pixels.
 --]]
 function getDrawableArea()
-   local w, h = getScreenSize()
+   local w, h = game.getScreenSize()
    local aspect = w / h
    if aspect == 16 / 9 then
       return 832, 468

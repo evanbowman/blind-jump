@@ -35,10 +35,11 @@ int main() {
     try {
         resourceHandler.load();
         setgResHandlerPtr(&resourceHandler);
-        LuaProvider luaProv;
-        Game game(luaProv.getConf());
+        auto luaProv = std::make_unique<LuaProvider>();
+	luaProv->runScriptFromFile(resourcePath() + "scripts/conf.lua");
+        Game game(luaProv->applyHook(getConfig));
 	setgGamePtr(&game);
-	luaProv.runFromFile(resourcePath() + "scripts/enemies.lua");
+	luaProv->runScriptFromFile(resourcePath() + "scripts/enemies.lua");
         framework::SmartThread logicThread([&game]() {
             duration logicUpdateDelta;
             sf::Clock gameClock;

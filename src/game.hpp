@@ -27,6 +27,15 @@
 #include <cmath>
 #include <mutex>
 
+using EnemyTable = std::map<std::string, std::vector<framework::Object>>;
+
+struct ConfigData {
+    sf::Vector2f drawableArea;
+    bool enableVsync;
+    bool showMouse;
+    int framerateLimit;
+};
+
 class Game {
 public:
     enum class TransitionState {
@@ -55,6 +64,7 @@ public:
     ui::Frontend & getUIFrontend();
     Camera & getCamera();
     sf::Vector2f viewPort;
+    EnemyTable & getEnemyTable();
     TransitionState transitionState;
     sf::RenderWindow & getWindow();
     const sf::Time & getElapsedTime();
@@ -62,6 +72,7 @@ public:
 
 private:
     void init();
+    EnemyTable enemyTable;
     sf::RenderWindow window;
     sf::Time elapsedTime;
     InputController input;
@@ -101,3 +112,31 @@ extern const std::array<std::pair<float, float>, 59> levelZeroWalls;
 // to an instance of the game to be accessible...
 void setgGamePtr(Game *);
 Game * getgGamePtr();
+
+inline ConfigData getConfig(lua_State * state) {
+    lua_getglobal(state, "getConf");
+    if (lua_pcall(state, 0, 1, 0) != 0) {
+	throw std::runtime_error(lua_tostring(state, -1));
+    }
+    lua_pushstring(state, "width");
+    lua_gettable(state, -2);
+    float width = lua_tonumber(state, -1);
+    lua_pop(state, 1);
+    lua_pushstring(state, "height");
+    lua_gettable(state, -2);
+    float height = lua_tonumber(state, -1);
+    lua_pop(state, 1);
+    lua_pushstring(state, "vsync");
+    lua_gettable(state, -2);
+    bool vsync = lua_toboolean(state, -1);
+    lua_pop(state, 1);
+    lua_pushstring(state, "showCursor");
+    lua_gettable(state, -2);
+    bool showCursor = lua_toboolean(state, -1);
+    lua_pop(state, 1);
+    lua_pushstring(state, "framerateLimit");
+    lua_gettable(state, -2);
+    int framerateLimit = lua_tointeger(state, -1);
+    lua_pop(state, 2);
+    return ConfigData{{width, height}, vsync, showCursor, framerateLimit};
+}

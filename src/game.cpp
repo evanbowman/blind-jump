@@ -345,6 +345,11 @@ void Game::updateLogic() {
             bkg.setOffset(0, 0);
         }
         tiles.update();
+	for (auto & kvp : enemyTable) {
+	    for (auto it = kvp.second.begin(); it != kvp.second.end(); ++it) {
+	        
+	    }
+	}
         auto objUpdatePolicy = [this](auto & vec) {
             for (auto it = vec.begin(); it != vec.end();) {
                 if ((*it)->getKillFlag()) {
@@ -849,4 +854,8 @@ void setgGamePtr(Game * pGame) {
 
 Game * getgGamePtr() {
     return ::pGame;
+}
+
+EnemyTable & Game::getEnemyTable() {
+    return enemyTable;
 }

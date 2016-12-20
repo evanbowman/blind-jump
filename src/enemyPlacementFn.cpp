@@ -102,4 +102,5 @@ int initEnemies(Game * gm) {
 
     // // Return the count
     // return count;
+    return 0;
 }

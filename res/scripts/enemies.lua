@@ -12,7 +12,7 @@ Enemies["Turret"] = {
    end,
    
    OnUpdate = function(this)
-      local TODO = true
+      deltaT = game.getDeltaTime()
    end,
 
    OnDestroy = function(this)
@@ -20,7 +20,7 @@ Enemies["Turret"] = {
    end
 }
 
-registerEnemy("Turret")
+game.registerEnemyClass("Turret")
 
 
 --[[=============================================
@@ -36,7 +36,7 @@ Enemies["Dasher"] = {
    end,
 
    OnUpdate = function(this)
-      local TODO = true
+      deltaT = game.getDeltaTime()
    end,
 
    OnDestroy = function(this)
@@ -44,7 +44,7 @@ Enemies["Dasher"] = {
    end
 }
 
-registerEnemy("Dasher")
+game.registerEnemyClass("Dasher")
 
 
 --[[=============================================
@@ -59,7 +59,7 @@ Enemies["Drone"] = {
    end,
 
    OnUpdate = function(this)
-      local TODO = true
+      deltaT = game.getDeltaTime()
    end,
 
    OnDestroy = function(this)
@@ -67,7 +67,7 @@ Enemies["Drone"] = {
    end
 }
 
-registerEnemy("Drone")
+game.registerEnemyClass("Drone")
 
 
 --[[=============================================
@@ -82,7 +82,7 @@ Enemies["Critter"] = {
    end,
 
    OnUpdate = function(this)
-      local TODO = true
+      deltaT = game.getDeltaTime()
    end,
 
    OnDestroy = function(this)
@@ -90,4 +90,4 @@ Enemies["Critter"] = {
    end
 }
 
-registerEnemy("Critter")
+game.registerEnemyClass("Critter")
