@@ -100,13 +100,13 @@ ui::Backend::PowerupBubbleState ui::Backend::getPowerupBubbleState() const {
 }
 
 void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
-    InputController * pInput = pGame->getPInput();
-    Frontend & uIFrontEnd = *pGame->getPUIFrontend();
+    InputController & input = pGame->getInputController();
+    Frontend & uIFrontEnd = pGame->getUIFrontend();
     Player & player = pGame->getPlayer();
-    bool action = pInput->actionPressed();
-    bool up = pInput->upPressed();
-    bool down = pInput->downPressed();
-    bool pause = pInput->pausePressed();
+    bool action = input.actionPressed();
+    bool up = input.upPressed();
+    bool down = input.downPressed();
+    bool pause = input.pausePressed();
     SoundController & sounds = pGame->getSounds();
     switch (state) {
     case State::closed:

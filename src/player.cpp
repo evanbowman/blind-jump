@@ -158,17 +158,17 @@ void setSpeed(bool key1, bool key2, bool key3, bool collision, float & speed) {
 
 void Player::update(Game * pGame, const sf::Time & elapsedTime,
                     SoundController & sounds) {
-    InputController * pInput(pGame->getPInput());
-    tileController & tiles(pGame->getTileController());
-    DetailGroup & details(pGame->getDetails());
-    EffectGroup & effects(pGame->getEffects());
-    ui::Frontend * pUiFrontend(pGame->getPUIFrontend());
-    bool shoot(pInput->shootPressed());
-    bool action(pInput->actionPressed());
-    bool up(pInput->upPressed());
-    bool down(pInput->downPressed());
-    bool left(pInput->leftPressed());
-    bool right(pInput->rightPressed());
+    InputController & input = pGame->getInputController();
+    tileController & tiles = pGame->getTileController();
+    DetailGroup & details = pGame->getDetails();
+    EffectGroup & effects = pGame->getEffects();
+    ui::Frontend & uiFrontend = pGame->getUIFrontend();
+    bool shoot(input.shootPressed());
+    bool action(input.actionPressed());
+    bool up(input.upPressed());
+    bool down(input.downPressed());
+    bool left(input.leftPressed());
+    bool right(input.rightPressed());
     bool collisionUp(false);
     bool collisionDown(false);
     bool collisionLeft(false);
@@ -436,9 +436,9 @@ void Player::update(Game * pGame, const sf::Time & elapsedTime,
     }
     updateColor(elapsedTime);
     if (health > 0 && state != Player::State::deactivated) {
-        checkEffectCollisions(effects, pUiFrontend, sounds);
+        checkEffectCollisions(effects, uiFrontend, sounds);
         enemyController & enemies = pGame->getEnemyController();
-        checkEnemyCollisions(enemies, pUiFrontend, sounds);
+        checkEnemyCollisions(enemies, uiFrontend, sounds);
     }
     if (health <= 0 && state != Player::State::dead) {
         state = Player::State::dead;
@@ -663,7 +663,6 @@ void Player::updateAnimation(const sf::Time & elapsedTime, uint8_t maxIndex,
 	case 9:
 	    if (frameIndex == 0 || frameIndex == 4) {
 	        int whichStep = getRandomStep<ResHandler::Sound::footstepDirt1, 5>();
-		std::cout << whichStep << std::endl;
 		sounds.play(static_cast<ResHandler::Sound>(whichStep));
 	    }
 	    break;
@@ -671,7 +670,6 @@ void Player::updateAnimation(const sf::Time & elapsedTime, uint8_t maxIndex,
 	case 5:
 	    if (frameIndex == 0) {
 		int whichStep = getRandomStep<ResHandler::Sound::footstepDirt1, 5>();
-		std::cout << whichStep << std::endl;
 		sounds.play(static_cast<ResHandler::Sound>(whichStep));
 	    }
 	    break;
@@ -756,12 +754,12 @@ void checkEffectCollision(EffectGroup & effects, Player * pPlayer,
 }
 
 void Player::checkEffectCollisions(EffectGroup & effects,
-                                   ui::Frontend * pUiFrontend,
+                                   ui::Frontend & uiFrontend,
                                    SoundController & sounds) {
     auto hitPolicy = [&]() {
         if (colorAmount == 0.f) {
             health -= 1;
-            pUiFrontend->updateHealth(health);
+            uiFrontend.updateHealth(health);
             renderType = Rendertype::shadeGldnGt;
             colorAmount = 1.f;
             colorTimer = 0;
@@ -772,15 +770,15 @@ void Player::checkEffectCollisions(EffectGroup & effects,
     checkEffectCollision<7>(effects, this, hitPolicy);
     checkEffectCollision<6>(effects, this, hitPolicy);
     checkEffectCollision<4>(effects, this, [&]() {
-        health = fmin(pUiFrontend->getMaxHealth(), health + 1);
-        pUiFrontend->updateHealth(health);
+        health = fmin(uiFrontend.getMaxHealth(), health + 1);
+        uiFrontend.updateHealth(health);
         renderType = Rendertype::shadeRuby;
         colorAmount = 1.f;
         colorTimer = 0;
         util::sleep(milliseconds(40));
     });
     checkEffectCollision<5>(effects, this, [&]() {
-        pUiFrontend->updateScore(1);
+        uiFrontend.updateScore(1);
         renderType = Rendertype::shadeElectric;
         colorAmount = 1.f;
         colorTimer = 0;
@@ -811,11 +809,11 @@ void checkEnemyCollision(const std::vector<std::shared_ptr<Dasher>> & dashers,
 }
 
 void Player::checkEnemyCollisions(enemyController & enemies,
-                                  ui::Frontend * pUiFrontend,
+                                  ui::Frontend & uiFrontend,
                                   SoundController & sounds) {
     auto collisionPolicy = [&]() {
         health -= 1;
-        pUiFrontend->updateHealth(health);
+        uiFrontend.updateHealth(health);
         renderType = Rendertype::shadeGldnGt;
         colorAmount = 1.f;
         colorTimer = 0;

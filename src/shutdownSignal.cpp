@@ -5,6 +5,6 @@
 
 #include "shutdownSignal.hpp"
 
-ShutdownSignal::ShutdownSignal() : msg("blindjump: goodbye") {}
+ShutdownSignal::ShutdownSignal() : msg("process terminated") {}
 
 const char * ShutdownSignal::what() const noexcept { return msg.c_str(); }

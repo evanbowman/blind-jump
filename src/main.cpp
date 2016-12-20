@@ -32,30 +32,17 @@ bool gameHasFocus = false;
 int main() {
     rng::seed();
     ResHandler resourceHandler;
-    sf::Vector2f drawableRegionSize = getDrawableRegionSize();
     try {
-        resourceHandler.load();
+	resourceHandler.load();
         setgResHandlerPtr(&resourceHandler);
-        sf::ContextSettings settings;
-        settings.antialiasingLevel = 6;
-        sf::RenderWindow window(sf::VideoMode::getDesktopMode(),
-                                EXECUTABLE_NAME, sf::Style::Fullscreen,
-                                settings);
-        window.setMouseCursorVisible(false);
-        window.setVerticalSyncEnabled(true);
-        window.setFramerateLimit(120);
-        InputController input;
-        dispIntroSequence(window, input);
-        sf::View hudView(
-            sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
-        ui::Frontend uIFrontEnd(hudView, drawableRegionSize.x / 2,
-                                drawableRegionSize.y / 2);
-        Game game(drawableRegionSize, &input, &uIFrontEnd, &window);
-        framework::SmartThread logicThread([&game, &window]() {
+	LuaProvider luaProv;
+        Game game(luaProv.getConf());
+	game.init();
+        framework::SmartThread logicThread([&game]() {
             duration logicUpdateDelta;
             sf::Clock gameClock;
             try {
-                while (window.isOpen()) {
+                while (game.getWindow().isOpen()) {
                     time_point start = high_resolution_clock::now();
                     sf::Time elapsedTime = gameClock.restart();
                     // TODO: what if the game freezes? Elapsed time will be
@@ -78,13 +65,11 @@ int main() {
             }
         });
         game.getCamera().panDown();
-        while (window.isOpen()) {
-            game.eventLoop(window);
-            window.clear();
-            game.updateGraphics(window);
-            window.display();
+        while (game.getWindow().isOpen()) {
+            game.eventLoop();
+            game.updateGraphics();
             if (::pWorkerException) {
-                window.close();
+                game.getWindow().close();
                 std::rethrow_exception(::pWorkerException);
             }
         }

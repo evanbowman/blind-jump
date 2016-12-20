@@ -25,6 +25,7 @@
 #include <atomic>
 #include <cmath>
 #include <mutex>
+#include "LuaProvider.hpp"
 
 class Game {
 public:
@@ -38,11 +39,10 @@ public:
         EntryBeamDrop,
         EntryBeamFade
     };
-    Game(const sf::Vector2f & viewPort, InputController *, ui::Frontend *,
-         sf::RenderWindow *);
+    Game(const ConfigResults &);
     void updateLogic(const sf::Time &);
-    void updateGraphics(sf::RenderWindow &);
-    void eventLoop(sf::RenderWindow &);
+    void updateGraphics();
+    void eventLoop();
     void nextLevel();
     int getLevel();
     DetailGroup & getDetails();
@@ -51,16 +51,18 @@ public:
     Player & getPlayer();
     EffectGroup & getEffects();
     SoundController & getSounds();
-    InputController * getPInput();
+    InputController & getInputController();
     ui::Backend & getUI();
-    ui::Frontend * getPUIFrontend();
+    ui::Frontend & getUIFrontend();
     Camera & getCamera();
     sf::Vector2f viewPort;
     TransitionState transitionState;
-
-private:
+    sf::RenderWindow & getWindow();
     void init();
-    InputController * pInput;
+    
+private:
+    sf::RenderWindow window;
+    InputController input;
     SoundController sounds;
     Player player;
     Camera camera;
@@ -69,7 +71,7 @@ private:
     EffectGroup effectGroup;
     DetailGroup detailGroup;
     enemyController en;
-    ui::Frontend * pUiFrontend;
+    ui::Frontend uiFrontend;
     std::mutex overworldMutex, UIMutex, transitionMutex;
     int level;
     bool stashed, preload;

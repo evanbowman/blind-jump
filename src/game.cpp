@@ -13,11 +13,9 @@
 #include "math.h"
 #include "pillarPlacement.h"
 
-Game::Game(const sf::Vector2f & _viewPort, InputController * _pInput,
-           ui::Frontend * _pUiFrontend, sf::RenderWindow * pWindow)
-    : viewPort(_viewPort), transitionState(TransitionState::TransitionIn),
-      pInput(_pInput), player(viewPort.x / 2, viewPort.y / 2),
-      camera(&player, viewPort, pWindow->getSize()), pUiFrontend(_pUiFrontend),
+Game::Game(const ConfigResults & res)
+    : viewPort(res.drawableArea), transitionState(TransitionState::TransitionIn), player(viewPort.x / 2, viewPort.y / 2), window(sf::VideoMode::getDesktopMode(), EXECUTABLE_NAME, sf::Style::Fullscreen, sf::ContextSettings(0, 0, 6)),
+      camera(&player, viewPort, window.getSize()), uiFrontend(sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y)), viewPort.x / 2, viewPort.y / 2),
       level(0), stashed(false), preload(false),
       worldView(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
       timer(0) {
@@ -28,11 +26,10 @@ Game::Game(const sf::Vector2f & _viewPort, InputController * _pInput,
         (viewPort.y * (visibleArea + 0.02)) / 450);
     vignetteSprite.setScale(vignetteMaskScale);
     vignetteShadowSpr.setScale(vignetteMaskScale);
-    windowView.setSize(pWindow->getSize().x, pWindow->getSize().y);
+    windowView.setSize(window.getSize().x, window.getSize().y);
     windowView.zoom(visibleArea);
     camera.setWindowView(windowView);
     gfxContext.targetRef = &target;
-    init();
 }
 
 void Game::init() {
@@ -67,7 +64,7 @@ void Game::init() {
 
 extern bool gameHasFocus;
 
-void Game::eventLoop(sf::RenderWindow & window) {
+void Game::eventLoop() {
     sf::Event event;
     while (window.pollEvent(event)) {
         switch (event.type) {
@@ -87,13 +84,14 @@ void Game::eventLoop(sf::RenderWindow & window) {
             break;
 
         default:
-            pInput->recordEvent(event);
+            input.recordEvent(event);
             break;
         }
     }
 }
 
-void Game::updateGraphics(sf::RenderWindow & window) {
+void Game::updateGraphics() {
+    window.clear();
     if (!::gameHasFocus) {
         util::sleep(milliseconds(200));
         return;
@@ -251,7 +249,7 @@ void Game::updateGraphics(sf::RenderWindow & window) {
         }
     } else if (UI.blurEnabled() && !UI.desaturateEnabled()) {
         if (stashed) {
-            if (pInput->pausePressed()) {
+            if (input.pausePressed()) {
                 preload = true;
             }
             sf::Sprite targetSprite(stash.getTexture());
@@ -303,16 +301,17 @@ void Game::updateGraphics(sf::RenderWindow & window) {
     {
         std::lock_guard<std::mutex> UILock(UIMutex);
         if (player.getState() == Player::State::dead) {
-            UI.draw(window, *pUiFrontend);
+            UI.draw(window, uiFrontend);
         } else {
             if (transitionState == TransitionState::None) {
-                UI.draw(window, *pUiFrontend);
+                UI.draw(window, uiFrontend);
             }
-            pUiFrontend->draw(window);
+            uiFrontend.draw(window);
         }
     }
     window.setView(worldView);
     drawTransitions(window);
+    window.display();
 }
 
 void Game::updateLogic(const sf::Time & elapsedTime) {
@@ -369,11 +368,11 @@ void Game::updateLogic(const sf::Time & elapsedTime) {
                 // be zero
                 level = -1;
                 this->nextLevel();
-                pUiFrontend->reset();
+                uiFrontend.reset();
                 static const char playerStartingHealth = 4;
-                pUiFrontend->updateHealth(playerStartingHealth);
-                pUiFrontend->updateMaxHealth(playerStartingHealth);
-                pUiFrontend->setWaypointText(level);
+                uiFrontend.updateHealth(playerStartingHealth);
+                uiFrontend.updateMaxHealth(playerStartingHealth);
+                uiFrontend.setWaypointText(level);
             }
             UI.update(this, elapsedTime);
         } else {
@@ -435,9 +434,9 @@ void Game::drawTransitions(sf::RenderWindow & window) {
                     Easing::easeOut<1>(timer - 1600000,
                                        static_cast<int_fast64_t>(600000)) *
                     255;
-                pUiFrontend->drawTitle(textAlpha, window);
+                uiFrontend.drawTitle(textAlpha, window);
             } else {
-                pUiFrontend->drawTitle(255, window);
+                uiFrontend.drawTitle(255, window);
             }
             if (timer > 3000000) {
                 transitionState = TransitionState::TransitionIn;
@@ -618,7 +617,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 
 void Game::nextLevel() {
     level += 1;
-    pUiFrontend->setWaypointText(level);
+    uiFrontend.setWaypointText(level);
     tiles.clear();
     effectGroup.clear();
     detailGroup.clear();
@@ -779,15 +778,17 @@ Camera & Game::getCamera() { return camera; }
 
 EffectGroup & Game::getEffects() { return effectGroup; }
 
-InputController * Game::getPInput() { return pInput; }
+InputController & Game::getInputController() { return input; }
 
 ui::Backend & Game::getUI() { return UI; }
 
-ui::Frontend * Game::getPUIFrontend() { return pUiFrontend; }
+ui::Frontend & Game::getUIFrontend() { return uiFrontend; }
 
 SoundController & Game::getSounds() { return sounds; }
 
 int Game::getLevel() { return level; }
+
+sf::RenderWindow & Game::getWindow() { return window; }
 
 const std::array<std::pair<float, float>, 59> levelZeroWalls{
     {std::make_pair(-20, 500), std::make_pair(-20, 526),
