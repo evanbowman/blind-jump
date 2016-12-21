@@ -1,80 +1,85 @@
 classes["Turret"] = {
    OnCreate = function(this)
-      instance.setState(this, "closed")
+      entity.setField(this, "hp", 6)
+      entity.setField(this, "animCounter", 0)
+      entity.setField(this, "state", "closed")
    end,
    
    OnUpdate = function(this)
       local dt = system.getDeltaTime()
-      local counter = instance.getCounter(this, 0)
+      local counter = entity.getField(this, "animCounter")
       counter = counter + dt
-      local state = instance.getState(this)
+      entity.setField(this, "animCounter", counter)
+      local state = entity.getField(this, "state")
       classes["Turret"].FSM[state](this, counter)
+      local currentHealth = entity.getField(this, "hp")
+      if currentHealth == 0 then
+	 entity.remove(this)
+      end
    end,
-
+   
    FSM = {
       ["closed"] = function(this, counter)
 	 if counter > 50000 then
-	    instance.setState(this, "opening")
-	    instance.setCounter(this, 0, 0)
-	 else
-	    instance.setCounter(this, 0, counter)
+	    entity.setField(this, "state", "opening")
+	    entity.setField(this, "animCounter", 0)
 	 end
       end,
       
       ["opening"] = function(this, counter)
 	 if counter > 50000 then
-	    instance.setState(this, "shoot1")
-	    instance.setCounter(this, 0, 0)
-	 else
-	    instance.setCounter(this, 0, counter)
+	    entity.setField(this, "animCounter", 0)
+	    local currentFrame = entity.getKeyframe(this)
+	    currentFrame = currentFrame + 1
+	    if currentFrame <= 4 then
+	       entity.setKeyframe(this, currentFrame)
+	    else
+	       entity.setField(this, "state", "shoot1")
+	    end
 	 end
       end,
       
       ["shoot1"] = function(this, counter)
 	 if counter > 200000 then
-	    instance.setState(this, "shoot2")
-	    instance.setCounter(this, 0, 0)
-	    instance.emitSound(this, "sounds/laser.ogg", 220, 30)
-	 else
-	    instance.setCounter(this, 0, counter)
+	    entity.setField(this, "state", "shoot2")
+	    entity.setField(this, "animCounter", 0)
+	    entity.emitSound(this, "sounds/laser.ogg", 220, 30)
 	 end
       end,
       
       ["shoot2"] = function(this, counter)
 	 if counter > 200000 then
-	    instance.setState(this, "shoot3")
-	    instance.setCounter(this, 0, 0)
-	    instance.emitSound(this, "sounds/laser.ogg", 220, 30)
-	 else
-	    instance.setCounter(this, 0, counter)
+	    entity.setField(this, "state", "shoot3")
+	    entity.setField(this, "animCounter", 0)
+	    entity.emitSound(this, "sounds/laser.ogg", 220, 30)
 	 end
       end,
       
       ["shoot3"] = function(this, counter)
 	 if counter > 200000 then
-	    instance.setState(this, "rest")
-	    instance.setCounter(this, 0, 0)
-	    instance.emitSound(this, "sounds/laser.ogg", 220, 30)
-	 else
-	    instance.setCounter(this, 0, counter)
+	    entity.setField(this, "state", "rest")
+	    entity.setField(this, "animCounter", 0)
+	    entity.emitSound(this, "sounds/laser.ogg", 220, 30)
 	 end
       end,
       
       ["rest"] = function(this, counter)
 	 if counter > 1200000 then
-	    instance.setState(this, "closing")
-	    instance.setCounter(this, 0, 0)
-	 else
-	    instance.setCounter(this, 0, counter)
+	    entity.setField(this, "state", "closing")
+	    entity.setField(this, "animCounter", 0)
 	 end
       end,
       
       ["closing"] = function(this, counter)
 	 if counter > 50000 then
-	    instance.setState(this, "closed")
-	    instance.setCounter(this, 0, 0)
-	 else
-	    instance.setCounter(this, 0, counter)
+	    entity.setField(this, "animCounter", 0)
+	    local currentFrame  = entity.getKeyframe(this)
+	    currentFrame = currentFrame - 1
+	    if currentFrame >= 0 then
+	       entity.setKeyframe(this, currentFrame)
+	    else
+	       entity.setField(this, "state", "closed")
+	    end
 	 end
       end
    }

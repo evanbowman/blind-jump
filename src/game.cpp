@@ -133,7 +133,15 @@ void Game::updateGraphics() {
 		for (auto & entity : kvp.second) {
 		    auto spr = entity->getSprite();
 		    if (spr) {
-			// TODO: draw it!
+		        spr->setPosition(entity->getPosition());
+		    }
+		    spr = entity->getShadow();
+		    if (spr) {
+			
+		    }
+		    spr = entity->getGlow();
+		    if (spr) {
+			
 		    }
 		}
 	    }
@@ -364,20 +372,23 @@ void Game::updateLogic(LuaProvider & luaProv) {
 			kvp.first + " is not a table";
                 }
                 for (auto it = kvp.second.begin(); it != kvp.second.end();) {
-		    if (!(*it)->getKillFlag()) {
-			lua_getfield(state, -1, "OnUpdate");
-			if (!lua_isfunction(state, -1)) {
-			    const std::string err =
-				"Error: missing or malformed OnUpdate for class " +
-				kvp.first;
+		    lua_getfield(state, -1, "OnUpdate");
+		    if (!lua_isfunction(state, -1)) {
+			const std::string err =
+			    "Error: missing or malformed OnUpdate for class " +
+			    kvp.first;
+		    }
+		    lua_pushlightuserdata(state, (void *)(&(*it)));
+		    if (lua_pcall(state, 1, 0, 0)) {
+			throw std::runtime_error(lua_tostring(state, -1));
+		    }
+		    if ((*it)->getKillFlag()) {
+			for (auto & member : (*it)->getMemberTable()) {
+			    luaL_unref(state, LUA_REGISTRYINDEX, member.second);
 			}
-			lua_pushlightuserdata(state, (void *)(&(*it)));
-			if (lua_pcall(state, 1, 0, 0)) {
-			    throw std::runtime_error(lua_tostring(state, -1));
-			}
-			++it;
-		    } else {
 			it = kvp.second.erase(it);
+		    } else {
+			++it;
 		    }
                 }
                 lua_pop(state, 1);

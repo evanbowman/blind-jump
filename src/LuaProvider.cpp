@@ -3,7 +3,7 @@
 
 // GAME API
 //     Provides access to Game data from lua scripts.
-//     TODO: create nested tables, e.g.: instance.create, instance.getPosition
+//     TODO: create nested tables, e.g.: entity.create, entity.getPosition
 extern "C" {
     static const luaL_Reg systemModFuncs[] = {
 	{"getScreenSize",
@@ -75,7 +75,7 @@ extern "C" {
 	return &vec.back();
     }
     
-    static const luaL_Reg instanceModFuncs[] = {
+    static const luaL_Reg entityModFuncs[] = {
 	{"new",
 	 [](lua_State * state) -> int {
 	     const std::string classname = lua_tostring(state, 1);
@@ -101,17 +101,35 @@ extern "C" {
 		 setPosition(sf::Vector2f(x, y));
 	     return 0;
 	 }},
-	{"setKillFlag",
+	{"remove",
 	 [](lua_State * state) -> int {
-	     void * entity = lua_touserdata(state, 1);
-	     (*static_cast<EntityRef *>(entity))->setKillFlag(true);
+	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
+	     (*entity)->setKillFlag();
 	     return 0;
 	 }},
-	{"getKillFlag",
+	{"setField",
 	 [](lua_State * state) -> int {
-	     void * entity = lua_touserdata(state, 1);
-	     bool flag = (*static_cast<EntityRef *>(entity))->getKillFlag();
-	     lua_pushboolean(state, flag);
+	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
+	     const std::string varName = lua_tostring(state, 2);
+	     auto & members = (*entity)->getMemberTable();
+	     if (members.find(varName) != members.end()) {
+		 luaL_unref(state, LUA_REGISTRYINDEX, members[varName]);
+	     }
+	     lua_pushvalue(state, 3);
+	     members[varName] = luaL_ref(state, LUA_REGISTRYINDEX);
+	     return 0;
+	 }},
+	{"getField",
+	 [](lua_State * state) -> int {
+	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
+	     const std::string varName = lua_tostring(state, 2);
+	     auto & members = (*entity)->getMemberTable();
+	     if (members.find(varName) == members.end()) {
+		 const std::string err = "Error: member " + varName + " lookup failed";
+		 throw std::runtime_error(err);
+	     }
+	     int ref = members[varName];
+	     lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
 	     return 1;
 	 }},
 	{"emitSound",
@@ -125,44 +143,37 @@ extern "C" {
 	     sounds.play(soundName, *entity, minDist, attenuation, false);
 	     return 0;
 	 }},
-	{"setState",
-	 [](lua_State * state) -> int {
-	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
-	     entity->setState(lua_tostring(state, 2));
-	     return 0;
-	 }},
-	{"getState",
-	 [](lua_State * state) -> int {
-	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
-	     lua_pushstring(state, entity->getState().c_str());
-	     return 1;
-	 }},
-	{"getCounter",
-	 [](lua_State * state) -> int {
-	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
-	     const uint64_t val = entity->getCounter(lua_tointeger(state, 2));
-	     lua_pushinteger(state, val);
-	     return 1;
-	 }},
-	{"setCounter",
-	 [](lua_State * state) -> int {
-	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
-	     entity->setCounter(lua_tointeger(state, 2), lua_tointeger(state, 3));
-	     return 0;
-	 }},
-	{"setFrame",
+	{"setKeyframe",
 	 [](lua_State * state) -> int {
 	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
 	     const int frameno = lua_tointeger(state, 2);
 	     entity->setFrameIndex(frameno);
 	     return 0;
 	 }},
-	{"getFrame",
+	{"getKeyframe",
 	 [](lua_State * state) -> int {
 	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
 	     const int frameno = entity->getFrameIndex();
 	     lua_pushinteger(state, frameno);
 	     return 1;
+	 }},
+	{"setSprite",
+	 [](lua_State * state) -> int {
+	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
+	     std::cout << lua_tostring(state, 2) << std::endl;;
+	     return 0;
+	 }},
+	{"setShadow",
+	 [](lua_State * state) -> int {
+	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
+	     std::cout << lua_tostring(state, 2) << std::endl;;
+	     return 0;
+	 }},
+	{"setGlow",
+	 [](lua_State * state) -> int {
+	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
+	     std::cout << lua_tostring(state, 2) << std::endl;;
+	     return 0;
 	 }}
     };
 
@@ -173,10 +184,10 @@ extern "C" {
 	return 1;
     }
 
-    static int luaopen_instance(lua_State * state) {
+    static int luaopen_entity(lua_State * state) {
 	lua_newtable(state);
-	luaL_setfuncs(state, instanceModFuncs, 0);
-	lua_setglobal(state, "instance");
+	luaL_setfuncs(state, entityModFuncs, 0);
+	lua_setglobal(state, "entity");
 	return 1;
     }
 }
@@ -184,7 +195,7 @@ extern "C" {
 LuaProvider::LuaProvider() : m_state(luaL_newstate()) {
     luaL_openlibs(m_state);
     luaopen_system(m_state);
-    luaopen_instance(m_state);
+    luaopen_entity(m_state);
     lua_newtable(m_state);
     lua_setglobal(m_state, "classes");
     lua_getglobal(m_state, "package");

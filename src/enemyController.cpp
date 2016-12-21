@@ -19,25 +19,6 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
     const sf::View & cameraView = camera.getOverworldView();
     sf::Vector2f viewCenter = cameraView.getCenter();
     sf::Vector2f viewSize = cameraView.getSize();
-    for (auto & element : turrets) {
-        if (element->getPosition().x > viewCenter.x - viewSize.x / 2 - 32 &&
-            element->getPosition().x < viewCenter.x + viewSize.x / 2 + 32 &&
-            element->getPosition().y > viewCenter.y - viewSize.y / 2 - 32 &&
-            element->getPosition().y < viewCenter.y + viewSize.y / 2 + 32) {
-            std::tuple<sf::Sprite, float, Rendertype, float> shadow;
-            std::get<0>(shadow) = element->getShadow();
-            gameShadows.push_back(shadow);
-            std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
-            std::get<0>(tSpr) = element->getSprite();
-            std::get<1>(tSpr) = element->getPosition().y;
-            if (element->colored()) {
-                std::get<2>(tSpr) = Rendertype::shadeWhite;
-            } else {
-                std::get<2>(tSpr) = Rendertype::shadeDefault;
-            }
-            gameObjects.push_back(tSpr);
-        }
-    }
     for (auto & element : critters) {
         gameShadows.emplace_back(element->getShadow(), 0.f,
                                  Rendertype::shadeDefault, 0.f);
@@ -111,31 +92,6 @@ void enemyController::update(Game * pGame, bool enabled,
     const sf::View & cameraView = camera.getOverworldView();
     sf::Vector2f viewCenter = cameraView.getCenter();
     sf::Vector2f viewSize = cameraView.getSize();
-    if (!turrets.empty()) {
-        for (auto it = turrets.begin(); it != turrets.end();) {
-            if ((*it)->getKillFlag() == 1) {
-                util::sleep(milliseconds(60));
-                camera.shake(0.17f);
-                it = turrets.erase(it);
-            } else {
-                if ((*it)->getPosition().x >
-                        viewCenter.x - viewSize.x / 2 - 32 &&
-                    (*it)->getPosition().x <
-                        viewCenter.x + viewSize.x / 2 + 32 &&
-                    (*it)->getPosition().y >
-                        viewCenter.y - viewSize.y / 2 - 32 &&
-                    (*it)->getPosition().y <
-                        viewCenter.y + viewSize.y / 2 + 32) {
-                    if (enabled) {
-                        (*it)->update(elapsedTime, player, effectGroup);
-                    }
-                    cameraTargets.emplace_back((*it)->getPosition().x,
-                                               (*it)->getPosition().y);
-                }
-                ++it;
-            }
-        }
-    }
     if (!scoots.empty()) {
         for (auto it = scoots.begin(); it != scoots.end();) {
             if ((*it)->getKillFlag()) {
@@ -232,23 +188,9 @@ void enemyController::update(Game * pGame, bool enabled,
 }
 
 void enemyController::clear() {
-    turrets.clear();
     scoots.clear();
     dashers.clear();
     critters.clear();
-}
-
-void enemyController::addTurret(tileController * pTiles) {
-    auto pCoordVec = pTiles->getEmptyLocations();
-    int locationSelect = rng::random<2>() ? rng::random(pCoordVec->size() / 2)
-                                          : rng::random(pCoordVec->size());
-    float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
-    float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-    turrets.push_back(std::make_shared<Turret>(
-        getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
-        xInit, yInit));
-    (*pCoordVec)[locationSelect] = pCoordVec->back();
-    pCoordVec->pop_back();
 }
 
 void enemyController::addScoot(tileController * pTiles) {
@@ -305,8 +247,4 @@ std::vector<std::shared_ptr<Dasher>> & enemyController::getDashers() {
 
 std::vector<std::shared_ptr<Scoot>> & enemyController::getScoots() {
     return scoots;
-}
-
-std::vector<std::shared_ptr<Turret>> & enemyController::getTurrets() {
-    return turrets;
 }

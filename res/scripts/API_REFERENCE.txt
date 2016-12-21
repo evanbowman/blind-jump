@@ -8,25 +8,19 @@ here for your convenience.
 
 ENTITY
 
-entity.create(classname) -> handle
+entity.new(classname) -> handle
 
 entity.getPosition(handle) -> x, y
 
 entity.setPosition(handle, x, y)
 
-entity.setKillFlag(handle)
+entity.remove(handle)
 
-entity.getKillFlag(handle) -> isSet
+entity.emitSound(handle, soundName, minDistance, attenuation)
 
-entity.emitSound(handle, soundName, minDistance, attenuation, looping)
+entity.setMember(handle, membername, membervalue)
 
-entity.getState(handle) -> state
-
-entity.setState(handle, state)
-
-entity.getTimer(handle, timerno) -> timerval
-
-entity.setTimer(handle, timerno, timerval)
+entity.getMember(handle, membername) -> membervalue
 
 
 SYSTEM

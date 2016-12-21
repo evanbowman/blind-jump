@@ -11,7 +11,6 @@
 #include "effectsController.hpp"
 #include "resourceHandler.hpp"
 #include "scoot.hpp"
-#include "turret.hpp"
 #include "util.hpp"
 #include <SFML/Graphics.hpp>
 #include <memory>
@@ -27,7 +26,6 @@ class enemyController {
 private:
     using drawableVec =
         std::vector<std::tuple<sf::Sprite, float, Rendertype, float>>;
-    std::vector<std::shared_ptr<Turret>> turrets;
     std::vector<std::shared_ptr<Scoot>> scoots;
     std::vector<std::shared_ptr<Dasher>> dashers;
     std::vector<std::shared_ptr<Critter>> critters;
@@ -47,5 +45,4 @@ public:
     std::vector<std::shared_ptr<Critter>> & getCritters();
     std::vector<std::shared_ptr<Scoot>> & getScoots();
     std::vector<std::shared_ptr<Dasher>> & getDashers();
-    std::vector<std::shared_ptr<Turret>> & getTurrets();
 };

@@ -9,7 +9,6 @@
 #include "initMapVectors.hpp"
 #include "mappingFunctions.hpp"
 #include "resourceHandler.hpp"
-#include "turret.hpp"
 #include <cstring>
 #include <random>
 
