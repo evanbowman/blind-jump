@@ -28,7 +28,7 @@
 #include <mutex>
 #include "Entity.hpp"
 
-using EntityTable = std::map<std::string, std::vector<std::shared_ptr<Entity>>>;
+using EntityTable = std::map<std::string, std::vector<EntityRef>>;
 
 struct ConfigData {
     sf::Vector2f drawableArea;
@@ -70,9 +70,9 @@ public:
     sf::RenderWindow & getWindow();
     const sf::Time & getElapsedTime();
     void setElapsedTime(const sf::Time &);
+    void init();
 
 private:
-    void init();
     EntityTable entityTable;
     sf::RenderWindow window;
     sf::Time elapsedTime;

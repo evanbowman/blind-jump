@@ -50,24 +50,24 @@ void Critter::update(Game * pGame, const sf::Time & elapsedTime,
         if (temp == 0) {
             effects.add<EffectRef::Heart>(
                 getgResHandlerPtr()->getTexture(
-                    ResHandler::Texture::gameObjects),
-                getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
+                    "textures/gameObjects.png"),
+                getgResHandlerPtr()->getTexture("textures/redFloorGlow.png"),
                 xInit + 10, yInit, Item::Type::Heart);
         } else {
             effects.add<EffectRef::Coin>(
                 getgResHandlerPtr()->getTexture(
-                    ResHandler::Texture::gameObjects),
-                getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
+                    "textures/gameObjects.png"),
+                getgResHandlerPtr()->getTexture("textures/blueFloorGlow.png"),
                 xInit + 10, yInit, Item::Type::Coin);
         }
         effects.add<EffectRef::SmallExplosion>(
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
             getgResHandlerPtr()->getTexture(
-                ResHandler::Texture::fireExplosionGlow),
+                "textures/fireExplosionGlow.png"),
             xInit + 8, yInit);
-        pGame->getSounds().play(ResHandler::Sound::blast1,
-                                effects.get<EffectRef::SmallExplosion>().back(),
-                                300, 4.f);
+        // pGame->getSounds().play(ResHandler::Sound::blast1,
+        //                         effects.get<EffectRef::SmallExplosion>().back(),
+        //                         300, 4.f);
         killFlag = true;
     }
     position.x -=

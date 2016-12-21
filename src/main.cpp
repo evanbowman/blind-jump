@@ -37,9 +37,10 @@ int main() {
         setgResHandlerPtr(&resourceHandler);
         LuaProvider luaProv;
         luaProv.runScriptFromFile(resourcePath() + "scripts/conf.lua");
+	luaProv.runScriptFromFile(resourcePath() + "scripts/resources.lua");
         Game game(luaProv.applyHook(getConfig));
         setgGamePtr(&game);
-        luaProv.runScriptFromFile(resourcePath() + "scripts/enemies.lua");
+	luaProv.runScriptFromFile(resourcePath() + "scripts/main.lua");
         framework::SmartThread logicThread([&game, &luaProv]() {
             duration logicUpdateDelta;
             sf::Clock gameClock;

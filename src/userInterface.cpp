@@ -334,7 +334,7 @@ void ui::PowerupBubble::init(float scale) {
     bubble.setOutlineColor(sf::Color::White);
     bubble.setPointCount(60);
     powerupSheet.setTexture(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::powerupSheet));
+        getgResHandlerPtr()->getTexture("textures/powerupSheet.png"));
 }
 
 void ui::PowerupBubble::setFrame(size_t idx) { powerupSheet[idx]; }

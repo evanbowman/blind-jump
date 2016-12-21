@@ -51,20 +51,20 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
         if (rng::random<4>() == 0) {
             effects.add<EffectRef::Heart>(
                 getgResHandlerPtr()->getTexture(
-                    ResHandler::Texture::gameObjects),
-                getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
+                    "textures/gameObjects.png"),
+                getgResHandlerPtr()->getTexture("textures/redFloorGlow.png"),
                 position.x + 8, position.y + 10, Item::Type::Heart);
         } else {
             effects.add<EffectRef::Coin>(
                 getgResHandlerPtr()->getTexture(
-                    ResHandler::Texture::gameObjects),
-                getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
+                    "textures/gameObjects.png"),
+                getgResHandlerPtr()->getTexture("textures/blueFloorGlow.png"),
                 position.x + 8, position.y + 10, Item::Type::Coin);
         }
         effects.add<EffectRef::FireExplosion>(
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
             getgResHandlerPtr()->getTexture(
-                ResHandler::Texture::fireExplosionGlow),
+                "textures/fireExplosionGlow.png"),
             position.x + 12, position.y + 12);
     }
     switch (state) {
@@ -96,12 +96,12 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
         if (timer > 200000) {
             effects.add<EffectRef::TurretFlashEffect>(
                 getgResHandlerPtr()->getTexture(
-                    ResHandler::Texture::gameObjects),
+                    "textures/gameObjects.png"),
                 position.x, position.y + 8);
             effects.add<EffectRef::EnemyShot>(
                 getgResHandlerPtr()->getTexture(
-                    ResHandler::Texture::gameObjects),
-                getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
+                    "textures/gameObjects.png"),
+                getgResHandlerPtr()->getTexture("textures/redFloorGlow.png"),
                 position.x, position.y + 6,
                 angleFunction(target.x + 16, target.y + 8, position.x + 18,
                               position.y + 8));
@@ -115,12 +115,12 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
         if (timer > 200000) {
             effects.add<EffectRef::TurretFlashEffect>(
                 getgResHandlerPtr()->getTexture(
-                    ResHandler::Texture::gameObjects),
+                    "textures/gameObjects.png"),
                 position.x, position.y + 8);
             effects.add<EffectRef::EnemyShot>(
                 getgResHandlerPtr()->getTexture(
-                    ResHandler::Texture::gameObjects),
-                getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
+                    "textures/gameObjects.png"),
+                getgResHandlerPtr()->getTexture("textures/redFloorGlow.png"),
                 position.x, position.y + 8,
                 angleFunction(target.x + 16, target.y + 8, position.x + 18,
                               position.y + 6));
@@ -134,12 +134,12 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
         if (timer > 200000) {
             effects.add<EffectRef::TurretFlashEffect>(
                 getgResHandlerPtr()->getTexture(
-                    ResHandler::Texture::gameObjects),
+                    "textures/gameObjects.png"),
                 position.x, position.y + 8);
             effects.add<EffectRef::EnemyShot>(
                 getgResHandlerPtr()->getTexture(
-                    ResHandler::Texture::gameObjects),
-                getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
+                    "textures/gameObjects.png"),
+                getgResHandlerPtr()->getTexture("textures/redFloorGlow.png"),
                 position.x, position.y + 8,
                 angleFunction(target.x + 16, target.y + 8, position.x + 18,
                               position.y + 6));

@@ -48,7 +48,7 @@ void SoundController::update() {
     if (!soundRequests.empty()) {
         for (const auto req : soundRequests) {
             runningSounds.emplace_back(
-                getgResHandlerPtr()->getSound(req.soundIdx));
+                getgResHandlerPtr()->getSound(req.soundname));
             runningSounds.back().setMinDistance(req.minDistance);
             runningSounds.back().setAttenuation(req.attenuation);
             runningData.push_back({req.source, req.spatialized});
@@ -101,17 +101,17 @@ void SoundController::update() {
     }
 }
 
-void SoundController::play(ResHandler::Sound indx) {
+void SoundController::play(const std::string & name) {
     std::lock_guard<std::mutex> lk(soundsGuard);
-    soundRequests.push_back({indx, 1.f, 0.f, false, false /*, nullptr not
+    soundRequests.push_back({name, 1.f, 0.f, false, false /*, nullptr not
                                                             convertible to 
                                                             weak_ptr*/});
 }
 
-void SoundController::play(ResHandler::Sound indx,
-                           std::shared_ptr<framework::Object> source,
+void SoundController::play(const std::string & name,
+                           std::shared_ptr<Entity> source,
                            float minDistance, float attenuation, bool loop) {
     std::lock_guard<std::mutex> lk(soundsGuard);
     soundRequests.push_back(
-        {indx, minDistance, attenuation, true, loop, source});
+        {name, minDistance, attenuation, true, loop, source});
 }

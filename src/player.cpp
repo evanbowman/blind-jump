@@ -23,15 +23,15 @@ Player::Player(float _xPos, float _yPos)
 
 void Player::init() {
     deathSheet.setTexture(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects));
+        getgResHandlerPtr()->getTexture("textures/gameObjects.png"));
     walkDown.setTexture(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects));
+        getgResHandlerPtr()->getTexture("textures/gameObjects.png"));
     walkUp.setTexture(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects));
+        getgResHandlerPtr()->getTexture("textures/gameObjects.png"));
     walkLeft.setTexture(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects));
+        getgResHandlerPtr()->getTexture("textures/gameObjects.png"));
     walkRight.setTexture(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects));
+        getgResHandlerPtr()->getTexture("textures/gameObjects.png"));
     walkDown.setPosition(xPos, yPos);
     walkUp.setPosition(xPos, yPos);
     walkLeft.setPosition(xPos, yPos);
@@ -40,14 +40,14 @@ void Player::init() {
     dashSheet.setPosition(xPos, yPos);
     deathSheet.setPosition(xPos - 13, yPos - 1);
     dashSheet.setTexture(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects));
+        getgResHandlerPtr()->getTexture("textures/gameObjects.png"));
     dashSheet.setOrigin(0, 1);
     shadowSprite.setTexture(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects));
+        getgResHandlerPtr()->getTexture("textures/gameObjects.png"));
     shadowSprite.setTextureRect(sf::IntRect(0, 100, 18, 16));
     gun.gunSpr.setPosition(xPos, yPos);
     gun.gunSpr.setTexture(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects));
+        getgResHandlerPtr()->getTexture("textures/gameObjects.png"));
 }
 
 sf::Vector2f Player::getPosition() { return sf::Vector2f(xPos + 16, yPos); }
@@ -303,8 +303,8 @@ void Player::update(Game * pGame, const sf::Time & elapsedTime,
                     chest->getState() == TreasureChest::State::closed &&
                     action) {
                     util::sleep(milliseconds(40));
-                    pGame->getSounds().play(ResHandler::Sound::creak, chest,
-                                            64.f, 8.f);
+                    // pGame->getSounds().play(ResHandler::Sound::creak, chest,
+                    //                         64.f, 8.f);
                     chest->setState(TreasureChest::State::opening);
                 }
             }
@@ -336,7 +336,7 @@ void Player::update(Game * pGame, const sf::Time & elapsedTime,
         dashTimer += elapsedTime.asMicroseconds();
         if (dashTimer > 80000) {
             dashTimer = 0;
-            sounds.play(ResHandler::Sound::woosh);
+            // sounds.play(ResHandler::Sound::woosh);
             state = State::dashing;
             switch (frameIndex) {
             case 6:
@@ -647,34 +647,34 @@ void Player::draw(drawableVec & gameObjects, drawableVec & gameShadows) {
     }
 }
 
-template <ResHandler::Sound StepBase, int NumSteps> int getRandomStep() {
-    int choice = rng::random<NumSteps, 0>();
-    choice += static_cast<int>(StepBase);
-    return choice;
-}
+// template <ResHandler::Sound StepBase, int NumSteps> int getRandomStep() {
+//     int choice = rng::random<NumSteps, 0>();
+//     choice += static_cast<int>(StepBase);
+//     return choice;
+// }
 
 void Player::updateAnimation(const sf::Time & elapsedTime, uint8_t maxIndex,
                              uint32_t count, SoundController & sounds) {
     animationTimer += elapsedTime.asMicroseconds();
     if (animationTimer > count) {
         animationTimer -= count;
-        switch (maxIndex) {
-        case 9:
-            if (frameIndex == 0 || frameIndex == 4) {
-                int whichStep =
-                    getRandomStep<ResHandler::Sound::footstepDirt1, 5>();
-                sounds.play(static_cast<ResHandler::Sound>(whichStep));
-            }
-            break;
+        // switch (maxIndex) {
+        // case 9:
+        //     if (frameIndex == 0 || frameIndex == 4) {
+        //         int whichStep =
+        //             getRandomStep<ResHandler::Sound::footstepDirt1, 5>();
+        //         sounds.play(static_cast<ResHandler::Sound>(whichStep));
+        //     }
+        //     break;
 
-        case 5:
-            if (frameIndex == 0) {
-                int whichStep =
-                    getRandomStep<ResHandler::Sound::footstepDirt1, 5>();
-                sounds.play(static_cast<ResHandler::Sound>(whichStep));
-            }
-            break;
-        }
+        // case 5:
+        //     if (frameIndex == 0) {
+        //         int whichStep =
+        //             getRandomStep<ResHandler::Sound::footstepDirt1, 5>();
+        //         sounds.play(static_cast<ResHandler::Sound>(whichStep));
+        //     }
+        //     break;
+        // }
         ++frameIndex;
     }
     if (frameIndex > maxIndex) {
@@ -726,12 +726,12 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey,
         } else if (gun.timeout < 1671000) {
             gun.timeout = 1671000;
             if (gun.bulletTimer == 0) {
-                sounds.play(ResHandler::Sound::gunShot);
+                // sounds.play(ResHandler::Sound::gunShot);
                 effects.add<EffectRef::PlayerShot>(
                     getgResHandlerPtr()->getTexture(
-                        ResHandler::Texture::gameObjects),
+                        "textures/gameObjects.png"),
                     getgResHandlerPtr()->getTexture(
-                        ResHandler::Texture::whiteGlow),
+                        "textures/whiteFloorGlow.png"),
                     static_cast<int>(sheetIndex), xPos, yPos);
                 if (UI.getCurrentPowerup() == Powerup::rapidFire) {
                     gun.bulletTimer = 220000;
@@ -824,9 +824,9 @@ void Player::checkEnemyCollisions(enemyController & enemies,
         if (colorAmount == 0.f) {
             collisionPolicy();
             if (rng::random<1>()) {
-                sounds.play(ResHandler::Sound::bite1);
+                // sounds.play(ResHandler::Sound::bite1);
             } else {
-                sounds.play(ResHandler::Sound::bite2);
+                // sounds.play(ResHandler::Sound::bite2);
             }
         }
     });

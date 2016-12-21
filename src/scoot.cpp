@@ -50,20 +50,20 @@ void Scoot::update(Game * pGame, const std::vector<wall> & w,
         if (select == 0) {
             effects.add<EffectRef::Heart>(
                 getgResHandlerPtr()->getTexture(
-                    ResHandler::Texture::gameObjects),
-                getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
+                    "textures/gameObjects.png"),
+                getgResHandlerPtr()->getTexture("textures/redFloorGlow.png"),
                 position.x, position.y + 4, Item::Type::Heart);
         } else {
             effects.add<EffectRef::Coin>(
                 getgResHandlerPtr()->getTexture(
-                    ResHandler::Texture::gameObjects),
-                getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
+                    "textures/gameObjects.png"),
+                getgResHandlerPtr()->getTexture("textures/blueFloorGlow.png"),
                 position.x, position.y + 4, Item::Type::Coin);
         }
         effects.add<EffectRef::FireExplosion>(
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
             getgResHandlerPtr()->getTexture(
-                ResHandler::Texture::fireExplosionGlow),
+                "textures/fireExplosionGlow.png"),
             position.x, position.y - 2);
         killFlag = true;
     }
@@ -104,14 +104,14 @@ void Scoot::update(Game * pGame, const std::vector<wall> & w,
     case State::shoot: {
         const sf::Vector2f playerPos = player.getPosition();
         effects.add<EffectRef::TurretFlashEffect>(
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
             position.x - 8, position.y - 12);
         effects.add<EffectRef::TurretShot>(
             position.x - 8, position.y - 12,
             angleFunction(playerPos.x + 16, playerPos.y + 8, position.x - 8,
                           position.y - 8));
-        pGame->getSounds().play(ResHandler::Sound::laser,
-                                this->shared_from_this(), 220.f, 30.f);
+        // pGame->getSounds().play(ResHandler::Sound::laser,
+        //                         this->shared_from_this(), 220.f, 30.f);
         state = State::recoil;
         changeDir(atan((position.y - player.getYpos()) /
                        (position.x - player.getXpos())));

@@ -27,8 +27,8 @@ public:
         : Effect(x, y), soundsStarted(false) {
         auto res = getgResHandlerPtr();
         spriteSheet.setTexture(
-            res->getTexture(ResHandler::Texture::gameObjects));
-        glowSprite.setTexture(res->getTexture(ResHandler::Texture::redglow));
+            res->getTexture("textures/gameObjects.png"));
+        glowSprite.setTexture(res->getTexture("textures/redFloorGlow.png"));
         spriteSheet.setRotation(dir + 270);
         spriteSheet.setOrigin(4, 6);
         glowSprite.setOrigin(22.5, 22.5);
@@ -37,8 +37,8 @@ public:
         animationTimer = 0;
     }
     void initSounds(SoundController & sounds) {
-        sounds.play(ResHandler::Sound::espark, this->shared_from_this(), 38.f,
-                    20.f, true);
+        // sounds.play(ResHandler::Sound::espark, this->shared_from_this(), 38.f,
+        //             20.f, true);
     }
     template <typename Game>
     void update(const sf::Time & elapsedTime, Game * pGame) {

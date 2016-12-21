@@ -11,18 +11,19 @@
 #include <list>
 #include <memory>
 #include <vector>
+#include "Entity.hpp"
 
 struct reqInfo {
-    ResHandler::Sound soundIdx;
+    std::string soundname;
     float minDistance;
     float attenuation;
     bool spatialized;
     bool loop;
-    std::weak_ptr<framework::Object> source;
+    std::weak_ptr<Entity> source;
 };
 
 struct runningData {
-    std::weak_ptr<framework::Object> source;
+    std::weak_ptr<Entity> source;
     bool spatialized;
 };
 
@@ -33,14 +34,14 @@ public:
     void update();
     void pause(int);
     void unpause(int);
-    void play(ResHandler::Sound);
+    void play(const std::string &);
     // Note: sounds MUST be transient. Although this member function
     // has a loop parameter, this is designed for sounds that should
     // loop for the duration of a SHORT LIVED visual effect. Deallocation
     // of running sounds works like a queue, so if you play a long running
     // looping one, sounds behind it will not be deallocated, and adding
     // new ones will eventually use up all available sound resources.
-    void play(ResHandler::Sound indx, std::shared_ptr<framework::Object>,
+    void play(const std::string &, std::shared_ptr<Entity>,
               float minDistance, float attenuation, bool loop = false);
 
 private:

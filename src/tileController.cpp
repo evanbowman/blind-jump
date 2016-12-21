@@ -174,7 +174,7 @@ void createMapImage(const sf::Image & tileImage, uint8_t mapArray[61][61],
 tileController::tileController()
     : posX(-72), posY(-476), windowH(0), windowW(0) {
     transitionLvSpr.setTexture(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::introLevel));
+        getgResHandlerPtr()->getTexture("textures/introLevel.png"));
     shadow.setFillColor(sf::Color(188, 188, 198, 255));
 }
 

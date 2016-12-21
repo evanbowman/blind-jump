@@ -245,7 +245,7 @@ void enemyController::addTurret(tileController * pTiles) {
     float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
     float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
     turrets.push_back(std::make_shared<Turret>(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+        getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
         xInit, yInit));
     (*pCoordVec)[locationSelect] = pCoordVec->back();
     pCoordVec->pop_back();
@@ -258,8 +258,8 @@ void enemyController::addScoot(tileController * pTiles) {
     float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
     float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
     scoots.push_back(std::make_shared<Scoot>(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::scootShadow),
+        getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
+        getgResHandlerPtr()->getTexture("textures/charger_enemy_shadow.png"),
         xInit, yInit));
     (*pCoordVec)[locationSelect] = pCoordVec->back();
     pCoordVec->pop_back();
@@ -272,7 +272,7 @@ void enemyController::addDasher(tileController * pTiles) {
     float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
     float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
     dashers.push_back(std::make_shared<Dasher>(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+        getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
         xInit, yInit));
     (*pCoordVec)[locationSelect] = pCoordVec->back();
     pCoordVec->pop_back();
@@ -284,7 +284,7 @@ void enemyController::addCritter(tileController * pTiles) {
     float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
     float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
     critters.push_back(std::make_shared<Critter>(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+        getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
         pTiles->mapArray, xInit, yInit));
     (*pCoordVec)[locationSelect] = pCoordVec->back();
     pCoordVec->pop_back();

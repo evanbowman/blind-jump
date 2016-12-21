@@ -28,9 +28,9 @@ public:
         : Effect(x, y), soundsStarted(false) {
         auto res = getgResHandlerPtr();
         spriteSheet.setTexture(
-            res->getTexture(ResHandler::Texture::gameObjects));
+            res->getTexture("textures/gameObjects.png"));
         spriteSheet.setOrigin(6, 6);
-        glowSprite.setTexture(res->getTexture(ResHandler::Texture::redglow));
+        glowSprite.setTexture(res->getTexture("textures/redFloorGlow.png"));
         glowSprite.setOrigin(22.5, 22.5);
         int diff = pow(-1, rng::random<2>() + rng::random<6, -3>());
         direction = (dir + diff) * (3.14 / 180);
@@ -39,8 +39,8 @@ public:
         driftSel = rng::random<2>();
     }
     void initSounds(SoundController & sounds) {
-        sounds.play(ResHandler::Sound::espark, this->shared_from_this(), 38.f,
-                    20.f, true);
+        // sounds.play(ResHandler::Sound::espark, this->shared_from_this(), 38.f,
+        //             20.f, true);
     }
     template <typename Game>
     void update(const sf::Time & elapsedTime, Game * pGame) {

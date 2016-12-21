@@ -143,25 +143,25 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls,
             if (position.x > player.getXpos()) {
                 effects.add<EffectRef::TurretFlashEffect>(
                     getgResHandlerPtr()->getTexture(
-                        ResHandler::Texture::gameObjects),
+                        "textures/gameObjects.png"),
                     position.x - 14, position.y + 2);
                 effects.add<EffectRef::DasherShot>(
                     position.x - 12, position.y,
                     angleFunction(target.x + 8, target.y + 8, position.x,
                                   position.y));
-                pGame->getSounds().play(ResHandler::Sound::silenced,
-                                        this->shared_from_this(), 220.f, 5.f);
+                // pGame->getSounds().play(ResHandler::Sound::silenced,
+                //                         this->shared_from_this(), 220.f, 5.f);
             } else {
                 effects.add<EffectRef::TurretFlashEffect>(
                     getgResHandlerPtr()->getTexture(
-                        ResHandler::Texture::gameObjects),
+                        "textures/gameObjects.png"),
                     position.x + 6, position.y + 2);
                 effects.add<EffectRef::DasherShot>(
                     position.x + 4, position.y,
                     angleFunction(target.x, target.y + 8, position.x,
                                   position.y));
-                pGame->getSounds().play(ResHandler::Sound::silenced,
-                                        this->shared_from_this(), 220.f, 5.f);
+                // pGame->getSounds().play(ResHandler::Sound::silenced,
+                //                         this->shared_from_this(), 220.f, 5.f);
             }
         }
         if (timer > 300) {
@@ -188,8 +188,8 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls,
         if (timer > 352) {
             timer -= 352;
             state = State::dashing;
-            sounds.play(ResHandler::Sound::wooshMono, this->shared_from_this(),
-                        220.f, 5.f);
+            // sounds.play(ResHandler::Sound::wooshMono, this->shared_from_this(),
+            //             220.f, 5.f);
             frameIndex = 2;
             uint8_t tries{0};
             float dir{static_cast<float>(rng::random<359>())};
@@ -282,18 +282,18 @@ void Dasher::onDeath(EffectGroup & effects) {
     unsigned long int temp = rng::random<4>();
     if (temp == 0) {
         effects.add<EffectRef::Heart>(
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
+            getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
+            getgResHandlerPtr()->getTexture("textures/redFloorGlow.png"),
             position.x, position.y + 4, Item::Type::Heart);
     } else {
         effects.add<EffectRef::Coin>(
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
+            getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
+            getgResHandlerPtr()->getTexture("textures/blueFloorGlow.png"),
             position.x, position.y + 4, Item::Type::Coin);
     }
     effects.add<EffectRef::SmallExplosion>(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::fireExplosionGlow),
+        getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
+        getgResHandlerPtr()->getTexture("textures/fireExplosionGlow.png"),
         position.x, position.y - 2);
     blurEffects.clear();
 }

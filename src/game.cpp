@@ -53,18 +53,17 @@ void Game::init() {
     stash.setSmooth(true);
     lightingMap.create(viewPort.x, viewPort.y);
     vignetteSprite.setTexture(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::vignette));
+        getgResHandlerPtr()->getTexture("textures/vignetteMask.png"));
     vignetteShadowSpr.setTexture(
-        getgResHandlerPtr()->getTexture(ResHandler::Texture::vignetteShadow));
+        getgResHandlerPtr()->getTexture("textures/vignetteShadow.png"));
     beamGlowSpr.setTexture(getgResHandlerPtr()->getTexture(
-        ResHandler::Texture::teleporterBeamGlow));
+        "textures/teleporterBeamGlow.png"));
     vignetteShadowSpr.setColor(sf::Color(255, 255, 255, 100));
     hudView.setSize(viewPort.x, viewPort.y);
     hudView.setCenter(viewPort.x / 2, viewPort.y / 2);
     bkg.giveWindowSize(viewPort.x, viewPort.y);
     tiles.setPosition((viewPort.x / 2) - 16, (viewPort.y / 2));
     tiles.setWindowSize(viewPort.x, viewPort.y);
-    // en.setWindowSize(viewPort.x, viewPort.y);
     beamGlowSpr.setColor(sf::Color(0, 0, 0, 255));
     transitionShape.setSize(sf::Vector2f(viewPort.x, viewPort.y));
     transitionShape.setFillColor(sf::Color(0, 0, 0, 0));
@@ -130,6 +129,14 @@ void Game::updateGraphics() {
                 player.draw(gfxContext.faces, gfxContext.shadows);
             }
             effectGroup.apply(drawPolicy);
+	    for (auto & kvp : entityTable) {
+		for (auto & entity : kvp.second) {
+		    auto spr = entity->getSprite();
+		    if (spr) {
+			// TODO: draw it!
+		    }
+		}
+	    }
             // en.draw(gfxContext.faces, gfxContext.shadows, camera);
             sounds.update();
         }
@@ -702,9 +709,9 @@ void Game::nextLevel() {
         Coordinate c = tiles.getTeleporterLoc();
         detailGroup.add<DetailRef::Teleporter>(
             tiles.posX + c.x * 32 + 2, tiles.posY + c.y * 26 - 4,
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
             getgResHandlerPtr()->getTexture(
-                ResHandler::Texture::teleporterGlow));
+                "textures/teleporterGlow.png"));
         // sounds.play(ResHandler::Sound::electricHum,
         // detailGroup.get<DetailRef::Teleporter>().back(), 72.f, 3.f, true);
         initEnemies(this);
@@ -715,7 +722,7 @@ void Game::nextLevel() {
                 optCoord.value().x * 32 + tiles.posX,
                 optCoord.value().y * 26 + tiles.posY,
                 getgResHandlerPtr()->getTexture(
-                    ResHandler::Texture::gameObjects),
+                    "textures/gameObjects.png"),
                 chestContents);
         }
         if (!rng::random<2>()) {
@@ -727,7 +734,7 @@ void Game::nextLevel() {
             detailGroup.add<DetailRef::Terminal>(
                 xInit * 32 + tiles.posX, yInit * 26 + tiles.posY,
                 getgResHandlerPtr()->getTexture(
-                    ResHandler::Texture::gameObjects),
+                    "textures/gameObjects.png"),
                 tiles.mapArray[xInit][yInit]);
         }
         gfxContext.glowSprs1.clear();
@@ -745,7 +752,7 @@ void Game::nextLevel() {
                     tiles.posX + 32 * element.x,
                     tiles.posY + 26 * element.y - 35,
                     getgResHandlerPtr()->getTexture(
-                        ResHandler::Texture::gameObjects));
+                        "textures/gameObjects.png"));
             }
             detailPositions.clear();
         }
@@ -757,34 +764,34 @@ void Game::nextLevel() {
                 tiles.posX + 16 + (detailPositions[i].x * 32),
                 tiles.posY - 3 + (detailPositions[i].y * 26),
                 getgResHandlerPtr()->getTexture(
-                    ResHandler::Texture::gameObjects),
+                    "textures/gameObjects.png"),
                 getgResHandlerPtr()->getTexture(
-                    ResHandler::Texture::lamplight));
+                    "textures/lampLight.png"));
         }
         detailPositions.clear();
     } else if (set == tileController::Tileset::intro) {
         detailGroup.add<DetailRef::Lamp>(
             tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (6 * 26),
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::lamplight));
+            getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
+            getgResHandlerPtr()->getTexture("textures/lampLight.png"));
         detailGroup.add<DetailRef::Lamp>(
             tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (0 * 26),
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::lamplight));
+            getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
+            getgResHandlerPtr()->getTexture("textures/lampLight.png"));
         detailGroup.add<DetailRef::Lamp>(
             tiles.posX - 180 + 16 + (11 * 32), tiles.posY + 200 - 3 + (11 * 26),
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::lamplight));
+            getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
+            getgResHandlerPtr()->getTexture("textures/lampLight.png"));
         detailGroup.add<DetailRef::Lamp>(
             tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 204 + 8 + (-9 * 26),
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::lamplight));
+            getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
+            getgResHandlerPtr()->getTexture("textures/lampLight.png"));
         detailGroup.add<DetailRef::IntroDoor>(
             tiles.posX - 192 + 6 * 32, tiles.posY + 301,
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::introWall));
+            getgResHandlerPtr()->getTexture("textures/introWall.png"));
         sf::Sprite podSpr;
         podSpr.setTexture(
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects));
+            getgResHandlerPtr()->getTexture("textures/gameObjects.png"));
         podSpr.setTextureRect(sf::IntRect(164, 145, 44, 50));
         detailGroup.add<DetailRef::StaticDrawable>(
             tiles.posX + 3 * 32, tiles.posY + 4 + 17 * 26, podSpr);
@@ -794,9 +801,9 @@ void Game::nextLevel() {
         tiles.teleporterLocation.y = initTeleporterLocY;
         detailGroup.add<DetailRef::Teleporter>(
             tiles.posX - 178 + 8 * 32, tiles.posY + 284 + -7 * 26,
-            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
             getgResHandlerPtr()->getTexture(
-                ResHandler::Texture::teleporterGlow));
+                "textures/teleporterGlow.png"));
         // sounds.play(ResHandler::Sound::electricHum,
         // detailGroup.get<DetailRef::Teleporter>().back(), 72.f, 3.f, true);
         for (auto it = ::levelZeroWalls.begin(); it != ::levelZeroWalls.end();
