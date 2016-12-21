@@ -42,6 +42,6 @@ public:
     const sf::Sprite & getSprite() const { return spriteSheet[frameIndex]; }
 
 private:
-    mutable SpriteSheet<0, 116, 16, 16> spriteSheet;
+    mutable framework::SpriteSheet<0, 116, 16, 16> spriteSheet;
 };
 }

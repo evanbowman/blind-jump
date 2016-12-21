@@ -1,6 +1,6 @@
 classes["Rock"] = {
    OnCreate = function(this)
-      print("Hello, world. Ima rock.")
+      
    end,
 
    OnUpdate = function(this)
@@ -8,4 +8,32 @@ classes["Rock"] = {
    end
 }
 
-system.registerClass("Rock")
+classes["TreasureChest"] = {
+   OnCreate = function(this)
+
+   end,
+
+   OnUpdate = function(this)
+
+   end
+}
+
+classes["Lamp"] = {
+   OnCreate = function(this)
+
+   end,
+
+   OnUpdate = function(this)
+
+   end
+}
+
+classes["Terminal"] = {
+   OnCreate = function(this)
+
+   end,
+
+   OnUpdate = function(this)
+
+   end
+}

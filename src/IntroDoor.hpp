@@ -24,7 +24,7 @@ public:
 
 private:
     enum class State { dormant, opening, opened };
-    mutable SpriteSheet<0, 0, 200, 95> doorSheet;
+    mutable framework::SpriteSheet<0, 0, 200, 95> doorSheet;
     uint8_t frameIndex;
 };
 }

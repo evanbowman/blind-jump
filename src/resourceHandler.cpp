@@ -34,11 +34,42 @@ void loadResource(
     shaders[index].setUniform("texture", sf::Shader::CurrentTexture);
 }
 
-static bool hasResources;
+void ResHandler::addSheet(const std::string & name, const SpriteSheet & sheet) {
+    sheets.insert(std::map<std::string, SpriteSheet>::value_type(name, sheet));
+}
+
+void ResHandler::loadTexture(const std::string & path) {
+    loadResource(path, textures);
+}
+
+void ResHandler::loadSound(const std::string & path) {
+    loadResource(path, sounds);
+}
+
+SpriteSheet & ResHandler::getSheet(const std::string & name) {
+    return sheets.find(name)->second;
+}
+
+const sf::Texture & ResHandler::getTexture(const std::string & path) {
+    if (textures.find(path) == textures.end()) {
+	const std::string err = "Error: path " + path + "hasn't been loaded.";
+	throw std::runtime_error(err);
+    }
+    return textures[path];
+}
+
+const sf::SoundBuffer & ResHandler::getSound(const std::string & path) {
+    if (sounds.find(path) == sounds.end()) {
+	const std::string err = "Error: path " + path + "hasn't been loaded.";
+	throw std::runtime_error(err);
+    }
+    return sounds[path];
+}
+
+// Below functions now deprecated, refactor to maps and strings for easier
+// access via lua scripts.
 
 void ResHandler::load() {
-    assert(!hasResources);
-    hasResources = true;
     const std::string resPath = resourcePath();
     loadShaders(resPath);
     loadFonts(resPath);
@@ -52,9 +83,6 @@ void ResHandler::loadShaders(const std::string & resPath) {
     loadResource(resPath + "shaders/blur.frag", Shader::blur, shaders);
 }
 
-void ResHandler::loadTexture(const std::string & path) {
-    loadResource(path, textures);
-}
 
 void ResHandler::loadFonts(const std::string & resPath) {
     loadResource(resPath + "fonts/Cornerstone.ttf", Font::cornerstone, fonts);
@@ -69,20 +97,8 @@ void ResHandler::loadImages(const std::string & resPath) {
     loadResource(resPath + "textures/gameIcon.png", Image::icon, images);
 }
 
-void ResHandler::loadSound(const std::string & path) {
-    loadResource(path, sounds);
-}
-
 const sf::Image & ResHandler::getImage(Image id) const {
     return images[static_cast<int>(id)];
-}
-
-const sf::Texture & ResHandler::getTexture(const std::string & path) {
-    if (textures.find(path) == textures.end()) {
-	const std::string err = "Error: path " + path + "hasn't been loaded.";
-	throw std::runtime_error(err);
-    }
-    return textures[path];
 }
 
 const sf::Font & ResHandler::getFont(Font id) const {
@@ -91,14 +107,6 @@ const sf::Font & ResHandler::getFont(Font id) const {
 
 sf::Shader & ResHandler::getShader(Shader id) {
     return shaders[static_cast<int>(id)];
-}
-
-const sf::SoundBuffer & ResHandler::getSound(const std::string & path) {
-    if (sounds.find(path) == sounds.end()) {
-	const std::string err = "Error: path " + path + "hasn't been loaded.";
-	throw std::runtime_error(err);
-    }
-    return sounds[path];
 }
 
 static ResHandler * resHandlerPtr;

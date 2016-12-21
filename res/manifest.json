@@ -1,0 +1,62 @@
+{
+    "main": "scripts/main.lua",
+    "textures": [
+	"textures/teleporterBeamGlow.png",
+	"textures/fireExplosionGlow.png",
+	"textures/charger_enemy_shadow.png",
+	"textures/vignetteShadow.png",
+	"textures/teleporterGlow.png",
+	"textures/bkg_stars_distant.png",
+	"textures/introLevelMask.png",
+	"textures/powerupSheet.png",
+	"textures/whiteFloorGlow.png",
+	"textures/gameObjects.png",
+	"textures/blueFloorGlow.png",
+	"textures/bkg_stars.png",
+	"textures/vignetteMask.png",
+	"textures/introLevel.png",
+	"textures/redFloorGlow.png",
+	"textures/lampLight.png",
+	"textures/introWall.png",
+	"textures/bkg_orbit2.png"
+    ],
+    "sounds": [
+	"sounds/laser.ogg",
+    	"sounds/gunshot.ogg",
+	"sounds/creak.ogg",
+	"sounds/bite-small.wav",
+	"sounds/bite-small3.wav",
+	"sounds/woosh.ogg",
+	"sounds/wooshMono.ogg",
+	"sounds/espark.ogg",
+	"sounds/silenced.ogg",
+	"sounds/laser.ogg",
+	"sounds/blast1.ogg",
+	"sounds/electricHum.ogg",
+	"sounds/footstepDirt1.ogg",
+	"sounds/footstepDirt2.ogg",
+	"sounds/footstepDirt3.ogg",
+	"sounds/footstepDirt4.ogg",
+	"sounds/footstepDirt5.ogg"
+    ],
+    "spriteSheets": {
+	"turretSheet": {
+	    "texture": "textures/gameObjects.png",
+	    "box": {
+		"x": 0,
+		"y": 0,
+		"w": 16,
+		"h": 32
+	    }
+	},
+	"chestSheet": {
+	    "texture": "textures/gameObjects.png",
+	    "box": {
+		"x": 656,
+		"y": 76,
+		"w": 16,
+		"h": 30
+	    }
+	}
+    }
+}

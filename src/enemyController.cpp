@@ -19,24 +19,6 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
     const sf::View & cameraView = camera.getOverworldView();
     sf::Vector2f viewCenter = cameraView.getCenter();
     sf::Vector2f viewSize = cameraView.getSize();
-    for (auto & element : critters) {
-        gameShadows.emplace_back(element->getShadow(), 0.f,
-                                 Rendertype::shadeDefault, 0.f);
-        std::tuple<sf::Sprite, float, Rendertype, float> tSpr;
-        std::get<0>(tSpr) = element->getSprite();
-        std::get<1>(tSpr) = element->getPosition().y - 16;
-        // If the enemy should be colored, let the rendering code know to pass
-        // it through a fragment shader
-        if (element->isColored()) {
-            gameObjects.emplace_back(
-                element->getSprite(), element->getPosition().y - 16,
-                Rendertype::shadeWhite, element->getColorAmount());
-        } else {
-            gameObjects.emplace_back(element->getSprite(),
-                                     element->getPosition().y - 16,
-                                     Rendertype::shadeDefault, 0.f);
-        }
-    }
     for (auto & element : scoots) {
         if (element->getPosition().x > viewCenter.x - viewSize.x / 2 - 32 &&
             element->getPosition().x < viewCenter.x + viewSize.x / 2 + 32 &&
@@ -117,55 +99,6 @@ void enemyController::update(Game * pGame, bool enabled,
             }
         }
     }
-    if (!critters.empty()) {
-        // Need to check if each enemy overlaps with any other enemies so that
-        // they don't bunch up
-        for (size_t i = 0; i < critters.size(); i++) {
-            for (size_t j = 0; j < critters.size(); j++) {
-                // Obviously it would be bad to compare an object to itself.
-                if (i != j) {
-                    // If the enemy at index i is active and overlaps with
-                    // another enemy that is also active...
-                    if (fabs(critters[i]->getPosition().x -
-                             critters[j]->getPosition().x) < 12 &&
-                        fabs(critters[i]->getPosition().y -
-                             critters[j]->getPosition().y) < 12 &&
-                        critters[i]->isActive() && critters[j]->isActive()) {
-                        critters[i]->deActivate();
-                    }
-                }
-            }
-        }
-        for (auto it = critters.begin(); it != critters.end();) {
-            if ((*it)->getKillFlag()) {
-                util::sleep(milliseconds(60));
-                camera.shake(0.17f);
-                it = critters.erase(it);
-            } else {
-                if ((*it)->getPosition().x >
-                        viewCenter.x - viewSize.x / 2 - 32 &&
-                    (*it)->getPosition().x <
-                        viewCenter.x + viewSize.x / 2 + 32 &&
-                    (*it)->getPosition().y >
-                        viewCenter.y - viewSize.y / 2 - 32 &&
-                    (*it)->getPosition().y <
-                        viewCenter.y + viewSize.y / 2 + 32) {
-                    cameraTargets.emplace_back((*it)->getPosition().x,
-                                               (*it)->getPosition().y);
-                }
-                if (enabled) {
-                    (*it)->update(pGame, elapsedTime, tileController);
-                }
-                ++it;
-            }
-        }
-
-        // Now we have to reactivate all of the objects. Perhaps there is a
-        // smarter way than this brute force approach...
-        for (auto & element : critters) {
-            element->activate();
-        }
-    }
     for (auto & element : dashers) {
         if (element->getPosition().x > viewCenter.x - viewSize.x / 2 - 32 &&
             element->getPosition().x < viewCenter.x + viewSize.x / 2 + 32 &&
@@ -190,7 +123,6 @@ void enemyController::update(Game * pGame, bool enabled,
 void enemyController::clear() {
     scoots.clear();
     dashers.clear();
-    critters.clear();
 }
 
 void enemyController::addScoot(tileController * pTiles) {
@@ -220,25 +152,9 @@ void enemyController::addDasher(tileController * pTiles) {
     pCoordVec->pop_back();
 }
 
-void enemyController::addCritter(tileController * pTiles) {
-    auto pCoordVec = pTiles->getEmptyLocations();
-    int locationSelect = rng::random(pCoordVec->size());
-    float xInit = (*pCoordVec)[locationSelect].x * 32 + pTiles->getPosX();
-    float yInit = (*pCoordVec)[locationSelect].y * 26 + pTiles->getPosY();
-    critters.push_back(std::make_shared<Critter>(
-        getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
-        pTiles->mapArray, xInit, yInit));
-    (*pCoordVec)[locationSelect] = pCoordVec->back();
-    pCoordVec->pop_back();
-}
-
 void enemyController::setWindowSize(float windowW, float windowH) {
     this->windowW = windowW;
     this->windowH = windowH;
-}
-
-std::vector<std::shared_ptr<Critter>> & enemyController::getCritters() {
-    return critters;
 }
 
 std::vector<std::shared_ptr<Dasher>> & enemyController::getDashers() {

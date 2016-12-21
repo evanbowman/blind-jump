@@ -49,7 +49,7 @@ public:
         prepdash
     };
     struct Weapon {
-        SpriteSheet<688, 106, 11, 10> gunSpr;
+        framework::SpriteSheet<688, 106, 11, 10> gunSpr;
         int64_t timeout, bulletTimer;
     };
     Player(float, float);
@@ -95,12 +95,12 @@ private:
     Sheet sheetIndex, cachedSheet;
     float lSpeed, rSpeed, uSpeed, dSpeed;
     sf::Sprite shadowSprite;
-    SpriteSheet<400, 108, 32, 32> walkDown;
-    SpriteSheet<208, 108, 32, 32> walkUp;
-    SpriteSheet<208, 76, 32, 32> walkLeft;
-    SpriteSheet<432, 76, 32, 32> walkRight;
-    SpriteSheet<208, 38, 40, 38> deathSheet;
-    SpriteSheet<208, 140, 32, 33> dashSheet;
+    framework::SpriteSheet<400, 108, 32, 32> walkDown;
+    framework::SpriteSheet<208, 108, 32, 32> walkUp;
+    framework::SpriteSheet<208, 76, 32, 32> walkLeft;
+    framework::SpriteSheet<432, 76, 32, 32> walkRight;
+    framework::SpriteSheet<208, 38, 40, 38> deathSheet;
+    framework::SpriteSheet<208, 140, 32, 33> dashSheet;
     int64_t animationTimer, dashTimer;
     bool invulnerable;
     State state;

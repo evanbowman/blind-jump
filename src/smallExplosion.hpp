@@ -48,7 +48,7 @@ public:
     const sf::Sprite & getSprite() const { return spriteSheet[frameIndex]; }
 
 private:
-    mutable SpriteSheet<174, 224, 36, 36> spriteSheet;
+    mutable framework::SpriteSheet<174, 224, 36, 36> spriteSheet;
     sf::Sprite glow;
     int64_t glowFadeTimer;
 };

@@ -61,7 +61,7 @@ public:
 
 private:
     HBox hitBox;
-    mutable SpriteSheet<50, 91, 14, 14> spriteSheet;
+    mutable framework::SpriteSheet<50, 91, 14, 14> spriteSheet;
     int32_t frameTimer;
     float direction;
     sf::Sprite glowSprite;

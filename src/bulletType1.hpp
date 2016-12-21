@@ -120,8 +120,8 @@ public:
 private:
     float xInit, yInit;
     HBox hitBox;
-    mutable SpriteSheet<44, 75, 16, 16> spriteSheet;
-    mutable SpriteSheet<88, 145, 16, 16> puffSheet;
+    mutable framework::SpriteSheet<44, 75, 16, 16> spriteSheet;
+    mutable framework::SpriteSheet<88, 145, 16, 16> puffSheet;
     sf::Sprite glow;
     char direction;
     bool canPoof;

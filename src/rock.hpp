@@ -31,6 +31,6 @@ public:
     const sf::Sprite & getSprite() const { return rockSheet.getSprite(); }
 
 private:
-    mutable SpriteSheet<80, 38, 32, 64> rockSheet;
+    mutable framework::SpriteSheet<80, 38, 32, 64> rockSheet;
 };
 }

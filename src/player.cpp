@@ -820,16 +820,6 @@ void Player::checkEnemyCollisions(enemyController & enemies,
         colorTimer = 0;
         util::sleep(milliseconds(40));
     };
-    checkEnemyCollision(enemies.getCritters(), this, [&] {
-        if (colorAmount == 0.f) {
-            collisionPolicy();
-            if (rng::random<1>()) {
-                // sounds.play(ResHandler::Sound::bite1);
-            } else {
-                // sounds.play(ResHandler::Sound::bite2);
-            }
-        }
-    });
     checkEnemyCollision(enemies.getDashers(), this, [&] {
         if (colorAmount == 0.f) {
             collisionPolicy();

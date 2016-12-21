@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include "spriteSheet.hpp"
 
 class Entity;
 using EntityRef = std::shared_ptr<Entity>;
@@ -10,8 +11,8 @@ private:
     sf::Vector2f m_position;
     bool m_killFlag;
     uint16_t m_frameIndex;
-    sf::Sprite * m_sprite;
-    sf::Sprite * m_shadow;
+    SpriteSheet * m_sheet;
+    SpriteSheet * m_shadow;
     sf::Sprite * m_glow;
     std::map<std::string, int> m_members;
     
@@ -19,7 +20,7 @@ public:
     Entity() : m_position{},
 	       m_killFlag(false),
 	       m_frameIndex(0),
-	       m_sprite(nullptr),
+	       m_sheet(nullptr),
 	       m_shadow(nullptr),
 	       m_glow(nullptr) {}
     inline void setPosition(const sf::Vector2f & position) {
@@ -43,10 +44,13 @@ public:
     inline uint16_t getFrameIndex() const {
 	return m_frameIndex;
     }
-    inline sf::Sprite * getSprite() {
-	return m_sprite;
+    inline void setSheet(SpriteSheet * sheet) {
+	m_sheet = sheet;
     }
-    inline sf::Sprite * getShadow() {
+    inline SpriteSheet * getSheet() {
+	return m_sheet;
+    }
+    inline SpriteSheet * getShadow() {
 	return m_shadow;
     }
     inline sf::Sprite * getGlow() {

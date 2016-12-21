@@ -3,6 +3,7 @@ classes["Turret"] = {
       entity.setField(this, "hp", 6)
       entity.setField(this, "animCounter", 0)
       entity.setField(this, "state", "closed")
+      entity.setSheet(this, "turretSheet")
    end,
    
    OnUpdate = function(this)
@@ -14,7 +15,7 @@ classes["Turret"] = {
       classes["Turret"].FSM[state](this, counter)
       local currentHealth = entity.getField(this, "hp")
       if currentHealth == 0 then
-	 entity.remove(this)
+	 entity.destroy(this)
       end
    end,
    
@@ -84,5 +85,3 @@ classes["Turret"] = {
       end
    }
 }
-
-system.registerClass("Turret")

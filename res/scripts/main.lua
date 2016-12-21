@@ -1,11 +1,9 @@
 require("enemies")
 require("details")
 
-local turret = entity.new("Turret")
+local turret = entity.spawn("Turret")
+entity.setPosition(turret, 400, 200)
 
-local rock = entity.new("Rock")
+local rock = entity.spawn("Rock")
 
-entity.remove(rock)
-
-local turret2 = entity.new("Turret")
-entity.remove(turret2)
+entity.destroy(rock)

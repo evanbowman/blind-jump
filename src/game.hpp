@@ -85,6 +85,7 @@ private:
     EffectGroup effectGroup;
     DetailGroup detailGroup;
     ui::Frontend uiFrontend;
+    bool hasFocus;
     std::mutex overworldMutex, UIMutex, transitionMutex;
     int level;
     bool stashed, preload;

@@ -50,8 +50,8 @@ private:
     HBox hitBox;
     uint8_t shotCount;
     State state;
-    mutable SpriteSheet<648, 38, 29, 38> dasherSheet;
-    mutable SpriteSheet<80, 0, 47, 38> deathSheet;
+    mutable framework::SpriteSheet<648, 38, 29, 38> dasherSheet;
+    mutable framework::SpriteSheet<80, 0, 47, 38> deathSheet;
     sf::Sprite shadow;
     sf::Vector2f target;
     float hSpeed, vSpeed;

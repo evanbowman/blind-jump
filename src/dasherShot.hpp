@@ -80,7 +80,7 @@ public:
     const DasherShot::HBox & getHitBox() const { return hitBox; }
 
 private:
-    mutable SpriteSheet<0, 88, 12, 12> spriteSheet;
+    mutable framework::SpriteSheet<0, 88, 12, 12> spriteSheet;
     int64_t timeout;
     float initialVelocity;
     HBox hitBox;

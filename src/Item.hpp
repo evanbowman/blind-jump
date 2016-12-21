@@ -49,6 +49,6 @@ public:
 protected:
     HBox hitBox;
     sf::Sprite glow;
-    SpriteSheet<0, 75, 13, 13> powerupSheet;
+    framework::SpriteSheet<0, 75, 13, 13> powerupSheet;
 };
 }

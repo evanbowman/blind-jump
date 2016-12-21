@@ -66,7 +66,7 @@ private:
     Powerup powerup;
     int64_t animationTimer;
     uint8_t frameIndex;
-    mutable SpriteSheet<656, 76, 16, 30> chestSheet;
+    mutable framework::SpriteSheet<656, 76, 16, 30> chestSheet;
     mutable sf::Sprite chestShadow;
 };
 }

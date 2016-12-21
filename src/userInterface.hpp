@@ -36,7 +36,7 @@ public:
 
 private:
     sf::CircleShape bubble;
-    SpriteSheet<0, 0, 46, 46> powerupSheet;
+    framework::SpriteSheet<0, 0, 46, 46> powerupSheet;
 };
 
 class Frontend {

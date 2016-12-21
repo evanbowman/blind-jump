@@ -33,7 +33,7 @@ private:
     float currentDir;
     float jumpTargetx, jumpTargety;
     void newPath(tileController &);
-    mutable SpriteSheet<0, 57, 18, 18> spriteSheet;
+    mutable framework::SpriteSheet<0, 57, 18, 18> spriteSheet;
     std::vector<aStrCoordinate> path;
     aStrCoordinate previous;
     sf::Sprite shadow;

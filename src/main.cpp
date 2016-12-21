@@ -25,22 +25,36 @@
 #include <exception>
 #include <iostream>
 #include <stdexcept>
+#include <fstream>
+#include "json.hpp"
+
+using json = nlohmann::json;
 
 std::exception_ptr pWorkerException = nullptr;
-bool gameHasFocus = false;
+
+static void parseManifest(json & manifest, ResHandler & resources);
 
 int main() {
     rng::seed();
-    ResHandler resourceHandler;
     try {
-        resourceHandler.load();
-        setgResHandlerPtr(&resourceHandler);
+	ResHandler resources;
+        resources.load();
+        setgResHandlerPtr(&resources);
         LuaProvider luaProv;
         luaProv.runScriptFromFile(resourcePath() + "scripts/conf.lua");
-	luaProv.runScriptFromFile(resourcePath() + "scripts/resources.lua");
+	json manifest;
+	{
+	    std::fstream manifestRaw(resourcePath() + "manifest.json");
+	    manifestRaw >> manifest;
+	    parseManifest(manifest, resources);
+	}
         Game game(luaProv.applyHook(getConfig));
         setgGamePtr(&game);
-	luaProv.runScriptFromFile(resourcePath() + "scripts/main.lua");
+	json::iterator entryPt = manifest.find("main");
+	if (entryPt == manifest.end()) {
+	    throw std::runtime_error("Error: \"main\" field missing from manifest.json");
+	}
+	luaProv.runScriptFromFile(resourcePath() + entryPt->get<std::string>());
         framework::SmartThread logicThread([&game, &luaProv]() {
             duration logicUpdateDelta;
             sf::Clock gameClock;
@@ -80,4 +94,33 @@ int main() {
         std::cerr << ex.what() << std::endl;
     }
     return EXIT_SUCCESS;
+}
+
+static void parseManifest(json & manifest, ResHandler & resources) {
+    auto it = manifest.find("textures");
+    if (it != manifest.end()) {
+	for (const auto & entry : *it) {
+	    resources.loadTexture(entry);
+	}
+    }
+    it = manifest.find("sounds");
+    if (it != manifest.end()) {
+	for (const auto & entry : *it) {
+	    resources.loadSound(entry);
+	}
+    }
+    it = manifest.find("spriteSheets");
+    if (it != manifest.end()) {
+	for (auto sheet = it->begin(); sheet != it->end(); ++sheet) {
+	    auto textureTag = sheet->find("texture");
+	    auto boxObj = sheet->find("box");
+	    auto x = boxObj->find("x")->get<int>();
+	    auto y = boxObj->find("y")->get<int>();
+	    auto w = boxObj->find("w")->get<int>();
+	    auto h = boxObj->find("h")->get<int>();
+	    auto & texture = resources.getTexture(*textureTag);
+	    resources.addSheet(sheet.key(), SpriteSheet(texture,
+							sf::IntRect(x, y, w, h)));
+	}
+    }
 }

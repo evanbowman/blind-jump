@@ -22,7 +22,7 @@ Game::Game(const ConfigData & conf)
       camera(&player, viewPort, window.getSize()),
       uiFrontend(
           sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y)),
-          viewPort.x / 2, viewPort.y / 2),
+          viewPort.x / 2, viewPort.y / 2), hasFocus(false),
       level(0), stashed(false), preload(false),
       worldView(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
       timer(0) {
@@ -72,8 +72,6 @@ void Game::init() {
     this->nextLevel();
 }
 
-extern bool gameHasFocus;
-
 void Game::eventLoop() {
     sf::Event event;
     while (window.pollEvent(event)) {
@@ -85,12 +83,12 @@ void Game::eventLoop() {
 
         case sf::Event::GainedFocus:
             sounds.unpause(SoundController::Sound | SoundController::Music);
-            ::gameHasFocus = true;
+            hasFocus = true;
             break;
 
         case sf::Event::LostFocus:
             sounds.pause(SoundController::Sound | SoundController::Music);
-            ::gameHasFocus = false;
+            hasFocus = false;
             break;
 
         default:
@@ -102,7 +100,7 @@ void Game::eventLoop() {
 
 void Game::updateGraphics() {
     window.clear();
-    if (!::gameHasFocus) {
+    if (!hasFocus) {
         util::sleep(milliseconds(200));
         return;
     }
@@ -131,21 +129,23 @@ void Game::updateGraphics() {
             effectGroup.apply(drawPolicy);
 	    for (auto & kvp : entityTable) {
 		for (auto & entity : kvp.second) {
-		    auto spr = entity->getSprite();
-		    if (spr) {
-		        spr->setPosition(entity->getPosition());
+		    auto sheet = entity->getSheet();
+		    if (sheet) {
+			sheet->setFrame(entity->getFrameIndex());
+		        sheet->getSprite().setPosition(entity->getPosition());
+			gfxContext.faces.emplace_back(sheet->getSprite(),
+						      entity->getPosition().y,
+						      Rendertype::shadeDefault,
+						      0.f);
 		    }
-		    spr = entity->getShadow();
-		    if (spr) {
-			
+		    if (entity->getShadow()) {
+			// TODO...
 		    }
-		    spr = entity->getGlow();
-		    if (spr) {
-			
+		    if (entity->getGlow()) {
+			// TODO...
 		    }
 		}
 	    }
-            // en.draw(gfxContext.faces, gfxContext.shadows, camera);
             sounds.update();
         }
         if (!gfxContext.shadows.empty()) {
@@ -341,7 +341,7 @@ void Game::updateGraphics() {
 }
 
 void Game::updateLogic(LuaProvider & luaProv) {
-    if (!::gameHasFocus) {
+    if (!hasFocus) {
         util::sleep(milliseconds(200));
         return;
     }
@@ -370,6 +370,7 @@ void Game::updateLogic(LuaProvider & luaProv) {
                 if (!lua_istable(state, -1)) {
 		    const std::string err = "Error: classtable field " +
 			kvp.first + " is not a table";
+		    throw std::runtime_error(err);
                 }
                 for (auto it = kvp.second.begin(); it != kvp.second.end();) {
 		    lua_getfield(state, -1, "OnUpdate");
@@ -377,6 +378,7 @@ void Game::updateLogic(LuaProvider & luaProv) {
 			const std::string err =
 			    "Error: missing or malformed OnUpdate for class " +
 			    kvp.first;
+			throw std::runtime_error(err);
 		    }
 		    lua_pushlightuserdata(state, (void *)(&(*it)));
 		    if (lua_pcall(state, 1, 0, 0)) {

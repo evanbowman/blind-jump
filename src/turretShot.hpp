@@ -74,7 +74,7 @@ public:
 
 private:
     bool soundsStarted;
-    mutable SpriteSheet<26, 75, 9, 16> spriteSheet;
+    mutable framework::SpriteSheet<26, 75, 9, 16> spriteSheet;
     HBox hitBox;
     sf::Sprite glowSprite;
     float direction;

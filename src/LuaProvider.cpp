@@ -20,13 +20,6 @@ extern "C" {
 	     lua_pushnumber(state, elapsed.asMicroseconds());
 	     return 1;
 	 }},
-	{"registerClass",
-	 [](lua_State * state) -> int {
-	     const std::string classname = lua_tostring(state, 1);
-	     Game * pGame = getgGamePtr();
-	     pGame->getEntityTable()[classname] = {};
-	     return 0;
-	 }},
 	{"loadSound",
 	 [](lua_State * state) -> int {
 	     auto resources = getgResHandlerPtr();
@@ -45,11 +38,6 @@ extern "C" {
 				    const std::string & classname) {
 	Game * pGame = getgGamePtr();
 	auto & entityTable = pGame->getEntityTable();
-	if (entityTable.find(classname) == entityTable.end()) {
-	    std::string errorMsg =
-		"Error: unregistered classname " + classname;
-	    throw std::runtime_error(errorMsg);
-	}
 	auto & vec = pGame->getEntityTable()[classname];
 	vec.push_back(std::make_shared<Entity>());
 	lua_getglobal(state, "classes");
@@ -76,7 +64,7 @@ extern "C" {
     }
     
     static const luaL_Reg entityModFuncs[] = {
-	{"new",
+	{"spawn",
 	 [](lua_State * state) -> int {
 	     const std::string classname = lua_tostring(state, 1);
 	     EntityRef * created = createEntity(state, classname);
@@ -101,7 +89,7 @@ extern "C" {
 		 setPosition(sf::Vector2f(x, y));
 	     return 0;
 	 }},
-	{"remove",
+	{"destroy",
 	 [](lua_State * state) -> int {
 	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
 	     (*entity)->setKillFlag();
@@ -157,22 +145,12 @@ extern "C" {
 	     lua_pushinteger(state, frameno);
 	     return 1;
 	 }},
-	{"setSprite",
+	{"setSheet",
 	 [](lua_State * state) -> int {
 	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
-	     std::cout << lua_tostring(state, 2) << std::endl;;
-	     return 0;
-	 }},
-	{"setShadow",
-	 [](lua_State * state) -> int {
-	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
-	     std::cout << lua_tostring(state, 2) << std::endl;;
-	     return 0;
-	 }},
-	{"setGlow",
-	 [](lua_State * state) -> int {
-	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
-	     std::cout << lua_tostring(state, 2) << std::endl;;
+	     const std::string sheetName = lua_tostring(state, 2);
+	     auto resources = getgResHandlerPtr();
+	     entity->setSheet(&resources->getSheet(sheetName));
 	     return 0;
 	 }}
     };

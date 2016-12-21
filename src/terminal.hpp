@@ -91,7 +91,7 @@ private:
     int64_t stateTimer;
     uint8_t frameIndex;
     State state;
-    mutable SpriteSheet<21, 132, 19, 11> screenSheet;
+    mutable framework::SpriteSheet<21, 132, 19, 11> screenSheet;
     sf::Sprite mainSprite;
     sf::Sprite shadow;
 };

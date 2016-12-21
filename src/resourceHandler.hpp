@@ -11,8 +11,9 @@
 #include <assert.h>
 #include <stdexcept>
 #include <utility>
-
+#include "json.hpp"
 #include "ResourcePath.hpp"
+#include "spriteSheet.hpp"
 
 class ResHandler {
 public:
@@ -27,13 +28,16 @@ public:
     void load();
     void loadSound(const std::string &);
     void loadTexture(const std::string &);
+    void addSheet(const std::string &, const SpriteSheet &);
+    SpriteSheet & getSheet(const std::string &);
 
 private:
-    std::array<sf::Shader, static_cast<int>(Shader::count)> shaders;
     std::map<std::string, sf::Texture> textures;
+    std::map<std::string, SpriteSheet> sheets;
+    std::map<std::string, sf::SoundBuffer> sounds;
+    std::array<sf::Shader, static_cast<int>(Shader::count)> shaders;
     std::array<sf::Font, static_cast<int>(Font::count)> fonts;
     std::array<sf::Image, static_cast<int>(Image::count)> images;
-    std::map<std::string, sf::SoundBuffer> sounds;
     void loadShaders(const std::string &);
     void loadFonts(const std::string &);
     void loadImages(const std::string &);
