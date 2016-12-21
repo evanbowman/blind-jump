@@ -26,8 +26,9 @@
 #include <atomic>
 #include <cmath>
 #include <mutex>
+#include "Entity.hpp"
 
-using EntityTable = std::map<std::string, std::vector<framework::Object>>;
+using EntityTable = std::map<std::string, std::vector<std::shared_ptr<Entity>>>;
 
 struct ConfigData {
     sf::Vector2f drawableArea;

@@ -353,26 +353,25 @@ void Game::updateLogic(LuaProvider & luaProv) {
             for (auto & kvp : this->entityTable) {
                 lua_getfield(state, -1, kvp.first.c_str());
                 if (!lua_istable(state, -1)) {
-                    throw std::runtime_error(
-                        "Error: classtable entry is not table");
+		    const std::string err = "Error: classtable field " +
+			kvp.first + " is not a table";
                 }
-                for (auto it = kvp.second.begin(); it != kvp.second.end();
-                     ++it) {
-                    time_point start = high_resolution_clock::now();
-                    lua_getfield(state, -1, "OnUpdate");
-                    if (!lua_isfunction(state, -1)) {
-                        const std::string err =
-                            "Error: missing or malformed OnUpdate for class" +
-                            kvp.first;
-                    }
-                    lua_pushlightuserdata(state, (void *)(&(*it)));
-                    if (lua_pcall(state, 1, 0, 9)) {
-                        throw std::runtime_error(lua_tostring(state, -1));
-                    }
-                    time_point stop = high_resolution_clock::now();
-                    duration diff =
-                        std::chrono::duration_cast<nanoseconds>(stop - start);
-                    std::cout << diff.count() << "\n";
+                for (auto it = kvp.second.begin(); it != kvp.second.end();) {
+		    if (!(*it)->getKillFlag()) {
+			lua_getfield(state, -1, "OnUpdate");
+			if (!lua_isfunction(state, -1)) {
+			    const std::string err =
+				"Error: missing or malformed OnUpdate for class " +
+				kvp.first;
+			}
+			lua_pushlightuserdata(state, (void *)(&(*it)));
+			if (lua_pcall(state, 1, 0, 0)) {
+			    throw std::runtime_error(lua_tostring(state, -1));
+			}
+			++it;
+		    } else {
+			it = kvp.second.erase(it);
+		    }
                 }
                 lua_pop(state, 1);
             }

@@ -53,6 +53,7 @@ if(APPLE)
     COMMAND cp macos/icon.icns ${EXECUTABLE_NAME}.app/Contents/Resources
     COMMAND cp -r ${SFML_DIR}/lib/* ${EXECUTABLE_NAME}.app/Contents/Frameworks
     COMMAND cp -r ${SFML_DIR}/extlibs/libs-osx/Frameworks/* ${EXECUTABLE_NAME}.app/Contents/Frameworks)
+  add_custom_target(res cp -r ../res/* ${EXECUTABLE_NAME}.app/Contents/Resources)
 elseif(WIN32)
   # FIXME: I don't have Windows, cannot do this myself!!!
   target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})

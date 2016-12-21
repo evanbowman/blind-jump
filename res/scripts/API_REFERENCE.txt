@@ -6,28 +6,33 @@ side of things, their scemantics and calling conventions are provided
 here for your convenience.
 
 
-game.getScreenSize() -> number, number
+ENTITY
 
-Returns the width and height of the monitor displaying the game
-visuals.
+entity.create(classname) -> handle
+
+entity.getPosition(handle) -> x, y
+
+entity.setPosition(handle, x, y)
+
+entity.setKillFlag(handle)
+
+entity.getKillFlag(handle) -> isSet
+
+entity.emitSound(handle, soundName, minDistance, attenuation, looping)
+
+entity.getState(handle) -> state
+
+entity.setState(handle, state)
+
+entity.getTimer(handle, timerno) -> timerval
+
+entity.setTimer(handle, timerno, timerval)
 
 
-game.registerEnemyClass(classname) -> none
+SYSTEM
 
-Registers an enemy class with the engine. Enemy classes are tables
-that are expected to implement three functions: OnCreate, OnUpdata,
-and OnDestroy. Each of these functions should take one parameter, to
-which the game will bind the address of the caller on the engine side
-of things so that a specific instance of the class can be mutated.
+system.getScreenSize() -> width, height
 
+system.getDeltaTime() -> microseconds
 
-game.getDeltaTime() -> number
-
-Returns the time elapsed since the last logic update, in microseconds.
-
-
-game.createInstance(classname) -> light userdata
-
-Takes the name of a class previously declared with
-game.registerEnemyClass(), and returns a reference to the newly
-instanciated instance of that class.
+system.registerClass(classname)
