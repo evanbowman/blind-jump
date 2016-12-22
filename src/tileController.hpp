@@ -7,7 +7,6 @@
 
 #include "camera.hpp"
 #include "coordinate.hpp"
-#include "enemyController.hpp"
 #include "resourceHandler.hpp"
 #include "wall.hpp"
 #include <SFML/Graphics.hpp>

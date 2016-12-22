@@ -3,6 +3,7 @@
 // Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
 //========================================================================//
 
+#include "rng.hpp"
 #include "tileController.hpp"
 #include "ResourcePath.hpp"
 #include "drawPixels.hpp"

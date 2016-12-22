@@ -5,6 +5,9 @@
 //     Provides access to Game data from lua scripts.
 //     TODO: create nested tables, e.g.: entity.create, entity.getPosition
 extern "C" {
+    static const std::string paramErr =
+	"Error: wrong number of parameters for function ";
+    
     static const luaL_Reg systemModFuncs[] = {
 	{"getScreenSize",
 	 [](lua_State * state) -> int {
@@ -20,17 +23,16 @@ extern "C" {
 	     lua_pushnumber(state, elapsed.asMicroseconds());
 	     return 1;
 	 }},
-	{"loadSound",
+	{"random",
 	 [](lua_State * state) -> int {
-	     auto resources = getgResHandlerPtr();
-	     resources->loadSound(lua_tostring(state, 1));
-	     return 0;
-	 }},
-	{"loadTexture",
-	 [](lua_State * state) -> int {
-	     auto resources = getgResHandlerPtr();
-	     resources->loadTexture(lua_tostring(state, 1));
-	     return 0;
+	     if (lua_gettop(state) != 2) {
+		 throw std::runtime_error(paramErr + "random");
+	     }
+	     int upper = lua_tointeger(state, 1);
+	     int lower = lua_tointeger(state, 2);
+	     int result = rng::random(upper, lower);
+	     lua_pushinteger(state, result);
+	     return 1;
 	 }}
     };
 
@@ -66,6 +68,9 @@ extern "C" {
     static const luaL_Reg entityModFuncs[] = {
 	{"spawn",
 	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 1) {
+		 throw std::runtime_error(paramErr + "spawn");
+	     }
 	     const std::string classname = lua_tostring(state, 1);
 	     EntityRef * created = createEntity(state, classname);
 	     lua_pushlightuserdata(state, (void *)created);
@@ -73,6 +78,9 @@ extern "C" {
 	 }},
 	{"getPosition",
 	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 1) {
+		 throw std::runtime_error(paramErr + "getPosition");
+	     }
 	     void * entity = lua_touserdata(state, 1);
 	     auto & pos = (*static_cast<EntityRef *>(entity))
 		 ->getPosition();
@@ -82,6 +90,9 @@ extern "C" {
 	 }},
 	{"setPosition",
 	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 3) {
+		 throw std::runtime_error(paramErr + "setPosition");
+	     }
 	     void * entity = lua_touserdata(state, 1);
 	     float x = lua_tonumber(state, 2);
 	     float y = lua_tonumber(state, 3);
@@ -91,12 +102,18 @@ extern "C" {
 	 }},
 	{"destroy",
 	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 1) {
+		 throw std::runtime_error(paramErr + "destroy");
+	     }
 	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
 	     (*entity)->setKillFlag();
 	     return 0;
 	 }},
 	{"setField",
 	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 3) {
+		 throw std::runtime_error(paramErr + "setField");
+	     }
 	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
 	     const std::string varName = lua_tostring(state, 2);
 	     auto & members = (*entity)->getMemberTable();
@@ -109,6 +126,9 @@ extern "C" {
 	 }},
 	{"getField",
 	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 2) {
+		 throw std::runtime_error(paramErr + "getField");
+	     }
 	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
 	     const std::string varName = lua_tostring(state, 2);
 	     auto & members = (*entity)->getMemberTable();
@@ -122,6 +142,9 @@ extern "C" {
 	 }},
 	{"emitSound",
 	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 4) {
+		 throw std::runtime_error(paramErr + "emitSound");
+	     }
 	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
 	     const char * soundName = lua_tostring(state, 2);
 	     const float minDist = lua_tonumber(state, 3);
@@ -133,6 +156,9 @@ extern "C" {
 	 }},
 	{"setKeyframe",
 	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 2) {
+		 throw std::runtime_error(paramErr + "setKeyframe");
+	     }
 	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
 	     const int frameno = lua_tointeger(state, 2);
 	     entity->setFrameIndex(frameno);
@@ -140,6 +166,9 @@ extern "C" {
 	 }},
 	{"getKeyframe",
 	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 1) {
+		 throw std::runtime_error(paramErr + "getKeyframe");
+	     }
 	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
 	     const int frameno = entity->getFrameIndex();
 	     lua_pushinteger(state, frameno);
@@ -147,6 +176,9 @@ extern "C" {
 	 }},
 	{"setSheet",
 	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 2) {
+		 throw std::runtime_error(paramErr + "setSheet");
+	     }
 	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
 	     const std::string sheetName = lua_tostring(state, 2);
 	     auto resources = getgResHandlerPtr();

@@ -809,29 +809,6 @@ void checkEnemyCollision(const std::vector<std::shared_ptr<Dasher>> & dashers,
     }
 }
 
-void Player::checkEnemyCollisions(enemyController & enemies,
-                                  ui::Frontend & uiFrontend,
-                                  SoundController & sounds) {
-    auto collisionPolicy = [&]() {
-        health -= 1;
-        uiFrontend.updateHealth(health);
-        renderType = Rendertype::shadeGldnGt;
-        colorAmount = 1.f;
-        colorTimer = 0;
-        util::sleep(milliseconds(40));
-    };
-    checkEnemyCollision(enemies.getDashers(), this, [&] {
-        if (colorAmount == 0.f) {
-            collisionPolicy();
-        }
-    });
-    checkEnemyCollision(enemies.getScoots(), this, [&] {
-        if (colorAmount == 0.f) {
-            collisionPolicy();
-        }
-    });
-}
-
 const Player::HBox & Player::getHitBox() const { return hitBox; }
 
 void Player::updateColor(const sf::Time & elapsedTime) {

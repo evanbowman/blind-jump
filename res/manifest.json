@@ -57,6 +57,24 @@
 		"w": 16,
 		"h": 30
 	    }
+	},
+	"dasherSheet": {
+	    "texture": "textures/gameObjects.png",
+	    "box": {
+		"x": 648,
+		"y": 38,
+		"w": 29,
+		"h": 38
+	    }
+	},
+	"dasherDeathSheet": {
+	    "texture": "textures/gameObjects.png",
+	    "box": {
+		"x": 80,
+		"y": 0,
+		"w": 47,
+		"h": 38
+	    }
 	}
     }
 }

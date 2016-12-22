@@ -5,6 +5,7 @@
 
 #include "mappingFunctions.hpp"
 #include "tileController.hpp"
+#include "rng.hpp"
 #include <cstring>
 
 // This code is not so readable... TODO: make map type a scoped enum

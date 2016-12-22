@@ -6,6 +6,7 @@
 #pragma once
 
 #include "DetailGroup.hpp"
+#include "dasher.hpp"
 #include "RenderType.hpp"
 #include "inputController.hpp"
 #include "playerAnimationFunctions.hpp"
@@ -83,8 +84,6 @@ private:
     Weapon gun;
     void checkEffectCollisions(EffectGroup &, ui::Frontend &,
                                SoundController &);
-    void checkEnemyCollisions(enemyController &, ui::Frontend &,
-                              SoundController &);
     std::vector<Dasher::Blur> blurs; // TODO: Move blur subclass out of Dasher,
                                      // and into its own file...
     Health health;

@@ -13,7 +13,6 @@
 #include "camera.hpp"
 #include "colors.hpp"
 #include "effectsController.hpp"
-#include "enemyController.hpp"
 #include "framework/option.hpp"
 #include "inputController.hpp"
 #include "player.hpp"

@@ -6,7 +6,6 @@
 #include "game.hpp"
 #include "ResourcePath.hpp"
 #include "easingTemplates.hpp"
-#include "enemyPlacementFn.hpp"
 #include "initMapVectors.hpp"
 #include "lightingMap.hpp"
 #include "mappingFunctions.hpp"
@@ -725,9 +724,6 @@ void Game::nextLevel() {
             getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
             getgResHandlerPtr()->getTexture(
                 "textures/teleporterGlow.png"));
-        // sounds.play(ResHandler::Sound::electricHum,
-        // detailGroup.get<DetailRef::Teleporter>().back(), 72.f, 3.f, true);
-        initEnemies(this);
         auto optCoord = pickLocation(tiles.emptyMapLocations);
         if (optCoord) {
             Powerup chestContents = static_cast<Powerup>(rng::random<2, 1>());
