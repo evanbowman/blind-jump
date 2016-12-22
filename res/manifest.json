@@ -39,6 +39,20 @@
 	"sounds/footstepDirt4.ogg",
 	"sounds/footstepDirt5.ogg"
     ],
+    "fonts": [
+	"fonts/Cornerstone.ttf"
+    ],
+    "images": [
+	"textures/soilTileset.png",
+	"textures/grassSetEdge.png",
+	"textures/grassSet.png",
+	"textures/gameIcon.png"
+    ],
+    "shaders": [
+	"shaders/desaturate.frag",
+	"shaders/color.frag",
+	"shaders/blur.frag"
+    ],
     "spriteSheets": {
 	"turretSheet": {
 	    "texture": "textures/gameObjects.png",

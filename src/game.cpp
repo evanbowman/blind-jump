@@ -163,7 +163,7 @@ void Game::updateGraphics() {
         static const size_t sprIdx = 0;
         static const size_t shaderIdx = 3;
         sf::Shader & colorShader =
-            getgResHandlerPtr()->getShader(ResHandler::Shader::color);
+            getgResHandlerPtr()->getShader("shaders/color.frag");
         for (auto & element : gfxContext.faces) {
             switch (std::get<2>(element)) {
             case Rendertype::shadeDefault:
@@ -240,9 +240,9 @@ void Game::updateGraphics() {
             window.draw(targetSprite);
         } else {
             sf::Shader & blurShader =
-                getgResHandlerPtr()->getShader(ResHandler::Shader::blur);
+                getgResHandlerPtr()->getShader("shaders/blur.frag");
             sf::Shader & desaturateShader =
-                getgResHandlerPtr()->getShader(ResHandler::Shader::desaturate);
+                getgResHandlerPtr()->getShader("shaders/desaturate.frag");
             secondPass.clear(sf::Color::Transparent);
             thirdPass.clear(sf::Color::Transparent);
             const sf::Vector2u textureSize = target.getSize();
@@ -283,7 +283,7 @@ void Game::updateGraphics() {
             window.draw(targetSprite);
         } else {
             sf::Shader & blurShader =
-                getgResHandlerPtr()->getShader(ResHandler::Shader::blur);
+                getgResHandlerPtr()->getShader("shaders/blur.frag");
             secondPass.clear(sf::Color::Transparent);
             sf::Vector2u textureSize = target.getSize();
             float blurAmount = UI.getBlurAmount();
@@ -311,7 +311,7 @@ void Game::updateGraphics() {
         }
     } else if (!UI.blurEnabled() && UI.desaturateEnabled()) {
         sf::Shader & desaturateShader =
-            getgResHandlerPtr()->getShader(ResHandler::Shader::desaturate);
+            getgResHandlerPtr()->getShader("shaders/desaturate.frag");
         desaturateShader.setUniform("amount", UI.getDesaturateAmount());
         sf::Sprite targetSprite(target.getTexture());
         window.setView(camera.getWindowView());

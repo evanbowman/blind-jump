@@ -7,14 +7,6 @@
 
 static const char * LOAD_FAILURE_MSG = "blindjump [crash]: missing resource";
 
-template <typename T, typename E>
-void loadResource(const std::string & str, E id, T & array) {
-    int idx = static_cast<int>(id);
-    if (!array[idx].loadFromFile(str)) {
-        throw std::runtime_error(LOAD_FAILURE_MSG);
-    }
-}
-
 template <typename T>
 void loadResource(const std::string & str, T & map) {
     if (!map[str].loadFromFile(resourcePath() + str)) {
@@ -23,15 +15,58 @@ void loadResource(const std::string & str, T & map) {
 }
 
 template <>
-void loadResource(
-    const std::string & str, ResHandler::Shader id,
-    std::array<sf::Shader, static_cast<int>(ResHandler::Shader::count)> &
-        shaders) {
-    size_t index = static_cast<int>(id);
-    if (!shaders[index].loadFromFile(str, sf::Shader::Fragment)) {
+void loadResource(const std::string & str, std::map<std::string, sf::Shader> & shaders) {
+    if (!shaders[str].loadFromFile(resourcePath() + str, sf::Shader::Fragment)) {
         throw std::runtime_error(LOAD_FAILURE_MSG);
     }
-    shaders[index].setUniform("texture", sf::Shader::CurrentTexture);
+    shaders[str].setUniform("texture", sf::Shader::CurrentTexture);
+}
+
+void ResHandler::loadFromManifest(json & manifest) {
+    auto it = manifest.find("textures");
+    if (it != manifest.end()) {
+	for (const auto & entry : *it) {
+	    this->loadTexture(entry);
+	}
+    }
+    it = manifest.find("sounds");
+    if (it != manifest.end()) {
+	for (const auto & entry : *it) {
+	    this->loadSound(entry);
+	}
+    }
+    it = manifest.find("fonts");
+    if (it != manifest.end()) {
+	for (const auto & entry : *it) {
+	    this->loadFont(entry);
+	}
+    }
+    it = manifest.find("images");
+    if (it != manifest.end()) {
+	for (const auto & entry : *it) {
+	    this->loadImage(entry);
+	}
+    }
+    it = manifest.find("shaders");
+    if (it != manifest.end()) {
+	for (const auto & entry : *it) {
+	    this->loadShader(entry);
+	}
+    }
+    it = manifest.find("spriteSheets");
+    if (it != manifest.end()) {
+	for (auto sheet = it->begin(); sheet != it->end(); ++sheet) {
+	    auto textureTag = sheet->find("texture");
+	    auto boxObj = sheet->find("box");
+	    auto x = boxObj->find("x")->get<int>();
+	    auto y = boxObj->find("y")->get<int>();
+	    auto w = boxObj->find("w")->get<int>();
+	    auto h = boxObj->find("h")->get<int>();
+	    auto & texture = this->getTexture(*textureTag);
+	    this->addSheet(sheet.key(), SpriteSheet(texture,
+						    sf::IntRect(x, y, w, h)));
+	}
+    }
 }
 
 void ResHandler::addSheet(const std::string & name, const SpriteSheet & sheet) {
@@ -44,6 +79,18 @@ void ResHandler::loadTexture(const std::string & path) {
 
 void ResHandler::loadSound(const std::string & path) {
     loadResource(path, sounds);
+}
+
+void ResHandler::loadShader(const std::string & path) {
+    loadResource(path, shaders);
+}
+
+void ResHandler::loadFont(const std::string & path) {
+    loadResource(path, fonts);
+}
+
+void ResHandler::loadImage(const std::string & path) {
+    loadResource(path, images);
 }
 
 SpriteSheet & ResHandler::getSheet(const std::string & name) {
@@ -66,47 +113,29 @@ const sf::SoundBuffer & ResHandler::getSound(const std::string & path) {
     return sounds[path];
 }
 
-// Below functions now deprecated, refactor to maps and strings for easier
-// access via lua scripts.
 
-void ResHandler::load() {
-    const std::string resPath = resourcePath();
-    loadShaders(resPath);
-    loadFonts(resPath);
-    loadImages(resPath);
+const sf::Image & ResHandler::getImage(const std::string & path) {
+    if (images.find(path) == images.end()) {
+	const std::string err = "Error: path " + path + "hasn't been loaded.";
+	throw std::runtime_error(err);
+    }
+    return images[path];
 }
 
-void ResHandler::loadShaders(const std::string & resPath) {
-    loadResource(resPath + "shaders/desaturate.frag", Shader::desaturate,
-                 shaders);
-    loadResource(resPath + "shaders/color.frag", Shader::color, shaders);
-    loadResource(resPath + "shaders/blur.frag", Shader::blur, shaders);
+const sf::Font & ResHandler::getFont(const std::string & path) {
+    if (fonts.find(path) == fonts.end()) {
+	const std::string err = "Error: path " + path + "hasn't been loaded.";
+	throw std::runtime_error(err);
+    }
+    return fonts[path];
 }
 
-
-void ResHandler::loadFonts(const std::string & resPath) {
-    loadResource(resPath + "fonts/Cornerstone.ttf", Font::cornerstone, fonts);
-}
-
-void ResHandler::loadImages(const std::string & resPath) {
-    loadResource(resPath + "textures/soilTileset.png", Image::soilTileset,
-                 images);
-    loadResource(resPath + "textures/grassSetEdge.png", Image::grassSet2,
-                 images);
-    loadResource(resPath + "textures/grassSet.png", Image::grassSet1, images);
-    loadResource(resPath + "textures/gameIcon.png", Image::icon, images);
-}
-
-const sf::Image & ResHandler::getImage(Image id) const {
-    return images[static_cast<int>(id)];
-}
-
-const sf::Font & ResHandler::getFont(Font id) const {
-    return fonts[static_cast<int>(id)];
-}
-
-sf::Shader & ResHandler::getShader(Shader id) {
-    return shaders[static_cast<int>(id)];
+sf::Shader & ResHandler::getShader(const std::string & path) {
+    if (shaders.find(path) == shaders.end()) {
+	const std::string err = "Error: path " + path + "hasn't been loaded.";
+	throw std::runtime_error(err);
+    }
+    return shaders[path];
 }
 
 static ResHandler * resHandlerPtr;

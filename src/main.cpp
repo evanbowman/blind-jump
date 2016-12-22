@@ -32,13 +32,10 @@ using json = nlohmann::json;
 
 std::exception_ptr pWorkerException = nullptr;
 
-static void parseManifest(json & manifest, ResHandler & resources);
-
 int main() {
     rng::seed();
     try {
 	ResHandler resources;
-        resources.load();
         setgResHandlerPtr(&resources);
         LuaProvider luaProv;
         luaProv.runScriptFromFile(resourcePath() + "scripts/conf.lua");
@@ -46,7 +43,7 @@ int main() {
 	{
 	    std::fstream manifestRaw(resourcePath() + "manifest.json");
 	    manifestRaw >> manifest;
-	    parseManifest(manifest, resources);
+	    resources.loadFromManifest(manifest);
 	}
         Game game(luaProv.applyHook(getConfig));
         setgGamePtr(&game);
@@ -94,33 +91,4 @@ int main() {
         std::cerr << ex.what() << std::endl;
     }
     return EXIT_SUCCESS;
-}
-
-static void parseManifest(json & manifest, ResHandler & resources) {
-    auto it = manifest.find("textures");
-    if (it != manifest.end()) {
-	for (const auto & entry : *it) {
-	    resources.loadTexture(entry);
-	}
-    }
-    it = manifest.find("sounds");
-    if (it != manifest.end()) {
-	for (const auto & entry : *it) {
-	    resources.loadSound(entry);
-	}
-    }
-    it = manifest.find("spriteSheets");
-    if (it != manifest.end()) {
-	for (auto sheet = it->begin(); sheet != it->end(); ++sheet) {
-	    auto textureTag = sheet->find("texture");
-	    auto boxObj = sheet->find("box");
-	    auto x = boxObj->find("x")->get<int>();
-	    auto y = boxObj->find("y")->get<int>();
-	    auto w = boxObj->find("w")->get<int>();
-	    auto h = boxObj->find("h")->get<int>();
-	    auto & texture = resources.getTexture(*textureTag);
-	    resources.addSheet(sheet.key(), SpriteSheet(texture,
-							sf::IntRect(x, y, w, h)));
-	}
-    }
 }

@@ -10,7 +10,7 @@ extern bool gameHasFocus;
 inline void dispIntroSequence(sf::RenderWindow & window,
                               InputController & input) {
     const sf::Font & cornerstone =
-        getgResHandlerPtr()->getFont(ResHandler::Font::cornerstone);
+        getgResHandlerPtr()->getFont("fonts/Cornerstone.ttf");
     sf::Text introText("A Game by Evan Bowman", cornerstone);
     const sf::Vector2u windowSize = window.getSize();
     int scale;

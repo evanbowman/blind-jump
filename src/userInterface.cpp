@@ -424,7 +424,7 @@ ui::Frontend::Frontend(sf::View fontView, float x, float y)
     coin.setOrigin(coin.getLocalBounds().width / 2,
                    coin.getLocalBounds().height / 2);
     const sf::Font & cornerstone =
-        getgResHandlerPtr()->getFont(ResHandler::Font::cornerstone);
+        getgResHandlerPtr()->getFont("fonts/Cornerstone.ttf");
 
     auto initText = [&cornerstone](sf::Text & text, const std::string string,
                                    float size) {

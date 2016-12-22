@@ -253,10 +253,10 @@ void tileController::rebuild(Tileset set) {
         workingSet = 1;
         shadow.setFillColor(sf::Color(188, 188, 198, 255));
         createMapImage(
-            getgResHandlerPtr()->getImage(ResHandler::Image::soilTileset),
+            getgResHandlerPtr()->getImage("textures/soilTileset.png"),
             mapArray, mapTexture,
-            getgResHandlerPtr()->getImage(ResHandler::Image::grassSet1),
-            getgResHandlerPtr()->getImage(ResHandler::Image::grassSet2));
+            getgResHandlerPtr()->getImage("textures/grassSetEdge.png"),
+            getgResHandlerPtr()->getImage("textures/grassSet.png"));
         initMapVectors(this);
         mapSprite1.setTexture(mapTexture[0]);
         mapSprite2.setTexture(mapTexture[1]);
