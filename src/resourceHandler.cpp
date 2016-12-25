@@ -22,39 +22,39 @@ void loadResource(const std::string & str, std::map<std::string, sf::Shader> & s
     shaders[str].setUniform("texture", sf::Shader::CurrentTexture);
 }
 
-void ResHandler::loadFromManifest(json & manifest) {
-    auto it = manifest.find("textures");
-    if (it != manifest.end()) {
+void ResHandler::loadFromJSON(json & JSON) {
+    auto it = JSON.find("textures");
+    if (it != JSON.end()) {
 	for (const auto & entry : *it) {
 	    this->loadTexture(entry);
 	}
     }
-    it = manifest.find("sounds");
-    if (it != manifest.end()) {
+    it = JSON.find("sounds");
+    if (it != JSON.end()) {
 	for (const auto & entry : *it) {
 	    this->loadSound(entry);
 	}
     }
-    it = manifest.find("fonts");
-    if (it != manifest.end()) {
+    it = JSON.find("fonts");
+    if (it != JSON.end()) {
 	for (const auto & entry : *it) {
 	    this->loadFont(entry);
 	}
     }
-    it = manifest.find("images");
-    if (it != manifest.end()) {
+    it = JSON.find("images");
+    if (it != JSON.end()) {
 	for (const auto & entry : *it) {
 	    this->loadImage(entry);
 	}
     }
-    it = manifest.find("shaders");
-    if (it != manifest.end()) {
+    it = JSON.find("shaders");
+    if (it != JSON.end()) {
 	for (const auto & entry : *it) {
 	    this->loadShader(entry);
 	}
     }
-    it = manifest.find("sprites");
-    if (it != manifest.end()) {
+    it = JSON.find("sprites");
+    if (it != JSON.end()) {
 	for (auto sheet = it->begin(); sheet != it->end(); ++sheet) {
 	    auto textureTag = sheet->find("texture");
 	    auto boxObj = sheet->find("box");

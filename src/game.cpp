@@ -16,6 +16,7 @@ Game::Game(const ConfigData & conf)
     : viewPort(conf.drawableArea),
       transitionState(TransitionState::TransitionIn),
       player(viewPort.x / 2, viewPort.y / 2),
+      slept(false),
       window(sf::VideoMode::getDesktopMode(), EXECUTABLE_NAME,
              sf::Style::Fullscreen, sf::ContextSettings(0, 0, 6)),
       camera(&player, viewPort, window.getSize()),
@@ -87,12 +88,12 @@ void Game::eventLoop() {
 
         case sf::Event::GainedFocus:
             sounds.unpause(SoundController::Sound | SoundController::Music);
-            hasFocus = true;
+            this->hasFocus = true;
             break;
 
         case sf::Event::LostFocus:
             sounds.pause(SoundController::Sound | SoundController::Music);
-            hasFocus = false;
+            this->hasFocus = false;
             break;
 
         default:
@@ -105,7 +106,7 @@ void Game::eventLoop() {
 void Game::updateGraphics() {
     window.clear();
     if (!hasFocus) {
-        util::sleep(milliseconds(200));
+	this->setSleep(std::chrono::microseconds(200000));
         return;
     }
     target.clear(sf::Color::Transparent);
@@ -349,7 +350,7 @@ void Game::updateGraphics() {
 
 void Game::updateLogic(LuaProvider & luaProv) {
     if (!hasFocus) {
-        util::sleep(milliseconds(200));
+        this->setSleep(std::chrono::microseconds(200));
         return;
     }
     // Blurring is graphics intensive, the game caches frames in a RenderTexture
@@ -659,7 +660,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
                 transitionState = TransitionState::EntryBeamFade;
                 timer = 0;
                 player.visible = true;
-                util::sleep(milliseconds(20));
+		this->setSleep(std::chrono::microseconds(20000));
                 camera.shake(0.19f);
             }
         }
@@ -697,7 +698,7 @@ void Game::nextLevel() {
         camera.snapToTarget();
         set = tileController::Tileset::intro;
     } else {
-        camera.panDown();
+        camera.setOffset({1.f, 2.f});
         set = tileController::Tileset::regular;
     }
     // vignetteSprite.setColor(sf::Color::White); // TODO: See if this line is
@@ -822,6 +823,19 @@ void Game::nextLevel() {
             tiles.walls.push_back(w);
         }
     }
+}
+
+bool Game::hasSlept() const {
+    return slept;
+}
+
+void Game::clearSleptFlag() {
+    slept = false;
+}
+
+void Game::setSleep(const std::chrono::microseconds & time) {
+    slept = true;
+    std::this_thread::sleep_for(time);
 }
 
 DetailGroup & Game::getDetails() { return detailGroup; }

@@ -15,7 +15,6 @@
 #include "soundController.hpp"
 #include "spriteSheet.hpp"
 #include "tileController.hpp"
-#include "util.hpp"
 #include "wall.hpp"
 #include <SFML/Graphics.hpp>
 #include <cmath>

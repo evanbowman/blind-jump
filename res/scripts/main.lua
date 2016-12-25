@@ -2,12 +2,11 @@ require("enemies/Turret")
 require("enemies/Dasher")
 require("details/Pod")
 require("details/Door")
-require("player")
+require("Player")
 
 level = -1
 
-local player = entity.new("Player", 100, 100)
-camera.setTarget(player)
+camera.transition.panInDown()
 
 local clearEntitiesOf = function(classname)
    local entitiesList = entity.listAll(classname)

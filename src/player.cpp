@@ -301,7 +301,7 @@ void Player::update(Game * pGame, const sf::Time & elapsedTime,
                     std::abs(yPos - chestPosition.y) < 26 &&
                     chest->getState() == TreasureChest::State::closed &&
                     action) {
-                    util::sleep(milliseconds(40));
+		    pGame->setSleep(std::chrono::microseconds(40000));
                     // pGame->getSounds().play(ResHandler::Sound::creak, chest,
                     //                         64.f, 8.f);
                     chest->setState(TreasureChest::State::opening);
@@ -763,7 +763,7 @@ void Player::checkEffectCollisions(EffectGroup & effects,
             renderType = Rendertype::shadeGldnGt;
             colorAmount = 1.f;
             colorTimer = 0;
-            util::sleep(milliseconds(40));
+	    getgGamePtr()->setSleep(std::chrono::microseconds(40000));
         }
     };
     checkEffectCollision<8>(effects, this, hitPolicy);
@@ -775,14 +775,14 @@ void Player::checkEffectCollisions(EffectGroup & effects,
         renderType = Rendertype::shadeRuby;
         colorAmount = 1.f;
         colorTimer = 0;
-        util::sleep(milliseconds(40));
+	getgGamePtr()->setSleep(std::chrono::microseconds(40000));
     });
     checkEffectCollision<5>(effects, this, [&]() {
         uiFrontend.updateScore(1);
         renderType = Rendertype::shadeElectric;
         colorAmount = 1.f;
         colorTimer = 0;
-        util::sleep(milliseconds(40));
+	getgGamePtr()->setSleep(std::chrono::microseconds(40000));
     });
 }
 

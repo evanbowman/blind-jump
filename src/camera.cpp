@@ -119,12 +119,13 @@ const sf::View & Camera::getOverworldView() const { return overworldView; }
 
 const sf::View & Camera::getWindowView() const { return windowView; }
 
-void Camera::panDown() {
-    float placementOffset = pTarget->getPosition().y / 2;
-    overworldView.setCenter(
-        sf::Vector2f(pTarget->getPosition().x, placementOffset));
-    startPosition = overworldView.getCenter();
-    currentPosition = startPosition;
+void Camera::setOffset(const sf::Vector2f & offset) {
+    const sf::Vector2f & targetPos = pTarget->getPosition();
+    sf::Vector2f newPos;
+    newPos.x = targetPos.x / offset.x;
+    newPos.y = targetPos.y / offset.y;
+    overworldView.setCenter(newPos);
+    currentPosition = newPos;
 }
 
 void Camera::snapToTarget() {

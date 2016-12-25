@@ -7,7 +7,7 @@ extern "C" {
     static const std::string paramErr =
 	"Error: wrong number of parameters for function ";
     
-    static const luaL_Reg systemModFuncs[] = {
+    static const luaL_Reg systemLibFuncs[] = {
 	{"getScreenSize",
 	 [](lua_State * state) -> int {
 	     auto desktop = sf::VideoMode::getDesktopMode();
@@ -32,7 +32,16 @@ extern "C" {
 	     int result = rng::random(upper, lower);
 	     lua_pushinteger(state, result);
 	     return 1;
-	 }}
+	 }},
+	{"sleep",
+	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 1) {
+		 throw std::runtime_error(paramErr + "sleep");
+	     }
+	     getgGamePtr()->setSleep(std::chrono::microseconds(lua_tointeger(state, 1)));
+	     return 0;
+	 }},
+	{}
     };
 
     static EntityRef * createEntity(lua_State * state,
@@ -66,17 +75,54 @@ extern "C" {
 	return &vec.back();
     }
 
-    static const luaL_Reg cameraModFuncs[] = {
+    static const luaL_Reg cameraTrackingLibFuncs[] = {
 	{"setTarget",
 	 [](lua_State * state) {
 	     if (lua_gettop(state) != 1) {
 		 throw std::runtime_error(paramErr + "setTarget");
 	     }
 	     return 0;
-	 }}
+	 }},
+	{}
     };
 
-    static const luaL_Reg inputModFuncs[] = {
+    static const luaL_Reg cameraTransitionLibFuncs[] = {
+	{"panInDown",
+	 [](lua_State * state) {
+	     if (lua_gettop(state) != 0) {
+		 throw std::runtime_error(paramErr + "panInDown");
+	     }
+	     getgGamePtr()->getCamera().setOffset(sf::Vector2f(1.f, 2.f));
+	     return 0;
+	 }},
+	{"panInLeft",
+	 [](lua_State * state) {
+	     if (lua_gettop(state) != 0) {
+		 throw std::runtime_error(paramErr + "panInLeft");
+	     }
+	     getgGamePtr()->getCamera().setOffset(sf::Vector2f(2.f, 1.f));
+	     return 0;
+	 }},
+	{"panInRight",
+	 [](lua_State * state) {
+	     if (lua_gettop(state) != 0) {
+		 throw std::runtime_error(paramErr + "panInRight");
+	     }
+	     getgGamePtr()->getCamera().setOffset(sf::Vector2f(0.5f, 1.f));
+	     return 0;
+	 }},
+	{"panInUp",
+	 [](lua_State * state) {
+	     if (lua_gettop(state) != 0) {
+		 throw std::runtime_error(paramErr + "panInUp");
+	     }
+	     getgGamePtr()->getCamera().setOffset(sf::Vector2f(1.f, 0.5f));
+	     return 0;
+	 }},
+	{}
+    };
+
+    static const luaL_Reg inputLibFuncs[] = {
 	{"left",
 	 [](lua_State * state) {
 	     if (lua_gettop(state) != 0) {
@@ -112,10 +158,11 @@ extern "C" {
 	     InputController & input = getgGamePtr()->getInputController();
 	     lua_pushboolean(state, input.downPressed());
 	     return 1;
-	 }}
+	 }},
+	{}
     };
     
-    static const luaL_Reg entityModFuncs[] = {
+    static const luaL_Reg entityLibFuncs[] = {
 	{"new",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 3) {
@@ -294,24 +341,35 @@ extern "C" {
 		 lua_settable(state, -3);
 	     }
 	     return 1;
-	 }}
+	 }},
+	{}
     };
 }
 
-template <typename M>
-static int registerMod(lua_State * state, M * mod, const char * name) {
+static void registerCameraLib(lua_State * state) {
     lua_newtable(state);
-    luaL_setfuncs(state, mod, 0);
+    lua_newtable(state);
+    luaL_setfuncs(state, cameraTransitionLibFuncs, 0);
+    lua_setfield(state, -2, "transition");
+    lua_newtable(state);
+    luaL_setfuncs(state, cameraTrackingLibFuncs, 0);
+    lua_setfield(state, -2, "tracking");
+    lua_setglobal(state, "camera");
+}
+
+template <typename M>
+static void registerLib(lua_State * state, M * lib, const char * name) {
+    lua_newtable(state);
+    luaL_setfuncs(state, lib, 0);
     lua_setglobal(state, name);
-    return 1;
 }
 
 LuaProvider::LuaProvider() : m_state(luaL_newstate()) {
     luaL_openlibs(m_state);
-    registerMod(m_state, systemModFuncs, "system");
-    registerMod(m_state, inputModFuncs, "input");
-    registerMod(m_state, entityModFuncs, "entity");
-    registerMod(m_state, cameraModFuncs, "camera");
+    registerLib(m_state, systemLibFuncs, "system");
+    registerLib(m_state, inputLibFuncs, "input");
+    registerLib(m_state, entityLibFuncs, "entity");
+    registerCameraLib(m_state);
     lua_newtable(m_state);
     lua_setglobal(m_state, "classes");
     lua_getglobal(m_state, "package");

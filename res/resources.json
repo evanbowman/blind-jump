@@ -134,6 +134,42 @@
 		"w": 200,
 		"h": 95
 	    }
+	},
+	"playerWalkDownSprite": {
+	    "texture": "textures/gameObjects.png",
+	    "box": {
+		"x": 400,
+		"y": 108,
+		"w": 32,
+		"h": 32
+	    }
+	},
+	"playerWalkUpSprite": {
+	    "texture": "textures/gameObjects.png",
+	    "box": {
+		"x": 208,
+		"y": 108,
+		"w": 32,
+		"h": 32
+	    }
+	},
+	"playerWalkLeftSprite": {
+	    "texture": "textures/gameObjects.png",
+	    "box": {
+		"x": 308,
+		"y": 76,
+		"w": 32,
+		"h": 32
+	    }
+	},
+	"playerWalkRightSprite": {
+	    "texture": "textures/gameObjects.png",
+	    "box": {
+		"x": 432,
+		"y": 76,
+		"w": 32,
+		"h": 32
+	    }
 	}
     }
 }

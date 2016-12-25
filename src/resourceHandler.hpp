@@ -19,7 +19,7 @@ using json = nlohmann::json;
 
 class ResHandler {
 public:
-    void loadFromManifest(json & manifest);
+    void loadFromJSON(json & manifest);
     const sf::Texture & getTexture(const std::string &);
     const sf::Font & getFont(const std::string &);
     const sf::Image & getImage(const std::string &);

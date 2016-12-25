@@ -26,6 +26,7 @@
 #include <cmath>
 #include <mutex>
 #include "Entity.hpp"
+#include <thread>
 
 using EntityTable = std::map<std::string, std::vector<EntityRef>>;
 
@@ -71,10 +72,14 @@ public:
     const sf::Time & getElapsedTime();
     void setElapsedTime(const sf::Time &);
     void init();
+    bool hasSlept() const;
+    void clearSleptFlag();
+    void setSleep(const std::chrono::microseconds & time);
 
 private:
     EntityTable entityTable;
     ResHandler resHandler;
+    bool slept;
     sf::RenderWindow window;
     sf::Time elapsedTime;
     InputController input;

@@ -13,11 +13,9 @@
 #include "framework/smartThread.hpp"
 #include "game.hpp"
 #include "inputController.hpp"
-#include "introSequence.hpp"
 #include "player.hpp"
 #include "resourceHandler.hpp"
 #include "rng.hpp"
-#include "util.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -28,8 +26,6 @@
 #include <fstream>
 #include "json.hpp"
 
-using json = nlohmann::json;
-
 std::exception_ptr pWorkerException = nullptr;
 
 int main() {
@@ -38,16 +34,16 @@ int main() {
         LuaProvider luaProv;
         luaProv.runScriptFromFile(resourcePath() + "scripts/conf.lua");
         Game game(luaProv.applyHook(getConfig));
-	json manifest;
+	json resourcesJSON;
 	{
-	    std::fstream manifestRaw(resourcePath() + "manifest.json");
-	    manifestRaw >> manifest;
-	    game.getResHandler().loadFromManifest(manifest);
+	    std::fstream resourcesJSONRaw(resourcePath() + "resources.json");
+	    resourcesJSONRaw >> resourcesJSON;
+	    game.getResHandler().loadFromJSON(resourcesJSON);
 	}
 	game.init();
         setgGamePtr(&game);
-	json::iterator entryPt = manifest.find("main");
-	if (entryPt == manifest.end()) {
+	json::iterator entryPt = resourcesJSON.find("main");
+	if (entryPt == resourcesJSON.end()) {
 	    throw std::runtime_error("Error: \"main\" field missing from manifest.json");
 	}
 	luaProv.runScriptFromFile(resourcePath() + entryPt->get<std::string>());
@@ -58,11 +54,9 @@ int main() {
                 while (game.getWindow().isOpen()) {
                     time_point start = high_resolution_clock::now();
                     game.setElapsedTime(gameClock.restart());
-                    // TODO: what if the game freezes? Elapsed time will be
-                    // large...
-                    if (util::isAsleep) {
+                    if (game.hasSlept()) {
                         game.setElapsedTime(gameClock.restart());
-                        util::isAsleep = false;
+			game.clearSleptFlag();
                     }
                     game.updateLogic(luaProv);
                     time_point stop = high_resolution_clock::now();
@@ -77,7 +71,6 @@ int main() {
                 return;
             }
         });
-        // game.getCamera().panDown();
         while (game.getWindow().isOpen()) {
             game.eventLoop();
             game.updateGraphics();

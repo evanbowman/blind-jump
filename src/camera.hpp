@@ -30,7 +30,7 @@ public:
            const sf::Vector2u &);
     void update(const sf::Time &, const std::vector<sf::Vector2f> &);
     void snapToTarget();
-    void panDown();
+    void setOffset(const sf::Vector2f &);
     const sf::View & getOverworldView() const;
     const sf::View & getWindowView() const;
     void shake(float);
