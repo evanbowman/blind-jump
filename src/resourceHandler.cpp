@@ -53,18 +53,22 @@ void ResHandler::loadFromManifest(json & manifest) {
 	    this->loadShader(entry);
 	}
     }
-    it = manifest.find("spriteSheets");
+    it = manifest.find("sprites");
     if (it != manifest.end()) {
 	for (auto sheet = it->begin(); sheet != it->end(); ++sheet) {
 	    auto textureTag = sheet->find("texture");
 	    auto boxObj = sheet->find("box");
-	    auto x = boxObj->find("x")->get<int>();
-	    auto y = boxObj->find("y")->get<int>();
-	    auto w = boxObj->find("w")->get<int>();
-	    auto h = boxObj->find("h")->get<int>();
+	    int x = boxObj->find("x")->get<int>();
+	    int y = boxObj->find("y")->get<int>();
+	    int w = boxObj->find("w")->get<int>();
+	    int h = boxObj->find("h")->get<int>();
 	    auto & texture = this->getTexture(*textureTag);
 	    this->addSheet(sheet.key(), SpriteSheet(texture,
 						    sf::IntRect(x, y, w, h)));
+	    // FIXME: sprites should be centered on origin, but this results in offsets
+	    // that I don't understand yet...
+	    // auto added = sheets.find(sheet.key());
+	    // added->second.getSprite().setOrigin(x / 2, y / 2);
 	}
     }
 }

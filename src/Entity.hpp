@@ -10,19 +10,30 @@ class Entity {
 private:
     sf::Vector2f m_position;
     bool m_killFlag;
-    uint16_t m_frameIndex;
+    uint16_t m_keyframe;
+    float m_zOrder;
+    float m_shadowOffset;
     SpriteSheet * m_sheet;
-    SpriteSheet * m_shadow;
+    SpriteSheet * m_shadowSheet;
     sf::Sprite * m_glow;
     std::map<std::string, int> m_members;
     
 public:
-    Entity() : m_position{},
+    Entity() : m_position(),
 	       m_killFlag(false),
-	       m_frameIndex(0),
+	       m_keyframe(0),
+	       m_shadowOffset(0.f),
+	       m_zOrder(0.f),
 	       m_sheet(nullptr),
-	       m_shadow(nullptr),
+	       m_shadowSheet(nullptr),
 	       m_glow(nullptr) {}
+
+    inline float getShadowOffset() const {
+	return m_shadowOffset;
+    }
+    inline void setShadowOffset(const float offset) {
+	m_shadowOffset = offset;
+    }
     inline void setPosition(const sf::Vector2f & position) {
 	m_position = position;
     }
@@ -38,22 +49,31 @@ public:
     inline void setKillFlag(const bool killFlag = true) {
 	m_killFlag = killFlag;
     }
-    inline void setFrameIndex(const uint16_t frameIndex) {
-	m_frameIndex = frameIndex;
+    inline void setKeyframe(const uint16_t keyframe) {
+        m_keyframe = keyframe;
     }
-    inline uint16_t getFrameIndex() const {
-	return m_frameIndex;
+    inline uint16_t getKeyframe() const {
+	return m_keyframe;
     }
     inline void setSheet(SpriteSheet * sheet) {
 	m_sheet = sheet;
     }
+    inline void setShadowSheet(SpriteSheet * sheet) {
+	m_shadowSheet = sheet;
+    }
     inline SpriteSheet * getSheet() {
 	return m_sheet;
     }
-    inline SpriteSheet * getShadow() {
-	return m_shadow;
+    inline SpriteSheet * getShadowSheet() {
+	return m_shadowSheet;
     }
     inline sf::Sprite * getGlow() {
 	return m_glow;
+    }
+    inline float getZOrder() const {
+	return m_zOrder;
+    }
+    inline void setZOrder(const float zOrder) {
+	m_zOrder = zOrder;
     }
 };

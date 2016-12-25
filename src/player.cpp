@@ -18,7 +18,6 @@ Player::Player(float _xPos, float _yPos)
       state(Player::State::nominal), colorAmount(0.f), colorTimer(0),
       renderType(Rendertype::shadeDefault), upPrevious(false),
       downPrevious(false), leftPrevious(false), rightPrevious(false) {
-    init();
 }
 
 void Player::init() {

@@ -384,6 +384,9 @@ ui::Frontend::Frontend(sf::View fontView, float x, float y)
     maxHealth = 4;
     health = 4;
     score = 0;
+}
+
+void ui::Frontend::init() {
     const sf::Vector2f viewSize = fontView.getSize();
     if (viewSize.y < viewSize.x) {
         scale = viewSize.y;

@@ -53,8 +53,8 @@
 	"shaders/color.frag",
 	"shaders/blur.frag"
     ],
-    "spriteSheets": {
-	"turretSheet": {
+    "sprites": {
+	"turretSprite": {
 	    "texture": "textures/gameObjects.png",
 	    "box": {
 		"x": 0,
@@ -63,7 +63,25 @@
 		"h": 32
 	    }
 	},
-	"chestSheet": {
+	"turretShadowSprite": {
+	    "texture": "textures/gameObjects.png",
+	    "box": {
+		"x": 0,
+		"y": 32,
+		"w": 16,
+		"h": 26
+	    }
+	},
+	"muzzleFlashSprite": {
+	    "texture": "textures/gameObjects.png",
+	    "box": {
+		"x": 0,
+		"y": 116,
+		"w": 16,
+		"h": 16
+	    }
+	},
+	"chestSprite": {
 	    "texture": "textures/gameObjects.png",
 	    "box": {
 		"x": 656,
@@ -72,7 +90,7 @@
 		"h": 30
 	    }
 	},
-	"dasherSheet": {
+	"dasherSprite": {
 	    "texture": "textures/gameObjects.png",
 	    "box": {
 		"x": 648,
@@ -81,13 +99,40 @@
 		"h": 38
 	    }
 	},
-	"dasherDeathSheet": {
+	"dasherDeathSprite": {
 	    "texture": "textures/gameObjects.png",
 	    "box": {
 		"x": 80,
 		"y": 0,
 		"w": 47,
 		"h": 38
+	    }
+	},
+	"rockSprite": {
+	    "texture": "textures/gameObjects.png",
+	    "box": {
+		"x": 80,
+		"y": 38,
+		"w": 32,
+		"h": 64
+	    }
+	},
+	"podSprite": {
+	    "texture": "textures/gameObjects.png",
+	    "box": {
+		"x": 164, 
+		"y": 145,
+		"w": 44,
+		"h": 50
+	    }
+	},
+	"introDoorSprite": {
+	    "texture": "textures/introWall.png",
+	    "box": {
+		"x": 0,
+		"y": 0,
+		"w": 200,
+		"h": 95
 	    }
 	}
     }

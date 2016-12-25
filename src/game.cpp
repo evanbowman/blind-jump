@@ -39,10 +39,15 @@ Game::Game(const ConfigData & conf)
     window.setMouseCursorVisible(conf.showMouse);
     window.setFramerateLimit(conf.framerateLimit);
     window.setVerticalSyncEnabled(conf.enableVsync);
-    this->init();
+    // TODO: refactor out global pointer!
+    setgResHandlerPtr(&resHandler);
 }
 
 void Game::init() {
+    tiles.init();
+    uiFrontend.init();
+    player.init();
+    bkg.init();
     target.create(viewPort.x, viewPort.y);
     secondPass.create(viewPort.x, viewPort.y);
     secondPass.setSmooth(true);
@@ -128,20 +133,23 @@ void Game::updateGraphics() {
             effectGroup.apply(drawPolicy);
 	    for (auto & kvp : entityTable) {
 		for (auto & entity : kvp.second) {
-		    auto sheet = entity->getSheet();
-		    if (sheet) {
-			sheet->setFrame(entity->getFrameIndex());
-		        sheet->getSprite().setPosition(entity->getPosition());
-			gfxContext.faces.emplace_back(sheet->getSprite(),
-						      entity->getPosition().y,
+		    auto fg = entity->getSheet();
+		    if (fg) {
+			fg->setFrame(entity->getKeyframe());
+		        fg->getSprite().setPosition(entity->getPosition());
+			gfxContext.faces.emplace_back(fg->getSprite(),
+						      entity->getZOrder(),
+						      // TODO: add shading options to
+						      //       lua API
 						      Rendertype::shadeDefault,
 						      0.f);
 		    }
-		    if (entity->getShadow()) {
-			// TODO...
-		    }
-		    if (entity->getGlow()) {
-			// TODO...
+		    auto shadow = entity->getShadowSheet();
+		    if (shadow) {
+			sf::Vector2f position = entity->getPosition();
+			position.y += entity->getShadowOffset();
+			shadow->getSprite().setPosition(position);
+			target.draw(shadow->getSprite());
 		    }
 		}
 	    }
@@ -372,7 +380,7 @@ void Game::updateLogic(LuaProvider & luaProv) {
 		    throw std::runtime_error(err);
                 }
                 for (auto it = kvp.second.begin(); it != kvp.second.end();) {
-		    lua_getfield(state, -1, "OnUpdate");
+		    lua_getfield(state, -1, "onUpdate");
 		    if (!lua_isfunction(state, -1)) {
 			const std::string err =
 			    "Error: missing or malformed OnUpdate for class " +
@@ -795,15 +803,6 @@ void Game::nextLevel() {
             tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 204 + 8 + (-9 * 26),
             getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
             getgResHandlerPtr()->getTexture("textures/lampLight.png"));
-        detailGroup.add<DetailRef::IntroDoor>(
-            tiles.posX - 192 + 6 * 32, tiles.posY + 301,
-            getgResHandlerPtr()->getTexture("textures/introWall.png"));
-        sf::Sprite podSpr;
-        podSpr.setTexture(
-            getgResHandlerPtr()->getTexture("textures/gameObjects.png"));
-        podSpr.setTextureRect(sf::IntRect(164, 145, 44, 50));
-        detailGroup.add<DetailRef::StaticDrawable>(
-            tiles.posX + 3 * 32, tiles.posY + 4 + 17 * 26, podSpr);
         static const int initTeleporterLocX = 8;
         static const int initTeleporterLocY = -7;
         tiles.teleporterLocation.x = initTeleporterLocX;
@@ -848,6 +847,8 @@ SoundController & Game::getSounds() { return sounds; }
 int Game::getLevel() { return level; }
 
 sf::RenderWindow & Game::getWindow() { return window; }
+
+ResHandler & Game::getResHandler() { return resHandler; }
 
 const std::array<std::pair<float, float>, 59> levelZeroWalls{
     {std::make_pair(-20, 500), std::make_pair(-20, 526),

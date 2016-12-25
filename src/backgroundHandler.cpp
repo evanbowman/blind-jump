@@ -17,6 +17,9 @@ backgroundHandler::backgroundHandler() {
     xOffPrev = 0;
     yOffPrev = 0;
     posY = 0;
+}
+
+void backgroundHandler::init() {
     bkgSprite.setTexture(
         getgResHandlerPtr()->getTexture("textures/bkg_orbit2.png"));
     for (int i = 0; i < STARMAP_SIZE; i++) {

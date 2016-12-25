@@ -66,6 +66,7 @@ public:
     sf::Vector2f viewPort;
     EntityTable & getEntityTable();
     TransitionState transitionState;
+    ResHandler & getResHandler();
     sf::RenderWindow & getWindow();
     const sf::Time & getElapsedTime();
     void setElapsedTime(const sf::Time &);
@@ -73,6 +74,7 @@ public:
 
 private:
     EntityTable entityTable;
+    ResHandler resHandler;
     sf::RenderWindow window;
     sf::Time elapsedTime;
     InputController input;

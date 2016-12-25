@@ -35,17 +35,16 @@ std::exception_ptr pWorkerException = nullptr;
 int main() {
     rng::seed();
     try {
-	ResHandler resources;
-        setgResHandlerPtr(&resources);
         LuaProvider luaProv;
         luaProv.runScriptFromFile(resourcePath() + "scripts/conf.lua");
+        Game game(luaProv.applyHook(getConfig));
 	json manifest;
 	{
 	    std::fstream manifestRaw(resourcePath() + "manifest.json");
 	    manifestRaw >> manifest;
-	    resources.loadFromManifest(manifest);
+	    game.getResHandler().loadFromManifest(manifest);
 	}
-        Game game(luaProv.applyHook(getConfig));
+	game.init();
         setgGamePtr(&game);
 	json::iterator entryPt = manifest.find("main");
 	if (entryPt == manifest.end()) {

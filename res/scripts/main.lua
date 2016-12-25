@@ -1,8 +1,13 @@
-require("enemies")
-require("details")
+require("enemies/Turret")
+require("enemies/Dasher")
+require("details/Pod")
+require("details/Door")
 
-local turret = entity.spawn("Turret")
-entity.setPosition(turret, 400, 200)
+level = 0
 
-local dasher = entity.spawn("Dasher")
-entity.setPosition(dasher, 500, 200)
+function setupIntroLevel()
+   entity.new("Pod", 400, 216)
+   entity.new("Door", 305, 70)
+end
+
+setupIntroLevel()

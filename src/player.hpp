@@ -75,9 +75,9 @@ public:
     float getYVeclocty() const;
     sf::Vector2f requestFuturePos(const uint32_t) const;
     sf::Vector2f getPosition() const;
+    void init();
 
 private:
-    void init();
     HBox hitBox;
     void updateGun(const sf::Time &, const bool, EffectGroup &,
                    SoundController &, ui::Backend &);
