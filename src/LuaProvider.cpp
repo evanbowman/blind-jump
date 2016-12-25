@@ -167,13 +167,13 @@ extern "C" {
 		 throw std::runtime_error(paramErr + "setField");
 	     }
 	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
-	     const std::string varName = lua_tostring(state, 2);
+	     const int varIndex = lua_tointeger(state, 2);
 	     auto & members = (*entity)->getMemberTable();
-	     if (members.find(varName) != members.end()) {
-		 luaL_unref(state, LUA_REGISTRYINDEX, members[varName]);
+	     if (members.find(varIndex) != members.end()) {
+		 luaL_unref(state, LUA_REGISTRYINDEX, members[varIndex]);
 	     }
 	     lua_pushvalue(state, 3);
-	     members[varName] = luaL_ref(state, LUA_REGISTRYINDEX);
+	     members[varIndex] = luaL_ref(state, LUA_REGISTRYINDEX);
 	     return 0;
 	 }},
 	{"getField",
@@ -182,13 +182,14 @@ extern "C" {
 		 throw std::runtime_error(paramErr + "getField");
 	     }
 	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
-	     const std::string varName = lua_tostring(state, 2);
+	     const int varIndex = lua_tointeger(state, 2);
 	     auto & members = (*entity)->getMemberTable();
-	     if (members.find(varName) == members.end()) {
-		 const std::string err = "Error: member " + varName + " lookup failed";
+	     if (members.find(varIndex) == members.end()) {
+		 const std::string err = "Error: member " + std::to_string(varIndex)
+		     + " lookup failed";
 		 throw std::runtime_error(err);
 	     }
-	     int ref = members[varName];
+	     int ref = members[varIndex];
 	     lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
 	     return 1;
 	 }},

@@ -5,6 +5,7 @@ require("details/Door")
 require("player")
 
 level = -1
+
 local player = entity.new("Player", 100, 100)
 camera.setTarget(player)
 

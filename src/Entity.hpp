@@ -16,7 +16,7 @@ private:
     SpriteSheet * m_sheet;
     SpriteSheet * m_shadowSheet;
     sf::Sprite * m_glow;
-    std::map<std::string, int> m_members;
+    std::map<int, int> m_members;
     
 public:
     Entity() : m_position(),
@@ -37,7 +37,7 @@ public:
     inline void setPosition(const sf::Vector2f & position) {
 	m_position = position;
     }
-    inline std::map<std::string, int> & getMemberTable() {
+    inline std::map<int, int> & getMemberTable() {
 	return m_members;
     }
     inline const sf::Vector2f & getPosition() const {
