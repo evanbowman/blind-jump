@@ -66,6 +66,16 @@ extern "C" {
 	return &vec.back();
     }
 
+    static const luaL_Reg cameraModFuncs[] = {
+	{"setTarget",
+	 [](lua_State * state) {
+	     if (lua_gettop(state) != 1) {
+		 throw std::runtime_error(paramErr + "setTarget");
+	     }
+	     return 0;
+	 }}
+    };
+
     static const luaL_Reg inputModFuncs[] = {
 	{"left",
 	 [](lua_State * state) {
@@ -266,6 +276,23 @@ extern "C" {
 	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
 	     lua_pushnumber(state, entity->getZOrder());
 	     return 1;
+	 }},
+	{"listAll",
+	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 1) {
+		 throw std::runtime_error(paramErr + "listAll");
+	     }
+	     Game * pGame = getgGamePtr();
+	     EntityTable & tab = pGame->getEntityTable();
+	     // FIXME: this code is unsafe, map entry may not exist...
+	     auto & entityVec = tab[lua_tostring(state, 1)];
+	     lua_newtable(state);
+	     for (int i = 0; i < entityVec.size(); ++i) {
+		 lua_pushnumber(state, i);
+		 lua_pushlightuserdata(state, &entityVec[i]);
+		 lua_settable(state, -3);
+	     }
+	     return 1;
 	 }}
     };
 }
@@ -283,6 +310,7 @@ LuaProvider::LuaProvider() : m_state(luaL_newstate()) {
     registerMod(m_state, systemModFuncs, "system");
     registerMod(m_state, inputModFuncs, "input");
     registerMod(m_state, entityModFuncs, "entity");
+    registerMod(m_state, cameraModFuncs, "camera");
     lua_newtable(m_state);
     lua_setglobal(m_state, "classes");
     lua_getglobal(m_state, "package");

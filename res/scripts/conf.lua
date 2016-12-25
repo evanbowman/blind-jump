@@ -39,10 +39,12 @@ mouse visibility, framerate limit, etc.
 function getConf()
    local conf = {}
    local w, h = getDrawableArea()
-   conf["width"] = w
-   conf["height"] = h
-   conf["vsync"] = true
-   conf["showCursor"] = false
-   conf["framerateLimit"] = 120
+   local conf = {
+      width = w,
+      height = h,
+      vsync = true,
+      showCursor = false,
+      framerateLimit = 120
+   }
    return conf
 end

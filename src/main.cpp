@@ -77,7 +77,7 @@ int main() {
                 return;
             }
         });
-        game.getCamera().panDown();
+        // game.getCamera().panDown();
         while (game.getWindow().isOpen()) {
             game.eventLoop();
             game.updateGraphics();
