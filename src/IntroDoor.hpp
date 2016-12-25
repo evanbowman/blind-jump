@@ -6,7 +6,6 @@
 #pragma once
 
 #include "Drawable.hpp"
-#include "effectsController.hpp"
 #include "spriteSheet.hpp"
 
 namespace detail {

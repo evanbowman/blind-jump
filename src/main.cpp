@@ -13,7 +13,6 @@
 #include "framework/smartThread.hpp"
 #include "game.hpp"
 #include "inputController.hpp"
-#include "player.hpp"
 #include "resourceHandler.hpp"
 #include "rng.hpp"
 #include <SFML/Audio.hpp>

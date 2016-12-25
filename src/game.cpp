@@ -15,11 +15,10 @@
 Game::Game(const ConfigData & conf)
     : viewPort(conf.drawableArea),
       transitionState(TransitionState::TransitionIn),
-      player(viewPort.x / 2, viewPort.y / 2),
       slept(false),
       window(sf::VideoMode::getDesktopMode(), EXECUTABLE_NAME,
              sf::Style::Fullscreen, sf::ContextSettings(0, 0, 6)),
-      camera(&player, viewPort, window.getSize()),
+      camera(viewPort, window.getSize()),
       uiFrontend(
           sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y)),
           viewPort.x / 2, viewPort.y / 2), hasFocus(false),
@@ -47,7 +46,6 @@ Game::Game(const ConfigData & conf)
 void Game::init() {
     tiles.init();
     uiFrontend.init();
-    player.init();
     bkg.init();
     target.create(viewPort.x, viewPort.y);
     secondPass.create(viewPort.x, viewPort.y);
@@ -128,10 +126,6 @@ void Game::updateGraphics() {
                 }
             };
             detailGroup.apply(drawPolicy);
-            if (player.visible) {
-                player.draw(gfxContext.faces, gfxContext.shadows);
-            }
-            effectGroup.apply(drawPolicy);
 	    for (auto & kvp : entityTable) {
 		for (auto & entity : kvp.second) {
 		    auto fg = entity->getSheet();
@@ -148,7 +142,8 @@ void Game::updateGraphics() {
 		    auto shadow = entity->getShadowSheet();
 		    if (shadow) {
 			sf::Vector2f position = entity->getPosition();
-			position.y += entity->getShadowOffset();
+			position.y += entity->getShadowOffset().y;
+			position.x += entity->getShadowOffset().x;
 			shadow->getSprite().setPosition(position);
 			target.draw(shadow->getSprite());
 		    }
@@ -334,14 +329,10 @@ void Game::updateGraphics() {
     }
     {
         std::lock_guard<std::mutex> UILock(UIMutex);
-        if (player.getState() == Player::State::dead) {
-            UI.draw(window, uiFrontend);
-        } else {
-            if (transitionState == TransitionState::None) {
-                UI.draw(window, uiFrontend);
-            }
-            uiFrontend.draw(window);
-        }
+	if (transitionState == TransitionState::None) {
+	    UI.draw(window, uiFrontend);
+	}
+	uiFrontend.draw(window);
     }
     window.setView(worldView);
     drawTransitions(window);
@@ -419,38 +410,12 @@ void Game::updateLogic(LuaProvider & luaProv) {
         std::vector<sf::Vector2f> cameraTargets;
         // en.update(this, !UI.isOpen(), elapsedTime, cameraTargets);
         camera.update(elapsedTime, cameraTargets);
-        if (player.visible) {
-            player.update(this, elapsedTime, sounds);
-            const sf::Vector2f playerPos = player.getPosition();
-            sf::Listener::setPosition(playerPos.x, playerPos.y, 35.f);
-        }
-        if (!UI.isOpen()) {
-            effectGroup.apply(objUpdatePolicy);
-        }
     }
     {
         std::lock_guard<std::mutex> UILock(UIMutex);
-        if (player.getState() == Player::State::dead) {
-            UI.dispDeathSeq();
-            if (UI.isComplete()) {
-                UI.reset();
-                player.reset();
-                // Game::nextLevel() increments level, set to -1 so that it will
-                // be zero
-                level = -1;
-                this->nextLevel();
-                uiFrontend.reset();
-                static const char playerStartingHealth = 4;
-                uiFrontend.updateHealth(playerStartingHealth);
-                uiFrontend.updateMaxHealth(playerStartingHealth);
-                uiFrontend.setWaypointText(level);
-            }
-            UI.update(this, elapsedTime);
-        } else {
-            if (transitionState == TransitionState::None) {
-                UI.update(this, elapsedTime);
-            }
-        }
+	if (transitionState == TransitionState::None) {
+	    UI.update(this, elapsedTime);
+	}
     }
     updateTransitions(elapsedTime);
 }
@@ -542,18 +507,18 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
         auto teleporterAddr =
             detailGroup.get<DetailRef::Teleporter>().back().get();
         auto teleporterPos = teleporterAddr->getPosition();
-        if ((std::abs(player.getXpos() - teleporterPos.x) < 8 &&
-             std::abs(player.getYpos() - teleporterPos.y + 12) < 8)) {
-            player.setPosition(teleporterPos.x - 2.f, teleporterPos.y - 16.f);
-            player.setState(Player::State::deactivated);
-            if (!camera.moving() &&
-                (UI.getPowerupBubbleState() ==
-                     ui::Backend::PowerupBubbleState::closed ||
-                 UI.getPowerupBubbleState() ==
-                     ui::Backend::PowerupBubbleState::dormant)) {
-                transitionState = TransitionState::ExitBeamEnter;
-            }
-        }
+        // if ((std::abs(player.getXpos() - teleporterPos.x) < 8 &&
+        //      std::abs(player.getYpos() - teleporterPos.y + 12) < 8)) {
+        //     player.setPosition(teleporterPos.x - 2.f, teleporterPos.y - 16.f);
+        //     player.setState(Player::State::deactivated);
+        //     if (!camera.moving() &&
+        //         (UI.getPowerupBubbleState() ==
+        //              ui::Backend::PowerupBubbleState::closed ||
+        //          UI.getPowerupBubbleState() ==
+        //              ui::Backend::PowerupBubbleState::dormant)) {
+        //         transitionState = TransitionState::ExitBeamEnter;
+        //     }
+        // }
         beamShape.setPosition(viewPort.x / 2 - 1.5, viewPort.y / 2 + 48);
         beamShape.setFillColor(sf::Color(114, 255, 229, 6));
         beamShape.setSize(sf::Vector2f(2, 0));
@@ -598,7 +563,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
             if (timer > transitionTime) {
                 timer = 0;
                 transitionState = TransitionState::ExitBeamDeflate;
-                player.visible = false;
+                // player.visible = false;
             }
         }
         break;
@@ -659,7 +624,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
             if (timer > transitionTime) {
                 transitionState = TransitionState::EntryBeamFade;
                 timer = 0;
-                player.visible = true;
+                // player.visible = true;
 		this->setSleep(std::chrono::microseconds(20000));
                 camera.shake(0.19f);
             }
@@ -678,7 +643,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
                 sf::Color(brightness, brightness, brightness, 255));
             if (timer > transitionTime) {
                 transitionState = TransitionState::None;
-                player.setState(Player::State::nominal);
+                // player.setState(Player::State::nominal);
                 timer = 0;
             }
         }
@@ -690,12 +655,10 @@ void Game::nextLevel() {
     level += 1;
     uiFrontend.setWaypointText(level);
     tiles.clear();
-    effectGroup.clear();
     detailGroup.clear();
-    player.setPosition(viewPort.x / 2 - 17, viewPort.y / 2);
+    // player.setPosition(viewPort.x / 2 - 17, viewPort.y / 2);
     // en.clear();
     if (level == 0) {
-        camera.snapToTarget();
         set = tileController::Tileset::intro;
     } else {
         camera.setOffset({1.f, 2.f});
@@ -844,11 +807,9 @@ DetailGroup & Game::getDetails() { return detailGroup; }
 
 tileController & Game::getTileController() { return tiles; }
 
-Player & Game::getPlayer() { return player; }
+// Player & Game::getPlayer() { return player; }
 
 Camera & Game::getCamera() { return camera; }
-
-EffectGroup & Game::getEffects() { return effectGroup; }
 
 InputController & Game::getInputController() { return input; }
 

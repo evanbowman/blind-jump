@@ -5,7 +5,6 @@
 
 #include "userInterface.hpp"
 #include "game.hpp"
-#include "player.hpp"
 #include <cmath>
 
 ui::Backend::Backend()
@@ -102,7 +101,7 @@ ui::Backend::PowerupBubbleState ui::Backend::getPowerupBubbleState() const {
 void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
     InputController & input = pGame->getInputController();
     Frontend & uIFrontEnd = pGame->getUIFrontend();
-    Player & player = pGame->getPlayer();
+    // Player & player = pGame->getPlayer();
     bool action = input.actionPressed();
     bool up = input.upPressed();
     bool down = input.downPressed();
@@ -122,7 +121,7 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
         }
         if (pause) {
             state = State::menuScreenEntry;
-            player.setState(Player::State::deactivated);
+            // player.setState(Player::State::deactivated);
             uIFrontEnd.setTextAlpha(0, ui::Frontend::Text::waypointText);
             uIFrontEnd.setTextAlpha(0, ui::Frontend::Text::healthNumText);
             uIFrontEnd.setTextAlpha(0, ui::Frontend::Text::scoreText);
@@ -186,7 +185,7 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
         if (blurAmount == 0.f) {
             state = State::closed;
             timer = 0;
-            player.activate();
+            // player.activate();
             uIFrontEnd.setTextAlpha(0, ui::Frontend::Text::resumeText);
             uIFrontEnd.setTextAlpha(0, ui::Frontend::Text::quitText);
         }

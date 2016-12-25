@@ -12,10 +12,8 @@
 #include "backgroundHandler.hpp"
 #include "camera.hpp"
 #include "colors.hpp"
-#include "effectsController.hpp"
 #include "framework/option.hpp"
 #include "inputController.hpp"
-#include "player.hpp"
 #include "resourceHandler.hpp"
 #include "soundController.hpp"
 #include "tileController.hpp"
@@ -57,8 +55,6 @@ public:
     int getLevel();
     DetailGroup & getDetails();
     tileController & getTileController();
-    Player & getPlayer();
-    EffectGroup & getEffects();
     SoundController & getSounds();
     InputController & getInputController();
     ui::Backend & getUI();
@@ -84,11 +80,9 @@ private:
     sf::Time elapsedTime;
     InputController input;
     SoundController sounds;
-    Player player;
     Camera camera;
     ui::Backend UI;
     tileController tiles;
-    EffectGroup effectGroup;
     DetailGroup detailGroup;
     ui::Frontend uiFrontend;
     bool hasFocus;

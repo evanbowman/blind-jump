@@ -4,16 +4,17 @@
 //========================================================================//
 
 #pragma once
+#include <SFML/Audio.hpp>
 #include "math.hpp"
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <utility>
 #include <vector>
-
-class Player;
+#include "Entity.hpp"
+#include <array>
 
 class Camera {
-    Player * pTarget;
+    std::weak_ptr<Entity> targetRef;
     sf::View overworldView, windowView;
     sf::Vector2f startPosition, midpoint, buffer, currentPosition;
     sf::Vector2u windowSize;
@@ -26,9 +27,9 @@ class Camera {
     void upscaleWindowView();
 
 public:
-    Camera(Player * _pTarget, const sf::Vector2f & viewPort,
-           const sf::Vector2u &);
+    Camera(const sf::Vector2f & viewPort, const sf::Vector2u &);
     void update(const sf::Time &, const std::vector<sf::Vector2f> &);
+    void setTarget(std::shared_ptr<Entity>);
     void snapToTarget();
     void setOffset(const sf::Vector2f &);
     const sf::View & getOverworldView() const;

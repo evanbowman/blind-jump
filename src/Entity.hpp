@@ -12,7 +12,7 @@ private:
     bool m_killFlag;
     uint16_t m_keyframe;
     float m_zOrder;
-    float m_shadowOffset;
+    sf::Vector2f m_shadowOffset;
     SpriteSheet * m_sheet;
     SpriteSheet * m_shadowSheet;
     sf::Sprite * m_glow;
@@ -22,16 +22,16 @@ public:
     Entity() : m_position(),
 	       m_killFlag(false),
 	       m_keyframe(0),
-	       m_shadowOffset(0.f),
+	       m_shadowOffset{},
 	       m_zOrder(0.f),
 	       m_sheet(nullptr),
 	       m_shadowSheet(nullptr),
 	       m_glow(nullptr) {}
 
-    inline float getShadowOffset() const {
+    inline const sf::Vector2f & getShadowOffset() const {
 	return m_shadowOffset;
     }
-    inline void setShadowOffset(const float offset) {
+    inline void setShadowOffset(const sf::Vector2f & offset) {
 	m_shadowOffset = offset;
     }
     inline void setPosition(const sf::Vector2f & position) {

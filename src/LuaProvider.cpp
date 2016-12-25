@@ -75,50 +75,40 @@ extern "C" {
 	return &vec.back();
     }
 
-    static const luaL_Reg cameraTrackingLibFuncs[] = {
+    static const luaL_Reg cameraLibFuncs[] = {
 	{"setTarget",
 	 [](lua_State * state) {
 	     if (lua_gettop(state) != 1) {
 		 throw std::runtime_error(paramErr + "setTarget");
 	     }
+	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
+	     getgGamePtr()->getCamera().setTarget(*entity);
 	     return 0;
+	 }},
+	{"displaceFromTarget",
+	 [](lua_State * state) {
+	     if (lua_gettop(state) != 2) {
+		 throw std::runtime_error(paramErr + "displaceFromTarget");
+	     }
+	     const float x = lua_tonumber(state, 1);
+	     const float y = lua_tonumber(state, 2);
+	     getgGamePtr()->getCamera().setOffset({x, y});
+	     return 0;
+	 }},
+	{"getViewportSize",
+	 [](lua_State * state) {
+	     if (lua_gettop(state) != 0) {
+		 throw std::runtime_error(paramErr + "getViewportSize");
+	     }
+	     auto viewsize = getgGamePtr()->getCamera().getOverworldView().getSize();
+	     lua_pushnumber(state, viewsize.x);
+	     lua_pushnumber(state, viewsize.y);
+	     return 2;
 	 }},
 	{}
     };
 
     static const luaL_Reg cameraTransitionLibFuncs[] = {
-	{"panInDown",
-	 [](lua_State * state) {
-	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "panInDown");
-	     }
-	     getgGamePtr()->getCamera().setOffset(sf::Vector2f(1.f, 2.f));
-	     return 0;
-	 }},
-	{"panInLeft",
-	 [](lua_State * state) {
-	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "panInLeft");
-	     }
-	     getgGamePtr()->getCamera().setOffset(sf::Vector2f(2.f, 1.f));
-	     return 0;
-	 }},
-	{"panInRight",
-	 [](lua_State * state) {
-	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "panInRight");
-	     }
-	     getgGamePtr()->getCamera().setOffset(sf::Vector2f(0.5f, 1.f));
-	     return 0;
-	 }},
-	{"panInUp",
-	 [](lua_State * state) {
-	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "panInUp");
-	     }
-	     getgGamePtr()->getCamera().setOffset(sf::Vector2f(1.f, 0.5f));
-	     return 0;
-	 }},
 	{}
     };
 
@@ -298,12 +288,13 @@ extern "C" {
 	 }},
 	{"setShadowOffset",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 2) {
+	     if (lua_gettop(state) != 3) {
 		 throw std::runtime_error(paramErr + "setShadowOffset");
 	     }
 	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
-	     const float offset = lua_tonumber(state, 2);
-	     entity->setShadowOffset(offset);
+	     const float offsetX = lua_tonumber(state, 2);
+	     const float offsetY = lua_tonumber(state, 3);
+	     entity->setShadowOffset({offsetX, offsetY});
 	     return 0;
 	 }},
 	{"setZOrder",
@@ -346,16 +337,16 @@ extern "C" {
     };
 }
 
-static void registerCameraLib(lua_State * state) {
-    lua_newtable(state);
-    lua_newtable(state);
-    luaL_setfuncs(state, cameraTransitionLibFuncs, 0);
-    lua_setfield(state, -2, "transition");
-    lua_newtable(state);
-    luaL_setfuncs(state, cameraTrackingLibFuncs, 0);
-    lua_setfield(state, -2, "tracking");
-    lua_setglobal(state, "camera");
-}
+// static void registerCameraLib(lua_State * state) {
+//     lua_newtable(state);
+//     lua_newtable(state);
+//     luaL_setfuncs(state, cameraTransitionLibFuncs, 0);
+//     lua_setfield(state, -2, "transition");
+//     lua_newtable(state);
+//     luaL_setfuncs(state, cameraTrackingLibFuncs, 0);
+//     lua_setfield(state, -2, "tracking");
+//     lua_setglobal(state, "camera");
+// }
 
 template <typename M>
 static void registerLib(lua_State * state, M * lib, const char * name) {
@@ -369,7 +360,7 @@ LuaProvider::LuaProvider() : m_state(luaL_newstate()) {
     registerLib(m_state, systemLibFuncs, "system");
     registerLib(m_state, inputLibFuncs, "input");
     registerLib(m_state, entityLibFuncs, "entity");
-    registerCameraLib(m_state);
+    registerLib(m_state, cameraLibFuncs, "camera");
     lua_newtable(m_state);
     lua_setglobal(m_state, "classes");
     lua_getglobal(m_state, "package");

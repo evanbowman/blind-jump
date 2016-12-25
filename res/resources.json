@@ -170,6 +170,15 @@
 		"w": 32,
 		"h": 32
 	    }
+	},
+	"playerShadowSprite": {
+	    "texture": "textures/gameObjects.png",
+	    "box": {
+		"x": 0,
+		"y": 100,
+		"w": 18,
+		"h": 16
+	    }
 	}
     }
 }

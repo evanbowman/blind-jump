@@ -6,7 +6,6 @@
 #pragma once
 #include "colors.hpp"
 #include "easingTemplates.hpp"
-#include "effectsController.hpp"
 #include "inputController.hpp"
 #include "powerup.hpp"
 #include "resourceHandler.hpp"

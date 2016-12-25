@@ -85,7 +85,7 @@ classes["Turret"] = {
       entity.setField(this, id.state, "closed")
       entity.setSprite(this, "turretSprite")
       entity.setShadow(this, "turretShadowSprite")
-      entity.setShadowOffset(this, 20)
+      entity.setShadowOffset(this, 0, 20)
       local x, y = entity.getPosition(this)
       entity.setZOrder(this, y - 3)
    end,

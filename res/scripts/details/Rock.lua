@@ -6,7 +6,5 @@ classes["Rock"] = {
       entity.setZOrder(this, y + 10)
    end,
 
-   onUpdate = function(this)
-      
-   end
+   onUpdate = function(this) end
 }
