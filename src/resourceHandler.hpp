@@ -5,15 +5,15 @@
 
 #pragma once
 
+#include "ResourcePath.hpp"
+#include "json.hpp"
+#include "spriteSheet.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <array>
 #include <assert.h>
 #include <stdexcept>
 #include <utility>
-#include "json.hpp"
-#include "ResourcePath.hpp"
-#include "spriteSheet.hpp"
 
 using json = nlohmann::json;
 

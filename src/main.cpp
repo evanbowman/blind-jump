@@ -13,6 +13,7 @@
 #include "framework/smartThread.hpp"
 #include "game.hpp"
 #include "inputController.hpp"
+#include "json.hpp"
 #include "resourceHandler.hpp"
 #include "rng.hpp"
 #include <SFML/Audio.hpp>
@@ -20,10 +21,9 @@
 #include <SFML/Window.hpp>
 #include <cmath>
 #include <exception>
+#include <fstream>
 #include <iostream>
 #include <stdexcept>
-#include <fstream>
-#include "json.hpp"
 
 std::exception_ptr pWorkerException = nullptr;
 
@@ -33,19 +33,22 @@ int main() {
         LuaProvider luaProv;
         luaProv.runScriptFromFile(resourcePath() + "scripts/conf.lua");
         Game game(luaProv.applyHook(getConfig));
-	json resourcesJSON;
-	{
-	    std::fstream resourcesJSONRaw(resourcePath() + "resources.json");
-	    resourcesJSONRaw >> resourcesJSON;
-	    game.getResHandler().loadFromJSON(resourcesJSON);
-	}
-	game.init();
+        json resourcesJSON;
+        {
+            std::fstream resourcesJSONRaw(resourcePath() + "resources.json");
+            resourcesJSONRaw >> resourcesJSON;
+            game.getResHandler().loadFromJSON(resourcesJSON);
+        }
+        game.init();
+        // A global pointer to an instance of the Game class is required for the
+        // engine's Lua API for scripting logic
         setgGamePtr(&game);
-	json::iterator entryPt = resourcesJSON.find("main");
-	if (entryPt == resourcesJSON.end()) {
-	    throw std::runtime_error("Error: \"main\" field missing from manifest.json");
-	}
-	luaProv.runScriptFromFile(resourcePath() + entryPt->get<std::string>());
+        json::iterator entryPt = resourcesJSON.find("main");
+        if (entryPt == resourcesJSON.end()) {
+            throw std::runtime_error(
+                "Error: \"main\" field missing from manifest.json");
+        }
+        luaProv.runScriptFromFile(resourcePath() + entryPt->get<std::string>());
         framework::SmartThread logicThread([&game, &luaProv]() {
             duration logicUpdateDelta;
             sf::Clock gameClock;
@@ -54,8 +57,12 @@ int main() {
                     time_point start = high_resolution_clock::now();
                     game.setElapsedTime(gameClock.restart());
                     if (game.hasSlept()) {
+                        // IMPORTANT:
+                        // This is necessary, otherwise calls to
+                        // Game::setSleep would screw with delta
+			// timing for game logic.
                         game.setElapsedTime(gameClock.restart());
-			game.clearSleptFlag();
+                        game.clearSleptFlag();
                     }
                     game.updateLogic(luaProv);
                     time_point stop = high_resolution_clock::now();

@@ -109,8 +109,8 @@ void SoundController::play(const std::string & name) {
 }
 
 void SoundController::play(const std::string & name,
-                           std::shared_ptr<Entity> source,
-                           float minDistance, float attenuation, bool loop) {
+                           std::shared_ptr<Entity> source, float minDistance,
+                           float attenuation, bool loop) {
     std::lock_guard<std::mutex> lk(soundsGuard);
     soundRequests.push_back(
         {name, minDistance, attenuation, true, loop, source});

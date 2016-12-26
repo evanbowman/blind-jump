@@ -27,8 +27,8 @@ void backgroundHandler::init() {
             starsFar[i][j].setTexture(getgResHandlerPtr()->getTexture(
                 "textures/bkg_stars_distant.png"));
             starsFar[i][j].setPosition(i * 128, j * 128);
-            stars[i][j].setTexture(getgResHandlerPtr()->getTexture(
-                "textures/bkg_stars.png"));
+            stars[i][j].setTexture(
+                getgResHandlerPtr()->getTexture("textures/bkg_stars.png"));
             stars[i][j].setPosition(i * 128, j * 128);
         }
     }

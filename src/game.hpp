@@ -5,6 +5,7 @@
 
 #pragma once
 #include "DetailGroup.hpp"
+#include "Entity.hpp"
 #include "GfxContext.hpp"
 #include "LuaProvider.hpp"
 #include "RenderType.hpp"
@@ -23,7 +24,6 @@
 #include <atomic>
 #include <cmath>
 #include <mutex>
-#include "Entity.hpp"
 #include <thread>
 
 using EntityTable = std::map<std::string, std::vector<EntityRef>>;

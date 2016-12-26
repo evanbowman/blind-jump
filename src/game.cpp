@@ -14,15 +14,14 @@
 
 Game::Game(const ConfigData & conf)
     : viewPort(conf.drawableArea),
-      transitionState(TransitionState::TransitionIn),
-      slept(false),
+      transitionState(TransitionState::TransitionIn), slept(false),
       window(sf::VideoMode::getDesktopMode(), EXECUTABLE_NAME,
              sf::Style::Fullscreen, sf::ContextSettings(0, 0, 6)),
       camera(viewPort, window.getSize()),
       uiFrontend(
           sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y)),
-          viewPort.x / 2, viewPort.y / 2), hasFocus(false),
-      level(0), stashed(false), preload(false),
+          viewPort.x / 2, viewPort.y / 2),
+      hasFocus(false), level(0), stashed(false), preload(false),
       worldView(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
       timer(0) {
     sf::View windowView;
@@ -39,7 +38,7 @@ Game::Game(const ConfigData & conf)
     window.setMouseCursorVisible(conf.showMouse);
     window.setFramerateLimit(conf.framerateLimit);
     window.setVerticalSyncEnabled(conf.enableVsync);
-    // TODO: refactor out global pointer!
+    // TODO: refactor out global pointer! (only needed for old C++ logic)
     setgResHandlerPtr(&resHandler);
 }
 
@@ -59,8 +58,8 @@ void Game::init() {
         getgResHandlerPtr()->getTexture("textures/vignetteMask.png"));
     vignetteShadowSpr.setTexture(
         getgResHandlerPtr()->getTexture("textures/vignetteShadow.png"));
-    beamGlowSpr.setTexture(getgResHandlerPtr()->getTexture(
-        "textures/teleporterBeamGlow.png"));
+    beamGlowSpr.setTexture(
+        getgResHandlerPtr()->getTexture("textures/teleporterBeamGlow.png"));
     vignetteShadowSpr.setColor(sf::Color(255, 255, 255, 100));
     hudView.setSize(viewPort.x, viewPort.y);
     hudView.setCenter(viewPort.x / 2, viewPort.y / 2);
@@ -104,7 +103,7 @@ void Game::eventLoop() {
 void Game::updateGraphics() {
     window.clear();
     if (!hasFocus) {
-	this->setSleep(std::chrono::microseconds(200000));
+        this->setSleep(std::chrono::microseconds(200000));
         return;
     }
     target.clear(sf::Color::Transparent);
@@ -126,29 +125,28 @@ void Game::updateGraphics() {
                 }
             };
             detailGroup.apply(drawPolicy);
-	    for (auto & kvp : entityTable) {
-		for (auto & entity : kvp.second) {
-		    auto fg = entity->getSheet();
-		    if (fg) {
-			fg->setFrame(entity->getKeyframe());
-		        fg->getSprite().setPosition(entity->getPosition());
-			gfxContext.faces.emplace_back(fg->getSprite(),
-						      entity->getZOrder(),
-						      // TODO: add shading options to
-						      //       lua API
-						      Rendertype::shadeDefault,
-						      0.f);
-		    }
-		    auto shadow = entity->getShadowSheet();
-		    if (shadow) {
-			sf::Vector2f position = entity->getPosition();
-			position.y += entity->getShadowOffset().y;
-			position.x += entity->getShadowOffset().x;
-			shadow->getSprite().setPosition(position);
-			target.draw(shadow->getSprite());
-		    }
-		}
-	    }
+            for (auto & kvp : entityTable) {
+                for (auto & entity : kvp.second) {
+                    auto fg = entity->getSheet();
+                    if (fg) {
+                        fg->setFrame(entity->getKeyframe());
+                        fg->getSprite().setPosition(entity->getPosition());
+                        gfxContext.faces.emplace_back(
+                            fg->getSprite(), entity->getZOrder(),
+                            // TODO: add shading options to
+                            //       lua API
+                            Rendertype::shadeDefault, 0.f);
+                    }
+                    auto shadow = entity->getShadowSheet();
+                    if (shadow) {
+                        sf::Vector2f position = entity->getPosition();
+                        position.y += entity->getShadowOffset().y;
+                        position.x += entity->getShadowOffset().x;
+                        shadow->getSprite().setPosition(position);
+                        target.draw(shadow->getSprite());
+                    }
+                }
+            }
             sounds.update();
         }
         if (!gfxContext.shadows.empty()) {
@@ -329,10 +327,10 @@ void Game::updateGraphics() {
     }
     {
         std::lock_guard<std::mutex> UILock(UIMutex);
-	if (transitionState == TransitionState::None) {
-	    UI.draw(window, uiFrontend);
-	}
-	uiFrontend.draw(window);
+        if (transitionState == TransitionState::None) {
+            UI.draw(window, uiFrontend);
+        }
+        uiFrontend.draw(window);
     }
     window.setView(worldView);
     drawTransitions(window);
@@ -367,30 +365,30 @@ void Game::updateLogic(LuaProvider & luaProv) {
             for (auto & kvp : this->entityTable) {
                 lua_getfield(state, -1, kvp.first.c_str());
                 if (!lua_istable(state, -1)) {
-		    const std::string err = "Error: classtable field " +
-			kvp.first + " is not a table";
-		    throw std::runtime_error(err);
+                    const std::string err = "Error: classtable field " +
+                                            kvp.first + " is not a table";
+                    throw std::runtime_error(err);
                 }
                 for (auto it = kvp.second.begin(); it != kvp.second.end();) {
-		    lua_getfield(state, -1, "onUpdate");
-		    if (!lua_isfunction(state, -1)) {
-			const std::string err =
-			    "Error: missing or malformed OnUpdate for class " +
-			    kvp.first;
-			throw std::runtime_error(err);
-		    }
-		    lua_pushlightuserdata(state, (void *)(&(*it)));
-		    if (lua_pcall(state, 1, 0, 0)) {
-			throw std::runtime_error(lua_tostring(state, -1));
-		    }
-		    if ((*it)->getKillFlag()) {
-			for (auto & member : (*it)->getMemberTable()) {
-			    luaL_unref(state, LUA_REGISTRYINDEX, member.second);
-			}
-			it = kvp.second.erase(it);
-		    } else {
-			++it;
-		    }
+                    lua_getfield(state, -1, "onUpdate");
+                    if (!lua_isfunction(state, -1)) {
+                        const std::string err =
+                            "Error: missing or malformed OnUpdate for class " +
+                            kvp.first;
+                        throw std::runtime_error(err);
+                    }
+                    lua_pushlightuserdata(state, (void *)(&(*it)));
+                    if (lua_pcall(state, 1, 0, 0)) {
+                        throw std::runtime_error(lua_tostring(state, -1));
+                    }
+                    if ((*it)->getKillFlag()) {
+                        for (auto & member : (*it)->getMemberTable()) {
+                            luaL_unref(state, LUA_REGISTRYINDEX, member.second);
+                        }
+                        it = kvp.second.erase(it);
+                    } else {
+                        ++it;
+                    }
                 }
                 lua_pop(state, 1);
             }
@@ -408,14 +406,13 @@ void Game::updateLogic(LuaProvider & luaProv) {
         };
         detailGroup.apply(objUpdatePolicy);
         std::vector<sf::Vector2f> cameraTargets;
-        // en.update(this, !UI.isOpen(), elapsedTime, cameraTargets);
         camera.update(elapsedTime, cameraTargets);
     }
     {
         std::lock_guard<std::mutex> UILock(UIMutex);
-	if (transitionState == TransitionState::None) {
-	    UI.update(this, elapsedTime);
-	}
+        if (transitionState == TransitionState::None) {
+            UI.update(this, elapsedTime);
+        }
     }
     updateTransitions(elapsedTime);
 }
@@ -507,18 +504,6 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
         auto teleporterAddr =
             detailGroup.get<DetailRef::Teleporter>().back().get();
         auto teleporterPos = teleporterAddr->getPosition();
-        // if ((std::abs(player.getXpos() - teleporterPos.x) < 8 &&
-        //      std::abs(player.getYpos() - teleporterPos.y + 12) < 8)) {
-        //     player.setPosition(teleporterPos.x - 2.f, teleporterPos.y - 16.f);
-        //     player.setState(Player::State::deactivated);
-        //     if (!camera.moving() &&
-        //         (UI.getPowerupBubbleState() ==
-        //              ui::Backend::PowerupBubbleState::closed ||
-        //          UI.getPowerupBubbleState() ==
-        //              ui::Backend::PowerupBubbleState::dormant)) {
-        //         transitionState = TransitionState::ExitBeamEnter;
-        //     }
-        // }
         beamShape.setPosition(viewPort.x / 2 - 1.5, viewPort.y / 2 + 48);
         beamShape.setFillColor(sf::Color(114, 255, 229, 6));
         beamShape.setSize(sf::Vector2f(2, 0));
@@ -563,7 +548,6 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
             if (timer > transitionTime) {
                 timer = 0;
                 transitionState = TransitionState::ExitBeamDeflate;
-                // player.visible = false;
             }
         }
         break;
@@ -624,8 +608,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
             if (timer > transitionTime) {
                 transitionState = TransitionState::EntryBeamFade;
                 timer = 0;
-                // player.visible = true;
-		this->setSleep(std::chrono::microseconds(20000));
+                this->setSleep(std::chrono::microseconds(20000));
                 camera.shake(0.19f);
             }
         }
@@ -643,7 +626,6 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
                 sf::Color(brightness, brightness, brightness, 255));
             if (timer > transitionTime) {
                 transitionState = TransitionState::None;
-                // player.setState(Player::State::nominal);
                 timer = 0;
             }
         }
@@ -656,16 +638,12 @@ void Game::nextLevel() {
     uiFrontend.setWaypointText(level);
     tiles.clear();
     detailGroup.clear();
-    // player.setPosition(viewPort.x / 2 - 17, viewPort.y / 2);
-    // en.clear();
     if (level == 0) {
         set = tileController::Tileset::intro;
     } else {
         camera.setOffset({1.f, 2.f});
         set = tileController::Tileset::regular;
     }
-    // vignetteSprite.setColor(sf::Color::White); // TODO: See if this line is
-    // actually benificial
     if (set != tileController::Tileset::intro) {
         int count;
         do {
@@ -694,16 +672,14 @@ void Game::nextLevel() {
         detailGroup.add<DetailRef::Teleporter>(
             tiles.posX + c.x * 32 + 2, tiles.posY + c.y * 26 - 4,
             getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
-            getgResHandlerPtr()->getTexture(
-                "textures/teleporterGlow.png"));
+            getgResHandlerPtr()->getTexture("textures/teleporterGlow.png"));
         auto optCoord = pickLocation(tiles.emptyMapLocations);
         if (optCoord) {
             Powerup chestContents = static_cast<Powerup>(rng::random<2, 1>());
             detailGroup.add<DetailRef::TreasureChest>(
                 optCoord.value().x * 32 + tiles.posX,
                 optCoord.value().y * 26 + tiles.posY,
-                getgResHandlerPtr()->getTexture(
-                    "textures/gameObjects.png"),
+                getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
                 chestContents);
         }
         if (!rng::random<2>()) {
@@ -714,8 +690,7 @@ void Game::nextLevel() {
             const int yInit = (*pCoordVec)[vecSize - 1 - locationSel].y;
             detailGroup.add<DetailRef::Terminal>(
                 xInit * 32 + tiles.posX, yInit * 26 + tiles.posY,
-                getgResHandlerPtr()->getTexture(
-                    "textures/gameObjects.png"),
+                getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
                 tiles.mapArray[xInit][yInit]);
         }
         gfxContext.glowSprs1.clear();
@@ -744,10 +719,8 @@ void Game::nextLevel() {
             detailGroup.add<DetailRef::Lamp>(
                 tiles.posX + 16 + (detailPositions[i].x * 32),
                 tiles.posY - 3 + (detailPositions[i].y * 26),
-                getgResHandlerPtr()->getTexture(
-                    "textures/gameObjects.png"),
-                getgResHandlerPtr()->getTexture(
-                    "textures/lampLight.png"));
+                getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
+                getgResHandlerPtr()->getTexture("textures/lampLight.png"));
         }
         detailPositions.clear();
     } else if (set == tileController::Tileset::intro) {
@@ -774,10 +747,7 @@ void Game::nextLevel() {
         detailGroup.add<DetailRef::Teleporter>(
             tiles.posX - 178 + 8 * 32, tiles.posY + 284 + -7 * 26,
             getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
-            getgResHandlerPtr()->getTexture(
-                "textures/teleporterGlow.png"));
-        // sounds.play(ResHandler::Sound::electricHum,
-        // detailGroup.get<DetailRef::Teleporter>().back(), 72.f, 3.f, true);
+            getgResHandlerPtr()->getTexture("textures/teleporterGlow.png"));
         for (auto it = ::levelZeroWalls.begin(); it != ::levelZeroWalls.end();
              ++it) {
             wall w;
@@ -788,13 +758,9 @@ void Game::nextLevel() {
     }
 }
 
-bool Game::hasSlept() const {
-    return slept;
-}
+bool Game::hasSlept() const { return slept; }
 
-void Game::clearSleptFlag() {
-    slept = false;
-}
+void Game::clearSleptFlag() { slept = false; }
 
 void Game::setSleep(const std::chrono::microseconds & time) {
     slept = true;
@@ -803,11 +769,7 @@ void Game::setSleep(const std::chrono::microseconds & time) {
 
 DetailGroup & Game::getDetails() { return detailGroup; }
 
-// enemyController & Game::getEnemyController() { return en; }
-
 tileController & Game::getTileController() { return tiles; }
-
-// Player & Game::getPlayer() { return player; }
 
 Camera & Game::getCamera() { return camera; }
 

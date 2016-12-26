@@ -5,13 +5,13 @@
 
 #pragma once
 
+#include "Entity.hpp"
 #include "framework/framework.hpp"
 #include "resourceHandler.hpp"
 #include <SFML/Audio.hpp>
 #include <list>
 #include <memory>
 #include <vector>
-#include "Entity.hpp"
 
 struct reqInfo {
     std::string soundname;
@@ -41,8 +41,8 @@ public:
     // of running sounds works like a queue, so if you play a long running
     // looping one, sounds behind it will not be deallocated, and adding
     // new ones will eventually use up all available sound resources.
-    void play(const std::string &, std::shared_ptr<Entity>,
-              float minDistance, float attenuation, bool loop = false);
+    void play(const std::string &, std::shared_ptr<Entity>, float minDistance,
+              float attenuation, bool loop = false);
 
 private:
     std::mutex soundsGuard;

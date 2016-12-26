@@ -4,14 +4,14 @@
 //========================================================================//
 
 #pragma once
-#include <SFML/Audio.hpp>
+#include "Entity.hpp"
 #include "math.hpp"
+#include <SFML/Audio.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
+#include <array>
 #include <utility>
 #include <vector>
-#include "Entity.hpp"
-#include <array>
 
 class Camera {
     std::weak_ptr<Entity> targetRef;

@@ -3,13 +3,13 @@
 // Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
 //========================================================================//
 
-#include "rng.hpp"
 #include "tileController.hpp"
 #include "ResourcePath.hpp"
 #include "drawPixels.hpp"
 #include "initMapVectors.hpp"
 #include "mappingFunctions.hpp"
 #include "resourceHandler.hpp"
+#include "rng.hpp"
 #include <cstring>
 #include <random>
 
@@ -256,8 +256,8 @@ void tileController::rebuild(Tileset set) {
         workingSet = 1;
         shadow.setFillColor(sf::Color(188, 188, 198, 255));
         createMapImage(
-            getgResHandlerPtr()->getImage("textures/soilTileset.png"),
-            mapArray, mapTexture,
+            getgResHandlerPtr()->getImage("textures/soilTileset.png"), mapArray,
+            mapTexture,
             getgResHandlerPtr()->getImage("textures/grassSetEdge.png"),
             getgResHandlerPtr()->getImage("textures/grassSet.png"));
         initMapVectors(this);
