@@ -123,8 +123,7 @@ static const luaL_Reg cameraLibFuncs[] = {
 static const luaL_Reg cameraTransitionLibFuncs[] = {{}};
 
 static const luaL_Reg inputLibFuncs[] = {
-    {"left",
-     [](lua_State * state) {
+    {"left", [](lua_State * state) {
          if (lua_gettop(state) != 0) {
              throw std::runtime_error(paramErr + "left");
          }

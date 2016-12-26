@@ -21,7 +21,6 @@ local fsm = {
       end
       if input.down() then
 	 y = y + 1
-	 system.quit()
       end
       entity.setPosition(this, x, y)
    end,
