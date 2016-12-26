@@ -86,8 +86,6 @@ local fsm = {
 classes["Player"] = {
    onCreate = function(this)
       entity.setSprite(this, "playerDownSprite")
-      entity.setShadow(this, "playerShadowSprite")
-      entity.setShadowOffset(this, 7, 24)
       entity.setKeyframe(this, 5)
       entity.setField(this, id.hp, 4)
       entity.setField(this, id.state, "nominal")

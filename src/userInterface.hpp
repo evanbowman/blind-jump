@@ -7,7 +7,6 @@
 #include "colors.hpp"
 #include "easingTemplates.hpp"
 #include "inputController.hpp"
-#include "powerup.hpp"
 #include "resourceHandler.hpp"
 #include "shutdownSignal.hpp"
 #include <SFML/Graphics.hpp>
@@ -71,7 +70,6 @@ public:
     void resetHPText();
     void resetSCText();
     void updateScore(int);
-    void addPowerup(Powerup);
     int getScore();
     void setBarWidth(float);
 
@@ -83,7 +81,6 @@ private:
     sf::Text resumeText, quitText, powerupText;
     char maxHealth, health;
     bool healthModified, scoreModified;
-    Powerup powerupAdded;
     int score;
     PowerupBubble powerupBubble;
     float windowCenterX, windowCenterY;
@@ -130,14 +127,11 @@ public:
     bool blurEnabled();
     bool desaturateEnabled();
     float getBlurAmount();
-    void setPowerup(Powerup);
-    Powerup getCurrentPowerup() const;
     PowerupBubbleState getPowerupBubbleState() const;
 
 private:
     State state;
     PowerupBubbleState powerupBubbleState;
-    Powerup powerup;
     int menuItemSelected;
     int menuItemTarget;
     int32_t timer, timerAlt;

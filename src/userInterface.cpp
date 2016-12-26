@@ -85,15 +85,6 @@ void ui::Backend::draw(sf::RenderWindow & window, ui::Frontend & uIFrontEnd) {
     }
 }
 
-void ui::Backend::setPowerup(Powerup _powerup) {
-    dispPowerupBar = false;
-    powerupTimer = 0;
-    powerup = _powerup;
-    powerupBubbleState = PowerupBubbleState::triggered;
-}
-
-Powerup ui::Backend::getCurrentPowerup() const { return powerup; }
-
 ui::Backend::PowerupBubbleState ui::Backend::getPowerupBubbleState() const {
     return powerupBubbleState;
 }
@@ -116,7 +107,6 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
             uIFrontEnd.setBarWidth(barWidth);
             if (powerupTimer > powerupTimerCeil) {
                 dispPowerupBar = false;
-                powerup = Powerup::nil;
             }
         }
         if (pause) {
@@ -239,7 +229,6 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
     }
     switch (powerupBubbleState) {
     case PowerupBubbleState::triggered:
-        uIFrontEnd.addPowerup(powerup);
         powerupBubbleState = PowerupBubbleState::opening;
         break;
 
@@ -279,19 +268,6 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
 
     case PowerupBubbleState::closed:
         uIFrontEnd.setBubbleAlpha(0);
-        switch (powerup) {
-        case Powerup::nil:
-            break;
-
-        case Powerup::health:
-            uIFrontEnd.updateMaxHealth(uIFrontEnd.getMaxHealth() + 1);
-            break;
-
-        case Powerup::rapidFire:
-            dispPowerupBar = true;
-            powerupTimer = 0;
-            break;
-        }
         powerupBubbleState = PowerupBubbleState::dormant;
         break;
 
@@ -316,7 +292,6 @@ void ui::Backend::reset() {
     desaturateAmount = 0.f;
     blurAmount = 0.f;
     timer = 0;
-    powerup = Powerup::nil;
     dispPowerupBar = false;
     powerupTimer = 0;
 }
@@ -374,7 +349,7 @@ const sf::CircleShape & ui::PowerupBubble::getShape() const { return bubble; }
 #define WAYPOINT_TEXT_FADE_SECONDS 3
 
 ui::Frontend::Frontend(sf::View fontView, float x, float y)
-    : healthModified(true), scoreModified(true), powerupAdded(Powerup::nil),
+    : healthModified(true), scoreModified(true),
       barWidth(0.f) {
     // Store the view to use when drawing fonts
     this->fontView = fontView;
@@ -565,8 +540,6 @@ void ui::Frontend::reset() {
     barWidth = 0;
 }
 
-void ui::Frontend::addPowerup(Powerup powerup) { powerupAdded = powerup; }
-
 void ui::Frontend::setWaypointText(const int level) {
     heart.setPosition(fontView.getSize().x - heart.getLocalBounds().width / 2,
                       heart.getLocalBounds().height / 1.8);
@@ -626,25 +599,6 @@ void ui::Frontend::draw(sf::RenderWindow & window) {
                 fontView.getSize().x * 0.015 - heart.getLocalBounds().width,
             scoreText.getLocalBounds().height * 3);
     }
-    switch (powerupAdded) {
-    case Powerup::nil:
-        break;
-
-    case Powerup::health:
-        powerupBubble.setFrame(static_cast<int>(powerupAdded) -
-                               1); // Powerup::nil has no frame
-        powerupAdded = Powerup::nil;
-        barWidth = 0;
-        powerupText.setString(std::string("LIFE JAR"));
-        break;
-
-    case Powerup::rapidFire:
-        powerupBubble.setFrame(static_cast<int>(powerupAdded) - 1);
-        powerupAdded = Powerup::nil;
-        powerupText.setString(std::string("SUPERCHARGER"));
-        break;
-    }
-    // Slowly fade out the  waypoint text
     sf::Color c = waypointText.getFillColor();
     if (c.a > 68) {
         if (wpTextDisplayTimer.getElapsedTime().asSeconds() >

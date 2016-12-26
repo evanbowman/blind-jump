@@ -66,11 +66,6 @@ void ResHandler::loadFromJSON(json & JSON) {
             auto & texture = this->getTexture(*textureTag);
             this->addSheet(sheet.key(),
                            SpriteSheet(texture, sf::IntRect(x, y, w, h)));
-            // FIXME: sprites should be centered on origin, but this results in
-            // offsets
-            // that I don't understand yet...
-            // auto added = sheets.find(sheet.key());
-            // added->second.getSprite().setOrigin(x / 2, y / 2);
         }
     }
 }

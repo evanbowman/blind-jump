@@ -9,6 +9,7 @@ extern "C" {
 #include "ResourcePath.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include "rng.hpp"
 #include <iostream>
 
 class LuaProvider {

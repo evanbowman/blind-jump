@@ -119,12 +119,6 @@ void Game::updateGraphics() {
             gfxContext.shadows.clear();
             gfxContext.faces.clear();
             target.setView(camera.getOverworldView());
-            auto drawPolicy = [this](auto & vec) {
-                for (auto it = vec.begin(); it != vec.end(); ++it) {
-                    it->get()->draw(gfxContext, camera.getOverworldView());
-                }
-            };
-            detailGroup.apply(drawPolicy);
             for (auto & kvp : entityTable) {
                 for (auto & entity : kvp.second) {
                     auto fg = entity->getSheet();
@@ -136,14 +130,6 @@ void Game::updateGraphics() {
                             // TODO: add shading options to
                             //       lua API
                             Rendertype::shadeDefault, 0.f);
-                    }
-                    auto shadow = entity->getShadowSheet();
-                    if (shadow) {
-                        sf::Vector2f position = entity->getPosition();
-                        position.y += entity->getShadowOffset().y;
-                        position.x += entity->getShadowOffset().x;
-                        shadow->getSprite().setPosition(position);
-                        target.draw(shadow->getSprite());
                     }
                 }
             }
@@ -404,7 +390,6 @@ void Game::updateLogic(LuaProvider & luaProv) {
                 }
             }
         };
-        detailGroup.apply(objUpdatePolicy);
         std::vector<sf::Vector2f> cameraTargets;
         camera.update(elapsedTime, cameraTargets);
     }
@@ -501,9 +486,6 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
     std::lock_guard<std::mutex> grd(transitionMutex);
     switch (transitionState) {
     case TransitionState::None: {
-        auto teleporterAddr =
-            detailGroup.get<DetailRef::Teleporter>().back().get();
-        auto teleporterPos = teleporterAddr->getPosition();
         beamShape.setPosition(viewPort.x / 2 - 1.5, viewPort.y / 2 + 48);
         beamShape.setFillColor(sf::Color(114, 255, 229, 6));
         beamShape.setSize(sf::Vector2f(2, 0));
@@ -637,7 +619,6 @@ void Game::nextLevel() {
     level += 1;
     uiFrontend.setWaypointText(level);
     tiles.clear();
-    detailGroup.clear();
     if (level == 0) {
         set = tileController::Tileset::intro;
     } else {
@@ -666,32 +647,15 @@ void Game::nextLevel() {
             return {};
         }
     };
-    auto emptyOncreate = [](auto created) {};
     if (level != 0) {
         Coordinate c = tiles.getTeleporterLoc();
-        detailGroup.add<DetailRef::Teleporter>(
-            tiles.posX + c.x * 32 + 2, tiles.posY + c.y * 26 - 4,
-            getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
-            getgResHandlerPtr()->getTexture("textures/teleporterGlow.png"));
         auto optCoord = pickLocation(tiles.emptyMapLocations);
-        if (optCoord) {
-            Powerup chestContents = static_cast<Powerup>(rng::random<2, 1>());
-            detailGroup.add<DetailRef::TreasureChest>(
-                optCoord.value().x * 32 + tiles.posX,
-                optCoord.value().y * 26 + tiles.posY,
-                getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
-                chestContents);
-        }
         if (!rng::random<2>()) {
             auto pCoordVec = tiles.getEmptyLocations();
             const size_t vecSize = pCoordVec->size();
             const int locationSel = rng::random(vecSize / 3);
             const int xInit = (*pCoordVec)[vecSize - 1 - locationSel].x;
             const int yInit = (*pCoordVec)[vecSize - 1 - locationSel].y;
-            detailGroup.add<DetailRef::Terminal>(
-                xInit * 32 + tiles.posX, yInit * 26 + tiles.posY,
-                getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
-                tiles.mapArray[xInit][yInit]);
         }
         gfxContext.glowSprs1.clear();
         gfxContext.glowSprs2.clear();
@@ -699,55 +663,11 @@ void Game::nextLevel() {
         teleporterFootprint.x = tiles.getTeleporterLoc().x;
         teleporterFootprint.y = tiles.getTeleporterLoc().y;
         teleporterFootprint.r = 50;
-        std::vector<Coordinate> detailPositions;
-        if (set == tileController::Tileset::regular) {
-            getRockPositions(tiles.mapArray, detailPositions,
-                             teleporterFootprint);
-            for (auto element : detailPositions) {
-                detailGroup.add<DetailRef::Rock>(
-                    tiles.posX + 32 * element.x,
-                    tiles.posY + 26 * element.y - 35,
-                    getgResHandlerPtr()->getTexture(
-                        "textures/gameObjects.png"));
-            }
-            detailPositions.clear();
-        }
-        getLightingPositions(tiles.mapArray, detailPositions,
-                             teleporterFootprint);
-        const size_t len = detailPositions.size();
-        for (size_t i = 0; i < len; i++) {
-            detailGroup.add<DetailRef::Lamp>(
-                tiles.posX + 16 + (detailPositions[i].x * 32),
-                tiles.posY - 3 + (detailPositions[i].y * 26),
-                getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
-                getgResHandlerPtr()->getTexture("textures/lampLight.png"));
-        }
-        detailPositions.clear();
     } else if (set == tileController::Tileset::intro) {
-        detailGroup.add<DetailRef::Lamp>(
-            tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (6 * 26),
-            getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
-            getgResHandlerPtr()->getTexture("textures/lampLight.png"));
-        detailGroup.add<DetailRef::Lamp>(
-            tiles.posX - 180 + 16 + (5 * 32), tiles.posY + 200 - 3 + (0 * 26),
-            getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
-            getgResHandlerPtr()->getTexture("textures/lampLight.png"));
-        detailGroup.add<DetailRef::Lamp>(
-            tiles.posX - 180 + 16 + (11 * 32), tiles.posY + 200 - 3 + (11 * 26),
-            getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
-            getgResHandlerPtr()->getTexture("textures/lampLight.png"));
-        detailGroup.add<DetailRef::Lamp>(
-            tiles.posX - 180 + 16 + (10 * 32), tiles.posY + 204 + 8 + (-9 * 26),
-            getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
-            getgResHandlerPtr()->getTexture("textures/lampLight.png"));
         static const int initTeleporterLocX = 8;
         static const int initTeleporterLocY = -7;
         tiles.teleporterLocation.x = initTeleporterLocX;
         tiles.teleporterLocation.y = initTeleporterLocY;
-        detailGroup.add<DetailRef::Teleporter>(
-            tiles.posX - 178 + 8 * 32, tiles.posY + 284 + -7 * 26,
-            getgResHandlerPtr()->getTexture("textures/gameObjects.png"),
-            getgResHandlerPtr()->getTexture("textures/teleporterGlow.png"));
         for (auto it = ::levelZeroWalls.begin(); it != ::levelZeroWalls.end();
              ++it) {
             wall w;
@@ -766,8 +686,6 @@ void Game::setSleep(const std::chrono::microseconds & time) {
     slept = true;
     std::this_thread::sleep_for(time);
 }
-
-DetailGroup & Game::getDetails() { return detailGroup; }
 
 tileController & Game::getTileController() { return tiles; }
 

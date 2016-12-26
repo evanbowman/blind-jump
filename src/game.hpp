@@ -4,7 +4,6 @@
 //========================================================================//
 
 #pragma once
-#include "DetailGroup.hpp"
 #include "Entity.hpp"
 #include "GfxContext.hpp"
 #include "LuaProvider.hpp"
@@ -53,7 +52,6 @@ public:
     void eventLoop();
     void nextLevel();
     int getLevel();
-    DetailGroup & getDetails();
     tileController & getTileController();
     SoundController & getSounds();
     InputController & getInputController();
@@ -83,7 +81,6 @@ private:
     Camera camera;
     ui::Backend UI;
     tileController tiles;
-    DetailGroup detailGroup;
     ui::Frontend uiFrontend;
     bool hasFocus;
     std::mutex overworldMutex, UIMutex, transitionMutex;

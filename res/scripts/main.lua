@@ -25,6 +25,7 @@ local cleanupLevel = function()
    if level == 0 then
       clearEntitiesOf("Pod")
       clearEntitiesOf("Door")
+      clearEntitiesOf("Lamp")
    elseif level > 0 then
       -- TODO...
    end
@@ -35,6 +36,15 @@ local setupLevel = function()
       entity.setPosition(player, playerStart.x, playerStart.y)
       entity.new("Pod", 400, 216)
       entity.new("Door", 305, 70)
+      local lampPositions = {
+         { x = 300, y = 122 },
+         { x = 300, y = -34 },
+         { x = 492, y = 252 },
+         { x = 460, y = -248 }
+      }
+      for k, coord in pairs(lampPositions) do
+	 entity.new("Lamp", coord.x, coord.y)
+      end
    elseif level > 0 then
       -- TODO...
    end

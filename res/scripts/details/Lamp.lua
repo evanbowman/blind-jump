@@ -1,6 +1,6 @@
 classes["Lamp"] = {
    onCreate = function(this)
-      -- TODO...
+      entity.setSprite(this, "lampSprite")
    end,
 
    onUpdate = function(this)
