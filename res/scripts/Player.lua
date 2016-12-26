@@ -3,25 +3,62 @@ local id = {
    hp = 1
 }
 
+local movementFactor = 0.000054
+
+local keyResponse = function(this, key1, key2, key3, key4, sheet)
+   if key1 then
+      if not key2 and not key3 and not key4 then
+	 --[[ TODO: store sprite id in a variable, and only call
+	    setSprite when needed. ]]
+	 entity.setSprite(this, sheet)
+      end
+      if key3 or key4 then
+	 return 1.70
+      else
+	 return 2.20
+      end
+   else
+      return 0.0
+   end
+end
+
+local keyResponseStrafe = function(this, key1, key2, key3)
+   if key1 then
+      if key2 or key3 then
+	 return 1.40
+      else
+	 return 1.80
+      end
+   else
+      return 0.0
+   end
+end
+
 local fsm = {
    deactivated = function(this, dt)
       -- TODO...
    end,
 
    nominal = function(this, dt)
+      local lSpeed, rSpeed, uSpeed, dSpeed = 0, 0, 0, 0
+      local left = input.left()
+      local right = input.right()
+      local up = input.up()
+      local down = input.down()
+      if not input.x() then
+	 uSpeed = keyResponse(this, up, down, left, right, "playerUpSprite")
+	 dSpeed = keyResponse(this, down, up, left, right, "playerDownSprite")
+	 lSpeed = keyResponse(this, left, right, down, up, "playerLeftSprite")
+	 rSpeed = keyResponse(this, right, left, down, up, "playerRightSprite")
+      else
+	 uSpeed = keyResponseStrafe(this, up, left, right)
+	 dSpeed = keyResponseStrafe(this, down, left, right)
+	 lSpeed = keyResponseStrafe(this, left, up, down)
+	 rSpeed = keyResponseStrafe(this, right, up, down)
+      end
       local x, y = entity.getPosition(this)
-      if input.left() then
-	 x = x - 1
-      end
-      if input.right() then
-	 x = x + 1
-      end
-      if input.up() then
-	 y = y - 1
-      end
-      if input.down() then
-	 y = y + 1
-      end
+      x = x - (lSpeed - rSpeed) * (dt * movementFactor)
+      y = y - (uSpeed - dSpeed) * (dt * movementFactor)
       entity.setPosition(this, x, y)
    end,
 
@@ -48,7 +85,7 @@ local fsm = {
 
 classes["Player"] = {
    onCreate = function(this)
-      entity.setSprite(this, "playerWalkDownSprite")
+      entity.setSprite(this, "playerDownSprite")
       entity.setShadow(this, "playerShadowSprite")
       entity.setShadowOffset(this, 7, 24)
       entity.setKeyframe(this, 5)

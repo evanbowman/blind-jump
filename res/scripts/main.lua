@@ -2,6 +2,7 @@ require("enemies/Turret")
 require("enemies/Dasher")
 require("details/Pod")
 require("details/Door")
+require("details/Lamp")
 require("Player")
 
 local level = -1

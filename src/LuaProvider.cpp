@@ -158,6 +158,15 @@ static const luaL_Reg inputLibFuncs[] = {
          lua_pushboolean(state, input.downPressed());
          return 1;
      }},
+    {"x",
+     [](lua_State * state) {
+	 if (lua_gettop(state) != 0) {
+	     
+	 }
+	 InputController & input = getgGamePtr()->getInputController();
+	 lua_pushboolean(state, input.shootPressed());
+	 return 1;
+     }},
     {}};
 
 static const luaL_Reg entityLibFuncs[] = {

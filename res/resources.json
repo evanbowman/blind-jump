@@ -135,7 +135,7 @@
 		"h": 95
 	    }
 	},
-	"playerWalkDownSprite": {
+	"playerDownSprite": {
 	    "texture": "textures/gameObjects.png",
 	    "box": {
 		"x": 400,
@@ -144,7 +144,7 @@
 		"h": 32
 	    }
 	},
-	"playerWalkUpSprite": {
+	"playerUpSprite": {
 	    "texture": "textures/gameObjects.png",
 	    "box": {
 		"x": 208,
@@ -153,16 +153,16 @@
 		"h": 32
 	    }
 	},
-	"playerWalkLeftSprite": {
+	"playerLeftSprite": {
 	    "texture": "textures/gameObjects.png",
 	    "box": {
-		"x": 308,
+		"x": 208,
 		"y": 76,
 		"w": 32,
 		"h": 32
 	    }
 	},
-	"playerWalkRightSprite": {
+	"playerRightSprite": {
 	    "texture": "textures/gameObjects.png",
 	    "box": {
 		"x": 432,

@@ -100,47 +100,57 @@ void ResHandler::loadImage(const std::string & path) {
 }
 
 SpriteSheet & ResHandler::getSheet(const std::string & name) {
-    return sheets.find(name)->second;
+    auto it = sheets.find(name);
+    if (it != sheets.end()) {
+	return it->second;
+    }
+    const std::string err = "Error: sprite " + name + "does not exist.";
+    throw std::runtime_error(err);
 }
 
 const sf::Texture & ResHandler::getTexture(const std::string & path) {
-    if (textures.find(path) == textures.end()) {
+    auto it = textures.find(path);
+    if (it == textures.end()) {
         const std::string err = "Error: path " + path + "hasn't been loaded.";
         throw std::runtime_error(err);
     }
-    return textures[path];
+    return it->second;
 }
 
 const sf::SoundBuffer & ResHandler::getSound(const std::string & path) {
-    if (sounds.find(path) == sounds.end()) {
+    auto it = sounds.find(path);
+    if (it == sounds.end()) {
         const std::string err = "Error: path " + path + "hasn't been loaded.";
         throw std::runtime_error(err);
     }
-    return sounds[path];
+    return it->second;
 }
 
 const sf::Image & ResHandler::getImage(const std::string & path) {
-    if (images.find(path) == images.end()) {
+    auto it = images.find(path);
+    if (it == images.end()) {
         const std::string err = "Error: path " + path + "hasn't been loaded.";
         throw std::runtime_error(err);
     }
-    return images[path];
+    return it->second;
 }
 
 const sf::Font & ResHandler::getFont(const std::string & path) {
-    if (fonts.find(path) == fonts.end()) {
+    auto it = fonts.find(path);
+    if (it == fonts.end()) {
         const std::string err = "Error: path " + path + "hasn't been loaded.";
         throw std::runtime_error(err);
     }
-    return fonts[path];
+    return it->second;
 }
 
 sf::Shader & ResHandler::getShader(const std::string & path) {
-    if (shaders.find(path) == shaders.end()) {
+    auto it = shaders.find(path);
+    if (it == shaders.end()) {
         const std::string err = "Error: path " + path + "hasn't been loaded.";
         throw std::runtime_error(err);
     }
-    return shaders[path];
+    return it->second;
 }
 
 static ResHandler * resHandlerPtr;
