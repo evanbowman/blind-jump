@@ -42,11 +42,11 @@ local fsm = {
 
    nominal = function(this, dt)
       local lSpeed, rSpeed, uSpeed, dSpeed = 0, 0, 0, 0
-      local left = input.left()
-      local right = input.right()
-      local up = input.up()
-      local down = input.down()
-      if not input.x() then
+      local left = input.keyPressed(keyboard.left)
+      local right = input.keyPressed(keyboard.right)
+      local up = input.keyPressed(keyboard.left)
+      local down = input.keyPressed(keyboard.down)
+      if not input.keyPressed(keyboard.x) then
 	 uSpeed = keyResponse(this, up, down, left, right, "playerUpSprite")
 	 dSpeed = keyResponse(this, down, up, left, right, "playerDownSprite")
 	 lSpeed = keyResponse(this, left, right, down, up, "playerLeftSprite")

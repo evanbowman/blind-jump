@@ -153,49 +153,15 @@ extern "C" {
     };
 
     static const luaL_Reg inputLibFuncs[] = {
-	{"left",
-	 [](lua_State * state) {
-	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "input.left");
+	{"keyPressed",
+	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 1) {
+		 throw std::runtime_error(paramErr + "input.keyPressed");
 	     }
-	     InputController & input = getgGamePtr()->getInputController();
-	     lua_pushboolean(state, input.leftPressed());
-	     return 1;
-	 }},
-	{"right",
-	 [](lua_State * state) {
-	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "input.left");
-	     }
-	     InputController & input = getgGamePtr()->getInputController();
-	     lua_pushboolean(state, input.rightPressed());
-	     return 1;
-	 }},
-	{"up",
-	 [](lua_State * state) {
-	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "input.left");
-	     }
-	     InputController & input = getgGamePtr()->getInputController();
-	     lua_pushboolean(state, input.upPressed());
-	     return 1;
-	 }},
-	{"down",
-	 [](lua_State * state) {
-	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "input.left");
-	     }
-	     InputController & input = getgGamePtr()->getInputController();
-	     lua_pushboolean(state, input.downPressed());
-	     return 1;
-	 }},
-	{"x",
-	 [](lua_State * state) {
-	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "input.x");
-	     }
-	     InputController & input = getgGamePtr()->getInputController();
-	     lua_pushboolean(state, input.shootPressed());
+	     int keyCode = lua_tointeger(state, 1);
+	     Game * pGame = getgGamePtr();
+	     InputController & input = pGame->getInputController();
+	     lua_pushboolean(state, input.getKeyState(keyCode) == 1);
 	     return 1;
 	 }},
 	{}};

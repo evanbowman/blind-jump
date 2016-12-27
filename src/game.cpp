@@ -17,9 +17,6 @@ Game::Game(const ConfigData & conf)
       window(sf::VideoMode::getDesktopMode(), EXECUTABLE_NAME,
              sf::Style::Fullscreen, sf::ContextSettings(0, 0, 6)),
       camera(viewPort, window.getSize()),
-      uiFrontend(
-          sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y)),
-          viewPort.x / 2, viewPort.y / 2),
       hasFocus(false), stashed(false), preload(false),
       worldView(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
       timer(0) {
@@ -43,7 +40,6 @@ Game::Game(const ConfigData & conf)
 
 void Game::init() {
     tiles.init();
-    uiFrontend.init();
     bkg.init();
     target.create(viewPort.x, viewPort.y);
     secondPass.create(viewPort.x, viewPort.y);
@@ -222,97 +218,10 @@ void Game::updateGraphics() {
     const sf::Vector2u windowSize = window.getSize();
     const sf::Vector2f upscaleVec(windowSize.x / viewPort.x,
                                   windowSize.y / viewPort.y);
-    if (UI.blurEnabled() && UI.desaturateEnabled()) {
-        if (stashed) {
-            sf::Sprite targetSprite(stash.getTexture());
-            window.setView(camera.getWindowView());
-            targetSprite.setScale(upscaleVec);
-            window.draw(targetSprite);
-        } else {
-            sf::Shader & blurShader =
-                getgResHandlerPtr()->getShader("shaders/blur.frag");
-            sf::Shader & desaturateShader =
-                getgResHandlerPtr()->getShader("shaders/desaturate.frag");
-            secondPass.clear(sf::Color::Transparent);
-            thirdPass.clear(sf::Color::Transparent);
-            const sf::Vector2u textureSize = target.getSize();
-            float blurAmount = UI.getBlurAmount();
-            const sf::Glsl::Vec2 vBlur =
-                sf::Glsl::Vec2(0.f, blurAmount / textureSize.y);
-            blurShader.setUniform("blur_radius", vBlur);
-            secondPass.draw(sf::Sprite(target.getTexture()), &blurShader);
-            secondPass.display();
-            const sf::Glsl::Vec2 hBlur =
-                sf::Glsl::Vec2(blurAmount / textureSize.x, 0.f);
-            blurShader.setUniform("blur_radius", hBlur);
-            thirdPass.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
-            thirdPass.display();
-            desaturateShader.setUniform("amount", UI.getDesaturateAmount());
-            sf::Sprite targetSprite(thirdPass.getTexture());
-            window.setView(camera.getWindowView());
-            targetSprite.setScale(upscaleVec);
-            window.draw(targetSprite, &desaturateShader);
-            if (!stashed && (UI.getState() == ui::Backend::State::statsScreen ||
-                             UI.getState() == ui::Backend::State::menuScreen) &&
-                !camera.moving()) {
-                stash.clear(sf::Color::Black);
-                stash.draw(sf::Sprite(thirdPass.getTexture()),
-                           &desaturateShader);
-                stash.display();
-                stashed = true;
-            }
-        }
-    } else if (UI.blurEnabled() && !UI.desaturateEnabled()) {
-        if (stashed) {
-            if (input.pausePressed()) {
-                preload = true;
-            }
-            sf::Sprite targetSprite(stash.getTexture());
-            window.setView(camera.getWindowView());
-            targetSprite.setScale(upscaleVec);
-            window.draw(targetSprite);
-        } else {
-            sf::Shader & blurShader =
-                getgResHandlerPtr()->getShader("shaders/blur.frag");
-            secondPass.clear(sf::Color::Transparent);
-            sf::Vector2u textureSize = target.getSize();
-            float blurAmount = UI.getBlurAmount();
-            const sf::Glsl::Vec2 vBlur =
-                sf::Glsl::Vec2(0.f, blurAmount / textureSize.y);
-            blurShader.setUniform("blur_radius", vBlur);
-            secondPass.draw(sf::Sprite(target.getTexture()), &blurShader);
-            secondPass.display();
-            const sf::Glsl::Vec2 hBlur =
-                sf::Glsl::Vec2(blurAmount / textureSize.x, 0.f);
-            blurShader.setUniform("blur_radius", hBlur);
-            sf::Sprite targetSprite(secondPass.getTexture());
-            window.setView(camera.getWindowView());
-            targetSprite.setScale(upscaleVec);
-            window.draw(targetSprite, &blurShader);
-            if (!stashed && (UI.getState() == ui::Backend::State::statsScreen ||
-                             UI.getState() == ui::Backend::State::menuScreen) &&
-                !camera.moving()) {
-                stash.clear(sf::Color::Black);
-                stash.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
-                stash.display();
-                stashed = true;
-                preload = false;
-            }
-        }
-    } else if (!UI.blurEnabled() && UI.desaturateEnabled()) {
-        sf::Shader & desaturateShader =
-            getgResHandlerPtr()->getShader("shaders/desaturate.frag");
-        desaturateShader.setUniform("amount", UI.getDesaturateAmount());
-        sf::Sprite targetSprite(target.getTexture());
-        window.setView(camera.getWindowView());
-        targetSprite.setScale(upscaleVec);
-        window.draw(targetSprite, &desaturateShader);
-    } else {
-        sf::Sprite targetSprite(target.getTexture());
-        window.setView(camera.getWindowView());
-        targetSprite.setScale(upscaleVec);
-        window.draw(targetSprite);
-    }
+    sf::Sprite targetSprite(target.getTexture());
+    window.setView(camera.getWindowView());
+    targetSprite.setScale(upscaleVec);
+    window.draw(targetSprite);
     window.setView(worldView);
     window.display();
 }
@@ -324,63 +233,57 @@ void Game::updateLogic(LuaProvider & luaProv) {
     }
     // Blurring is graphics intensive, the game caches frames in a RenderTexture
     // when possible
-    if (stashed && UI.getState() != ui::Backend::State::statsScreen &&
-        UI.getState() != ui::Backend::State::menuScreen) {
-        stashed = false;
-    }
-    if (!stashed || preload) {
-        std::lock_guard<std::mutex> overworldLock(overworldMutex);
-        tiles.update();
-        luaProv.applyHook([this](lua_State * state) {
-            lua_getglobal(state, "classes");
-            if (!lua_istable(state, -1)) {
-                throw std::runtime_error("Error: missing classtable");
-            }
-            for (auto & kvp : this->entityTable) {
-                lua_getfield(state, -1, kvp.first.c_str());
-                if (!lua_istable(state, -1)) {
-                    const std::string err = "Error: classtable field " +
-                                            kvp.first + " is not a table";
-                    throw std::runtime_error(err);
-                }
-                for (auto it = kvp.second.begin(); it != kvp.second.end();) {
-                    lua_getfield(state, -1, "onUpdate");
-		    // It is allowable to not implement onUpdate for objects that
-		    // do not have update logic, as any call to Lua from the engine
-		    // incurs a performance penalty...
+    std::lock_guard<std::mutex> overworldLock(overworldMutex);
+    tiles.update();
+    luaProv.applyHook([this](lua_State * state) {
+	lua_getglobal(state, "classes");
+	if (!lua_istable(state, -1)) {
+	    throw std::runtime_error("Error: missing classtable");
+	}
+	for (auto & kvp : this->entityTable) {
+	    lua_getfield(state, -1, kvp.first.c_str());
+	    if (!lua_istable(state, -1)) {
+		const std::string err = "Error: classtable field " +
+		    kvp.first + " is not a table";
+		throw std::runtime_error(err);
+	    }
+	    for (auto it = kvp.second.begin(); it != kvp.second.end();) {
+		lua_getfield(state, -1, "onUpdate");
+		// It is allowable to not implement onUpdate for objects that
+		// do not have update logic, as any call to Lua from the engine
+		// incurs a performance penalty...
+		if (lua_isnil(state, -1)) {
+		    lua_pop(state, 1);
+		} else {
+		    lua_pushlightuserdata(state, (void *)(&(*it)));
+		    if (lua_pcall(state, 1, 0, 0)) {
+			throw std::runtime_error(lua_tostring(state, -1));
+		    }
+		}
+		if ((*it)->getKillFlag()) {
+		    lua_getfield(state, -1, "onDestroy");
 		    if (lua_isnil(state, -1)) {
-			lua_pop(state, 1);
+			lua_pop(state, 1);			    
 		    } else {
 			lua_pushlightuserdata(state, (void *)(&(*it)));
 			if (lua_pcall(state, 1, 0, 0)) {
 			    throw std::runtime_error(lua_tostring(state, -1));
 			}
 		    }
-                    if ((*it)->getKillFlag()) {
-			lua_getfield(state, -1, "onDestroy");
-			if (lua_isnil(state, -1)) {
-			    lua_pop(state, 1);			    
-			} else {
-			    lua_pushlightuserdata(state, (void *)(&(*it)));
-			    if (lua_pcall(state, 1, 0, 0)) {
-				throw std::runtime_error(lua_tostring(state, -1));
-			    }
-			}
-                        for (auto & member : (*it)->getMemberTable()) {
-                            luaL_unref(state, LUA_REGISTRYINDEX, member.second);
-                        }
-                        it = kvp.second.erase(it);
-                    } else {
-                        ++it;
-                    }
-                }
-                lua_pop(state, 1);
-            }
-            lua_pop(state, 1);
-        });
-        std::vector<sf::Vector2f> cameraTargets;
-        camera.update(elapsedTime, cameraTargets);
-    }
+		    for (auto & member : (*it)->getMemberTable()) {
+			luaL_unref(state, LUA_REGISTRYINDEX, member.second);
+		    }
+		    it = kvp.second.erase(it);
+		} else {
+		    ++it;
+		}
+	    }
+	    lua_pop(state, 1);
+	}
+	lua_pop(state, 1);
+    });
+    std::vector<sf::Vector2f> cameraTargets;
+    camera.update(elapsedTime, cameraTargets);
 }
 
 bool Game::hasSlept() const { return slept; }
@@ -397,10 +300,6 @@ tileController & Game::getTileController() { return tiles; }
 Camera & Game::getCamera() { return camera; }
 
 InputController & Game::getInputController() { return input; }
-
-ui::Backend & Game::getUI() { return UI; }
-
-ui::Frontend & Game::getUIFrontend() { return uiFrontend; }
 
 SoundController & Game::getSounds() { return sounds; }
 

@@ -18,7 +18,6 @@
 #include "resourceHandler.hpp"
 #include "soundController.hpp"
 #include "tileController.hpp"
-#include "userInterface.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <atomic>
@@ -65,8 +64,6 @@ public:
     tileController & getTileController();
     SoundController & getSounds();
     InputController & getInputController();
-    ui::Backend & getUI();
-    ui::Frontend & getUIFrontend();
     Camera & getCamera();
     sf::Vector2f viewPort;
     EntityTable & getEntityTable();
@@ -91,11 +88,9 @@ private:
     InputController input;
     SoundController sounds;
     Camera camera;
-    ui::Backend UI;
     tileController tiles;
-    ui::Frontend uiFrontend;
     bool hasFocus;
-    std::mutex overworldMutex, UIMutex, transitionMutex;
+    std::mutex overworldMutex;
     bool stashed, preload;
     sf::Sprite vignetteSprite;
     backgroundHandler bkg;
