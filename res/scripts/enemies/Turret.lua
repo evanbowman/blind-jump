@@ -2,7 +2,7 @@ require("effects/MuzzleFlash")
 
 local emitBullet = function(this)
    local x, y = entity.getPosition(this)
-   entity.new("MuzzleFlash", x, y + 10)
+   entity.create("MuzzleFlash", x, y + 10)
    entity.emitSound(this, "sounds/laser.ogg", 220, 30)
 end
 
@@ -84,8 +84,6 @@ classes["Turret"] = {
       entity.setField(this, id.timer, 0)
       entity.setField(this, id.state, "closed")
       entity.setSprite(this, "turretSprite")
-      entity.setShadow(this, "turretShadowSprite")
-      entity.setShadowOffset(this, 0, 20)
       local x, y = entity.getPosition(this)
       entity.setZOrder(this, y - 3)
    end,

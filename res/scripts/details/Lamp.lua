@@ -2,6 +2,7 @@ classes["Lamp"] = {
    onCreate = function(this)
       entity.setSprite(this, "lampSprite")
       local x, y = entity.getPosition(this)
-      light.new("lampGlowSprite", x, y)
+      local glow = light.create("lampGlowSprite", x, y)
+      light.setOrigin(glow, 250, 250)
    end
 }

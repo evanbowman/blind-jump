@@ -22,7 +22,7 @@ public:
     sf::Image grassSetEdge[2];
     tileController();
     void update();
-    void draw(sf::RenderTexture &, std::vector<sf::Sprite> *, int level,
+    void draw(sf::RenderTexture &, std::vector<sf::Sprite> *,
               const sf::View &, const sf::View &);
     float posX;
     float posY;

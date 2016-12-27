@@ -26,7 +26,18 @@
 #include <mutex>
 #include <thread>
 
-using EntityTable = std::map<std::string, std::vector<EntityRef>>;
+// IMPORTANT:
+//   I understand the performance implications in using a std::list
+//   here. I'm doing it anyway for the time being, because the
+//   engine's Lua API function entity.create() returns userdata
+//   which holds a pointer to the created element, so I need a
+//   container that will not invalidate iterators upon resizing. An
+//   alternative design might be to instead return an id to Lua, and
+//   maintain a table of id->memory mappings for each Entity. I will
+//   only do this though if my code profiling tools suggest that
+//   locality of access is an issue, which it does not appear to be
+//   at the moment.
+using EntityTable = std::map<std::string, std::list<EntityRef>>;
 
 struct ConfigData {
     sf::Vector2f drawableArea;
@@ -51,8 +62,6 @@ public:
     void updateLogic(LuaProvider &);
     void updateGraphics();
     void eventLoop();
-    void nextLevel();
-    int getLevel();
     tileController & getTileController();
     SoundController & getSounds();
     InputController & getInputController();
@@ -87,7 +96,6 @@ private:
     ui::Frontend uiFrontend;
     bool hasFocus;
     std::mutex overworldMutex, UIMutex, transitionMutex;
-    int level;
     bool stashed, preload;
     sf::Sprite vignetteSprite;
     backgroundHandler bkg;

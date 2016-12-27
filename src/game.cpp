@@ -13,15 +13,14 @@
 #include "pillarPlacement.h"
 
 Game::Game(const ConfigData & conf)
-    : viewPort(conf.drawableArea),
-      transitionState(TransitionState::TransitionIn), slept(false),
+    : viewPort(conf.drawableArea), slept(false),
       window(sf::VideoMode::getDesktopMode(), EXECUTABLE_NAME,
              sf::Style::Fullscreen, sf::ContextSettings(0, 0, 6)),
       camera(viewPort, window.getSize()),
       uiFrontend(
           sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y)),
           viewPort.x / 2, viewPort.y / 2),
-      hasFocus(false), level(0), stashed(false), preload(false),
+      hasFocus(false), stashed(false), preload(false),
       worldView(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
       timer(0) {
     sf::View windowView;
@@ -67,11 +66,7 @@ void Game::init() {
     tiles.setPosition((viewPort.x / 2) - 16, (viewPort.y / 2));
     tiles.setWindowSize(viewPort.x, viewPort.y);
     beamGlowSpr.setColor(sf::Color(0, 0, 0, 255));
-    transitionShape.setSize(sf::Vector2f(viewPort.x, viewPort.y));
-    transitionShape.setFillColor(sf::Color(0, 0, 0, 0));
     vignetteSprite.setColor(sf::Color::White);
-    level = -1;
-    this->nextLevel();
 }
 
 void Game::eventLoop() {
@@ -112,7 +107,7 @@ void Game::updateGraphics() {
             std::lock_guard<std::mutex> overworldLock(overworldMutex);
             lightingMap.setView(camera.getOverworldView());
             bkg.drawBackground(target, worldView, camera);
-            tiles.draw(target, &gfxContext.glowSprs1, level, worldView,
+            tiles.draw(target, &gfxContext.glowSprs1, worldView,
                        camera.getOverworldView());
             gfxContext.glowSprs2.clear();
             gfxContext.glowSprs1.clear();
@@ -136,6 +131,7 @@ void Game::updateGraphics() {
 	    for (auto & light : lights) {
 	        auto sheet = light.getSheet();
 		sheet->getSprite().setPosition(light.getPosition());
+		sheet->getSprite().setOrigin(light.getOrigin());
 		gfxContext.glowSprs1.push_back(sheet->getSprite());
 		gfxContext.glowSprs2.push_back(sheet->getSprite());
 	    }
@@ -317,15 +313,7 @@ void Game::updateGraphics() {
         targetSprite.setScale(upscaleVec);
         window.draw(targetSprite);
     }
-    {
-        std::lock_guard<std::mutex> UILock(UIMutex);
-        if (transitionState == TransitionState::None) {
-            UI.draw(window, uiFrontend);
-        }
-        uiFrontend.draw(window);
-    }
     window.setView(worldView);
-    drawTransitions(window);
     window.display();
 }
 
@@ -342,12 +330,6 @@ void Game::updateLogic(LuaProvider & luaProv) {
     }
     if (!stashed || preload) {
         std::lock_guard<std::mutex> overworldLock(overworldMutex);
-        if (level != 0) {
-            const sf::Vector2f & cameraOffset = camera.getOffsetFromStart();
-            bkg.setOffset(cameraOffset.x, cameraOffset.y);
-        } else { // TODO: why is this necessary...?
-            bkg.setOffset(0, 0);
-        }
         tiles.update();
         luaProv.applyHook([this](lua_State * state) {
             lua_getglobal(state, "classes");
@@ -368,20 +350,22 @@ void Game::updateLogic(LuaProvider & luaProv) {
 		    // incurs a performance penalty...
 		    if (lua_isnil(state, -1)) {
 			lua_pop(state, 1);
-			++it;
-			continue;
+		    } else {
+			lua_pushlightuserdata(state, (void *)(&(*it)));
+			if (lua_pcall(state, 1, 0, 0)) {
+			    throw std::runtime_error(lua_tostring(state, -1));
+			}
 		    }
-                    if (!lua_isfunction(state, -1)) {
-                        const std::string err =
-                            "Error: malformed OnUpdate for class " +
-                            kvp.first;
-                        throw std::runtime_error(err);
-                    }
-                    lua_pushlightuserdata(state, (void *)(&(*it)));
-                    if (lua_pcall(state, 1, 0, 0)) {
-                        throw std::runtime_error(lua_tostring(state, -1));
-                    }
                     if ((*it)->getKillFlag()) {
+			lua_getfield(state, -1, "onDestroy");
+			if (lua_isnil(state, -1)) {
+			    lua_pop(state, 1);			    
+			} else {
+			    lua_pushlightuserdata(state, (void *)(&(*it)));
+			    if (lua_pcall(state, 1, 0, 0)) {
+				throw std::runtime_error(lua_tostring(state, -1));
+			    }
+			}
                         for (auto & member : (*it)->getMemberTable()) {
                             luaL_unref(state, LUA_REGISTRYINDEX, member.second);
                         }
@@ -396,289 +380,6 @@ void Game::updateLogic(LuaProvider & luaProv) {
         });
         std::vector<sf::Vector2f> cameraTargets;
         camera.update(elapsedTime, cameraTargets);
-    }
-    {
-        std::lock_guard<std::mutex> UILock(UIMutex);
-        if (transitionState == TransitionState::None) {
-            UI.update(this, elapsedTime);
-        }
-    }
-    updateTransitions(elapsedTime);
-}
-
-void Game::drawTransitions(sf::RenderWindow & window) {
-    std::lock_guard<std::mutex> grd(transitionMutex);
-    switch (transitionState) {
-    case TransitionState::None:
-        break;
-
-    case TransitionState::ExitBeamEnter:
-        window.draw(beamShape);
-        gfxContext.glowSprs1.push_back(beamGlowSpr);
-        break;
-
-    case TransitionState::ExitBeamInflate:
-        window.draw(beamShape);
-        gfxContext.glowSprs1.push_back(beamGlowSpr);
-        break;
-
-    case TransitionState::ExitBeamDeflate:
-        window.draw(beamShape);
-        gfxContext.glowSprs1.push_back(beamGlowSpr);
-        break;
-
-    // This isn't stateless, but only because it can't be. Reseting the level
-    // involves texture creation, which is graphics code and therefore needs to
-    // happen on the main thread for portability reasons.
-    case TransitionState::TransitionOut:
-        if (level != 0) {
-            if (timer > 100000) {
-                uint8_t alpha =
-                    math::smoothstep(0.f, 900000, timer - 100000) * 255;
-                transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
-                window.draw(transitionShape);
-            }
-            if (timer > 1000000) {
-                transitionState = TransitionState::TransitionIn;
-                timer = 0;
-                transitionShape.setFillColor(sf::Color(0, 0, 0, 255));
-                beamGlowSpr.setColor(sf::Color::Black);
-                this->nextLevel(); // Creates textures, needs to happen on main
-                                   // thread
-            }
-        } else {
-            if (timer > 1600000) {
-                uint8_t alpha =
-                    math::smoothstep(0.f, 1400000, timer - 1600000) * 255;
-                transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
-                window.draw(transitionShape);
-                uint8_t textAlpha =
-                    Easing::easeOut<1>(timer - 1600000,
-                                       static_cast<int_fast64_t>(600000)) *
-                    255;
-                uiFrontend.drawTitle(textAlpha, window);
-            } else {
-                uiFrontend.drawTitle(255, window);
-            }
-            if (timer > 3000000) {
-                transitionState = TransitionState::TransitionIn;
-                beamGlowSpr.setColor(sf::Color::Black);
-                timer = 0;
-                transitionShape.setFillColor(sf::Color(0, 0, 0, 255));
-                this->nextLevel();
-            }
-        }
-        break;
-
-    case TransitionState::TransitionIn:
-        window.draw(transitionShape);
-        break;
-
-    case TransitionState::EntryBeamDrop:
-        window.draw(beamShape);
-        gfxContext.glowSprs1.push_back(beamGlowSpr);
-        break;
-
-    case TransitionState::EntryBeamFade:
-        window.draw(beamShape);
-        gfxContext.glowSprs1.push_back(beamGlowSpr);
-        break;
-    }
-}
-
-void Game::updateTransitions(const sf::Time & elapsedTime) {
-    std::lock_guard<std::mutex> grd(transitionMutex);
-    switch (transitionState) {
-    case TransitionState::None: {
-        beamShape.setPosition(viewPort.x / 2 - 1.5, viewPort.y / 2 + 48);
-        beamShape.setFillColor(sf::Color(114, 255, 229, 6));
-        beamShape.setSize(sf::Vector2f(2, 0));
-        beamGlowSpr.setPosition(viewPort.x / 2 - 200,
-                                viewPort.y / 2 - 200 + 36);
-    } break;
-
-    case TransitionState::ExitBeamEnter:
-        timer += elapsedTime.asMicroseconds();
-        {
-            static const int_fast64_t transitionTime = 500000;
-            static const int_fast64_t alphaTransitionTime = 450000;
-            const int beamTargetY = -(viewPort.y / 2 + 48);
-            float beamHeight =
-                Easing::easeIn<1>(timer, transitionTime) * beamTargetY;
-            uint8_t brightness = Easing::easeIn<1>(timer, transitionTime) * 255;
-            uint_fast8_t alpha =
-                Easing::easeIn<1>(timer, alphaTransitionTime) * 255;
-            beamGlowSpr.setColor(
-                sf::Color(brightness, brightness, brightness, 255));
-            beamShape.setFillColor(sf::Color(114, 255, 229, alpha));
-            beamShape.setSize(sf::Vector2f(2, beamHeight));
-            if (timer > transitionTime) {
-                timer = 0;
-                beamShape.setSize(sf::Vector2f(2, -(viewPort.y / 2 + 48)));
-                beamShape.setFillColor(sf::Color(114, 255, 229, 255));
-                transitionState = TransitionState::ExitBeamInflate;
-            }
-        }
-        break;
-
-    case TransitionState::ExitBeamInflate:
-        timer += elapsedTime.asMicroseconds();
-        {
-            static const int64_t transitionTime = 250000;
-            float beamWidth =
-                std::max(2.f, Easing::easeIn<2>(timer, transitionTime) * 20.f);
-            float beamHeight = beamShape.getSize().y;
-            beamShape.setSize(sf::Vector2f(beamWidth, beamHeight));
-            beamShape.setPosition(viewPort.x / 2 - 0.5f - beamWidth / 2.f,
-                                  viewPort.y / 2 + 48);
-            if (timer > transitionTime) {
-                timer = 0;
-                transitionState = TransitionState::ExitBeamDeflate;
-            }
-        }
-        break;
-
-    case TransitionState::ExitBeamDeflate:
-        timer += elapsedTime.asMilliseconds();
-        {
-            // beamWidth is carefully calibrated, be sure to recalculate the
-            // regression based on the timer if you change it...
-            float beamWidth =
-                0.9999995 *
-                std::exp(-0.0050125355 * static_cast<double>(timer)) * 20.f;
-            float beamHeight = beamShape.getSize().y;
-            beamShape.setSize(sf::Vector2f(beamWidth, beamHeight));
-            beamShape.setPosition(viewPort.x / 2 - 0.5f - beamWidth / 2.f,
-                                  viewPort.y / 2 + 48);
-            if (timer >= 640) {
-                timer = 0;
-                transitionState = TransitionState::TransitionOut;
-            }
-        }
-        break;
-
-    case TransitionState::TransitionOut:
-        timer += elapsedTime.asMicroseconds();
-        // Logic updates instead when drawing transitions, see above comment.
-        break;
-
-    case TransitionState::TransitionIn:
-        timer += elapsedTime.asMicroseconds();
-        {
-            uint8_t alpha = 255 - math::smoothstep(0.f, 800000, timer) * 255;
-            transitionShape.setFillColor(sf::Color(0, 0, 0, alpha));
-        }
-        if (timer >= 800000) {
-            if (level != 0) {
-                transitionState = TransitionState::EntryBeamDrop;
-            } else {
-                transitionState = TransitionState::None;
-            }
-            timer = 0;
-            beamShape.setSize(sf::Vector2f(4, 0));
-            beamShape.setPosition(viewPort.x / 2 - 2, 0);
-            beamShape.setFillColor(sf::Color(114, 255, 229, 240));
-        }
-        break;
-
-    case TransitionState::EntryBeamDrop:
-        timer += elapsedTime.asMicroseconds();
-        {
-            static const int64_t transitionTime = 350000;
-            float beamHeight = Easing::easeIn<2>(timer, transitionTime) *
-                               (viewPort.y / 2 + 36);
-            uint8_t brightness = Easing::easeIn<1>(timer, transitionTime) * 255;
-            beamGlowSpr.setColor(
-                sf::Color(brightness, brightness, brightness, 255));
-            beamShape.setSize(sf::Vector2f(4, beamHeight));
-            if (timer > transitionTime) {
-                transitionState = TransitionState::EntryBeamFade;
-                timer = 0;
-                this->setSleep(std::chrono::microseconds(20000));
-                camera.shake(0.19f);
-            }
-        }
-        break;
-
-    case TransitionState::EntryBeamFade:
-        timer += elapsedTime.asMicroseconds();
-        {
-            static const int64_t transitionTime = 300000;
-            uint8_t alpha = Easing::easeOut<1>(timer, transitionTime) * 240;
-            beamShape.setFillColor(sf::Color(114, 255, 229, alpha));
-            uint8_t brightness =
-                Easing::easeOut<2>(timer, transitionTime) * 255;
-            beamGlowSpr.setColor(
-                sf::Color(brightness, brightness, brightness, 255));
-            if (timer > transitionTime) {
-                transitionState = TransitionState::None;
-                timer = 0;
-            }
-        }
-        break;
-    }
-}
-
-void Game::nextLevel() {
-    level += 1;
-    uiFrontend.setWaypointText(level);
-    tiles.clear();
-    if (level == 0) {
-        set = tileController::Tileset::intro;
-    } else {
-        camera.setOffset({1.f, 2.f});
-        set = tileController::Tileset::regular;
-    }
-    if (set != tileController::Tileset::intro) {
-        int count;
-        do {
-            count = generateMap(tiles.mapArray);
-        } while (count < 150);
-    }
-    tiles.rebuild(set);
-    bkg.setBkg(tiles.getWorkingSet());
-    tiles.setPosition((viewPort.x / 2) - 16, (viewPort.y / 2));
-    bkg.setPosition((tiles.posX / 2) + 206, tiles.posY / 2);
-    auto pickLocation = [](std::vector<Coordinate> & emptyLocations)
-        -> framework::option<Coordinate> {
-        if (emptyLocations.size() > 0) {
-            int locationSelect = rng::random(emptyLocations.size());
-            Coordinate c = emptyLocations[locationSelect];
-            emptyLocations[locationSelect] = emptyLocations.back();
-            emptyLocations.pop_back();
-            return framework::option<Coordinate>(c);
-        } else {
-            return {};
-        }
-    };
-    if (level != 0) {
-        Coordinate c = tiles.getTeleporterLoc();
-        auto optCoord = pickLocation(tiles.emptyMapLocations);
-        if (!rng::random<2>()) {
-            auto pCoordVec = tiles.getEmptyLocations();
-            const size_t vecSize = pCoordVec->size();
-            const int locationSel = rng::random(vecSize / 3);
-            const int xInit = (*pCoordVec)[vecSize - 1 - locationSel].x;
-            const int yInit = (*pCoordVec)[vecSize - 1 - locationSel].y;
-        }
-        gfxContext.glowSprs1.clear();
-        gfxContext.glowSprs2.clear();
-        Circle teleporterFootprint;
-        teleporterFootprint.x = tiles.getTeleporterLoc().x;
-        teleporterFootprint.y = tiles.getTeleporterLoc().y;
-        teleporterFootprint.r = 50;
-    } else if (set == tileController::Tileset::intro) {
-        static const int initTeleporterLocX = 8;
-        static const int initTeleporterLocY = -7;
-        tiles.teleporterLocation.x = initTeleporterLocX;
-        tiles.teleporterLocation.y = initTeleporterLocY;
-        for (auto it = ::levelZeroWalls.begin(); it != ::levelZeroWalls.end();
-             ++it) {
-            wall w;
-            w.setXinit(it->first);
-            w.setYinit(it->second);
-            tiles.walls.push_back(w);
-        }
     }
 }
 
@@ -703,43 +404,9 @@ ui::Frontend & Game::getUIFrontend() { return uiFrontend; }
 
 SoundController & Game::getSounds() { return sounds; }
 
-int Game::getLevel() { return level; }
-
 sf::RenderWindow & Game::getWindow() { return window; }
 
 ResHandler & Game::getResHandler() { return resHandler; }
-
-const std::array<std::pair<float, float>, 59> levelZeroWalls{
-    {std::make_pair(-20, 500), std::make_pair(-20, 526),
-     std::make_pair(-20, 474), std::make_pair(-20, 448),
-     std::make_pair(-20, 422), std::make_pair(-20, 396),
-     std::make_pair(-20, 370), std::make_pair(-20, 552),
-     std::make_pair(-20, 578), std::make_pair(196, 500),
-     std::make_pair(196, 526), std::make_pair(196, 474),
-     std::make_pair(196, 448), std::make_pair(196, 422),
-     std::make_pair(196, 396), std::make_pair(196, 370),
-     std::make_pair(196, 552), std::make_pair(196, 578),
-     std::make_pair(12, 604),  std::make_pair(44, 604),
-     std::make_pair(76, 604),  std::make_pair(108, 604),
-     std::make_pair(140, 604), std::make_pair(172, 604),
-     std::make_pair(12, 370),  std::make_pair(34, 370),
-     std::make_pair(120, 370), std::make_pair(152, 370),
-     std::make_pair(184, 370), std::make_pair(34, 344),
-     std::make_pair(120, 344), std::make_pair(34, 318),
-     std::make_pair(120, 318), std::make_pair(34, 292),
-     std::make_pair(120, 292), std::make_pair(34, 266),
-     std::make_pair(120, 266), std::make_pair(12, 266),
-     std::make_pair(-20, 266), std::make_pair(152, 266),
-     std::make_pair(-20, 240), std::make_pair(172, 240),
-     std::make_pair(-20, 214), std::make_pair(172, 214),
-     std::make_pair(-20, 188), std::make_pair(172, 188),
-     std::make_pair(-20, 162), std::make_pair(172, 162),
-     std::make_pair(-20, 136), std::make_pair(172, 136),
-     std::make_pair(-20, 110), std::make_pair(172, 110),
-     std::make_pair(-20, 84),  std::make_pair(172, 84),
-     std::make_pair(12, 58),   std::make_pair(44, 58),
-     std::make_pair(76, 58),   std::make_pair(108, 58),
-     std::make_pair(140, 58)}};
 
 const sf::Time & Game::getElapsedTime() { return elapsedTime; }
 

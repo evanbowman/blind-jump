@@ -8,6 +8,7 @@ private:
     sf::Vector2f m_position;
     bool m_killFlag;
     SpriteSheet * m_sheet;
+    sf::Vector2f m_origin;
 public:
     Light() : m_position{}, m_killFlag(false), m_sheet(nullptr) {}
     inline void setPosition(const sf::Vector2f & position) {
@@ -20,4 +21,6 @@ public:
     }
     inline void setSheet(SpriteSheet * sheet) { m_sheet = sheet; }
     inline SpriteSheet * getSheet() { return m_sheet; }
+    inline const sf::Vector2f & getOrigin() const { return m_origin; }
+    inline void setOrigin(const sf::Vector2f & origin) { m_origin = origin; }
 };

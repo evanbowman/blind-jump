@@ -192,18 +192,18 @@ void tileController::update() {
 }
 
 void tileController::draw(sf::RenderTexture & window,
-                          std::vector<sf::Sprite> * glowSprites, int level,
+                          std::vector<sf::Sprite> * glowSprites,
                           const sf::View & worldView,
                           const sf::View & cameraView) {
     // Clear out the RenderTexture
     rt.setView(cameraView);
     rt.clear(sf::Color::Transparent);
     // Draw the map sprite to the texture
-    if (level != 0) {
-        rt.draw(mapSprite1);
-    } else {
+    // if (level != 0) {
+    //     rt.draw(mapSprite1);
+    // } else {
         rt.draw(transitionLvSpr);
-    }
+    // }
     // Draw a shadow over everything
     rt.setView(worldView);
     rt.draw(shadow, sf::BlendMultiply);
@@ -218,9 +218,9 @@ void tileController::draw(sf::RenderTexture & window,
     rt.display();
     re.setView(cameraView);
     re.clear(sf::Color::Transparent);
-    if (level != 0) {
-        re.draw(mapSprite2);
-    }
+    // if (level != 0) {
+    //     re.draw(mapSprite2);
+    // }
     re.setView(worldView);
     re.draw(shadow, sf::BlendMultiply);
     re.display();

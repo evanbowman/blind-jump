@@ -97,10 +97,10 @@ extern "C" {
 	{}};
 
     static const luaL_Reg lightLibFuncs[] = {
-	{"new",
+	{"create",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 3) {
-		 throw std::runtime_error(paramErr + "light.new");
+		 throw std::runtime_error(paramErr + "light.create");
 	     }
 	     const std::string sheetName = lua_tostring(state, 1);
 	     const float x = lua_tonumber(state, 2);
@@ -114,10 +114,21 @@ extern "C" {
 	     lua_pushlightuserdata(state, (void *)&lights.back());
 	     return 1;
 	 }},
-	{"dispose",
+	{"setOrigin",
+	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 3) {
+		 throw std::runtime_error(paramErr + "light.setOrigin");
+	     }
+	     Light * light = reinterpret_cast<Light *>(lua_touserdata(state, 1));
+	     const float xOrigin = lua_tonumber(state, 2);
+	     const float yOrigin = lua_tonumber(state, 3);
+	     light->setOrigin({xOrigin, yOrigin});
+	     return 0;
+	 }},
+	{"destroy",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "light.dispose");
+		 throw std::runtime_error(paramErr + "light.destroy");
 	     }
 	     Light * light = reinterpret_cast<Light *>(lua_touserdata(state, 1));
 	     light->setKillFlag();
@@ -190,10 +201,10 @@ extern "C" {
 	{}};
 
     static const luaL_Reg entityLibFuncs[] = {
-	{"new",
+	{"create",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 3) {
-		 throw std::runtime_error(paramErr + "entity.new");
+		 throw std::runtime_error(paramErr + "entity.create");
 	     }
 	     const std::string classname = lua_tostring(state, 1);
 	     const float x = lua_tonumber(state, 2);
@@ -247,10 +258,10 @@ extern "C" {
 	     (*static_cast<EntityRef *>(entity))->setPosition(sf::Vector2f(x, y));
 	     return 0;
 	 }},
-	{"dispose",
+	{"destroy",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "entity.dispose");
+		 throw std::runtime_error(paramErr + "entity.destroy");
 	     }
 	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
 	     (*entity)->setKillFlag();
@@ -362,10 +373,12 @@ extern "C" {
 	     // FIXME: this code is unsafe, map entry may not exist...
 	     auto & entityVec = tab[lua_tostring(state, 1)];
 	     lua_newtable(state);
-	     for (int i = 0; i < entityVec.size(); ++i) {
+	     int i = 0;
+	     for (auto & ent : entityVec) {
 		 lua_pushnumber(state, i);
-		 lua_pushlightuserdata(state, &entityVec[i]);
+		 lua_pushlightuserdata(state, &ent);
 		 lua_settable(state, -3);
+		 ++i;
 	     }
 	     return 1;
 	 }},

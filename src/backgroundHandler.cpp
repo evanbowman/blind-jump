@@ -35,7 +35,7 @@ void backgroundHandler::init() {
     foregroundTreesSpr.setTexture(
         getgResHandlerPtr()->getTexture("textures/introLevelMask.png"));
     solidBkg.setFillColor(sf::Color(17, 45, 50));
-    workingSet = 1;
+    workingSet = 0;
 }
 
 void backgroundHandler::drawForeground(sf::RenderTexture & window) {

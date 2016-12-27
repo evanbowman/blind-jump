@@ -1,6 +1,7 @@
 local id = {
    state = 0,
-   hp = 1
+   hp = 1,
+   shadow = 2,
 }
 
 local movementFactor = 0.000054
@@ -89,14 +90,24 @@ classes["Player"] = {
       entity.setKeyframe(this, 5)
       entity.setField(this, id.hp, 4)
       entity.setField(this, id.state, "nominal")
+      local x, y = entity.getPosition(this)
+      entity.setField(this, id.shadow, entity.create("PlayerShadow", x, y))
    end,
 
    onUpdate = function(this)
       local x, y = entity.getPosition(this)
       entity.setZOrder(this, y)
       fsm[entity.getField(this, id.state)](this, system.getDeltaTime())
+      local shadow = entity.getField(this, id.shadow)
+      entity.setPosition(shadow, x + 7, y + 24)
       if entity.getField(this, id.hp) == 0 then
 	 entity.setField(this, id.state, "dying")
       end
+   end
+}
+
+classes["PlayerShadow"] = {
+   onCreate = function(this)
+      entity.setSprite(this, "playerShadowSprite")
    end
 }

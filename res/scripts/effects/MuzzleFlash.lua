@@ -15,7 +15,7 @@ classes["MuzzleFlash"] = {
       if timer > 40000 then
 	 entity.setField(this, "timer", 0)
 	 if currentFrame == 4 then
-	    entity.dispose(this)
+	    entity.destroy(this)
 	 else
 	    currentFrame = currentFrame + 1
 	    entity.setKeyframe(this, currentFrame)
