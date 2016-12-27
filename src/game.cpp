@@ -1,11 +1,6 @@
 #include "game.hpp"
 #include "ResourcePath.hpp"
-#include "easingTemplates.hpp"
-#include "initMapVectors.hpp"
-#include "lightingMap.hpp"
-#include "mappingFunctions.hpp"
 #include "math.h"
-#include "pillarPlacement.h"
 
 Game::Game(const ConfigData & conf)
     : viewPort(conf.drawableArea), slept(false),
@@ -34,7 +29,6 @@ Game::Game(const ConfigData & conf)
 }
 
 void Game::init() {
-    tiles.init();
     bkg.init();
     target.create(viewPort.x, viewPort.y);
     secondPass.create(viewPort.x, viewPort.y);
@@ -48,15 +42,10 @@ void Game::init() {
         getgResHandlerPtr()->getTexture("textures/vignetteMask.png"));
     vignetteShadowSpr.setTexture(
         getgResHandlerPtr()->getTexture("textures/vignetteShadow.png"));
-    beamGlowSpr.setTexture(
-        getgResHandlerPtr()->getTexture("textures/teleporterBeamGlow.png"));
     vignetteShadowSpr.setColor(sf::Color(255, 255, 255, 100));
     hudView.setSize(viewPort.x, viewPort.y);
     hudView.setCenter(viewPort.x / 2, viewPort.y / 2);
     bkg.giveWindowSize(viewPort.x, viewPort.y);
-    tiles.setPosition((viewPort.x / 2) - 16, (viewPort.y / 2));
-    tiles.setWindowSize(viewPort.x, viewPort.y);
-    beamGlowSpr.setColor(sf::Color(0, 0, 0, 255));
     vignetteSprite.setColor(sf::Color::White);
 }
 
@@ -79,8 +68,14 @@ void Game::eventLoop() {
             this->hasFocus = false;
             break;
 
+	    // Note: Deliberate fallthrough
+	case sf::Event::KeyPressed:
+	case sf::Event::KeyReleased:
+	    input.recordEvent(event);
+	    break;
+
         default:
-            input.recordEvent(event);
+	    std::cout << "Unhandled event: " << event.type << std::endl;
             break;
         }
     }
@@ -98,8 +93,6 @@ void Game::updateGraphics() {
             std::lock_guard<std::mutex> overworldLock(overworldMutex);
             lightingMap.setView(camera.getOverworldView());
             bkg.drawBackground(target, worldView, camera);
-            tiles.draw(target, &gfxContext.glowSprs1, worldView,
-                       camera.getOverworldView());
             gfxContext.glowSprs2.clear();
             gfxContext.glowSprs1.clear();
             gfxContext.shadows.clear();
@@ -186,10 +179,7 @@ void Game::updateGraphics() {
             } break;
             }
         }
-        static const sf::Color blendAmount(185, 185, 185);
-        sf::Sprite tempSprite;
         for (auto & element : gfxContext.glowSprs2) {
-            element.setColor(blendAmount);
             lightingMap.draw(element,
                              sf::BlendMode(sf::BlendMode(
                                  sf::BlendMode::SrcAlpha, sf::BlendMode::One,
@@ -229,7 +219,6 @@ void Game::updateLogic(LuaProvider & luaProv) {
     // Blurring is graphics intensive, the game caches frames in a RenderTexture
     // when possible
     std::lock_guard<std::mutex> overworldLock(overworldMutex);
-    tiles.update();
     luaProv.applyHook([this](lua_State * state) {
 	lua_getglobal(state, "classes");
 	if (!lua_istable(state, -1)) {
@@ -289,8 +278,6 @@ void Game::setSleep(const std::chrono::microseconds & time) {
     slept = true;
     std::this_thread::sleep_for(time);
 }
-
-tileController & Game::getTileController() { return tiles; }
 
 Camera & Game::getCamera() { return camera; }
 

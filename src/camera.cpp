@@ -1,12 +1,19 @@
 #include "camera.hpp"
 
-#include "easingTemplates.hpp"
-
 Camera::Camera(const sf::Vector2f & viewPort, const sf::Vector2u & _windowSize)
     : overworldView(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
       startPosition(overworldView.getCenter()), currentPosition(startPosition),
       windowSize(_windowSize), isShaking(false), shakeIndex(0), shakeTimer(0),
       trackingTimer(0), shakeIntensity(0.f), state(State::followPlayer) {}
+
+template <int_fast16_t dim, typename T> float easeIn(T current, T duration) {
+    if (current >= duration) {
+        return 1.f;
+    }
+    return static_cast<float>(std::pow(current, dim)) /
+           static_cast<float>(std::pow(duration, dim));
+}
+
 
 void Camera::update(const sf::Time & elapsedTime,
                     const std::vector<sf::Vector2f> & targets) {
@@ -61,8 +68,8 @@ void Camera::update(const sf::Time & elapsedTime,
             trackingTimer += elapsedTime.asMicroseconds();
             float targetWeight =
                 1.f -
-                0.22f * Easing::easeIn<1>(trackingTimer,
-                                          static_cast<int64_t>(900000));
+                0.22f * easeIn<1>(trackingTimer,
+				  static_cast<int64_t>(900000));
             midpoint = math::lerp(sharedTarget->getPosition(), aggregate,
                                   targetWeight);
             currentPosition = math::lerp(midpoint, currentPosition, lerpSpeed);
@@ -72,13 +79,6 @@ void Camera::update(const sf::Time & elapsedTime,
             }
         } break;
         }
-        // } else {
-        //     state = State::followPlayer;
-        //     lerpSpeed =
-        // 	math::clamp(elapsedTime.asMicroseconds() * 0.0000055f, 0.f, 1.f);
-        //     currentPosition =
-        // 	math::lerp(sharedTarget->getPosition(), currentPosition, lerpSpeed);
-        // }
         if (isShaking) {
             shakeTimer += elapsedTime.asMicroseconds();
             if (shakeTimer > 50000) {

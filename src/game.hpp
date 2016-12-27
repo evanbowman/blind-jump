@@ -12,7 +12,6 @@
 #include "inputController.hpp"
 #include "resourceHandler.hpp"
 #include "soundController.hpp"
-#include "tileController.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <atomic>
@@ -42,27 +41,15 @@ struct ConfigData {
 
 class Game {
 public:
-    enum class TransitionState {
-        None,
-        ExitBeamEnter,
-        ExitBeamInflate,
-        ExitBeamDeflate,
-        TransitionOut,
-        TransitionIn,
-        EntryBeamDrop,
-        EntryBeamFade
-    };
     Game(const ConfigData &);
     void updateLogic(LuaProvider &);
     void updateGraphics();
     void eventLoop();
-    tileController & getTileController();
     SoundController & getSounds();
     InputController & getInputController();
     Camera & getCamera();
     sf::Vector2f viewPort;
     EntityTable & getEntityTable();
-    TransitionState transitionState;
     ResHandler & getResHandler();
     sf::RenderWindow & getWindow();
     const sf::Time & getElapsedTime();
@@ -83,22 +70,16 @@ private:
     InputController input;
     SoundController sounds;
     Camera camera;
-    tileController tiles;
     bool hasFocus;
     std::mutex overworldMutex;
     bool stashed, preload;
     sf::Sprite vignetteSprite;
     backgroundHandler bkg;
     sf::Sprite vignetteShadowSpr;
-    tileController::Tileset set;
     GfxContext gfxContext;
-    sf::Sprite beamGlowSpr;
     sf::View worldView, hudView;
     sf::RenderTexture lightingMap;
     sf::RenderTexture target, secondPass, thirdPass, stash;
-    sf::RectangleShape transitionShape, beamShape;
-    void updateTransitions(const sf::Time &);
-    void drawTransitions(sf::RenderWindow &);
     int_fast64_t timer;
 };
 

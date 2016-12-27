@@ -224,6 +224,15 @@
 		"w": 400,
 		"h": 400
 	    }
+	},
+	"introLevelFloorSprite": {
+	    "texture": "textures/introLevel.png",
+	    "box": {
+		"x": 0,
+		"y": 0,
+		"w": 200,
+		"h": 600
+	    }
 	}
     }
 }
