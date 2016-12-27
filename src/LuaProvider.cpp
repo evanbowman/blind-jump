@@ -420,8 +420,32 @@ static void registerInputLib(lua_State * state) {
     lua_setglobal(state, "input");
 }
 
+// ::sandbox contains a safe version of luaL_openlibs
+// with the io and os libraries disabled
+namespace sandbox {
+    static const luaL_Reg loadedlibs[] = {
+	{"_G", luaopen_base},
+	{LUA_LOADLIBNAME, luaopen_package},
+	{LUA_COLIBNAME, luaopen_coroutine},
+	{LUA_TABLIBNAME, luaopen_table},
+	{LUA_STRLIBNAME, luaopen_string},
+	{LUA_MATHLIBNAME, luaopen_math},
+	{LUA_UTF8LIBNAME, luaopen_utf8},
+	{LUA_DBLIBNAME, luaopen_debug},
+	{}
+    };
+
+    static void luaL_openlibs(lua_State *L) {
+	const luaL_Reg *lib;
+	for (lib = loadedlibs; lib->func; lib++) {
+	    luaL_requiref(L, lib->name, lib->func, 1);
+	    lua_pop(L, 1);
+	}
+    }
+}
+
 LuaProvider::LuaProvider() : m_state(luaL_newstate()) {
-    luaL_openlibs(m_state);
+    sandbox::luaL_openlibs(m_state);
     registerLib(m_state, systemLibFuncs, "system");
     registerLib(m_state, entityLibFuncs, "entity");
     registerLib(m_state, cameraLibFuncs, "camera");

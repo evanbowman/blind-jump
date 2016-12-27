@@ -1,8 +1,3 @@
-//========================================================================//
-// Copyright (C) 2016 Evan Bowman                                         //
-// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
-//========================================================================//
-
 #include "resourceHandler.hpp"
 
 static const char * LOAD_FAILURE_MSG = "blindjump [crash]: missing resource";

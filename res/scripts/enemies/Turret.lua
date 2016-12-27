@@ -1,4 +1,5 @@
 require("effects/MuzzleFlash")
+require("Player")
 
 local emitBullet = function(this)
    local x, y = entity.getPosition(this)
@@ -15,6 +16,8 @@ local id = {
 local fsm = {
    closed = function(this, timer)
       if timer > 50000 then
+	 local x, y = entity.getPosition(this)
+	 local playerX, playerY = entity.getPosition(player)
 	 entity.setField(this, id.state, "opening")
 	 entity.setField(this, id.timer, 0)
       end

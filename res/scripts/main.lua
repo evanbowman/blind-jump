@@ -9,9 +9,6 @@ require("Player")
 
 local level = -1
 
-playerStart = { x = 374, y = 238 }
-local player = entity.create("Player", playerStart.x, playerStart.y)
-
 camera.setTarget(player)
 local w, h = camera.getViewportSize()
 camera.displaceFromTarget(0, -h / 4)

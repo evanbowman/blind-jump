@@ -1,8 +1,10 @@
-local id = {
-   state = 0,
-   hp = 1,
-   shadow = 2,
-}
+--[[ NOTE: this script assumes that only one player will be 
+   created, if you want to change it to add more players, refactor
+   the some of the local variables into fields in the player entities. ]]
+
+local hp = 4
+
+local state = "nominal"
 
 local movementFactor = 0.000054
 
@@ -84,30 +86,31 @@ local fsm = {
    end
 }
 
-classes["Player"] = {
-   onCreate = function(this)
-      entity.setSprite(this, "playerDownSprite")
-      entity.setKeyframe(this, 5)
-      entity.setField(this, id.hp, 4)
-      entity.setField(this, id.state, "nominal")
-      local x, y = entity.getPosition(this)
-      entity.setField(this, id.shadow, entity.create("PlayerShadow", x, y))
-   end,
-
-   onUpdate = function(this)
-      local x, y = entity.getPosition(this)
-      entity.setZOrder(this, y)
-      fsm[entity.getField(this, id.state)](this, system.getDeltaTime())
-      local shadow = entity.getField(this, id.shadow)
-      entity.setPosition(shadow, x + 7, y + 24)
-      if entity.getField(this, id.hp) == 0 then
-	 entity.setField(this, id.state, "dying")
-      end
-   end
-}
-
 classes["PlayerShadow"] = {
    onCreate = function(this)
       entity.setSprite(this, "playerShadowSprite")
    end
 }
+
+local shadow = entity.create("PlayerShadow", 0, 0)
+
+classes["Player"] = {
+   onCreate = function(this)
+      entity.setSprite(this, "playerDownSprite")
+      entity.setKeyframe(this, 5)
+      local x, y = entity.getPosition(this)
+   end,
+
+   onUpdate = function(this)
+      local x, y = entity.getPosition(this)
+      entity.setZOrder(this, y)
+      fsm[state](this, system.getDeltaTime())
+      entity.setPosition(shadow, x + 7, y + 24)
+      if hp == 0 then
+	 state = dying
+      end
+   end
+}
+
+playerStart = { x = 374, y = 238 }
+player = entity.create("Player", playerStart.x, playerStart.y)
