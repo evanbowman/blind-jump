@@ -8,6 +8,10 @@ require("details/IntroFloor")
 require("Wall")
 require("Player")
 
+system.setVerticalSyncEnabled(true)
+system.setFramerateLimit(120)
+system.setCursorVisible(false)
+
 local level = -1
 
 camera.setTarget(player)
@@ -32,7 +36,6 @@ local cleanupLevel = function()
    if level == 0 then
       clearEntitiesOf("Pod")
       clearEntitiesOf("Door")
-      clearEntitiesOf("IntroFloor")
    elseif level > 0 then
       -- TODO...
    end
@@ -46,7 +49,6 @@ local setupLevel = function()
    if level == 0 then
       entity.setPosition(player, playerStart.x, playerStart.y)
       entity.create("Transporter", 378, -128)
-      entity.create("IntroFloor", 306, -231)
       entity.create("Pod", 400, 216)
       entity.create("Door", 305, 70)
       local lampPositions = {

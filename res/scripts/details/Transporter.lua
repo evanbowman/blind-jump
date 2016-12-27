@@ -6,6 +6,8 @@ local id = {
 classes["TransporterShadow"] = {
    onCreate = function(this)
       entity.setSprite(this, "teleporterShadowSprite")
+      local x, y = entity.getPosition(this)
+      entity.setZOrder(this, y - 33)
    end
 }
 
@@ -15,6 +17,7 @@ classes["Transporter"] = {
       local x, y = entity.getPosition(this)
       local shadow = entity.create("TransporterShadow", x, y + 4)
       local glow = light.create("teleporterGlowSprite", x + 16, y)
+      entity.setZOrder(this, y - 28)
       light.setOrigin(glow, 200, 200)
       entity.setField(this, id.shadow, shadow)
    end,

@@ -2,10 +2,10 @@
 #include "Entity.hpp"
 #include "GfxContext.hpp"
 #include "LightSource.hpp"
+#include "background.hpp"
 #include "LuaProvider.hpp"
 #include "RenderType.hpp"
 #include "alias.hpp"
-#include "backgroundHandler.hpp"
 #include "camera.hpp"
 #include "colors.hpp"
 #include "framework/option.hpp"
@@ -48,6 +48,7 @@ public:
     SoundController & getSounds();
     InputController & getInputController();
     Camera & getCamera();
+    BackgroundController & getBackground();
     sf::Vector2f viewPort;
     EntityTable & getEntityTable();
     ResHandler & getResHandler();
@@ -67,6 +68,7 @@ private:
     bool slept;
     sf::RenderWindow window;
     sf::Time elapsedTime;
+    BackgroundController background;
     InputController input;
     SoundController sounds;
     Camera camera;
@@ -74,7 +76,6 @@ private:
     std::mutex overworldMutex;
     bool stashed, preload;
     sf::Sprite vignetteSprite;
-    backgroundHandler bkg;
     sf::Sprite vignetteShadowSpr;
     GfxContext gfxContext;
     sf::View worldView, hudView;
@@ -106,18 +107,6 @@ inline ConfigData getConfig(lua_State * state) {
     lua_pushstring(state, "height");
     lua_gettable(state, -2);
     float height = lua_tonumber(state, -1);
-    lua_pop(state, 1);
-    lua_pushstring(state, "vsync");
-    lua_gettable(state, -2);
-    bool vsync = lua_toboolean(state, -1);
-    lua_pop(state, 1);
-    lua_pushstring(state, "showCursor");
-    lua_gettable(state, -2);
-    bool showCursor = lua_toboolean(state, -1);
-    lua_pop(state, 1);
-    lua_pushstring(state, "frameratestateimit");
-    lua_gettable(state, -2);
-    int frameratestateimit = lua_tointeger(state, -1);
     lua_pop(state, 2);
-    return ConfigData{{width, height}, vsync, showCursor, frameratestateimit};
+    return ConfigData{{width, height}};
 }

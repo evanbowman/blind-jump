@@ -41,10 +41,7 @@ function getConf()
    local w, h = getDrawableArea()
    local conf = {
       width = w,
-      height = h,
-      vsync = true,
-      showCursor = false,
-      framerateLimit = 120
+      height = h
    }
    return conf
 end

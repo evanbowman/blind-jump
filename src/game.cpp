@@ -22,14 +22,11 @@ Game::Game(const ConfigData & conf)
     camera.setWindowView(windowView);
     gfxContext.targetRef = &target;
     window.setMouseCursorVisible(conf.showMouse);
-    window.setFramerateLimit(conf.framerateLimit);
-    window.setVerticalSyncEnabled(conf.enableVsync);
     // TODO: refactor out global pointer! (only needed for old C++ logic)
     setgResHandlerPtr(&resHandler);
 }
 
 void Game::init() {
-    bkg.init();
     target.create(viewPort.x, viewPort.y);
     secondPass.create(viewPort.x, viewPort.y);
     secondPass.setSmooth(true);
@@ -45,7 +42,6 @@ void Game::init() {
     vignetteShadowSpr.setColor(sf::Color(255, 255, 255, 100));
     hudView.setSize(viewPort.x, viewPort.y);
     hudView.setCenter(viewPort.x / 2, viewPort.y / 2);
-    bkg.giveWindowSize(viewPort.x, viewPort.y);
     vignetteSprite.setColor(sf::Color::White);
 }
 
@@ -92,7 +88,6 @@ void Game::updateGraphics() {
         {
             std::lock_guard<std::mutex> overworldLock(overworldMutex);
             lightingMap.setView(camera.getOverworldView());
-            bkg.drawBackground(target, worldView, camera);
             gfxContext.glowSprs2.clear();
             gfxContext.glowSprs1.clear();
             gfxContext.shadows.clear();
@@ -179,7 +174,9 @@ void Game::updateGraphics() {
             } break;
             }
         }
+	static const sf::Color entityLightBlending(185, 185, 185);
         for (auto & element : gfxContext.glowSprs2) {
+	    element.setColor(entityLightBlending);
             lightingMap.draw(element,
                              sf::BlendMode(sf::BlendMode(
                                  sf::BlendMode::SrcAlpha, sf::BlendMode::One,
@@ -189,7 +186,6 @@ void Game::updateGraphics() {
         lightingMap.display();
         target.draw(sf::Sprite(lightingMap.getTexture()));
         target.setView(camera.getOverworldView());
-        bkg.drawForeground(target);
         target.setView(worldView);
         sf::Vector2f fgMaskPos(
             viewPort.x * 0.115f + camera.getOffsetFromTarget().x * 0.75f,
@@ -284,6 +280,8 @@ Camera & Game::getCamera() { return camera; }
 InputController & Game::getInputController() { return input; }
 
 SoundController & Game::getSounds() { return sounds; }
+
+BackgroundController & Game::getBackground() { return background; }
 
 sf::RenderWindow & Game::getWindow() { return window; }
 

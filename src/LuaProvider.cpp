@@ -61,6 +61,33 @@ extern "C" {
 	     throw ShutdownSignal();
 	     return 0;
 	 }},
+	{"setVerticalSyncEnabled",
+	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 1) {
+		 throw std::runtime_error(paramErr + "system.setVerticalSyncEnabled");
+	     }
+	     sf::RenderWindow & window = getgGamePtr()->getWindow();
+	     window.setVerticalSyncEnabled(lua_toboolean(state, 1));
+	     return 0;
+	 }},
+	{"setFramerateLimit",
+	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 1) {
+		 throw std::runtime_error(paramErr + "system.setFramerateLimit");
+	     }
+	     sf::RenderWindow & window = getgGamePtr()->getWindow();
+	     window.setFramerateLimit(lua_tointeger(state, 1));
+	     return 0;
+	 }},
+	{"setCursorVisible",
+	 [](lua_State * state) {
+	     if (lua_gettop(state) != 1) {
+		 throw std::runtime_error(paramErr + "system.setCursorVisible");
+	     }
+	     sf::RenderWindow & window = getgGamePtr()->getWindow();
+	     window.setMouseCursorVisible(lua_toboolean(state, 1));
+	     return 0;
+	 }},
 	{}};
     
     static const luaL_Reg cameraLibFuncs[] = {
