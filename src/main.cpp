@@ -7,7 +7,6 @@
 // End Date:
 
 #include "alias.hpp"
-#include "aspectScaling.hpp"
 #include "backgroundHandler.hpp"
 #include "config.h"
 #include "framework/smartThread.hpp"

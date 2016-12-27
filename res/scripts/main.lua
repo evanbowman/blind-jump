@@ -3,6 +3,7 @@ require("enemies/Dasher")
 require("details/Pod")
 require("details/Door")
 require("details/Lamp")
+require("Wall")
 require("Player")
 
 local level = -1
@@ -21,6 +22,13 @@ local clearEntitiesOf = function(classname)
    end
 end
 
+local clearLights = function()
+   local lightsList = light.listAll()
+   for i, handle in pairs(lightsList) do
+      light.dispose(handle)
+   end
+end
+
 local cleanupLevel = function()
    if level == 0 then
       clearEntitiesOf("Pod")
@@ -29,6 +37,7 @@ local cleanupLevel = function()
    elseif level > 0 then
       -- TODO...
    end
+   clearLights()
 end
 
 local setupLevel = function()

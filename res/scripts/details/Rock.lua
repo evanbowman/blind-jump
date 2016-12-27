@@ -4,7 +4,5 @@ classes["Rock"] = {
       entity.setKeyframe(this, system.random(4, 0))
       local x, y = entity.getPosition(this)
       entity.setZOrder(this, y + 10)
-   end,
-
-   onUpdate = function(this) end
+   end
 }

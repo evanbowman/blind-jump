@@ -363,9 +363,17 @@ void Game::updateLogic(LuaProvider & luaProv) {
                 }
                 for (auto it = kvp.second.begin(); it != kvp.second.end();) {
                     lua_getfield(state, -1, "onUpdate");
+		    // It is allowable to not implement onUpdate for objects that
+		    // do not have update logic, as any call to Lua from the engine
+		    // incurs a performance penalty...
+		    if (lua_isnil(state, -1)) {
+			lua_pop(state, 1);
+			++it;
+			continue;
+		    }
                     if (!lua_isfunction(state, -1)) {
                         const std::string err =
-                            "Error: missing or malformed OnUpdate for class " +
+                            "Error: malformed OnUpdate for class " +
                             kvp.first;
                         throw std::runtime_error(err);
                     }

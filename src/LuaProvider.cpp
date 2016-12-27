@@ -125,7 +125,7 @@ extern "C" {
 	 }},
 	{"listAll",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 1) {
+	     if (lua_gettop(state) != 0) {
 		 throw std::runtime_error(paramErr + "light.listAll");
 	     }
 	     Game * pGame = getgGamePtr();

@@ -4,7 +4,5 @@ classes["Door"] = {
       entity.setKeyframe(this, 3)
       local x, y = entity.getPosition(this)
       entity.setZOrder(this, y + 58)
-   end,
-
-   onUpdate = function(this) end
+   end
 }
