@@ -10,6 +10,9 @@ extern "C" {
     static const luaL_Reg systemLibFuncs[] = {
 	{"getScreenSize",
 	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 0) {
+		 throw std::runtime_error(paramErr + "system.getScreenSize");
+	     }
 	     auto desktop = sf::VideoMode::getDesktopMode();
 	     lua_pushnumber(state, desktop.width);
 	     lua_pushnumber(state, desktop.height);
@@ -17,6 +20,9 @@ extern "C" {
 	 }},
 	{"getDeltaTime",
 	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 0) {
+		 throw std::runtime_error(paramErr + "system.getDeltaTime");
+	     }
 	     Game * pGame = getgGamePtr();
 	     const sf::Time & elapsed = pGame->getElapsedTime();
 	     lua_pushnumber(state, elapsed.asMicroseconds());
@@ -25,7 +31,7 @@ extern "C" {
 	{"random",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 2) {
-		 throw std::runtime_error(paramErr + "random");
+		 throw std::runtime_error(paramErr + "system.random");
 	     }
 	     int upper = lua_tointeger(state, 1);
 	     int lower = lua_tointeger(state, 2);
@@ -36,7 +42,7 @@ extern "C" {
 	{"sleep",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "sleep");
+		 throw std::runtime_error(paramErr + "system.sleep");
 	     }
 	     getgGamePtr()->setSleep(
 				     std::chrono::microseconds(lua_tointeger(state, 1)));
@@ -45,7 +51,7 @@ extern "C" {
 	{"quit",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "quit");
+		 throw std::runtime_error(paramErr + "system.quit");
 	     }
 	     // The engine code is multithreaded with a lots of locks, threads,
 	     // and other resources (e.g. the Lua state) that need to be
@@ -56,42 +62,12 @@ extern "C" {
 	     return 0;
 	 }},
 	{}};
-
-    static EntityRef * createEntity(lua_State * state,
-				    const std::string & classname, const float x,
-				    const float y) {
-	Game * pGame = getgGamePtr();
-	auto & entityTable = pGame->getEntityTable();
-	auto & vec = pGame->getEntityTable()[classname];
-	vec.push_back(std::make_shared<Entity>());
-	vec.back()->setPosition(sf::Vector2f(x, y));
-	lua_getglobal(state, "classes");
-	if (!lua_istable(state, -1)) {
-	    throw std::runtime_error("Error: missing classtable");
-	}
-	lua_getfield(state, -1, classname.c_str());
-	if (!lua_istable(state, -1)) {
-	    const std::string err =
-		"Error: classtable field " + classname + " is not a table";
-	    throw std::runtime_error(err);
-	}
-	lua_getfield(state, -1, "onCreate");
-	if (!lua_isfunction(state, -1)) {
-	    const std::string err =
-		"Error: missing or malformed OnUpdate for class " + classname;
-	}
-	lua_pushlightuserdata(state, (void *)(&vec.back()));
-	if (lua_pcall(state, 1, 0, 0)) {
-	    throw std::runtime_error(lua_tostring(state, -1));
-	}
-	return &vec.back();
-    }
-
+    
     static const luaL_Reg cameraLibFuncs[] = {
 	{"setTarget",
 	 [](lua_State * state) {
 	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "setTarget");
+		 throw std::runtime_error(paramErr + "camera.setTarget");
 	     }
 	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
 	     getgGamePtr()->getCamera().setTarget(*entity);
@@ -100,7 +76,7 @@ extern "C" {
 	{"displaceFromTarget",
 	 [](lua_State * state) {
 	     if (lua_gettop(state) != 2) {
-		 throw std::runtime_error(paramErr + "displaceFromTarget");
+		 throw std::runtime_error(paramErr + "camera.displaceFromTarget");
 	     }
 	     const float x = lua_tonumber(state, 1);
 	     const float y = lua_tonumber(state, 2);
@@ -110,7 +86,7 @@ extern "C" {
 	{"getViewportSize",
 	 [](lua_State * state) {
 	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "getViewportSize");
+		 throw std::runtime_error(paramErr + "camera.getViewportSize");
 	     }
 	     auto viewsize =
 		 getgGamePtr()->getCamera().getOverworldView().getSize();
@@ -123,24 +99,62 @@ extern "C" {
     static const luaL_Reg lightLibFuncs[] = {
 	{"new",
 	 [](lua_State * state) -> int {
-	     // ...
+	     if (lua_gettop(state) != 3) {
+		 throw std::runtime_error(paramErr + "light.new");
+	     }
+	     const std::string sheetName = lua_tostring(state, 1);
+	     const float x = lua_tonumber(state, 2);
+	     const float y = lua_tonumber(state, 3);
+	     Game * pGame = getgGamePtr();
+	     ResHandler & resources = pGame->getResHandler();
+	     auto & lights = pGame->getLights();
+	     lights.emplace_back();
+	     lights.back().setSheet(&resources.getSheet(sheetName));
+	     lights.back().setPosition({x, y});
+	     lua_pushlightuserdata(state, (void *)&lights.back());
+	     return 1;
+	 }},
+	{"dispose",
+	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 1) {
+		 throw std::runtime_error(paramErr + "light.dispose");
+	     }
+	     Light * light = reinterpret_cast<Light *>(lua_touserdata(state, 1));
+	     light->setKillFlag();
 	     return 0;
-	 }}
+	 }},
+	{"listAll",
+	 [](lua_State * state) -> int {
+	     if (lua_gettop(state) != 1) {
+		 throw std::runtime_error(paramErr + "light.listAll");
+	     }
+	     Game * pGame = getgGamePtr();
+	     auto & lights = pGame->getLights();
+	     lua_newtable(state);
+	     for (int i = 0; i < lights.size(); ++i) {
+		 lua_pushnumber(state, i);
+		 lua_pushlightuserdata(state, &lights[i]);
+		 lua_settable(state, -3);
+	     }
+	     return 1;
+	 }},
+	{}
     };
 
     static const luaL_Reg inputLibFuncs[] = {
-	{"left", [](lua_State * state) {
-		     if (lua_gettop(state) != 0) {
-			 throw std::runtime_error(paramErr + "left");
-		     }
-		     InputController & input = getgGamePtr()->getInputController();
-		     lua_pushboolean(state, input.leftPressed());
-		     return 1;
-		 }},
+	{"left",
+	 [](lua_State * state) {
+	     if (lua_gettop(state) != 0) {
+		 throw std::runtime_error(paramErr + "input.left");
+	     }
+	     InputController & input = getgGamePtr()->getInputController();
+	     lua_pushboolean(state, input.leftPressed());
+	     return 1;
+	 }},
 	{"right",
 	 [](lua_State * state) {
 	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "left");
+		 throw std::runtime_error(paramErr + "input.left");
 	     }
 	     InputController & input = getgGamePtr()->getInputController();
 	     lua_pushboolean(state, input.rightPressed());
@@ -149,7 +163,7 @@ extern "C" {
 	{"up",
 	 [](lua_State * state) {
 	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "left");
+		 throw std::runtime_error(paramErr + "input.left");
 	     }
 	     InputController & input = getgGamePtr()->getInputController();
 	     lua_pushboolean(state, input.upPressed());
@@ -158,7 +172,7 @@ extern "C" {
 	{"down",
 	 [](lua_State * state) {
 	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "left");
+		 throw std::runtime_error(paramErr + "input.left");
 	     }
 	     InputController & input = getgGamePtr()->getInputController();
 	     lua_pushboolean(state, input.downPressed());
@@ -167,7 +181,7 @@ extern "C" {
 	{"x",
 	 [](lua_State * state) {
 	     if (lua_gettop(state) != 0) {
-	     
+		 throw std::runtime_error(paramErr + "input.x");
 	     }
 	     InputController & input = getgGamePtr()->getInputController();
 	     lua_pushboolean(state, input.shootPressed());
@@ -179,19 +193,42 @@ extern "C" {
 	{"new",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 3) {
-		 throw std::runtime_error(paramErr + "spawn");
+		 throw std::runtime_error(paramErr + "entity.new");
 	     }
 	     const std::string classname = lua_tostring(state, 1);
 	     const float x = lua_tonumber(state, 2);
 	     const float y = lua_tonumber(state, 3);
-	     EntityRef * created = createEntity(state, classname, x, y);
-	     lua_pushlightuserdata(state, (void *)created);
+	     Game * pGame = getgGamePtr();
+	     auto & entityTable = pGame->getEntityTable();
+	     auto & vec = pGame->getEntityTable()[classname];
+	     vec.push_back(std::make_shared<Entity>());
+	     vec.back()->setPosition(sf::Vector2f(x, y));
+	     lua_getglobal(state, "classes");
+	     if (!lua_istable(state, -1)) {
+		 throw std::runtime_error("Error: missing classtable");
+	     }
+	     lua_getfield(state, -1, classname.c_str());
+	     if (!lua_istable(state, -1)) {
+		 const std::string err =
+		     "Error: classtable field " + classname + " is not a table";
+		 throw std::runtime_error(err);
+	     }
+	     lua_getfield(state, -1, "onCreate");
+	     if (!lua_isfunction(state, -1)) {
+		 const std::string err =
+		     "Error: missing or malformed OnUpdate for class " + classname;
+	     }
+	     lua_pushlightuserdata(state, (void *)(&vec.back()));
+	     if (lua_pcall(state, 1, 0, 0)) {
+		 throw std::runtime_error(lua_tostring(state, -1));
+	     }
+	     lua_pushlightuserdata(state, (void *)&vec.back());
 	     return 1;
 	 }},
 	{"getPosition",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "getPosition");
+		 throw std::runtime_error(paramErr + "entity.getPosition");
 	     }
 	     void * entity = lua_touserdata(state, 1);
 	     auto & pos = (*static_cast<EntityRef *>(entity))->getPosition();
@@ -202,7 +239,7 @@ extern "C" {
 	{"setPosition",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 3) {
-		 throw std::runtime_error(paramErr + "setPosition");
+		 throw std::runtime_error(paramErr + "entity.setPosition");
 	     }
 	     void * entity = lua_touserdata(state, 1);
 	     float x = lua_tonumber(state, 2);
@@ -213,7 +250,7 @@ extern "C" {
 	{"dispose",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "destroy");
+		 throw std::runtime_error(paramErr + "entity.dispose");
 	     }
 	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
 	     (*entity)->setKillFlag();
@@ -222,7 +259,7 @@ extern "C" {
 	{"setField",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 3) {
-		 throw std::runtime_error(paramErr + "setField");
+		 throw std::runtime_error(paramErr + "entity.setField");
 	     }
 	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
 	     const int varIndex = lua_tointeger(state, 2);
@@ -237,7 +274,7 @@ extern "C" {
 	{"getField",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 2) {
-		 throw std::runtime_error(paramErr + "getField");
+		 throw std::runtime_error(paramErr + "entity.getField");
 	     }
 	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
 	     const int varIndex = lua_tointeger(state, 2);
@@ -254,7 +291,7 @@ extern "C" {
 	{"emitSound",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 4) {
-		 throw std::runtime_error(paramErr + "emitSound");
+		 throw std::runtime_error(paramErr + "entity.emitSound");
 	     }
 	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
 	     const char * soundName = lua_tostring(state, 2);
@@ -268,7 +305,7 @@ extern "C" {
 	{"setKeyframe",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 2) {
-		 throw std::runtime_error(paramErr + "setKeyframe");
+		 throw std::runtime_error(paramErr + "entity.setKeyframe");
 	     }
 	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
 	     const int frameno = lua_tointeger(state, 2);
@@ -278,7 +315,7 @@ extern "C" {
 	{"getKeyframe",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "getKeyframe");
+		 throw std::runtime_error(paramErr + "entity.getKeyframe");
 	     }
 	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
 	     const int frameno = entity->getKeyframe();
@@ -288,7 +325,7 @@ extern "C" {
 	{"setSprite",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 2) {
-		 throw std::runtime_error(paramErr + "setSprite");
+		 throw std::runtime_error(paramErr + "entity.setSprite");
 	     }
 	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
 	     const std::string sheetName = lua_tostring(state, 2);
@@ -299,7 +336,7 @@ extern "C" {
 	{"setZOrder",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 2) {
-		 throw std::runtime_error(paramErr + "setZOrder");
+		 throw std::runtime_error(paramErr + "entity.setZOrder");
 	     }
 	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
 	     const float z = lua_tonumber(state, 2);
@@ -309,7 +346,7 @@ extern "C" {
 	{"getZOrder",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "getZOrder");
+		 throw std::runtime_error(paramErr + "entity.getZOrder");
 	     }
 	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
 	     lua_pushnumber(state, entity->getZOrder());
@@ -318,7 +355,7 @@ extern "C" {
 	{"listAll",
 	 [](lua_State * state) -> int {
 	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "listAll");
+		 throw std::runtime_error(paramErr + "entity.listAll");
 	     }
 	     Game * pGame = getgGamePtr();
 	     EntityTable & tab = pGame->getEntityTable();
@@ -348,6 +385,7 @@ LuaProvider::LuaProvider() : m_state(luaL_newstate()) {
     registerLib(m_state, inputLibFuncs, "input");
     registerLib(m_state, entityLibFuncs, "entity");
     registerLib(m_state, cameraLibFuncs, "camera");
+    registerLib(m_state, lightLibFuncs, "light");
     lua_newtable(m_state);
     lua_setglobal(m_state, "classes");
     lua_getglobal(m_state, "package");

@@ -133,6 +133,12 @@ void Game::updateGraphics() {
                     }
                 }
             }
+	    for (auto & light : lights) {
+	        auto sheet = light.getSheet();
+		sheet->getSprite().setPosition(light.getPosition());
+		gfxContext.glowSprs1.push_back(sheet->getSprite());
+		gfxContext.glowSprs2.push_back(sheet->getSprite());
+	    }
             sounds.update();
         }
         if (!gfxContext.shadows.empty()) {
@@ -380,16 +386,6 @@ void Game::updateLogic(LuaProvider & luaProv) {
             }
             lua_pop(state, 1);
         });
-        auto objUpdatePolicy = [this](auto & vec) {
-            for (auto it = vec.begin(); it != vec.end();) {
-                if ((*it)->getKillFlag()) {
-                    it = vec.erase(it);
-                } else {
-                    (*it)->update(this->elapsedTime, this);
-                    ++it;
-                }
-            }
-        };
         std::vector<sf::Vector2f> cameraTargets;
         camera.update(elapsedTime, cameraTargets);
     }
@@ -750,3 +746,5 @@ void setgGamePtr(Game * pGame) { ::pGame = pGame; }
 Game * getgGamePtr() { return ::pGame; }
 
 EntityTable & Game::getEntityTable() { return entityTable; }
+
+std::vector<Light> & Game::getLights() { return lights; }

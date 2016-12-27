@@ -6,6 +6,7 @@
 #pragma once
 #include "Entity.hpp"
 #include "GfxContext.hpp"
+#include "LightSource.hpp"
 #include "LuaProvider.hpp"
 #include "RenderType.hpp"
 #include "alias.hpp"
@@ -69,9 +70,11 @@ public:
     bool hasSlept() const;
     void clearSleptFlag();
     void setSleep(const std::chrono::microseconds & time);
+    std::vector<Light> & getLights();
 
 private:
     EntityTable entityTable;
+    std::vector<Light> lights;
     ResHandler resHandler;
     bool slept;
     sf::RenderWindow window;
