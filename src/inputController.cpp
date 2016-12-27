@@ -7,7 +7,7 @@
 #include <cmath>
 #include <iostream>
 
-InputController::InputController() {}
+InputController::InputController() : m_keyStates{{}} {}
 
 void InputController::recordEvent(const sf::Event & event) {
     switch (event.type) {

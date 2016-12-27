@@ -358,13 +358,75 @@ static void registerLib(lua_State * state, M * lib, const char * name) {
     lua_setglobal(state, name);
 }
 
+static void registerInputLib(lua_State * state) {
+    lua_newtable(state);
+    luaL_setfuncs(state, inputLibFuncs, 0);
+    lua_newtable(state);
+    const auto createBinding =
+	[state](const char * keyName, sf::Keyboard::Key code) {
+	    lua_pushinteger(state, code);
+	    lua_setfield(state, -2, keyName);
+	};
+    createBinding("left", sf::Keyboard::Left);
+    createBinding("right", sf::Keyboard::Right);
+    createBinding("up", sf::Keyboard::Up);
+    createBinding("down", sf::Keyboard::Down);
+    createBinding("a", sf::Keyboard::A);
+    createBinding("b", sf::Keyboard::B);
+    createBinding("c", sf::Keyboard::C);
+    createBinding("d", sf::Keyboard::D);
+    createBinding("e", sf::Keyboard::E);
+    createBinding("f", sf::Keyboard::F);
+    createBinding("g", sf::Keyboard::G);
+    createBinding("h", sf::Keyboard::H);
+    createBinding("i", sf::Keyboard::I);
+    createBinding("j", sf::Keyboard::J);
+    createBinding("k", sf::Keyboard::K);
+    createBinding("l", sf::Keyboard::L);
+    createBinding("m", sf::Keyboard::M);
+    createBinding("n", sf::Keyboard::N);
+    createBinding("o", sf::Keyboard::O);
+    createBinding("p", sf::Keyboard::P);
+    createBinding("q", sf::Keyboard::Q);
+    createBinding("r", sf::Keyboard::R);
+    createBinding("s", sf::Keyboard::S);
+    createBinding("t", sf::Keyboard::T);
+    createBinding("u", sf::Keyboard::U);
+    createBinding("v", sf::Keyboard::V);
+    createBinding("w", sf::Keyboard::W);
+    createBinding("x", sf::Keyboard::X);
+    createBinding("y", sf::Keyboard::Y);
+    createBinding("z", sf::Keyboard::Z);
+    createBinding("num0", sf::Keyboard::Num0);
+    createBinding("num1", sf::Keyboard::Num1);
+    createBinding("num2", sf::Keyboard::Num2);
+    createBinding("num3", sf::Keyboard::Num3);
+    createBinding("num4", sf::Keyboard::Num4);
+    createBinding("num5", sf::Keyboard::Num5);
+    createBinding("num6", sf::Keyboard::Num6);
+    createBinding("num7", sf::Keyboard::Num7);
+    createBinding("num8", sf::Keyboard::Num8);
+    createBinding("num9", sf::Keyboard::Num9);
+    createBinding("esc", sf::Keyboard::Escape);
+    createBinding("lctrl", sf::Keyboard::LControl);
+    createBinding("lshift", sf::Keyboard::LShift);
+    createBinding("lalt", sf::Keyboard::LAlt);
+    createBinding("lsuper", sf::Keyboard::LSystem);
+    createBinding("rctrl", sf::Keyboard::RControl);
+    createBinding("rshift", sf::Keyboard::RShift);
+    createBinding("ralt", sf::Keyboard::RAlt);
+    createBinding("rsuper", sf::Keyboard::RSystem);
+    lua_setfield(state, -2, "key");
+    lua_setglobal(state, "input");
+}
+
 LuaProvider::LuaProvider() : m_state(luaL_newstate()) {
     luaL_openlibs(m_state);
     registerLib(m_state, systemLibFuncs, "system");
-    registerLib(m_state, inputLibFuncs, "input");
     registerLib(m_state, entityLibFuncs, "entity");
     registerLib(m_state, cameraLibFuncs, "camera");
     registerLib(m_state, lightLibFuncs, "light");
+    registerInputLib(m_state);
     lua_newtable(m_state);
     lua_setglobal(m_state, "classes");
     lua_getglobal(m_state, "package");
