@@ -1,5 +1,4 @@
 #include "soundController.hpp"
-#include "rng.hpp"
 
 static const std::string musicPaths[] = {"music/Frostellar.ogg"};
 
@@ -60,7 +59,7 @@ void SoundController::update() {
                 sf::Time loopedTrackLength =
                     runningSounds.back().getBuffer()->getDuration();
                 auto randomOffset =
-                    rng::random(loopedTrackLength.asMilliseconds());
+                    calc::rng::random(loopedTrackLength.asMilliseconds());
                 sf::Time playingOffset = sf::milliseconds(randomOffset);
                 runningSounds.back().setPlayingOffset(playingOffset);
                 runningSounds.back().setLoop(true);

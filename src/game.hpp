@@ -49,7 +49,6 @@ public:
     InputController & getInputController();
     Camera & getCamera();
     BackgroundController & getBackground();
-    sf::Vector2f viewPort;
     EntityTable & getEntityTable();
     ResHandler & getResHandler();
     sf::RenderWindow & getWindow();
@@ -62,26 +61,26 @@ public:
     std::vector<Light> & getLights();
 
 private:
-    EntityTable entityTable;
-    std::vector<Light> lights;
-    ResHandler resHandler;
-    bool slept;
-    sf::RenderWindow window;
-    sf::Time elapsedTime;
-    BackgroundController background;
-    InputController input;
-    SoundController sounds;
-    Camera camera;
-    bool hasFocus;
-    std::mutex overworldMutex;
-    bool stashed, preload;
-    sf::Sprite vignetteSprite;
-    sf::Sprite vignetteShadowSpr;
-    GfxContext gfxContext;
-    sf::View worldView, hudView;
-    sf::RenderTexture lightingMap;
-    sf::RenderTexture target, secondPass, thirdPass, stash;
-    int_fast64_t timer;
+    sf::Vector2f m_viewPort;
+    EntityTable m_entityTable;
+    std::vector<Light> m_lights;
+    ResHandler m_resHandler;
+    bool m_slept;
+    sf::RenderWindow m_window;
+    sf::Time m_elapsedTime;
+    BackgroundController m_background;
+    InputController m_input;
+    SoundController m_sounds;
+    Camera m_camera;
+    bool m_hasFocus;
+    std::mutex m_overworldMutex;
+    sf::Sprite m_vignetteSprite;
+    sf::Sprite m_vignetteShadowSpr;
+    GfxContext m_gfxContext;
+    sf::View m_worldView, m_hudView;
+    sf::RenderTexture m_lightingMap;
+    sf::RenderTexture m_target, m_secondPass, m_thirdPass, m_stash;
+    int_fast64_t m_timer;
 };
 
 // The first room is not procedurally generated so the positions of the walls

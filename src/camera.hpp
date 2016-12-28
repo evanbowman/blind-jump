@@ -1,6 +1,6 @@
 #pragma once
 #include "Entity.hpp"
-#include "math.hpp"
+#include "calc.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>

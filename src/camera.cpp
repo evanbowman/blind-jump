@@ -26,9 +26,9 @@ void Camera::update(const sf::Time & elapsedTime,
         }
         switch (state) {
         case State::followPlayer:
-            lerpSpeed = math::clamp(elapsedTime.asMicroseconds() * 0.0000025f,
+            lerpSpeed = calc::clamp(elapsedTime.asMicroseconds() * 0.0000025f,
                                     0.f, 1.f);
-            currentPosition = math::lerp(sharedTarget->getPosition(),
+            currentPosition = calc::lerp(sharedTarget->getPosition(),
                                          currentPosition, lerpSpeed);
             if (!targets.empty()) {
                 state = State::foundEnemy;
@@ -37,7 +37,7 @@ void Camera::update(const sf::Time & elapsedTime,
             break;
 
         case State::trackMidpoint: {
-            lerpSpeed = math::clamp(elapsedTime.asMicroseconds() * 0.0000025f,
+            lerpSpeed = calc::clamp(elapsedTime.asMicroseconds() * 0.0000025f,
                                     0.f, 1.f);
             sf::Vector2f aggregate;
             float divisor = 0;
@@ -49,13 +49,13 @@ void Camera::update(const sf::Time & elapsedTime,
             // Enemies entering and leaving the camera view creates jarring
             // shifts
             // so I'm using a buffer of the average enemy positions
-            buffer = math::lerp(buffer, aggregate, lerpSpeed * 0.1f);
-            midpoint = math::lerp(sharedTarget->getPosition(), buffer, 0.78);
-            currentPosition = math::lerp(midpoint, currentPosition, lerpSpeed);
+            buffer = calc::lerp(buffer, aggregate, lerpSpeed * 0.1f);
+            midpoint = calc::lerp(sharedTarget->getPosition(), buffer, 0.78);
+            currentPosition = calc::lerp(midpoint, currentPosition, lerpSpeed);
         } break;
 
         case State::foundEnemy: {
-            lerpSpeed = math::clamp(elapsedTime.asMicroseconds() * 0.0000025f,
+            lerpSpeed = calc::clamp(elapsedTime.asMicroseconds() * 0.0000025f,
                                     0.f, 1.f);
             sf::Vector2f aggregate;
             float divisor = 0;
@@ -68,9 +68,9 @@ void Camera::update(const sf::Time & elapsedTime,
             float targetWeight =
                 1.f -
                 0.22f * easeIn<1>(trackingTimer, static_cast<int64_t>(900000));
-            midpoint = math::lerp(sharedTarget->getPosition(), aggregate,
+            midpoint = calc::lerp(sharedTarget->getPosition(), aggregate,
                                   targetWeight);
-            currentPosition = math::lerp(midpoint, currentPosition, lerpSpeed);
+            currentPosition = calc::lerp(midpoint, currentPosition, lerpSpeed);
             if (trackingTimer > 900000) {
                 state = State::trackMidpoint;
                 buffer = aggregate;

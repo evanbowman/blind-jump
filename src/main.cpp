@@ -9,7 +9,7 @@
 #include "inputController.hpp"
 #include "json.hpp"
 #include "resourceHandler.hpp"
-#include "rng.hpp"
+#include "calc.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -22,7 +22,7 @@
 std::exception_ptr pWorkerException = nullptr;
 
 int main() {
-    rng::seed();
+    calc::rng::seed();
     try {
         LuaProvider luaProv;
         luaProv.runScriptFromFile(resourcePath() + "scripts/conf.lua");

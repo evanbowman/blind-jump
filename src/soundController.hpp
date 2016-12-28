@@ -7,6 +7,7 @@
 #include <list>
 #include <memory>
 #include <vector>
+#include "calc.hpp"
 
 struct reqInfo {
     std::string soundname;

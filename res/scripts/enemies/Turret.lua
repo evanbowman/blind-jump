@@ -18,8 +18,10 @@ local fsm = {
       if timer > 50000 then
 	 local x, y = entity.getPosition(this)
 	 local playerX, playerY = entity.getPosition(player)
-	 entity.setField(this, id.state, "opening")
-	 entity.setField(this, id.timer, 0)
+	 if calc.distance(x, y, playerX, playerY) < 174 then
+	    entity.setField(this, id.state, "opening")
+	    entity.setField(this, id.timer, 0)
+	 end
       end
    end,
    
@@ -62,8 +64,15 @@ local fsm = {
    
    rest = function(this, timer)
       if timer > 1200000 then
-	 entity.setField(this, id.state, "closing")
-	 entity.setField(this, id.timer, 0)
+	 local x, y = entity.getPosition(this)
+	 local playerX, playerY = entity.getPosition(player)
+	 if calc.distance(x, y, playerX, playerY) > 174 then
+	    entity.setField(this, id.state, "closing")
+	    entity.setField(this, id.timer, 0)
+	 else
+	    entity.setField(this, id.state, "shoot1")
+	    entity.setField(this, id.timer, 0)
+	 end
       end
    end,
    
