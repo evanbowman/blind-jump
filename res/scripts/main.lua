@@ -12,6 +12,8 @@ system.setVerticalSyncEnabled(true)
 system.setFramerateLimit(120)
 system.setCursorVisible(false)
 
+environment.setNaturalLight(190, 190, 210)
+
 local level = -1
 
 camera.setTarget(player)
@@ -21,15 +23,15 @@ camera.displaceFromTarget(0, -h / 4)
 
 local clearEntitiesOf = function(classname)
    local entitiesList = entity.listAll(classname)
-   for i, handle in pairs(entitiesList) do
-      entity.destroy(handle)
+   for i = 1, #entitiesList do
+      entity.destroy(entitiesList[i])
    end
 end
 
 local clearLights = function()
    local lightsList = light.listAll()
-   for i, handle in pairs(lightsList) do
-      light.destroy(handle)
+   for i = 1, #lightsList do
+      entity.destroy(lightsList[i])
    end
 end
 
@@ -49,6 +51,12 @@ end
 
 local setupLevel = function()
    if level == 0 then
+      background.addLayerFromSprite(0, "introLevelFloorSprite")
+      background.setLayerPosition(0, 305, -231)
+      background.setLayerAbsorptivity(0, 0.0)
+      foreground.addLayerFromSprite(0, "introLevelMaskSprite")
+      foreground.setLayerPosition(0, 284, -250)
+      foreground.setLayerAbsorptivity(0, 1.0)
       entity.setPosition(player, playerStart.x, playerStart.y)
       entity.create("Transporter", 378, -128)
       entity.create("Pod", 400, 216)
@@ -59,8 +67,8 @@ local setupLevel = function()
          { x = 492, y = 252 },
          { x = 460, y = -248 }
       }
-      for k, coord in pairs(lampPositions) do
-	 entity.create("Lamp", coord.x, coord.y)
+      for i = 1, #lampPositions do
+	 entity.create("Lamp", lampPositions[i].x, lampPositions[i].y)
       end
       local wallPositions = {
 	 { x = -20, y = 500 }, { x = -20, y = 526 }, { x = -20, y = 474 },
@@ -84,8 +92,9 @@ local setupLevel = function()
 	 { x = 108, y = 58 }, { x = 140, y = 58 }, { x = 12, y = 58 },
 	 { x = 76, y = 58 }, { x = 44, y = 58 }
       }
-      for k, coord in pairs(wallPositions) do
-	 entity.create("Wall", coord.x, coord.y)
+      for i = 1, #wallPositions do
+	 local coord = wallPositions[i]
+	 entity.create("Wall", wallPositions[i].x, wallPositions[i].y)
       end
    elseif level > 0 then
       -- TODO...
@@ -99,5 +108,3 @@ function nextLevel()
 end
 
 nextLevel()
-
-local turret = entity.create("Turret", 200, 200)

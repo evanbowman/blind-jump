@@ -10,7 +10,8 @@ end
 local id = {
    state = 0,
    hp = 1,
-   timer = 2
+   timer = 2,
+   shadow = 3
 }
 
 local fsm = {
@@ -32,6 +33,8 @@ local fsm = {
 	 currentFrame = currentFrame + 1
 	 if currentFrame <= 4 then
 	    entity.setKeyframe(this, currentFrame)
+	    local shadow = entity.getField(this, id.shadow)
+	    entity.setKeyframe(shadow, currentFrame) 
 	 else
 	    entity.setField(this, id.state, "shoot1")
 	 end
@@ -83,10 +86,18 @@ local fsm = {
 	 currentFrame = currentFrame - 1
 	 if currentFrame >= 0 then
 	    entity.setKeyframe(this, currentFrame)
+	    local shadow = entity.getField(this, id.shadow)
+	    entity.setKeyframe(shadow, currentFrame) 
 	 else
 	    entity.setField(this, id.state, "closed")
 	 end
       end
+   end
+}
+
+classes["TurretShadow"] = {
+   onCreate = function(this)
+      entity.setSprite(this, "turretShadowSprite")
    end
 }
 
@@ -98,6 +109,8 @@ classes["Turret"] = {
       entity.setSprite(this, "turretSprite")
       local x, y = entity.getPosition(this)
       entity.setZOrder(this, y - 3)
+      local shadow = entity.create("TurretShadow", x, y + 20)
+      entity.setField(this, id.shadow, shadow)
    end,
    
    onUpdate = function(this, dt)

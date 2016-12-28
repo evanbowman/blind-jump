@@ -3,17 +3,17 @@
 #include "math.h"
 
 Game::Game(const ConfigData & conf)
-    : m_viewPort(conf.drawableArea), m_slept(false),
+    : m_drawableArea(conf.drawableArea), m_slept(false),
       m_window(sf::VideoMode::getDesktopMode(), EXECUTABLE_NAME,
                sf::Style::Fullscreen, sf::ContextSettings(0, 0, 6)),
-      m_camera(m_viewPort, m_window.getSize()), m_hasFocus(false),
-      m_worldView(sf::Vector2f(m_viewPort.x / 2, m_viewPort.y / 2), m_viewPort),
-      m_timer(0) {
+      m_camera(m_drawableArea, m_window.getSize()), m_hasFocus(false),
+      m_worldView(sf::Vector2f(m_drawableArea.x / 2, m_drawableArea.y / 2), m_drawableArea),
+      m_naturalLight(185, 185, 185) {
     sf::View windowView;
     static const float visibleArea = 0.75f;
     const sf::Vector2f vignetteMaskScale(
-        (m_viewPort.x * (visibleArea + 0.02)) / 450,
-        (m_viewPort.y * (visibleArea + 0.02)) / 450);
+        (m_drawableArea.x * (visibleArea + 0.02)) / 450,
+        (m_drawableArea.y * (visibleArea + 0.02)) / 450);
     m_vignetteSprite.setScale(vignetteMaskScale);
     m_vignetteShadowSpr.setScale(vignetteMaskScale);
     windowView.setSize(m_window.getSize().x, m_window.getSize().y);
@@ -25,21 +25,15 @@ Game::Game(const ConfigData & conf)
 }
 
 void Game::init() {
-    m_target.create(m_viewPort.x, m_viewPort.y);
-    m_secondPass.create(m_viewPort.x, m_viewPort.y);
-    m_secondPass.setSmooth(true);
-    m_thirdPass.create(m_viewPort.x, m_viewPort.y);
-    m_thirdPass.setSmooth(true);
-    m_stash.create(m_viewPort.x, m_viewPort.y);
-    m_stash.setSmooth(true);
-    m_lightingMap.create(m_viewPort.x, m_viewPort.y);
+    m_target.create(m_drawableArea.x, m_drawableArea.y);
+    m_lightingMap.create(m_drawableArea.x, m_drawableArea.y);
     m_vignetteSprite.setTexture(
         getgResHandlerPtr()->getTexture("textures/vignetteMask.png"));
     m_vignetteShadowSpr.setTexture(
         getgResHandlerPtr()->getTexture("textures/vignetteShadow.png"));
     m_vignetteShadowSpr.setColor(sf::Color(255, 255, 255, 100));
-    m_hudView.setSize(m_viewPort.x, m_viewPort.y);
-    m_hudView.setCenter(m_viewPort.x / 2, m_viewPort.y / 2);
+    m_hudView.setSize(m_drawableArea.x, m_drawableArea.y);
+    m_hudView.setCenter(m_drawableArea.x / 2, m_drawableArea.y / 2);
     m_vignetteSprite.setColor(sf::Color::White);
 }
 
@@ -76,14 +70,14 @@ void Game::eventLoop() {
 }
 
 void Game::updateGraphics() {
-    m_window.clear();
+    m_window.clear(sf::Color(128, 128, 128));
     if (!m_hasFocus) {
         this->setSleep(std::chrono::microseconds(200000));
         return;
     }
     m_target.clear(sf::Color::Transparent);
     {
-        std::lock_guard<std::mutex> overworldLock(m_overworldMutex);
+        std::lock_guard<std::mutex> overworldLock(m_mutex);
         m_lightingMap.setView(m_camera.getOverworldView());
         m_gfxContext.glowSprs2.clear();
         m_gfxContext.glowSprs1.clear();
@@ -113,6 +107,69 @@ void Game::updateGraphics() {
         }
         m_sounds.update();
     }
+    const auto updateLayer =
+	[this](auto it) {
+	    Layer & l = it->second;
+	    switch (l.source) {
+	    case Layer::Source::sprite: {
+		m_target.setView(m_camera.getOverworldView());
+		sf::Sprite & spr = l.data.spriteLayer.sheet->getSprite();
+		if (l.absorptivity < 1.f) {
+		    spr.setPosition(0.f, 0.f);
+		    if (l.canvas == nullptr) {
+			l.canvas = std::make_unique<sf::RenderTexture>();
+			sf::Vector2u textureSize = spr.getTexture()->getSize();
+			l.canvas->create(textureSize.x, textureSize.y);
+		    }
+		    l.canvas->clear(sf::Color::Transparent);
+		    l.canvas->draw(spr);
+		    for (auto & lightSpr : m_gfxContext.glowSprs1) {
+			const sf::Vector2f lightAbsPos = lightSpr.getPosition();
+			const sf::Vector2f lightRelativePos {
+			    lightAbsPos.x - l.data.spriteLayer.x,
+			    lightAbsPos.y - l.data.spriteLayer.y
+			};
+			lightSpr.setPosition(lightRelativePos);
+			l.canvas->draw(lightSpr,
+				       sf::BlendMode(sf::BlendMode(
+                                           sf::BlendMode::SrcAlpha, sf::BlendMode::One,
+                                           sf::BlendMode::Add, sf::BlendMode::DstAlpha,
+                                           sf::BlendMode::Zero, sf::BlendMode::Add)));
+			lightSpr.setPosition(lightAbsPos);
+		    }
+		    l.canvas->display();
+		    sf::Sprite canvasSpr(l.canvas->getTexture());
+		    canvasSpr.setPosition(l.data.spriteLayer.x, l.data.spriteLayer.y);
+		    canvasSpr.setColor(m_naturalLight);
+		    m_target.draw(canvasSpr, l.blending);
+		} else {
+		    if (l.canvas) l.canvas = nullptr;
+		    spr.setPosition(l.data.spriteLayer.x, l.data.spriteLayer.y);
+		    m_target.draw(spr, l.blending);
+		}
+	    } break;
+		    
+	    case Layer::Source::color: {
+		m_target.setView(m_worldView);
+		sf::RectangleShape rect;
+		rect.setFillColor(sf::Color(l.data.colorLayer.color.r,
+					    l.data.colorLayer.color.g,
+					    l.data.colorLayer.color.b,
+					    l.data.colorLayer.color.a));
+		// static const float visibleArea = 0.75f;
+		// const sf::Vector2f colorLayerScale(
+                //     (m_drawableArea.x * (visibleArea + 0.02)) / 450,
+                //     (m_drawableArea.y * (visibleArea + 0.02)) / 450);
+		// rect.setScale(colorLayerScale);
+		// rect.setSize({2000, 2000});
+		// m_target.draw(rect);
+	    } break;
+	    }
+	};
+    auto & bkgLayers = m_background.getBkgLayers();
+    for (auto it = bkgLayers.rbegin(); it != bkgLayers.rend(); ++it) {
+	updateLayer(it);
+    }
     m_target.setView(m_worldView);
     m_lightingMap.clear(sf::Color::Transparent);
     static const size_t zOrderIdx = 1;
@@ -129,41 +186,13 @@ void Game::updateGraphics() {
         switch (std::get<2>(element)) {
         case Rendertype::shadeDefault:
             std::get<0>(element).setColor(sf::Color(
-                190, 190, 210, std::get<sprIdx>(element).getColor().a));
+						    m_naturalLight.r, m_naturalLight.g, m_naturalLight.b, std::get<sprIdx>(element).getColor().a));
             m_lightingMap.draw(std::get<sprIdx>(element));
             break;
 
-        case Rendertype::shadeNone:
-            m_lightingMap.draw(std::get<sprIdx>(element));
-            break;
-
-        case Rendertype::shadeWhite: {
-            DEF_GLSL_COLOR(colors::White, White);
-            colorShader.setUniform("amount", std::get<shaderIdx>(element));
-            colorShader.setUniform("targetColor", White);
-            m_lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-        } break;
-
-        case Rendertype::shadeGldnGt: {
-            DEF_GLSL_COLOR(colors::GldnGt, GldnGt);
-            colorShader.setUniform("amount", std::get<shaderIdx>(element));
-            colorShader.setUniform("targetColor", GldnGt);
-            m_lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-        } break;
-
-        case Rendertype::shadeRuby: {
-            DEF_GLSL_COLOR(colors::Ruby, Ruby);
-            colorShader.setUniform("amount", std::get<shaderIdx>(element));
-            colorShader.setUniform("targetColor", Ruby);
-            m_lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-        } break;
-
-        case Rendertype::shadeElectric: {
-            DEF_GLSL_COLOR(colors::Electric, Electric);
-            colorShader.setUniform("amount", std::get<shaderIdx>(element));
-            colorShader.setUniform("targetColor", Electric);
-            m_lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-        } break;
+	default:
+	    throw std::runtime_error("Error: bad rendertype");
+	    break;
         }
     }
     static const sf::Color entityLightBlending(185, 185, 185);
@@ -176,20 +205,25 @@ void Game::updateGraphics() {
                                sf::BlendMode::Zero, sf::BlendMode::Add)));
     }
     m_lightingMap.display();
-    m_target.draw(sf::Sprite(m_lightingMap.getTexture()));
+    sf::Sprite lightingMapSpr(m_lightingMap.getTexture());
+    m_target.draw(lightingMapSpr);
     m_target.setView(m_camera.getOverworldView());
+    auto & fgLayers = m_background.getFgLayers();
+    for (auto it = fgLayers.rbegin(); it != fgLayers.rend(); ++it) {
+	updateLayer(it);
+    }
     m_target.setView(m_worldView);
     sf::Vector2f fgMaskPos(
-        m_viewPort.x * 0.115f + m_camera.getOffsetFromTarget().x * 0.75f,
-        m_viewPort.y * 0.115f + m_camera.getOffsetFromTarget().y * 0.75f);
+        m_drawableArea.x * 0.115f + m_camera.getOffsetFromTarget().x * 0.75f,
+        m_drawableArea.y * 0.115f + m_camera.getOffsetFromTarget().y * 0.75f);
     m_vignetteSprite.setPosition(fgMaskPos);
     m_vignetteShadowSpr.setPosition(fgMaskPos);
     m_target.draw(m_vignetteSprite, sf::BlendMultiply);
     m_target.draw(m_vignetteShadowSpr);
     m_target.display();
     const sf::Vector2u windowSize = m_window.getSize();
-    const sf::Vector2f upscaleVec(windowSize.x / m_viewPort.x,
-                                  windowSize.y / m_viewPort.y);
+    const sf::Vector2f upscaleVec(windowSize.x / m_drawableArea.x,
+                                  windowSize.y / m_drawableArea.y);
     sf::Sprite targetSprite(m_target.getTexture());
     m_window.setView(m_camera.getWindowView());
     targetSprite.setScale(upscaleVec);
@@ -220,7 +254,7 @@ void Game::updateLogic(LuaProvider & luaProv) {
         this->setSleep(std::chrono::microseconds(200));
         return;
     }
-    std::lock_guard<std::mutex> overworldLock(m_overworldMutex);
+    std::lock_guard<std::mutex> overworldLock(m_mutex);
     luaProv.applyHook([this](lua_State * state) {
         lua_getglobal(state, "__heartBeat__");
         if (lua_isnil(state, -1)) {
@@ -271,3 +305,7 @@ Game * getgGamePtr() { return ::pGame; }
 EntityTable & Game::getEntityTable() { return m_entityTable; }
 
 std::vector<Light> & Game::getLights() { return m_lights; }
+
+void Game::setNaturalLight(const sf::Color & naturalLight) {
+    m_naturalLight = naturalLight;
+}

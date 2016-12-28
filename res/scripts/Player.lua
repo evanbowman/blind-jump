@@ -97,7 +97,7 @@ local shadow = entity.create("PlayerShadow", 0, 0)
 classes["Player"] = {
    onCreate = function(this)
       entity.setSprite(this, "playerDownSprite")
-      entity.setKeyframe(this, 5)
+      entity.setKeyframe(this, 0)
       local x, y = entity.getPosition(this)
    end,
 

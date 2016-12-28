@@ -19,17 +19,6 @@
 #include <mutex>
 #include <thread>
 
-// IMPORTANT:
-//   I understand the performance implications in using a std::list
-//   here. I'm doing it anyway for the time being, because the
-//   engine's Lua API function entity.create() returns userdata
-//   which holds a pointer to the created element, so I need a
-//   container that will not invalidate iterators upon resizing. An
-//   alternative design might be to instead return an id to Lua, and
-//   maintain a table of id->memory mappings for each Entity. I will
-//   only do this though if my code profiling tools suggest that
-//   locality of access is an issue, which it does not appear to be
-//   at the moment.
 using EntityTable = std::map<std::string, std::list<EntityRef>>;
 
 struct ConfigData {
@@ -59,9 +48,10 @@ public:
     void clearSleptFlag();
     void setSleep(const std::chrono::microseconds & time);
     std::vector<Light> & getLights();
-
+    void setNaturalLight(const sf::Color &);
+    
 private:
-    sf::Vector2f m_viewPort;
+    sf::Vector2f m_drawableArea;
     EntityTable m_entityTable;
     std::vector<Light> m_lights;
     ResHandler m_resHandler;
@@ -73,14 +63,13 @@ private:
     SoundController m_sounds;
     Camera m_camera;
     bool m_hasFocus;
-    std::mutex m_overworldMutex;
+    std::mutex m_mutex;
     sf::Sprite m_vignetteSprite;
     sf::Sprite m_vignetteShadowSpr;
     GfxContext m_gfxContext;
     sf::View m_worldView, m_hudView;
-    sf::RenderTexture m_lightingMap;
-    sf::RenderTexture m_target, m_secondPass, m_thirdPass, m_stash;
-    int_fast64_t m_timer;
+    sf::RenderTexture m_lightingMap, m_target;
+    sf::Color m_naturalLight;
 };
 
 // The first room is not procedurally generated so the positions of the walls

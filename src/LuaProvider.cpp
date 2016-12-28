@@ -9,20 +9,20 @@ static const std::string paramErr =
 
 static const luaL_Reg systemLibFuncs[] = {
     {"getScreenSize",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          auto desktop = sf::VideoMode::getDesktopMode();
          lua_pushnumber(state, desktop.width);
          lua_pushnumber(state, desktop.height);
          return 2;
      }},
     {"sleep",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          getgGamePtr()->setSleep(
              std::chrono::microseconds(lua_tointeger(state, 1)));
          return 0;
      }},
     {"quit",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          // The engine code is multithreaded with a lots of locks, threads,
          // and other resources (e.g. the Lua state) that need to be
          // deallocated correctly. The codebase uses RAII for ALL resources,
@@ -32,13 +32,13 @@ static const luaL_Reg systemLibFuncs[] = {
          return 0;
      }},
     {"setVerticalSyncEnabled",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          sf::RenderWindow & window = getgGamePtr()->getWindow();
          window.setVerticalSyncEnabled(lua_toboolean(state, 1));
          return 0;
      }},
     {"setFramerateLimit",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          sf::RenderWindow & window = getgGamePtr()->getWindow();
          window.setFramerateLimit(lua_tointeger(state, 1));
          return 0;
@@ -51,6 +51,103 @@ static const luaL_Reg systemLibFuncs[] = {
      }},
     {}};
 
+    static const luaL_Reg foregroundLibFuncs[] = {
+	{"addLayerFromSprite",
+	 [](lua_State * state) {
+	     BackgroundController & bkg = getgGamePtr()->getBackground();
+	     ResHandler & resources = getgGamePtr()->getResHandler();
+	     const std::string name(lua_tostring(state, 2));
+	     bkg.addFgLayer(lua_tointeger(state, 1), {
+	     	     {&resources.getSheet(name), 0.f, SpriteLayer::Fill::full, 0.f, 0.f},
+	     		 Layer::Source::sprite, 1.f, nullptr, sf::BlendAlpha});
+	     return 0;
+	 }},
+	{"setLayerPosition",
+	 [](lua_State * state) {
+	     BackgroundController & bkg = getgGamePtr()->getBackground();
+	     auto & layers = bkg.getFgLayers();
+	     const float x = lua_tonumber(state, 2);
+	     const float y = lua_tonumber(state, 3);
+	     Layer & layer = layers[lua_tointeger(state, 1)];
+	     if (layer.source != Layer::Source::color) {
+		 layer.data.spriteLayer.x = x;
+		 layer.data.spriteLayer.y = y;
+	     } else {
+		 throw std::runtime_error("Error: attempt to set position for color layer");
+	     }
+	     return 0;
+	 }},
+	{"setLayerAbsorptivity",
+	 [](lua_State * state) {
+	     BackgroundController & bkg = getgGamePtr()->getBackground();
+	     auto & layers = bkg.getFgLayers();
+	     const float a = lua_tonumber(state, 2);
+	     layers[lua_tointeger(state, 1)].absorptivity = a;
+	     return 0;
+	 }},
+	{}
+    };
+
+    static const luaL_Reg backgroundLibFuncs[] = {
+	{"addLayerFromSprite",
+	 [](lua_State * state) {
+	     BackgroundController & bkg = getgGamePtr()->getBackground();
+	     ResHandler & resources = getgGamePtr()->getResHandler();
+	     const std::string name(lua_tostring(state, 2));
+	     bkg.addBkgLayer(lua_tointeger(state, 1), {
+	     	     {&resources.getSheet(name), 0.f, SpriteLayer::Fill::full, 0.f, 0.f},
+	     		 Layer::Source::sprite, 1.f, nullptr, sf::BlendAlpha});
+	     return 0;
+	 }},
+	{"addLayerFromColor",
+	 [](lua_State * state) {
+	     BackgroundController & bkg = getgGamePtr()->getBackground();
+	     auto & layers = bkg.getBkgLayers();
+	     const uint8_t r = lua_tointeger(state, 2);
+	     const uint8_t g = lua_tointeger(state, 3);
+	     const uint8_t b = lua_tointeger(state, 4);
+	     const uint8_t a = lua_tointeger(state, 5);
+	     bkg.addBkgLayer(lua_tointeger(state, 1), {
+		     {.colorLayer = {r, g, b, a}}, Layer::Source::color, 1.f, nullptr});
+	     return 0;
+	 }},
+	{"setLayerPosition",
+	 [](lua_State * state) {
+	     BackgroundController & bkg = getgGamePtr()->getBackground();
+	     auto & layers = bkg.getBkgLayers();
+	     const float x = lua_tonumber(state, 2);
+	     const float y = lua_tonumber(state, 3);
+	     Layer & layer = layers[lua_tointeger(state, 1)];
+	     if (layer.source != Layer::Source::color) {
+		 layer.data.spriteLayer.x = x;
+		 layer.data.spriteLayer.y = y;
+	     } else {
+		 throw std::runtime_error("Error: attempt to set position for color layer"); 
+	     }
+	     return 0;
+	 }},
+	{"setLayerAbsorptivity",
+	 [](lua_State * state) {
+	     BackgroundController & bkg = getgGamePtr()->getBackground();
+	     auto & layers = bkg.getBkgLayers();
+	     const float a = lua_tonumber(state, 2);
+	     layers[lua_tointeger(state, 1)].absorptivity = a;
+	     return 0;
+	 }},
+	{}};
+
+    static const luaL_Reg envLibFuncs[] = {
+	{"setNaturalLight",
+	 [](lua_State * state) {
+	     const uint8_t r = lua_tointeger(state, 1);
+	     const uint8_t g = lua_tointeger(state, 2);
+	     const uint8_t b = lua_tointeger(state, 3);
+	     getgGamePtr()->setNaturalLight({r, g, b});
+	     return 0;
+	 }},
+	{}
+    };
+    
 static const luaL_Reg cameraLibFuncs[] = {
     {"setTarget",
      [](lua_State * state) {
@@ -77,7 +174,7 @@ static const luaL_Reg cameraLibFuncs[] = {
 
 static const luaL_Reg lightLibFuncs[] = {
     {"create",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          const std::string sheetName = lua_tostring(state, 1);
          const float x = lua_tonumber(state, 2);
          const float y = lua_tonumber(state, 3);
@@ -91,7 +188,7 @@ static const luaL_Reg lightLibFuncs[] = {
          return 1;
      }},
     {"setOrigin",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          Light * light = reinterpret_cast<Light *>(lua_touserdata(state, 1));
          const float xOrigin = lua_tonumber(state, 2);
          const float yOrigin = lua_tonumber(state, 3);
@@ -99,20 +196,19 @@ static const luaL_Reg lightLibFuncs[] = {
          return 0;
      }},
     {"destroy",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          Light * light = reinterpret_cast<Light *>(lua_touserdata(state, 1));
          light->setKillFlag();
          return 0;
      }},
     {"listAll",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          Game * pGame = getgGamePtr();
          auto & lights = pGame->getLights();
          lua_newtable(state);
          for (int i = 0; i < lights.size(); ++i) {
-             lua_pushnumber(state, i);
-             lua_pushlightuserdata(state, &lights[i]);
-             lua_settable(state, -3);
+	     lua_pushlightuserdata(state, &lights[i]);
+	     lua_rawseti(state, -2, i + 1);
          }
          return 1;
      }},
@@ -120,7 +216,7 @@ static const luaL_Reg lightLibFuncs[] = {
 
 static const luaL_Reg inputLibFuncs[] = {
     {"keyPressed",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          int keyCode = lua_tointeger(state, 1);
          Game * pGame = getgGamePtr();
          InputController & input = pGame->getInputController();
@@ -131,7 +227,7 @@ static const luaL_Reg inputLibFuncs[] = {
 
 static const luaL_Reg calcLibFuncs[] = {
     {"distance",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          const float x1 = lua_tonumber(state, 1);
          const float x2 = lua_tonumber(state, 3);
          const float y1 = lua_tonumber(state, 2);
@@ -141,7 +237,7 @@ static const luaL_Reg calcLibFuncs[] = {
          return 1;
      }},
     {"random",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          const int upper = lua_tointeger(state, 1);
          const int lower = lua_tointeger(state, 2);
          const int result = calc::rng::random(upper, lower);
@@ -149,7 +245,7 @@ static const luaL_Reg calcLibFuncs[] = {
          return 1;
      }},
     {"clamp",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          const float x = lua_tonumber(state, 1);
          const float floor = lua_tonumber(state, 2);
          const float ceil = lua_tonumber(state, 3);
@@ -157,7 +253,7 @@ static const luaL_Reg calcLibFuncs[] = {
          return 1;
      }},
     {"lerp",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          const float t = lua_tonumber(state, 3);
          const float A = lua_tonumber(state, 1);
          const float B = lua_tonumber(state, 2);
@@ -165,7 +261,7 @@ static const luaL_Reg calcLibFuncs[] = {
          return 1;
      }},
     {"smoothstep",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          const float edge0 = lua_tonumber(state, 1);
          const float edge1 = lua_tonumber(state, 2);
          const float x = lua_tonumber(state, 3);
@@ -173,7 +269,7 @@ static const luaL_Reg calcLibFuncs[] = {
          return 1;
      }},
     {"smootherstep",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          const float edge0 = lua_tonumber(state, 1);
          const float edge1 = lua_tonumber(state, 2);
          const float x = lua_tonumber(state, 3);
@@ -184,7 +280,7 @@ static const luaL_Reg calcLibFuncs[] = {
 
 static const luaL_Reg entityLibFuncs[] = {
     {"create",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          const std::string classname = lua_tostring(state, 1);
          const float x = lua_tonumber(state, 2);
          const float y = lua_tonumber(state, 3);
@@ -216,7 +312,7 @@ static const luaL_Reg entityLibFuncs[] = {
          return 1;
      }},
     {"getPosition",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          void * entity = lua_touserdata(state, 1);
          auto & pos = (*static_cast<EntityRef *>(entity))->getPosition();
          lua_pushnumber(state, pos.x);
@@ -224,7 +320,7 @@ static const luaL_Reg entityLibFuncs[] = {
          return 2;
      }},
     {"setPosition",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          void * entity = lua_touserdata(state, 1);
          float x = lua_tonumber(state, 2);
          float y = lua_tonumber(state, 3);
@@ -232,13 +328,13 @@ static const luaL_Reg entityLibFuncs[] = {
          return 0;
      }},
     {"destroy",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
          (*entity)->setKillFlag();
          return 0;
      }},
     {"setField",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
          const int varIndex = lua_tointeger(state, 2);
          auto & members = (*entity)->getMemberTable();
@@ -250,7 +346,7 @@ static const luaL_Reg entityLibFuncs[] = {
          return 0;
      }},
     {"getField",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
          const int varIndex = lua_tointeger(state, 2);
          auto & members = (*entity)->getMemberTable();
@@ -264,7 +360,7 @@ static const luaL_Reg entityLibFuncs[] = {
          return 1;
      }},
     {"emitSound",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
          const char * soundName = lua_tostring(state, 2);
          const float minDist = lua_tonumber(state, 3);
@@ -275,21 +371,21 @@ static const luaL_Reg entityLibFuncs[] = {
          return 0;
      }},
     {"setKeyframe",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
          const int frameno = lua_tointeger(state, 2);
          entity->setKeyframe(frameno);
          return 0;
      }},
     {"getKeyframe",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
          const int frameno = entity->getKeyframe();
          lua_pushinteger(state, frameno);
          return 1;
      }},
     {"setSprite",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
          const std::string sheetName = lua_tostring(state, 2);
          auto resources = getgResHandlerPtr();
@@ -297,20 +393,20 @@ static const luaL_Reg entityLibFuncs[] = {
          return 0;
      }},
     {"setZOrder",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
          const float z = lua_tonumber(state, 2);
          entity->setZOrder(z);
          return 0;
      }},
     {"getZOrder",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
          lua_pushnumber(state, entity->getZOrder());
          return 1;
      }},
     {"listAll",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          Game * pGame = getgGamePtr();
          EntityTable & tab = pGame->getEntityTable();
          // FIXME: this code is unsafe, map entry may not exist...
@@ -329,7 +425,7 @@ static const luaL_Reg entityLibFuncs[] = {
          return 1;
      }},
     {"__sweep__",
-     [](lua_State * state) -> int {
+     [](lua_State * state) {
          EntityTable & tab = getgGamePtr()->getEntityTable();
          auto & entityList = tab[lua_tostring(state, 1)];
          for (auto it = entityList.begin(); it != entityList.end();) {
@@ -444,6 +540,9 @@ LuaProvider::LuaProvider() : m_state(luaL_newstate()) {
     registerLib(m_state, cameraLibFuncs, "camera");
     registerLib(m_state, lightLibFuncs, "light");
     registerLib(m_state, calcLibFuncs, "calc");
+    registerLib(m_state, envLibFuncs, "environment");
+    registerLib(m_state, backgroundLibFuncs, "background");
+    registerLib(m_state, foregroundLibFuncs, "foreground");
     registerInputLib(m_state);
     lua_newtable(m_state);
     lua_setglobal(m_state, "classes");

@@ -233,6 +233,15 @@
 		"w": 200,
 		"h": 600
 	    }
+	},
+	"introLevelMaskSprite": {
+	    "texture": "textures/introLevelMask.png",
+	    "box": {
+		"x": 0,
+		"y": 0,
+		"w": 240,
+		"h": 640
+	    }
 	}
     }
 }
