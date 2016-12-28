@@ -1,13 +1,13 @@
 #pragma once
 
 #include "Entity.hpp"
+#include "calc.hpp"
 #include "framework/framework.hpp"
 #include "resourceHandler.hpp"
 #include <SFML/Audio.hpp>
 #include <list>
 #include <memory>
 #include <vector>
-#include "calc.hpp"
 
 struct reqInfo {
     std::string soundname;

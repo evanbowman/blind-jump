@@ -7,10 +7,10 @@ extern "C" {
 #include <lualib.h>
 }
 #include "ResourcePath.hpp"
+#include "calc.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>
-#include "calc.hpp"
 
 class LuaProvider {
 public:

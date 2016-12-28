@@ -3,13 +3,13 @@
 
 #include "alias.hpp"
 #include "backgroundHandler.hpp"
+#include "calc.hpp"
 #include "config.h"
 #include "framework/smartThread.hpp"
 #include "game.hpp"
 #include "inputController.hpp"
 #include "json.hpp"
 #include "resourceHandler.hpp"
-#include "calc.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>

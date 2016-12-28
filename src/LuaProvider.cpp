@@ -129,58 +129,58 @@ static const luaL_Reg inputLibFuncs[] = {
      }},
     {}};
 
-    static const luaL_Reg calcLibFuncs[] = {
-	{"distance",
-	 [](lua_State * state) -> int {
-	     const float x1 = lua_tonumber(state, 1);
-	     const float x2 = lua_tonumber(state, 3);
-	     const float y1 = lua_tonumber(state, 2);
-	     const float y2 = lua_tonumber(state, 4);
-	     lua_pushnumber(state, std::sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
-	     return 1;
-	 }},
-	{"random",
-	 [](lua_State * state) -> int {
-	     const int upper = lua_tointeger(state, 1);
-	     const int lower = lua_tointeger(state, 2);
-	     const int result = calc::rng::random(upper, lower);
-	     lua_pushinteger(state, result);
-	     return 1;
-	 }},
-	{"clamp",
-	 [](lua_State * state) -> int {
-	     const float x = lua_tonumber(state, 1);
-	     const float floor = lua_tonumber(state, 2);
-	     const float ceil = lua_tonumber(state, 3);
-	     lua_pushnumber(state, calc::clamp(x, floor, ceil));
-	     return 1;
-	 }},
-	{"lerp",
-	 [](lua_State * state) -> int {
-	     const float t = lua_tonumber(state, 3);
-	     const float A = lua_tonumber(state, 1);
-	     const float B = lua_tonumber(state, 2);
-	     lua_pushnumber(state, calc::lerp(A, B, t));
-	     return 1;
-	 }},
-	{"smoothstep",
-	 [](lua_State * state) -> int {
-	     const float edge0 = lua_tonumber(state, 1);
-	     const float edge1 = lua_tonumber(state, 2);
-	     const float x = lua_tonumber(state, 3);
-	     lua_pushnumber(state, calc::smoothstep(edge0, edge1, x));
-	     return 1;
-	 }},
-	{"smootherstep",
-	 [](lua_State * state) -> int {
-	     const float edge0 = lua_tonumber(state, 1);
-	     const float edge1 = lua_tonumber(state, 2);
-	     const float x = lua_tonumber(state, 3);
-	     lua_pushnumber(state, calc::smootherstep(edge0, edge1, x));
-	     return 1;
-	 }},
-	{}
-    };
+static const luaL_Reg calcLibFuncs[] = {
+    {"distance",
+     [](lua_State * state) -> int {
+         const float x1 = lua_tonumber(state, 1);
+         const float x2 = lua_tonumber(state, 3);
+         const float y1 = lua_tonumber(state, 2);
+         const float y2 = lua_tonumber(state, 4);
+         lua_pushnumber(
+             state, std::sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
+         return 1;
+     }},
+    {"random",
+     [](lua_State * state) -> int {
+         const int upper = lua_tointeger(state, 1);
+         const int lower = lua_tointeger(state, 2);
+         const int result = calc::rng::random(upper, lower);
+         lua_pushinteger(state, result);
+         return 1;
+     }},
+    {"clamp",
+     [](lua_State * state) -> int {
+         const float x = lua_tonumber(state, 1);
+         const float floor = lua_tonumber(state, 2);
+         const float ceil = lua_tonumber(state, 3);
+         lua_pushnumber(state, calc::clamp(x, floor, ceil));
+         return 1;
+     }},
+    {"lerp",
+     [](lua_State * state) -> int {
+         const float t = lua_tonumber(state, 3);
+         const float A = lua_tonumber(state, 1);
+         const float B = lua_tonumber(state, 2);
+         lua_pushnumber(state, calc::lerp(A, B, t));
+         return 1;
+     }},
+    {"smoothstep",
+     [](lua_State * state) -> int {
+         const float edge0 = lua_tonumber(state, 1);
+         const float edge1 = lua_tonumber(state, 2);
+         const float x = lua_tonumber(state, 3);
+         lua_pushnumber(state, calc::smoothstep(edge0, edge1, x));
+         return 1;
+     }},
+    {"smootherstep",
+     [](lua_State * state) -> int {
+         const float edge0 = lua_tonumber(state, 1);
+         const float edge1 = lua_tonumber(state, 2);
+         const float x = lua_tonumber(state, 3);
+         lua_pushnumber(state, calc::smootherstep(edge0, edge1, x));
+         return 1;
+     }},
+    {}};
 
 static const luaL_Reg entityLibFuncs[] = {
     {"create",
