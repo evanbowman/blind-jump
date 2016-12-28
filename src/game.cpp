@@ -204,14 +204,16 @@ void Game::updateGraphics() {
 
 // clang-format off
 const char * heartBeatFn =
-    "heartBeat = function()                             \
-         for k, v in pairs(classes) do                  \
+    "__heartBeat__ = function(dt)                       \
+         for k, _ in pairs(classes) do                  \
              local updateFn = classes[k].onUpdate       \
              if updateFn then                           \
                  local handles = entity.listAll(k)      \
                  for i = 1, #handles do                 \
-                     updateFn(handles[i])               \
+                     updateFn(handles[i], dt)           \
                  end                                    \
+             else                                       \
+                 entity.__sweep__(k)                    \
              end                                        \
          end                                            \
      end";
@@ -224,11 +226,12 @@ void Game::updateLogic(LuaProvider & luaProv) {
     }
     std::lock_guard<std::mutex> overworldLock(overworldMutex);
     luaProv.applyHook([this](lua_State * state) {
-	lua_getglobal(state, "heartBeat");
+	lua_getglobal(state, "__heartBeat__");
 	if (lua_isnil(state, -1)) {
 	    throw std::runtime_error("Error: missing heartBeat function");
 	}
-	if (lua_pcall(state, 0, 0, 0)) {
+	lua_pushinteger(state, elapsedTime.asMicroseconds());
+	if (lua_pcall(state, 1, 0, 0)) {
 	    throw std::runtime_error(lua_tostring(state, -1));
 	}
     });

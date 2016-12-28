@@ -91,8 +91,7 @@ classes["Turret"] = {
       entity.setZOrder(this, y - 3)
    end,
    
-   onUpdate = function(this)
-      local dt = system.getDeltaTime()
+   onUpdate = function(this, dt)
       local timer = entity.getField(this, id.timer)
       timer = timer + dt
       entity.setField(this, id.timer, timer)

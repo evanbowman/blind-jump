@@ -101,10 +101,10 @@ classes["Player"] = {
       local x, y = entity.getPosition(this)
    end,
 
-   onUpdate = function(this)
+   onUpdate = function(this, dt)
       local x, y = entity.getPosition(this)
       entity.setZOrder(this, y)
-      fsm[state](this, system.getDeltaTime())
+      fsm[state](this, dt)
       entity.setPosition(shadow, x + 7, y + 24)
       if hp == 0 then
 	 state = dying

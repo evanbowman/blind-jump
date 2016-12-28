@@ -59,8 +59,7 @@ classes["Dasher"] = {
       entity.setField(this, memberIds.state, "idle")
    end,
 
-   onUpdate = function(this)
-      local dt = system.getDeltaTime()
+   onUpdate = function(this, dt)
       local timer = entity.getField(this, memberIds.timer)
       timer = timer + dt
       entity.setField(this, memberIds.timer, timer)

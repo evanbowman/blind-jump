@@ -10,29 +10,13 @@ extern "C" {
     static const luaL_Reg systemLibFuncs[] = {
 	{"getScreenSize",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "system.getScreenSize");
-	     }
 	     auto desktop = sf::VideoMode::getDesktopMode();
 	     lua_pushnumber(state, desktop.width);
 	     lua_pushnumber(state, desktop.height);
 	     return 2;
 	 }},
-	{"getDeltaTime",
-	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "system.getDeltaTime");
-	     }
-	     Game * pGame = getgGamePtr();
-	     const sf::Time & elapsed = pGame->getElapsedTime();
-	     lua_pushnumber(state, elapsed.asMicroseconds());
-	     return 1;
-	 }},
 	{"random",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 2) {
-		 throw std::runtime_error(paramErr + "system.random");
-	     }
 	     int upper = lua_tointeger(state, 1);
 	     int lower = lua_tointeger(state, 2);
 	     int result = rng::random(upper, lower);
@@ -41,18 +25,12 @@ extern "C" {
 	 }},
 	{"sleep",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "system.sleep");
-	     }
 	     getgGamePtr()->setSleep(
 				     std::chrono::microseconds(lua_tointeger(state, 1)));
 	     return 0;
 	 }},
 	{"quit",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "system.quit");
-	     }
 	     // The engine code is multithreaded with a lots of locks, threads,
 	     // and other resources (e.g. the Lua state) that need to be
 	     // deallocated correctly. The codebase uses RAII for ALL resources,
@@ -63,27 +41,18 @@ extern "C" {
 	 }},
 	{"setVerticalSyncEnabled",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "system.setVerticalSyncEnabled");
-	     }
 	     sf::RenderWindow & window = getgGamePtr()->getWindow();
 	     window.setVerticalSyncEnabled(lua_toboolean(state, 1));
 	     return 0;
 	 }},
 	{"setFramerateLimit",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "system.setFramerateLimit");
-	     }
 	     sf::RenderWindow & window = getgGamePtr()->getWindow();
 	     window.setFramerateLimit(lua_tointeger(state, 1));
 	     return 0;
 	 }},
 	{"setCursorVisible",
 	 [](lua_State * state) {
-	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "system.setCursorVisible");
-	     }
 	     sf::RenderWindow & window = getgGamePtr()->getWindow();
 	     window.setMouseCursorVisible(lua_toboolean(state, 1));
 	     return 0;
@@ -93,18 +62,12 @@ extern "C" {
     static const luaL_Reg cameraLibFuncs[] = {
 	{"setTarget",
 	 [](lua_State * state) {
-	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "camera.setTarget");
-	     }
 	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
 	     getgGamePtr()->getCamera().setTarget(*entity);
 	     return 0;
 	 }},
 	{"displaceFromTarget",
 	 [](lua_State * state) {
-	     if (lua_gettop(state) != 2) {
-		 throw std::runtime_error(paramErr + "camera.displaceFromTarget");
-	     }
 	     const float x = lua_tonumber(state, 1);
 	     const float y = lua_tonumber(state, 2);
 	     getgGamePtr()->getCamera().setOffset({x, y});
@@ -112,9 +75,6 @@ extern "C" {
 	 }},
 	{"getViewportSize",
 	 [](lua_State * state) {
-	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "camera.getViewportSize");
-	     }
 	     auto viewsize =
 		 getgGamePtr()->getCamera().getOverworldView().getSize();
 	     lua_pushnumber(state, viewsize.x);
@@ -126,9 +86,6 @@ extern "C" {
     static const luaL_Reg lightLibFuncs[] = {
 	{"create",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 3) {
-		 throw std::runtime_error(paramErr + "light.create");
-	     }
 	     const std::string sheetName = lua_tostring(state, 1);
 	     const float x = lua_tonumber(state, 2);
 	     const float y = lua_tonumber(state, 3);
@@ -143,9 +100,6 @@ extern "C" {
 	 }},
 	{"setOrigin",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 3) {
-		 throw std::runtime_error(paramErr + "light.setOrigin");
-	     }
 	     Light * light = reinterpret_cast<Light *>(lua_touserdata(state, 1));
 	     const float xOrigin = lua_tonumber(state, 2);
 	     const float yOrigin = lua_tonumber(state, 3);
@@ -154,18 +108,12 @@ extern "C" {
 	 }},
 	{"destroy",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "light.destroy");
-	     }
 	     Light * light = reinterpret_cast<Light *>(lua_touserdata(state, 1));
 	     light->setKillFlag();
 	     return 0;
 	 }},
 	{"listAll",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 0) {
-		 throw std::runtime_error(paramErr + "light.listAll");
-	     }
 	     Game * pGame = getgGamePtr();
 	     auto & lights = pGame->getLights();
 	     lua_newtable(state);
@@ -182,9 +130,6 @@ extern "C" {
     static const luaL_Reg inputLibFuncs[] = {
 	{"keyPressed",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "input.keyPressed");
-	     }
 	     int keyCode = lua_tointeger(state, 1);
 	     Game * pGame = getgGamePtr();
 	     InputController & input = pGame->getInputController();
@@ -196,9 +141,6 @@ extern "C" {
     static const luaL_Reg entityLibFuncs[] = {
 	{"create",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 3) {
-		 throw std::runtime_error(paramErr + "entity.create");
-	     }
 	     const std::string classname = lua_tostring(state, 1);
 	     const float x = lua_tonumber(state, 2);
 	     const float y = lua_tonumber(state, 3);
@@ -231,9 +173,6 @@ extern "C" {
 	 }},
 	{"getPosition",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "entity.getPosition");
-	     }
 	     void * entity = lua_touserdata(state, 1);
 	     auto & pos = (*static_cast<EntityRef *>(entity))->getPosition();
 	     lua_pushnumber(state, pos.x);
@@ -242,9 +181,6 @@ extern "C" {
 	 }},
 	{"setPosition",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 3) {
-		 throw std::runtime_error(paramErr + "entity.setPosition");
-	     }
 	     void * entity = lua_touserdata(state, 1);
 	     float x = lua_tonumber(state, 2);
 	     float y = lua_tonumber(state, 3);
@@ -253,18 +189,12 @@ extern "C" {
 	 }},
 	{"destroy",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "entity.destroy");
-	     }
 	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
 	     (*entity)->setKillFlag();
 	     return 0;
 	 }},
 	{"setField",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 3) {
-		 throw std::runtime_error(paramErr + "entity.setField");
-	     }
 	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
 	     const int varIndex = lua_tointeger(state, 2);
 	     auto & members = (*entity)->getMemberTable();
@@ -277,9 +207,6 @@ extern "C" {
 	 }},
 	{"getField",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 2) {
-		 throw std::runtime_error(paramErr + "entity.getField");
-	     }
 	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
 	     const int varIndex = lua_tointeger(state, 2);
 	     auto & members = (*entity)->getMemberTable();
@@ -294,9 +221,6 @@ extern "C" {
 	 }},
 	{"emitSound",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 4) {
-		 throw std::runtime_error(paramErr + "entity.emitSound");
-	     }
 	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
 	     const char * soundName = lua_tostring(state, 2);
 	     const float minDist = lua_tonumber(state, 3);
@@ -308,9 +232,6 @@ extern "C" {
 	 }},
 	{"setKeyframe",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 2) {
-		 throw std::runtime_error(paramErr + "entity.setKeyframe");
-	     }
 	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
 	     const int frameno = lua_tointeger(state, 2);
 	     entity->setKeyframe(frameno);
@@ -318,9 +239,6 @@ extern "C" {
 	 }},
 	{"getKeyframe",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "entity.getKeyframe");
-	     }
 	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
 	     const int frameno = entity->getKeyframe();
 	     lua_pushinteger(state, frameno);
@@ -328,9 +246,6 @@ extern "C" {
 	 }},
 	{"setSprite",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 2) {
-		 throw std::runtime_error(paramErr + "entity.setSprite");
-	     }
 	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
 	     const std::string sheetName = lua_tostring(state, 2);
 	     auto resources = getgResHandlerPtr();
@@ -339,9 +254,6 @@ extern "C" {
 	 }},
 	{"setZOrder",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 2) {
-		 throw std::runtime_error(paramErr + "entity.setZOrder");
-	     }
 	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
 	     const float z = lua_tonumber(state, 2);
 	     entity->setZOrder(z);
@@ -349,18 +261,12 @@ extern "C" {
 	 }},
 	{"getZOrder",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "entity.getZOrder");
-	     }
 	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
 	     lua_pushnumber(state, entity->getZOrder());
 	     return 1;
 	 }},
 	{"listAll",
 	 [](lua_State * state) -> int {
-	     if (lua_gettop(state) != 1) {
-		 throw std::runtime_error(paramErr + "entity.listAll");
-	     }
 	     Game * pGame = getgGamePtr();
 	     EntityTable & tab = pGame->getEntityTable();
 	     // FIXME: this code is unsafe, map entry may not exist...
@@ -377,6 +283,19 @@ extern "C" {
 		 }
 	     }
 	     return 1;
+	 }},
+	{"__sweep__",
+	 [](lua_State * state) -> int {
+	     EntityTable & tab = getgGamePtr()->getEntityTable();
+	     auto & entityList = tab[lua_tostring(state, 1)];
+	     for (auto it = entityList.begin(); it != entityList.end();) {
+		 if ((*it)->getKillFlag()) {
+		     it = entityList.erase(it);
+		 } else {
+		     ++it;
+		 }
+	     }
+	     return 0;
 	 }},
 	{}};
 }

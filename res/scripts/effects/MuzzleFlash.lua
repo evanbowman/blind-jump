@@ -6,8 +6,7 @@ classes["MuzzleFlash"] = {
       entity.setZOrder(this, y)
    end,
 
-   onUpdate = function(this)
-      local dt = system.getDeltaTime()
+   onUpdate = function(this, dt)
       local timer = entity.getField(this, "timer")
       timer = timer + dt
       entity.setField(this, "timer", timer)
