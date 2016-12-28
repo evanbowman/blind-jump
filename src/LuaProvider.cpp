@@ -364,14 +364,17 @@ extern "C" {
 	     Game * pGame = getgGamePtr();
 	     EntityTable & tab = pGame->getEntityTable();
 	     // FIXME: this code is unsafe, map entry may not exist...
-	     auto & entityVec = tab[lua_tostring(state, 1)];
+	     auto & entityList = tab[lua_tostring(state, 1)];
 	     lua_newtable(state);
 	     int i = 0;
-	     for (auto & ent : entityVec) {
-		 lua_pushnumber(state, i);
-		 lua_pushlightuserdata(state, &ent);
-		 lua_settable(state, -3);
-		 ++i;
+	     for (auto it = entityList.begin(); it != entityList.end();) {
+		 if ((*it)->getKillFlag()) {
+		     it = entityList.erase(it);
+		 } else {
+		     lua_pushlightuserdata(state, &(*it));
+		     lua_rawseti(state, -2, ++i);
+		     ++it;
+		 }
 	     }
 	     return 1;
 	 }},
@@ -462,8 +465,8 @@ namespace sandbox {
 	{}
     };
 
-    static void luaL_openlibs(lua_State *L) {
-	const luaL_Reg *lib;
+    static void luaL_openlibs(lua_State * L) {
+	const luaL_Reg * lib;
 	for (lib = loadedlibs; lib->func; lib++) {
 	    luaL_requiref(L, lib->name, lib->func, 1);
 	    lua_pop(L, 1);
@@ -471,6 +474,8 @@ namespace sandbox {
     }
 }
 
+extern const char * heartBeatFn;
+    
 LuaProvider::LuaProvider() : m_state(luaL_newstate()) {
     sandbox::luaL_openlibs(m_state);
     registerLib(m_state, systemLibFuncs, "system");
@@ -489,6 +494,7 @@ LuaProvider::LuaProvider() : m_state(luaL_newstate()) {
     lua_pushstring(m_state, currentPath.c_str());
     lua_setfield(m_state, -2, "path");
     lua_pop(m_state, 1);
+    luaL_dostring(m_state, heartBeatFn);
 }
 
 LuaProvider::~LuaProvider() { lua_close(m_state); }

@@ -18,6 +18,7 @@ camera.setTarget(player)
 local w, h = camera.getViewportSize()
 camera.displaceFromTarget(0, -h / 4)
 
+
 local clearEntitiesOf = function(classname)
    local entitiesList = entity.listAll(classname)
    for i, handle in pairs(entitiesList) do
@@ -31,6 +32,7 @@ local clearLights = function()
       light.destroy(handle)
    end
 end
+
 
 local cleanupLevel = function()
    if level == 0 then
@@ -97,3 +99,5 @@ function nextLevel()
 end
 
 nextLevel()
+
+local turret = entity.create("Turret", 200, 200)

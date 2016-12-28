@@ -116,11 +116,6 @@ void Game::updateGraphics() {
 	    }
             sounds.update();
         }
-        if (!gfxContext.shadows.empty()) {
-            for (const auto & element : gfxContext.shadows) {
-                target.draw(std::get<0>(element));
-            }
-        }
         target.setView(worldView);
         lightingMap.clear(sf::Color::Transparent);
         static const size_t zOrderIdx = 1;
@@ -207,60 +202,35 @@ void Game::updateGraphics() {
     window.display();
 }
 
+// clang-format off
+const char * heartBeatFn =
+    "heartBeat = function()                             \
+         for k, v in pairs(classes) do                  \
+             local updateFn = classes[k].onUpdate       \
+             if updateFn then                           \
+                 local handles = entity.listAll(k)      \
+                 for i = 1, #handles do                 \
+                     updateFn(handles[i])               \
+                 end                                    \
+             end                                        \
+         end                                            \
+     end";
+// clang-format on
+
 void Game::updateLogic(LuaProvider & luaProv) {
     if (!hasFocus) {
         this->setSleep(std::chrono::microseconds(200));
         return;
     }
-    // Blurring is graphics intensive, the game caches frames in a RenderTexture
-    // when possible
     std::lock_guard<std::mutex> overworldLock(overworldMutex);
     luaProv.applyHook([this](lua_State * state) {
-	lua_getglobal(state, "classes");
-	if (!lua_istable(state, -1)) {
-	    throw std::runtime_error("Error: missing classtable");
+	lua_getglobal(state, "heartBeat");
+	if (lua_isnil(state, -1)) {
+	    throw std::runtime_error("Error: missing heartBeat function");
 	}
-	for (auto & kvp : this->entityTable) {
-	    lua_getfield(state, -1, kvp.first.c_str());
-	    if (!lua_istable(state, -1)) {
-		const std::string err = "Error: classtable field " +
-		    kvp.first + " is not a table";
-		throw std::runtime_error(err);
-	    }
-	    for (auto it = kvp.second.begin(); it != kvp.second.end();) {
-		lua_getfield(state, -1, "onUpdate");
-		// It is allowable to not implement onUpdate for objects that
-		// do not have update logic, as any call to Lua from the engine
-		// incurs a performance penalty...
-		if (lua_isnil(state, -1)) {
-		    lua_pop(state, 1);
-		} else {
-		    lua_pushlightuserdata(state, (void *)(&(*it)));
-		    if (lua_pcall(state, 1, 0, 0)) {
-			throw std::runtime_error(lua_tostring(state, -1));
-		    }
-		}
-		if ((*it)->getKillFlag()) {
-		    lua_getfield(state, -1, "onDestroy");
-		    if (lua_isnil(state, -1)) {
-			lua_pop(state, 1);			    
-		    } else {
-			lua_pushlightuserdata(state, (void *)(&(*it)));
-			if (lua_pcall(state, 1, 0, 0)) {
-			    throw std::runtime_error(lua_tostring(state, -1));
-			}
-		    }
-		    for (auto & member : (*it)->getMemberTable()) {
-			luaL_unref(state, LUA_REGISTRYINDEX, member.second);
-		    }
-		    it = kvp.second.erase(it);
-		} else {
-		    ++it;
-		}
-	    }
-	    lua_pop(state, 1);
+	if (lua_pcall(state, 0, 0, 0)) {
+	    throw std::runtime_error(lua_tostring(state, -1));
 	}
-	lua_pop(state, 1);
     });
     std::vector<sf::Vector2f> cameraTargets;
     camera.update(elapsedTime, cameraTargets);
