@@ -31,13 +31,13 @@ int main() {
         {
             std::fstream resourcesJSONRaw(resourcePath() + "resources.json");
             resourcesJSONRaw >> resourcesJSON;
-	    try {
-		game.getResHandler().loadFromJSON(resourcesJSON);
-	    } catch (const std::exception & ex) {
-		std::string err("Error: failed to parse resources file; ");
-		std::cout << err + ex.what() << std::endl;
-		return EXIT_FAILURE;
-	    }
+            try {
+                game.getResHandler().loadFromJSON(resourcesJSON);
+            } catch (const std::exception & ex) {
+                std::string err("Error: failed to parse resources file; ");
+                std::cout << err + ex.what() << std::endl;
+                return EXIT_FAILURE;
+            }
         }
         game.init();
         // A global pointer to an instance of the Game class is required for the
@@ -60,7 +60,7 @@ int main() {
                         // IMPORTANT:
                         // This is necessary, otherwise calls to
                         // Game::setSleep would screw with delta
-			// timing for game logic.
+                        // timing for game logic.
                         game.setElapsedTime(gameClock.restart());
                         game.clearSleptFlag();
                     }

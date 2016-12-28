@@ -8,10 +8,11 @@ using EntityRef = std::shared_ptr<Entity>;
 
 class Entity {
     struct SpriteInfo {
-	SpriteSheet * sheet;
-	sf::Vector2f origin;
-	sf::Vector2f scale;
+        SpriteSheet * sheet;
+        sf::Vector2f origin;
+        sf::Vector2f scale;
     };
+
 private:
     sf::Vector2f m_position;
     bool m_killFlag;
@@ -22,8 +23,8 @@ private:
 
 public:
     Entity()
-        : m_position(), m_killFlag(false), m_keyframe(0),
-          m_zOrder(0.f), m_sprite{nullptr, {}, {1.f, 1.f}} {}
+        : m_position(), m_killFlag(false), m_keyframe(0), m_zOrder(0.f),
+          m_sprite{nullptr, {}, {1.f, 1.f}} {}
     inline void setPosition(const sf::Vector2f & position) {
         m_position = position;
     }

@@ -6,8 +6,8 @@ Game::Game(const ConfigData & conf)
     : viewPort(conf.drawableArea), slept(false),
       window(sf::VideoMode::getDesktopMode(), EXECUTABLE_NAME,
              sf::Style::Fullscreen, sf::ContextSettings(0, 0, 6)),
-      camera(viewPort, window.getSize()),
-      hasFocus(false), stashed(false), preload(false),
+      camera(viewPort, window.getSize()), hasFocus(false), stashed(false),
+      preload(false),
       worldView(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
       timer(0) {
     sf::View windowView;
@@ -64,14 +64,14 @@ void Game::eventLoop() {
             this->hasFocus = false;
             break;
 
-	    // Note: Deliberate fallthrough
-	case sf::Event::KeyPressed:
-	case sf::Event::KeyReleased:
-	    input.recordEvent(event);
-	    break;
+        // Note: Deliberate fallthrough
+        case sf::Event::KeyPressed:
+        case sf::Event::KeyReleased:
+            input.recordEvent(event);
+            break;
 
         default:
-	    std::cout << "Unhandled event: " << event.type << std::endl;
+            std::cout << "Unhandled event: " << event.type << std::endl;
             break;
         }
     }
@@ -107,13 +107,13 @@ void Game::updateGraphics() {
                     }
                 }
             }
-	    for (auto & light : lights) {
-	        auto sheet = light.getSheet();
-		sheet->getSprite().setPosition(light.getPosition());
-		sheet->getSprite().setOrigin(light.getOrigin());
-		gfxContext.glowSprs1.push_back(sheet->getSprite());
-		gfxContext.glowSprs2.push_back(sheet->getSprite());
-	    }
+            for (auto & light : lights) {
+                auto sheet = light.getSheet();
+                sheet->getSprite().setPosition(light.getPosition());
+                sheet->getSprite().setOrigin(light.getOrigin());
+                gfxContext.glowSprs1.push_back(sheet->getSprite());
+                gfxContext.glowSprs2.push_back(sheet->getSprite());
+            }
             sounds.update();
         }
         target.setView(worldView);
@@ -169,9 +169,9 @@ void Game::updateGraphics() {
             } break;
             }
         }
-	static const sf::Color entityLightBlending(185, 185, 185);
+        static const sf::Color entityLightBlending(185, 185, 185);
         for (auto & element : gfxContext.glowSprs2) {
-	    element.setColor(entityLightBlending);
+            element.setColor(entityLightBlending);
             lightingMap.draw(element,
                              sf::BlendMode(sf::BlendMode(
                                  sf::BlendMode::SrcAlpha, sf::BlendMode::One,
@@ -226,14 +226,14 @@ void Game::updateLogic(LuaProvider & luaProv) {
     }
     std::lock_guard<std::mutex> overworldLock(overworldMutex);
     luaProv.applyHook([this](lua_State * state) {
-	lua_getglobal(state, "__heartBeat__");
-	if (lua_isnil(state, -1)) {
-	    throw std::runtime_error("Error: missing heartBeat function");
-	}
-	lua_pushinteger(state, elapsedTime.asMicroseconds());
-	if (lua_pcall(state, 1, 0, 0)) {
-	    throw std::runtime_error(lua_tostring(state, -1));
-	}
+        lua_getglobal(state, "__heartBeat__");
+        if (lua_isnil(state, -1)) {
+            throw std::runtime_error("Error: missing heartBeat function");
+        }
+        lua_pushinteger(state, elapsedTime.asMicroseconds());
+        if (lua_pcall(state, 1, 0, 0)) {
+            throw std::runtime_error(lua_tostring(state, -1));
+        }
     });
     std::vector<sf::Vector2f> cameraTargets;
     camera.update(elapsedTime, cameraTargets);

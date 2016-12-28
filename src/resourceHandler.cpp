@@ -92,7 +92,7 @@ void ResHandler::loadImage(const std::string & path) {
 SpriteSheet & ResHandler::getSheet(const std::string & name) {
     auto it = sheets.find(name);
     if (it != sheets.end()) {
-	return it->second;
+        return it->second;
     }
     const std::string err = "Error: sprite " + name + "does not exist.";
     throw std::runtime_error(err);

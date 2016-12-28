@@ -12,7 +12,7 @@ public:
     void recordEvent(const sf::Event &);
     void clear();
     int getKeyState(const int) const;
-    
+
 private:
     std::array<int, sf::Keyboard::Key::KeyCount> m_keyStates;
 };

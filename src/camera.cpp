@@ -14,7 +14,6 @@ template <int_fast16_t dim, typename T> float easeIn(T current, T duration) {
            static_cast<float>(std::pow(duration, dim));
 }
 
-
 void Camera::update(const sf::Time & elapsedTime,
                     const std::vector<sf::Vector2f> & targets) {
     if (auto sharedTarget = targetRef.lock()) {
@@ -68,8 +67,7 @@ void Camera::update(const sf::Time & elapsedTime,
             trackingTimer += elapsedTime.asMicroseconds();
             float targetWeight =
                 1.f -
-                0.22f * easeIn<1>(trackingTimer,
-				  static_cast<int64_t>(900000));
+                0.22f * easeIn<1>(trackingTimer, static_cast<int64_t>(900000));
             midpoint = math::lerp(sharedTarget->getPosition(), aggregate,
                                   targetWeight);
             currentPosition = math::lerp(midpoint, currentPosition, lerpSpeed);

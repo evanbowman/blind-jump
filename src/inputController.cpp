@@ -7,12 +7,12 @@ InputController::InputController() : m_keyStates{{}} {}
 void InputController::recordEvent(const sf::Event & event) {
     switch (event.type) {
     case sf::Event::KeyPressed:
-	m_keyStates[event.key.code] = 1;
-	break;
-	
+        m_keyStates[event.key.code] = 1;
+        break;
+
     case sf::Event::KeyReleased:
-	m_keyStates[event.key.code] = 0;
-	break;
+        m_keyStates[event.key.code] = 0;
+        break;
     }
 }
 

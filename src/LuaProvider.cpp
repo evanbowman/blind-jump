@@ -4,300 +4,299 @@
 // GAME API
 //     Provides access to Game data from lua scripts.
 extern "C" {
-    static const std::string paramErr =
-	"Error: wrong number of parameters for function ";
-    
-    static const luaL_Reg systemLibFuncs[] = {
-	{"getScreenSize",
-	 [](lua_State * state) -> int {
-	     auto desktop = sf::VideoMode::getDesktopMode();
-	     lua_pushnumber(state, desktop.width);
-	     lua_pushnumber(state, desktop.height);
-	     return 2;
-	 }},
-	{"random",
-	 [](lua_State * state) -> int {
-	     int upper = lua_tointeger(state, 1);
-	     int lower = lua_tointeger(state, 2);
-	     int result = rng::random(upper, lower);
-	     lua_pushinteger(state, result);
-	     return 1;
-	 }},
-	{"sleep",
-	 [](lua_State * state) -> int {
-	     getgGamePtr()->setSleep(
-				     std::chrono::microseconds(lua_tointeger(state, 1)));
-	     return 0;
-	 }},
-	{"quit",
-	 [](lua_State * state) -> int {
-	     // The engine code is multithreaded with a lots of locks, threads,
-	     // and other resources (e.g. the Lua state) that need to be
-	     // deallocated correctly. The codebase uses RAII for ALL resources,
-	     // so letting an exception hit the top level is actually a clean
-	     // way to quit a game.
-	     throw ShutdownSignal();
-	     return 0;
-	 }},
-	{"setVerticalSyncEnabled",
-	 [](lua_State * state) -> int {
-	     sf::RenderWindow & window = getgGamePtr()->getWindow();
-	     window.setVerticalSyncEnabled(lua_toboolean(state, 1));
-	     return 0;
-	 }},
-	{"setFramerateLimit",
-	 [](lua_State * state) -> int {
-	     sf::RenderWindow & window = getgGamePtr()->getWindow();
-	     window.setFramerateLimit(lua_tointeger(state, 1));
-	     return 0;
-	 }},
-	{"setCursorVisible",
-	 [](lua_State * state) {
-	     sf::RenderWindow & window = getgGamePtr()->getWindow();
-	     window.setMouseCursorVisible(lua_toboolean(state, 1));
-	     return 0;
-	 }},
-	{}};
-    
-    static const luaL_Reg cameraLibFuncs[] = {
-	{"setTarget",
-	 [](lua_State * state) {
-	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
-	     getgGamePtr()->getCamera().setTarget(*entity);
-	     return 0;
-	 }},
-	{"displaceFromTarget",
-	 [](lua_State * state) {
-	     const float x = lua_tonumber(state, 1);
-	     const float y = lua_tonumber(state, 2);
-	     getgGamePtr()->getCamera().setOffset({x, y});
-	     return 0;
-	 }},
-	{"getViewportSize",
-	 [](lua_State * state) {
-	     auto viewsize =
-		 getgGamePtr()->getCamera().getOverworldView().getSize();
-	     lua_pushnumber(state, viewsize.x);
-	     lua_pushnumber(state, viewsize.y);
-	     return 2;
-	 }},
-	{}};
+static const std::string paramErr =
+    "Error: wrong number of parameters for function ";
 
-    static const luaL_Reg lightLibFuncs[] = {
-	{"create",
-	 [](lua_State * state) -> int {
-	     const std::string sheetName = lua_tostring(state, 1);
-	     const float x = lua_tonumber(state, 2);
-	     const float y = lua_tonumber(state, 3);
-	     Game * pGame = getgGamePtr();
-	     ResHandler & resources = pGame->getResHandler();
-	     auto & lights = pGame->getLights();
-	     lights.emplace_back();
-	     lights.back().setSheet(&resources.getSheet(sheetName));
-	     lights.back().setPosition({x, y});
-	     lua_pushlightuserdata(state, (void *)&lights.back());
-	     return 1;
-	 }},
-	{"setOrigin",
-	 [](lua_State * state) -> int {
-	     Light * light = reinterpret_cast<Light *>(lua_touserdata(state, 1));
-	     const float xOrigin = lua_tonumber(state, 2);
-	     const float yOrigin = lua_tonumber(state, 3);
-	     light->setOrigin({xOrigin, yOrigin});
-	     return 0;
-	 }},
-	{"destroy",
-	 [](lua_State * state) -> int {
-	     Light * light = reinterpret_cast<Light *>(lua_touserdata(state, 1));
-	     light->setKillFlag();
-	     return 0;
-	 }},
-	{"listAll",
-	 [](lua_State * state) -> int {
-	     Game * pGame = getgGamePtr();
-	     auto & lights = pGame->getLights();
-	     lua_newtable(state);
-	     for (int i = 0; i < lights.size(); ++i) {
-		 lua_pushnumber(state, i);
-		 lua_pushlightuserdata(state, &lights[i]);
-		 lua_settable(state, -3);
-	     }
-	     return 1;
-	 }},
-	{}
-    };
+static const luaL_Reg systemLibFuncs[] = {
+    {"getScreenSize",
+     [](lua_State * state) -> int {
+         auto desktop = sf::VideoMode::getDesktopMode();
+         lua_pushnumber(state, desktop.width);
+         lua_pushnumber(state, desktop.height);
+         return 2;
+     }},
+    {"random",
+     [](lua_State * state) -> int {
+         int upper = lua_tointeger(state, 1);
+         int lower = lua_tointeger(state, 2);
+         int result = rng::random(upper, lower);
+         lua_pushinteger(state, result);
+         return 1;
+     }},
+    {"sleep",
+     [](lua_State * state) -> int {
+         getgGamePtr()->setSleep(
+             std::chrono::microseconds(lua_tointeger(state, 1)));
+         return 0;
+     }},
+    {"quit",
+     [](lua_State * state) -> int {
+         // The engine code is multithreaded with a lots of locks, threads,
+         // and other resources (e.g. the Lua state) that need to be
+         // deallocated correctly. The codebase uses RAII for ALL resources,
+         // so letting an exception hit the top level is actually a clean
+         // way to quit a game.
+         throw ShutdownSignal();
+         return 0;
+     }},
+    {"setVerticalSyncEnabled",
+     [](lua_State * state) -> int {
+         sf::RenderWindow & window = getgGamePtr()->getWindow();
+         window.setVerticalSyncEnabled(lua_toboolean(state, 1));
+         return 0;
+     }},
+    {"setFramerateLimit",
+     [](lua_State * state) -> int {
+         sf::RenderWindow & window = getgGamePtr()->getWindow();
+         window.setFramerateLimit(lua_tointeger(state, 1));
+         return 0;
+     }},
+    {"setCursorVisible",
+     [](lua_State * state) {
+         sf::RenderWindow & window = getgGamePtr()->getWindow();
+         window.setMouseCursorVisible(lua_toboolean(state, 1));
+         return 0;
+     }},
+    {}};
 
-    static const luaL_Reg inputLibFuncs[] = {
-	{"keyPressed",
-	 [](lua_State * state) -> int {
-	     int keyCode = lua_tointeger(state, 1);
-	     Game * pGame = getgGamePtr();
-	     InputController & input = pGame->getInputController();
-	     lua_pushboolean(state, input.getKeyState(keyCode) == 1);
-	     return 1;
-	 }},
-	{}};
+static const luaL_Reg cameraLibFuncs[] = {
+    {"setTarget",
+     [](lua_State * state) {
+         auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
+         getgGamePtr()->getCamera().setTarget(*entity);
+         return 0;
+     }},
+    {"displaceFromTarget",
+     [](lua_State * state) {
+         const float x = lua_tonumber(state, 1);
+         const float y = lua_tonumber(state, 2);
+         getgGamePtr()->getCamera().setOffset({x, y});
+         return 0;
+     }},
+    {"getViewportSize",
+     [](lua_State * state) {
+         auto viewsize =
+             getgGamePtr()->getCamera().getOverworldView().getSize();
+         lua_pushnumber(state, viewsize.x);
+         lua_pushnumber(state, viewsize.y);
+         return 2;
+     }},
+    {}};
 
-    static const luaL_Reg entityLibFuncs[] = {
-	{"create",
-	 [](lua_State * state) -> int {
-	     const std::string classname = lua_tostring(state, 1);
-	     const float x = lua_tonumber(state, 2);
-	     const float y = lua_tonumber(state, 3);
-	     Game * pGame = getgGamePtr();
-	     auto & entityTable = pGame->getEntityTable();
-	     auto & vec = pGame->getEntityTable()[classname];
-	     vec.push_back(std::make_shared<Entity>());
-	     vec.back()->setPosition(sf::Vector2f(x, y));
-	     lua_getglobal(state, "classes");
-	     if (!lua_istable(state, -1)) {
-		 throw std::runtime_error("Error: missing classtable");
-	     }
-	     lua_getfield(state, -1, classname.c_str());
-	     if (!lua_istable(state, -1)) {
-		 const std::string err =
-		     "Error: classtable field " + classname + " is not a table";
-		 throw std::runtime_error(err);
-	     }
-	     lua_getfield(state, -1, "onCreate");
-	     if (!lua_isfunction(state, -1)) {
-		 const std::string err =
-		     "Error: missing or malformed OnUpdate for class " + classname;
-	     }
-	     lua_pushlightuserdata(state, (void *)(&vec.back()));
-	     if (lua_pcall(state, 1, 0, 0)) {
-		 throw std::runtime_error(lua_tostring(state, -1));
-	     }
-	     lua_pushlightuserdata(state, (void *)&vec.back());
-	     return 1;
-	 }},
-	{"getPosition",
-	 [](lua_State * state) -> int {
-	     void * entity = lua_touserdata(state, 1);
-	     auto & pos = (*static_cast<EntityRef *>(entity))->getPosition();
-	     lua_pushnumber(state, pos.x);
-	     lua_pushnumber(state, pos.y);
-	     return 2;
-	 }},
-	{"setPosition",
-	 [](lua_State * state) -> int {
-	     void * entity = lua_touserdata(state, 1);
-	     float x = lua_tonumber(state, 2);
-	     float y = lua_tonumber(state, 3);
-	     (*static_cast<EntityRef *>(entity))->setPosition(sf::Vector2f(x, y));
-	     return 0;
-	 }},
-	{"destroy",
-	 [](lua_State * state) -> int {
-	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
-	     (*entity)->setKillFlag();
-	     return 0;
-	 }},
-	{"setField",
-	 [](lua_State * state) -> int {
-	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
-	     const int varIndex = lua_tointeger(state, 2);
-	     auto & members = (*entity)->getMemberTable();
-	     if (members.find(varIndex) != members.end()) {
-		 luaL_unref(state, LUA_REGISTRYINDEX, members[varIndex]);
-	     }
-	     lua_pushvalue(state, 3);
-	     members[varIndex] = luaL_ref(state, LUA_REGISTRYINDEX);
-	     return 0;
-	 }},
-	{"getField",
-	 [](lua_State * state) -> int {
-	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
-	     const int varIndex = lua_tointeger(state, 2);
-	     auto & members = (*entity)->getMemberTable();
-	     if (members.find(varIndex) == members.end()) {
-		 const std::string err =
-		     "Error: member " + std::to_string(varIndex) + " lookup failed";
-		 throw std::runtime_error(err);
-	     }
-	     int ref = members[varIndex];
-	     lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
-	     return 1;
-	 }},
-	{"emitSound",
-	 [](lua_State * state) -> int {
-	     auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
-	     const char * soundName = lua_tostring(state, 2);
-	     const float minDist = lua_tonumber(state, 3);
-	     const float attenuation = lua_tonumber(state, 4);
-	     Game * pGame = getgGamePtr();
-	     auto & sounds = pGame->getSounds();
-	     sounds.play(soundName, *entity, minDist, attenuation, false);
-	     return 0;
-	 }},
-	{"setKeyframe",
-	 [](lua_State * state) -> int {
-	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
-	     const int frameno = lua_tointeger(state, 2);
-	     entity->setKeyframe(frameno);
-	     return 0;
-	 }},
-	{"getKeyframe",
-	 [](lua_State * state) -> int {
-	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
-	     const int frameno = entity->getKeyframe();
-	     lua_pushinteger(state, frameno);
-	     return 1;
-	 }},
-	{"setSprite",
-	 [](lua_State * state) -> int {
-	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
-	     const std::string sheetName = lua_tostring(state, 2);
-	     auto resources = getgResHandlerPtr();
-	     entity->setSheet(&resources->getSheet(sheetName));
-	     return 0;
-	 }},
-	{"setZOrder",
-	 [](lua_State * state) -> int {
-	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
-	     const float z = lua_tonumber(state, 2);
-	     entity->setZOrder(z);
-	     return 0;
-	 }},
-	{"getZOrder",
-	 [](lua_State * state) -> int {
-	     auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
-	     lua_pushnumber(state, entity->getZOrder());
-	     return 1;
-	 }},
-	{"listAll",
-	 [](lua_State * state) -> int {
-	     Game * pGame = getgGamePtr();
-	     EntityTable & tab = pGame->getEntityTable();
-	     // FIXME: this code is unsafe, map entry may not exist...
-	     auto & entityList = tab[lua_tostring(state, 1)];
-	     lua_newtable(state);
-	     int i = 0;
-	     for (auto it = entityList.begin(); it != entityList.end();) {
-		 if ((*it)->getKillFlag()) {
-		     it = entityList.erase(it);
-		 } else {
-		     lua_pushlightuserdata(state, &(*it));
-		     lua_rawseti(state, -2, ++i);
-		     ++it;
-		 }
-	     }
-	     return 1;
-	 }},
-	{"__sweep__",
-	 [](lua_State * state) -> int {
-	     EntityTable & tab = getgGamePtr()->getEntityTable();
-	     auto & entityList = tab[lua_tostring(state, 1)];
-	     for (auto it = entityList.begin(); it != entityList.end();) {
-		 if ((*it)->getKillFlag()) {
-		     it = entityList.erase(it);
-		 } else {
-		     ++it;
-		 }
-	     }
-	     return 0;
-	 }},
-	{}};
+static const luaL_Reg lightLibFuncs[] = {
+    {"create",
+     [](lua_State * state) -> int {
+         const std::string sheetName = lua_tostring(state, 1);
+         const float x = lua_tonumber(state, 2);
+         const float y = lua_tonumber(state, 3);
+         Game * pGame = getgGamePtr();
+         ResHandler & resources = pGame->getResHandler();
+         auto & lights = pGame->getLights();
+         lights.emplace_back();
+         lights.back().setSheet(&resources.getSheet(sheetName));
+         lights.back().setPosition({x, y});
+         lua_pushlightuserdata(state, (void *)&lights.back());
+         return 1;
+     }},
+    {"setOrigin",
+     [](lua_State * state) -> int {
+         Light * light = reinterpret_cast<Light *>(lua_touserdata(state, 1));
+         const float xOrigin = lua_tonumber(state, 2);
+         const float yOrigin = lua_tonumber(state, 3);
+         light->setOrigin({xOrigin, yOrigin});
+         return 0;
+     }},
+    {"destroy",
+     [](lua_State * state) -> int {
+         Light * light = reinterpret_cast<Light *>(lua_touserdata(state, 1));
+         light->setKillFlag();
+         return 0;
+     }},
+    {"listAll",
+     [](lua_State * state) -> int {
+         Game * pGame = getgGamePtr();
+         auto & lights = pGame->getLights();
+         lua_newtable(state);
+         for (int i = 0; i < lights.size(); ++i) {
+             lua_pushnumber(state, i);
+             lua_pushlightuserdata(state, &lights[i]);
+             lua_settable(state, -3);
+         }
+         return 1;
+     }},
+    {}};
+
+static const luaL_Reg inputLibFuncs[] = {
+    {"keyPressed",
+     [](lua_State * state) -> int {
+         int keyCode = lua_tointeger(state, 1);
+         Game * pGame = getgGamePtr();
+         InputController & input = pGame->getInputController();
+         lua_pushboolean(state, input.getKeyState(keyCode) == 1);
+         return 1;
+     }},
+    {}};
+
+static const luaL_Reg entityLibFuncs[] = {
+    {"create",
+     [](lua_State * state) -> int {
+         const std::string classname = lua_tostring(state, 1);
+         const float x = lua_tonumber(state, 2);
+         const float y = lua_tonumber(state, 3);
+         Game * pGame = getgGamePtr();
+         auto & entityTable = pGame->getEntityTable();
+         auto & vec = pGame->getEntityTable()[classname];
+         vec.push_back(std::make_shared<Entity>());
+         vec.back()->setPosition(sf::Vector2f(x, y));
+         lua_getglobal(state, "classes");
+         if (!lua_istable(state, -1)) {
+             throw std::runtime_error("Error: missing classtable");
+         }
+         lua_getfield(state, -1, classname.c_str());
+         if (!lua_istable(state, -1)) {
+             const std::string err =
+                 "Error: classtable field " + classname + " is not a table";
+             throw std::runtime_error(err);
+         }
+         lua_getfield(state, -1, "onCreate");
+         if (!lua_isfunction(state, -1)) {
+             const std::string err =
+                 "Error: missing or malformed OnUpdate for class " + classname;
+         }
+         lua_pushlightuserdata(state, (void *)(&vec.back()));
+         if (lua_pcall(state, 1, 0, 0)) {
+             throw std::runtime_error(lua_tostring(state, -1));
+         }
+         lua_pushlightuserdata(state, (void *)&vec.back());
+         return 1;
+     }},
+    {"getPosition",
+     [](lua_State * state) -> int {
+         void * entity = lua_touserdata(state, 1);
+         auto & pos = (*static_cast<EntityRef *>(entity))->getPosition();
+         lua_pushnumber(state, pos.x);
+         lua_pushnumber(state, pos.y);
+         return 2;
+     }},
+    {"setPosition",
+     [](lua_State * state) -> int {
+         void * entity = lua_touserdata(state, 1);
+         float x = lua_tonumber(state, 2);
+         float y = lua_tonumber(state, 3);
+         (*static_cast<EntityRef *>(entity))->setPosition(sf::Vector2f(x, y));
+         return 0;
+     }},
+    {"destroy",
+     [](lua_State * state) -> int {
+         auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
+         (*entity)->setKillFlag();
+         return 0;
+     }},
+    {"setField",
+     [](lua_State * state) -> int {
+         auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
+         const int varIndex = lua_tointeger(state, 2);
+         auto & members = (*entity)->getMemberTable();
+         if (members.find(varIndex) != members.end()) {
+             luaL_unref(state, LUA_REGISTRYINDEX, members[varIndex]);
+         }
+         lua_pushvalue(state, 3);
+         members[varIndex] = luaL_ref(state, LUA_REGISTRYINDEX);
+         return 0;
+     }},
+    {"getField",
+     [](lua_State * state) -> int {
+         auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
+         const int varIndex = lua_tointeger(state, 2);
+         auto & members = (*entity)->getMemberTable();
+         if (members.find(varIndex) == members.end()) {
+             const std::string err =
+                 "Error: member " + std::to_string(varIndex) + " lookup failed";
+             throw std::runtime_error(err);
+         }
+         int ref = members[varIndex];
+         lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
+         return 1;
+     }},
+    {"emitSound",
+     [](lua_State * state) -> int {
+         auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
+         const char * soundName = lua_tostring(state, 2);
+         const float minDist = lua_tonumber(state, 3);
+         const float attenuation = lua_tonumber(state, 4);
+         Game * pGame = getgGamePtr();
+         auto & sounds = pGame->getSounds();
+         sounds.play(soundName, *entity, minDist, attenuation, false);
+         return 0;
+     }},
+    {"setKeyframe",
+     [](lua_State * state) -> int {
+         auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
+         const int frameno = lua_tointeger(state, 2);
+         entity->setKeyframe(frameno);
+         return 0;
+     }},
+    {"getKeyframe",
+     [](lua_State * state) -> int {
+         auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
+         const int frameno = entity->getKeyframe();
+         lua_pushinteger(state, frameno);
+         return 1;
+     }},
+    {"setSprite",
+     [](lua_State * state) -> int {
+         auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
+         const std::string sheetName = lua_tostring(state, 2);
+         auto resources = getgResHandlerPtr();
+         entity->setSheet(&resources->getSheet(sheetName));
+         return 0;
+     }},
+    {"setZOrder",
+     [](lua_State * state) -> int {
+         auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
+         const float z = lua_tonumber(state, 2);
+         entity->setZOrder(z);
+         return 0;
+     }},
+    {"getZOrder",
+     [](lua_State * state) -> int {
+         auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
+         lua_pushnumber(state, entity->getZOrder());
+         return 1;
+     }},
+    {"listAll",
+     [](lua_State * state) -> int {
+         Game * pGame = getgGamePtr();
+         EntityTable & tab = pGame->getEntityTable();
+         // FIXME: this code is unsafe, map entry may not exist...
+         auto & entityList = tab[lua_tostring(state, 1)];
+         lua_newtable(state);
+         int i = 0;
+         for (auto it = entityList.begin(); it != entityList.end();) {
+             if ((*it)->getKillFlag()) {
+                 it = entityList.erase(it);
+             } else {
+                 lua_pushlightuserdata(state, &(*it));
+                 lua_rawseti(state, -2, ++i);
+                 ++it;
+             }
+         }
+         return 1;
+     }},
+    {"__sweep__",
+     [](lua_State * state) -> int {
+         EntityTable & tab = getgGamePtr()->getEntityTable();
+         auto & entityList = tab[lua_tostring(state, 1)];
+         for (auto it = entityList.begin(); it != entityList.end();) {
+             if ((*it)->getKillFlag()) {
+                 it = entityList.erase(it);
+             } else {
+                 ++it;
+             }
+         }
+         return 0;
+     }},
+    {}};
 }
 
 template <typename M>
@@ -311,11 +310,11 @@ static void registerInputLib(lua_State * state) {
     lua_newtable(state);
     luaL_setfuncs(state, inputLibFuncs, 0);
     lua_newtable(state);
-    const auto createBinding =
-	[state](const char * keyName, sf::Keyboard::Key code) {
-	    lua_pushinteger(state, code);
-	    lua_setfield(state, -2, keyName);
-	};
+    const auto createBinding = [state](const char * keyName,
+                                       sf::Keyboard::Key code) {
+        lua_pushinteger(state, code);
+        lua_setfield(state, -2, keyName);
+    };
     createBinding("left", sf::Keyboard::Left);
     createBinding("right", sf::Keyboard::Right);
     createBinding("up", sf::Keyboard::Up);
@@ -372,29 +371,27 @@ static void registerInputLib(lua_State * state) {
 // ::sandbox contains a safe version of luaL_openlibs
 // with the io and os libraries disabled
 namespace sandbox {
-    static const luaL_Reg loadedlibs[] = {
-	{"_G", luaopen_base},
-	{LUA_LOADLIBNAME, luaopen_package},
-	{LUA_COLIBNAME, luaopen_coroutine},
-	{LUA_TABLIBNAME, luaopen_table},
-	{LUA_STRLIBNAME, luaopen_string},
-	{LUA_MATHLIBNAME, luaopen_math},
-	{LUA_UTF8LIBNAME, luaopen_utf8},
-	{LUA_DBLIBNAME, luaopen_debug},
-	{}
-    };
+static const luaL_Reg loadedlibs[] = {{"_G", luaopen_base},
+                                      {LUA_LOADLIBNAME, luaopen_package},
+                                      {LUA_COLIBNAME, luaopen_coroutine},
+                                      {LUA_TABLIBNAME, luaopen_table},
+                                      {LUA_STRLIBNAME, luaopen_string},
+                                      {LUA_MATHLIBNAME, luaopen_math},
+                                      {LUA_UTF8LIBNAME, luaopen_utf8},
+                                      {LUA_DBLIBNAME, luaopen_debug},
+                                      {}};
 
-    static void luaL_openlibs(lua_State * L) {
-	const luaL_Reg * lib;
-	for (lib = loadedlibs; lib->func; lib++) {
-	    luaL_requiref(L, lib->name, lib->func, 1);
-	    lua_pop(L, 1);
-	}
+static void luaL_openlibs(lua_State * L) {
+    const luaL_Reg * lib;
+    for (lib = loadedlibs; lib->func; lib++) {
+        luaL_requiref(L, lib->name, lib->func, 1);
+        lua_pop(L, 1);
     }
+}
 }
 
 extern const char * heartBeatFn;
-    
+
 LuaProvider::LuaProvider() : m_state(luaL_newstate()) {
     sandbox::luaL_openlibs(m_state);
     registerLib(m_state, systemLibFuncs, "system");
