@@ -69,7 +69,7 @@ static const luaL_Reg foregroundLibFuncs[] = {
                         {{&resources.getSheet(name), 0.f,
                           SpriteLayer::Fill::full, 0.f, 0.f},
                          Layer::Source::sprite,
-                         1.f,
+                         0.f,
                          nullptr,
                          sf::BlendAlpha});
          return 0;
@@ -80,7 +80,7 @@ static const luaL_Reg foregroundLibFuncs[] = {
          auto layers = bkg.getFgLayers();
          const float x = lua_tonumber(state, 2);
          const float y = lua_tonumber(state, 3);
-         Layer & layer = (*layers.first)[lua_tointeger(state, 1)];
+         Layer & layer = layers.resource.get()[lua_tointeger(state, 1)];
          if (layer.source != Layer::Source::color) {
              layer.data.spriteLayer.x = x;
              layer.data.spriteLayer.y = y;
@@ -95,7 +95,7 @@ static const luaL_Reg foregroundLibFuncs[] = {
          BackgroundController & bkg = getgGamePtr()->getBackground();
          auto layers = bkg.getFgLayers();
          const float a = lua_tonumber(state, 2);
-         (*layers.first)[lua_tointeger(state, 1)].absorptivity = a;
+         layers.resource.get()[lua_tointeger(state, 1)].absorptivity = a;
          return 0;
      }},
     {}};
@@ -110,7 +110,7 @@ static const luaL_Reg backgroundLibFuncs[] = {
                          {{&resources.getSheet(name), 0.f,
                            SpriteLayer::Fill::full, 0.f, 0.f},
                           Layer::Source::sprite,
-                          1.f,
+                          0.f,
                           nullptr,
                           sf::BlendAlpha});
          return 0;
@@ -134,7 +134,7 @@ static const luaL_Reg backgroundLibFuncs[] = {
          auto layers = bkg.getBkgLayers();
          const float x = lua_tonumber(state, 2);
          const float y = lua_tonumber(state, 3);
-         Layer & layer = (*layers.first)[lua_tointeger(state, 1)];
+         Layer & layer = layers.resource.get()[lua_tointeger(state, 1)];
          if (layer.source != Layer::Source::color) {
              layer.data.spriteLayer.x = x;
              layer.data.spriteLayer.y = y;
@@ -149,7 +149,7 @@ static const luaL_Reg backgroundLibFuncs[] = {
          BackgroundController & bkg = getgGamePtr()->getBackground();
          auto layers = bkg.getBkgLayers();
          const float a = lua_tonumber(state, 2);
-         (*layers.first)[lua_tointeger(state, 1)].absorptivity = a;
+         layers.resource.get()[lua_tointeger(state, 1)].absorptivity = a;
          return 0;
      }},
     {}};

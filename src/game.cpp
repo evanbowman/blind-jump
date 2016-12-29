@@ -158,11 +158,9 @@ void Game::updateGraphics() {
         }
     };
     {
-        // Important: LockedLayersMapPtr is a pair containing a pointer to the
-        // protected resource and a unique_lock. i.e. it needs its own scope.
-        LockedLayersMapPtr bkgLayers = m_background.getBkgLayers();
-        for (auto it = bkgLayers.first->rbegin(); it != bkgLayers.first->rend();
-             ++it) {
+        LockedRef<LayerMap> bkgLayers = m_background.getBkgLayers();
+        for (auto it = bkgLayers.resource.get().rbegin();
+             it != bkgLayers.resource.get().rend(); ++it) {
             drawLayer(it);
         }
     }
@@ -206,9 +204,9 @@ void Game::updateGraphics() {
     m_target.draw(lightingMapSpr);
     m_target.setView(m_camera.getOverworldView());
     {
-        LockedLayersMapPtr fgLayers = m_background.getFgLayers();
-        for (auto it = fgLayers.first->rbegin(); it != fgLayers.first->rend();
-             ++it) {
+        LockedRef<LayerMap> fgLayers = m_background.getFgLayers();
+        for (auto it = fgLayers.resource.get().rbegin();
+             it != fgLayers.resource.get().rend(); ++it) {
             drawLayer(it);
         }
     }

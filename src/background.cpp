@@ -10,10 +10,10 @@ void BackgroundController::addFgLayer(const int layerno, Layer && layer) {
     m_fgLayers[layerno] = std::move(layer);
 }
 
-LockedLayersMapPtr BackgroundController::getBkgLayers() {
-    return {&m_bkgLayers, std::unique_lock<std::mutex>(m_layersMutex)};
+LockedRef<LayerMap> BackgroundController::getBkgLayers() {
+    return {m_bkgLayers, std::unique_lock<std::mutex>(m_layersMutex)};
 }
 
-LockedLayersMapPtr BackgroundController::getFgLayers() {
-    return {&m_fgLayers, std::unique_lock<std::mutex>(m_layersMutex)};
+LockedRef<LayerMap> BackgroundController::getFgLayers() {
+    return {m_fgLayers, std::unique_lock<std::mutex>(m_layersMutex)};
 }
