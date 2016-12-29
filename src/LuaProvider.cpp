@@ -51,103 +51,113 @@ static const luaL_Reg systemLibFuncs[] = {
      }},
     {}};
 
-    static const luaL_Reg foregroundLibFuncs[] = {
-	{"addLayerFromSprite",
-	 [](lua_State * state) {
-	     BackgroundController & bkg = getgGamePtr()->getBackground();
-	     ResHandler & resources = getgGamePtr()->getResHandler();
-	     const std::string name(lua_tostring(state, 2));
-	     bkg.addFgLayer(lua_tointeger(state, 1), {
-	     	     {&resources.getSheet(name), 0.f, SpriteLayer::Fill::full, 0.f, 0.f},
-	     		 Layer::Source::sprite, 1.f, nullptr, sf::BlendAlpha});
-	     return 0;
-	 }},
-	{"setLayerPosition",
-	 [](lua_State * state) {
-	     BackgroundController & bkg = getgGamePtr()->getBackground();
-	     auto & layers = bkg.getFgLayers();
-	     const float x = lua_tonumber(state, 2);
-	     const float y = lua_tonumber(state, 3);
-	     Layer & layer = layers[lua_tointeger(state, 1)];
-	     if (layer.source != Layer::Source::color) {
-		 layer.data.spriteLayer.x = x;
-		 layer.data.spriteLayer.y = y;
-	     } else {
-		 throw std::runtime_error("Error: attempt to set position for color layer");
-	     }
-	     return 0;
-	 }},
-	{"setLayerAbsorptivity",
-	 [](lua_State * state) {
-	     BackgroundController & bkg = getgGamePtr()->getBackground();
-	     auto & layers = bkg.getFgLayers();
-	     const float a = lua_tonumber(state, 2);
-	     layers[lua_tointeger(state, 1)].absorptivity = a;
-	     return 0;
-	 }},
-	{}
-    };
+static const luaL_Reg foregroundLibFuncs[] = {
+    {"addLayerFromSprite",
+     [](lua_State * state) {
+         BackgroundController & bkg = getgGamePtr()->getBackground();
+         ResHandler & resources = getgGamePtr()->getResHandler();
+         const std::string name(lua_tostring(state, 2));
+         bkg.addFgLayer(lua_tointeger(state, 1),
+                        {{&resources.getSheet(name), 0.f,
+                          SpriteLayer::Fill::full, 0.f, 0.f},
+                         Layer::Source::sprite,
+                         1.f,
+                         nullptr,
+                         sf::BlendAlpha});
+         return 0;
+     }},
+    {"setLayerPosition",
+     [](lua_State * state) {
+         BackgroundController & bkg = getgGamePtr()->getBackground();
+         auto & layers = bkg.getFgLayers();
+         const float x = lua_tonumber(state, 2);
+         const float y = lua_tonumber(state, 3);
+         Layer & layer = layers[lua_tointeger(state, 1)];
+         if (layer.source != Layer::Source::color) {
+             layer.data.spriteLayer.x = x;
+             layer.data.spriteLayer.y = y;
+         } else {
+             throw std::runtime_error(
+                 "Error: attempt to set position for color layer");
+         }
+         return 0;
+     }},
+    {"setLayerAbsorptivity",
+     [](lua_State * state) {
+         BackgroundController & bkg = getgGamePtr()->getBackground();
+         auto & layers = bkg.getFgLayers();
+         const float a = lua_tonumber(state, 2);
+         layers[lua_tointeger(state, 1)].absorptivity = a;
+         return 0;
+     }},
+    {}};
 
-    static const luaL_Reg backgroundLibFuncs[] = {
-	{"addLayerFromSprite",
-	 [](lua_State * state) {
-	     BackgroundController & bkg = getgGamePtr()->getBackground();
-	     ResHandler & resources = getgGamePtr()->getResHandler();
-	     const std::string name(lua_tostring(state, 2));
-	     bkg.addBkgLayer(lua_tointeger(state, 1), {
-	     	     {&resources.getSheet(name), 0.f, SpriteLayer::Fill::full, 0.f, 0.f},
-	     		 Layer::Source::sprite, 1.f, nullptr, sf::BlendAlpha});
-	     return 0;
-	 }},
-	{"addLayerFromColor",
-	 [](lua_State * state) {
-	     BackgroundController & bkg = getgGamePtr()->getBackground();
-	     auto & layers = bkg.getBkgLayers();
-	     const uint8_t r = lua_tointeger(state, 2);
-	     const uint8_t g = lua_tointeger(state, 3);
-	     const uint8_t b = lua_tointeger(state, 4);
-	     const uint8_t a = lua_tointeger(state, 5);
-	     bkg.addBkgLayer(lua_tointeger(state, 1), {
-		     {.colorLayer = {r, g, b, a}}, Layer::Source::color, 1.f, nullptr});
-	     return 0;
-	 }},
-	{"setLayerPosition",
-	 [](lua_State * state) {
-	     BackgroundController & bkg = getgGamePtr()->getBackground();
-	     auto & layers = bkg.getBkgLayers();
-	     const float x = lua_tonumber(state, 2);
-	     const float y = lua_tonumber(state, 3);
-	     Layer & layer = layers[lua_tointeger(state, 1)];
-	     if (layer.source != Layer::Source::color) {
-		 layer.data.spriteLayer.x = x;
-		 layer.data.spriteLayer.y = y;
-	     } else {
-		 throw std::runtime_error("Error: attempt to set position for color layer"); 
-	     }
-	     return 0;
-	 }},
-	{"setLayerAbsorptivity",
-	 [](lua_State * state) {
-	     BackgroundController & bkg = getgGamePtr()->getBackground();
-	     auto & layers = bkg.getBkgLayers();
-	     const float a = lua_tonumber(state, 2);
-	     layers[lua_tointeger(state, 1)].absorptivity = a;
-	     return 0;
-	 }},
-	{}};
+static const luaL_Reg backgroundLibFuncs[] = {
+    {"addLayerFromSprite",
+     [](lua_State * state) {
+         BackgroundController & bkg = getgGamePtr()->getBackground();
+         ResHandler & resources = getgGamePtr()->getResHandler();
+         const std::string name(lua_tostring(state, 2));
+         bkg.addBkgLayer(lua_tointeger(state, 1),
+                         {{&resources.getSheet(name), 0.f,
+                           SpriteLayer::Fill::full, 0.f, 0.f},
+                          Layer::Source::sprite,
+                          1.f,
+                          nullptr,
+                          sf::BlendAlpha});
+         return 0;
+     }},
+    {"addLayerFromColor",
+     [](lua_State * state) {
+         BackgroundController & bkg = getgGamePtr()->getBackground();
+         auto & layers = bkg.getBkgLayers();
+         const uint8_t r = lua_tointeger(state, 2);
+         const uint8_t g = lua_tointeger(state, 3);
+         const uint8_t b = lua_tointeger(state, 4);
+         const uint8_t a = lua_tointeger(state, 5);
+         bkg.addBkgLayer(lua_tointeger(state, 1), {{.colorLayer = {r, g, b, a}},
+                                                   Layer::Source::color,
+                                                   1.f,
+                                                   nullptr});
+         return 0;
+     }},
+    {"setLayerPosition",
+     [](lua_State * state) {
+         BackgroundController & bkg = getgGamePtr()->getBackground();
+         auto & layers = bkg.getBkgLayers();
+         const float x = lua_tonumber(state, 2);
+         const float y = lua_tonumber(state, 3);
+         Layer & layer = layers[lua_tointeger(state, 1)];
+         if (layer.source != Layer::Source::color) {
+             layer.data.spriteLayer.x = x;
+             layer.data.spriteLayer.y = y;
+         } else {
+             throw std::runtime_error(
+                 "Error: attempt to set position for color layer");
+         }
+         return 0;
+     }},
+    {"setLayerAbsorptivity",
+     [](lua_State * state) {
+         BackgroundController & bkg = getgGamePtr()->getBackground();
+         auto & layers = bkg.getBkgLayers();
+         const float a = lua_tonumber(state, 2);
+         layers[lua_tointeger(state, 1)].absorptivity = a;
+         return 0;
+     }},
+    {}};
 
-    static const luaL_Reg envLibFuncs[] = {
-	{"setNaturalLight",
-	 [](lua_State * state) {
-	     const uint8_t r = lua_tointeger(state, 1);
-	     const uint8_t g = lua_tointeger(state, 2);
-	     const uint8_t b = lua_tointeger(state, 3);
-	     getgGamePtr()->setNaturalLight({r, g, b});
-	     return 0;
-	 }},
-	{}
-    };
-    
+static const luaL_Reg envLibFuncs[] = {
+    {"setNaturalLight",
+     [](lua_State * state) {
+         const uint8_t r = lua_tointeger(state, 1);
+         const uint8_t g = lua_tointeger(state, 2);
+         const uint8_t b = lua_tointeger(state, 3);
+         getgGamePtr()->setNaturalLight({r, g, b});
+         return 0;
+     }},
+    {}};
+
 static const luaL_Reg cameraLibFuncs[] = {
     {"setTarget",
      [](lua_State * state) {
@@ -207,8 +217,8 @@ static const luaL_Reg lightLibFuncs[] = {
          auto & lights = pGame->getLights();
          lua_newtable(state);
          for (int i = 0; i < lights.size(); ++i) {
-	     lua_pushlightuserdata(state, &lights[i]);
-	     lua_rawseti(state, -2, i + 1);
+             lua_pushlightuserdata(state, &lights[i]);
+             lua_rawseti(state, -2, i + 1);
          }
          return 1;
      }},

@@ -20,7 +20,6 @@ camera.setTarget(player)
 local w, h = camera.getViewportSize()
 camera.displaceFromTarget(0, -h / 4)
 
-
 local clearEntitiesOf = function(classname)
    local entitiesList = entity.listAll(classname)
    for i = 1, #entitiesList do
@@ -34,7 +33,6 @@ local clearLights = function()
       entity.destroy(lightsList[i])
    end
 end
-
 
 local cleanupLevel = function()
    if level == 0 then
@@ -93,8 +91,7 @@ local setupLevel = function()
 	 { x = 76, y = 58 }, { x = 44, y = 58 }
       }
       for i = 1, #wallPositions do
-	 local coord = wallPositions[i]
-	 entity.create("Wall", wallPositions[i].x, wallPositions[i].y)
+ 	 entity.create("Wall", wallPositions[i].x, wallPositions[i].y)
       end
    elseif level > 0 then
       -- TODO...

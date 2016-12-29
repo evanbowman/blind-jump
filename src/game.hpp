@@ -49,7 +49,7 @@ public:
     void setSleep(const std::chrono::microseconds & time);
     std::vector<Light> & getLights();
     void setNaturalLight(const sf::Color &);
-    
+
 private:
     sf::Vector2f m_drawableArea;
     EntityTable m_entityTable;

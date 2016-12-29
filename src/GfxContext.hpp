@@ -9,6 +9,6 @@ using drawContext = std::tuple<sf::Sprite, float, Rendertype, float>;
 
 struct GfxContext {
     std::vector<drawContext> faces, shadows;
-    std::vector<sf::Sprite> glowSprs1, glowSprs2;
+    std::vector<sf::Sprite> glowSprs;
     sf::RenderTexture * targetRef;
 };

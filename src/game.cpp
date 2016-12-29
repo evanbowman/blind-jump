@@ -7,7 +7,8 @@ Game::Game(const ConfigData & conf)
       m_window(sf::VideoMode::getDesktopMode(), EXECUTABLE_NAME,
                sf::Style::Fullscreen, sf::ContextSettings(0, 0, 6)),
       m_camera(m_drawableArea, m_window.getSize()), m_hasFocus(false),
-      m_worldView(sf::Vector2f(m_drawableArea.x / 2, m_drawableArea.y / 2), m_drawableArea),
+      m_worldView(sf::Vector2f(m_drawableArea.x / 2, m_drawableArea.y / 2),
+                  m_drawableArea),
       m_naturalLight(185, 185, 185) {
     sf::View windowView;
     static const float visibleArea = 0.75f;
@@ -79,8 +80,7 @@ void Game::updateGraphics() {
     {
         std::lock_guard<std::mutex> overworldLock(m_mutex);
         m_lightingMap.setView(m_camera.getOverworldView());
-        m_gfxContext.glowSprs2.clear();
-        m_gfxContext.glowSprs1.clear();
+        m_gfxContext.glowSprs.clear();
         m_gfxContext.shadows.clear();
         m_gfxContext.faces.clear();
         m_target.setView(m_camera.getOverworldView());
@@ -102,73 +102,72 @@ void Game::updateGraphics() {
             auto sheet = light.getSheet();
             sheet->getSprite().setPosition(light.getPosition());
             sheet->getSprite().setOrigin(light.getOrigin());
-            m_gfxContext.glowSprs1.push_back(sheet->getSprite());
-            m_gfxContext.glowSprs2.push_back(sheet->getSprite());
+            m_gfxContext.glowSprs.push_back(sheet->getSprite());
         }
         m_sounds.update();
     }
-    const auto updateLayer =
-	[this](auto it) {
-	    Layer & l = it->second;
-	    switch (l.source) {
-	    case Layer::Source::sprite: {
-		m_target.setView(m_camera.getOverworldView());
-		sf::Sprite & spr = l.data.spriteLayer.sheet->getSprite();
-		if (l.absorptivity < 1.f) {
-		    spr.setPosition(0.f, 0.f);
-		    if (l.canvas == nullptr) {
-			l.canvas = std::make_unique<sf::RenderTexture>();
-			sf::Vector2u textureSize = spr.getTexture()->getSize();
-			l.canvas->create(textureSize.x, textureSize.y);
-		    }
-		    l.canvas->clear(sf::Color::Transparent);
-		    l.canvas->draw(spr);
-		    for (auto & lightSpr : m_gfxContext.glowSprs1) {
-			const sf::Vector2f lightAbsPos = lightSpr.getPosition();
-			const sf::Vector2f lightRelativePos {
-			    lightAbsPos.x - l.data.spriteLayer.x,
-			    lightAbsPos.y - l.data.spriteLayer.y
-			};
-			lightSpr.setPosition(lightRelativePos);
-			l.canvas->draw(lightSpr,
-				       sf::BlendMode(sf::BlendMode(
-                                           sf::BlendMode::SrcAlpha, sf::BlendMode::One,
-                                           sf::BlendMode::Add, sf::BlendMode::DstAlpha,
-                                           sf::BlendMode::Zero, sf::BlendMode::Add)));
-			lightSpr.setPosition(lightAbsPos);
-		    }
-		    l.canvas->display();
-		    sf::Sprite canvasSpr(l.canvas->getTexture());
-		    canvasSpr.setPosition(l.data.spriteLayer.x, l.data.spriteLayer.y);
-		    canvasSpr.setColor(m_naturalLight);
-		    m_target.draw(canvasSpr, l.blending);
-		} else {
-		    if (l.canvas) l.canvas = nullptr;
-		    spr.setPosition(l.data.spriteLayer.x, l.data.spriteLayer.y);
-		    m_target.draw(spr, l.blending);
-		}
-	    } break;
-		    
-	    case Layer::Source::color: {
-		m_target.setView(m_worldView);
-		sf::RectangleShape rect;
-		rect.setFillColor(sf::Color(l.data.colorLayer.color.r,
-					    l.data.colorLayer.color.g,
-					    l.data.colorLayer.color.b,
-					    l.data.colorLayer.color.a));
-		// static const float visibleArea = 0.75f;
-		// const sf::Vector2f colorLayerScale(
-                //     (m_drawableArea.x * (visibleArea + 0.02)) / 450,
-                //     (m_drawableArea.y * (visibleArea + 0.02)) / 450);
-		// rect.setScale(colorLayerScale);
-		// rect.setSize({2000, 2000});
-		// m_target.draw(rect);
-	    } break;
-	    }
-	};
+    const auto updateLayer = [this](auto it) {
+        Layer & l = it->second;
+        switch (l.source) {
+        case Layer::Source::sprite: {
+            m_target.setView(m_camera.getOverworldView());
+            sf::Sprite & spr = l.data.spriteLayer.sheet->getSprite();
+            if (l.absorptivity < 1.f) {
+                spr.setPosition(0.f, 0.f);
+                if (l.canvas == nullptr) {
+                    l.canvas = std::make_unique<sf::RenderTexture>();
+                    sf::Vector2u textureSize = spr.getTexture()->getSize();
+                    l.canvas->create(textureSize.x, textureSize.y);
+                }
+                l.canvas->clear(sf::Color::Transparent);
+                l.canvas->draw(spr);
+                for (auto & lightSpr : m_gfxContext.glowSprs) {
+                    const sf::Vector2f lightAbsPos = lightSpr.getPosition();
+                    const sf::Vector2f lightRelativePos{
+                        lightAbsPos.x - l.data.spriteLayer.x,
+                        lightAbsPos.y - l.data.spriteLayer.y};
+                    lightSpr.setPosition(lightRelativePos);
+                    l.canvas->draw(
+                        lightSpr,
+                        sf::BlendMode(sf::BlendMode(
+                            sf::BlendMode::SrcAlpha, sf::BlendMode::One,
+                            sf::BlendMode::Add, sf::BlendMode::DstAlpha,
+                            sf::BlendMode::Zero, sf::BlendMode::Add)));
+                    lightSpr.setPosition(lightAbsPos);
+                }
+                l.canvas->display();
+                sf::Sprite canvasSpr(l.canvas->getTexture());
+                canvasSpr.setPosition(l.data.spriteLayer.x,
+                                      l.data.spriteLayer.y);
+                canvasSpr.setColor(m_naturalLight);
+                m_target.draw(canvasSpr, l.blending);
+            } else {
+                if (l.canvas)
+                    l.canvas = nullptr;
+                spr.setPosition(l.data.spriteLayer.x, l.data.spriteLayer.y);
+                m_target.draw(spr, l.blending);
+            }
+        } break;
+
+        case Layer::Source::color: {
+            m_target.setView(m_worldView);
+            sf::RectangleShape rect;
+            rect.setFillColor(sf::Color(
+                l.data.colorLayer.color.r, l.data.colorLayer.color.g,
+                l.data.colorLayer.color.b, l.data.colorLayer.color.a));
+            // static const float visibleArea = 0.75f;
+            // const sf::Vector2f colorLayerScale(
+            //     (m_drawableArea.x * (visibleArea + 0.02)) / 450,
+            //     (m_drawableArea.y * (visibleArea + 0.02)) / 450);
+            // rect.setScale(colorLayerScale);
+            // rect.setSize({2000, 2000});
+            // m_target.draw(rect);
+        } break;
+        }
+    };
     auto & bkgLayers = m_background.getBkgLayers();
     for (auto it = bkgLayers.rbegin(); it != bkgLayers.rend(); ++it) {
-	updateLayer(it);
+        updateLayer(it);
     }
     m_target.setView(m_worldView);
     m_lightingMap.clear(sf::Color::Transparent);
@@ -185,18 +184,19 @@ void Game::updateGraphics() {
     for (auto & element : m_gfxContext.faces) {
         switch (std::get<2>(element)) {
         case Rendertype::shadeDefault:
-            std::get<0>(element).setColor(sf::Color(
-						    m_naturalLight.r, m_naturalLight.g, m_naturalLight.b, std::get<sprIdx>(element).getColor().a));
+            std::get<0>(element).setColor(
+                sf::Color(m_naturalLight.r, m_naturalLight.g, m_naturalLight.b,
+                          std::get<sprIdx>(element).getColor().a));
             m_lightingMap.draw(std::get<sprIdx>(element));
             break;
 
-	default:
-	    throw std::runtime_error("Error: bad rendertype");
-	    break;
+        default:
+            throw std::runtime_error("Error: bad rendertype");
+            break;
         }
     }
     static const sf::Color entityLightBlending(185, 185, 185);
-    for (auto & element : m_gfxContext.glowSprs2) {
+    for (auto & element : m_gfxContext.glowSprs) {
         element.setColor(entityLightBlending);
         m_lightingMap.draw(element,
                            sf::BlendMode(sf::BlendMode(
@@ -210,7 +210,7 @@ void Game::updateGraphics() {
     m_target.setView(m_camera.getOverworldView());
     auto & fgLayers = m_background.getFgLayers();
     for (auto it = fgLayers.rbegin(); it != fgLayers.rend(); ++it) {
-	updateLayer(it);
+        updateLayer(it);
     }
     m_target.setView(m_worldView);
     sf::Vector2f fgMaskPos(
