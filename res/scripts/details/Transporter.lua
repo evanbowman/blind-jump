@@ -1,3 +1,5 @@
+require("Player")
+
 local id = {
    shadow = 0,
    glow = 1
@@ -20,6 +22,18 @@ classes["Transporter"] = {
       entity.setZOrder(this, y - 28)
       light.setOrigin(glow, 200, 200)
       entity.setField(this, id.shadow, shadow)
+   end,
+
+   onUpdate = function(this)
+      local player = player
+      local playerX, playerY = entity.getPosition(player)
+      local x, y = entity.getPosition(this)
+      if calc.distance(x + 1, y - 16, playerX, playerY) < 16 then
+	 entity.setPosition(player, x + 1, y - 16)
+	 entity.setField(player, 1, "deactivated")
+	 entity.setSprite(player, "playerDownSprite")
+	 entity.setKeyframe(player, 5)
+      end
    end,
    
    onDestroy = function(this)

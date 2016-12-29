@@ -53,14 +53,14 @@ static const luaL_Reg systemLibFuncs[] = {
      }},
     {"setLogicUpdateLimit",
      [](lua_State * state) {
-	 const int throttleAmount = lua_tointeger(state, 1);
-	 ::logicUpdateThrottle = microseconds(throttleAmount);
-	 return 0;
+         const int throttleAmount = lua_tointeger(state, 1);
+         ::logicUpdateThrottle = microseconds(throttleAmount);
+         return 0;
      }},
     {}};
 
 static const luaL_Reg foregroundLibFuncs[] = {
-    {"addLayerFromSprite",
+    {"createFromSprite",
      [](lua_State * state) {
          BackgroundController & bkg = getgGamePtr()->getBackground();
          ResHandler & resources = getgGamePtr()->getResHandler();
@@ -74,13 +74,13 @@ static const luaL_Reg foregroundLibFuncs[] = {
                          sf::BlendAlpha});
          return 0;
      }},
-    {"setLayerPosition",
+    {"setPosition",
      [](lua_State * state) {
          BackgroundController & bkg = getgGamePtr()->getBackground();
-         auto & layers = bkg.getFgLayers();
+         auto layers = bkg.getFgLayers();
          const float x = lua_tonumber(state, 2);
          const float y = lua_tonumber(state, 3);
-         Layer & layer = layers[lua_tointeger(state, 1)];
+         Layer & layer = (*layers.first)[lua_tointeger(state, 1)];
          if (layer.source != Layer::Source::color) {
              layer.data.spriteLayer.x = x;
              layer.data.spriteLayer.y = y;
@@ -90,18 +90,18 @@ static const luaL_Reg foregroundLibFuncs[] = {
          }
          return 0;
      }},
-    {"setLayerAbsorptivity",
+    {"setLightingFactor",
      [](lua_State * state) {
          BackgroundController & bkg = getgGamePtr()->getBackground();
-         auto & layers = bkg.getFgLayers();
+         auto layers = bkg.getFgLayers();
          const float a = lua_tonumber(state, 2);
-         layers[lua_tointeger(state, 1)].absorptivity = a;
+         (*layers.first)[lua_tointeger(state, 1)].absorptivity = a;
          return 0;
      }},
     {}};
 
 static const luaL_Reg backgroundLibFuncs[] = {
-    {"addLayerFromSprite",
+    {"createFromSprite",
      [](lua_State * state) {
          BackgroundController & bkg = getgGamePtr()->getBackground();
          ResHandler & resources = getgGamePtr()->getResHandler();
@@ -115,10 +115,9 @@ static const luaL_Reg backgroundLibFuncs[] = {
                           sf::BlendAlpha});
          return 0;
      }},
-    {"addLayerFromColor",
+    {"createFromColor",
      [](lua_State * state) {
          BackgroundController & bkg = getgGamePtr()->getBackground();
-         auto & layers = bkg.getBkgLayers();
          const uint8_t r = lua_tointeger(state, 2);
          const uint8_t g = lua_tointeger(state, 3);
          const uint8_t b = lua_tointeger(state, 4);
@@ -129,13 +128,13 @@ static const luaL_Reg backgroundLibFuncs[] = {
                                                    nullptr});
          return 0;
      }},
-    {"setLayerPosition",
+    {"setPosition",
      [](lua_State * state) {
          BackgroundController & bkg = getgGamePtr()->getBackground();
-         auto & layers = bkg.getBkgLayers();
+         auto layers = bkg.getBkgLayers();
          const float x = lua_tonumber(state, 2);
          const float y = lua_tonumber(state, 3);
-         Layer & layer = layers[lua_tointeger(state, 1)];
+         Layer & layer = (*layers.first)[lua_tointeger(state, 1)];
          if (layer.source != Layer::Source::color) {
              layer.data.spriteLayer.x = x;
              layer.data.spriteLayer.y = y;
@@ -145,12 +144,12 @@ static const luaL_Reg backgroundLibFuncs[] = {
          }
          return 0;
      }},
-    {"setLayerAbsorptivity",
+    {"setLightingFactor",
      [](lua_State * state) {
          BackgroundController & bkg = getgGamePtr()->getBackground();
-         auto & layers = bkg.getBkgLayers();
+         auto layers = bkg.getBkgLayers();
          const float a = lua_tonumber(state, 2);
-         layers[lua_tointeger(state, 1)].absorptivity = a;
+         (*layers.first)[lua_tointeger(state, 1)].absorptivity = a;
          return 0;
      }},
     {}};
@@ -187,6 +186,11 @@ static const luaL_Reg cameraLibFuncs[] = {
          lua_pushnumber(state, viewsize.x);
          lua_pushnumber(state, viewsize.y);
          return 2;
+     }},
+    {"snapToTarget",
+     [](lua_State * state) {
+         getgGamePtr()->getCamera().snapToTarget();
+         return 0;
      }},
     {}};
 

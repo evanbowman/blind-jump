@@ -49,12 +49,12 @@ end
 
 local setupLevel = function()
    if level == 0 then
-      background.addLayerFromSprite(0, "introLevelFloorSprite")
-      background.setLayerPosition(0, 305, -231)
-      background.setLayerAbsorptivity(0, 0.0)
-      foreground.addLayerFromSprite(0, "introLevelMaskSprite")
-      foreground.setLayerPosition(0, 284, -250)
-      foreground.setLayerAbsorptivity(0, 1.0)
+      background.createFromSprite(0, "introLevelFloorSprite")
+      background.setPosition(0, 305, -231)
+      background.setLightingFactor(0, 1)
+      foreground.createFromSprite(0, "introLevelMaskSprite")
+      foreground.setPosition(0, 284, -250)
+      foreground.setLightingFactor(0, 0)
       entity.setPosition(player, playerStart.x, playerStart.y)
       entity.create("Transporter", 378, -128)
       entity.create("Pod", 400, 216)

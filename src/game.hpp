@@ -62,7 +62,7 @@ private:
     SoundController m_sounds;
     Camera m_camera;
     bool m_hasFocus;
-    std::mutex m_mutex;
+    std::mutex m_entityMutex, m_layersMutex;
     sf::Sprite m_vignetteSprite;
     sf::Sprite m_vignetteShadowSpr;
     GfxContext m_gfxContext;

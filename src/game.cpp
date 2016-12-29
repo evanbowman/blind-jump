@@ -78,7 +78,7 @@ void Game::updateGraphics() {
     }
     m_target.clear(sf::Color::Transparent);
     {
-        std::lock_guard<std::mutex> overworldLock(m_mutex);
+        std::lock_guard<std::mutex> entitiesLock(m_entityMutex);
         m_lightingMap.setView(m_camera.getOverworldView());
         m_gfxContext.glowSprs.clear();
         m_gfxContext.shadows.clear();
@@ -106,13 +106,13 @@ void Game::updateGraphics() {
         }
         m_sounds.update();
     }
-    const auto updateLayer = [this](auto it) {
+    const auto drawLayer = [this](auto it) {
         Layer & l = it->second;
         switch (l.source) {
         case Layer::Source::sprite: {
             m_target.setView(m_camera.getOverworldView());
             sf::Sprite & spr = l.data.spriteLayer.sheet->getSprite();
-            if (l.absorptivity < 1.f) {
+            if (l.absorptivity > 0.f) {
                 spr.setPosition(0.f, 0.f);
                 if (l.canvas == nullptr) {
                     l.canvas = std::make_unique<sf::RenderTexture>();
@@ -126,6 +126,8 @@ void Game::updateGraphics() {
                     const sf::Vector2f lightRelativePos{
                         lightAbsPos.x - l.data.spriteLayer.x,
                         lightAbsPos.y - l.data.spriteLayer.y};
+                    const uint8_t brightness = l.absorptivity * 255;
+                    lightSpr.setColor({brightness, brightness, brightness});
                     lightSpr.setPosition(lightRelativePos);
                     l.canvas->draw(
                         lightSpr,
@@ -134,6 +136,7 @@ void Game::updateGraphics() {
                             sf::BlendMode::Add, sf::BlendMode::DstAlpha,
                             sf::BlendMode::Zero, sf::BlendMode::Add)));
                     lightSpr.setPosition(lightAbsPos);
+                    lightSpr.setColor(sf::Color::White);
                 }
                 l.canvas->display();
                 sf::Sprite canvasSpr(l.canvas->getTexture());
@@ -150,24 +153,18 @@ void Game::updateGraphics() {
         } break;
 
         case Layer::Source::color: {
-            m_target.setView(m_worldView);
-            sf::RectangleShape rect;
-            rect.setFillColor(sf::Color(
-                l.data.colorLayer.color.r, l.data.colorLayer.color.g,
-                l.data.colorLayer.color.b, l.data.colorLayer.color.a));
-            // static const float visibleArea = 0.75f;
-            // const sf::Vector2f colorLayerScale(
-            //     (m_drawableArea.x * (visibleArea + 0.02)) / 450,
-            //     (m_drawableArea.y * (visibleArea + 0.02)) / 450);
-            // rect.setScale(colorLayerScale);
-            // rect.setSize({2000, 2000});
-            // m_target.draw(rect);
+            throw std::runtime_error("Error: color layers unimplemented");
         } break;
         }
     };
-    auto & bkgLayers = m_background.getBkgLayers();
-    for (auto it = bkgLayers.rbegin(); it != bkgLayers.rend(); ++it) {
-        updateLayer(it);
+    {
+        // Important: LockedLayersMapPtr is a pair containing a pointer to the
+        // protected resource and a unique_lock. i.e. it needs its own scope.
+        LockedLayersMapPtr bkgLayers = m_background.getBkgLayers();
+        for (auto it = bkgLayers.first->rbegin(); it != bkgLayers.first->rend();
+             ++it) {
+            drawLayer(it);
+        }
     }
     m_target.setView(m_worldView);
     m_lightingMap.clear(sf::Color::Transparent);
@@ -208,9 +205,12 @@ void Game::updateGraphics() {
     sf::Sprite lightingMapSpr(m_lightingMap.getTexture());
     m_target.draw(lightingMapSpr);
     m_target.setView(m_camera.getOverworldView());
-    auto & fgLayers = m_background.getFgLayers();
-    for (auto it = fgLayers.rbegin(); it != fgLayers.rend(); ++it) {
-        updateLayer(it);
+    {
+        LockedLayersMapPtr fgLayers = m_background.getFgLayers();
+        for (auto it = fgLayers.first->rbegin(); it != fgLayers.first->rend();
+             ++it) {
+            drawLayer(it);
+        }
     }
     m_target.setView(m_worldView);
     sf::Vector2f fgMaskPos(
@@ -254,7 +254,7 @@ void Game::updateLogic(LuaProvider & luaProv) {
         this->setSleep(std::chrono::microseconds(200));
         return;
     }
-    std::lock_guard<std::mutex> overworldLock(m_mutex);
+    std::lock_guard<std::mutex> entitiesLock(m_entityMutex);
     luaProv.applyHook([this](lua_State * state) {
         lua_getglobal(state, "__heartBeat__");
         if (lua_isnil(state, -1)) {

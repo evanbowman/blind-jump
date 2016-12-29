@@ -2,9 +2,11 @@
    created, if you want to change it to add more players, refactor
    the some of the local variables into fields in the player entities. ]]
 
-local hp = 4
+local id = {
+   state = 1
+}
 
-local state = "nominal"
+local hp = 4
 
 local movementFactor = 0.000054
 
@@ -98,16 +100,19 @@ classes["Player"] = {
    onCreate = function(this)
       entity.setSprite(this, "playerDownSprite")
       entity.setKeyframe(this, 0)
+      entity.setField(this, id.state, "nominal")
       local x, y = entity.getPosition(this)
    end,
 
    onUpdate = function(this, dt)
       local x, y = entity.getPosition(this)
       entity.setZOrder(this, y)
+      local state = entity.getField(this, id.state)
       fsm[state](this, dt)
       entity.setPosition(shadow, x + 7, y + 24)
       if hp == 0 then
-	 state = dying
+	 state = "dying"
+	 entity.setField(this, id.state, state)
       end
    end
 }

@@ -30,7 +30,7 @@ int main() {
         luaProv.runScriptFromFile(resourcePath() + "scripts/conf.lua");
         Game game(luaProv.applyHook(getConfig));
         {
-	    json resourcesJSON;
+            json resourcesJSON;
             std::fstream resourcesJSONRaw(resourcePath() + "resources.json");
             resourcesJSONRaw >> resourcesJSON;
             try {
@@ -40,14 +40,15 @@ int main() {
                 std::cout << err + ex.what() << std::endl;
                 return EXIT_FAILURE;
             }
-	    game.init();
-	    setgGamePtr(&game);
-	    json::iterator entryPt = resourcesJSON.find("main");
-	    if (entryPt == resourcesJSON.end()) {
-		throw std::runtime_error(
-					 "Error: \"main\" field missing from manifest.json");
-	    }
-	    luaProv.runScriptFromFile(resourcePath() + entryPt->get<std::string>());
+            game.init();
+            setgGamePtr(&game);
+            json::iterator entryPt = resourcesJSON.find("main");
+            if (entryPt == resourcesJSON.end()) {
+                throw std::runtime_error(
+                    "Error: \"main\" field missing from manifest.json");
+            }
+            luaProv.runScriptFromFile(resourcePath() +
+                                      entryPt->get<std::string>());
         }
         framework::SmartThread logicThread([&game, &luaProv]() {
             duration logicUpdateDelta;

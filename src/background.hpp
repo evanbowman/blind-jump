@@ -1,5 +1,8 @@
 #pragma once
 #include "spriteSheet.hpp"
+#include <functional>
+#include <mutex>
+#include <utility>
 
 struct SpriteLayer {
     SpriteSheet * sheet;
@@ -29,14 +32,18 @@ struct Layer {
     sf::BlendMode blending;
 };
 
+using LockedLayersMapPtr =
+    std::pair<std::map<int, Layer> *, std::unique_lock<std::mutex>>;
+
 class BackgroundController {
 public:
     void addBkgLayer(const int, Layer &&);
     void addFgLayer(const int, Layer &&);
-    std::map<int, Layer> & getBkgLayers();
-    std::map<int, Layer> & getFgLayers();
+    LockedLayersMapPtr getBkgLayers();
+    LockedLayersMapPtr getFgLayers();
 
 private:
+    std::mutex m_layersMutex;
     std::map<int, Layer> m_bkgLayers;
     std::map<int, Layer> m_fgLayers;
 };
