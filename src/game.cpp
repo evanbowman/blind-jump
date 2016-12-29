@@ -9,7 +9,7 @@ Game::Game(const ConfigData & conf)
       m_camera(m_drawableArea, m_window.getSize()), m_hasFocus(false),
       m_worldView(sf::Vector2f(m_drawableArea.x / 2, m_drawableArea.y / 2),
                   m_drawableArea),
-      m_naturalLight(185, 185, 185) {
+      m_naturalLight(0, 0, 0) {
     sf::View windowView;
     static const float visibleArea = 0.75f;
     const sf::Vector2f vignetteMaskScale(
@@ -120,7 +120,9 @@ void Game::updateGraphics() {
                     l.canvas->create(textureSize.x, textureSize.y);
                 }
                 l.canvas->clear(sf::Color::Transparent);
+		spr.setColor(m_naturalLight);
                 l.canvas->draw(spr);
+		spr.setColor(sf::Color::White);
                 for (auto & lightSpr : m_gfxContext.glowSprs) {
                     const sf::Vector2f lightAbsPos = lightSpr.getPosition();
                     const sf::Vector2f lightRelativePos{
@@ -142,7 +144,6 @@ void Game::updateGraphics() {
                 sf::Sprite canvasSpr(l.canvas->getTexture());
                 canvasSpr.setPosition(l.data.spriteLayer.x,
                                       l.data.spriteLayer.y);
-                canvasSpr.setColor(m_naturalLight);
                 m_target.draw(canvasSpr, l.blending);
             } else {
                 if (l.canvas)

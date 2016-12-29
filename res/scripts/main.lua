@@ -62,7 +62,7 @@ local setupLevel = function()
          { x = 300, y = 122 },
          { x = 300, y = -34 },
          { x = 492, y = 252 },
-         { x = 460, y = -248 }
+         { x = 476, y = -248 }
       }
       for i = 1, #lampPositions do
 	 entity.create("Lamp", lampPositions[i].x, lampPositions[i].y)
