@@ -21,14 +21,16 @@
 
 std::exception_ptr pWorkerException = nullptr;
 
+microseconds logicUpdateThrottle(0);
+
 int main() {
     calc::rng::seed();
     try {
         LuaProvider luaProv;
         luaProv.runScriptFromFile(resourcePath() + "scripts/conf.lua");
         Game game(luaProv.applyHook(getConfig));
-        json resourcesJSON;
         {
+	    json resourcesJSON;
             std::fstream resourcesJSONRaw(resourcePath() + "resources.json");
             resourcesJSONRaw >> resourcesJSON;
             try {
@@ -38,17 +40,15 @@ int main() {
                 std::cout << err + ex.what() << std::endl;
                 return EXIT_FAILURE;
             }
+	    game.init();
+	    setgGamePtr(&game);
+	    json::iterator entryPt = resourcesJSON.find("main");
+	    if (entryPt == resourcesJSON.end()) {
+		throw std::runtime_error(
+					 "Error: \"main\" field missing from manifest.json");
+	    }
+	    luaProv.runScriptFromFile(resourcePath() + entryPt->get<std::string>());
         }
-        game.init();
-        // A global pointer to an instance of the Game class is required for the
-        // engine's Lua API for scripting logic
-        setgGamePtr(&game);
-        json::iterator entryPt = resourcesJSON.find("main");
-        if (entryPt == resourcesJSON.end()) {
-            throw std::runtime_error(
-                "Error: \"main\" field missing from manifest.json");
-        }
-        luaProv.runScriptFromFile(resourcePath() + entryPt->get<std::string>());
         framework::SmartThread logicThread([&game, &luaProv]() {
             duration logicUpdateDelta;
             sf::Clock gameClock;
@@ -68,8 +68,7 @@ int main() {
                     time_point stop = high_resolution_clock::now();
                     logicUpdateDelta =
                         std::chrono::duration_cast<nanoseconds>(stop - start);
-                    static const microseconds logicUpdateLimit(2000);
-                    std::this_thread::sleep_for(logicUpdateLimit -
+                    std::this_thread::sleep_for(logicUpdateThrottle -
                                                 logicUpdateDelta);
                 }
             } catch (...) {

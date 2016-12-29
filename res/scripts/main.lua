@@ -9,8 +9,8 @@ require("Wall")
 require("Player")
 
 system.setVerticalSyncEnabled(true)
-system.setFramerateLimit(120)
 system.setCursorVisible(false)
+system.setLogicUpdateLimit(2000)
 
 environment.setNaturalLight(190, 190, 210)
 

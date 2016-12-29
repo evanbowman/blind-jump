@@ -1,6 +1,8 @@
 #include "LuaProvider.hpp"
 #include "game.hpp"
 
+extern microseconds logicUpdateThrottle;
+
 // GAME API
 //     Provides access to Game data from lua scripts.
 extern "C" {
@@ -48,6 +50,12 @@ static const luaL_Reg systemLibFuncs[] = {
          sf::RenderWindow & window = getgGamePtr()->getWindow();
          window.setMouseCursorVisible(lua_toboolean(state, 1));
          return 0;
+     }},
+    {"setLogicUpdateLimit",
+     [](lua_State * state) {
+	 const int throttleAmount = lua_tointeger(state, 1);
+	 ::logicUpdateThrottle = microseconds(throttleAmount);
+	 return 0;
      }},
     {}};
 

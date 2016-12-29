@@ -7,7 +7,6 @@
 #include "alias.hpp"
 #include "background.hpp"
 #include "camera.hpp"
-#include "colors.hpp"
 #include "framework/option.hpp"
 #include "inputController.hpp"
 #include "resourceHandler.hpp"
