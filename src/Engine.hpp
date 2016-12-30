@@ -22,9 +22,7 @@ using EntityTable = std::map<std::string, std::list<EntityRef>>;
 
 struct ConfigData {
     sf::Vector2f drawableArea;
-    bool enableVsync;
-    bool showMouse;
-    int framerateLimit;
+    float fractionVisible;
 };
 
 class Engine {
@@ -55,6 +53,7 @@ private:
     std::vector<Light> m_lights;
     ResHandler m_resHandler;
     bool m_slept;
+    float m_zoomFactor;
     sf::RectangleShape m_overlayRect;
     sf::RenderWindow m_window;
     sf::Time m_elapsedTime;
@@ -64,8 +63,6 @@ private:
     Camera m_camera;
     bool m_hasFocus;
     std::mutex m_entityMutex, m_layersMutex;
-    sf::Sprite m_vignetteSprite;
-    sf::Sprite m_vignetteShadowSpr;
     GfxContext m_gfxContext;
     sf::View m_worldView, m_hudView;
     sf::RenderTexture m_lightingMap, m_target;
@@ -95,6 +92,10 @@ inline ConfigData getConfig(lua_State * state) {
     lua_pushstring(state, "height");
     lua_gettable(state, -2);
     float height = lua_tonumber(state, -1);
+    lua_pop(state, 1);
+    lua_pushstring(state, "fractionVisible");
+    lua_gettable(state, -2);
+    float fractionVisible = lua_tonumber(state, -1);
     lua_pop(state, 2);
-    return ConfigData{{width, height}};
+    return ConfigData{{width, height}, fractionVisible};
 }

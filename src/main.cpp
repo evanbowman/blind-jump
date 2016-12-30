@@ -49,7 +49,7 @@ int main() {
             luaProv.runScriptFromFile(resourcePath() +
                                       entryPt->get<std::string>());
         }
-        framework::SmartThread logicThread([&engine, &luaProv]() {
+        SmartThread logicThread([&engine, &luaProv]() {
             duration logicUpdateDelta;
             sf::Clock logicClock;
             try {
@@ -76,14 +76,19 @@ int main() {
                 return;
             }
         });
-        while (engine.getWindow().isOpen()) {
-            engine.eventLoop();
-            engine.updateGraphics();
-            if (::pExceptionSignal) {
-                engine.getWindow().close();
-                std::rethrow_exception(::pExceptionSignal);
-            }
-        }
+	try {
+	    while (engine.getWindow().isOpen()) {
+		engine.eventLoop();
+		engine.updateGraphics();
+		if (::pExceptionSignal) {
+		    std::rethrow_exception(::pExceptionSignal);
+		}
+	    }
+	} catch (const std::exception & ex) {
+	    engine.getWindow().close();
+	    logicThread.get().join();
+	    std::cerr << ex.what() << std::endl;
+	}
     } catch (const std::exception & ex) {
         std::cerr << ex.what() << std::endl;
     }

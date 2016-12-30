@@ -41,7 +41,12 @@ function getConf()
    local w, h = getDrawableArea()
    local conf = {
       width = w,
-      height = h
+      height = h,
+      --[[ The camera scrolls, so this is
+	 required because more stuff needs to be 
+	 drawn than will fit in the camera view 
+	 (in order to achieve pixel perfect scrolling) ]]
+      fractionVisible = 0.75
    }
    return conf
 end

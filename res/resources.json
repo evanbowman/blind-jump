@@ -242,6 +242,33 @@
 		"w": 240,
 		"h": 640
 	    }
+	},
+	"grassTileSprite": {
+	    "texture": "textures/introLevelMask.png",
+	    "box": {
+		"x": 0,
+		"y": 0,
+		"w": 16,
+		"h": 16
+	    }
+	},
+	"vignetteSprite": {
+	    "texture": "textures/vignetteMask.png",
+	    "box": {
+		"x": 0,
+		"y": 0,
+		"w": 450,
+		"h": 450
+	    }
+	},
+	"vignetteShadowSprite": {
+	    "texture": "textures/vignetteShadow.png",
+	    "box": {
+		"x": 0,
+		"y": 0,
+		"w": 450,
+		"h": 450
+	    }
 	}
     }
 }

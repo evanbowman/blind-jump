@@ -2,30 +2,12 @@
 #include "spriteSheet.hpp"
 #include "utility.hpp"
 
-struct SpriteLayer {
-    SpriteSheet * sheet;
-    float paralax;
-    enum class Fill { full, tiled, stretched };
-    Fill fill;
-    float x, y;
-};
-
-struct ColorLayer {
-    struct Color {
-        uint8_t r, g, b, a;
-    };
-    Color color;
-};
-
 struct Layer {
-    union Data {
-        SpriteLayer spriteLayer;
-        ColorLayer colorLayer;
-    };
-    Data data;
-    enum class Source { sprite, color };
-    Source source;
-    float absorptivity;
+    SpriteSheet * sheet;
+    float x, y;
+    bool fixed;
+    float xScale, yScale;
+    float lightingFactor;
     std::unique_ptr<sf::RenderTexture> canvas;
     sf::BlendMode blending;
 };

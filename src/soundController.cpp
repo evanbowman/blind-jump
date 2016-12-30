@@ -43,7 +43,7 @@ void SoundController::update() {
     if (!soundRequests.empty()) {
         for (const auto req : soundRequests) {
             runningSounds.emplace_back(
-		getgEnginePtr()->getResHandler().getSound(req.soundname));
+                getgEnginePtr()->getResHandler().getSound(req.soundname));
             runningSounds.back().setMinDistance(req.minDistance);
             runningSounds.back().setAttenuation(req.attenuation);
             runningData.push_back({req.source, req.spatialized});

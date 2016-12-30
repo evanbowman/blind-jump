@@ -1,4 +1,5 @@
 #include "background.hpp"
+#include "Engine.hpp"
 
 void BackgroundController::addBkgLayer(const int layerno, Layer && layer) {
     std::lock_guard<std::mutex> lk(m_bgLayersMutex);

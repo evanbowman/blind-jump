@@ -66,12 +66,8 @@ static const luaL_Reg foregroundLibFuncs[] = {
          ResHandler & resources = getgEnginePtr()->getResHandler();
          const std::string name(lua_tostring(state, 2));
          bkg.addFgLayer(lua_tointeger(state, 1),
-                        {{&resources.getSheet(name), 0.f,
-                          SpriteLayer::Fill::full, 0.f, 0.f},
-                         Layer::Source::sprite,
-                         0.f,
-                         nullptr,
-                         sf::BlendAlpha});
+                        {&resources.getSheet(name), 0.f, 0.f, false, 1.f, 1.f,
+                         0.f, nullptr, sf::BlendAlpha});
          return 0;
      }},
     {"setPosition",
@@ -81,12 +77,47 @@ static const luaL_Reg foregroundLibFuncs[] = {
          const float x = lua_tonumber(state, 2);
          const float y = lua_tonumber(state, 3);
          Layer & layer = layers.resource.get()[lua_tointeger(state, 1)];
-         if (layer.source != Layer::Source::color) {
-             layer.data.spriteLayer.x = x;
-             layer.data.spriteLayer.y = y;
-         } else {
-             throw std::runtime_error(
-                 "Error: attempt to set position for color layer");
+         layer.x = x;
+         layer.y = y;
+         return 0;
+     }},
+    {"setFixedEnabled",
+     [](lua_State * state) {
+         BackgroundController & bkg = getgEnginePtr()->getBackground();
+         auto layers = bkg.getFgLayers();
+         Layer & layer = layers.resource.get()[lua_tointeger(state, 1)];
+         layer.fixed = lua_toboolean(state, 2);
+         return 0;
+     }},
+    {"setScale",
+     [](lua_State * state) {
+         BackgroundController & bkg = getgEnginePtr()->getBackground();
+         auto layers = bkg.getFgLayers();
+         Layer & layer = layers.resource.get()[lua_tointeger(state, 1)];
+         layer.xScale = lua_tonumber(state, 2);
+         layer.yScale = lua_tonumber(state, 3);
+         return 0;
+     }},
+    {"setBlending",
+     [](lua_State * state) {
+         BackgroundController & bkg = getgEnginePtr()->getBackground();
+         auto layers = bkg.getFgLayers();
+         Layer & layer = layers.resource.get()[lua_tointeger(state, 1)];
+         switch (lua_tointeger(state, 2)) {
+         case 0:
+             layer.blending = sf::BlendAlpha;
+             break;
+         case 1:
+             layer.blending = sf::BlendAdd;
+             break;
+         case 2:
+             layer.blending = sf::BlendMultiply;
+             break;
+         case 3:
+             layer.blending = sf::BlendNone;
+             break;
+         default:
+             throw std::runtime_error("Error: invalid blendmode");
          }
          return 0;
      }},
@@ -95,7 +126,7 @@ static const luaL_Reg foregroundLibFuncs[] = {
          BackgroundController & bkg = getgEnginePtr()->getBackground();
          auto layers = bkg.getFgLayers();
          const float a = lua_tonumber(state, 2);
-         layers.resource.get()[lua_tointeger(state, 1)].absorptivity = a;
+         layers.resource.get()[lua_tointeger(state, 1)].lightingFactor = a;
          return 0;
      }},
     {}};
@@ -107,26 +138,48 @@ static const luaL_Reg backgroundLibFuncs[] = {
          ResHandler & resources = getgEnginePtr()->getResHandler();
          const std::string name(lua_tostring(state, 2));
          bkg.addBkgLayer(lua_tointeger(state, 1),
-                         {{&resources.getSheet(name), 0.f,
-                           SpriteLayer::Fill::full, 0.f, 0.f},
-                          Layer::Source::sprite,
-                          0.f,
-                          nullptr,
-                          sf::BlendAlpha});
+                         {&resources.getSheet(name), 0.f, 0.f, false, 1.f, 1.f,
+                          0.f, nullptr, sf::BlendAlpha});
          return 0;
      }},
-    {"createFromColor",
+    {"setBlending",
      [](lua_State * state) {
          BackgroundController & bkg = getgEnginePtr()->getBackground();
-         const uint8_t r = lua_tointeger(state, 2);
-         const uint8_t g = lua_tointeger(state, 3);
-         const uint8_t b = lua_tointeger(state, 4);
-         const uint8_t a = lua_tointeger(state, 5);
-         bkg.addBkgLayer(lua_tointeger(state, 1), {{.colorLayer = {r, g, b, a}},
-                                                   Layer::Source::color,
-                                                   0.f,
-                                                   nullptr,
-                                                   sf::BlendAlpha});
+         auto layers = bkg.getBkgLayers();
+         Layer & layer = layers.resource.get()[lua_tointeger(state, 1)];
+         switch (lua_tointeger(state, 2)) {
+         case 0:
+             layer.blending = sf::BlendAlpha;
+             break;
+         case 1:
+             layer.blending = sf::BlendAdd;
+             break;
+         case 2:
+             layer.blending = sf::BlendMultiply;
+             break;
+         case 3:
+             layer.blending = sf::BlendNone;
+             break;
+         default:
+             throw std::runtime_error("Error: invalid blendmode");
+         }
+         return 0;
+     }},
+    {"setScale",
+     [](lua_State * state) {
+         BackgroundController & bkg = getgEnginePtr()->getBackground();
+         auto layers = bkg.getBkgLayers();
+         Layer & layer = layers.resource.get()[lua_tointeger(state, 1)];
+         layer.xScale = lua_tonumber(state, 2);
+         layer.yScale = lua_tonumber(state, 3);
+         return 0;
+     }},
+    {"setFixedEnabled",
+     [](lua_State * state) {
+         BackgroundController & bkg = getgEnginePtr()->getBackground();
+         auto layers = bkg.getBkgLayers();
+         Layer & layer = layers.resource.get()[lua_tointeger(state, 1)];
+         layer.fixed = lua_toboolean(state, 2);
          return 0;
      }},
     {"setPosition",
@@ -136,13 +189,8 @@ static const luaL_Reg backgroundLibFuncs[] = {
          const float x = lua_tonumber(state, 2);
          const float y = lua_tonumber(state, 3);
          Layer & layer = layers.resource.get()[lua_tointeger(state, 1)];
-         if (layer.source != Layer::Source::color) {
-             layer.data.spriteLayer.x = x;
-             layer.data.spriteLayer.y = y;
-         } else {
-             throw std::runtime_error(
-                 "Error: attempt to set position for color layer");
-         }
+         layer.x = x;
+         layer.y = y;
          return 0;
      }},
     {"setLightingFactor",
@@ -150,7 +198,7 @@ static const luaL_Reg backgroundLibFuncs[] = {
          BackgroundController & bkg = getgEnginePtr()->getBackground();
          auto layers = bkg.getBkgLayers();
          const float a = lua_tonumber(state, 2);
-         layers.resource.get()[lua_tointeger(state, 1)].absorptivity = a;
+         layers.resource.get()[lua_tointeger(state, 1)].lightingFactor = a;
          return 0;
      }},
     {}};

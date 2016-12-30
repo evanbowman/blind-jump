@@ -9,16 +9,10 @@ Engine::Engine(const ConfigData & conf)
       m_camera(m_drawableArea, m_window.getSize()), m_hasFocus(false),
       m_worldView(sf::Vector2f(m_drawableArea.x / 2, m_drawableArea.y / 2),
                   m_drawableArea),
-      m_naturalLight(0, 0, 0) {
+      m_naturalLight(0, 0, 0), m_zoomFactor(conf.fractionVisible) {
     sf::View windowView;
-    static const float visibleArea = 0.75f;
-    const sf::Vector2f vignetteMaskScale(
-        (m_drawableArea.x * (visibleArea + 0.02)) / 450,
-        (m_drawableArea.y * (visibleArea + 0.02)) / 450);
-    m_vignetteSprite.setScale(vignetteMaskScale);
-    m_vignetteShadowSpr.setScale(vignetteMaskScale);
     windowView.setSize(m_window.getSize().x, m_window.getSize().y);
-    windowView.zoom(visibleArea);
+    windowView.zoom(m_zoomFactor);
     m_camera.setWindowView(windowView);
     m_gfxContext.targetRef = &m_target;
 }
@@ -27,12 +21,8 @@ void Engine::init() {
     m_target.create(m_drawableArea.x, m_drawableArea.y);
     m_overlayRect.setSize(m_drawableArea);
     m_lightingMap.create(m_drawableArea.x, m_drawableArea.y);
-    m_vignetteSprite.setTexture(m_resHandler.getTexture("textures/vignetteMask.png"));
-    m_vignetteShadowSpr.setTexture(m_resHandler.getTexture("textures/vignetteShadow.png"));
-    m_vignetteShadowSpr.setColor(sf::Color(255, 255, 255, 100));
     m_hudView.setSize(m_drawableArea.x, m_drawableArea.y);
     m_hudView.setCenter(m_drawableArea.x / 2, m_drawableArea.y / 2);
-    m_vignetteSprite.setColor(sf::Color::White);
 }
 
 void Engine::eventLoop() {
@@ -103,15 +93,28 @@ void Engine::updateGraphics() {
         }
         m_sounds.update();
     }
+    // The layer rendering code is a bit messy, mostly because layers have
+    // a lot of properties that don't seamlessly interact.
     const auto drawLayer = [this](auto it) {
         Layer & l = it->second;
-        const auto drawLights = [this, &l] {
+        m_target.setView(m_camera.getOverworldView());
+        sf::Sprite & spr = l.sheet->getSprite();
+        if (l.lightingFactor > 0.f) {
+            spr.setPosition(0.f, 0.f);
+            if (l.canvas == nullptr) {
+                l.canvas = std::make_unique<sf::RenderTexture>();
+                sf::Vector2u textureSize = spr.getTexture()->getSize();
+                l.canvas->create(textureSize.x, textureSize.y);
+            }
+            l.canvas->clear(sf::Color::Transparent);
+            spr.setColor(m_naturalLight);
+            l.canvas->draw(spr);
+            spr.setColor(sf::Color::White);
             for (auto & lightSpr : m_gfxContext.glowSprs) {
                 const sf::Vector2f lightAbsPos = lightSpr.getPosition();
-                const sf::Vector2f lightRelativePos{
-                    lightAbsPos.x - l.data.spriteLayer.x,
-                    lightAbsPos.y - l.data.spriteLayer.y};
-                const uint8_t brightness = l.absorptivity * 255;
+                const sf::Vector2f lightRelativePos{lightAbsPos.x - l.x,
+                                                    lightAbsPos.y - l.y};
+                const uint8_t brightness = l.lightingFactor * 255;
                 lightSpr.setColor({brightness, brightness, brightness});
                 lightSpr.setPosition(lightRelativePos);
                 l.canvas->draw(lightSpr,
@@ -124,48 +127,29 @@ void Engine::updateGraphics() {
             }
             l.canvas->display();
             sf::Sprite canvasSpr(l.canvas->getTexture());
-            canvasSpr.setPosition(l.data.spriteLayer.x, l.data.spriteLayer.y);
+	    canvasSpr.setScale(l.xScale, l.yScale);
+            canvasSpr.setPosition(l.x, l.y);
             m_target.draw(canvasSpr, l.blending);
-        };
-        switch (l.source) {
-        case Layer::Source::sprite: {
-            m_target.setView(m_camera.getOverworldView());
-            sf::Sprite & spr = l.data.spriteLayer.sheet->getSprite();
-            if (l.absorptivity > 0.f) {
-                spr.setPosition(0.f, 0.f);
-                if (l.canvas == nullptr) {
-                    l.canvas = std::make_unique<sf::RenderTexture>();
-                    sf::Vector2u textureSize = spr.getTexture()->getSize();
-                    l.canvas->create(textureSize.x, textureSize.y);
-                }
-                l.canvas->clear(sf::Color::Transparent);
-                spr.setColor(m_naturalLight);
-                l.canvas->draw(spr);
-                spr.setColor(sf::Color::White);
-                drawLights();
-            } else {
-                if (l.canvas) {
-                    l.canvas = nullptr;
-                }
-                spr.setColor(sf::Color::White);
-                spr.setPosition(l.data.spriteLayer.x, l.data.spriteLayer.y);
-                m_target.draw(spr, l.blending);
+        } else {
+            if (l.canvas) {
+                l.canvas = nullptr;
             }
-        } break;
-
-        case Layer::Source::color: {
-            if (l.absorptivity > 0.f) {
-                // TODO...
-            } else {
-                if (l.canvas) {
-                    l.canvas = nullptr;
-                }
+            spr.setColor(sf::Color::White);
+            float offX = 0;
+            float offY = 0;
+            if (l.fixed) {
                 m_target.setView(m_worldView);
-                ColorLayer::Color & c = l.data.colorLayer.color;
-                m_overlayRect.setFillColor({c.r, c.g, c.b, c.a});
-                m_target.draw(m_overlayRect, l.blending);
+                offX = m_drawableArea.x * 0.115f +
+                       m_camera.getOffsetFromTarget().x * m_zoomFactor;
+                offY = m_drawableArea.y * 0.115f +
+                       m_camera.getOffsetFromTarget().y * m_zoomFactor;
             }
-        } break;
+	    spr.setScale(l.xScale, l.yScale);
+            spr.setPosition(offX + l.x, offY + l.y);
+            m_target.draw(spr, l.blending);
+            if (l.fixed) {
+                m_target.setView(m_camera.getOverworldView());
+            }
         }
     };
     {
@@ -221,13 +205,6 @@ void Engine::updateGraphics() {
         }
     }
     m_target.setView(m_worldView);
-    sf::Vector2f fgMaskPos(
-        m_drawableArea.x * 0.115f + m_camera.getOffsetFromTarget().x * 0.75f,
-        m_drawableArea.y * 0.115f + m_camera.getOffsetFromTarget().y * 0.75f);
-    m_vignetteSprite.setPosition(fgMaskPos);
-    m_vignetteShadowSpr.setPosition(fgMaskPos);
-    m_target.draw(m_vignetteSprite, sf::BlendMultiply);
-    m_target.draw(m_vignetteShadowSpr);
     m_target.display();
     const sf::Vector2u windowSize = m_window.getSize();
     const sf::Vector2f upscaleVec(windowSize.x / m_drawableArea.x,
