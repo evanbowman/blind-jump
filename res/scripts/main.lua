@@ -114,3 +114,5 @@ function nextLevel()
 end
 
 nextLevel()
+
+entity.create("Turret", 350, 200)

@@ -3,6 +3,18 @@
 
 extern microseconds logicUpdateThrottle;
 
+static size_t eid;
+
+static std::map<size_t, EntityRef *> translationTable;
+
+static inline EntityRef * getEntityFromEid(const size_t id) {
+    auto it = translationTable.find(id);
+    if (it != translationTable.end()) {
+	return it->second;
+    }
+    throw std::runtime_error("Error: attempt to access nonexsistent entity");
+}
+
 // ENGINE API
 //     Provides access to Engine data from lua scripts.
 extern "C" {
@@ -217,8 +229,8 @@ static const luaL_Reg envLibFuncs[] = {
 static const luaL_Reg cameraLibFuncs[] = {
     {"setTarget",
      [](lua_State * state) {
-         auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
-         getgEnginePtr()->getCamera().setTarget(*entity);
+         auto entity = getEntityFromEid(lua_tointeger(state, 1));
+	 getgEnginePtr()->getCamera().setTarget(*entity);
          return 0;
      }},
     {"displaceFromTarget",
@@ -360,6 +372,9 @@ static const luaL_Reg entityLibFuncs[] = {
          auto & vec = pEngine->getEntityTable()[classname];
          vec.push_back(std::make_shared<Entity>());
          vec.back()->setPosition(sf::Vector2f(x, y));
+	 ::eid += 1;
+	 translationTable[::eid] = &vec.back();
+	 vec.back()->setEid(::eid);
          lua_getglobal(state, "classes");
          if (!lua_istable(state, -1)) {
              throw std::runtime_error("Error: missing classtable");
@@ -375,38 +390,42 @@ static const luaL_Reg entityLibFuncs[] = {
              const std::string err =
                  "Error: missing or malformed OnUpdate for class " + classname;
          }
-         lua_pushlightuserdata(state, (void *)(&vec.back()));
+         lua_pushinteger(state, ::eid);
          if (lua_pcall(state, 1, 0, 0)) {
              throw std::runtime_error(lua_tostring(state, -1));
          }
-         lua_pushlightuserdata(state, (void *)&vec.back());
+	 lua_pushinteger(state, ::eid);
          return 1;
      }},
     {"getPosition",
      [](lua_State * state) {
-         void * entity = lua_touserdata(state, 1);
-         auto & pos = (*static_cast<EntityRef *>(entity))->getPosition();
-         lua_pushnumber(state, pos.x);
-         lua_pushnumber(state, pos.y);
+	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
+	 auto & pos = (*entity)->getPosition();
+	 lua_pushnumber(state, pos.x);
+	 lua_pushnumber(state, pos.y);
          return 2;
      }},
     {"setPosition",
      [](lua_State * state) {
-         void * entity = lua_touserdata(state, 1);
+	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
          float x = lua_tonumber(state, 2);
          float y = lua_tonumber(state, 3);
-         (*static_cast<EntityRef *>(entity))->setPosition(sf::Vector2f(x, y));
+         (*entity)->setPosition(sf::Vector2f(x, y));
          return 0;
      }},
     {"destroy",
      [](lua_State * state) {
-         auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
-         (*entity)->setKillFlag();
+	 const size_t id = lua_tointeger(state, 1);
+	 auto it = translationTable.find(id);
+	 if (it != translationTable.end()) {
+	     it->second->get()->setKillFlag();
+	     translationTable.erase(it);
+	 }
          return 0;
      }},
     {"setField",
      [](lua_State * state) {
-         auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
+	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
          const int varIndex = lua_tointeger(state, 2);
          auto & members = (*entity)->getMemberTable();
          if (members.find(varIndex) != members.end()) {
@@ -418,7 +437,7 @@ static const luaL_Reg entityLibFuncs[] = {
      }},
     {"getField",
      [](lua_State * state) {
-         auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
+	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
          const int varIndex = lua_tointeger(state, 2);
          auto & members = (*entity)->getMemberTable();
          if (members.find(varIndex) == members.end()) {
@@ -432,7 +451,7 @@ static const luaL_Reg entityLibFuncs[] = {
      }},
     {"emitSound",
      [](lua_State * state) {
-         auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
+	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
          const char * soundName = lua_tostring(state, 2);
          const float minDist = lua_tonumber(state, 3);
          const float attenuation = lua_tonumber(state, 4);
@@ -443,37 +462,37 @@ static const luaL_Reg entityLibFuncs[] = {
      }},
     {"setKeyframe",
      [](lua_State * state) {
-         auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
+	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
          const int frameno = lua_tointeger(state, 2);
-         entity->setKeyframe(frameno);
+         (*entity)->setKeyframe(frameno);
          return 0;
      }},
     {"getKeyframe",
      [](lua_State * state) {
-         auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
-         const int frameno = entity->getKeyframe();
+	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
+         const int frameno = (*entity)->getKeyframe();
          lua_pushinteger(state, frameno);
          return 1;
      }},
     {"setSprite",
      [](lua_State * state) {
-         auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
+	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
          const std::string sheetName = lua_tostring(state, 2);
          auto & resources = getgEnginePtr()->getResHandler();
-         entity->setSheet(&resources.getSheet(sheetName));
+         (*entity)->setSheet(&resources.getSheet(sheetName));
          return 0;
      }},
     {"setZOrder",
      [](lua_State * state) {
-         auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
+	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
          const float z = lua_tonumber(state, 2);
-         entity->setZOrder(z);
+         (*entity)->setZOrder(z);
          return 0;
      }},
     {"getZOrder",
      [](lua_State * state) {
-         auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
-         lua_pushnumber(state, entity->getZOrder());
+	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
+         lua_pushnumber(state, (*entity)->getZOrder());
          return 1;
      }},
     {"listAll",
@@ -488,7 +507,7 @@ static const luaL_Reg entityLibFuncs[] = {
              if ((*it)->getKillFlag()) {
                  it = entityList.erase(it);
              } else {
-                 lua_pushlightuserdata(state, &(*it));
+		 lua_pushinteger(state, (*it)->getEid());
                  lua_rawseti(state, -2, ++i);
                  ++it;
              }

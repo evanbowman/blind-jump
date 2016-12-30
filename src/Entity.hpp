@@ -14,6 +14,7 @@ class Entity {
     };
 
 private:
+    size_t m_eid;
     sf::Vector2f m_position;
     bool m_killFlag;
     uint16_t m_keyframe;
@@ -23,11 +24,13 @@ private:
 
 public:
     Entity()
-        : m_position(), m_killFlag(false), m_keyframe(0), m_zOrder(0.f),
+        : m_eid(0), m_position(), m_killFlag(false), m_keyframe(0), m_zOrder(0.f),
           m_sprite{nullptr, {}, {1.f, 1.f}} {}
     inline void setPosition(const sf::Vector2f & position) {
         m_position = position;
     }
+    inline void setEid(const size_t eid) { m_eid = eid; }
+    inline size_t getEid() { return m_eid; }
     inline std::map<int, int> & getMemberTable() { return m_members; }
     inline const sf::Vector2f & getPosition() const { return m_position; }
     inline bool getKillFlag() const { return m_killFlag; }
