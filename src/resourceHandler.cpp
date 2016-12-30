@@ -142,12 +142,3 @@ sf::Shader & ResHandler::getShader(const std::string & path) {
     }
     return it->second;
 }
-
-static ResHandler * resHandlerPtr;
-
-void setgResHandlerPtr(ResHandler * addr) {
-    assert(!::resHandlerPtr);
-    ::resHandlerPtr = addr;
-}
-
-ResHandler * getgResHandlerPtr() noexcept { return ::resHandlerPtr; }

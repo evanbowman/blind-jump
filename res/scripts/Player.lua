@@ -47,11 +47,22 @@ local updateAnimation = function(this, dt, maxFrame, decoder)
    end
 end
 
+local floorVertKeyframes = function(this)
+   if currentSprite == "playerUpSprite" or
+   currentSprite == "playerDownSprite" then
+      local currentFrame = entity.getKeyframe(this)
+      if currentFrame > 4 then
+	 entity.setKeyframe(this, 0)
+      end
+   end
+end
+
 local keyResponse = function(this, key1, key2, key3, key4, sprite)
    if key1 then
       if not key2 and not key3 and not key4 then
 	 entity.setSprite(this, sprite)
 	 currentSprite = sprite
+	 floorVertKeyframes(this)
       end
       if key3 or key4 then
 	 return 1.70

@@ -36,7 +36,3 @@ private:
     std::map<std::string, sf::Font> fonts;
     std::map<std::string, sf::Image> images;
 };
-
-void setgResHandlerPtr(ResHandler *);
-
-ResHandler * getgResHandlerPtr() noexcept;

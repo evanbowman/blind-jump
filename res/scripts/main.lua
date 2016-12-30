@@ -18,7 +18,7 @@ local level = -1
 
 camera.setTarget(player)
 local w, h = camera.getViewportSize()
-camera.displaceFromTarget(0, -h / 4)
+camera.displaceFromTarget(0, -h / 6)
 
 local clearEntitiesOf = function(classname)
    local entitiesList = entity.listAll(classname)
@@ -52,6 +52,7 @@ local setupLevel = function()
       background.createFromSprite(0, "introLevelFloorSprite")
       background.setPosition(0, 305, -231)
       background.setLightingFactor(0, 1)
+      background.createFromColor(1, 19, 59, 65, 255)
       foreground.createFromSprite(0, "introLevelMaskSprite")
       foreground.setPosition(0, 284, -250)
       entity.setPosition(player, playerStart.x, playerStart.y)

@@ -27,9 +27,9 @@ struct ConfigData {
     int framerateLimit;
 };
 
-class Game {
+class Engine {
 public:
-    Game(const ConfigData &);
+    Engine(const ConfigData &);
     void updateLogic(LuaProvider &);
     void updateGraphics();
     void eventLoop();
@@ -55,6 +55,7 @@ private:
     std::vector<Light> m_lights;
     ResHandler m_resHandler;
     bool m_slept;
+    sf::RectangleShape m_overlayRect;
     sf::RenderWindow m_window;
     sf::Time m_elapsedTime;
     BackgroundController m_background;
@@ -78,9 +79,9 @@ private:
 extern const std::array<std::pair<float, float>, 59> levelZeroWalls;
 
 // Foreign function interface for lua requires a pointer
-// to an instance of the game to be accessible...
-void setgGamePtr(Game *);
-Game * getgGamePtr();
+// to an instance of the engine to be accessible...
+void setgEnginePtr(Engine *);
+Engine * getgEnginePtr();
 
 inline ConfigData getConfig(lua_State * state) {
     lua_getglobal(state, "getConf");

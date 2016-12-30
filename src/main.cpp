@@ -1,12 +1,11 @@
 // Start Date: 10/9/15
 // End Date:
 
+#include "Engine.hpp"
 #include "alias.hpp"
-#include "backgroundHandler.hpp"
 #include "calc.hpp"
 #include "config.h"
 #include "framework/smartThread.hpp"
-#include "game.hpp"
 #include "inputController.hpp"
 #include "json.hpp"
 #include "resourceHandler.hpp"
@@ -19,7 +18,7 @@
 #include <iostream>
 #include <stdexcept>
 
-std::exception_ptr pWorkerException = nullptr;
+std::exception_ptr pExceptionSignal = nullptr;
 
 microseconds logicUpdateThrottle(0);
 
@@ -28,20 +27,20 @@ int main() {
     try {
         LuaProvider luaProv;
         luaProv.runScriptFromFile(resourcePath() + "scripts/conf.lua");
-        Game game(luaProv.applyHook(getConfig));
+        Engine engine(luaProv.applyHook(getConfig));
         {
             json resourcesJSON;
             std::fstream resourcesJSONRaw(resourcePath() + "resources.json");
             resourcesJSONRaw >> resourcesJSON;
             try {
-                game.getResHandler().loadFromJSON(resourcesJSON);
+                engine.getResHandler().loadFromJSON(resourcesJSON);
             } catch (const std::exception & ex) {
                 std::string err("Error: failed to parse resources file; ");
                 std::cout << err + ex.what() << std::endl;
                 return EXIT_FAILURE;
             }
-            game.init();
-            setgGamePtr(&game);
+            engine.init();
+            setgEnginePtr(&engine);
             json::iterator entryPt = resourcesJSON.find("main");
             if (entryPt == resourcesJSON.end()) {
                 throw std::runtime_error(
@@ -50,22 +49,22 @@ int main() {
             luaProv.runScriptFromFile(resourcePath() +
                                       entryPt->get<std::string>());
         }
-        framework::SmartThread logicThread([&game, &luaProv]() {
+        framework::SmartThread logicThread([&engine, &luaProv]() {
             duration logicUpdateDelta;
-            sf::Clock gameClock;
+            sf::Clock logicClock;
             try {
-                while (game.getWindow().isOpen()) {
+                while (engine.getWindow().isOpen()) {
                     time_point start = high_resolution_clock::now();
-                    game.setElapsedTime(gameClock.restart());
-                    if (game.hasSlept()) {
+                    engine.setElapsedTime(logicClock.restart());
+                    if (engine.hasSlept()) {
                         // IMPORTANT:
                         // This is necessary, otherwise calls to
-                        // Game::setSleep would screw with delta
+                        // Engine::setSleep would screw with delta
                         // timing for game logic.
-                        game.setElapsedTime(gameClock.restart());
-                        game.clearSleptFlag();
+                        engine.setElapsedTime(logicClock.restart());
+                        engine.clearSleptFlag();
                     }
-                    game.updateLogic(luaProv);
+                    engine.updateLogic(luaProv);
                     time_point stop = high_resolution_clock::now();
                     logicUpdateDelta =
                         std::chrono::duration_cast<nanoseconds>(stop - start);
@@ -73,16 +72,16 @@ int main() {
                                                 logicUpdateDelta);
                 }
             } catch (...) {
-                ::pWorkerException = std::current_exception();
+                ::pExceptionSignal = std::current_exception();
                 return;
             }
         });
-        while (game.getWindow().isOpen()) {
-            game.eventLoop();
-            game.updateGraphics();
-            if (::pWorkerException) {
-                game.getWindow().close();
-                std::rethrow_exception(::pWorkerException);
+        while (engine.getWindow().isOpen()) {
+            engine.eventLoop();
+            engine.updateGraphics();
+            if (::pExceptionSignal) {
+                engine.getWindow().close();
+                std::rethrow_exception(::pExceptionSignal);
             }
         }
     } catch (const std::exception & ex) {

@@ -1,4 +1,5 @@
 #include "soundController.hpp"
+#include "Engine.hpp"
 
 static const std::string musicPaths[] = {"music/Frostellar.ogg"};
 
@@ -42,7 +43,7 @@ void SoundController::update() {
     if (!soundRequests.empty()) {
         for (const auto req : soundRequests) {
             runningSounds.emplace_back(
-                getgResHandlerPtr()->getSound(req.soundname));
+		getgEnginePtr()->getResHandler().getSound(req.soundname));
             runningSounds.back().setMinDistance(req.minDistance);
             runningSounds.back().setAttenuation(req.attenuation);
             runningData.push_back({req.source, req.spatialized});

@@ -40,7 +40,8 @@ public:
     LockedRef<LayerMap> getFgLayers();
 
 private:
-    std::mutex m_layersMutex;
+    std::mutex m_fgLayersMutex;
+    std::mutex m_bgLayersMutex;
     std::map<int, Layer> m_bkgLayers;
     std::map<int, Layer> m_fgLayers;
 };

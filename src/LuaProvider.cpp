@@ -1,10 +1,10 @@
 #include "LuaProvider.hpp"
-#include "game.hpp"
+#include "Engine.hpp"
 
 extern microseconds logicUpdateThrottle;
 
-// GAME API
-//     Provides access to Game data from lua scripts.
+// ENGINE API
+//     Provides access to Engine data from lua scripts.
 extern "C" {
 static const std::string paramErr =
     "Error: wrong number of parameters for function ";
@@ -19,7 +19,7 @@ static const luaL_Reg systemLibFuncs[] = {
      }},
     {"sleep",
      [](lua_State * state) {
-         getgGamePtr()->setSleep(
+         getgEnginePtr()->setSleep(
              std::chrono::microseconds(lua_tointeger(state, 1)));
          return 0;
      }},
@@ -35,19 +35,19 @@ static const luaL_Reg systemLibFuncs[] = {
      }},
     {"setVerticalSyncEnabled",
      [](lua_State * state) {
-         sf::RenderWindow & window = getgGamePtr()->getWindow();
+         sf::RenderWindow & window = getgEnginePtr()->getWindow();
          window.setVerticalSyncEnabled(lua_toboolean(state, 1));
          return 0;
      }},
     {"setFramerateLimit",
      [](lua_State * state) {
-         sf::RenderWindow & window = getgGamePtr()->getWindow();
+         sf::RenderWindow & window = getgEnginePtr()->getWindow();
          window.setFramerateLimit(lua_tointeger(state, 1));
          return 0;
      }},
     {"setCursorVisible",
      [](lua_State * state) {
-         sf::RenderWindow & window = getgGamePtr()->getWindow();
+         sf::RenderWindow & window = getgEnginePtr()->getWindow();
          window.setMouseCursorVisible(lua_toboolean(state, 1));
          return 0;
      }},
@@ -62,8 +62,8 @@ static const luaL_Reg systemLibFuncs[] = {
 static const luaL_Reg foregroundLibFuncs[] = {
     {"createFromSprite",
      [](lua_State * state) {
-         BackgroundController & bkg = getgGamePtr()->getBackground();
-         ResHandler & resources = getgGamePtr()->getResHandler();
+         BackgroundController & bkg = getgEnginePtr()->getBackground();
+         ResHandler & resources = getgEnginePtr()->getResHandler();
          const std::string name(lua_tostring(state, 2));
          bkg.addFgLayer(lua_tointeger(state, 1),
                         {{&resources.getSheet(name), 0.f,
@@ -76,7 +76,7 @@ static const luaL_Reg foregroundLibFuncs[] = {
      }},
     {"setPosition",
      [](lua_State * state) {
-         BackgroundController & bkg = getgGamePtr()->getBackground();
+         BackgroundController & bkg = getgEnginePtr()->getBackground();
          auto layers = bkg.getFgLayers();
          const float x = lua_tonumber(state, 2);
          const float y = lua_tonumber(state, 3);
@@ -92,7 +92,7 @@ static const luaL_Reg foregroundLibFuncs[] = {
      }},
     {"setLightingFactor",
      [](lua_State * state) {
-         BackgroundController & bkg = getgGamePtr()->getBackground();
+         BackgroundController & bkg = getgEnginePtr()->getBackground();
          auto layers = bkg.getFgLayers();
          const float a = lua_tonumber(state, 2);
          layers.resource.get()[lua_tointeger(state, 1)].absorptivity = a;
@@ -103,8 +103,8 @@ static const luaL_Reg foregroundLibFuncs[] = {
 static const luaL_Reg backgroundLibFuncs[] = {
     {"createFromSprite",
      [](lua_State * state) {
-         BackgroundController & bkg = getgGamePtr()->getBackground();
-         ResHandler & resources = getgGamePtr()->getResHandler();
+         BackgroundController & bkg = getgEnginePtr()->getBackground();
+         ResHandler & resources = getgEnginePtr()->getResHandler();
          const std::string name(lua_tostring(state, 2));
          bkg.addBkgLayer(lua_tointeger(state, 1),
                          {{&resources.getSheet(name), 0.f,
@@ -117,20 +117,21 @@ static const luaL_Reg backgroundLibFuncs[] = {
      }},
     {"createFromColor",
      [](lua_State * state) {
-         BackgroundController & bkg = getgGamePtr()->getBackground();
+         BackgroundController & bkg = getgEnginePtr()->getBackground();
          const uint8_t r = lua_tointeger(state, 2);
          const uint8_t g = lua_tointeger(state, 3);
          const uint8_t b = lua_tointeger(state, 4);
          const uint8_t a = lua_tointeger(state, 5);
          bkg.addBkgLayer(lua_tointeger(state, 1), {{.colorLayer = {r, g, b, a}},
                                                    Layer::Source::color,
-                                                   1.f,
-                                                   nullptr});
+                                                   0.f,
+                                                   nullptr,
+                                                   sf::BlendAlpha});
          return 0;
      }},
     {"setPosition",
      [](lua_State * state) {
-         BackgroundController & bkg = getgGamePtr()->getBackground();
+         BackgroundController & bkg = getgEnginePtr()->getBackground();
          auto layers = bkg.getBkgLayers();
          const float x = lua_tonumber(state, 2);
          const float y = lua_tonumber(state, 3);
@@ -146,7 +147,7 @@ static const luaL_Reg backgroundLibFuncs[] = {
      }},
     {"setLightingFactor",
      [](lua_State * state) {
-         BackgroundController & bkg = getgGamePtr()->getBackground();
+         BackgroundController & bkg = getgEnginePtr()->getBackground();
          auto layers = bkg.getBkgLayers();
          const float a = lua_tonumber(state, 2);
          layers.resource.get()[lua_tointeger(state, 1)].absorptivity = a;
@@ -160,7 +161,7 @@ static const luaL_Reg envLibFuncs[] = {
          const uint8_t r = lua_tointeger(state, 1);
          const uint8_t g = lua_tointeger(state, 2);
          const uint8_t b = lua_tointeger(state, 3);
-         getgGamePtr()->setNaturalLight({r, g, b});
+         getgEnginePtr()->setNaturalLight({r, g, b});
          return 0;
      }},
     {}};
@@ -169,27 +170,27 @@ static const luaL_Reg cameraLibFuncs[] = {
     {"setTarget",
      [](lua_State * state) {
          auto entity = static_cast<EntityRef *>(lua_touserdata(state, 1));
-         getgGamePtr()->getCamera().setTarget(*entity);
+         getgEnginePtr()->getCamera().setTarget(*entity);
          return 0;
      }},
     {"displaceFromTarget",
      [](lua_State * state) {
          const float x = lua_tonumber(state, 1);
          const float y = lua_tonumber(state, 2);
-         getgGamePtr()->getCamera().setOffset({x, y});
+         getgEnginePtr()->getCamera().setOffset({x, y});
          return 0;
      }},
     {"getViewportSize",
      [](lua_State * state) {
          auto viewsize =
-             getgGamePtr()->getCamera().getOverworldView().getSize();
+             getgEnginePtr()->getCamera().getOverworldView().getSize();
          lua_pushnumber(state, viewsize.x);
          lua_pushnumber(state, viewsize.y);
          return 2;
      }},
     {"snapToTarget",
      [](lua_State * state) {
-         getgGamePtr()->getCamera().snapToTarget();
+         getgEnginePtr()->getCamera().snapToTarget();
          return 0;
      }},
     {}};
@@ -200,9 +201,9 @@ static const luaL_Reg lightLibFuncs[] = {
          const std::string sheetName = lua_tostring(state, 1);
          const float x = lua_tonumber(state, 2);
          const float y = lua_tonumber(state, 3);
-         Game * pGame = getgGamePtr();
-         ResHandler & resources = pGame->getResHandler();
-         auto & lights = pGame->getLights();
+         Engine * pEngine = getgEnginePtr();
+         ResHandler & resources = pEngine->getResHandler();
+         auto & lights = pEngine->getLights();
          lights.emplace_back();
          lights.back().setSheet(&resources.getSheet(sheetName));
          lights.back().setPosition({x, y});
@@ -225,8 +226,8 @@ static const luaL_Reg lightLibFuncs[] = {
      }},
     {"listAll",
      [](lua_State * state) {
-         Game * pGame = getgGamePtr();
-         auto & lights = pGame->getLights();
+         Engine * pEngine = getgEnginePtr();
+         auto & lights = pEngine->getLights();
          lua_newtable(state);
          for (int i = 0; i < lights.size(); ++i) {
              lua_pushlightuserdata(state, &lights[i]);
@@ -240,8 +241,8 @@ static const luaL_Reg inputLibFuncs[] = {
     {"keyPressed",
      [](lua_State * state) {
          int keyCode = lua_tointeger(state, 1);
-         Game * pGame = getgGamePtr();
-         InputController & input = pGame->getInputController();
+         Engine * pEngine = getgEnginePtr();
+         InputController & input = pEngine->getInputController();
          lua_pushboolean(state, input.getKeyState(keyCode) == 1);
          return 1;
      }},
@@ -306,9 +307,9 @@ static const luaL_Reg entityLibFuncs[] = {
          const std::string classname = lua_tostring(state, 1);
          const float x = lua_tonumber(state, 2);
          const float y = lua_tonumber(state, 3);
-         Game * pGame = getgGamePtr();
-         auto & entityTable = pGame->getEntityTable();
-         auto & vec = pGame->getEntityTable()[classname];
+         Engine * pEngine = getgEnginePtr();
+         auto & entityTable = pEngine->getEntityTable();
+         auto & vec = pEngine->getEntityTable()[classname];
          vec.push_back(std::make_shared<Entity>());
          vec.back()->setPosition(sf::Vector2f(x, y));
          lua_getglobal(state, "classes");
@@ -387,8 +388,8 @@ static const luaL_Reg entityLibFuncs[] = {
          const char * soundName = lua_tostring(state, 2);
          const float minDist = lua_tonumber(state, 3);
          const float attenuation = lua_tonumber(state, 4);
-         Game * pGame = getgGamePtr();
-         auto & sounds = pGame->getSounds();
+         Engine * pEngine = getgEnginePtr();
+         auto & sounds = pEngine->getSounds();
          sounds.play(soundName, *entity, minDist, attenuation, false);
          return 0;
      }},
@@ -410,8 +411,8 @@ static const luaL_Reg entityLibFuncs[] = {
      [](lua_State * state) {
          auto entity = (*static_cast<EntityRef *>(lua_touserdata(state, 1)));
          const std::string sheetName = lua_tostring(state, 2);
-         auto resources = getgResHandlerPtr();
-         entity->setSheet(&resources->getSheet(sheetName));
+         auto & resources = getgEnginePtr()->getResHandler();
+         entity->setSheet(&resources.getSheet(sheetName));
          return 0;
      }},
     {"setZOrder",
@@ -429,8 +430,8 @@ static const luaL_Reg entityLibFuncs[] = {
      }},
     {"listAll",
      [](lua_State * state) {
-         Game * pGame = getgGamePtr();
-         EntityTable & tab = pGame->getEntityTable();
+         Engine * pEngine = getgEnginePtr();
+         EntityTable & tab = pEngine->getEntityTable();
          // FIXME: this code is unsafe, map entry may not exist...
          auto & entityList = tab[lua_tostring(state, 1)];
          lua_newtable(state);
@@ -448,7 +449,7 @@ static const luaL_Reg entityLibFuncs[] = {
      }},
     {"__sweep__",
      [](lua_State * state) {
-         EntityTable & tab = getgGamePtr()->getEntityTable();
+         EntityTable & tab = getgEnginePtr()->getEntityTable();
          auto & entityList = tab[lua_tostring(state, 1)];
          for (auto it = entityList.begin(); it != entityList.end();) {
              if ((*it)->getKillFlag()) {

@@ -1,8 +1,8 @@
-#include "game.hpp"
+#include "Engine.hpp"
 #include "ResourcePath.hpp"
 #include "math.h"
 
-Game::Game(const ConfigData & conf)
+Engine::Engine(const ConfigData & conf)
     : m_drawableArea(conf.drawableArea), m_slept(false),
       m_window(sf::VideoMode::getDesktopMode(), EXECUTABLE_NAME,
                sf::Style::Fullscreen, sf::ContextSettings(0, 0, 6)),
@@ -21,24 +21,21 @@ Game::Game(const ConfigData & conf)
     windowView.zoom(visibleArea);
     m_camera.setWindowView(windowView);
     m_gfxContext.targetRef = &m_target;
-    // TODO: refactor out global pointer! (only needed for old C++ logic)
-    setgResHandlerPtr(&m_resHandler);
 }
 
-void Game::init() {
+void Engine::init() {
     m_target.create(m_drawableArea.x, m_drawableArea.y);
+    m_overlayRect.setSize(m_drawableArea);
     m_lightingMap.create(m_drawableArea.x, m_drawableArea.y);
-    m_vignetteSprite.setTexture(
-        getgResHandlerPtr()->getTexture("textures/vignetteMask.png"));
-    m_vignetteShadowSpr.setTexture(
-        getgResHandlerPtr()->getTexture("textures/vignetteShadow.png"));
+    m_vignetteSprite.setTexture(m_resHandler.getTexture("textures/vignetteMask.png"));
+    m_vignetteShadowSpr.setTexture(m_resHandler.getTexture("textures/vignetteShadow.png"));
     m_vignetteShadowSpr.setColor(sf::Color(255, 255, 255, 100));
     m_hudView.setSize(m_drawableArea.x, m_drawableArea.y);
     m_hudView.setCenter(m_drawableArea.x / 2, m_drawableArea.y / 2);
     m_vignetteSprite.setColor(sf::Color::White);
 }
 
-void Game::eventLoop() {
+void Engine::eventLoop() {
     sf::Event event;
     while (m_window.pollEvent(event)) {
         switch (event.type) {
@@ -70,7 +67,7 @@ void Game::eventLoop() {
     }
 }
 
-void Game::updateGraphics() {
+void Engine::updateGraphics() {
     m_window.clear(sf::Color(128, 128, 128));
     if (!m_hasFocus) {
         this->setSleep(std::chrono::microseconds(200000));
@@ -108,6 +105,28 @@ void Game::updateGraphics() {
     }
     const auto drawLayer = [this](auto it) {
         Layer & l = it->second;
+        const auto drawLights = [this, &l] {
+            for (auto & lightSpr : m_gfxContext.glowSprs) {
+                const sf::Vector2f lightAbsPos = lightSpr.getPosition();
+                const sf::Vector2f lightRelativePos{
+                    lightAbsPos.x - l.data.spriteLayer.x,
+                    lightAbsPos.y - l.data.spriteLayer.y};
+                const uint8_t brightness = l.absorptivity * 255;
+                lightSpr.setColor({brightness, brightness, brightness});
+                lightSpr.setPosition(lightRelativePos);
+                l.canvas->draw(lightSpr,
+                               sf::BlendMode(sf::BlendMode(
+                                   sf::BlendMode::SrcAlpha, sf::BlendMode::One,
+                                   sf::BlendMode::Add, sf::BlendMode::DstAlpha,
+                                   sf::BlendMode::Zero, sf::BlendMode::Add)));
+                lightSpr.setPosition(lightAbsPos);
+                lightSpr.setColor(sf::Color::White);
+            }
+            l.canvas->display();
+            sf::Sprite canvasSpr(l.canvas->getTexture());
+            canvasSpr.setPosition(l.data.spriteLayer.x, l.data.spriteLayer.y);
+            m_target.draw(canvasSpr, l.blending);
+        };
         switch (l.source) {
         case Layer::Source::sprite: {
             m_target.setView(m_camera.getOverworldView());
@@ -120,41 +139,32 @@ void Game::updateGraphics() {
                     l.canvas->create(textureSize.x, textureSize.y);
                 }
                 l.canvas->clear(sf::Color::Transparent);
-		spr.setColor(m_naturalLight);
+                spr.setColor(m_naturalLight);
                 l.canvas->draw(spr);
-		spr.setColor(sf::Color::White);
-                for (auto & lightSpr : m_gfxContext.glowSprs) {
-                    const sf::Vector2f lightAbsPos = lightSpr.getPosition();
-                    const sf::Vector2f lightRelativePos{
-                        lightAbsPos.x - l.data.spriteLayer.x,
-                        lightAbsPos.y - l.data.spriteLayer.y};
-                    const uint8_t brightness = l.absorptivity * 255;
-                    lightSpr.setColor({brightness, brightness, brightness});
-                    lightSpr.setPosition(lightRelativePos);
-                    l.canvas->draw(
-                        lightSpr,
-                        sf::BlendMode(sf::BlendMode(
-                            sf::BlendMode::SrcAlpha, sf::BlendMode::One,
-                            sf::BlendMode::Add, sf::BlendMode::DstAlpha,
-                            sf::BlendMode::Zero, sf::BlendMode::Add)));
-                    lightSpr.setPosition(lightAbsPos);
-                    lightSpr.setColor(sf::Color::White);
-                }
-                l.canvas->display();
-                sf::Sprite canvasSpr(l.canvas->getTexture());
-                canvasSpr.setPosition(l.data.spriteLayer.x,
-                                      l.data.spriteLayer.y);
-                m_target.draw(canvasSpr, l.blending);
+                spr.setColor(sf::Color::White);
+                drawLights();
             } else {
-                if (l.canvas)
+                if (l.canvas) {
                     l.canvas = nullptr;
+                }
+                spr.setColor(sf::Color::White);
                 spr.setPosition(l.data.spriteLayer.x, l.data.spriteLayer.y);
                 m_target.draw(spr, l.blending);
             }
         } break;
 
         case Layer::Source::color: {
-            throw std::runtime_error("Error: color layers unimplemented");
+            if (l.absorptivity > 0.f) {
+                // TODO...
+            } else {
+                if (l.canvas) {
+                    l.canvas = nullptr;
+                }
+                m_target.setView(m_worldView);
+                ColorLayer::Color & c = l.data.colorLayer.color;
+                m_overlayRect.setFillColor({c.r, c.g, c.b, c.a});
+                m_target.draw(m_overlayRect, l.blending);
+            }
         } break;
         }
     };
@@ -175,8 +185,7 @@ void Game::updateGraphics() {
               });
     static const size_t sprIdx = 0;
     static const size_t shaderIdx = 3;
-    sf::Shader & colorShader =
-        getgResHandlerPtr()->getShader("shaders/color.frag");
+    sf::Shader & colorShader = m_resHandler.getShader("shaders/color.frag");
     for (auto & element : m_gfxContext.faces) {
         switch (std::get<2>(element)) {
         case Rendertype::shadeDefault:
@@ -248,7 +257,7 @@ const char * heartBeatFn =
      end";
 // clang-format on
 
-void Game::updateLogic(LuaProvider & luaProv) {
+void Engine::updateLogic(LuaProvider & luaProv) {
     if (!m_hasFocus) {
         this->setSleep(std::chrono::microseconds(200));
         return;
@@ -268,43 +277,43 @@ void Game::updateLogic(LuaProvider & luaProv) {
     m_camera.update(m_elapsedTime, cameraTargets);
 }
 
-bool Game::hasSlept() const { return m_slept; }
+bool Engine::hasSlept() const { return m_slept; }
 
-void Game::clearSleptFlag() { m_slept = false; }
+void Engine::clearSleptFlag() { m_slept = false; }
 
-void Game::setSleep(const std::chrono::microseconds & time) {
+void Engine::setSleep(const std::chrono::microseconds & time) {
     m_slept = true;
     std::this_thread::sleep_for(time);
 }
 
-Camera & Game::getCamera() { return m_camera; }
+Camera & Engine::getCamera() { return m_camera; }
 
-InputController & Game::getInputController() { return m_input; }
+InputController & Engine::getInputController() { return m_input; }
 
-SoundController & Game::getSounds() { return m_sounds; }
+SoundController & Engine::getSounds() { return m_sounds; }
 
-BackgroundController & Game::getBackground() { return m_background; }
+BackgroundController & Engine::getBackground() { return m_background; }
 
-sf::RenderWindow & Game::getWindow() { return m_window; }
+sf::RenderWindow & Engine::getWindow() { return m_window; }
 
-ResHandler & Game::getResHandler() { return m_resHandler; }
+ResHandler & Engine::getResHandler() { return m_resHandler; }
 
-const sf::Time & Game::getElapsedTime() { return m_elapsedTime; }
+const sf::Time & Engine::getElapsedTime() { return m_elapsedTime; }
 
-void Game::setElapsedTime(const sf::Time & elapsedTime) {
+void Engine::setElapsedTime(const sf::Time & elapsedTime) {
     m_elapsedTime = elapsedTime;
 }
 
-static Game * pGame;
+static Engine * pEngine;
 
-void setgGamePtr(Game * pGame) { ::pGame = pGame; }
+void setgEnginePtr(Engine * pEngine) { ::pEngine = pEngine; }
 
-Game * getgGamePtr() { return ::pGame; }
+Engine * getgEnginePtr() { return ::pEngine; }
 
-EntityTable & Game::getEntityTable() { return m_entityTable; }
+EntityTable & Engine::getEntityTable() { return m_entityTable; }
 
-std::vector<Light> & Game::getLights() { return m_lights; }
+std::vector<Light> & Engine::getLights() { return m_lights; }
 
-void Game::setNaturalLight(const sf::Color & naturalLight) {
+void Engine::setNaturalLight(const sf::Color & naturalLight) {
     m_naturalLight = naturalLight;
 }
