@@ -3,16 +3,20 @@
 
 extern microseconds logicUpdateThrottle;
 
-static size_t eid;
+static unsigned long long eid;
 
-static std::map<size_t, EntityRef *> translationTable;
+// Translates from a eid to the shared pointer to the actual entity object.
+// Unique ids are slightly better more secure than exposing pointers used by the
+// engine to lua scripts.
+static std::map<unsigned long long, EntityRef> translationTable;
 
-static inline EntityRef * getEntityFromEid(const size_t id) {
+static inline EntityRef getEntityFromEid(const size_t id) {
     auto it = translationTable.find(id);
     if (it != translationTable.end()) {
 	return it->second;
     }
-    throw std::runtime_error("Error: attempt to access nonexsistent entity");
+    throw std::runtime_error("Error: attempt to access nonexsistent entity at EID: " +
+			     std::to_string(id));
 }
 
 // ENGINE API
@@ -141,6 +145,13 @@ static const luaL_Reg foregroundLibFuncs[] = {
          layers.resource.get()[lua_tointeger(state, 1)].lightingFactor = a;
          return 0;
      }},
+    {"destroy",
+     [](lua_State * state) {
+	 BackgroundController & bkg = getgEnginePtr()->getBackground();
+	 auto layers = bkg.getFgLayers();
+	 layers.resource.get().erase(layers.resource.get().find(lua_tointeger(state, 1)));
+	 return 0;
+     }},
     {}};
 
 static const luaL_Reg backgroundLibFuncs[] = {
@@ -213,6 +224,13 @@ static const luaL_Reg backgroundLibFuncs[] = {
          layers.resource.get()[lua_tointeger(state, 1)].lightingFactor = a;
          return 0;
      }},
+    {"destroy",
+     [](lua_State * state) {
+	 BackgroundController & bkg = getgEnginePtr()->getBackground();
+	 auto layers = bkg.getBkgLayers();
+	 layers.resource.get().erase(layers.resource.get().find(lua_tointeger(state, 1)));
+	 return 0;
+     }},
     {}};
 
 static const luaL_Reg envLibFuncs[] = {
@@ -230,8 +248,8 @@ static const luaL_Reg cameraLibFuncs[] = {
     {"setTarget",
      [](lua_State * state) {
          auto entity = getEntityFromEid(lua_tointeger(state, 1));
-	 getgEnginePtr()->getCamera().setTarget(*entity);
-         return 0;
+	 getgEnginePtr()->getCamera().setTarget(entity);
+	 return 0;
      }},
     {"displaceFromTarget",
      [](lua_State * state) {
@@ -289,10 +307,11 @@ static const luaL_Reg lightLibFuncs[] = {
          Engine * pEngine = getgEnginePtr();
          auto & lights = pEngine->getLights();
          lua_newtable(state);
-         for (int i = 0; i < lights.size(); ++i) {
-             lua_pushlightuserdata(state, &lights[i]);
-             lua_rawseti(state, -2, i + 1);
-         }
+	 int i = 0;
+	 for (auto it = lights.begin(); it != lights.end(); ++it) {
+	     lua_pushlightuserdata(state, &(*it));
+             lua_rawseti(state, -2, ++i);
+	 }
          return 1;
      }},
     {}};
@@ -369,12 +388,15 @@ static const luaL_Reg entityLibFuncs[] = {
          const float y = lua_tonumber(state, 3);
          Engine * pEngine = getgEnginePtr();
          auto & entityTable = pEngine->getEntityTable();
-         auto & vec = pEngine->getEntityTable()[classname];
-         vec.push_back(std::make_shared<Entity>());
-         vec.back()->setPosition(sf::Vector2f(x, y));
+         auto & list = pEngine->getEntityTable()[classname];
+         list.push_back(std::make_shared<Entity>());
+         list.back()->setPosition(sf::Vector2f(x, y));
 	 ::eid += 1;
-	 translationTable[::eid] = &vec.back();
-	 vec.back()->setEid(::eid);
+	 ::translationTable[::eid] = list.back();
+	 list.back()->setEid(::eid);
+	 list.back()->setClassContainerIter(entityTable.find(classname));
+	 auto listBackIter = list.end();
+	 list.back()->setListContainerIter(--listBackIter);
          lua_getglobal(state, "classes");
          if (!lua_istable(state, -1)) {
              throw std::runtime_error("Error: missing classtable");
@@ -389,18 +411,19 @@ static const luaL_Reg entityLibFuncs[] = {
          if (!lua_isfunction(state, -1)) {
              const std::string err =
                  "Error: missing or malformed OnUpdate for class " + classname;
+	     throw std::runtime_error(err);
          }
          lua_pushinteger(state, ::eid);
          if (lua_pcall(state, 1, 0, 0)) {
              throw std::runtime_error(lua_tostring(state, -1));
          }
-	 lua_pushinteger(state, ::eid);
+	 lua_pushinteger(state, list.back()->getEid());
          return 1;
      }},
     {"getPosition",
      [](lua_State * state) {
 	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
-	 auto & pos = (*entity)->getPosition();
+	 auto & pos = entity->getPosition();
 	 lua_pushnumber(state, pos.x);
 	 lua_pushnumber(state, pos.y);
          return 2;
@@ -408,91 +431,114 @@ static const luaL_Reg entityLibFuncs[] = {
     {"setPosition",
      [](lua_State * state) {
 	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
-         float x = lua_tonumber(state, 2);
-         float y = lua_tonumber(state, 3);
-         (*entity)->setPosition(sf::Vector2f(x, y));
+	 float x = lua_tonumber(state, 2);
+	 float y = lua_tonumber(state, 3);
+	 entity->setPosition(sf::Vector2f(x, y));
          return 0;
      }},
     {"destroy",
      [](lua_State * state) {
 	 const size_t id = lua_tointeger(state, 1);
-	 auto it = translationTable.find(id);
+	 auto it = ::translationTable.find(id);
 	 if (it != translationTable.end()) {
-	     it->second->get()->setKillFlag();
+	     auto & className = it->second->getClassName();
+	     EntityTable & tab = getgEnginePtr()->getEntityTable();
+	     auto & entityList = tab[className];
+	     lua_getglobal(state, "classes");
+	     lua_getfield(state, -1, className.c_str());
+	     lua_getfield(state, -1, "onDestroy");
+	     if (lua_isnil(state, -1)) {
+		 lua_pop(state, 1);
+	     } else {
+		 lua_pushinteger(state, it->second->getEid());
+		 lua_pcall(state, 1, 0, 0);
+	     }
+	     for (auto & member : it->second->getMemberTable()) {
+		 luaL_unref(state, LUA_REGISTRYINDEX, member.second);
+	     }
+	     lua_pop(state, 2);
+	     entityList.erase(it->second->getListIterToSelf());
 	     translationTable.erase(it);
 	 }
          return 0;
      }},
+    {"checkExists",
+     [](lua_State * state) {
+	 const size_t id = lua_tointeger(state, 1);
+	 auto it = ::translationTable.find(id);
+	 lua_pushboolean(state, it != ::translationTable.end());
+	 return 1;
+     }},
     {"setField",
      [](lua_State * state) {
 	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
-         const int varIndex = lua_tointeger(state, 2);
-         auto & members = (*entity)->getMemberTable();
-         if (members.find(varIndex) != members.end()) {
-             luaL_unref(state, LUA_REGISTRYINDEX, members[varIndex]);
-         }
-         lua_pushvalue(state, 3);
-         members[varIndex] = luaL_ref(state, LUA_REGISTRYINDEX);
+	 const int varIndex = lua_tointeger(state, 2);
+	 auto & members = entity->getMemberTable();
+	 if (members.find(varIndex) != members.end()) {
+	     luaL_unref(state, LUA_REGISTRYINDEX, members[varIndex]);
+	 }
+	 lua_pushvalue(state, 3);
+	 members[varIndex] = luaL_ref(state, LUA_REGISTRYINDEX);
          return 0;
      }},
     {"getField",
      [](lua_State * state) {
 	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
-         const int varIndex = lua_tointeger(state, 2);
-         auto & members = (*entity)->getMemberTable();
-         if (members.find(varIndex) == members.end()) {
-             const std::string err =
-                 "Error: member " + std::to_string(varIndex) + " lookup failed";
-             throw std::runtime_error(err);
-         }
-         int ref = members[varIndex];
-         lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
+	 const int varIndex = lua_tointeger(state, 2);
+	 auto & members = entity->getMemberTable();
+	 if (members.find(varIndex) == members.end()) {
+	     const std::string err =
+		 "Error: member " + std::to_string(varIndex) + " lookup failed";
+	     throw std::runtime_error(err);
+	 }
+	 int ref = members[varIndex];
+	 lua_rawgeti(state, LUA_REGISTRYINDEX, ref);
          return 1;
      }},
     {"emitSound",
      [](lua_State * state) {
 	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
-         const char * soundName = lua_tostring(state, 2);
-         const float minDist = lua_tonumber(state, 3);
-         const float attenuation = lua_tonumber(state, 4);
-         Engine * pEngine = getgEnginePtr();
-         auto & sounds = pEngine->getSounds();
-         sounds.play(soundName, *entity, minDist, attenuation, false);
+	 const char * soundName = lua_tostring(state, 2);
+	 const float minDist = lua_tonumber(state, 3);
+	 const float attenuation = lua_tonumber(state, 4);
+	 Engine * pEngine = getgEnginePtr();
+	 auto & sounds = pEngine->getSounds();
+	 sounds.play(soundName, entity, minDist, attenuation, false);
          return 0;
      }},
     {"setKeyframe",
      [](lua_State * state) {
 	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
-         const int frameno = lua_tointeger(state, 2);
-         (*entity)->setKeyframe(frameno);
+	 const int frameno = lua_tointeger(state, 2);
+	 entity->setKeyframe(frameno);
          return 0;
      }},
     {"getKeyframe",
      [](lua_State * state) {
 	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
-         const int frameno = (*entity)->getKeyframe();
-         lua_pushinteger(state, frameno);
+	 const int frameno = entity->getKeyframe();
+	 lua_pushinteger(state, frameno);
          return 1;
      }},
     {"setSprite",
      [](lua_State * state) {
 	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
-         const std::string sheetName = lua_tostring(state, 2);
-         auto & resources = getgEnginePtr()->getResHandler();
-         (*entity)->setSheet(&resources.getSheet(sheetName));
+	 const std::string sheetName = lua_tostring(state, 2);
+	 auto & resources = getgEnginePtr()->getResHandler();
+	 entity->setSheet(&resources.getSheet(sheetName));
          return 0;
      }},
     {"setZOrder",
      [](lua_State * state) {
 	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
-         const float z = lua_tonumber(state, 2);
-         (*entity)->setZOrder(z);
+	 const float z = lua_tonumber(state, 2);
+	 entity->setZOrder(z);
          return 0;
      }},
     {"getZOrder",
      [](lua_State * state) {
 	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
-         lua_pushnumber(state, (*entity)->getZOrder());
+         lua_pushnumber(state, entity->getZOrder());
          return 1;
      }},
     {"listAll",
@@ -500,32 +546,16 @@ static const luaL_Reg entityLibFuncs[] = {
          Engine * pEngine = getgEnginePtr();
          EntityTable & tab = pEngine->getEntityTable();
          // FIXME: this code is unsafe, map entry may not exist...
-         auto & entityList = tab[lua_tostring(state, 1)];
+	 const char * strParam = lua_tostring(state, 1);
+         auto & entityList = tab[strParam];
          lua_newtable(state);
          int i = 0;
          for (auto it = entityList.begin(); it != entityList.end();) {
-             if ((*it)->getKillFlag()) {
-                 it = entityList.erase(it);
-             } else {
-		 lua_pushinteger(state, (*it)->getEid());
-                 lua_rawseti(state, -2, ++i);
-                 ++it;
-             }
+	     lua_pushinteger(state, (*it)->getEid());
+	     lua_rawseti(state, -2, ++i);
+	     ++it;
          }
          return 1;
-     }},
-    {"__sweep__",
-     [](lua_State * state) {
-         EntityTable & tab = getgEnginePtr()->getEntityTable();
-         auto & entityList = tab[lua_tostring(state, 1)];
-         for (auto it = entityList.begin(); it != entityList.end();) {
-             if ((*it)->getKillFlag()) {
-                 it = entityList.erase(it);
-             } else {
-                 ++it;
-             }
-         }
-         return 0;
      }},
     {}};
 }

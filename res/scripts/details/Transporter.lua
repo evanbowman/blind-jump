@@ -22,6 +22,7 @@ classes["Transporter"] = {
       entity.setZOrder(this, y - 28)
       light.setOrigin(glow, 200, 200)
       entity.setField(this, id.shadow, shadow)
+      entity.setField(this, id.glow, glow)
    end,
 
    onUpdate = function(this)
@@ -33,6 +34,7 @@ classes["Transporter"] = {
 	 entity.setField(player, 1, "deactivated")
 	 entity.setSprite(player, "playerDownSprite")
 	 entity.setKeyframe(player, 5)
+	 nextLevel()
       end
    end,
    

@@ -2,9 +2,15 @@
 #include "spriteSheet.hpp"
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include <list>
 
 class Entity;
 using EntityRef = std::shared_ptr<Entity>;
+
+// Entities are stored in iterator-stable containers with shared ownership scemantics,
+// storing the iterators allows for faster removal
+using ClassContainerIter = std::map<std::string, std::list<EntityRef>>::iterator;
+using ListContainerIter = std::list<EntityRef>::iterator;
 
 class Entity {
     struct SpriteInfo {
@@ -15,6 +21,8 @@ class Entity {
 
 private:
     size_t m_eid;
+    ClassContainerIter m_classContainerIter;
+    ListContainerIter m_listContainerIter;
     sf::Vector2f m_position;
     bool m_killFlag;
     uint16_t m_keyframe;
@@ -28,6 +36,18 @@ public:
           m_sprite{nullptr, {}, {1.f, 1.f}} {}
     inline void setPosition(const sf::Vector2f & position) {
         m_position = position;
+    }
+    inline void setClassContainerIter(ClassContainerIter it) {
+	m_classContainerIter = it;
+    }
+    inline void setListContainerIter(ListContainerIter it) {
+	m_listContainerIter = it;
+    }
+    inline ListContainerIter getListIterToSelf() {
+	return m_listContainerIter;
+    }
+    inline const std::string & getClassName() const {
+	return m_classContainerIter->first;
     }
     inline void setEid(const size_t eid) { m_eid = eid; }
     inline size_t getEid() { return m_eid; }

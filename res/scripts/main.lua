@@ -7,6 +7,8 @@ require("details/Transporter")
 require("details/IntroFloor")
 require("Wall")
 require("Player")
+local utility = require("utility")
+local mapgen = require("mapgen")
 
 system.setVerticalSyncEnabled(true)
 system.setCursorVisible(false)
@@ -19,8 +21,6 @@ local level = -1
 camera.setTarget(player)
 local _, viewportH = camera.getViewportSize()
 camera.displaceFromTarget(0, -viewportH / 6)
-
-local utility = require("utility")
 
 foreground.createFromSprite(0, "vignetteShadowSprite")
 utility.setLayerFixedStretched(0, foreground, 450, 450)
@@ -46,8 +46,11 @@ local cleanupLevel = function()
    if level == 0 then
       clearEntitiesOf("Pod")
       clearEntitiesOf("Door")
+      background.destroy(0)
+      background.destroy(1)
+      foreground.destroy(2)
    elseif level > 0 then
-      -- TODO...
+      background.destroy(2)
    end
    clearEntitiesOf("Lamp")
    clearEntitiesOf("Wall")
@@ -103,7 +106,8 @@ local setupLevel = function()
  	 entity.create("Wall", wallPositions[i].x, wallPositions[i].y)
       end
    elseif level > 0 then
-      -- TODO...
+      background.createFromSprite(2, "spaceGradientSprite")
+      utility.setLayerFixedStretched(2, background, 450, 450)
    end
 end
 
@@ -114,5 +118,3 @@ function nextLevel()
 end
 
 nextLevel()
-
-entity.create("Turret", 350, 200)

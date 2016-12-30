@@ -219,18 +219,18 @@ void Engine::updateGraphics() {
 
 // clang-format off
 const char * heartBeatFn =
-    "__heartBeat__ = function(dt)                       \
-         for k, _ in pairs(classes) do                  \
-             local updateFn = classes[k].onUpdate       \
-             if updateFn then                           \
-                 local handles = entity.listAll(k)      \
-                 for i = 1, #handles do                 \
-                     updateFn(handles[i], dt)           \
-                 end                                    \
-             else                                       \
-                 entity.__sweep__(k)                    \
-             end                                        \
-         end                                            \
+    "__heartBeat__ = function(dt)                            \
+         for k, _ in pairs(classes) do                       \
+             local updateFn = classes[k].onUpdate            \
+             if updateFn then                                \
+                 local handles = entity.listAll(k)           \
+                 for i = 1, #handles do                      \
+                     if entity.checkExists(handles[i]) then  \
+                         updateFn(handles[i], dt)            \
+                     end                                     \
+                 end                                         \
+             end                                             \
+         end                                                 \
      end";
 // clang-format on
 
@@ -250,6 +250,13 @@ void Engine::updateLogic(LuaProvider & luaProv) {
             throw std::runtime_error(lua_tostring(state, -1));
         }
     });
+    for (auto it = m_lights.begin(); it != m_lights.end();) {
+	if (it->getKillFlag()) {
+	    it = m_lights.erase(it);
+	} else {
+	    ++it;
+	}
+    }
     std::vector<sf::Vector2f> cameraTargets;
     m_camera.update(m_elapsedTime, cameraTargets);
 }
@@ -289,7 +296,7 @@ Engine * getgEnginePtr() { return ::pEngine; }
 
 EntityTable & Engine::getEntityTable() { return m_entityTable; }
 
-std::vector<Light> & Engine::getLights() { return m_lights; }
+std::list<Light> & Engine::getLights() { return m_lights; }
 
 void Engine::setNaturalLight(const sf::Color & naturalLight) {
     m_naturalLight = naturalLight;

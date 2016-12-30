@@ -44,13 +44,13 @@ public:
     bool hasSlept() const;
     void clearSleptFlag();
     void setSleep(const std::chrono::microseconds & time);
-    std::vector<Light> & getLights();
+    std::list<Light> & getLights();
     void setNaturalLight(const sf::Color &);
 
 private:
     sf::Vector2f m_drawableArea;
     EntityTable m_entityTable;
-    std::vector<Light> m_lights;
+    std::list<Light> m_lights;
     ResHandler m_resHandler;
     bool m_slept;
     float m_zoomFactor;

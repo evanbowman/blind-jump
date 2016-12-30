@@ -18,7 +18,7 @@
 	"textures/redFloorGlow.png",
 	"textures/lampLight.png",
 	"textures/introWall.png",
-	"textures/bkg_orbit2.png"
+	"textures/bkgOrbit.png"
     ],
     "sounds": [
 	"sounds/laser.ogg",
@@ -263,6 +263,15 @@
 	},
 	"vignetteShadowSprite": {
 	    "texture": "textures/vignetteShadow.png",
+	    "box": {
+		"x": 0,
+		"y": 0,
+		"w": 450,
+		"h": 450
+	    }
+	},
+	"spaceGradientSprite": {
+	    "texture": "textures/bkgOrbit.png",
 	    "box": {
 		"x": 0,
 		"y": 0,
