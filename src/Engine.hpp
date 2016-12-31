@@ -8,7 +8,7 @@
 #include "background.hpp"
 #include "camera.hpp"
 #include "framework/option.hpp"
-#include "inputController.hpp"
+#include "shutdownSignal.hpp"
 #include "resourceHandler.hpp"
 #include "soundController.hpp"
 #include <SFML/Audio.hpp>
@@ -32,7 +32,6 @@ public:
     void updateGraphics();
     void eventLoop(LuaProvider &);
     SoundController & getSounds();
-    InputController & getInputController();
     Camera & getCamera();
     BackgroundController & getBackground();
     EntityTable & getEntityTable();
@@ -58,7 +57,6 @@ private:
     sf::RenderWindow m_window;
     sf::Time m_elapsedTime;
     BackgroundController m_background;
-    InputController m_input;
     SoundController m_sounds;
     Camera m_camera;
     bool m_hasFocus;

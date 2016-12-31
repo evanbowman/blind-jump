@@ -3,20 +3,20 @@
 
 extern microseconds logicUpdateThrottle;
 
-static unsigned long long eid;
+static unsigned long long uid;
 
-// Translates from a eid to the shared pointer to the actual entity object.
+// Translates from a uid to the shared pointer to the actual entity object.
 // Unique ids are slightly better more secure than exposing pointers used by the
 // engine to lua scripts.
 static std::map<unsigned long long, EntityRef> translationTable;
 
-static inline EntityRef getEntityFromEid(const size_t id) {
+static inline EntityRef getEntityFromUid(const size_t id) {
     auto it = translationTable.find(id);
     if (it != translationTable.end()) {
         return it->second;
     }
     throw std::runtime_error(
-        "Error: attempt to access nonexsistent entity at EID: " +
+        "Error: attempt to access nonexsistent entity at UID: " +
         std::to_string(id));
 }
 
@@ -250,7 +250,7 @@ static const luaL_Reg envLibFuncs[] = {
 static const luaL_Reg cameraLibFuncs[] = {
     {"setTarget",
      [](lua_State * state) {
-         auto entity = getEntityFromEid(lua_tointeger(state, 1));
+         auto entity = getEntityFromUid(lua_tointeger(state, 1));
          getgEnginePtr()->getCamera().setTarget(entity);
          return 0;
      }},
@@ -338,9 +338,7 @@ static const luaL_Reg inputLibFuncs[] = {
     {"keyPressed",
      [](lua_State * state) {
          int keyCode = lua_tointeger(state, 1);
-         Engine * pEngine = getgEnginePtr();
-         InputController & input = pEngine->getInputController();
-         lua_pushboolean(state, input.getKeyState(keyCode) == 1);
+         lua_pushboolean(state, sf::Keyboard::isKeyPressed((sf::Keyboard::Key)keyCode));
          return 1;
      }},
     {}};
@@ -409,9 +407,9 @@ static const luaL_Reg entityLibFuncs[] = {
          auto & list = pEngine->getEntityTable()[classname];
          list.push_back(std::make_shared<Entity>());
          list.back()->setPosition(sf::Vector2f(x, y));
-         ::eid += 1;
-         ::translationTable[::eid] = list.back();
-         list.back()->setEid(::eid);
+         ::uid += 1;
+         ::translationTable[::uid] = list.back();
+         list.back()->setUid(::uid);
          list.back()->setClassContainerIter(entityTable.find(classname));
          auto listBackIter = list.end();
          list.back()->setListContainerIter(--listBackIter);
@@ -431,16 +429,16 @@ static const luaL_Reg entityLibFuncs[] = {
                  "Error: missing or malformed OnUpdate for class " + classname;
              throw std::runtime_error(err);
          }
-         lua_pushinteger(state, ::eid);
+         lua_pushinteger(state, ::uid);
          if (lua_pcall(state, 1, 0, 0)) {
              throw std::runtime_error(lua_tostring(state, -1));
          }
-         lua_pushinteger(state, list.back()->getEid());
+         lua_pushinteger(state, list.back()->getUid());
          return 1;
      }},
     {"setShader",
      [](lua_State * state) {
-         auto entity = getEntityFromEid(lua_tointeger(state, 1));
+         auto entity = getEntityFromUid(lua_tointeger(state, 1));
 	 if (lua_isstring(state, 2)) {
 	     entity->setShader(&getgEnginePtr()->getResHandler().getShader(
 	        lua_tostring(state, 2)));
@@ -451,7 +449,7 @@ static const luaL_Reg entityLibFuncs[] = {
      }},
     {"setShaderData",
      [](lua_State * state) {
-	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
+	 auto entity = getEntityFromUid(lua_tointeger(state, 1));
          auto & shaderData = entity->getShaderData();
 	 shaderData.clear();
 	 lua_pushnil(state);
@@ -467,7 +465,7 @@ static const luaL_Reg entityLibFuncs[] = {
      }},
     {"setScale",
      [](lua_State * state) {
-	 auto entity = getEntityFromEid(lua_tointeger(state, 1));
+	 auto entity = getEntityFromUid(lua_tointeger(state, 1));
 	 const float xScale = lua_tonumber(state, 2);
 	 const float yScale = lua_tonumber(state, 3);
 	 entity->setScale({xScale, yScale});
@@ -475,7 +473,7 @@ static const luaL_Reg entityLibFuncs[] = {
      }},
     {"getPosition",
      [](lua_State * state) {
-         auto entity = getEntityFromEid(lua_tointeger(state, 1));
+         auto entity = getEntityFromUid(lua_tointeger(state, 1));
          auto & pos = entity->getPosition();
          lua_pushnumber(state, pos.x);
          lua_pushnumber(state, pos.y);
@@ -483,7 +481,7 @@ static const luaL_Reg entityLibFuncs[] = {
      }},
     {"setPosition",
      [](lua_State * state) {
-         auto entity = getEntityFromEid(lua_tointeger(state, 1));
+         auto entity = getEntityFromUid(lua_tointeger(state, 1));
          float x = lua_tonumber(state, 2);
          float y = lua_tonumber(state, 3);
          entity->setPosition(sf::Vector2f(x, y));
@@ -503,7 +501,7 @@ static const luaL_Reg entityLibFuncs[] = {
              if (lua_isnil(state, -1)) {
                  lua_pop(state, 1);
              } else {
-                 lua_pushinteger(state, it->second->getEid());
+                 lua_pushinteger(state, it->second->getUid());
                  lua_pcall(state, 1, 0, 0);
              }
              for (auto & member : it->second->getMemberTable()) {
@@ -524,7 +522,7 @@ static const luaL_Reg entityLibFuncs[] = {
      }},
     {"setField",
      [](lua_State * state) {
-         auto entity = getEntityFromEid(lua_tointeger(state, 1));
+         auto entity = getEntityFromUid(lua_tointeger(state, 1));
          const int varIndex = lua_tointeger(state, 2);
          auto & members = entity->getMemberTable();
          if (members.find(varIndex) != members.end()) {
@@ -536,7 +534,7 @@ static const luaL_Reg entityLibFuncs[] = {
      }},
     {"getField",
      [](lua_State * state) {
-         auto entity = getEntityFromEid(lua_tointeger(state, 1));
+         auto entity = getEntityFromUid(lua_tointeger(state, 1));
          const int varIndex = lua_tointeger(state, 2);
          auto & members = entity->getMemberTable();
          if (members.find(varIndex) == members.end()) {
@@ -550,7 +548,7 @@ static const luaL_Reg entityLibFuncs[] = {
      }},
     {"emitSound",
      [](lua_State * state) {
-         auto entity = getEntityFromEid(lua_tointeger(state, 1));
+         auto entity = getEntityFromUid(lua_tointeger(state, 1));
          const char * soundName = lua_tostring(state, 2);
          const float minDist = lua_tonumber(state, 3);
          const float attenuation = lua_tonumber(state, 4);
@@ -561,21 +559,21 @@ static const luaL_Reg entityLibFuncs[] = {
      }},
     {"setKeyframe",
      [](lua_State * state) {
-         auto entity = getEntityFromEid(lua_tointeger(state, 1));
+         auto entity = getEntityFromUid(lua_tointeger(state, 1));
          const int frameno = lua_tointeger(state, 2);
          entity->setKeyframe(frameno);
          return 0;
      }},
     {"getKeyframe",
      [](lua_State * state) {
-         auto entity = getEntityFromEid(lua_tointeger(state, 1));
+         auto entity = getEntityFromUid(lua_tointeger(state, 1));
          const int frameno = entity->getKeyframe();
          lua_pushinteger(state, frameno);
          return 1;
      }},
     {"setSprite",
      [](lua_State * state) {
-         auto entity = getEntityFromEid(lua_tointeger(state, 1));
+         auto entity = getEntityFromUid(lua_tointeger(state, 1));
          const std::string sheetName = lua_tostring(state, 2);
          auto & resources = getgEnginePtr()->getResHandler();
          entity->setSheet(&resources.getSheet(sheetName));
@@ -583,14 +581,14 @@ static const luaL_Reg entityLibFuncs[] = {
      }},
     {"setZOrder",
      [](lua_State * state) {
-         auto entity = getEntityFromEid(lua_tointeger(state, 1));
+         auto entity = getEntityFromUid(lua_tointeger(state, 1));
          const float z = lua_tonumber(state, 2);
          entity->setZOrder(z);
          return 0;
      }},
     {"getZOrder",
      [](lua_State * state) {
-         auto entity = getEntityFromEid(lua_tointeger(state, 1));
+         auto entity = getEntityFromUid(lua_tointeger(state, 1));
          lua_pushnumber(state, entity->getZOrder());
          return 1;
      }},
@@ -604,7 +602,7 @@ static const luaL_Reg entityLibFuncs[] = {
          lua_newtable(state);
          int i = 0;
          for (auto it = entityList.begin(); it != entityList.end();) {
-             lua_pushinteger(state, (*it)->getEid());
+             lua_pushinteger(state, (*it)->getUid());
              lua_rawseti(state, -2, ++i);
              ++it;
          }
@@ -670,14 +668,39 @@ static void registerInputLib(lua_State * state) {
     createBinding("num8", sf::Keyboard::Num8);
     createBinding("num9", sf::Keyboard::Num9);
     createBinding("esc", sf::Keyboard::Escape);
-    createBinding("lctrl", sf::Keyboard::LControl);
-    createBinding("lshift", sf::Keyboard::LShift);
-    createBinding("lalt", sf::Keyboard::LAlt);
-    createBinding("lsuper", sf::Keyboard::LSystem);
-    createBinding("rctrl", sf::Keyboard::RControl);
-    createBinding("rshift", sf::Keyboard::RShift);
-    createBinding("ralt", sf::Keyboard::RAlt);
-    createBinding("rsuper", sf::Keyboard::RSystem);
+    createBinding("lCtrl", sf::Keyboard::LControl);
+    createBinding("lShift", sf::Keyboard::LShift);
+    createBinding("lAlt", sf::Keyboard::LAlt);
+    createBinding("lSuper", sf::Keyboard::LSystem);
+    createBinding("rCtrl", sf::Keyboard::RControl);
+    createBinding("rShift", sf::Keyboard::RShift);
+    createBinding("rAlt", sf::Keyboard::RAlt);
+    createBinding("rSuper", sf::Keyboard::RSystem);
+    createBinding("menu", sf::Keyboard::Menu);
+    createBinding("lBracket", sf::Keyboard::LBracket);
+    createBinding("rBracket", sf::Keyboard::RBracket);
+    createBinding("semiColon", sf::Keyboard::SemiColon);
+    createBinding("comma", sf::Keyboard::Comma);
+    createBinding("period", sf::Keyboard::Period);
+    createBinding("quote", sf::Keyboard::Quote);
+    createBinding("slash", sf::Keyboard::Slash);
+    createBinding("backSlash", sf::Keyboard::BackSlash);
+    createBinding("tilde", sf::Keyboard::Tilde);
+    createBinding("equal", sf::Keyboard::Equal);
+    createBinding("dash", sf::Keyboard::Dash);
+    createBinding("return", sf::Keyboard::Return);
+    createBinding("backSpace", sf::Keyboard::BackSpace);
+    createBinding("tab", sf::Keyboard::Tab);
+    createBinding("pageUp", sf::Keyboard::PageUp);
+    createBinding("pageDown", sf::Keyboard::PageDown);
+    createBinding("end", sf::Keyboard::End);
+    createBinding("home", sf::Keyboard::Home);
+    createBinding("insert", sf::Keyboard::Insert);
+    createBinding("delete", sf::Keyboard::Delete);
+    createBinding("add", sf::Keyboard::Add);
+    createBinding("subtract", sf::Keyboard::Subtract);
+    createBinding("multiply", sf::Keyboard::Multiply);
+    createBinding("divide", sf::Keyboard::Divide);
     lua_setfield(state, -2, "key");
     lua_setglobal(state, "input");
     luaL_dostring(state, "function input.onKeyPressed(key) end");
@@ -686,6 +709,8 @@ static void registerInputLib(lua_State * state) {
     luaL_dostring(state, "function input.onCursorButtonPressed(x, y, button) end");
     luaL_dostring(state, "function input.onCursorButtonReleased(x, y, button) end");
     luaL_dostring(state, "function input.onCursorEntered(x, y) end");
+    luaL_dostring(state, "function input.onCursorLeft(x, y) end");
+    luaL_dostring(state, "function input.onCursorWheelScroll(x, y, button, delta) end");
 }
 
 // ::sandbox contains a safer version of luaL_openlibs

@@ -64,7 +64,6 @@ void Engine::eventLoop(LuaProvider & luaProv) {
             break;
 
         case sf::Event::KeyPressed:
-            m_input.recordEvent(event);
 	    luaProv.applyHook([this, &event](lua_State * state) {
 		LuaInputContext here(state, "onKeyPressed");
 		lua_pushinteger(state, event.key.code);
@@ -75,7 +74,6 @@ void Engine::eventLoop(LuaProvider & luaProv) {
             break;
 
 	case sf::Event::KeyReleased:
-	    m_input.recordEvent(event);
 	    luaProv.applyHook([this, &event](lua_State * state) {
 		LuaInputContext here(state, "onKeyReleased");
 		lua_pushinteger(state, event.key.code);
@@ -86,7 +84,6 @@ void Engine::eventLoop(LuaProvider & luaProv) {
 	    break;
 
 	case sf::Event::MouseMoved:
-	    m_input.recordEvent(event);
 	    luaProv.applyHook([this, &event](lua_State * state) {
 		LuaInputContext here(state, "onCursorMoved");
 		lua_pushinteger(state, event.mouseMove.x);
@@ -100,9 +97,9 @@ void Engine::eventLoop(LuaProvider & luaProv) {
 	case sf::Event::MouseButtonPressed:
 	    luaProv.applyHook([this, &event](lua_State * state) {
 		LuaInputContext here(state, "onCursorButtonPressed");
-		lua_pushinteger(state, event.mouseButton.button);
 		lua_pushinteger(state, event.mouseButton.x);
 		lua_pushinteger(state, event.mouseButton.y);
+		lua_pushinteger(state, event.mouseButton.button);
 		if (lua_pcall(state, 3, 0, 0)) {
 		    throw std::runtime_error(lua_tostring(state, -1));
 		}
@@ -112,9 +109,9 @@ void Engine::eventLoop(LuaProvider & luaProv) {
 	case sf::Event::MouseButtonReleased:
 	    luaProv.applyHook([this, &event](lua_State * state) {
 		LuaInputContext here(state, "onCursorButtonReleased");
-		lua_pushinteger(state, event.mouseButton.button);
 		lua_pushinteger(state, event.mouseButton.x);
 		lua_pushinteger(state, event.mouseButton.y);
+		lua_pushinteger(state, event.mouseButton.button);
 		if (lua_pcall(state, 3, 0, 0)) {
 		    throw std::runtime_error(lua_tostring(state, -1));
 		}
@@ -127,6 +124,30 @@ void Engine::eventLoop(LuaProvider & luaProv) {
 		lua_pushinteger(state, event.mouseMove.x);
 		lua_pushinteger(state, event.mouseMove.y);
 		if (lua_pcall(state, 2, 0, 0)) {
+		    throw std::runtime_error(lua_tostring(state, -1));
+		}
+	    });
+	    break;
+
+	case sf::Event::MouseLeft:
+	    luaProv.applyHook([this, &event](lua_State * state) {
+		LuaInputContext here(state, "onCursorLeft");
+		lua_pushinteger(state, event.mouseMove.x);
+		lua_pushinteger(state, event.mouseMove.y);
+		if (lua_pcall(state, 2, 0, 0)) {
+		    throw std::runtime_error(lua_tostring(state, -1));
+		}
+	    });
+	    break;
+
+	case sf::Event::MouseWheelScrolled:
+	    luaProv.applyHook([this, &event](lua_State * state) {
+		LuaInputContext here(state, "onCursorWheelScroll");
+		lua_pushinteger(state, event.mouseWheelScroll.x);
+		lua_pushinteger(state, event.mouseWheelScroll.y);
+		lua_pushinteger(state, event.mouseWheelScroll.wheel);
+		lua_pushinteger(state, event.mouseWheelScroll.delta);
+		if (lua_pcall(state, 4, 0, 0)) {
 		    throw std::runtime_error(lua_tostring(state, -1));
 		}
 	    });
@@ -365,8 +386,6 @@ void Engine::setSleep(const std::chrono::microseconds & time) {
 }
 
 Camera & Engine::getCamera() { return m_camera; }
-
-InputController & Engine::getInputController() { return m_input; }
 
 SoundController & Engine::getSounds() { return m_sounds; }
 

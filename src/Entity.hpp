@@ -23,7 +23,7 @@ class Entity {
     };
 
 private:
-    size_t m_eid;
+    size_t m_uid;
     ClassContainerIter m_classContainerIter;
     ListContainerIter m_listContainerIter;
     sf::Vector2f m_position;
@@ -36,7 +36,7 @@ private:
 
 public:
     Entity()
-        : m_eid(0), m_position(), m_keyframe(0), m_zOrder(0.f),
+        : m_uid(0), m_position(), m_keyframe(0), m_zOrder(0.f),
           m_sprite{nullptr, {}, {1.f, 1.f}}, m_shader(nullptr) {}
     inline void setPosition(const sf::Vector2f & position) {
         m_position = position;
@@ -56,8 +56,8 @@ public:
     inline const std::string & getClassName() const {
         return m_classContainerIter->first;
     }
-    inline void setEid(const size_t eid) { m_eid = eid; }
-    inline size_t getEid() { return m_eid; }
+    inline void setUid(const size_t uid) { m_uid = uid; }
+    inline size_t getUid() { return m_uid; }
     inline std::map<int, int> & getMemberTable() { return m_members; }
     inline const sf::Vector2f & getPosition() const { return m_position; }
     inline void setKeyframe(const uint16_t keyframe) { m_keyframe = keyframe; }

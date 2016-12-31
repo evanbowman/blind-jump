@@ -6,7 +6,6 @@
 #include "calc.hpp"
 #include "config.h"
 #include "framework/smartThread.hpp"
-#include "inputController.hpp"
 #include "json.hpp"
 #include "resourceHandler.hpp"
 #include <SFML/Audio.hpp>
