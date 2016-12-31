@@ -109,6 +109,9 @@ local setupLevel = function()
    elseif level > 0 then
       background.createFromSprite(2, "spaceGradientSprite")
       utility.setLayerFixedStretched(2, background, 450, 450)
+      local map = mapgen.createMap(42, 42, 5, 1, 250)
+      mapgen.displayMap(map)
+      system.quit()
    end
 end
 

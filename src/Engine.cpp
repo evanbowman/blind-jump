@@ -25,7 +25,26 @@ void Engine::init() {
     m_hudView.setCenter(m_drawableArea.x / 2, m_drawableArea.y / 2);
 }
 
-void Engine::eventLoop() {
+class LuaInputContext {
+public:
+    LuaInputContext(lua_State * state, const char * libfunc) : m_state(state) {
+	lua_getglobal(state, "input");
+	lua_pushstring(state, libfunc);
+	lua_gettable(state, -2);
+	if (!lua_isfunction(state, -1)) {
+	    std::string err = "Error: missing fuction: ";
+	    throw std::runtime_error(err + libfunc);
+	}
+    }
+
+    ~LuaInputContext() {
+	lua_pop(m_state, 1);
+    }
+private:
+    lua_State * m_state;
+};
+
+void Engine::eventLoop(LuaProvider & luaProv) {
     sf::Event event;
     while (m_window.pollEvent(event)) {
         switch (event.type) {
@@ -44,12 +63,75 @@ void Engine::eventLoop() {
             m_hasFocus = false;
             break;
 
-        // Note: Deliberate fallthrough
         case sf::Event::KeyPressed:
-        case sf::Event::KeyReleased:
             m_input.recordEvent(event);
+	    luaProv.applyHook([this, &event](lua_State * state) {
+		LuaInputContext here(state, "onKeyPressed");
+		lua_pushinteger(state, event.key.code);
+		if (lua_pcall(state, 1, 0, 0)) {
+		    throw std::runtime_error(lua_tostring(state, -1));
+		}
+	    });
             break;
 
+	case sf::Event::KeyReleased:
+	    m_input.recordEvent(event);
+	    luaProv.applyHook([this, &event](lua_State * state) {
+		LuaInputContext here(state, "onKeyReleased");
+		lua_pushinteger(state, event.key.code);
+		if (lua_pcall(state, 1, 0, 0)) {
+		    throw std::runtime_error(lua_tostring(state, -1));
+		}
+	    });
+	    break;
+
+	case sf::Event::MouseMoved:
+	    m_input.recordEvent(event);
+	    luaProv.applyHook([this, &event](lua_State * state) {
+		LuaInputContext here(state, "onCursorMoved");
+		lua_pushinteger(state, event.mouseMove.x);
+		lua_pushinteger(state, event.mouseMove.y);
+		if (lua_pcall(state, 2, 0, 0)) {
+		    throw std::runtime_error(lua_tostring(state, -1));
+		}
+	    });
+	    break;
+
+	case sf::Event::MouseButtonPressed:
+	    luaProv.applyHook([this, &event](lua_State * state) {
+		LuaInputContext here(state, "onCursorButtonPressed");
+		lua_pushinteger(state, event.mouseButton.button);
+		lua_pushinteger(state, event.mouseButton.x);
+		lua_pushinteger(state, event.mouseButton.y);
+		if (lua_pcall(state, 3, 0, 0)) {
+		    throw std::runtime_error(lua_tostring(state, -1));
+		}
+	    });
+	    break;
+
+	case sf::Event::MouseButtonReleased:
+	    luaProv.applyHook([this, &event](lua_State * state) {
+		LuaInputContext here(state, "onCursorButtonReleased");
+		lua_pushinteger(state, event.mouseButton.button);
+		lua_pushinteger(state, event.mouseButton.x);
+		lua_pushinteger(state, event.mouseButton.y);
+		if (lua_pcall(state, 3, 0, 0)) {
+		    throw std::runtime_error(lua_tostring(state, -1));
+		}
+	    });
+	    break;
+
+	case sf::Event::MouseEntered:
+	    luaProv.applyHook([this, &event](lua_State * state) {
+		LuaInputContext here(state, "onCursorEntered");
+		lua_pushinteger(state, event.mouseMove.x);
+		lua_pushinteger(state, event.mouseMove.y);
+		if (lua_pcall(state, 2, 0, 0)) {
+		    throw std::runtime_error(lua_tostring(state, -1));
+		}
+	    });
+	    break;
+	    
         default:
             std::cout << "Unhandled event: " << event.type << std::endl;
             break;

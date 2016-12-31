@@ -33,6 +33,7 @@ local updateAnimation = function(this, dt, maxFrame, decoder)
    local animationTimer = entity.getField(this, id.animTimer)
    animationTimer = animationTimer + dt
    entity.setField(this, id.animTimer, animationTimer)
+   entity.setKeyframe(this, decoder[currentFrame + 1])
    if animationTimer > 100000 then
       animationTimer = 0
       currentFrame = currentFrame + 1

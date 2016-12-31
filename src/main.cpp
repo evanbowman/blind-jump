@@ -78,7 +78,7 @@ int main() {
         });
         try {
             while (engine.getWindow().isOpen()) {
-                engine.eventLoop();
+                engine.eventLoop(luaProv);
                 engine.updateGraphics();
                 if (::pExceptionSignal) {
                     std::rethrow_exception(::pExceptionSignal);

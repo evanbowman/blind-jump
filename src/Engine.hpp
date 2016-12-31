@@ -30,7 +30,7 @@ public:
     Engine(const ConfigData &);
     void updateLogic(LuaProvider &);
     void updateGraphics();
-    void eventLoop();
+    void eventLoop(LuaProvider &);
     SoundController & getSounds();
     InputController & getInputController();
     Camera & getCamera();

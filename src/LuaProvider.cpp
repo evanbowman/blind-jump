@@ -680,10 +680,16 @@ static void registerInputLib(lua_State * state) {
     createBinding("rsuper", sf::Keyboard::RSystem);
     lua_setfield(state, -2, "key");
     lua_setglobal(state, "input");
+    luaL_dostring(state, "function input.onKeyPressed(key) end");
+    luaL_dostring(state, "function input.onKeyReleased(key) end");
+    luaL_dostring(state, "function input.onCursorMoved(x, y) end");
+    luaL_dostring(state, "function input.onCursorButtonPressed(x, y, button) end");
+    luaL_dostring(state, "function input.onCursorButtonReleased(x, y, button) end");
+    luaL_dostring(state, "function input.onCursorEntered(x, y) end");
 }
 
-// ::sandbox contains a safe version of luaL_openlibs
-// with the io and os libraries disabled
+// ::sandbox contains a safer version of luaL_openlibs
+// with the os library disabled
 namespace sandbox {
 static const luaL_Reg loadedlibs[] = {{"_G", luaopen_base},
                                       {LUA_LOADLIBNAME, luaopen_package},
@@ -692,6 +698,7 @@ static const luaL_Reg loadedlibs[] = {{"_G", luaopen_base},
                                       {LUA_STRLIBNAME, luaopen_string},
                                       {LUA_MATHLIBNAME, luaopen_math},
                                       {LUA_UTF8LIBNAME, luaopen_utf8},
+				      {LUA_IOLIBNAME, luaopen_io},
                                       {LUA_DBLIBNAME, luaopen_debug},
                                       {}};
 

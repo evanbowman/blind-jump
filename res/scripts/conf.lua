@@ -6,29 +6,31 @@ add an elseif condition for the ratio of your
 monitor's width to height ratio.
 
 The optimal area returned from this function
-is a value nearest to 400,000 square pixels.
+is a value nearest to 650,000 square pixels.
 --]]
 function getDrawableArea()
    local w, h = system.getScreenSize()
    local aspect = w / h
    if aspect == 16 / 9 then
-      return 832, 468
+      return 1072, 603
    elseif aspect == 16 / 10 then
       return 1024, 640
    elseif aspect == 4 / 3 then
-      return 720, 540
+      return 936, 702
    elseif aspect == 5 / 4 then
-      return 695, 556
+      return 905, 724
    elseif aspect == 9 / 16 then
-      return 468 / 832
+      return 603 / 1072
    elseif aspect == 10 / 16 then
-      return 490 / 784
+      return 640 / 1024
    elseif aspect == 3 / 4 then
-      return 540, 720
+      return 702, 936
    elseif aspect == 4 / 5 then
-      return 556, 695
+      return 724, 905
    else
-      return 0, 0
+      print("Error: your aspect ratio is unsupported!")
+      print("To remedy this, add it to the file conf.lua")
+      system.quit()
    end
 end
 

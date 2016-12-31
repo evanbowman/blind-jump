@@ -18,11 +18,13 @@ public:
     ~LuaProvider();
     void runScriptFromFile(const std::string & path);
     template <typename F> decltype(auto) applyHook(F && functor) {
+	std::lock_guard<std::mutex> lk(m_mutex);
         return functor(m_state);
     }
     LuaProvider(const LuaProvider &) = delete;
     LuaProvider & operator=(const LuaProvider &) = delete;
 
 private:
+    std::mutex m_mutex;
     lua_State * m_state;
 };
