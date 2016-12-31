@@ -4,7 +4,8 @@ Camera::Camera(const sf::Vector2f & viewPort, const sf::Vector2u & _windowSize)
     : overworldView(sf::Vector2f(viewPort.x / 2, viewPort.y / 2), viewPort),
       startPosition(overworldView.getCenter()), currentPosition(startPosition),
       windowSize(_windowSize), isShaking(false), shakeIndex(0), shakeTimer(0),
-      trackingTimer(0), shakeIntensity(0.f), state(State::followPlayer) {}
+      trackingTimer(0), shakeIntensity(0.f), state(State::followPlayer),
+      rateFactor(0.0000025f) {}
 
 template <int_fast16_t dim, typename T> float easeIn(T current, T duration) {
     if (current >= duration) {
@@ -13,6 +14,8 @@ template <int_fast16_t dim, typename T> float easeIn(T current, T duration) {
     return static_cast<float>(std::pow(current, dim)) /
            static_cast<float>(std::pow(duration, dim));
 }
+
+void Camera::setRateFactor(const float rate) { rateFactor = rate; }
 
 void Camera::update(const sf::Time & elapsedTime,
                     const std::vector<sf::Vector2f> & targets) {
@@ -26,7 +29,7 @@ void Camera::update(const sf::Time & elapsedTime,
         }
         switch (state) {
         case State::followPlayer:
-            lerpSpeed = calc::clamp(elapsedTime.asMicroseconds() * 0.0000025f,
+            lerpSpeed = calc::clamp(elapsedTime.asMicroseconds() * rateFactor,
                                     0.f, 1.f);
             currentPosition = calc::lerp(sharedTarget->getPosition(),
                                          currentPosition, lerpSpeed);
@@ -37,7 +40,7 @@ void Camera::update(const sf::Time & elapsedTime,
             break;
 
         case State::trackMidpoint: {
-            lerpSpeed = calc::clamp(elapsedTime.asMicroseconds() * 0.0000025f,
+            lerpSpeed = calc::clamp(elapsedTime.asMicroseconds() * rateFactor,
                                     0.f, 1.f);
             sf::Vector2f aggregate;
             float divisor = 0;
@@ -46,7 +49,7 @@ void Camera::update(const sf::Time & elapsedTime,
                 ++divisor;
             }
             aggregate /= divisor;
-            // Enemies entering and leaving the camera view creates jarring
+            // Entities entering and leaving the camera view creates jarring
             // shifts
             // so I'm using a buffer of the average enemy positions
             buffer = calc::lerp(buffer, aggregate, lerpSpeed * 0.1f);
@@ -55,7 +58,7 @@ void Camera::update(const sf::Time & elapsedTime,
         } break;
 
         case State::foundEnemy: {
-            lerpSpeed = calc::clamp(elapsedTime.asMicroseconds() * 0.0000025f,
+            lerpSpeed = calc::clamp(elapsedTime.asMicroseconds() * rateFactor,
                                     0.f, 1.f);
             sf::Vector2f aggregate;
             float divisor = 0;
@@ -166,6 +169,10 @@ void Camera::shake(float _shakeIntensity) {
         isShaking = true;
         shakeIndex = 0;
     }
+}
+
+std::unordered_map<std::string, int> & Camera::getWatchList() {
+    return watchList;
 }
 
 sf::Vector2f Camera::getOffsetFromStart() const {

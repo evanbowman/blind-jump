@@ -67,6 +67,7 @@ private:
     sf::View m_worldView, m_hudView;
     sf::RenderTexture m_lightingMap, m_target;
     sf::Color m_naturalLight;
+    void drawLayer(Layer &);
 };
 
 // The first room is not procedurally generated so the positions of the walls

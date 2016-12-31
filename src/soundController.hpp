@@ -42,7 +42,6 @@ public:
 
 private:
     std::mutex soundsGuard;
-    sf::Music currentSong;
     // TODO: try changing deque to list, for easier removal
     std::deque<sf::Sound> runningSounds;
     std::deque<runningData> runningData;

@@ -14,7 +14,7 @@ function getDrawableArea()
    if aspect == 16 / 9 then
       return 832, 468
    elseif aspect == 16 / 10 then
-      return 784, 490
+      return 1024, 640
    elseif aspect == 4 / 3 then
       return 720, 540
    elseif aspect == 5 / 4 then
@@ -46,7 +46,7 @@ function getConf()
 	 required because more stuff needs to be 
 	 drawn than will fit in the camera view 
 	 (in order to achieve pixel perfect scrolling) ]]
-      fractionVisible = 0.75
+      fractionVisible = 0.60
    }
    return conf
 end

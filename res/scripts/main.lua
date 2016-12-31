@@ -29,14 +29,14 @@ utility.setLayerFixedStretched(1, foreground, 450, 450)
 foreground.setBlending(1, 2)
 
 local clearEntitiesOf = function(classname)
-   local entitiesList = entity.listAll(classname)
+   local entitiesList = entity.collect(classname)
    for i = 1, #entitiesList do
       entity.destroy(entitiesList[i])
    end
 end
 
 local clearLights = function()
-   local lightsList = light.listAll()
+   local lightsList = light.collect()
    for i = 1, #lightsList do
       entity.destroy(lightsList[i])
    end
@@ -59,6 +59,7 @@ local cleanupLevel = function()
 end
 
 local setupLevel = function()
+   camera.setWatchList({"Turret", "Dasher", "Drone", "Critter", "Transporter"})
    if level == 0 then
       background.createFromSprite(0, "introLevelFloorSprite")
       background.setPosition(0, 305, -231)
@@ -69,7 +70,7 @@ local setupLevel = function()
       foreground.setPosition(2, 284, -250)
       entity.setPosition(player, playerStart.x, playerStart.y)
       entity.create("Transporter", 378, -128)
-      entity.create("Pod", 400, 216)
+      local pod = entity.create("Pod", 400, 216)
       entity.create("Door", 305, 70)
       local lampPositions = {
          { x = 300, y = 122 },

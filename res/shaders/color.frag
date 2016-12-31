@@ -1,6 +1,5 @@
 uniform sampler2D texture;
-uniform vec3 targetColor;
-uniform float amount;
+uniform float data[4];
 
 void main() {
 	// lookup the pixel in the texture
@@ -8,7 +7,8 @@ void main() {
 	
 	if (pixel.a != 0.0) {
 		vec3 originalColor = vec3(pixel.r, pixel.g, pixel.b);
-		gl_FragColor = vec4(mix(originalColor, targetColor, amount), pixel.a);
+		vec3 targetColor = vec3(data[0], data[1], data[2]);
+		gl_FragColor = vec4(mix(originalColor, targetColor, data[3]), pixel.a);
 	} else {
 		gl_FragColor = pixel;
 	}

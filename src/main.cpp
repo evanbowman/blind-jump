@@ -76,19 +76,19 @@ int main() {
                 return;
             }
         });
-	try {
-	    while (engine.getWindow().isOpen()) {
-		engine.eventLoop();
-		engine.updateGraphics();
-		if (::pExceptionSignal) {
-		    std::rethrow_exception(::pExceptionSignal);
-		}
-	    }
-	} catch (const std::exception & ex) {
-	    engine.getWindow().close();
-	    logicThread.get().join();
-	    std::cerr << ex.what() << std::endl;
-	}
+        try {
+            while (engine.getWindow().isOpen()) {
+                engine.eventLoop();
+                engine.updateGraphics();
+                if (::pExceptionSignal) {
+                    std::rethrow_exception(::pExceptionSignal);
+                }
+            }
+        } catch (const std::exception & ex) {
+            engine.getWindow().close();
+            logicThread.get().join();
+            std::cerr << ex.what() << std::endl;
+        }
     } catch (const std::exception & ex) {
         std::cerr << ex.what() << std::endl;
     }

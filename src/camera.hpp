@@ -7,6 +7,7 @@
 #include <array>
 #include <utility>
 #include <vector>
+#include <unordered_map>
 
 class Camera {
     std::weak_ptr<Entity> targetRef;
@@ -20,6 +21,8 @@ class Camera {
     enum class State { trackMidpoint, followPlayer, foundEnemy };
     State state;
     void upscaleWindowView();
+    float rateFactor;
+    std::unordered_map<std::string, int> watchList;
 
 public:
     Camera(const sf::Vector2f & viewPort, const sf::Vector2u &);
@@ -33,6 +36,8 @@ public:
     void setOverworldView(const sf::View &);
     void setWindowView(const sf::View &);
     bool moving() const;
+    void setRateFactor(const float);
     sf::Vector2f getOffsetFromStart() const;
     sf::Vector2f getOffsetFromTarget() const;
+    std::unordered_map<std::string, int> & getWatchList();
 };

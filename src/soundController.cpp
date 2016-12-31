@@ -1,14 +1,7 @@
 #include "soundController.hpp"
 #include "Engine.hpp"
 
-static const std::string musicPaths[] = {"music/Frostellar.ogg"};
-
-SoundController::SoundController() {
-    sf::Listener::setGlobalVolume(75.f);
-    currentSong.openFromFile(resourcePath() + musicPaths[0]);
-    currentSong.setLoop(true);
-    currentSong.play();
-}
+SoundController::SoundController() { sf::Listener::setGlobalVolume(75.f); }
 
 void SoundController::pause(int options) {
     std::lock_guard<std::mutex> lk(soundsGuard);
@@ -20,7 +13,7 @@ void SoundController::pause(int options) {
         }
     }
     if (options & Music) {
-        currentSong.pause();
+        // currentSong.pause();
     }
 }
 
@@ -34,7 +27,7 @@ void SoundController::unpause(int options) {
         }
     }
     if (options & Music) {
-        currentSong.play();
+        // currentSong.play();
     }
 }
 
