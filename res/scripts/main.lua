@@ -111,7 +111,6 @@ local setupLevel = function()
       utility.setLayerFixedStretched(2, background, 450, 450)
       local map = mapgen.createMap(42, 42, 5, 1, 250)
       mapgen.displayMap(map)
-      system.quit()
    end
 end
 
