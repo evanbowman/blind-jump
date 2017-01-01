@@ -711,6 +711,7 @@ static void registerInputLib(lua_State * state) {
     luaL_dostring(state, "function input.onCursorEntered(x, y) end");
     luaL_dostring(state, "function input.onCursorLeft(x, y) end");
     luaL_dostring(state, "function input.onCursorWheelScroll(x, y, button, delta) end");
+    luaL_dostring(state, "function input.onTextEntered(c) end");
 }
 
 // ::sandbox contains a safer version of luaL_openlibs

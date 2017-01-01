@@ -94,6 +94,15 @@ void Engine::eventLoop(LuaProvider & luaProv) {
 	    });
 	    break;
 
+	case sf::Event::TextEntered:
+	    luaProv.applyHook([this, &event](lua_State * state) {
+		LuaInputContext here(state, "onTextEntered");
+		lua_pushinteger(state, event.text.unicode);
+		if (lua_pcall(state, 1, 0, 0)) {
+		    throw std::runtime_error(lua_tostring(state, -1));
+		}
+	    });
+
 	case sf::Event::MouseButtonPressed:
 	    luaProv.applyHook([this, &event](lua_State * state) {
 		LuaInputContext here(state, "onCursorButtonPressed");

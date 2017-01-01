@@ -12,7 +12,8 @@ local mapgen = require("mapgen")
 
 system.setVerticalSyncEnabled(true)
 system.setCursorVisible(false)
-system.setLogicUpdateLimit(2000)
+system.setLogicUpdateLimit(1000)
+system.setFramerateLimit(60)
 
 environment.setNaturalLight(190, 190, 210)
 
