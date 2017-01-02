@@ -35,8 +35,7 @@ int main() {
     try {
 	resourceHandler.load();
         setgResHandlerPtr(&resourceHandler);
-	LuaProvider luaProv;
-        Game game(luaProv.getConf());
+        Game game({{784.f, 490.f}});
 	game.init();
         framework::SmartThread logicThread([&game]() {
             duration logicUpdateDelta;

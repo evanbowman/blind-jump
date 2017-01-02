@@ -25,7 +25,10 @@
 #include <atomic>
 #include <cmath>
 #include <mutex>
-#include "LuaProvider.hpp"
+
+struct ConfigResults {
+    sf::Vector2f drawableArea;
+};
 
 class Game {
 public:

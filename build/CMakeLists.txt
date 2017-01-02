@@ -4,7 +4,6 @@ project(BlindJump)
 set(EXECUTABLE_NAME ${PROJECT_NAME})
 set(PROJECT_SOURCE_DIR "../src/")
 set(SFML_DIR "../deps/SFML-2.4.1")
-set(LUA_DIR "../deps/lua-5.3.3/src")
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -42,9 +41,9 @@ add_executable(${EXECUTABLE_NAME} WIN32 MACOSX_BUNDLE ${blindjump_SOURCES} ${RES
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 
-include_directories("${SFML_DIR}/include/" "${LUA_DIR}")
+include_directories("${SFML_DIR}/include/")
 if(APPLE)
-  target_link_libraries(${EXECUTABLE_NAME} "-L${LUA_DIR} -llua -framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio -Xlinker -rpath -Xlinker @loader_path/../Frameworks")
+  target_link_libraries(${EXECUTABLE_NAME} "-framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio -Xlinker -rpath -Xlinker @loader_path/../Frameworks")
   set(MACOSX_BUNDLE_BUNDLE_NAME ${EXECUTABLE_NAME})
   set(MACOSX_BUNDLE_ICON_FILE icon.icns)
   add_custom_target(pkg ALL mkdir -p ${EXECUTABLE_NAME}.app/Contents/Resources

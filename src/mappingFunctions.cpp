@@ -7,39 +7,28 @@
 #include "tileController.hpp"
 #include <cstring>
 
-// This code is not so readable... TODO: make map type a scoped enum
-
-void floodFillspread(uint8_t screen[61][61], uint8_t x, uint8_t y,
-                     uint8_t prevC, uint8_t newC) {
-    // Base cases
-    if (x <= 2 || x >= 59 || y <= 2 || y >= 59)
-        return;
-    if (screen[x][y] != prevC)
-        return;
-
-    // Replace replace the old element with the desired new one
-    screen[x][y] = newC;
-
-    // Continue in four directions
-    floodFillspread(screen, x + 1, y, prevC, newC);
-    floodFillspread(screen, x - 1, y, prevC, newC);
-    floodFillspread(screen, x, y + 1, prevC, newC);
-    floodFillspread(screen, x, y - 1, prevC, newC);
-}
-
-void floodFill(uint8_t screen[61][61], uint8_t x, uint8_t y, uint8_t newC) {
-    int prevC = screen[x][y];
-    floodFillspread(screen, x, y, prevC, newC);
-}
-
-inline void cleanUp(uint8_t map[61][61]) {
-    for (int i = 1; i < 60; i++) {
-        for (int j = 1; j < 60; j++) {
-            if (map[i][j] == 1 && map[i - 1][j] < 2 && map[i + 1][j] < 2 &&
-                map[i][j - 1] < 2 && map[i][j + 1] < 2) {
-                map[i][j] = 0;
-            }
-        }
+static void floodFill(uint8_t map[61][61], uint8_t x, uint8_t y, uint8_t sub) {
+    using Coord = std::pair<uint8_t, uint8_t>;
+    std::stack<Coord> stack;
+    stack.push({x, y});
+    uint8_t target = map[x][y];
+    const auto action = [map, target, sub, &stack](Coord & c, int xOff, int yOff) {
+			    const int i = c.first + xOff;
+			    const int j = c.second + yOff;
+			    if (i > 0 && i < 60 && j > 0 && j < 60) {
+				if (map[i][j] == target) {
+				    map[i][j] = sub;
+				    stack.push({i, j});
+				}
+			    }
+			};
+    while (!stack.empty()) {
+	Coord coord = stack.top();
+	stack.pop();
+	action(coord, -1, 0);
+	action(coord, 0, 1);
+	action(coord, 0, -1);
+	action(coord, 1, 0);
     }
 }
 
@@ -232,7 +221,6 @@ int generateMap(uint8_t map[61][61]) {
         }
     }
     addEdges(map); // Adds the top and bottom edges for the platforms
-    cleanUp(map);
     addCenterTiles(map);
     int count = 0;
     for (int i = 0; i < 59; i++) {
