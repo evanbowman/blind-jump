@@ -1,8 +1,3 @@
-//========================================================================//
-// Copyright (C) 2016 Evan Bowman                                         //
-// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
-//========================================================================//
-
 #include "wall.hpp"
 
 wall::wall() : xPosInitial{0.f}, yPosInitial{0.f}, xPos{0.f}, yPos{0.f} {}

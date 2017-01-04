@@ -1,10 +1,4 @@
-//========================================================================//
-// Copyright (C) 2016 Evan Bowman                                         //
-// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
-//========================================================================//
-
 #include "camera.hpp"
-
 #include "player.hpp"
 
 Camera::Camera(Player * _pTarget, const sf::Vector2f & viewPort,

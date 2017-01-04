@@ -1,10 +1,4 @@
-//========================================================================//
-// Copyright (C) 2016 Evan Bowman                                         //
-// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
-//========================================================================//
-
 // Start Date: 10/9/15
-// End Date:
 
 #include "alias.hpp"
 #include "aspectScaling.hpp"

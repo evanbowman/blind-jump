@@ -1,8 +1,3 @@
-//========================================================================//
-// Copyright (C) 2016 Evan Bowman                                         //
-// Liscensed under GPL 3, see: <http://www.gnu.org/licenses/>.            //
-//========================================================================//
-
 #include <SFML/Graphics.hpp>
 
 void drawPixels(sf::Image & tileMap, const sf::Image & tileImage, int xIndex,
