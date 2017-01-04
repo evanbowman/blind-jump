@@ -9,7 +9,7 @@
 class InputController {
 public:
     InputController();
-    void mapJsById();
+    void mapJsById(); 
     bool pausePressed() const;
     bool leftPressed() const;
     bool rightPressed() const;

@@ -7,27 +7,23 @@
 
 inline sf::Vector2f getDrawableArea(const nlohmann::json & configJSON) {
     sf::Vector2f drawableAreaSize = {};
+    auto screenSize = sf::VideoMode::getDesktopMode();
+    const float aspectRatio = (float)screenSize.width / (float)screenSize.height;
     try {
-	auto screenSize = sf::VideoMode::getDesktopMode();
-	const float aspect = static_cast<float>(screenSize.width)
-	    / static_cast<float>(screenSize.height);
-	auto aspectsArrayIter = configJSON.find("aspect-ratios");
-	if (aspectsArrayIter != configJSON.end()) {
-	    for (const auto & entry : *aspectsArrayIter) {
-		auto aspectString = entry.find("aspect")->get<std::string>();
-		static const std::string delimiter(":");
-		size_t splitPos = aspectString.find(":");
-		const float wFactor = std::atoi(aspectString.substr(0, splitPos).c_str());
-		const float hFactor = std::atoi(aspectString.substr(splitPos + 1, aspectString.length()).c_str());
-		const int width = entry.find("width")->get<int>();
-		const int height = entry.find("height")->get<int>();
-		if (wFactor / hFactor == aspect) {
-		    drawableAreaSize.x = width;
-		    drawableAreaSize.y = height;
-		} else if (hFactor / wFactor == aspect) {
-		    drawableAreaSize.y = height;
-		    drawableAreaSize.x = width;
-		}
+	for (auto it = configJSON["aspect-ratios"].begin();
+	     it != configJSON["aspect-ratios"].end(); ++it) {
+	    static const char delimiter = ':';
+	    const size_t splitPos = it.key().find(delimiter);
+	    const float wFactor = std::atoi(it.key().substr(0, splitPos).c_str());
+	    const float hFactor = std::atoi(it.key().substr(splitPos + 1, it.key().length()).c_str());
+	    const int width = it.value().find("width")->get<int>();
+	    const int height = it.value().find("height")->get<int>();
+	    if (wFactor / hFactor == aspectRatio) {
+		drawableAreaSize.x = width;
+		drawableAreaSize.y = height;
+	    } else if (hFactor / wFactor == aspectRatio) {
+		drawableAreaSize.y = height;
+		drawableAreaSize.x = width;
 	    }
 	}
     } catch (const std::exception & ex) {

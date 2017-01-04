@@ -1,27 +1,40 @@
 {
-    "aspect-ratios": [
-	{
-	    "aspect": "16:9",
+    "aspect-ratios": {
+	"16:9": {
 	    "width": 832,
 	    "height": 468
 	},
-	{
-	    "aspect": "16:10",
+	"16:10": {
 	    "width": 784,
 	    "height": 490
 	},
-	{
-	    "aspect": "4:3",
+	"4:3": {
 	    "width": 720,
 	    "height": 540
 	},
-	{
-	    "aspect": "5:4",
+	"5:4": {
 	    "width": 695,
 	    "height": 556
 	}
-    ],
-    "joysticks": [
-	
-    ]
+    },
+    "joystick": {
+	"sony-ps3-controller": {
+	    "vendor-id": 1356,
+	    "product-id": 616,
+	    "button-mappings": {
+		"weapon": 11,
+		"action": 14,
+		"pause": 16
+	    }
+	},
+	"sony-ps4-controller": {
+	    "vendor-id": 1356,
+	    "product-id": 1476,
+	    "button-mappings": {
+		"weapon": 5,
+		"action": 1,
+		"pause": 12
+	    }
+	}
+    }
 }
