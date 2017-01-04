@@ -5,7 +5,7 @@
 #include "backgroundHandler.hpp"
 #include "config.h"
 #include "framework/smartThread.hpp"
-#include "game.hpp"
+#include "Game.hpp"
 #include "inputController.hpp"
 #include "introSequence.hpp"
 #include "player.hpp"
@@ -19,6 +19,8 @@
 #include <exception>
 #include <iostream>
 #include <stdexcept>
+#include <json.hpp>
+#include <fstream>
 
 std::exception_ptr pWorkerException = nullptr;
 bool gameHasFocus = false;
@@ -27,10 +29,17 @@ int main() {
     rng::seed();
     ResHandler resourceHandler;
     try {
-	resourceHandler.load();
+	nlohmann::json configJSON;
+	{
+	    std::fstream configRaw(resourcePath() + "config.json");
+	    configRaw >> configJSON;
+	}
+        resourceHandler.load();
         setgResHandlerPtr(&resourceHandler);
-        Game game({{784.f, 490.f}});
-	game.init();
+        Game game({getDrawableArea(configJSON)});
+        game.init();
+	configJSON.clear();
+        dispIntroSequence(game.getWindow(), game.getInputController());
         framework::SmartThread logicThread([&game]() {
             duration logicUpdateDelta;
             sf::Clock gameClock;

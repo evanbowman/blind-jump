@@ -1,8 +1,5 @@
 
 
-
-
-
 #pragma once
 
 // Decodes the horizontal movement based on the input (animation sprites are not

@@ -1,0 +1,27 @@
+{
+    "aspect-ratios": [
+	{
+	    "aspect": "16:9",
+	    "width": 832,
+	    "height": 468
+	},
+	{
+	    "aspect": "16:10",
+	    "width": 784,
+	    "height": 490
+	},
+	{
+	    "aspect": "4:3",
+	    "width": 720,
+	    "height": 540
+	},
+	{
+	    "aspect": "5:4",
+	    "width": 695,
+	    "height": 556
+	}
+    ],
+    "joysticks": [
+	
+    ]
+}

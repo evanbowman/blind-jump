@@ -2,7 +2,7 @@
 #include "DetailGroup.hpp"
 #include "ResourcePath.hpp"
 #include "camera.hpp"
-#include "game.hpp"
+#include "Game.hpp"
 #include "tileController.hpp"
 #include "wall.hpp"
 #include <cmath>

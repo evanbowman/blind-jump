@@ -4,6 +4,7 @@ project(BlindJump)
 set(EXECUTABLE_NAME ${PROJECT_NAME})
 set(PROJECT_SOURCE_DIR "../src/")
 set(SFML_DIR "../deps/SFML-2.4.1")
+set(JSON_DIR "../deps/JSON")
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -41,7 +42,7 @@ add_executable(${EXECUTABLE_NAME} WIN32 MACOSX_BUNDLE ${blindjump_SOURCES} ${RES
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 
-include_directories("${SFML_DIR}/include/")
+include_directories("${SFML_DIR}/include/" "${JSON_DIR}")
 if(APPLE)
   target_link_libraries(${EXECUTABLE_NAME} "-framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio -Xlinker -rpath -Xlinker @loader_path/../Frameworks")
   set(MACOSX_BUNDLE_BUNDLE_NAME ${EXECUTABLE_NAME})

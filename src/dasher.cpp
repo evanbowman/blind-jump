@@ -1,6 +1,6 @@
 #include "dasher.hpp"
 #include "angleFunction.hpp"
-#include "game.hpp"
+#include "Game.hpp"
 #include <cmath>
 
 Dasher::Blur::Blur(sf::Sprite * spr, float xInit, float yInit) {

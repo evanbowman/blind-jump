@@ -1,5 +1,5 @@
 #include "enemyPlacementFn.hpp"
-#include "game.hpp"
+#include "Game.hpp"
 #include <array>
 #include <cmath>
 #include <stdio.h>

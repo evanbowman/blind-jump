@@ -1,5 +1,5 @@
 #include "userInterface.hpp"
-#include "game.hpp"
+#include "Game.hpp"
 #include "player.hpp"
 #include <cmath>
 

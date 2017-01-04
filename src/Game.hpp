@@ -58,7 +58,7 @@ public:
     TransitionState transitionState;
     sf::RenderWindow & getWindow();
     void init();
-    
+
 private:
     sf::RenderWindow window;
     InputController input;

@@ -1,5 +1,5 @@
 #include "critter.hpp"
-#include "game.hpp"
+#include "Game.hpp"
 #include "math.h"
 #include "tileController.hpp"
 #include <cmath>

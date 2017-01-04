@@ -7,23 +7,24 @@ static void floodFill(uint8_t map[61][61], uint8_t x, uint8_t y, uint8_t sub) {
     std::stack<Coord> stack;
     stack.push({x, y});
     uint8_t target = map[x][y];
-    const auto action = [map, target, sub, &stack](Coord & c, int xOff, int yOff) {
-			    const int i = c.first + xOff;
-			    const int j = c.second + yOff;
-			    if (i > 0 && i < 60 && j > 0 && j < 60) {
-				if (map[i][j] == target) {
-				    map[i][j] = sub;
-				    stack.push({i, j});
-				}
-			    }
-			};
+    const auto action = [map, target, sub, &stack](Coord & c, int xOff,
+                                                   int yOff) {
+        const int i = c.first + xOff;
+        const int j = c.second + yOff;
+        if (i > 0 && i < 60 && j > 0 && j < 60) {
+            if (map[i][j] == target) {
+                map[i][j] = sub;
+                stack.push({i, j});
+            }
+        }
+    };
     while (!stack.empty()) {
-	Coord coord = stack.top();
-	stack.pop();
-	action(coord, -1, 0);
-	action(coord, 0, 1);
-	action(coord, 0, -1);
-	action(coord, 1, 0);
+        Coord coord = stack.top();
+        stack.pop();
+        action(coord, -1, 0);
+        action(coord, 0, 1);
+        action(coord, 0, -1);
+        action(coord, 1, 0);
     }
 }
 

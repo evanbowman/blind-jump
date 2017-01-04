@@ -1,6 +1,6 @@
 #include "scoot.hpp"
 #include "angleFunction.hpp"
-#include "game.hpp"
+#include "Game.hpp"
 #include "player.hpp"
 #include <cmath>
 
