@@ -4,6 +4,7 @@
 #include "GfxContext.hpp"
 #include "RenderType.hpp"
 #include "alias.hpp"
+#include "HelperGroup.hpp"
 #include "backgroundHandler.hpp"
 #include "camera.hpp"
 #include "colors.hpp"
@@ -69,6 +70,7 @@ private:
     tileController tiles;
     EffectGroup effectGroup;
     DetailGroup detailGroup;
+    HelperGroup helperGroup;
     enemyController en;
     ui::Frontend uiFrontend;
     std::mutex overworldMutex, UIMutex, transitionMutex;

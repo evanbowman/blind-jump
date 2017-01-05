@@ -7,16 +7,15 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 
-namespace effect {
 template <typename DrawPolicy>
-class Item : public Drawable<Item<DrawPolicy>, DrawPolicy>, public Effect {
+class _Item : public Drawable<_Item<DrawPolicy>, DrawPolicy>, public Effect {
     constexpr static float PI{3.1415926535};
 
 public:
     static const int drawOffset = -16;
     enum class Type { Heart, Coin };
     using HBox = framework::HitBox<13, 13, -8, -8>;
-    Item(const sf::Texture & bodyTxtr, const sf::Texture & glowTxtr,
+    _Item(const sf::Texture & bodyTxtr, const sf::Texture & glowTxtr,
          float xInit, float yInit, Type id)
         : Effect(xInit, yInit) {
         glow.setTexture(glowTxtr);
@@ -33,7 +32,7 @@ public:
     }
     const sf::Sprite & getSprite() const { return powerupSheet.getSprite(); }
     const sf::Sprite & getGlow() const { return glow; }
-    const Item::HBox & getHitBox() const { return hitBox; }
+    const _Item::HBox & getHitBox() const { return hitBox; }
     template <typename Game> void update(const sf::Time & elapsedTime, Game *) {
         timer += elapsedTime.asMilliseconds();
         const float offset = (3 * sinf(2 * PI * 0.001 * timer + 180));
@@ -46,4 +45,3 @@ protected:
     sf::Sprite glow;
     SpriteSheet<0, 75, 13, 13> powerupSheet;
 };
-}

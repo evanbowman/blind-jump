@@ -7,13 +7,12 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 
-namespace effect {
 template <typename DrawPolicy>
-class ShotPuff : public Drawable<ShotPuff<DrawPolicy>, DrawPolicy>,
+class _ShotPuff : public Drawable<_ShotPuff<DrawPolicy>, DrawPolicy>,
                  public Effect {
 public:
     static const int drawOffset = 0;
-    ShotPuff(const sf::Texture & txtr, float x, float y) : Effect(x, y) {
+    _ShotPuff(const sf::Texture & txtr, float x, float y) : Effect(x, y) {
         spriteSheet.setTexture(txtr);
         spriteSheet.setPosition(position.x, position.y);
     }
@@ -33,4 +32,3 @@ public:
 private:
     mutable SpriteSheet<88, 145, 16, 16> spriteSheet;
 };
-}

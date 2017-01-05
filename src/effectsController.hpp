@@ -17,15 +17,15 @@
 #include <SFML/Graphics.hpp>
 
 using DefaultEffectPolicy = RenderPolicy<DrawMainRaw, DrawGlowFloor>;
-using TurretFlashEffect = effect::TurretFlashEffect<RenderPolicy<DrawMainRaw>>;
-using SmallExplosion = effect::SmallExplosion<DefaultEffectPolicy>;
-using FireExplosion = effect::FireExplosion<DefaultEffectPolicy>;
-using ShotPuff = effect::ShotPuff<RenderPolicy<DrawMainRaw>>;
-using Item = effect::Item<DefaultEffectPolicy>;
-using EnemyShot = effect::EnemyShot<DefaultEffectPolicy>;
-using DasherShot = effect::DasherShot<DefaultEffectPolicy>;
-using TurretShot = effect::TurretShot<DefaultEffectPolicy>;
-using PlayerShot = effect::PlayerShot<DefaultEffectPolicy>;
+using TurretFlashEffect = _TurretFlashEffect<RenderPolicy<DrawMainRaw>>;
+using SmallExplosion = _SmallExplosion<DefaultEffectPolicy>;
+using FireExplosion = _FireExplosion<DefaultEffectPolicy>;
+using ShotPuff = _ShotPuff<RenderPolicy<DrawMainRaw>>;
+using Item = _Item<DefaultEffectPolicy>;
+using EnemyShot = _EnemyShot<DefaultEffectPolicy>;
+using DasherShot = _DasherShot<DefaultEffectPolicy>;
+using TurretShot = _TurretShot<DefaultEffectPolicy>;
+using PlayerShot = _PlayerShot<DefaultEffectPolicy>;
 
 struct EffectRef {
     enum {

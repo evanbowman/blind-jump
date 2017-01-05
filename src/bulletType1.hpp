@@ -6,14 +6,13 @@
 #include "spriteSheet.hpp"
 #include <SFML/Graphics.hpp>
 
-namespace effect {
 template <typename DrawPolicy>
-class PlayerShot : public Drawable<PlayerShot<DrawPolicy>, DrawPolicy>,
+class _PlayerShot : public Drawable<_PlayerShot<DrawPolicy>, DrawPolicy>,
                    public Effect {
 public:
     static const int drawOffset = 0;
     using HBox = framework::HitBox<12, 12, 2, 2>;
-    PlayerShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr,
+    _PlayerShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr,
                char dir, float x, float y)
         : Effect{x, y}, xInit{x}, yInit{y}, direction{dir}, canPoof{true},
           state{State::travelling} {
@@ -123,4 +122,3 @@ private:
     enum class State { travelling, poof };
     State state;
 };
-}

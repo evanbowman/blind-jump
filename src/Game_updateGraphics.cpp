@@ -31,6 +31,7 @@ void Game::updateGraphics() {
                 player.draw(gfxContext.faces, gfxContext.shadows);
             }
             effectGroup.apply(drawPolicy);
+	    helperGroup.apply(drawPolicy);
             en.draw(gfxContext.faces, gfxContext.shadows, camera);
             sounds.update();
         }

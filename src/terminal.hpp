@@ -14,14 +14,13 @@ struct DrawScreen {
     }
 };
 
-namespace detail {
 template <typename DrawPolicy>
-class Terminal : public Drawable<Terminal<DrawPolicy>, DrawPolicy>,
+class _Terminal : public Drawable<_Terminal<DrawPolicy>, DrawPolicy>,
                  public framework::Object {
 public:
     static const int drawOffset = -10;
     enum class State { dormant, wakeup, awake, poweroff };
-    Terminal(const float _xInit, const float _yInit,
+    _Terminal(const float _xInit, const float _yInit,
              const sf::Texture & mainTxtr, const uint8_t tile)
         : Object(_xInit + rng::random<4, -2>(), _yInit - rng::random<2, 1>()),
           animationTimer(0), stateTimer(0), frameIndex(0),
@@ -83,7 +82,7 @@ public:
         } break;
         }
     }
-    void setState(const Terminal::State _state) { state = _state; }
+    void setState(const _Terminal::State _state) { state = _state; }
     const State getState() const { return state; }
 
 private:
@@ -95,4 +94,3 @@ private:
     sf::Sprite mainSprite;
     sf::Sprite shadow;
 };
-}

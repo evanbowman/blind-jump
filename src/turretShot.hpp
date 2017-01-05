@@ -9,16 +9,15 @@
 #include <cmath>
 #include <memory>
 
-namespace effect {
 template <typename DrawPolicy>
-class TurretShot : public Drawable<TurretShot<DrawPolicy>, DrawPolicy>,
+class _TurretShot : public Drawable<_TurretShot<DrawPolicy>, DrawPolicy>,
                    public Effect,
-                   public std::enable_shared_from_this<TurretShot<DrawPolicy>> {
+                   public std::enable_shared_from_this<_TurretShot<DrawPolicy>> {
 public:
     static const int drawOffset = 11;
     using HBox = framework::HitBox<10, 10, -5, -5>;
     enum { lifetime = 600 };
-    TurretShot(float x, float y, float dir)
+    _TurretShot(float x, float y, float dir)
         : Effect(x, y), soundsStarted(false) {
         auto res = getgResHandlerPtr();
         spriteSheet.setTexture(
@@ -75,4 +74,3 @@ private:
     float direction;
     float scale;
 };
-}

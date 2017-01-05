@@ -16,15 +16,13 @@
 #include <SFML/Graphics.hpp>
 #include <array>
 
-using TreasureChest = detail::TreasureChest<RenderPolicy<DrawMain, DrawShadow>>;
-using Teleporter =
-    detail::Teleporter<RenderPolicy<ForceShadow, ForceMain, DrawGlowAll>>;
-using Lamp = detail::Lamp<RenderPolicy<ForceMain, DrawGlowAll>>;
-using Rock = detail::Rock<RenderPolicy<DrawMain>>;
-using IntroDoor = detail::IntroDoor<RenderPolicy<DrawMain>>;
-using StaticDrawable = detail::StaticDrawable<RenderPolicy<DrawMain>>;
-using Terminal =
-    detail::Terminal<RenderPolicy<DrawMain, DrawShadow, DrawScreen>>;
+using TreasureChest = _TreasureChest<RenderPolicy<DrawMain, DrawShadow>>;
+using Teleporter = _Teleporter<RenderPolicy<ForceShadow, ForceMain, DrawGlowAll>>;
+using Lamp = _Lamp<RenderPolicy<ForceMain, DrawGlowAll>>;
+using Rock = _Rock<RenderPolicy<DrawMain>>;
+using IntroDoor = _IntroDoor<RenderPolicy<DrawMain>>;
+using StaticDrawable = _StaticDrawable<RenderPolicy<DrawMain>>;
+using Terminal = _Terminal<RenderPolicy<DrawMain, DrawShadow, DrawScreen>>;
 
 struct DetailRef {
     enum {

@@ -7,13 +7,12 @@
 #include "spriteSheet.hpp"
 #include <SFML/Graphics.hpp>
 
-namespace effect {
 template <typename DrawPolicy>
-class FireExplosion : public Drawable<FireExplosion<DrawPolicy>, DrawPolicy>,
+class _FireExplosion : public Drawable<_FireExplosion<DrawPolicy>, DrawPolicy>,
                       public Effect {
 public:
     static const int drawOffset = 0;
-    FireExplosion(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr,
+    _FireExplosion(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr,
                   float x, float y)
         : Effect(x, y), glowFadeTimer(0) {
         spriteSheet.setTexture(mainTxtr);
@@ -49,4 +48,3 @@ private:
     sf::Sprite glow;
     int64_t glowFadeTimer;
 };
-}

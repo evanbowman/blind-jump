@@ -11,15 +11,14 @@
 #include <cmath>
 #include <memory>
 
-namespace effect {
 template <typename DrawPolicy>
-class DasherShot : public Drawable<DasherShot<DrawPolicy>, DrawPolicy>,
+class _DasherShot : public Drawable<_DasherShot<DrawPolicy>, DrawPolicy>,
                    public Effect,
-                   public std::enable_shared_from_this<DasherShot<DrawPolicy>> {
+                   public std::enable_shared_from_this<_DasherShot<DrawPolicy>> {
 public:
     static const int drawOffset = 11;
     using HBox = framework::HitBox<12, 12, -6, -6>;
-    DasherShot(float x, float y, float dir)
+    _DasherShot(float x, float y, float dir)
         : Effect(x, y), soundsStarted(false) {
         auto res = getgResHandlerPtr();
         spriteSheet.setTexture(
@@ -72,7 +71,7 @@ public:
     bool driftSel;
     const sf::Sprite & getSprite() const { return spriteSheet[frameIndex]; }
     const sf::Sprite & getGlow() const { return glowSprite; }
-    const DasherShot::HBox & getHitBox() const { return hitBox; }
+    const _DasherShot::HBox & getHitBox() const { return hitBox; }
 
 private:
     mutable SpriteSheet<0, 88, 12, 12> spriteSheet;
@@ -82,4 +81,3 @@ private:
     sf::Sprite glowSprite;
     bool soundsStarted;
 };
-}

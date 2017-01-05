@@ -2,13 +2,12 @@
 
 #include "Drawable.hpp"
 
-namespace detail {
 template <typename DrawPolicy>
-class Lamp : public Drawable<Lamp<DrawPolicy>, DrawPolicy>,
+class _Lamp : public Drawable<_Lamp<DrawPolicy>, DrawPolicy>,
              public framework::Object {
 public:
     static const int drawOffset = 0;
-    Lamp(float _xInit, float _yInit, const sf::Texture & txtr,
+    _Lamp(float _xInit, float _yInit, const sf::Texture & txtr,
          const sf::Texture & glwTxtr)
         : Object(_xInit, _yInit) {
         glowSprite.setTexture(glwTxtr);
@@ -25,4 +24,3 @@ private:
     sf::Sprite lampSprite;
     sf::Sprite glowSprite;
 };
-}

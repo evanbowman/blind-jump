@@ -8,14 +8,13 @@
 #include "rng.hpp"
 #include "spriteSheet.hpp"
 
-namespace detail {
 template <typename DrawPolicy>
-class TreasureChest : public Drawable<TreasureChest<DrawPolicy>, DrawPolicy>,
+class _TreasureChest : public Drawable<_TreasureChest<DrawPolicy>, DrawPolicy>,
                       public framework::Object {
 public:
     static const int drawOffset = -16;
     enum class State { closed, opening, ready, complete };
-    TreasureChest(float _xInit, float _yInit, const sf::Texture & mainTxtr,
+    _TreasureChest(float _xInit, float _yInit, const sf::Texture & mainTxtr,
                   Powerup _powerup)
         : Object(_xInit + rng::random<4, -2>(), _yInit), state(State::closed),
           powerup(_powerup), animationTimer(0), frameIndex(0),
@@ -64,4 +63,3 @@ private:
     mutable SpriteSheet<656, 76, 16, 30> chestSheet;
     mutable sf::Sprite chestShadow;
 };
-}

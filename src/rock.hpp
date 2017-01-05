@@ -6,13 +6,12 @@
 #include "spriteSheet.hpp"
 #include <SFML/Graphics.hpp>
 
-namespace detail {
 template <typename DrawPolicy>
-class Rock : public Drawable<Rock<DrawPolicy>, DrawPolicy>,
+class _Rock : public Drawable<_Rock<DrawPolicy>, DrawPolicy>,
              public framework::Object {
 public:
     static const int drawOffset = 24;
-    Rock(float _xPos, float _yPos, const sf::Texture & inpTxtr)
+    _Rock(float _xPos, float _yPos, const sf::Texture & inpTxtr)
         : Object(_xPos, _yPos) {
         rockSheet.setTexture(inpTxtr);
         if (rng::random<2>()) {
@@ -28,4 +27,3 @@ public:
 private:
     mutable SpriteSheet<80, 38, 32, 64> rockSheet;
 };
-}
