@@ -7,7 +7,7 @@
 Critter::Critter(const sf::Texture & txtr, uint8_t _map[61][61], float _xInit,
                  float _yInit)
     : Enemy(_xInit, _yInit), xInit(_xInit), yInit(_yInit), currentDir(0.f),
-      jumpTargetx(0.f), jumpTargety(0.f), spriteSheet(txtr), awake(false),
+      spriteSheet(txtr), awake(false),
       active(true), recalc(4), map(_map) {
     health = 3;
     spriteSheet.setOrigin(9, 9);
@@ -27,7 +27,7 @@ void Critter::update(Game * pGame, const sf::Time & elapsedTime,
     position.y = yInit;
     EffectGroup & effects = pGame->getEffects();
     Player & player = pGame->getPlayer();
-    for (auto & element : effects.get<9>()) {
+    for (auto & element : effects.get<EffectRef::PlayerShot>()) {
         if (element->getHitBox().overlapping(hitBox) &&
             element->checkCanPoof()) {
             if (health == 1) {

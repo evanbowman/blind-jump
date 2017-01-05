@@ -27,7 +27,7 @@ void Scoot::changeDir(float dir) {
 void Scoot::update(Game * pGame, const std::vector<wall> & w,
                    const sf::Time & elapsedTime) {
     EffectGroup & effects = pGame->getEffects();
-    for (auto & element : effects.get<9>()) {
+    for (auto & element : effects.get<EffectRef::PlayerShot>()) {
         if (hitBox.overlapping(element->getHitBox()) &&
             element->checkCanPoof()) {
             if (health == 1) {

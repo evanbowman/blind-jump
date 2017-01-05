@@ -70,7 +70,7 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls,
     EffectGroup & effects = pGame->getEffects();
     Player & player = pGame->getPlayer();
     if (health > 0) {
-        for (auto & element : effects.get<9>()) {
+        for (auto & element : effects.get<EffectRef::PlayerShot>()) {
             if (hitBox.overlapping(element->getHitBox()) &&
                 element->checkCanPoof()) {
                 if (health == 1) {
@@ -275,11 +275,13 @@ void Dasher::onDeath(EffectGroup & effects) {
     frameIndex = 0;
     killFlag = true;
     unsigned long int temp = rng::random<4>();
-    if (temp == 0) {
+    if (temp < 1) {
         effects.add<EffectRef::Heart>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
             position.x, position.y + 4, Item::Type::Heart);
+    } else if (temp < 3) {
+	effects.add<EffectRef::GoldHeart>(getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects), getgResHandlerPtr()->getTexture(ResHandler::Texture::yellowGlow), position.x, position.y + 4, Item::Type::GoldHeart);
     } else {
         effects.add<EffectRef::Coin>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),

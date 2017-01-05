@@ -26,8 +26,6 @@ private:
     float xInit, yInit;
     void onDeath(EffectGroup &);
     float currentDir;
-    float jumpTargetx, jumpTargety;
-    void newPath(tileController &);
     mutable SpriteSheet<0, 57, 18, 18> spriteSheet;
     std::vector<aStrCoordinate> path;
     aStrCoordinate previous;

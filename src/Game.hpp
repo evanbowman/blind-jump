@@ -58,6 +58,7 @@ public:
     sf::Vector2f viewPort;
     TransitionState transitionState;
     sf::RenderWindow & getWindow();
+    HelperGroup & getHelperGroup();
     void init();
 
 private:

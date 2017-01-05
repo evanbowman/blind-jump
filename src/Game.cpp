@@ -478,6 +478,10 @@ void Game::nextLevel() {
 
 DetailGroup & Game::getDetails() { return detailGroup; }
 
+HelperGroup & Game::getHelperGroup() {
+    return helperGroup;
+}
+
 enemyController & Game::getEnemyController() { return en; }
 
 tileController & Game::getTileController() { return tiles; }

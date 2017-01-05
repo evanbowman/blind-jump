@@ -79,6 +79,8 @@ void ResHandler::loadTextures(const std::string & resPath) {
                  textures);
     loadResource(resPath + "textures/bkg_orbit2.png", Texture::bkgOrbit,
                  textures);
+    loadResource(resPath + "textures/yellowGlow.png", Texture::yellowGlow,
+		 textures);
 }
 
 void ResHandler::loadFonts(const std::string & resPath) {

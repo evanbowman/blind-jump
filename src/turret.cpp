@@ -28,7 +28,7 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
             isColored = false;
         }
     }
-    for (auto & element : effects.get<9>()) {
+    for (auto & element : effects.get<EffectRef::PlayerShot>()) {
         if (hitBox.overlapping(element->getHitBox()) &&
             element->checkCanPoof()) {
             if (hp == 1) {

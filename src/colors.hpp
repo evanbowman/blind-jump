@@ -30,4 +30,9 @@ constexpr float R = 0.16f;
 constexpr float G = 0.26f;
 constexpr float B = 0.43f;
 }
+    namespace Yellow {
+	constexpr float R = 1.00f;
+	constexpr float G = 0.84f;
+	constexpr float B = 0.08f;
+    }
 }

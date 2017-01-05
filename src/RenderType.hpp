@@ -6,5 +6,6 @@ enum class Rendertype {
     shadeGldnGt,
     shadeRuby,
     shadeElectric,
+    shadeYellow,
     shadeNone
 };

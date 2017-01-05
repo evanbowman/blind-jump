@@ -71,6 +71,13 @@ void Game::updateGraphics() {
                 lightingMap.draw(std::get<sprIdx>(element), &colorShader);
             } break;
 
+	    case Rendertype::shadeYellow: {
+		DEF_GLSL_COLOR(colors::Yellow, Yellow);
+		colorShader.setUniform("amount", std::get<shaderIdx>(element));
+		colorShader.setUniform("targetColor", Yellow);
+		lightingMap.draw(std::get<sprIdx>(element), &colorShader);
+	    } break;
+		
             case Rendertype::shadeGldnGt: {
                 DEF_GLSL_COLOR(colors::GldnGt, GldnGt);
                 colorShader.setUniform("amount", std::get<shaderIdx>(element));

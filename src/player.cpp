@@ -728,7 +728,8 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey,
                     getgResHandlerPtr()->getTexture(
                         ResHandler::Texture::whiteGlow),
                     static_cast<int>(sheetIndex), xPos, yPos);
-                if (UI.getCurrentPowerup() == Powerup::rapidFire) {
+                if (UI.getCurrentPowerup() == Powerup::rapidFire &&
+		    UI.powerupBarVisible()) {
                     gun.bulletTimer = 220000;
                 } else {
                     gun.bulletTimer = 440000;
@@ -762,10 +763,10 @@ void Player::checkEffectCollisions(EffectGroup & effects,
             util::sleep(milliseconds(40));
         }
     };
-    checkEffectCollision<8>(effects, this, hitPolicy);
-    checkEffectCollision<7>(effects, this, hitPolicy);
-    checkEffectCollision<6>(effects, this, hitPolicy);
-    checkEffectCollision<4>(effects, this, [&]() {
+    checkEffectCollision<EffectRef::EnemyShot>(effects, this, hitPolicy);
+    checkEffectCollision<EffectRef::DasherShot>(effects, this, hitPolicy);
+    checkEffectCollision<EffectRef::TurretShot>(effects, this, hitPolicy);
+    checkEffectCollision<EffectRef::Heart>(effects, this, [&]() {
         health = fmin(uiFrontend.getMaxHealth(), health + 1);
         uiFrontend.updateHealth(health);
         renderType = Rendertype::shadeRuby;
@@ -773,13 +774,23 @@ void Player::checkEffectCollisions(EffectGroup & effects,
         colorTimer = 0;
         util::sleep(milliseconds(40));
     });
-    checkEffectCollision<5>(effects, this, [&]() {
+    checkEffectCollision<EffectRef::Coin>(effects, this, [&]() {
         uiFrontend.updateScore(1);
         renderType = Rendertype::shadeElectric;
         colorAmount = 1.f;
         colorTimer = 0;
         util::sleep(milliseconds(40));
     });
+    checkEffectCollision<EffectRef::GoldHeart>(effects, this, [&] {
+								  char maxHealth = uiFrontend.getMaxHealth();
+								  uiFrontend.updateMaxHealth(maxHealth + 1);
+								  health = fmin(maxHealth + 1, health + 1);
+								  uiFrontend.updateHealth(health);
+								  renderType = Rendertype::shadeYellow;
+								  colorAmount = 1.f;
+								  colorTimer = 0;
+								  util::sleep(milliseconds(40));
+							     });
 }
 
 template <typename F, typename T>

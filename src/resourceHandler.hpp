@@ -30,6 +30,7 @@ public:
         bkgOrbit,
         introLevelMask,
         powerupSheet,
+	yellowGlow,
         count
     };
     enum class Shader { color, blur, desaturate, count };

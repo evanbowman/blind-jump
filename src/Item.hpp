@@ -13,7 +13,7 @@ class _Item : public Drawable<_Item<DrawPolicy>, DrawPolicy>, public Effect {
 
 public:
     static const int drawOffset = -16;
-    enum class Type { Heart, Coin };
+    enum class Type { Heart, Coin, GoldHeart };
     using HBox = framework::HitBox<13, 13, -8, -8>;
     _Item(const sf::Texture & bodyTxtr, const sf::Texture & glowTxtr,
          float xInit, float yInit, Type id)
@@ -43,5 +43,5 @@ public:
 protected:
     HBox hitBox;
     sf::Sprite glow;
-    SpriteSheet<0, 75, 13, 13> powerupSheet;
+    SpriteSheet<0, 171, 13, 13> powerupSheet;
 };

@@ -106,12 +106,26 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
     switch (state) {
     case State::closed:
         if (dispPowerupBar) {
-            const static int64_t powerupTimerCeil = 18000000;
+	    int64_t powerupTimerCeil;
+	    switch (powerup) {
+	    case Powerup::laika:
+		powerupTimerCeil = 28000000;
+		break;
+		
+	    case Powerup::rapidFire:
+		powerupTimerCeil = 18000000;
+		break;
+
+	    case Powerup::nil: break;
+	    }
             powerupTimer += elapsedTime.asMicroseconds();
             float barWidth = Easing::easeOut<1>(powerupTimer, powerupTimerCeil);
             uIFrontEnd.setBarWidth(barWidth);
             if (powerupTimer > powerupTimerCeil) {
                 dispPowerupBar = false;
+		if (powerup == Powerup::laika) {
+		    pGame->getHelperGroup().clear();
+		}
                 powerup = Powerup::nil;
             }
         }
@@ -279,14 +293,18 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
         case Powerup::nil:
             break;
 
-        case Powerup::health:
-            uIFrontEnd.updateMaxHealth(uIFrontEnd.getMaxHealth() + 1);
-            break;
-
         case Powerup::rapidFire:
             dispPowerupBar = true;
             powerupTimer = 0;
             break;
+
+	case Powerup::laika: {
+	    dispPowerupBar = true;
+	    powerupTimer = 0;
+	    HelperGroup & hg = pGame->getHelperGroup();
+	    const sf::Vector2f playerPos = pGame->getPlayer().getPosition();
+	    hg.add<HelperRef::Laika>(playerPos.x, playerPos.y, getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects), pGame->getTileController().mapArray);
+	} break;
         }
         powerupBubbleState = PowerupBubbleState::dormant;
         break;
@@ -623,19 +641,17 @@ void ui::Frontend::draw(sf::RenderWindow & window) {
     case Powerup::nil:
         break;
 
-    case Powerup::health:
-        powerupBubble.setFrame(static_cast<int>(powerupAdded) -
-                               1); // Powerup::nil has no frame
-        powerupAdded = Powerup::nil;
-        barWidth = 0;
-        powerupText.setString(std::string("LIFE JAR"));
-        break;
-
     case Powerup::rapidFire:
         powerupBubble.setFrame(static_cast<int>(powerupAdded) - 1);
         powerupAdded = Powerup::nil;
         powerupText.setString(std::string("SUPERCHARGER"));
         break;
+
+    case Powerup::laika:
+	powerupBubble.setFrame(static_cast<int>(powerupAdded) - 1);
+	powerupAdded = Powerup::nil;
+	powerupText.setString(std::string("LAIKA"));
+	break;
     }
     // Slowly fade out the  waypoint text
     sf::Color c = waypointText.getFillColor();
