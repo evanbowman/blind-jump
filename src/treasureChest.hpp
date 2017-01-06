@@ -10,12 +10,12 @@
 
 template <typename DrawPolicy>
 class _TreasureChest : public Drawable<_TreasureChest<DrawPolicy>, DrawPolicy>,
-                      public framework::Object {
+                       public framework::Object {
 public:
     static const int drawOffset = -16;
     enum class State { closed, opening, ready, complete };
     _TreasureChest(float _xInit, float _yInit, const sf::Texture & mainTxtr,
-                  Powerup _powerup)
+                   Powerup _powerup)
         : Object(_xInit + rng::random<4, -2>(), _yInit), state(State::closed),
           powerup(_powerup), animationTimer(0), frameIndex(0),
           chestSheet(mainTxtr) {

@@ -17,7 +17,8 @@
 #include <array>
 
 using TreasureChest = _TreasureChest<RenderPolicy<DrawMain, DrawShadow>>;
-using Teleporter = _Teleporter<RenderPolicy<ForceShadow, ForceMain, DrawGlowAll>>;
+using Teleporter =
+    _Teleporter<RenderPolicy<ForceShadow, ForceMain, DrawGlowAll>>;
 using Lamp = _Lamp<RenderPolicy<ForceMain, DrawGlowAll>>;
 using Rock = _Rock<RenderPolicy<DrawMain>>;
 using IntroDoor = _IntroDoor<RenderPolicy<DrawMain>>;

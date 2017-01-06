@@ -16,12 +16,12 @@ struct DrawScreen {
 
 template <typename DrawPolicy>
 class _Terminal : public Drawable<_Terminal<DrawPolicy>, DrawPolicy>,
-                 public framework::Object {
+                  public framework::Object {
 public:
     static const int drawOffset = -10;
     enum class State { dormant, wakeup, awake, poweroff };
     _Terminal(const float _xInit, const float _yInit,
-             const sf::Texture & mainTxtr, const uint8_t tile)
+              const sf::Texture & mainTxtr, const uint8_t tile)
         : Object(_xInit + rng::random<4, -2>(), _yInit - rng::random<2, 1>()),
           animationTimer(0), stateTimer(0), frameIndex(0),
           state(State::dormant), screenSheet(mainTxtr), mainSprite(mainTxtr),

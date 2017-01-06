@@ -8,12 +8,13 @@
 #include <SFML/Graphics.hpp>
 
 template <typename DrawPolicy>
-class _SmallExplosion : public Drawable<_SmallExplosion<DrawPolicy>, DrawPolicy>,
-                       public Effect {
+class _SmallExplosion
+    : public Drawable<_SmallExplosion<DrawPolicy>, DrawPolicy>,
+      public Effect {
 public:
     static const int drawOffset = 0;
     _SmallExplosion(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr,
-                   float x, float y)
+                    float x, float y)
         : Effect(x, y), glowFadeTimer(0) {
         spriteSheet.setTexture(mainTxtr);
         spriteSheet.setOrigin(18, 18);

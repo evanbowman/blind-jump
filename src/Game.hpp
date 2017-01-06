@@ -2,9 +2,9 @@
 
 #include "DetailGroup.hpp"
 #include "GfxContext.hpp"
+#include "HelperGroup.hpp"
 #include "RenderType.hpp"
 #include "alias.hpp"
-#include "HelperGroup.hpp"
 #include "backgroundHandler.hpp"
 #include "camera.hpp"
 #include "colors.hpp"

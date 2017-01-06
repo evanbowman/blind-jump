@@ -2,6 +2,7 @@
 #include "angleFunction.hpp"
 #include "player.hpp"
 #include <cmath>
+#include "Game.hpp"
 
 Turret::Turret(const sf::Texture & gameObjects, float _xPos, float _yPos)
     : Enemy(_xPos, _yPos), state(State::closed), frameIndex(0), timer(0), hp(6),
@@ -16,8 +17,9 @@ Turret::Turret(const sf::Texture & gameObjects, float _xPos, float _yPos)
 
 const sf::Sprite & Turret::getSprite() { return turretSheet[frameIndex]; }
 
-void Turret::update(const sf::Time & elapsedTime, const Player * player,
-                    EffectGroup & effects) {
+void Turret::update(const sf::Time & elapsedTime, Game * pGame) {
+    EffectGroup & effects = pGame->getEffects();
+    Player & player = pGame->getPlayer();
     if (isColored) {
         colorTimer += elapsedTime.asMilliseconds();
         if (colorTimer > 20.f) {
@@ -40,6 +42,11 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
             isColored = true;
             colorAmount = 1.f;
         }
+    }
+    for (auto & helper : pGame->getHelperGroup().get<HelperRef::Laika>()) {
+	if (hitBox.overlapping(helper->getHitBox())) {
+	    health = 0;
+	}
     }
     if (hp == 0) {
         killFlag = true;
@@ -64,8 +71,8 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
     }
     switch (state) {
     case State::closed:
-        if (std::sqrt(std::pow((position.x - player->getXpos() + 8), 2) +
-                      std::pow((position.y - player->getYpos() + 16), 2)) <
+        if (std::sqrt(std::pow((position.x - player.getXpos() + 8), 2) +
+                      std::pow((position.y - player.getYpos() + 16), 2)) <
             174) {
             state = State::opening;
             timer = 0;
@@ -86,7 +93,7 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
         break;
 
     case State::shoot1:
-        target = player->requestFuturePos(TurretShot::lifetime * 1000);
+        target = player.requestFuturePos(TurretShot::lifetime * 1000);
         timer += elapsedTime.asMicroseconds();
         if (timer > 200000) {
             effects.add<EffectRef::TurretFlashEffect>(
@@ -146,8 +153,8 @@ void Turret::update(const sf::Time & elapsedTime, const Player * player,
     case State::rest:
         timer += elapsedTime.asMicroseconds();
         if (timer > 1200000) {
-            if (std::sqrt(std::pow((position.x - player->getXpos() + 8), 2) +
-                          std::pow((position.y - player->getYpos() + 16), 2)) <
+            if (std::sqrt(std::pow((position.x - player.getXpos() + 8), 2) +
+                          std::pow((position.y - player.getYpos() + 16), 2)) <
                 174) {
                 state = State::shoot1;
             } else {

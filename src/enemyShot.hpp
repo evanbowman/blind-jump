@@ -11,13 +11,13 @@
 
 template <typename DrawPolicy>
 class _EnemyShot : public Drawable<_EnemyShot<DrawPolicy>, DrawPolicy>,
-                  public Effect {
+                   public Effect {
 public:
     static const int drawOffset = 11;
     using HBox = framework::HitBox<14, 14, 0, 0>;
     enum { lifetime = 600 };
     _EnemyShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr,
-              float x, float y, float dir)
+               float x, float y, float dir)
         : Effect(x, y), frameTimer(0) {
         glowSprite.setTexture(glowTxtr);
         glowSprite.setOrigin(22.5, 22.5);

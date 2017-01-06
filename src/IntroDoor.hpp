@@ -6,7 +6,7 @@
 
 template <typename DrawPolicy>
 class _IntroDoor : public Drawable<_IntroDoor<DrawPolicy>, DrawPolicy>,
-                  public framework::Object {
+                   public framework::Object {
 public:
     static const int drawOffset = 60;
     template <typename Game> void update(const sf::Time &, Game *) {}

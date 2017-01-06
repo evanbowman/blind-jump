@@ -7,11 +7,11 @@
 
 template <typename DrawPolicy>
 class _Teleporter : public Drawable<_Teleporter<DrawPolicy>, DrawPolicy>,
-                   public framework::Object {
+                    public framework::Object {
 public:
     static const int drawOffset = 0;
     _Teleporter(float _xInit, float _yInit, const sf::Texture & mainTxtr,
-               const sf::Texture & glowTxtr)
+                const sf::Texture & glowTxtr)
         : Object(_xInit, _yInit), smokeTimer(0) {
         for (int i = 0; i < 2; i++) {
             TeleporterSprites[i].setTexture(mainTxtr);

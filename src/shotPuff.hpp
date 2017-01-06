@@ -9,7 +9,7 @@
 
 template <typename DrawPolicy>
 class _ShotPuff : public Drawable<_ShotPuff<DrawPolicy>, DrawPolicy>,
-                 public Effect {
+                  public Effect {
 public:
     static const int drawOffset = 0;
     _ShotPuff(const sf::Texture & txtr, float x, float y) : Effect(x, y) {

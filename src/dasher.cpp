@@ -1,6 +1,6 @@
 #include "dasher.hpp"
-#include "angleFunction.hpp"
 #include "Game.hpp"
+#include "angleFunction.hpp"
 #include <cmath>
 
 Dasher::Blur::Blur(sf::Sprite * spr, float xInit, float yInit) {
@@ -83,6 +83,11 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls,
                 colorAmount = 1.f;
             }
         }
+	for (auto & helper : pGame->getHelperGroup().get<HelperRef::Laika>()) {
+	    if (hitBox.overlapping(helper->getHitBox())) {
+		health = 0;
+	    }
+	}
         if (health == 0) {
             if (position.x > player.getXpos()) {
                 deathSheet.setScale(1, 1);
@@ -281,7 +286,10 @@ void Dasher::onDeath(EffectGroup & effects) {
             getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
             position.x, position.y + 4, Item::Type::Heart);
     } else if (temp < 3) {
-	effects.add<EffectRef::GoldHeart>(getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects), getgResHandlerPtr()->getTexture(ResHandler::Texture::yellowGlow), position.x, position.y + 4, Item::Type::GoldHeart);
+        effects.add<EffectRef::GoldHeart>(
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
+            getgResHandlerPtr()->getTexture(ResHandler::Texture::yellowGlow),
+            position.x, position.y + 4, Item::Type::GoldHeart);
     } else {
         effects.add<EffectRef::Coin>(
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),

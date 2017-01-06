@@ -1,6 +1,6 @@
 #include "scoot.hpp"
-#include "angleFunction.hpp"
 #include "Game.hpp"
+#include "angleFunction.hpp"
 #include "player.hpp"
 #include <cmath>
 
@@ -39,6 +39,11 @@ void Scoot::update(Game * pGame, const std::vector<wall> & w,
             colored = true;
             colorAmount = 1.f;
         }
+    }
+    for (auto & helper : pGame->getHelperGroup().get<HelperRef::Laika>()) {
+	if (hitBox.overlapping(helper->getHitBox())) {
+	    health = 0;
+	}
     }
     if (health == 0) {
         int select = rng::random<5>();

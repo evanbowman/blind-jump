@@ -729,7 +729,7 @@ void Player::updateGun(const sf::Time & elapsedTime, const bool shootKey,
                         ResHandler::Texture::whiteGlow),
                     static_cast<int>(sheetIndex), xPos, yPos);
                 if (UI.getCurrentPowerup() == Powerup::rapidFire &&
-		    UI.powerupBarVisible()) {
+                    UI.powerupBarVisible()) {
                     gun.bulletTimer = 220000;
                 } else {
                     gun.bulletTimer = 440000;
@@ -782,15 +782,15 @@ void Player::checkEffectCollisions(EffectGroup & effects,
         util::sleep(milliseconds(40));
     });
     checkEffectCollision<EffectRef::GoldHeart>(effects, this, [&] {
-								  char maxHealth = uiFrontend.getMaxHealth();
-								  uiFrontend.updateMaxHealth(maxHealth + 1);
-								  health = fmin(maxHealth + 1, health + 1);
-								  uiFrontend.updateHealth(health);
-								  renderType = Rendertype::shadeYellow;
-								  colorAmount = 1.f;
-								  colorTimer = 0;
-								  util::sleep(milliseconds(40));
-							     });
+        char maxHealth = uiFrontend.getMaxHealth();
+        uiFrontend.updateMaxHealth(maxHealth + 1);
+        health = fmin(maxHealth + 1, health + 1);
+        uiFrontend.updateHealth(health);
+        renderType = Rendertype::shadeYellow;
+        colorAmount = 1.f;
+        colorTimer = 0;
+        util::sleep(milliseconds(40));
+    });
 }
 
 template <typename F, typename T>

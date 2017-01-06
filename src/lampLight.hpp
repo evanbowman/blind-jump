@@ -4,11 +4,11 @@
 
 template <typename DrawPolicy>
 class _Lamp : public Drawable<_Lamp<DrawPolicy>, DrawPolicy>,
-             public framework::Object {
+              public framework::Object {
 public:
     static const int drawOffset = 0;
     _Lamp(float _xInit, float _yInit, const sf::Texture & txtr,
-         const sf::Texture & glwTxtr)
+          const sf::Texture & glwTxtr)
         : Object(_xInit, _yInit) {
         glowSprite.setTexture(glwTxtr);
         lampSprite.setTexture(txtr);

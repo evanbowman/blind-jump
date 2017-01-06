@@ -31,7 +31,7 @@ void Game::updateGraphics() {
                 player.draw(gfxContext.faces, gfxContext.shadows);
             }
             effectGroup.apply(drawPolicy);
-	    helperGroup.apply(drawPolicy);
+            helperGroup.apply(drawPolicy);
             en.draw(gfxContext.faces, gfxContext.shadows, camera);
             sounds.update();
         }
@@ -71,13 +71,13 @@ void Game::updateGraphics() {
                 lightingMap.draw(std::get<sprIdx>(element), &colorShader);
             } break;
 
-	    case Rendertype::shadeYellow: {
-		DEF_GLSL_COLOR(colors::Yellow, Yellow);
-		colorShader.setUniform("amount", std::get<shaderIdx>(element));
-		colorShader.setUniform("targetColor", Yellow);
-		lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-	    } break;
-		
+            case Rendertype::shadeYellow: {
+                DEF_GLSL_COLOR(colors::Yellow, Yellow);
+                colorShader.setUniform("amount", std::get<shaderIdx>(element));
+                colorShader.setUniform("targetColor", Yellow);
+                lightingMap.draw(std::get<sprIdx>(element), &colorShader);
+            } break;
+
             case Rendertype::shadeGldnGt: {
                 DEF_GLSL_COLOR(colors::GldnGt, GldnGt);
                 colorShader.setUniform("amount", std::get<shaderIdx>(element));

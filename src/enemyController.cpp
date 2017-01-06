@@ -1,8 +1,8 @@
 #include "enemyController.hpp"
 #include "DetailGroup.hpp"
+#include "Game.hpp"
 #include "ResourcePath.hpp"
 #include "camera.hpp"
-#include "Game.hpp"
 #include "tileController.hpp"
 #include "wall.hpp"
 #include <cmath>
@@ -122,7 +122,7 @@ void enemyController::update(Game * pGame, bool enabled,
                     (*it)->getPosition().y <
                         viewCenter.y + viewSize.y / 2 + 32) {
                     if (enabled) {
-                        (*it)->update(elapsedTime, player, effectGroup);
+                        (*it)->update(elapsedTime, pGame);
                     }
                     cameraTargets.emplace_back((*it)->getPosition().x,
                                                (*it)->getPosition().y);

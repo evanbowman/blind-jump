@@ -7,8 +7,7 @@
 Critter::Critter(const sf::Texture & txtr, uint8_t _map[61][61], float _xInit,
                  float _yInit)
     : Enemy(_xInit, _yInit), xInit(_xInit), yInit(_yInit), currentDir(0.f),
-      spriteSheet(txtr), awake(false),
-      active(true), recalc(4), map(_map) {
+      spriteSheet(txtr), awake(false), active(true), recalc(4), map(_map) {
     health = 3;
     spriteSheet.setOrigin(9, 9);
     shadow.setOrigin(9, 9);
@@ -39,6 +38,11 @@ void Critter::update(Game * pGame, const sf::Time & elapsedTime,
             colored = true;
             colorAmount = 1.f;
         }
+    }
+    for (auto & helper : pGame->getHelperGroup().get<HelperRef::Laika>()) {
+	if (hitBox.overlapping(helper->getHitBox())) {
+	    health = 0;
+	}
     }
     if (health == 0) {
         unsigned long int temp = rng::random<5>();

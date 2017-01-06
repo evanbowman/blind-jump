@@ -9,11 +9,11 @@
 
 template <typename DrawPolicy>
 class _FireExplosion : public Drawable<_FireExplosion<DrawPolicy>, DrawPolicy>,
-                      public Effect {
+                       public Effect {
 public:
     static const int drawOffset = 0;
     _FireExplosion(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr,
-                  float x, float y)
+                   float x, float y)
         : Effect(x, y), glowFadeTimer(0) {
         spriteSheet.setTexture(mainTxtr);
         spriteSheet.setOrigin(29, 25);

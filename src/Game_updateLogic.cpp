@@ -33,7 +33,7 @@ void Game::updateLogic(const sf::Time & elapsedTime) {
             }
         };
         detailGroup.apply(objUpdatePolicy);
-	helperGroup.apply(objUpdatePolicy);
+        helperGroup.apply(objUpdatePolicy);
         std::vector<sf::Vector2f> cameraTargets;
         en.update(this, !UI.isOpen(), elapsedTime, cameraTargets);
         camera.update(elapsedTime, cameraTargets);

@@ -12,9 +12,10 @@
 #include <memory>
 
 template <typename DrawPolicy>
-class _DasherShot : public Drawable<_DasherShot<DrawPolicy>, DrawPolicy>,
-                   public Effect,
-                   public std::enable_shared_from_this<_DasherShot<DrawPolicy>> {
+class _DasherShot
+    : public Drawable<_DasherShot<DrawPolicy>, DrawPolicy>,
+      public Effect,
+      public std::enable_shared_from_this<_DasherShot<DrawPolicy>> {
 public:
     static const int drawOffset = 11;
     using HBox = framework::HitBox<12, 12, -6, -6>;

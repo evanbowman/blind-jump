@@ -9,7 +9,7 @@
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
 
-class Player;
+class Game;
 
 class Turret : public Enemy {
 private:
@@ -34,7 +34,7 @@ public:
     const sf::Sprite & getShadow();
     const sf::Sprite & getSprite();
     sf::Vector2f target;
-    void update(const sf::Time &, const Player *, EffectGroup &);
+    void update(const sf::Time &, Game *);
     bool colored();
     float getColorAmount();
 };

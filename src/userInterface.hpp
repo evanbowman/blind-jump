@@ -128,9 +128,7 @@ public:
     void setPowerup(Powerup);
     Powerup getCurrentPowerup() const;
     PowerupBubbleState getPowerupBubbleState() const;
-    inline bool powerupBarVisible() {
-	return dispPowerupBar;
-    }
+    inline bool powerupBarVisible() { return dispPowerupBar; }
 
 private:
     State state;

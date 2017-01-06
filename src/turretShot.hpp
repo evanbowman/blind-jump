@@ -10,9 +10,10 @@
 #include <memory>
 
 template <typename DrawPolicy>
-class _TurretShot : public Drawable<_TurretShot<DrawPolicy>, DrawPolicy>,
-                   public Effect,
-                   public std::enable_shared_from_this<_TurretShot<DrawPolicy>> {
+class _TurretShot
+    : public Drawable<_TurretShot<DrawPolicy>, DrawPolicy>,
+      public Effect,
+      public std::enable_shared_from_this<_TurretShot<DrawPolicy>> {
 public:
     static const int drawOffset = 11;
     using HBox = framework::HitBox<10, 10, -5, -5>;
