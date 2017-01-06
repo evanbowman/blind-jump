@@ -82,8 +82,6 @@ void ui::Backend::draw(sf::RenderWindow & window, ui::Frontend & uIFrontEnd) {
 }
 
 void ui::Backend::setPowerup(Powerup _powerup) {
-    dispPowerupBar = false;
-    powerupTimer = 0;
     powerup = _powerup;
     powerupBubbleState = PowerupBubbleState::triggered;
 }
@@ -109,7 +107,7 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
 	    int64_t powerupTimerCeil;
 	    switch (powerup) {
 	    case Powerup::laika:
-		powerupTimerCeil = 28000000;
+		powerupTimerCeil = 22000000;
 		break;
 		
 	    case Powerup::rapidFire:
@@ -249,6 +247,8 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
     }
     switch (powerupBubbleState) {
     case PowerupBubbleState::triggered:
+	dispPowerupBar = false;
+	powerupTimer = 0;
         uIFrontEnd.addPowerup(powerup);
         powerupBubbleState = PowerupBubbleState::opening;
         break;
@@ -303,7 +303,8 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
 	    powerupTimer = 0;
 	    HelperGroup & hg = pGame->getHelperGroup();
 	    const sf::Vector2f playerPos = pGame->getPlayer().getPosition();
-	    hg.add<HelperRef::Laika>(playerPos.x, playerPos.y, getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects), pGame->getTileController().mapArray);
+	    hg.clear();
+	    hg.add<HelperRef::Laika>(playerPos.x, playerPos.y + 32, getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects), pGame->getTileController().mapArray);
 	} break;
         }
         powerupBubbleState = PowerupBubbleState::dormant;

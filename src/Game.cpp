@@ -351,6 +351,13 @@ void Game::nextLevel() {
     tiles.rebuild(set);
     bkg.setBkg(tiles.getWorkingSet());
     tiles.setPosition((viewPort.x / 2) - 16, (viewPort.y / 2));
+    helperGroup.apply([this](auto & vec) {
+	for (auto & element : vec) {
+	    sf::Vector2f playerPosition = this->player.getPosition();
+	    playerPosition.y += 32;
+	    element->setPosition(playerPosition);
+	}
+    });
     bkg.setPosition((tiles.posX / 2) + 206, tiles.posY / 2);
     auto pickLocation = [](std::vector<Coordinate> & emptyLocations)
         -> framework::option<Coordinate> {

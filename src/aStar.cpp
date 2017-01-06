@@ -109,7 +109,7 @@ std::vector<aStrCoordinate> getAdjacent(aStrCoordinate & coord,
             map[coord.x + 1][coord.y + 1] == 8 ||
             map[coord.x][coord.y + 1] == 11) {
             aStrCoordinate newCoord;
-            newCoord.g = coord.g + 1;
+            newCoord.g = coord.g + 0.75;
             newCoord.x = coord.x + 1;
             newCoord.y = coord.y + 1;
             newCoord.f = newCoord.g +
@@ -122,7 +122,7 @@ std::vector<aStrCoordinate> getAdjacent(aStrCoordinate & coord,
             map[coord.x - 1][coord.y + 1] == 8 ||
             map[coord.x - 1][coord.y + 1] == 11) {
             aStrCoordinate newCoord;
-            newCoord.g = coord.g + 1;
+            newCoord.g = coord.g + 0.75;
             newCoord.x = coord.x - 1;
             newCoord.y = coord.y + 1;
             newCoord.f = newCoord.g +
@@ -135,7 +135,7 @@ std::vector<aStrCoordinate> getAdjacent(aStrCoordinate & coord,
             map[coord.x - 1][coord.y - 1] == 8 ||
             map[coord.x - 1][coord.y - 1] == 11) {
             aStrCoordinate newCoord;
-            newCoord.g = coord.g + 1;
+            newCoord.g = coord.g + 0.75;
             newCoord.x = coord.x - 1;
             newCoord.y = coord.y - 1;
             newCoord.f = newCoord.g +
@@ -148,7 +148,7 @@ std::vector<aStrCoordinate> getAdjacent(aStrCoordinate & coord,
             map[coord.x + 1][coord.y + 1] == 8 ||
             map[coord.x + 1][coord.y + 1] == 11) {
             aStrCoordinate newCoord;
-            newCoord.g = coord.g + 1;
+            newCoord.g = coord.g + 0.75;
             newCoord.x = coord.x + 1;
             newCoord.y = coord.y + 1;
             newCoord.f = newCoord.g +
@@ -200,7 +200,6 @@ std::vector<aStrCoordinate> astar_path(aStrCoordinate & origin,
     // Map of previous nodes
     std::unordered_map<aStrCoordinate, aStrCoordinate> cameFrom;
     cameFrom[origin] = origin;
-
     do {
         // Retrieve the node from the priority queue with the lowest f score
         aStrCoordinate currentNode = open.back();
@@ -219,22 +218,17 @@ std::vector<aStrCoordinate> astar_path(aStrCoordinate & origin,
         // Now get the adjacent tiles
         std::vector<aStrCoordinate> adjacentTiles =
             getAdjacent(currentNode, target, map);
-        for (auto element : adjacentTiles) {
+        for (auto & element : adjacentTiles) {
             // If it's already in the closed list
             if (contains(closed, element)) {
                 continue;
             }
             // If it's not in the open list yet
             if (!contains(open, element)) {
-                // Add the element to both the open set and heapify
+                // Add the element to the open set and heapify
                 open.push_back(element);
                 cameFrom[element] = closed.back();
                 std::push_heap(open.begin(), open.end(), compare());
-            }
-            // If it's already in the open list and the current g score makes f
-            // lower,
-            else {
-                ////*** See how important this is
             }
         }
 
