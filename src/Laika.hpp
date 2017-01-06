@@ -14,7 +14,7 @@ class _Laika : public Drawable<_Laika<DrawPolicy>, DrawPolicy>,
                public std::enable_shared_from_this<_Laika<DrawPolicy>> {
 public:
     enum class State { idle, returnToPlayer, approachEnemy };
-    using HBox = framework::HitBox<32, 32, 0, 0>;
+    using HBox = framework::HitBox<32, 32, 0, -6>;
     _Laika(const float _xInit, const float _yInit, const sf::Texture & texture,
            uint8_t _map[61][61])
         : Object(_xInit, _yInit), state(State::idle), idleSheet(texture),
@@ -131,7 +131,10 @@ public:
                 shadow.setPosition(position.x, position.y + 4);
             }
             if (auto sp = targetEnemy.lock()) {
-		approachTarget(elapsedTime, pGame, sp->getPosition(), 2.4);
+		const sf::Vector2f & targetPos = sp->getPosition();
+		const float dist = math::distance(targetPos.x, targetPos.y, position.x, position.y);
+		const float normal = fmax(300.f - dist, 100.f) / 300.f;
+		approachTarget(elapsedTime, pGame, sp->getPosition(), normal * 6.f);
             } else {
                 idleSheet.setPosition(position);
                 state = State::idle;
