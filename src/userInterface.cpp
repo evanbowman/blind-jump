@@ -104,18 +104,7 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
     switch (state) {
     case State::closed:
         if (dispPowerupBar) {
-            int64_t powerupTimerCeil;
-	    switch (powerup) {
-	    case Powerup::laika:
-		powerupTimerCeil = 12000000;
-		break;
-
-	    case Powerup::rapidFire:
-		powerupTimerCeil = 18000000;
-		break;
-
-	    case Powerup::nil: break;
-	    }
+            static const int64_t powerupTimerCeil = 10000000;
             powerupTimer += elapsedTime.asMicroseconds();
             float barWidth = Easing::easeOut<1>(powerupTimer, powerupTimerCeil);
             uIFrontEnd.setBarWidth(barWidth);

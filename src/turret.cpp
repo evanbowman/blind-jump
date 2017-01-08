@@ -93,7 +93,7 @@ void Turret::update(const sf::Time & elapsedTime, Game * pGame) {
         break;
 
     case State::shoot1:
-        target = player.requestFuturePos(TurretShot::lifetime * 1000);
+        target = player.getPosition();
         timer += elapsedTime.asMicroseconds();
         if (timer > 200000) {
             effects.add<EffectRef::TurretFlashEffect>(

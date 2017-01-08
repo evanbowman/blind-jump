@@ -56,6 +56,7 @@ void Game::updateLogic(const sf::Time & elapsedTime) {
                 // Game::nextLevel() increments level, set to -1 so that it will
                 // be zero
                 level = -1;
+		helperGroup.clear();
                 this->nextLevel();
                 uiFrontend.reset();
                 static const char playerStartingHealth = 4;
