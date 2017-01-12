@@ -1,3 +1,3 @@
 #pragma once
 
-enum class Powerup { nil, rapidFire, laika };
+enum class Powerup { nil, goldHeart, rapidFire, laika };

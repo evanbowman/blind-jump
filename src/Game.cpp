@@ -384,7 +384,12 @@ void Game::nextLevel() {
         initEnemies(this);
         auto optCoord = pickLocation(tiles.emptyMapLocations);
         if (optCoord) {
-            Powerup chestContents = static_cast<Powerup>(rng::random<2, 1>());
+	    Powerup chestContents;
+	    if (level < 7) {
+	        chestContents = static_cast<Powerup>(rng::random<2, 1>());
+	    } else {
+		chestContents = static_cast<Powerup>(rng::random<3, 1>());
+	    }
             detailGroup.add<DetailRef::TreasureChest>(
                 optCoord.value().x * 32 + tiles.posX,
                 optCoord.value().y * 26 + tiles.posY,

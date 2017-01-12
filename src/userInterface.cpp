@@ -281,6 +281,11 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
         case Powerup::nil:
             break;
 
+	case Powerup::goldHeart:
+	    uIFrontEnd.updateMaxHealth(uIFrontEnd.getMaxHealth() + 1);
+	    uIFrontEnd.updateHealth(uIFrontEnd.getHealth() + 1);
+	    break;
+
         case Powerup::rapidFire:
             dispPowerupBar = true;
             powerupTimer = 0;
@@ -632,6 +637,12 @@ void ui::Frontend::draw(sf::RenderWindow & window) {
     case Powerup::nil:
         break;
 
+    case Powerup::goldHeart:
+	powerupBubble.setFrame(static_cast<int>(powerupAdded) - 1);
+	powerupAdded = Powerup::nil;
+	powerupText.setString(std::string("HEALTH UP"));
+	break;
+
     case Powerup::rapidFire:
         powerupBubble.setFrame(static_cast<int>(powerupAdded) - 1);
         powerupAdded = Powerup::nil;
@@ -755,6 +766,8 @@ void ui::Frontend::updateMaxHealth(char _maxHealth) {
 }
 
 char ui::Frontend::getMaxHealth() const { return maxHealth; }
+
+char ui::Frontend::getHealth() const { return health; }
 
 sf::Text * ui::Frontend::getDeathText() { return &deathText; }
 
