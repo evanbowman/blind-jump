@@ -4,7 +4,7 @@
 #include <cmath>
 #include <stdio.h>
 
-int initEnemies(Game * gm) {
+void initEnemies(Game * gm) {
     enum EnemyId {
 	Scoot, Critter, Dasher, Turret
     };

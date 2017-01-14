@@ -2,10 +2,61 @@
 #include <cmath>
 #include <iostream>
 
-InputController::InputController()
-    : keyboardMappings{{sf::Keyboard::X, sf::Keyboard::Z, sf::Keyboard::Escape,
-                        sf::Keyboard::Left, sf::Keyboard::Right,
-                        sf::Keyboard::Up, sf::Keyboard::Down}} {
+static std::unordered_map<std::string, sf::Keyboard::Key> translator {
+    {"esc", sf::Keyboard::Escape},
+    {"up", sf::Keyboard::Up},
+    {"down", sf::Keyboard::Down},
+    {"left", sf::Keyboard::Left},
+    {"right", sf::Keyboard::Right},
+    {"a", sf::Keyboard::A},
+    {"b", sf::Keyboard::B},
+    {"c", sf::Keyboard::C},
+    {"d", sf::Keyboard::D},
+    {"e", sf::Keyboard::E},
+    {"f", sf::Keyboard::F},
+    {"g", sf::Keyboard::G},
+    {"h", sf::Keyboard::H},
+    {"i", sf::Keyboard::I},
+    {"j", sf::Keyboard::J},
+    {"k", sf::Keyboard::K},
+    {"l", sf::Keyboard::L},
+    {"m", sf::Keyboard::M},
+    {"n", sf::Keyboard::N},
+    {"o", sf::Keyboard::O},
+    {"p", sf::Keyboard::P},
+    {"q", sf::Keyboard::Q},
+    {"r", sf::Keyboard::R},
+    {"s", sf::Keyboard::S},
+    {"t", sf::Keyboard::T},
+    {"u", sf::Keyboard::U},
+    {"v", sf::Keyboard::V},
+    {"w", sf::Keyboard::W},
+    {"x", sf::Keyboard::X},
+    {"y", sf::Keyboard::Y},
+    {"z", sf::Keyboard::Z}
+};
+
+static sf::Keyboard::Key toSfKey(const std::string & strKey) {
+    return ::translator[strKey];
+}
+
+InputController::InputController(nlohmann::json & config) {
+    try {
+	auto it = config.find("Keyboard");
+	const auto mapKey = [this, it](const int keyIndex, const char * jsonStr) {
+				keyboardMappings[keyIndex] =
+				    toSfKey(it->find(jsonStr)->get<std::string>());
+			    };
+	mapKey(indexShoot, "Shoot");
+	mapKey(indexAction, "Action");
+	mapKey(indexPause, "Pause");
+	mapKey(indexLeft, "Left");
+	mapKey(indexRight, "Right");
+	mapKey(indexUp, "Up");
+	mapKey(indexDown, "Down");
+    } catch (const std::exception & ex) {
+	throw std::runtime_error("JSON error: " + std::string(ex.what()));
+    }
     if (sf::Joystick::isConnected(0)) {
         mapJsById();
     }

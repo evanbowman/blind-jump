@@ -8,12 +8,13 @@
 #include "math.h"
 #include "pillarPlacement.h"
 
-Game::Game(const ConfigResults & res)
-    : viewPort(res.drawableArea),
+Game::Game(nlohmann::json & config)
+    : viewPort(getDrawableArea(config)),
       transitionState(TransitionState::TransitionIn),
       player(viewPort.x / 2, viewPort.y / 2),
       window(sf::VideoMode::getDesktopMode(), EXECUTABLE_NAME,
              sf::Style::Fullscreen, sf::ContextSettings(0, 0, 6)),
+      input(config),
       camera(&player, viewPort, window.getSize()),
       uiFrontend(
           sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y)),
@@ -32,6 +33,7 @@ Game::Game(const ConfigResults & res)
     windowView.zoom(visibleArea);
     camera.setWindowView(windowView);
     gfxContext.targetRef = &target;
+    init();
 }
 
 void Game::init() {

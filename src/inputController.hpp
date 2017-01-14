@@ -1,14 +1,16 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <unordered_map>
 #include <array>
 #include <bitset>
+#include <json.hpp>
 
 #include "shutdownSignal.hpp"
 
 class InputController {
 public:
-    InputController();
+    InputController(nlohmann::json &);
     void mapJsById();
     bool pausePressed() const;
     bool leftPressed() const;

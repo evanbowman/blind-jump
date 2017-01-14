@@ -22,10 +22,7 @@
 #include <atomic>
 #include <cmath>
 #include <mutex>
-
-struct ConfigResults {
-    sf::Vector2f drawableArea;
-};
+#include "aspectScaling.hpp"
 
 class Game {
 public:
@@ -39,7 +36,7 @@ public:
         EntryBeamDrop,
         EntryBeamFade
     };
-    Game(const ConfigResults &);
+    Game(nlohmann::json & json);
     void updateLogic(const sf::Time &);
     void updateGraphics();
     void eventLoop();
@@ -59,9 +56,9 @@ public:
     TransitionState transitionState;
     sf::RenderWindow & getWindow();
     HelperGroup & getHelperGroup();
-    void init();
 
 private:
+    void init();
     sf::RenderWindow window;
     InputController input;
     SoundController sounds;

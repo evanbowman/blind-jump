@@ -2,4 +2,4 @@
 
 class Game;
 
-int initEnemies(Game *);
+void initEnemies(Game *);

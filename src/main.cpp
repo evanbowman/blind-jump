@@ -2,7 +2,6 @@
 
 #include "Game.hpp"
 #include "alias.hpp"
-#include "aspectScaling.hpp"
 #include "backgroundHandler.hpp"
 #include "config.h"
 #include "framework/smartThread.hpp"
@@ -36,8 +35,7 @@ int main() {
         }
         resourceHandler.load();
         setgResHandlerPtr(&resourceHandler);
-        Game game({getDrawableArea(configJSON)});
-        game.init();
+        Game game(configJSON);
         configJSON.clear();
         dispIntroSequence(game.getWindow(), game.getInputController());
         framework::SmartThread logicThread([&game]() {

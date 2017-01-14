@@ -1,4 +1,4 @@
-{
+{   
     "AspectRatios": {
 	"16:9": {
 	    "Width": 832,
@@ -23,7 +23,7 @@
 	"Left": "left",
 	"Right": "right",
 	"Shoot": "x",
-	"Dash": "z",
+	"Action": "z",
 	"Pause": "esc"
     },
     "Joystick": {
@@ -32,7 +32,7 @@
 	    "ProductId": 616,
 	    "ButtonMappings": {
 		"Shoot": 11,
-		"Dash": 14,
+		"Action": 14,
 		"Pause": 16
 	    }
 	},
@@ -41,7 +41,7 @@
 	    "ProductId": 1476,
 	    "ButtonMappings": {
 		"Shoot": 5,
-		"Dash": 1,
+		"Action": 1,
 		"Pause": 12
 	    }
 	}
