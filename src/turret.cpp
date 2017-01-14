@@ -45,7 +45,7 @@ void Turret::update(const sf::Time & elapsedTime, Game * pGame) {
     }
     for (auto & helper : pGame->getHelperGroup().get<HelperRef::Laika>()) {
 	if (hitBox.overlapping(helper->getHitBox())) {
-	    health = 0;
+	    hp = 0;
 	}
     }
     if (hp == 0) {

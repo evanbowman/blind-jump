@@ -340,8 +340,6 @@ void Game::nextLevel() {
         camera.panDown();
         set = tileController::Tileset::regular;
     }
-    // vignetteSprite.setColor(sf::Color::White); // TODO: See if this line is
-    // actually benificial
     if (set != tileController::Tileset::intro) {
         int count;
         do {
@@ -379,8 +377,6 @@ void Game::nextLevel() {
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             getgResHandlerPtr()->getTexture(
                 ResHandler::Texture::teleporterGlow));
-        // sounds.play(ResHandler::Sound::electricHum,
-        // detailGroup.get<DetailRef::Teleporter>().back(), 72.f, 3.f, true);
         initEnemies(this);
         auto optCoord = pickLocation(tiles.emptyMapLocations);
         if (optCoord) {
@@ -388,7 +384,7 @@ void Game::nextLevel() {
 	    if (level < 7) {
 	        chestContents = static_cast<Powerup>(rng::random<2, 1>());
 	    } else {
-		chestContents = static_cast<Powerup>(rng::random<3, 1>());
+		chestContents = static_cast<Powerup>(rng::random<3, 2>());
 	    }
             detailGroup.add<DetailRef::TreasureChest>(
                 optCoord.value().x * 32 + tiles.posX,
@@ -476,8 +472,6 @@ void Game::nextLevel() {
             getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
             getgResHandlerPtr()->getTexture(
                 ResHandler::Texture::teleporterGlow));
-        // sounds.play(ResHandler::Sound::electricHum,
-        // detailGroup.get<DetailRef::Teleporter>().back(), 72.f, 3.f, true);
         for (auto it = ::levelZeroWalls.begin(); it != ::levelZeroWalls.end();
              ++it) {
             wall w;

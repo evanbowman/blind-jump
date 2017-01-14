@@ -5,17 +5,15 @@
 #include <stdio.h>
 
 int initEnemies(Game * gm) {
+    enum EnemyId {
+	Scoot, Critter, Dasher, Turret
+    };
     constexpr static std::array<int, 4> targetLevel = {{
         4 /*Scoot*/, 5 /*Critter*/, 20 /*Dasher*/, 28 /*Turrets*/
     }};
-
     int currentLevel = gm->getLevel();
     enemyController & enemies = gm->getEnemyController();
     tileController & tiles = gm->getTileController();
-
-    // Count sum of energy values for all enemies, used in health station cost
-    // calculations
-    int count = 0;
     std::vector<std::pair<int, int>> enemySelectVec;
     if (currentLevel >= 1) {
         enemySelectVec.emplace_back(1, std::abs(currentLevel - targetLevel[0]));
@@ -28,7 +26,6 @@ int initEnemies(Game * gm) {
         }
     }
     size_t enemyVecLen = enemySelectVec.size();
-
     // Collect enemy weight terms under a variable and init to 0
     int collector = 0;
     int diff;
@@ -49,6 +46,7 @@ int initEnemies(Game * gm) {
     if (iters > 15) {
         iters = 15;
     }
+    std::array<unsigned, 4> numPlaced = {};
     for (int i = 0; i < iters; i++) {
         // Generate a random number on the range of 0 to the sum of all enemy
         // weights
@@ -70,31 +68,36 @@ int initEnemies(Game * gm) {
         }
         // Now place enemies based on the selected index
         switch (selectedIndex) {
-        case 0:
+        case Scoot:
             enemies.addScoot(&tiles);
-            count += 1;
             break;
 
-        case 1:
+        case Critter:
             enemies.addCritter(&tiles);
-            count += 2;
             break;
 
-        case 2:
-            enemies.addDasher(&tiles);
-            count += 3;
+        case Dasher:
+	    static const unsigned maxDashers(5);
+	    if (numPlaced[Dasher] < maxDashers) {
+		enemies.addDasher(&tiles);
+		++numPlaced[Dasher];
+	    } else {
+	        --i;
+	    }
             break;
 
         case 3:
-            enemies.addTurret(&tiles);
-            count += 8;
+	    static const unsigned maxTurrets(3);
+	    if (numPlaced[Turret] < maxTurrets) {
+		enemies.addTurret(&tiles);
+		++numPlaced[Turret];
+	    } else {
+		--i;
+	    }
             break;
 
         default:
             break;
         }
     }
-
-    // Return the count
-    return count;
 }
