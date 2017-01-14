@@ -1,39 +1,48 @@
 {
-    "aspect-ratios": {
+    "AspectRatios": {
 	"16:9": {
-	    "width": 832,
-	    "height": 468
+	    "Width": 832,
+	    "Height": 468
 	},
 	"16:10": {
-	    "width": 784,
-	    "height": 490
+	    "Width": 784,
+	    "Height": 490
 	},
 	"4:3": {
-	    "width": 720,
-	    "height": 540
+	    "Width": 720,
+	    "Height": 540
 	},
 	"5:4": {
-	    "width": 695,
-	    "height": 556
+	    "Width": 695,
+	    "Height": 556
 	}
     },
-    "joystick": {
-	"sony-ps3-controller": {
-	    "vendor-id": 1356,
-	    "product-id": 616,
-	    "button-mappings": {
-		"weapon": 11,
-		"action": 14,
-		"pause": 16
+    "Keyboard": {
+	"Up": "up",
+	"Down": "down",
+	"Left": "left",
+	"Right": "right",
+	"Shoot": "x",
+	"Dash": "z",
+	"Pause": "esc"
+    },
+    "Joystick": {
+	"SonyPS3Controller": {
+	    "VendorId": 1356,
+	    "ProductId": 616,
+	    "ButtonMappings": {
+		"Shoot": 11,
+		"Dash": 14,
+		"Pause": 16
 	    }
 	},
 	"sony-ps4-controller": {
-	    "vendor-id": 1356,
-	    "product-id": 1476,
-	    "button-mappings": {
-		"weapon": 5,
-		"action": 1,
-		"pause": 12
+	    "VendorId": 1356,
+	    "ProductId": 1476,
+	    "ButtonMappings": {
+		"Shoot": 5,
+		"Dash": 1,
+		"Pause": 12
 	    }
 	}
     }

@@ -11,16 +11,16 @@ inline sf::Vector2f getDrawableArea(const nlohmann::json & configJSON) {
     const float aspectRatio =
         (float)screenSize.width / (float)screenSize.height;
     try {
-        for (auto it = configJSON["aspect-ratios"].begin();
-             it != configJSON["aspect-ratios"].end(); ++it) {
+        for (auto it = configJSON["AspectRatios"].begin();
+             it != configJSON["AspectRatios"].end(); ++it) {
             static const char delimiter = ':';
             const size_t splitPos = it.key().find(delimiter);
             const float wFactor =
                 std::atoi(it.key().substr(0, splitPos).c_str());
             const float hFactor = std::atoi(
                 it.key().substr(splitPos + 1, it.key().length()).c_str());
-            const int width = it.value().find("width")->get<int>();
-            const int height = it.value().find("height")->get<int>();
+            const int width = it.value().find("Width")->get<int>();
+            const int height = it.value().find("Height")->get<int>();
             if (wFactor / hFactor == aspectRatio) {
                 drawableAreaSize.x = width;
                 drawableAreaSize.y = height;
