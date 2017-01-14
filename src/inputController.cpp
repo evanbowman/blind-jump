@@ -54,38 +54,35 @@ InputController::InputController(nlohmann::json & config) {
 	mapKey(indexRight, "Right");
 	mapKey(indexUp, "Up");
 	mapKey(indexDown, "Down");
+	for (it = config.find("Joystick")->begin();
+	     it != config.find("Joystick")->end(); ++it) {
+	    JoystickInfo info;
+	    info.vendorId = it->find("VendorId")->get<int>();
+	    info.productId = it->find("ProductId")->get<int>();
+	    auto jsBtnMappings = it->find("ButtonMappings");
+	    info.shoot = jsBtnMappings->find("Shoot")->get<int>();
+	    info.action = jsBtnMappings->find("Action")->get<int>();
+	    info.pause = jsBtnMappings->find("Pause")->get<int>();
+	    this->joysticks.push_back(info);
+	}
+	it = config.find("Joystick")->begin();
     } catch (const std::exception & ex) {
 	throw std::runtime_error("JSON error: " + std::string(ex.what()));
     }
     if (sf::Joystick::isConnected(0)) {
-        mapJsById();
+        remapJoystick();
     }
 }
 
-void InputController::mapJsById() {
-    // TODO: move this metadata stuff to JSON config files?
-    enum Vendor { Sony = 0x054C, Microsoft = 0x045E };
-    enum Product {
-        PS3Controller = 0x0268,
-        PS4Controller = 0x05C4,
-        XBOneController = 0x02D1
-    };
+void InputController::remapJoystick() {
     sf::Joystick::Identification ident = sf::Joystick::getIdentification(0);
-    if (ident.vendorId == Sony && ident.productId == PS3Controller) {
-        joystickMappings[indexShoot] = 11;
-        joystickMappings[indexAction] = 14;
-        joystickMappings[indexPause] = 16;
-    } else if (ident.vendorId == Sony && ident.productId == PS4Controller) {
-        joystickMappings[indexShoot] = 5;
-        joystickMappings[indexAction] = 1;
-        joystickMappings[indexPause] = 12;
-    } else if (ident.vendorId == Microsoft &&
-               ident.productId == XBOneController) {
-        // TODO: Test XBOne Controller
-    } else {
-        joystickMappings[indexShoot] = 0;
-        joystickMappings[indexAction] = 1;
-        joystickMappings[indexPause] = 2;
+    for (auto & jsInfo : joysticks) {
+	if (jsInfo.vendorId == ident.vendorId &&
+	    jsInfo.productId == ident.productId) {
+	    joystickMappings[indexShoot] = jsInfo.shoot;
+	    joystickMappings[indexAction] = jsInfo.action;
+	    joystickMappings[indexPause] = jsInfo.pause;
+	}
     }
 }
 
@@ -213,7 +210,7 @@ void InputController::recordEvent(const sf::Event & event) {
         }
     } else if (event.type == sf::Event::JoystickConnected) {
         if (event.joystickConnect.joystickId == 0) {
-            this->mapJsById();
+            this->remapJoystick();
             joystickMask.reset();
         }
     } else if (event.type == sf::Event::JoystickDisconnected) {

@@ -36,7 +36,7 @@
 		"Pause": 16
 	    }
 	},
-	"sony-ps4-controller": {
+	"SonyPS4Controller": {
 	    "VendorId": 1356,
 	    "ProductId": 1476,
 	    "ButtonMappings": {
