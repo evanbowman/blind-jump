@@ -15,7 +15,7 @@ class Turret : public Enemy {
 private:
     enum class State { closed, opening, shoot1, shoot2, shoot3, rest, closing };
     State state;
-    using HBox = framework::HitBox<16, 32>;
+    using HBox = HitBox<16, 32>;
     HBox hitBox;
     int8_t frameIndex;
     SpriteSheet<0, 0, 16, 32> turretSheet;

@@ -18,7 +18,7 @@ class _DasherShot
       public std::enable_shared_from_this<_DasherShot<DrawPolicy>> {
 public:
     static const int drawOffset = 11;
-    using HBox = framework::HitBox<12, 12, -6, -6>;
+    using HBox = HitBox<12, 12, -6, -6>;
     _DasherShot(float x, float y, float dir)
         : Effect(x, y), soundsStarted(false) {
         auto res = getgResHandlerPtr();

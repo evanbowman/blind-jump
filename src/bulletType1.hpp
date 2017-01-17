@@ -11,7 +11,7 @@ class _PlayerShot : public Drawable<_PlayerShot<DrawPolicy>, DrawPolicy>,
                     public Effect {
 public:
     static const int drawOffset = 0;
-    using HBox = framework::HitBox<12, 12, 2, 2>;
+    using HBox = HitBox<12, 12, 2, 2>;
     _PlayerShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr,
                 char dir, float x, float y)
         : Effect{x, y}, xInit{x}, yInit{y}, direction{dir}, canPoof{true},

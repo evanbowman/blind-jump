@@ -13,11 +13,11 @@ struct reqInfo {
     float attenuation;
     bool spatialized;
     bool loop;
-    std::weak_ptr<framework::Object> source;
+    std::weak_ptr<Object> source;
 };
 
 struct runningData {
-    std::weak_ptr<framework::Object> source;
+    std::weak_ptr<Object> source;
     bool spatialized;
 };
 
@@ -35,7 +35,7 @@ public:
     // of running sounds works like a queue, so if you play a long running
     // looping one, sounds behind it will not be deallocated, and adding
     // new ones will eventually use up all available sound resources.
-    void play(ResHandler::Sound indx, std::shared_ptr<framework::Object>,
+    void play(ResHandler::Sound indx, std::shared_ptr<Object>,
               float minDistance, float attenuation, bool loop = false);
 
 private:

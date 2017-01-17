@@ -38,5 +38,5 @@ struct DetailRef {
     };
 };
 
-using DetailGroup = framework::Group<Teleporter, TreasureChest, Lamp, Rock,
-                                     IntroDoor, StaticDrawable, Terminal>;
+using DetailGroup = Group<Teleporter, TreasureChest, Lamp, Rock,
+			  IntroDoor, StaticDrawable, Terminal>;

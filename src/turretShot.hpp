@@ -16,7 +16,7 @@ class _TurretShot
       public std::enable_shared_from_this<_TurretShot<DrawPolicy>> {
 public:
     static const int drawOffset = 11;
-    using HBox = framework::HitBox<10, 10, -5, -5>;
+    using HBox = HitBox<10, 10, -5, -5>;
     enum { lifetime = 600 };
     _TurretShot(float x, float y, float dir)
         : Effect(x, y), soundsStarted(false) {

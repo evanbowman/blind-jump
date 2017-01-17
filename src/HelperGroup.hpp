@@ -9,4 +9,4 @@ struct HelperRef {
     enum { Laika };
 };
 
-using HelperGroup = framework::Group<Laika>;
+using HelperGroup = Group<Laika>;

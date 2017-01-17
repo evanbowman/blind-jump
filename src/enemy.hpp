@@ -7,7 +7,7 @@
 #include <cmath>
 #include <vector>
 
-class Enemy : public framework::Object {
+class Enemy : public Object {
 protected:
     bool colored;
     float colorAmount;

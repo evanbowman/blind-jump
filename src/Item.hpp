@@ -14,7 +14,7 @@ class _Item : public Drawable<_Item<DrawPolicy>, DrawPolicy>, public Effect {
 public:
     static const int drawOffset = -16;
     enum class Type { Heart, Coin, GoldHeart };
-    using HBox = framework::HitBox<13, 13, -8, -8>;
+    using HBox = HitBox<13, 13, -8, -8>;
     _Item(const sf::Texture & bodyTxtr, const sf::Texture & glowTxtr,
           float xInit, float yInit, Type id)
         : Effect(xInit, yInit) {

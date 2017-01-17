@@ -3,7 +3,7 @@
 #include "framework/framework.hpp"
 #include <SFML/Graphics.hpp>
 
-class Effect : public framework::Object {
+class Effect : public Object {
 protected:
     int64_t timer;
     uint8_t frameIndex;

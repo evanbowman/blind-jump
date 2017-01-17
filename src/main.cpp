@@ -38,7 +38,7 @@ int main() {
         Game game(configJSON);
         configJSON.clear();
         dispIntroSequence(game.getWindow(), game.getInputController());
-        framework::SmartThread logicThread([&game]() {
+        SmartThread logicThread([&game]() {
             duration logicUpdateDelta;
             sf::Clock gameClock;
             try {

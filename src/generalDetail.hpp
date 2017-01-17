@@ -5,7 +5,7 @@
 template <typename DrawPolicy>
 class _StaticDrawable
     : public Drawable<_StaticDrawable<DrawPolicy>, DrawPolicy>,
-      public framework::Object {
+      public Object {
 public:
     static const int drawOffset = 0;
     _StaticDrawable(float xInit, float yInit, sf::Sprite & _spr)

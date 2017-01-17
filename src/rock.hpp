@@ -8,7 +8,7 @@
 
 template <typename DrawPolicy>
 class _Rock : public Drawable<_Rock<DrawPolicy>, DrawPolicy>,
-              public framework::Object {
+              public Object {
 public:
     static const int drawOffset = 24;
     _Rock(float _xPos, float _yPos, const sf::Texture & inpTxtr)

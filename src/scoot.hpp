@@ -10,7 +10,7 @@ class Game;
 
 class Scoot : public Enemy, public std::enable_shared_from_this<Scoot> {
 public:
-    using HBox = framework::HitBox<12, 12, -6, -6>;
+    using HBox = HitBox<12, 12, -6, -6>;
     Scoot(const sf::Texture &, const sf::Texture &, float, float);
     void update(Game *, const std::vector<wall> &, const sf::Time &);
     const sf::Sprite & getSprite() const;

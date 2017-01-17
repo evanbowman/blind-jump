@@ -10,7 +10,7 @@
 
 template <typename DrawPolicy>
 class _TreasureChest : public Drawable<_TreasureChest<DrawPolicy>, DrawPolicy>,
-                       public framework::Object {
+                       public Object {
 public:
     static const int drawOffset = -16;
     enum class State { closed, opening, ready, complete };

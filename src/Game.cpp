@@ -328,7 +328,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 }
 
 void Game::nextLevel() {
-    level += 1;
+    ++level;
     uiFrontend.setWaypointText(level);
     tiles.clear();
     effectGroup.clear();
@@ -360,13 +360,13 @@ void Game::nextLevel() {
     });
     bkg.setPosition((tiles.posX / 2) + 206, tiles.posY / 2);
     auto pickLocation = [](std::vector<Coordinate> & emptyLocations)
-        -> framework::option<Coordinate> {
+        -> option<Coordinate> {
         if (emptyLocations.size() > 0) {
             int locationSelect = rng::random(emptyLocations.size());
             Coordinate c = emptyLocations[locationSelect];
             emptyLocations[locationSelect] = emptyLocations.back();
             emptyLocations.pop_back();
-            return framework::option<Coordinate>(c);
+            return option<Coordinate>(c);
         } else {
             return {};
         }

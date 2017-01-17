@@ -4,7 +4,7 @@
 
 template <typename DrawPolicy>
 class _Lamp : public Drawable<_Lamp<DrawPolicy>, DrawPolicy>,
-              public framework::Object {
+              public Object {
 public:
     static const int drawOffset = 0;
     _Lamp(float _xInit, float _yInit, const sf::Texture & txtr,

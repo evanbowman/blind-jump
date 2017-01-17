@@ -20,57 +20,55 @@
 #include <array>
 #include <exception>
 
-namespace framework {
-	class null_opt_err : public std::exception {
-		std::string msg;
-	public:
-		null_opt_err() : msg("Attempt to access empty option!") {}
-		inline const char * what() const noexcept override {
-			return msg.c_str();
-		}
-		virtual ~null_opt_err() {}
-	};
+class null_opt_err : public std::exception {
+    std::string msg;
+public:
+    null_opt_err() : msg("Attempt to access empty option!") {}
+    inline const char * what() const noexcept override {
+	return msg.c_str();
+    }
+    virtual ~null_opt_err() {}
+};
 	
-	template <typename T>
-	class option {
-		std::array<uint8_t, sizeof(T)> bytes;
-		bool initialized;
-	public:
-		option() : initialized(false) {}
-		option(const T && val) {
-			*reinterpret_cast<T *>(bytes.data()) = val;
-		}
-		template <typename ...Args>
-		option(Args && ...args) {
-			*reinterpret_cast<T *>(bytes.data()) = T(args...);
-			initialized = true;
-		}
-		option(const option<T> & other) {
-			if (other.initialized) {
-				bytes = other.bytes;
-				initialized = true;
-			} else {
-				initialized = false;
-			}
-		}
-		option(option<T> && other) {
-			if (other.initialized) {
-				bytes = std::move(other.bytes);
-				initialized = true;
-				other.initialized = false;
-			} else {
-				initialized = false;
-			}
-		}
-		~option() {
-			if (initialized) {
-				reinterpret_cast<T *>(bytes.data())->~T();
-			}
-		}
-		operator bool() { return initialized; }
-		const T & value() const {
-			if (!initialized) throw null_opt_err();
-			return *(T *)bytes.data();
-		}
-	};
-}
+template <typename T>
+class option {
+    std::array<uint8_t, sizeof(T)> bytes;
+    bool initialized;
+public:
+    option() : initialized(false) {}
+    option(const T && val) {
+	*reinterpret_cast<T *>(bytes.data()) = val;
+    }
+    template <typename ...Args>
+    option(Args && ...args) {
+	*reinterpret_cast<T *>(bytes.data()) = T(args...);
+	initialized = true;
+    }
+    option(const option<T> & other) {
+	if (other.initialized) {
+	    bytes = other.bytes;
+	    initialized = true;
+	} else {
+	    initialized = false;
+	}
+    }
+    option(option<T> && other) {
+	if (other.initialized) {
+	    bytes = std::move(other.bytes);
+	    initialized = true;
+	    other.initialized = false;
+	} else {
+	    initialized = false;
+	}
+    }
+    ~option() {
+	if (initialized) {
+	    reinterpret_cast<T *>(bytes.data())->~T();
+	}
+    }
+    operator bool() { return initialized; }
+    const T & value() const {
+	if (!initialized) throw null_opt_err();
+	return *(T *)bytes.data();
+    }
+};

@@ -7,7 +7,7 @@
 
 template <typename DrawPolicy>
 class _Teleporter : public Drawable<_Teleporter<DrawPolicy>, DrawPolicy>,
-                    public framework::Object {
+                    public Object {
 public:
     static const int drawOffset = 0;
     _Teleporter(float _xInit, float _yInit, const sf::Texture & mainTxtr,

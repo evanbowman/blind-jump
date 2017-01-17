@@ -45,6 +45,6 @@ struct EffectRef {
 };
 
 using EffectGroup =
-    framework::Group<TurretFlashEffect, SmallExplosion, FireExplosion, ShotPuff,
-                     Item, Item, Item, EnemyShot, DasherShot, TurretShot,
-                     PlayerShot>;
+    Group<TurretFlashEffect, SmallExplosion, FireExplosion, ShotPuff,
+	  Item, Item, Item, EnemyShot, DasherShot, TurretShot,
+	  PlayerShot>;

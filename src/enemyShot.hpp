@@ -14,7 +14,7 @@ class _EnemyShot : public Drawable<_EnemyShot<DrawPolicy>, DrawPolicy>,
                    public Effect {
 public:
     static const int drawOffset = 11;
-    using HBox = framework::HitBox<14, 14, 0, 0>;
+    using HBox = HitBox<14, 14, 0, 0>;
     enum { lifetime = 600 };
     _EnemyShot(const sf::Texture & mainTxtr, const sf::Texture & glowTxtr,
                float x, float y, float dir)

@@ -354,7 +354,7 @@ void ui::PowerupBubble::setAlpha(uint8_t alpha) {
     powerupSheet.setColor(sf::Color(255, 255, 255, alpha));
 }
 
-const framework::Sprite & ui::PowerupBubble::getSprite() {
+const Sprite & ui::PowerupBubble::getSprite() {
     return powerupSheet.getSprite();
 }
 

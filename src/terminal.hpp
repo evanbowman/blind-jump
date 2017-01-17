@@ -16,7 +16,7 @@ struct DrawScreen {
 
 template <typename DrawPolicy>
 class _Terminal : public Drawable<_Terminal<DrawPolicy>, DrawPolicy>,
-                  public framework::Object {
+                  public Object {
 public:
     static const int drawOffset = -10;
     enum class State { dormant, wakeup, awake, poweroff };

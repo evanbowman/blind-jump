@@ -10,11 +10,11 @@
 
 template <typename DrawPolicy>
 class _Laika : public Drawable<_Laika<DrawPolicy>, DrawPolicy>,
-               public framework::Object,
+               public Object,
                public std::enable_shared_from_this<_Laika<DrawPolicy>> {
 public:
     enum class State { idle, returnToPlayer, approachEnemy };
-    using HBox = framework::HitBox<32, 32, 0, -6>;
+    using HBox = HitBox<32, 32, 0, -6>;
     _Laika(const float _xInit, const float _yInit, const sf::Texture & texture,
            uint8_t _map[61][61])
         : Object(_xInit, _yInit), state(State::idle), idleSheet(texture),
@@ -75,7 +75,7 @@ public:
                 runSheet.setPosition(position);
             } else {
                 auto & enemies = pGame->getEnemyController();
-                std::vector<std::shared_ptr<framework::Object>> enemyVec;
+                std::vector<std::shared_ptr<Object>> enemyVec;
                 const sf::View & cv = pGame->getCamera().getOverworldView();
                 const auto collect = [&cv, &enemyVec](auto & vec) {
                     for (auto & element : vec) {
@@ -229,5 +229,5 @@ private:
     std::vector<aStrCoordinate> path;
     float currentDir;
     int recalc;
-    std::weak_ptr<framework::Object> targetEnemy;
+    std::weak_ptr<Object> targetEnemy;
 };

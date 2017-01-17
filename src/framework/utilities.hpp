@@ -1,11 +1,6 @@
-
-
-
-
-
 #pragma once
 
-namespace utilities {
+namespace _utility_ {
 	template<typename TupleType, typename FunctionType>
 	void for_each(TupleType&&, FunctionType,
 				  std::integral_constant<size_t, std::tuple_size<typename std::remove_reference<TupleType>::type >::value>) {}
