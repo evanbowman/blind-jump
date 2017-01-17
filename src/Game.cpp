@@ -33,6 +33,7 @@ Game::Game(nlohmann::json & config)
     windowView.zoom(visibleArea);
     camera.setWindowView(windowView);
     gfxContext.targetRef = &target;
+    window.requestFocus();
     init();
 }
 
@@ -63,12 +64,11 @@ void Game::init() {
     transitionShape.setFillColor(sf::Color(0, 0, 0, 0));
     vignetteSprite.setColor(sf::Color::White);
     window.setVerticalSyncEnabled(true);
+    window.setFramerateLimit(120);
     window.setMouseCursorVisible(false);
     level = -1;
     this->nextLevel();
 }
-
-extern bool gameHasFocus;
 
 void Game::eventLoop() {
     sf::Event event;
@@ -81,12 +81,10 @@ void Game::eventLoop() {
 
         case sf::Event::GainedFocus:
             sounds.unpause(SoundController::Sound | SoundController::Music);
-            ::gameHasFocus = true;
             break;
 
         case sf::Event::LostFocus:
             sounds.pause(SoundController::Sound | SoundController::Music);
-            ::gameHasFocus = false;
             break;
 
         default:

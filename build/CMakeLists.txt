@@ -53,7 +53,8 @@ if(APPLE)
     COMMAND cp -r ${SFML_DIR}/lib/* ${EXECUTABLE_NAME}.app/Contents/Frameworks
     COMMAND cp -r ${SFML_DIR}/extlibs/libs-osx/Frameworks/* ${EXECUTABLE_NAME}.app/Contents/Frameworks)
 elseif(WIN32)
-  target_link_libraries(${EXECUTABLE_NAME} "")
+  # FIXME: how to get path to show up in visual studio's "additional library directories"?
+  target_link_libraries(${EXECUTABLE_NAME} sfml-graphics sfml-window sfml-system sfml-audio)
 elseif(UNIX)
   # FIXME...
 endif()

@@ -1,10 +1,8 @@
 #include "Game.hpp"
 
-extern bool gameHasFocus;
-
 void Game::updateGraphics() {
     window.clear();
-    if (!::gameHasFocus) {
+    if (!window.hasFocus()) {
         util::sleep(milliseconds(200));
         return;
     }

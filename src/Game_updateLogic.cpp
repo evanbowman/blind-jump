@@ -3,7 +3,7 @@
 extern bool gameHasFocus;
 
 void Game::updateLogic(const sf::Time & elapsedTime) {
-    if (!::gameHasFocus) {
+    if (!window.hasFocus()) {
         util::sleep(milliseconds(200));
         return;
     }

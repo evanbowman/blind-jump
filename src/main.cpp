@@ -1,5 +1,3 @@
-// Start Date: 10/9/15
-
 #include "Game.hpp"
 #include "alias.hpp"
 #include "backgroundHandler.hpp"
@@ -23,6 +21,13 @@
 
 std::exception_ptr pWorkerException = nullptr;
 bool gameHasFocus = false;
+
+#ifdef WIN32
+int main();
+int WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+    return main();
+}
+#endif
 
 int main() {
     rng::seed();
