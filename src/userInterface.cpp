@@ -284,6 +284,8 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
 	case Powerup::goldHeart:
 	    uIFrontEnd.updateMaxHealth(uIFrontEnd.getMaxHealth() + 1);
 	    uIFrontEnd.updateHealth(uIFrontEnd.getHealth() + 1);
+	    dispPowerupBar = false;
+	    powerupTimer = 0;
 	    break;
 
         case Powerup::rapidFire:

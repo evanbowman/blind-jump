@@ -136,7 +136,7 @@ public:
 	std::get<indx>(contents).clear();
     }
     void clear() {
-	utilities::for_each(contents, [&](auto & vec) {
+	_utility_::for_each(contents, [&](auto & vec) {
 		vec.clear();
 	    });
     }
@@ -150,7 +150,7 @@ public:
     }
     template<typename F>
     void apply(const F & hook) {
-	utilities::for_each(contents, hook);
+	_utility_::for_each(contents, hook);
     }
     template<std::size_t indx, typename F>
     void apply(const F & hook) {
