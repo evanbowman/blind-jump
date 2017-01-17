@@ -76,25 +76,29 @@ void initEnemies(Game * gm) {
             enemies.addCritter(&tiles);
             break;
 
-        case Dasher:
-	    static const unsigned maxDashers(5);
-	    if (numPlaced[Dasher] < maxDashers) {
-		enemies.addDasher(&tiles);
-		++numPlaced[Dasher];
-	    } else {
-	        --i;
-	    }
+        case Dasher: {
+            static const unsigned maxDashers(5);
+            if (numPlaced[Dasher] < maxDashers) {
+                enemies.addDasher(&tiles);
+                ++numPlaced[Dasher];
+            }
+            else {
+                --i;
+            }
             break;
+        }
 
-        case 3:
-	    static const unsigned maxTurrets(3);
-	    if (numPlaced[Turret] < maxTurrets) {
-		enemies.addTurret(&tiles);
-		++numPlaced[Turret];
-	    } else {
-		--i;
-	    }
+        case Turret: {
+            static const unsigned maxTurrets(3);
+            if (numPlaced[Turret] < maxTurrets) {
+                enemies.addTurret(&tiles);
+                ++numPlaced[Turret];
+            }
+            else {
+                --i;
+            }
             break;
+        }
 
         default:
             break;

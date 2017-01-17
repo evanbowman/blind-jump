@@ -82,7 +82,7 @@ public:
         } break;
         }
     }
-    void setState(const _Terminal::State _state) { state = _state; }
+    void setState(const State _state) { state = _state; }
     const State getState() const { return state; }
 
 private:

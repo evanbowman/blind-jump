@@ -9,7 +9,7 @@
 
 template <typename DrawPolicy>
 class _Item : public Drawable<_Item<DrawPolicy>, DrawPolicy>, public Effect {
-    constexpr static float PI{3.1415926535};
+    constexpr static double PI{3.1415926535};
 
 public:
     static const int drawOffset = -16;
@@ -32,7 +32,7 @@ public:
     }
     const sf::Sprite & getSprite() const { return powerupSheet.getSprite(); }
     const sf::Sprite & getGlow() const { return glow; }
-    const _Item::HBox & getHitBox() const { return hitBox; }
+    const HBox & getHitBox() const { return hitBox; }
     template <typename Game> void update(const sf::Time & elapsedTime, Game *) {
         timer += elapsedTime.asMilliseconds();
         const float offset = (3 * sinf(2 * PI * 0.001 * timer + 180));

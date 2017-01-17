@@ -5,6 +5,7 @@
 #include <SFML/Audio.hpp>
 #include <list>
 #include <memory>
+#include <mutex>
 #include <vector>
 
 struct reqInfo {

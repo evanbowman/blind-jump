@@ -72,7 +72,7 @@ public:
     bool driftSel;
     const sf::Sprite & getSprite() const { return spriteSheet[frameIndex]; }
     const sf::Sprite & getGlow() const { return glowSprite; }
-    const _DasherShot::HBox & getHitBox() const { return hitBox; }
+    const HBox & getHitBox() const { return hitBox; }
 
 private:
     mutable SpriteSheet<0, 88, 12, 12> spriteSheet;

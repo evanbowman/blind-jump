@@ -5,13 +5,16 @@
 #if WIN32 != 0
 std::string resourcePath() {
     HMODULE hModule = GetModuleHandleW(nullptr);
-    wchar_t buffer[MAX_PATH];
+    char buffer[MAX_PATH];
     GetModuleFileName(hModule, buffer, MAX_PATH);
     const std::string path(buffer);
-    // TODO: untested! Path may use backslashes since it's Windows...
-    const std::size_t lastFwdSlash = path.find_last_of("/");
+    const std::size_t lastFwdSlash = path.find_last_of('\\');
     std::string pathWithoutBinary = path.substr(0, lastFwdSlash + 1);
-    // TODO: where to store resources?
+#ifdef _DEBUG
+	return pathWithoutBinary + "res\\";
+#else
+    return pathWithoutBinary + "..\\..\\res\\";
+#endif
 }
 #elif APPLE != 0
 std::string resourcePath() {

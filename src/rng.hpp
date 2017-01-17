@@ -1,5 +1,6 @@
 #pragma once
 #include <cmath>
+#include <ctime>
 #include <random>
 
 namespace rng {
@@ -15,6 +16,6 @@ inline int random(size_t upper, int lower = 0) {
 
 inline void seed() {
     std::random_device rd;
-    RNG.seed(rd() ^ time(nullptr));
+    RNG.seed(rd() ^ std::time(nullptr));
 }
 }

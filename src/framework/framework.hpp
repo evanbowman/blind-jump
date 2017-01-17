@@ -3,6 +3,7 @@
 #include <vector>
 #include <cmath>
 #include <queue>
+#include <memory>
 #include <SFML/Graphics.hpp>
 #include "utilities.hpp"
 

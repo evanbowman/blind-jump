@@ -107,10 +107,7 @@ void Critter::update(Game * pGame, const sf::Time & elapsedTime,
                     atan2(yInit - (((path.back().y * 26) + 4 + tilePosY)),
                           xInit - (((path.back().x * 32) + 4 + tilePosX)));
             }
-        }
-
-        // If the path is not empty
-        else {
+        } else if (!path.empty()) {
             // Add each component of the direction vector to the enemy's
             // position datafields
             xInit -= speed * cos(currentDir) *

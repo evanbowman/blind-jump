@@ -81,7 +81,7 @@ template <typename T> struct Wrapper {
 };
 
 template <typename... Args> struct RenderPolicy : public Wrapper<Args>... {
-    RenderPolicy() : Wrapper<Args>{}... {}
+    //RenderPolicy() : Wrapper<Args>{}... {} FIXME: Microsoft compiler complains about this... is this even necessary, if implicitly default constructible?
     template <typename CallerType>
     void draw(const CallerType & ct, GfxContext & gfxContext,
               const sf::View & view) {

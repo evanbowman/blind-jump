@@ -8,8 +8,7 @@ set(JSON_DIR "../deps/JSON")
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-file(GLOB_RECURSE blindjump_SOURCES "${PROJECT_SOURCE_DIR}/*.cpp")
-file(GLOB_RECURSE blindjump_HEADERS "${PROJECT_SOURCE_DIR}/*.hpp")
+file(GLOB_RECURSE SOURCES "${PROJECT_SOURCE_DIR}/*.cpp")
 
 # This bit is so that the CMAKE platform variables can map directly
 # to preprocessor macros in config.h (CMAKE vars don't default to 0).
@@ -38,7 +37,7 @@ configure_file(
   )
 include_directories("${PROJECT_BINARY_DIR}")
 
-add_executable(${EXECUTABLE_NAME} WIN32 MACOSX_BUNDLE ${blindjump_SOURCES} ${RESOURCE_PATH})
+add_executable(${EXECUTABLE_NAME} WIN32 MACOSX_BUNDLE ${SOURCES})
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 
@@ -54,17 +53,7 @@ if(APPLE)
     COMMAND cp -r ${SFML_DIR}/lib/* ${EXECUTABLE_NAME}.app/Contents/Frameworks
     COMMAND cp -r ${SFML_DIR}/extlibs/libs-osx/Frameworks/* ${EXECUTABLE_NAME}.app/Contents/Frameworks)
 elseif(WIN32)
-  # FIXME: I don't have Windows, cannot do this myself!!!
-  target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
+  target_link_libraries(${EXECUTABLE_NAME} "")
 elseif(UNIX)
-  # FIXME: I should install debian, redhat, etc. and get this working!!!
-  target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
-  find_package(Threads)
-  target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_THREAD_LIBS_INIT})
-  if(EXISTS "/etc/debian_version")
-    # TODO create deb package
-  endif()
-  if(EXISTS "/etc/redhat-release")
-    # TODO create rpm: install centos in a vm and get this working!
-  endif()
+  # FIXME...
 endif()
