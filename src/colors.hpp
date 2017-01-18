@@ -1,9 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-#define DEF_GLSL_COLOR(color, name)                                            \
-    static const sf::Glsl::Vec3 name(color::r, color::g, color::b)
-
 #define DEF_COLOR(NAME, R, G, B)                                               \
     struct NAME {                                                              \
         constexpr static float r = R;                                          \
