@@ -2,6 +2,3 @@
 #define VERSION_MINOR @VERSION_MINOR@
 #define STRING(s) #s
 #define EXECUTABLE_NAME STRING(@EXECUTABLE_NAME@)
-#define WIN32 @WIN32@
-#define APPLE @APPLE@
-#define UNIX @UNIX@

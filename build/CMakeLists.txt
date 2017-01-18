@@ -10,39 +10,20 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 file(GLOB_RECURSE SOURCES "${PROJECT_SOURCE_DIR}/*.cpp")
 
-# This bit is so that the CMAKE platform variables can map directly
-# to preprocessor macros in config.h (CMAKE vars don't default to 0).
-# The only part of the codebase that needs this is the resourcePath()
-# function, it provides a path to resource files relative to the
-# running executable, and cannot be done portably at the moment.
-if(WIN32)
-  set(SFML_STATIC_LIBRARIES ON)
-  set(APPLE 0)
-  set(UNIX 0)
-elseif(APPLE)
-  set(WIN32 0)
-  set(UNIX 0)
-elseif(UNIX)
-  set(WIN32 0)
-  set(APPLE 0)
-endif()
-
 set(CMAKE_BUILD_TYPE Release)
 
 set(VERSION_MAJOR 0)
-set(VERSION_MINOR 2)
+set(VERSION_MINOR 3)
 configure_file(
   "${PROJECT_BINARY_DIR}/config.h.in"
   "${PROJECT_SOURCE_DIR}/config.h"
   )
-include_directories("${PROJECT_BINARY_DIR}")
 
 add_executable(${EXECUTABLE_NAME} WIN32 MACOSX_BUNDLE ${SOURCES})
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
-
 include_directories("${SFML_DIR}/include/" "${JSON_DIR}")
 if(APPLE)
+  add_definitions(-DBLINDJUMP_MAC)
   target_link_libraries(${EXECUTABLE_NAME} "-framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio -Xlinker -rpath -Xlinker @loader_path/../Frameworks")
   set(MACOSX_BUNDLE_BUNDLE_NAME ${EXECUTABLE_NAME})
   set(MACOSX_BUNDLE_ICON_FILE icon.icns)
@@ -53,8 +34,12 @@ if(APPLE)
     COMMAND cp -r ${SFML_DIR}/lib/* ${EXECUTABLE_NAME}.app/Contents/Frameworks
     COMMAND cp -r ${SFML_DIR}/extlibs/libs-osx/Frameworks/* ${EXECUTABLE_NAME}.app/Contents/Frameworks)
 elseif(WIN32)
+  add_definitions(-DBLINDJUMP_WINDOWS)
   # FIXME: how to get path to show up in visual studio's "additional library directories"?
   target_link_libraries(${EXECUTABLE_NAME} sfml-graphics sfml-window sfml-system sfml-audio)
 elseif(UNIX)
-  # FIXME...
+  # TODO: not enough to just assume non-mac will be linux, there's BSD, etc...
+  add_definitions(-DBLINDJUMP_LINUX)
+  find_package(Threads)
+  target_link_libraries(${EXECUTABLE_NAME} ${CMAKE_THREAD_LIBS_INIT})
 endif()

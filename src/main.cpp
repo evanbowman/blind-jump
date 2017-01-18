@@ -22,7 +22,7 @@
 std::exception_ptr pWorkerException = nullptr;
 bool gameHasFocus = false;
 
-#ifdef WIN32
+#ifdef BLINDJUMP_WINDOWS
 int main();
 int WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     return main();

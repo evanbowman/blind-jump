@@ -4,12 +4,12 @@
 
 #include <cstring>
 #include <string>
-#if WIN32 != 0
+#ifdef BLINDJUMP_WINDOWS
 #include <Windows.h>
-#elif APPLE != 0
+#elif BLINDJUMP_MAC
 #include <mach-o/dyld.h>
 #include <sys/syslimits.h>
-#elif UNIX != 0
+#elif BLINDJUMP_LINUX
 #include <linux/limits.h>
 #include <unistd.h>
 #endif

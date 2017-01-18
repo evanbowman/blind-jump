@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#if WIN32 != 0
+#ifdef BLINDJUMP_WINDOWS
 std::string resourcePath() {
     HMODULE hModule = GetModuleHandleW(nullptr);
     char buffer[MAX_PATH];
@@ -11,12 +11,12 @@ std::string resourcePath() {
     const std::size_t lastFwdSlash = path.find_last_of('\\');
     std::string pathWithoutBinary = path.substr(0, lastFwdSlash + 1);
 #ifdef _DEBUG
-	return pathWithoutBinary + "..\\..\\res\\";
+    return pathWithoutBinary + "..\\..\\res\\";
 #else
     return pathWithoutBinary + "res\\";
 #endif
 }
-#elif APPLE != 0
+#elif BLINDJUMP_MAC
 std::string resourcePath() {
     char buffer[PATH_MAX];
     uint32_t size = sizeof(buffer);
@@ -26,7 +26,7 @@ std::string resourcePath() {
     std::string pathWithoutBinary = path.substr(0, lastFwdSlash + 1);
     return pathWithoutBinary + "../Resources/";
 }
-#elif UNIX != 0
+#elif BLINDJUMP_LINUX
 std::string resourcePath() {
     char buffer[PATH_MAX];
     [[gnu::unused]] const std::size_t bytesRead =
