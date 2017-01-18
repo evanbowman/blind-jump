@@ -73,7 +73,7 @@ void createMapImage(const sf::Image & tileImage, Tile mapArray[61][61],
                 }
                 bitMask[i][j] += 4 * static_cast<int>(mapTemp[i][j + 1]);
                 if (mapArray[i - 1][j] != Tile::GrassUpperEdge 
-                    && mapArray[i - 1][j] != Tile::GrassUpperEdge)
+                    && mapArray[i - 1][j] != Tile::GrassLowerEdge)
                     bitMask[i][j] += 8 * static_cast<int>(mapTemp[i - 1][j]);
             }
         }
