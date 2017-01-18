@@ -346,7 +346,7 @@ void Game::nextLevel() {
         } while (count < 150);
     }
     tiles.rebuild(set);
-    bkg.setBkg(tiles.getWorkingSet());
+    bkg.setBkg(static_cast<uint8_t>(set));
     tiles.setPosition((viewPort.x / 2) - 16, (viewPort.y / 2));
     helperGroup.apply([this](auto & vec) {
         for (auto & element : vec) {

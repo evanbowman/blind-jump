@@ -22,11 +22,11 @@ inline sf::Vector2f getDrawableArea(const nlohmann::json & configJSON) {
             const int width = it.value().find("Width")->get<int>();
             const int height = it.value().find("Height")->get<int>();
             if (wFactor / hFactor == aspectRatio) {
-                drawableAreaSize.x = width;
-                drawableAreaSize.y = height;
+                drawableAreaSize.x = static_cast<float>(width);
+                drawableAreaSize.y = static_cast<float>(height);
             } else if (hFactor / wFactor == aspectRatio) {
-                drawableAreaSize.y = height;
-                drawableAreaSize.x = width;
+                drawableAreaSize.y = static_cast<float>(height);
+                drawableAreaSize.x = static_cast<float>(width);
             }
         }
     } catch (const std::exception & ex) {

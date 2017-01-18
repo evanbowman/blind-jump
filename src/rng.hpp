@@ -16,6 +16,6 @@ inline int random(size_t upper, int lower = 0) {
 
 inline void seed() {
     std::random_device rd;
-    RNG.seed(rd() ^ std::time(nullptr));
+    RNG.seed(rd() ^ static_cast<unsigned>(std::time(nullptr)));
 }
 }

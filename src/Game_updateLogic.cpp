@@ -1,7 +1,5 @@
 #include "Game.hpp"
 
-extern bool gameHasFocus;
-
 void Game::updateLogic(const sf::Time & elapsedTime) {
     if (window.isOpen()) {
         if (!window.hasFocus()) {

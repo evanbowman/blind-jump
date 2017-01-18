@@ -21,22 +21,22 @@ float tileController::getPosX() const { return posX; }
 
 float tileController::getPosY() const { return posY; }
 
-void createMapImage(const sf::Image & tileImage, uint8_t mapArray[61][61],
+void createMapImage(const sf::Image & tileImage, Tile mapArray[61][61],
                     sf::Texture tx[2], const sf::Image & grassSet,
                     const sf::Image & grassSetEdge) {
-    uint8_t mapTemp[61][61], bitMask[61][61], gratePositions[61][61];
+    Tile mapTemp[61][61];
+    uint8_t bitMask[61][61], gratePositions[61][61];
     std::memset(mapTemp, 0, sizeof(mapTemp[0][0]) * std::pow(61, 2));
     std::memset(bitMask, 0, sizeof(bitMask[0][0]) * std::pow(61, 2));
     std::memset(gratePositions, 0,
                 sizeof(gratePositions[0][0]) * std::pow(61, 2));
     for (int i = 0; i < 61; i++) {
         for (int j = 0; j < 61; j++) {
-            if (mapArray[i][j] == 5 && !rng::random<11>()) {
+            if (mapArray[i][j] == Tile::Plate && !rng::random<11>()) {
                 gratePositions[i][j] = 1;
             }
         }
     }
-
     // Now smooth the grate positions
     int count;
     // Run 2 repetitions of smoothing
@@ -50,15 +50,14 @@ void createMapImage(const sf::Image & tileImage, uint8_t mapArray[61][61],
                 }
             }
         }
-
     // Now if the map array contains a grass tile, set the temporary map value
     // to 1
     for (int i = 0; i < 61; i++) {
         for (int j = 0; j < 61; j++) {
-            if (mapArray[i][j] == 8 || mapArray[i][j] == 11 ||
-                mapArray[i][j] == 10 || mapArray[i][j] == 9 ||
-                mapArray[i][j] == 7) {
-                mapTemp[i][j] = 1;
+            if (mapArray[i][j] == Tile::Grass || mapArray[i][j] == Tile::GrassFlowers ||
+                mapArray[i][j] == Tile::GrassUpperEdge || mapArray[i][j] == Tile::GrassLowerEdge ||
+                mapArray[i][j] == Tile::_UNUSED1_) {
+                mapTemp[i][j] = Tile::Wall;
             }
         }
     }
@@ -66,15 +65,16 @@ void createMapImage(const sf::Image & tileImage, uint8_t mapArray[61][61],
     // bit mask according to nearby element values
     for (int i = 0; i < 61; i++) {
         for (int j = 0; j < 61; j++) {
-            if (mapTemp[i][j] == 1) {
-                bitMask[i][j] += 1 * mapTemp[i][j - 1];
-                if (mapArray[i + 1][j] != 10 && mapArray[i + 1][j] != 9)
-                    bitMask[i][j] += 2 * mapTemp[i + 1][j];
-
-                bitMask[i][j] += 4 * mapTemp[i][j + 1];
-
-                if (mapArray[i - 1][j] != 10 && mapArray[i - 1][j] != 9)
-                    bitMask[i][j] += 8 * mapTemp[i - 1][j];
+            if (mapTemp[i][j] == Tile::Wall) {
+                bitMask[i][j] += 1 * static_cast<int>(mapTemp[i][j - 1]);
+                if (mapArray[i + 1][j] != Tile::GrassLowerEdge
+                    && mapArray[i + 1][j] != Tile::GrassUpperEdge) {
+                    bitMask[i][j] += 2 * static_cast<int>(mapTemp[i + 1][j]);
+                }
+                bitMask[i][j] += 4 * static_cast<int>(mapTemp[i][j + 1]);
+                if (mapArray[i - 1][j] != Tile::GrassUpperEdge 
+                    && mapArray[i - 1][j] != Tile::GrassUpperEdge)
+                    bitMask[i][j] += 8 * static_cast<int>(mapTemp[i - 1][j]);
             }
         }
     }
@@ -91,7 +91,7 @@ void createMapImage(const sf::Image & tileImage, uint8_t mapArray[61][61],
         for (int j = 10; j < 50; j++) {
             int select = rng::random<3>();
             switch (mapArray[i][j]) {
-            case 5:
+            case Tile::Plate:
                 if (gratePositions[i][j] != 1) {
                     drawPixels(tileMap, tileImage, i, j, 0, 0);
                 } else {
@@ -99,15 +99,15 @@ void createMapImage(const sf::Image & tileImage, uint8_t mapArray[61][61],
                 }
                 break;
 
-            case 3:
+            case Tile::Sand:
                 drawPixels(tileMap, tileImage, i, j, 32, 0);
                 break;
 
-            case 4:
+            case Tile::SandAndGrass:
                 drawPixels(tileMap, tileImage, i, j, 64, 0);
                 break;
 
-            case 2:
+            case Tile::PlateLowerEdge:
                 if (select == 2) {
                     drawPixels(tileMapEdge, tileImage, i, j, 96, 0);
                 } else if (select == 1) {
@@ -117,11 +117,11 @@ void createMapImage(const sf::Image & tileImage, uint8_t mapArray[61][61],
                 }
                 break;
 
-            case 6:
+            case Tile::PlateUpperEdge:
                 drawPixels(tileMap, tileImage, i, j, 128, 0);
                 break;
 
-            case 8:
+            case Tile::Grass:
                 drawPixels(tileMap, tileImage, i, j, 0, 0);
                 if (select != 2) {
                     drawPixels(tileMap, grassSetEdge, i, j, bitMask[i][j] * 32,
@@ -131,7 +131,7 @@ void createMapImage(const sf::Image & tileImage, uint8_t mapArray[61][61],
                 }
                 break;
 
-            case 11:
+            case Tile::GrassFlowers:
                 drawPixels(tileMap, tileImage, i, j, 32, 0);
                 if (select != 2) {
                     drawPixels(tileMap, grassSetEdge, i, j, bitMask[i][j] * 32,
@@ -141,7 +141,7 @@ void createMapImage(const sf::Image & tileImage, uint8_t mapArray[61][61],
                 }
                 break;
 
-            case 9:
+            case Tile::GrassLowerEdge:
                 if (select != 2) {
                     drawPixels(tileMapEdge, tileImage, i, j, 192, 0);
                 } else {
@@ -149,11 +149,11 @@ void createMapImage(const sf::Image & tileImage, uint8_t mapArray[61][61],
                 }
                 break;
 
-            case 10:
+            case Tile::GrassUpperEdge:
                 drawPixels(tileMap, tileImage, i, j, 224, 0);
                 break;
 
-            case 13:
+            case Tile::Grate:
                 drawPixels(tileMap, tileImage, i, j, 256, 0);
                 break;
 
@@ -167,7 +167,7 @@ void createMapImage(const sf::Image & tileImage, uint8_t mapArray[61][61],
 }
 
 tileController::tileController()
-    : posX(-72), posY(-476), windowH(0), windowW(0) {
+    : posX(-72), posY(-476) {
     transitionLvSpr.setTexture(
         getgResHandlerPtr()->getTexture(ResHandler::Texture::introLevel));
     shadow.setFillColor(sf::Color(188, 188, 198, 255));
@@ -224,9 +224,7 @@ void tileController::draw(sf::RenderTexture & window,
 // Set the center position according to the window width and height
 void tileController::setPosition(float X, float Y) {
     posX += X;
-    windowW = X;
     posY += Y;
-    windowH = Y;
 }
 
 // Empty all of the containers to prepare for pushing back a new map set
@@ -238,14 +236,12 @@ void tileController::clear() {
 void tileController::rebuild(Tileset set) {
     switch (set) {
     case Tileset::intro:
-        workingSet = 0;
         posX = -72;
         posY = -476;
         shadow.setFillColor(sf::Color(188, 188, 198, 255));
         break;
 
     case Tileset::regular:
-        workingSet = 1;
         shadow.setFillColor(sf::Color(188, 188, 198, 255));
         createMapImage(
             getgResHandlerPtr()->getImage(ResHandler::Image::soilTileset),
@@ -258,8 +254,6 @@ void tileController::rebuild(Tileset set) {
         break;
     }
 }
-
-unsigned char tileController::getWorkingSet() { return workingSet; }
 
 void tileController::setWindowSize(float w, float h) {
     rt.create(w, h);

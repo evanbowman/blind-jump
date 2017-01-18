@@ -23,7 +23,7 @@ bool checkOverlap(Circle c1, Circle c2) {
     return false;
 }
 
-void getLightingPositions(uint8_t gameMap[61][61],
+void getLightingPositions(Tile gameMap[61][61],
                           std::vector<Coordinate> & availableLocations,
                           Circle & teleporterFootprint) {
     // First create a temporary map containing only the surfaces from the game
@@ -33,8 +33,8 @@ void getLightingPositions(uint8_t gameMap[61][61],
     for (i = 0; i < 61; i++) {
         for (j = 0; j < 61; j++) {
             Circle c;
-            if (gameMap[i][j] == 3 || gameMap[i][j] == 4 ||
-                gameMap[i][j] == 8 || gameMap[i][j] == 11) {
+            if (gameMap[i][j] == Tile::Sand || gameMap[i][j] == Tile::SandAndGrass ||
+                gameMap[i][j] == Tile::Grass || gameMap[i][j] == Tile::GrassFlowers) {
                 c.x = i;
                 c.y = j;
                 c.r = CIRC_RADIUS + rng::random<40>();

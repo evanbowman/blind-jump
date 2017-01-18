@@ -4,6 +4,7 @@
 #include "math.hpp"
 #include "rng.hpp"
 #include "spriteSheet.hpp"
+#include "mappingFunctions.hpp"
 
 struct DrawScreen {
     using value_type = int;
@@ -21,13 +22,13 @@ public:
     static const int drawOffset = -10;
     enum class State { dormant, wakeup, awake, poweroff };
     _Terminal(const float _xInit, const float _yInit,
-              const sf::Texture & mainTxtr, const uint8_t tile)
+              const sf::Texture & mainTxtr, const Tile tile)
         : Object(_xInit + rng::random<4, -2>(), _yInit - rng::random<2, 1>()),
           animationTimer(0), stateTimer(0), frameIndex(0),
           state(State::dormant), screenSheet(mainTxtr), mainSprite(mainTxtr),
           shadow(mainTxtr) {
         shadow.setTextureRect(sf::IntRect(0, 159, 21, 12));
-        if (tile == 3 || tile == 4) {
+        if (tile == Tile::Sand || tile == Tile::SandAndGrass) {
             mainSprite.setTextureRect(sf::IntRect(0, 132, 21, 27));
         } else {
             mainSprite.setTextureRect(sf::IntRect(21, 143, 21, 27));

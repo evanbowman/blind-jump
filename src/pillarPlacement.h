@@ -4,7 +4,7 @@
 
 #define PILLAR_RADIUS 180
 
-void getRockPositions(uint8_t gameMap[61][61], std::vector<Coordinate>& availableLocations, Circle & teleporterFootprint) {
+void getRockPositions(Tile gameMap[61][61], std::vector<Coordinate>& availableLocations, Circle & teleporterFootprint) {
     // First create a temporary map containing only the surfaces from the game map
     std::vector<Circle> pillarMap;
     int i, j;
@@ -20,7 +20,7 @@ void getRockPositions(uint8_t gameMap[61][61], std::vector<Coordinate>& availabl
     for (i = 0; i < 61; i++) {
         for (j = 0; j < 61; j++) {
             Circle c;
-            if (gameMap[i][j] == 3 || gameMap[i][j] == 4) {
+            if (gameMap[i][j] == Tile::Sand || gameMap[i][j] == Tile::SandAndGrass) {
                 c.x = i;
                 c.y = j;
                 c.r = PILLAR_RADIUS + rng::random<60>();

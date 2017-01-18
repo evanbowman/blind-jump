@@ -28,6 +28,13 @@ BlindJump.rpm
 BlindJump.deb
 
 # CMake generated files
+*.vcxproj*
+*.sln
+*.VC*
+*.dir
+Debug
+.vs
+Win32
 CMakeCache.txt
 CMakeFiles
 cmake_install.cmake

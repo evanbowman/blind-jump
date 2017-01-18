@@ -46,7 +46,7 @@ void Camera::update(const sf::Time & elapsedTime,
             // shifts
             // so I'm using a buffer of the average enemy positions
             buffer = math::lerp(buffer, aggregate, lerpSpeed * 0.1f);
-            midpoint = math::lerp(pTarget->getPosition(), buffer, 0.78);
+            midpoint = math::lerp(pTarget->getPosition(), buffer, 0.78f);
             currentPosition = math::lerp(midpoint, currentPosition, lerpSpeed);
         } break;
 
@@ -92,7 +92,7 @@ void Camera::update(const sf::Time & elapsedTime,
                 shakeTimer = 0;
             }
         }
-        static const std::array<int, 5> shakeConstants = {{3, -5, 3, -2, 1}};
+        static const std::array<float, 5> shakeConstants = {{3.f, -5.f, 3.f, -2.f, 1.f}};
         float shakeOffset = shakeConstants[shakeIndex];
         currentPosition.y += shakeOffset * shakeIntensity;
     }

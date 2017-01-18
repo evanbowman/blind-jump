@@ -5,8 +5,6 @@
 #include "util.hpp"
 #include <SFML/Graphics.hpp>
 
-extern bool gameHasFocus;
-
 inline void dispIntroSequence(sf::RenderWindow & window,
                               InputController & input) {
     const sf::Font & cornerstone =
@@ -37,14 +35,6 @@ inline void dispIntroSequence(sf::RenderWindow & window,
                 throw ShutdownSignal();
                 break;
 
-            case sf::Event::GainedFocus:
-                ::gameHasFocus = true;
-                break;
-
-            case sf::Event::LostFocus:
-                ::gameHasFocus = false;
-                break;
-
             default:
                 input.recordEvent(event);
                 break;
@@ -56,7 +46,7 @@ inline void dispIntroSequence(sf::RenderWindow & window,
             util::isAsleep = false;
         }
         elapsedTime += timeDelta;
-        if (!::gameHasFocus) {
+        if (!window.hasFocus()) {
             util::sleep(milliseconds(200));
         }
         switch (state) {

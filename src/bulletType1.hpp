@@ -47,7 +47,7 @@ public:
         }
     }
     template <typename Game> void update(const sf::Time & elapsedTime, Game *) {
-        const static float movementRate = 0.00038;
+        const static float movementRate = 0.00038f;
         timer += elapsedTime.asMilliseconds();
         hitBox.setPosition(position);
         switch (state) {

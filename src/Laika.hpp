@@ -16,7 +16,7 @@ public:
     enum class State { idle, returnToPlayer, approachEnemy };
     using HBox = HitBox<32, 32, 0, -6>;
     _Laika(const float _xInit, const float _yInit, const sf::Texture & texture,
-           uint8_t _map[61][61])
+           Tile _map[MAP_WIDTH][MAP_HEIGHT])
         : Object(_xInit, _yInit), state(State::idle), idleSheet(texture),
           runSheet(texture), shadow(texture), frameIndex(0), animationTimer(0),
           currentDir(0.f), recalc(0), map(_map) {
@@ -190,9 +190,7 @@ public:
             origin.y = (position.y - tiles.posY) / 26;
             target.x = (tiles.posX - destination.x - 12) / -32;
             target.y = (tiles.posY - destination.y - 32) / -26;
-            if (map[target.x][target.y] == 3 || map[target.x][target.y] == 4 ||
-                map[target.x][target.y] == 5 || map[target.x][target.y] == 11 ||
-                map[target.x][target.y] == 8) {
+            if (isTileWalkable(map[target.x][target.y])) {
                 path = astar_path(target, origin, map);
                 path.pop_back();
                 position.x = ((position.x - tiles.posX) / 32) * 32 + tiles.posX;
@@ -227,7 +225,7 @@ private:
     sf::Sprite shadow;
     uint8_t frameIndex;
     int64_t animationTimer;
-    uint8_t (*map)[61];
+    Tile (*map)[61];
     std::vector<aStrCoordinate> path;
     float currentDir;
     int recalc;

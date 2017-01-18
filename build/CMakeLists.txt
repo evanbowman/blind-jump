@@ -19,6 +19,10 @@ configure_file(
   "${PROJECT_SOURCE_DIR}/config.h"
   )
 
+if(WIN32)
+  link_directories(${SFML_DIR}/lib/Release)
+endif()
+
 add_executable(${EXECUTABLE_NAME} WIN32 MACOSX_BUNDLE ${SOURCES})
 
 include_directories("${SFML_DIR}/include/" "${JSON_DIR}")

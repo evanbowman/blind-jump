@@ -20,7 +20,6 @@
 #include <stdexcept>
 
 std::exception_ptr pWorkerException = nullptr;
-bool gameHasFocus = false;
 
 #ifdef BLINDJUMP_WINDOWS
 int main();
@@ -32,9 +31,12 @@ int main() {
     ResHandler resourceHandler;
     try {
         nlohmann::json configJSON;
-        {
+        try {
             std::fstream configRaw(resourcePath() + "config.json");
             configRaw >> configJSON;
+        } catch (const std::exception & ex) {
+            std::cerr << std::string("JSON error: ") + ex.what() << std::endl;
+            return EXIT_FAILURE;
         }
         resourceHandler.load();
         setgResHandlerPtr(&resourceHandler);
@@ -69,15 +71,19 @@ int main() {
         });
         game.getCamera().panDown();
         while (game.getWindow().isOpen()) {
-            game.eventLoop();
             game.updateGraphics();
+            game.eventLoop();
             if (::pWorkerException) {
                 game.getWindow().close();
                 std::rethrow_exception(::pWorkerException);
             }
         }
+    } catch (const ShutdownSignal & sig) {
+        std::cout << sig.what() << std::endl;
+        return EXIT_SUCCESS;
     } catch (const std::exception & ex) {
         std::cerr << ex.what() << std::endl;
+        return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;
 }
