@@ -1,11 +1,11 @@
 #pragma once
 
+#include "shutdownSignal.hpp"
 #include <SFML/Graphics.hpp>
-#include <unordered_map>
 #include <array>
 #include <bitset>
 #include <json.hpp>
-#include "shutdownSignal.hpp"
+#include <unordered_map>
 
 struct JoystickInfo {
     int vendorId;

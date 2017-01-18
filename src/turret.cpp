@@ -1,8 +1,8 @@
 #include "turret.hpp"
+#include "Game.hpp"
 #include "angleFunction.hpp"
 #include "player.hpp"
 #include <cmath>
-#include "Game.hpp"
 
 Turret::Turret(const sf::Texture & gameObjects, float _xPos, float _yPos)
     : Enemy(_xPos, _yPos), state(State::closed), frameIndex(0), timer(0), hp(6),
@@ -44,9 +44,9 @@ void Turret::update(const sf::Time & elapsedTime, Game * pGame) {
         }
     }
     for (auto & helper : pGame->getHelperGroup().get<HelperRef::Laika>()) {
-	if (hitBox.overlapping(helper->getHitBox())) {
-	    hp = 0;
-	}
+        if (hitBox.overlapping(helper->getHitBox())) {
+            hp = 0;
+        }
     }
     if (hp == 0) {
         killFlag = true;

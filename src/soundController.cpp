@@ -104,8 +104,8 @@ void SoundController::play(ResHandler::Sound indx) {
 }
 
 void SoundController::play(ResHandler::Sound indx,
-                           std::shared_ptr<Object> source,
-                           float minDistance, float attenuation, bool loop) {
+                           std::shared_ptr<Object> source, float minDistance,
+                           float attenuation, bool loop) {
     std::lock_guard<std::mutex> lk(soundsGuard);
     soundRequests.push_back(
         {indx, minDistance, attenuation, true, loop, source});

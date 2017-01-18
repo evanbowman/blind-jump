@@ -24,9 +24,7 @@ bool gameHasFocus = false;
 
 #ifdef BLINDJUMP_WINDOWS
 int main();
-int WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-    return main();
-}
+int WinMain(HINSTANCE, HINSTANCE, LPSTR, int) { return main(); }
 #endif
 
 int main() {

@@ -31,7 +31,7 @@ public:
     static const int drawOffset = -20;
 
     const HBox & getHitBox() const { return hitBox; }
-    
+
     const sf::Sprite & getSprite() const {
         switch (state) {
         case State::idle:
@@ -47,7 +47,7 @@ public:
 
     template <typename Game>
     void update(const sf::Time & elapsedTime, Game * pGame) {
-	hitBox.setPosition(position.x - 16, position.y - 16);
+        hitBox.setPosition(position.x - 16, position.y - 16);
         switch (state) {
         case State::idle: {
             animationTimer += elapsedTime.asMicroseconds();
@@ -87,7 +87,7 @@ public:
                 collect(enemies.getCritters());
                 collect(enemies.getScoots());
                 collect(enemies.getTurrets());
-		collect(enemies.getDashers());
+                collect(enemies.getDashers());
                 if (!enemyVec.empty()) {
                     std::sort(enemyVec.begin(), enemyVec.end(),
                               [this](const auto & lhs, const auto & rhs) {
@@ -131,10 +131,12 @@ public:
                 shadow.setPosition(position.x, position.y + 4);
             }
             if (auto sp = targetEnemy.lock()) {
-		const sf::Vector2f & targetPos = sp->getPosition();
-		const float dist = math::distance(targetPos.x, targetPos.y, position.x, position.y);
-		const float normal = fmax(300.f - dist, 100.f) / 300.f;
-		approachTarget(elapsedTime, pGame, sp->getPosition(), normal * 6.f);
+                const sf::Vector2f & targetPos = sp->getPosition();
+                const float dist = math::distance(targetPos.x, targetPos.y,
+                                                  position.x, position.y);
+                const float normal = fmax(300.f - dist, 100.f) / 300.f;
+                approachTarget(elapsedTime, pGame, sp->getPosition(),
+                               normal * 6.f);
             } else {
                 idleSheet.setPosition(position);
                 state = State::idle;

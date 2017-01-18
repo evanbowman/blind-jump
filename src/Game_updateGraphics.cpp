@@ -62,40 +62,20 @@ void Game::updateGraphics() {
                 lightingMap.draw(std::get<sprIdx>(element));
                 break;
 
-            case Rendertype::shadeWhite: {
-                DEF_GLSL_COLOR(colors::White, White);
-                colorShader.setUniform("amount", std::get<shaderIdx>(element));
-                colorShader.setUniform("targetColor", White);
-                lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-            } break;
+#define COLOR_LABEL(C, TYPE)                                                   \
+    case Rendertype::TYPE: {                                                   \
+        static const sf::Glsl::Vec3 C(colors::C::r, colors::C::g,              \
+                                      colors::C::b);                           \
+        colorShader.setUniform("amount", std::get<shaderIdx>(element));        \
+        colorShader.setUniform("targetColor", C);                              \
+        lightingMap.draw(std::get<sprIdx>(element), &colorShader);             \
+    } break
 
-            case Rendertype::shadeYellow: {
-                DEF_GLSL_COLOR(colors::Yellow, Yellow);
-                colorShader.setUniform("amount", std::get<shaderIdx>(element));
-                colorShader.setUniform("targetColor", Yellow);
-                lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-            } break;
-
-            case Rendertype::shadeGldnGt: {
-                DEF_GLSL_COLOR(colors::GldnGt, GldnGt);
-                colorShader.setUniform("amount", std::get<shaderIdx>(element));
-                colorShader.setUniform("targetColor", GldnGt);
-                lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-            } break;
-
-            case Rendertype::shadeRuby: {
-                DEF_GLSL_COLOR(colors::Ruby, Ruby);
-                colorShader.setUniform("amount", std::get<shaderIdx>(element));
-                colorShader.setUniform("targetColor", Ruby);
-                lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-            } break;
-
-            case Rendertype::shadeElectric: {
-                DEF_GLSL_COLOR(colors::Electric, Electric);
-                colorShader.setUniform("amount", std::get<shaderIdx>(element));
-                colorShader.setUniform("targetColor", Electric);
-                lightingMap.draw(std::get<sprIdx>(element), &colorShader);
-            } break;
+                COLOR_LABEL(White, shadeWhite);
+                COLOR_LABEL(Yellow, shadeYellow);
+                COLOR_LABEL(GldnGt, shadeGldnGt);
+                COLOR_LABEL(Ruby, shadeRuby);
+                COLOR_LABEL(Electric, shadeElectric);
             }
         }
         static const sf::Color blendAmount(185, 185, 185);

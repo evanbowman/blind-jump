@@ -83,11 +83,11 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls,
                 colorAmount = 1.f;
             }
         }
-	for (auto & helper : pGame->getHelperGroup().get<HelperRef::Laika>()) {
-	    if (hitBox.overlapping(helper->getHitBox())) {
-		health = 0;
-	    }
-	}
+        for (auto & helper : pGame->getHelperGroup().get<HelperRef::Laika>()) {
+            if (hitBox.overlapping(helper->getHitBox())) {
+                health = 0;
+            }
+        }
         if (health == 0) {
             if (position.x > player.getXpos()) {
                 deathSheet.setScale(1, 1);

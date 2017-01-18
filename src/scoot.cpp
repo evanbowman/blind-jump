@@ -41,9 +41,9 @@ void Scoot::update(Game * pGame, const std::vector<wall> & w,
         }
     }
     for (auto & helper : pGame->getHelperGroup().get<HelperRef::Laika>()) {
-	if (hitBox.overlapping(helper->getHitBox())) {
-	    health = 0;
-	}
+        if (hitBox.overlapping(helper->getHitBox())) {
+            health = 0;
+        }
     }
     if (health == 0) {
         int select = rng::random<5>();

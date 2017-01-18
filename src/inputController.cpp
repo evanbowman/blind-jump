@@ -2,39 +2,23 @@
 #include <cmath>
 #include <iostream>
 
-static std::unordered_map<std::string, sf::Keyboard::Key> translator {
-    {"esc", sf::Keyboard::Escape},
-    {"up", sf::Keyboard::Up},
-    {"down", sf::Keyboard::Down},
-    {"left", sf::Keyboard::Left},
-    {"right", sf::Keyboard::Right},
-    {"a", sf::Keyboard::A},
-    {"b", sf::Keyboard::B},
-    {"c", sf::Keyboard::C},
-    {"d", sf::Keyboard::D},
-    {"e", sf::Keyboard::E},
-    {"f", sf::Keyboard::F},
-    {"g", sf::Keyboard::G},
-    {"h", sf::Keyboard::H},
-    {"i", sf::Keyboard::I},
-    {"j", sf::Keyboard::J},
-    {"k", sf::Keyboard::K},
-    {"l", sf::Keyboard::L},
-    {"m", sf::Keyboard::M},
-    {"n", sf::Keyboard::N},
-    {"o", sf::Keyboard::O},
-    {"p", sf::Keyboard::P},
-    {"q", sf::Keyboard::Q},
-    {"r", sf::Keyboard::R},
-    {"s", sf::Keyboard::S},
-    {"t", sf::Keyboard::T},
-    {"u", sf::Keyboard::U},
-    {"v", sf::Keyboard::V},
-    {"w", sf::Keyboard::W},
-    {"x", sf::Keyboard::X},
-    {"y", sf::Keyboard::Y},
-    {"z", sf::Keyboard::Z}
-};
+static std::unordered_map<std::string, sf::Keyboard::Key> translator{
+    {"esc", sf::Keyboard::Escape},  {"up", sf::Keyboard::Up},
+    {"down", sf::Keyboard::Down},   {"left", sf::Keyboard::Left},
+    {"right", sf::Keyboard::Right}, {"a", sf::Keyboard::A},
+    {"b", sf::Keyboard::B},         {"c", sf::Keyboard::C},
+    {"d", sf::Keyboard::D},         {"e", sf::Keyboard::E},
+    {"f", sf::Keyboard::F},         {"g", sf::Keyboard::G},
+    {"h", sf::Keyboard::H},         {"i", sf::Keyboard::I},
+    {"j", sf::Keyboard::J},         {"k", sf::Keyboard::K},
+    {"l", sf::Keyboard::L},         {"m", sf::Keyboard::M},
+    {"n", sf::Keyboard::N},         {"o", sf::Keyboard::O},
+    {"p", sf::Keyboard::P},         {"q", sf::Keyboard::Q},
+    {"r", sf::Keyboard::R},         {"s", sf::Keyboard::S},
+    {"t", sf::Keyboard::T},         {"u", sf::Keyboard::U},
+    {"v", sf::Keyboard::V},         {"w", sf::Keyboard::W},
+    {"x", sf::Keyboard::X},         {"y", sf::Keyboard::Y},
+    {"z", sf::Keyboard::Z}};
 
 static sf::Keyboard::Key toSfKey(const std::string & strKey) {
     return ::translator[strKey];
@@ -42,32 +26,33 @@ static sf::Keyboard::Key toSfKey(const std::string & strKey) {
 
 InputController::InputController(nlohmann::json & config) {
     try {
-	auto it = config.find("Keyboard");
-	const auto mapKey = [this, it](const int keyIndex, const char * jsonStr) {
-				keyboardMappings[keyIndex] =
-				    toSfKey(it->find(jsonStr)->get<std::string>());
-			    };
-	mapKey(indexShoot, "Shoot");
-	mapKey(indexAction, "Action");
-	mapKey(indexPause, "Pause");
-	mapKey(indexLeft, "Left");
-	mapKey(indexRight, "Right");
-	mapKey(indexUp, "Up");
-	mapKey(indexDown, "Down");
-	for (it = config.find("Joystick")->begin();
-	     it != config.find("Joystick")->end(); ++it) {
-	    JoystickInfo info;
-	    info.vendorId = it->find("VendorId")->get<int>();
-	    info.productId = it->find("ProductId")->get<int>();
-	    auto jsBtnMappings = it->find("ButtonMappings");
-	    info.shoot = jsBtnMappings->find("Shoot")->get<int>();
-	    info.action = jsBtnMappings->find("Action")->get<int>();
-	    info.pause = jsBtnMappings->find("Pause")->get<int>();
-	    this->joysticks.push_back(info);
-	}
-	it = config.find("Joystick")->begin();
+        auto it = config.find("Keyboard");
+        const auto mapKey = [this, it](const int keyIndex,
+                                       const char * jsonStr) {
+            keyboardMappings[keyIndex] =
+                toSfKey(it->find(jsonStr)->get<std::string>());
+        };
+        mapKey(indexShoot, "Shoot");
+        mapKey(indexAction, "Action");
+        mapKey(indexPause, "Pause");
+        mapKey(indexLeft, "Left");
+        mapKey(indexRight, "Right");
+        mapKey(indexUp, "Up");
+        mapKey(indexDown, "Down");
+        for (it = config.find("Joystick")->begin();
+             it != config.find("Joystick")->end(); ++it) {
+            JoystickInfo info;
+            info.vendorId = it->find("VendorId")->get<int>();
+            info.productId = it->find("ProductId")->get<int>();
+            auto jsBtnMappings = it->find("ButtonMappings");
+            info.shoot = jsBtnMappings->find("Shoot")->get<int>();
+            info.action = jsBtnMappings->find("Action")->get<int>();
+            info.pause = jsBtnMappings->find("Pause")->get<int>();
+            this->joysticks.push_back(info);
+        }
+        it = config.find("Joystick")->begin();
     } catch (const std::exception & ex) {
-	throw std::runtime_error("JSON error: " + std::string(ex.what()));
+        throw std::runtime_error("JSON error: " + std::string(ex.what()));
     }
     if (sf::Joystick::isConnected(0)) {
         remapJoystick();
@@ -77,12 +62,12 @@ InputController::InputController(nlohmann::json & config) {
 void InputController::remapJoystick() {
     sf::Joystick::Identification ident = sf::Joystick::getIdentification(0);
     for (auto & jsInfo : joysticks) {
-	if (jsInfo.vendorId == ident.vendorId &&
-	    jsInfo.productId == ident.productId) {
-	    joystickMappings[indexShoot] = jsInfo.shoot;
-	    joystickMappings[indexAction] = jsInfo.action;
-	    joystickMappings[indexPause] = jsInfo.pause;
-	}
+        if (jsInfo.vendorId == ident.vendorId &&
+            jsInfo.productId == ident.productId) {
+            joystickMappings[indexShoot] = jsInfo.shoot;
+            joystickMappings[indexAction] = jsInfo.action;
+            joystickMappings[indexPause] = jsInfo.pause;
+        }
     }
 }
 

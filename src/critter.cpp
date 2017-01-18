@@ -40,9 +40,9 @@ void Critter::update(Game * pGame, const sf::Time & elapsedTime,
         }
     }
     for (auto & helper : pGame->getHelperGroup().get<HelperRef::Laika>()) {
-	if (hitBox.overlapping(helper->getHitBox())) {
-	    health = 0;
-	}
+        if (hitBox.overlapping(helper->getHitBox())) {
+            health = 0;
+        }
     }
     if (health == 0) {
         unsigned long int temp = rng::random<5>();

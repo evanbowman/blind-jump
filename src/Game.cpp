@@ -14,8 +14,7 @@ Game::Game(nlohmann::json & config)
       player(viewPort.x / 2, viewPort.y / 2),
       window(sf::VideoMode::getDesktopMode(), EXECUTABLE_NAME,
              sf::Style::Fullscreen, sf::ContextSettings(0, 0, 6)),
-      input(config),
-      camera(&player, viewPort, window.getSize()),
+      input(config), camera(&player, viewPort, window.getSize()),
       uiFrontend(
           sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y)),
           viewPort.x / 2, viewPort.y / 2),
@@ -357,8 +356,8 @@ void Game::nextLevel() {
         }
     });
     bkg.setPosition((tiles.posX / 2) + 206, tiles.posY / 2);
-    auto pickLocation = [](std::vector<Coordinate> & emptyLocations)
-        -> option<Coordinate> {
+    auto pickLocation =
+        [](std::vector<Coordinate> & emptyLocations) -> option<Coordinate> {
         if (emptyLocations.size() > 0) {
             int locationSelect = rng::random(emptyLocations.size());
             Coordinate c = emptyLocations[locationSelect];
@@ -380,12 +379,12 @@ void Game::nextLevel() {
         initEnemies(this);
         auto optCoord = pickLocation(tiles.emptyMapLocations);
         if (optCoord) {
-	    Powerup chestContents;
-	    if (level < 7) {
-	        chestContents = static_cast<Powerup>(rng::random<2, 1>());
-	    } else {
-		chestContents = static_cast<Powerup>(rng::random<3, 2>());
-	    }
+            Powerup chestContents;
+            if (level < 7) {
+                chestContents = static_cast<Powerup>(rng::random<2, 1>());
+            } else {
+                chestContents = static_cast<Powerup>(rng::random<3, 2>());
+            }
             detailGroup.add<DetailRef::TreasureChest>(
                 optCoord.value().x * 32 + tiles.posX,
                 optCoord.value().y * 26 + tiles.posY,
@@ -509,33 +508,13 @@ int Game::getLevel() { return level; }
 sf::RenderWindow & Game::getWindow() { return window; }
 
 const std::array<std::pair<float, float>, 59> levelZeroWalls{
-    {{-20, 500}, {-20, 526},
-     {-20, 474}, {-20, 448},
-     {-20, 422}, {-20, 396},
-     {-20, 370}, {-20, 552},
-     {-20, 578}, {196, 500},
-     {196, 526}, {196, 474},
-     {196, 448}, {196, 422},
-     {196, 396}, {196, 370},
-     {196, 552}, {196, 578},
-     {12, 604},  {44, 604},
-     {76, 604},  {108, 604},
-     {140, 604}, {172, 604},
-     {12, 370},  {34, 370},
-     {120, 370}, {152, 370},
-     {184, 370}, {34, 344},
-     {120, 344}, {34, 318},
-     {120, 318}, {34, 292},
-     {120, 292}, {34, 266},
-     {120, 266}, {12, 266},
-     {-20, 266}, {152, 266},
-     {-20, 240}, {172, 240},
-     {-20, 214}, {172, 214},
-     {-20, 188}, {172, 188},
-     {-20, 162}, {172, 162},
-     {-20, 136}, {172, 136},
-     {-20, 110}, {172, 110},
-     {-20, 84},  {172, 84},
-     {12, 58},   {44, 58},
-     {76, 58},   {108, 58},
-     {140, 58}}};
+    {{-20, 500}, {-20, 526}, {-20, 474}, {-20, 448}, {-20, 422}, {-20, 396},
+     {-20, 370}, {-20, 552}, {-20, 578}, {196, 500}, {196, 526}, {196, 474},
+     {196, 448}, {196, 422}, {196, 396}, {196, 370}, {196, 552}, {196, 578},
+     {12, 604},  {44, 604},  {76, 604},  {108, 604}, {140, 604}, {172, 604},
+     {12, 370},  {34, 370},  {120, 370}, {152, 370}, {184, 370}, {34, 344},
+     {120, 344}, {34, 318},  {120, 318}, {34, 292},  {120, 292}, {34, 266},
+     {120, 266}, {12, 266},  {-20, 266}, {152, 266}, {-20, 240}, {172, 240},
+     {-20, 214}, {172, 214}, {-20, 188}, {172, 188}, {-20, 162}, {172, 162},
+     {-20, 136}, {172, 136}, {-20, 110}, {172, 110}, {-20, 84},  {172, 84},
+     {12, 58},   {44, 58},   {76, 58},   {108, 58},  {140, 58}}};

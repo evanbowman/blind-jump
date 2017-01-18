@@ -2,37 +2,20 @@
 #include <SFML/Graphics.hpp>
 
 #define DEF_GLSL_COLOR(color, name)                                            \
-    static const sf::Glsl::Vec3 name(color::R, color::G, color::B)
+    static const sf::Glsl::Vec3 name(color::r, color::g, color::b)
+
+#define DEF_COLOR(NAME, R, G, B)                                               \
+    struct NAME {                                                              \
+        constexpr static float r = R;                                          \
+        constexpr static float g = G;                                          \
+        constexpr static float b = B;                                          \
+    }
 
 namespace colors {
-namespace Ruby {
-constexpr float R = 0.93f;
-constexpr float G = 0.09f;
-constexpr float B = 0.36f;
-}
-namespace GldnGt {
-constexpr float R = 0.98f;
-constexpr float G = 0.22f;
-constexpr float B = 0.03f;
-}
-namespace White {
-constexpr float R = 1.00f;
-constexpr float G = 1.00f;
-constexpr float B = 1.00f;
-}
-namespace Electric {
-constexpr float R = 0.29f;
-constexpr float G = 0.99f;
-constexpr float B = 0.99f;
-}
-namespace Koamaru {
-constexpr float R = 0.16f;
-constexpr float G = 0.26f;
-constexpr float B = 0.43f;
-}
-namespace Yellow {
-constexpr float R = 1.00f;
-constexpr float G = 0.84f;
-constexpr float B = 0.08f;
-}
+DEF_COLOR(Ruby, 0.93f, 0.09f, 0.36f);
+DEF_COLOR(GldnGt, 0.98f, 0.22f, 0.03f);
+DEF_COLOR(White, 1.00f, 1.00f, 1.00f);
+DEF_COLOR(Electric, 0.29f, 0.99f, 0.99f);
+DEF_COLOR(Koamaru, 0.16f, 0.26f, 0.43f);
+DEF_COLOR(Yellow, 1.00f, 0.84f, 0.08f);
 }

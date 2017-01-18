@@ -1,8 +1,8 @@
 #include "enemy.hpp"
 
 Enemy::Enemy(float _xPos, float _yPos)
-    : Object(_xPos, _yPos), colored(false), colorAmount(0.f),
-      frameIndex(0), colorTimer(0), frameTimer(0) {}
+    : Object(_xPos, _yPos), colored(false), colorAmount(0.f), frameIndex(0),
+      colorTimer(0), frameTimer(0) {}
 
 float Enemy::getColorAmount() const { return colorAmount; }
 

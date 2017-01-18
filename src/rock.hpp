@@ -7,8 +7,7 @@
 #include <SFML/Graphics.hpp>
 
 template <typename DrawPolicy>
-class _Rock : public Drawable<_Rock<DrawPolicy>, DrawPolicy>,
-              public Object {
+class _Rock : public Drawable<_Rock<DrawPolicy>, DrawPolicy>, public Object {
 public:
     static const int drawOffset = 24;
     _Rock(float _xPos, float _yPos, const sf::Texture & inpTxtr)

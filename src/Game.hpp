@@ -5,6 +5,7 @@
 #include "HelperGroup.hpp"
 #include "RenderType.hpp"
 #include "alias.hpp"
+#include "aspectScaling.hpp"
 #include "backgroundHandler.hpp"
 #include "camera.hpp"
 #include "colors.hpp"
@@ -22,7 +23,6 @@
 #include <atomic>
 #include <cmath>
 #include <mutex>
-#include "aspectScaling.hpp"
 
 class Game {
 public:

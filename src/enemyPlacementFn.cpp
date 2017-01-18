@@ -5,9 +5,7 @@
 #include <stdio.h>
 
 void initEnemies(Game * gm) {
-    enum EnemyId {
-	Scoot, Critter, Dasher, Turret
-    };
+    enum EnemyId { Scoot, Critter, Dasher, Turret };
     constexpr static std::array<int, 4> targetLevel = {{
         4 /*Scoot*/, 5 /*Critter*/, 20 /*Dasher*/, 28 /*Turrets*/
     }};
@@ -81,8 +79,7 @@ void initEnemies(Game * gm) {
             if (numPlaced[Dasher] < maxDashers) {
                 enemies.addDasher(&tiles);
                 ++numPlaced[Dasher];
-            }
-            else {
+            } else {
                 --i;
             }
             break;
@@ -93,8 +90,7 @@ void initEnemies(Game * gm) {
             if (numPlaced[Turret] < maxTurrets) {
                 enemies.addTurret(&tiles);
                 ++numPlaced[Turret];
-            }
-            else {
+            } else {
                 --i;
             }
             break;

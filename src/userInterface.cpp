@@ -110,7 +110,7 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
             uIFrontEnd.setBarWidth(barWidth);
             if (powerupTimer > powerupTimerCeil) {
                 dispPowerupBar = false;
-		pGame->getHelperGroup().clear();
+                pGame->getHelperGroup().clear();
                 powerup = Powerup::nil;
             }
         }
@@ -236,7 +236,7 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
     case PowerupBubbleState::triggered:
         dispPowerupBar = false;
         powerupTimer = 0;
-	pGame->getHelperGroup().clear();
+        pGame->getHelperGroup().clear();
         uIFrontEnd.addPowerup(powerup);
         powerupBubbleState = PowerupBubbleState::opening;
         break;
@@ -281,12 +281,12 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
         case Powerup::nil:
             break;
 
-	case Powerup::goldHeart:
-	    uIFrontEnd.updateMaxHealth(uIFrontEnd.getMaxHealth() + 1);
-	    uIFrontEnd.updateHealth(uIFrontEnd.getHealth() + 1);
-	    dispPowerupBar = false;
-	    powerupTimer = 0;
-	    break;
+        case Powerup::goldHeart:
+            uIFrontEnd.updateMaxHealth(uIFrontEnd.getMaxHealth() + 1);
+            uIFrontEnd.updateHealth(uIFrontEnd.getHealth() + 1);
+            dispPowerupBar = false;
+            powerupTimer = 0;
+            break;
 
         case Powerup::rapidFire:
             dispPowerupBar = true;
@@ -640,10 +640,10 @@ void ui::Frontend::draw(sf::RenderWindow & window) {
         break;
 
     case Powerup::goldHeart:
-	powerupBubble.setFrame(static_cast<int>(powerupAdded) - 1);
-	powerupAdded = Powerup::nil;
-	powerupText.setString(std::string("HEALTH UP"));
-	break;
+        powerupBubble.setFrame(static_cast<int>(powerupAdded) - 1);
+        powerupAdded = Powerup::nil;
+        powerupText.setString(std::string("HEALTH UP"));
+        break;
 
     case Powerup::rapidFire:
         powerupBubble.setFrame(static_cast<int>(powerupAdded) - 1);
@@ -743,9 +743,9 @@ void ui::Frontend::drawTitle(unsigned char alpha, sf::RenderWindow & window) {
 
 void ui::Frontend::drawDeathText(unsigned char alpha,
                                  sf::RenderWindow & window) {
-    deathText.setFillColor(sf::Color(colors::Ruby::R * 255,
-                                     colors::Ruby::G * 255,
-                                     colors::Ruby::B * 255, alpha));
+    deathText.setFillColor(sf::Color(colors::Ruby::r * 255,
+                                     colors::Ruby::g * 255,
+                                     colors::Ruby::b * 255, alpha));
     window.setView(fontView);
     window.draw(deathText);
 }
