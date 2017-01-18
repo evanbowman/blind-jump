@@ -1,13 +1,9 @@
 #include "Game.hpp"
 
 void Game::updateLogic(const sf::Time & elapsedTime) {
-    if (window.isOpen()) {
-        if (!window.hasFocus()) {
-            util::sleep(milliseconds(200));
-            return;
-        }
-    } else {
-        return;
+    if (!window.hasFocus()) {
+	util::sleep(milliseconds(200));
+	return;
     }
     // Blurring is graphics intensive, the game caches frames in a RenderTexture
     // when possible
