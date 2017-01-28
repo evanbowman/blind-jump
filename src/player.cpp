@@ -803,18 +803,6 @@ void checkEnemyCollision(const std::vector<std::shared_ptr<T>> & enemyGroup,
     }
 }
 
-template <typename F>
-void checkEnemyCollision(const std::vector<std::shared_ptr<Dasher>> & dashers,
-                         Player * pPlayer, const F & policy) {
-    for (auto & enemy : dashers) {
-        if (pPlayer->getHitBox().overlapping(enemy->getHitBox()) &&
-            enemy->getState() != Dasher::State::dead &&
-            enemy->getState() != Dasher::State::dying) {
-            policy();
-        }
-    }
-}
-
 void Player::checkEnemyCollisions(enemyController & enemies,
                                   ui::Frontend & uiFrontend,
                                   SoundController & sounds) {

@@ -14,6 +14,7 @@
 #include "treasureChest.hpp"
 #include "userInterface.hpp"
 #include <SFML/Graphics.hpp>
+#include "DasherCorpse.hpp"
 #include <array>
 
 using TreasureChest = _TreasureChest<RenderPolicy<DrawMain, DrawShadow>>;
@@ -24,6 +25,7 @@ using Rock = _Rock<RenderPolicy<DrawMain>>;
 using IntroDoor = _IntroDoor<RenderPolicy<DrawMain>>;
 using StaticDrawable = _StaticDrawable<RenderPolicy<DrawMain>>;
 using Terminal = _Terminal<RenderPolicy<DrawMain, DrawShadow, DrawScreen>>;
+using DasherCorpse = _DasherCorpse<RenderPolicy<DrawMain>>;
 
 struct DetailRef {
     enum {
@@ -34,9 +36,10 @@ struct DetailRef {
         IntroDoor,
         StaticDrawable,
         Terminal,
+	DasherCorpse,
         Count
     };
 };
 
 using DetailGroup = Group<Teleporter, TreasureChest, Lamp, Rock, IntroDoor,
-                          StaticDrawable, Terminal>;
+                          StaticDrawable, Terminal, DasherCorpse>;

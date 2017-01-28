@@ -27,8 +27,6 @@ public:
         dashBegin,
         dashing,
         dashEnd,
-        dying,
-        dead,
         shootBegin,
         pause
     };
@@ -46,12 +44,10 @@ private:
     uint8_t shotCount;
     State state;
     mutable SpriteSheet<648, 38, 29, 38> dasherSheet;
-    mutable SpriteSheet<80, 0, 47, 38> deathSheet;
     sf::Sprite shadow;
     sf::Vector2f target;
     float hSpeed, vSpeed;
     int32_t timer;
     std::vector<Dasher::Blur> blurEffects;
-    void onDeath(EffectGroup &);
     void facePlayer();
 };

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Drawable.hpp"
-#include "Drawable.hpp"
 #include "GfxContext.hpp"
 #include "effectsController.hpp"
 
