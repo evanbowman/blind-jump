@@ -10,7 +10,7 @@ struct DrawScreen {
     using value_type = int;
     template <typename CallerType> void run(CallerType & ct, GfxContext & gfx) {
         gfx.faces.emplace_back(ct.getScreen(),
-                               ct.getPosition().y - CallerType::drawOffset + 1,
+                               ct.getPosition().y - CallerType::drawOffset - 18,
                                Rendertype::shadeNone, 0.f);
     }
 };

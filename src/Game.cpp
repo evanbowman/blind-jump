@@ -9,7 +9,7 @@
 #include "pillarPlacement.h"
 
 Game::Game(nlohmann::json & config)
-    : viewPort(getDrawableArea(config)),
+    : hasFocus(true), viewPort(getDrawableArea(config)),
       transitionState(TransitionState::TransitionIn),
       player(viewPort.x / 2, viewPort.y / 2),
       window(sf::VideoMode::getDesktopMode(), EXECUTABLE_NAME,
@@ -79,10 +79,12 @@ void Game::eventLoop() {
             break;
 
         case sf::Event::GainedFocus:
+	    hasFocus = true;
             sounds.unpause(SoundController::Sound | SoundController::Music);
             break;
 
         case sf::Event::LostFocus:
+	    hasFocus = false;
             sounds.pause(SoundController::Sound | SoundController::Music);
             break;
 

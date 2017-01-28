@@ -59,6 +59,7 @@ public:
 
 private:
     void init();
+    bool hasFocus;
     sf::RenderWindow window;
     InputController input;
     SoundController sounds;

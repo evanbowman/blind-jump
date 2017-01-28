@@ -1,7 +1,7 @@
 #include "Game.hpp"
 
 void Game::updateLogic(const sf::Time & elapsedTime) {
-    if (!window.hasFocus()) {
+    if (!hasFocus) {
 	util::sleep(milliseconds(200));
 	return;
     }

@@ -2,7 +2,7 @@
 
 void Game::updateGraphics() {
     window.clear();
-    if (!window.hasFocus()) {
+    if (!hasFocus) {
         util::sleep(milliseconds(200));
         return;
     }
