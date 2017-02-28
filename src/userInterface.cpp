@@ -13,6 +13,8 @@ bool ui::Backend::isOpen() const { return state != State::closed; }
 
 ui::Backend::State ui::Backend::getState() const { return state; }
 
+static const char MENU_ITEM_DESEL_INTEN = 180;
+
 void ui::Backend::draw(sf::RenderWindow & window, ui::Frontend & uIFrontEnd) {
     switch (state) {
     case State::deathScreenEntry: {
@@ -23,7 +25,7 @@ void ui::Backend::draw(sf::RenderWindow & window, ui::Frontend & uIFrontEnd) {
     case State::menuScreenEntry:
         uIFrontEnd.setTextAlpha(255 * blurAmount,
                                 ui::Frontend::Text::resumeText);
-        uIFrontEnd.setTextAlpha(255 * blurAmount, ui::Frontend::Text::quitText);
+        uIFrontEnd.setTextAlpha(140 * blurAmount, ui::Frontend::Text::quitText);
         uIFrontEnd.setTextOffset(0, -0.01 * blurAmount,
                                  ui::Frontend::Text::resumeText);
         uIFrontEnd.setTextOffset(0, -0.01 * blurAmount,
@@ -33,7 +35,7 @@ void ui::Backend::draw(sf::RenderWindow & window, ui::Frontend & uIFrontEnd) {
     case State::menuScreenExit:
         uIFrontEnd.setTextAlpha(255 * blurAmount,
                                 ui::Frontend::Text::resumeText);
-        uIFrontEnd.setTextAlpha(255 * blurAmount, ui::Frontend::Text::quitText);
+        uIFrontEnd.setTextAlpha(140 * blurAmount, ui::Frontend::Text::quitText);
         uIFrontEnd.setTextOffset(0, -0.01 * blurAmount,
                                  ui::Frontend::Text::resumeText);
         uIFrontEnd.setTextOffset(0, -0.01 * blurAmount,
@@ -132,7 +134,7 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
             state = State::menuScreen;
             sounds.pause(SoundController::Sound);
             uIFrontEnd.setTextAlpha(255, ui::Frontend::Text::resumeText);
-            uIFrontEnd.setTextAlpha(255, ui::Frontend::Text::quitText);
+            uIFrontEnd.setTextAlpha(140, ui::Frontend::Text::quitText);
         }
         break;
 
@@ -146,11 +148,13 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
             if (menuItemSelected == 1) {
                 menuItemTarget = 0;
                 state = State::menuSelectionTransition;
+		timer = 0;
             }
         } else if (down) {
             if (menuItemSelected == 0) {
                 menuItemTarget = 1;
                 state = State::menuSelectionTransition;
+		timer = 0;
             }
         } else if (action) {
             switch (menuItemSelected) {
@@ -169,9 +173,19 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
         break;
 
     case State::menuSelectionTransition:
-        // TODO: actually implement!!!
-        menuItemSelected = menuItemTarget;
-        state = State::menuScreen;
+	if ((timer += elapsedTime.asMilliseconds()) < 200) {
+	    const float transition = math::smoothstep(0, 200, timer);
+	    if (menuItemTarget == 0) {
+		uIFrontEnd.setTextAlpha(140 + transition * 115, ui::Frontend::Text::resumeText);
+		uIFrontEnd.setTextAlpha(255 - transition * 115, ui::Frontend::Text::quitText);	    
+	    } else {
+		uIFrontEnd.setTextAlpha(255 - transition * 115, ui::Frontend::Text::resumeText);
+		uIFrontEnd.setTextAlpha(140 + transition * 115, ui::Frontend::Text::quitText);
+	    }
+	} else {
+	    menuItemSelected = menuItemTarget;
+	    state = State::menuScreen;
+	}
         break;
 
     case State::menuScreenExit:
