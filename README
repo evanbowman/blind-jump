@@ -12,10 +12,10 @@ action: https://youtu.be/jQRcmj-kvgc
 
 
 			       BUILDING	  
-
  1. Clone the repository
- 2. Navigate to the build directory in bash
- 3. Enter command 'cmake . && make'
+ 2. Navigate to the sfml dir in deps and run 'cmake . && make'
+ 3. Navigate to the build directory
+ 4. Enter command 'cmake . && make'
  
 
 			PRE-COMPILED BINARIES
