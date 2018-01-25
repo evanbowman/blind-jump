@@ -1,5 +1,9 @@
 {   
     "AspectRatios": {
+    "683:384": {
+        "Width": 1366,
+        "Height": 768
+    },
 	"16:9": {
 	    "Width": 832,
 	    "Height": 468
