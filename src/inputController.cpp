@@ -2,9 +2,6 @@
 #include <cmath>
 #include <iostream>
 
-sf::Mouse::Button unusedButton;
-sf::Keyboard::Key unusedKey;
-
 static std::unordered_map<std::string, sf::Keyboard::Key> translator {
     {"esc", sf::Keyboard::Escape},  {"up", sf::Keyboard::Up},
     {"down", sf::Keyboard::Down},   {"left", sf::Keyboard::Left},
