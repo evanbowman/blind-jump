@@ -227,25 +227,20 @@ void InputController::recordEvent(const sf::Event & event) {
         if (event.joystickConnect.joystickId == 0) {
             joystickMask.reset();
         }
-	}
-	else if (event.type == sf::Event::MouseButtonPressed) {
+	} else if (event.type == sf::Event::MouseButtonPressed) {
 		if (event.key.code == mouseMappings[indexPause]) {
 			mouseMask[indexPause] = true;
-		}
-		else if (event.key.code == mouseMappings[indexShoot]) {
+		} else if (event.key.code == mouseMappings[indexShoot]) {
 			mouseMask[indexShoot] = true;
-		}
-		else if (event.key.code == mouseMappings[indexAction]) {
+		} else if (event.key.code == mouseMappings[indexAction]) {
 			mouseMask[indexAction] = true;
 		}
 	} else if (event.type == sf::Event::MouseButtonReleased) {
 		if (event.key.code == mouseMappings[indexPause]) {
 			mouseMask[indexPause] = false;
-		}
-		else if (event.key.code == mouseMappings[indexShoot]) {
+		} else if (event.key.code == mouseMappings[indexShoot]) {
 			mouseMask[indexShoot] = false;
-		}
-		else if (event.key.code == mouseMappings[indexAction]) {
+		} else if (event.key.code == mouseMappings[indexAction]) {
 			mouseMask[indexAction] = false;
 		}
 	}
