@@ -27,6 +27,7 @@ public:
     bool actionPressed() const;
     void recordEvent(const sf::Event &);
     void mapKeyboardKey(const sf::Keyboard::Key, const uint8_t);
+	void mapMouseKey(const sf::Mouse::Button, const uint8_t);
     void mapJoystickButton(const uint32_t, const uint8_t);
 
 private:
@@ -43,7 +44,9 @@ private:
     void remapJoystick();
     std::bitset<indexCount> keyMask;
     std::bitset<indexCount> joystickMask;
+	std::bitset<indexCount> mouseMask;
     std::array<uint32_t, 3> joystickMappings;
     std::array<sf::Keyboard::Key, 7> keyboardMappings;
+	std::array<sf::Mouse::Button, 4> mouseMappings;
     std::vector<JoystickInfo> joysticks;
 };

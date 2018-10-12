@@ -22,13 +22,18 @@
 	}
     },
     "Keyboard": {
-	"Up": "up",
-	"Down": "down",
-	"Left": "left",
-	"Right": "right",
-	"Shoot": "x",
-	"Action": "z",
-	"Pause": "esc"
+		"Up": "up",
+		"Down": "down",
+		"Left": "left",
+		"Right": "right",
+		"Shoot": "x",
+		"Action": "z",
+		"Pause": "esc"
+	},
+    "Mouse": {
+		"Shoot": "left",
+		"Action": "right",
+		"Pause": "middle"
     },
     "Joystick": {
 	"SonyPS3Controller": {
