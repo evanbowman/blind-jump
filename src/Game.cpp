@@ -327,6 +327,7 @@ void Game::updateTransitions(const sf::Time & elapsedTime) {
 }
 
 void Game::nextLevel() {
+    std::lock_guard<std::mutex> guard(overworldMutex);
     ++level;
     uiFrontend.setWaypointText(level);
     tiles.clear();
