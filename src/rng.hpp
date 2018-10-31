@@ -18,4 +18,4 @@ inline void seed() {
     std::random_device rd;
     RNG.seed(rd() ^ static_cast<unsigned>(std::time(nullptr)));
 }
-}
+} // namespace rng

@@ -30,4 +30,4 @@ inline float distance(const float x1, const float y1, const float x2,
                       const float y2) {
     return std::sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 }
-}
+} // namespace math

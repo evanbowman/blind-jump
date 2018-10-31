@@ -2,7 +2,8 @@
 #include "tileController.hpp"
 #include <cstring>
 
-static void floodFill(Tile map[MAP_WIDTH][MAP_HEIGHT], size_t x, size_t y, Tile sub) {
+static void floodFill(Tile map[MAP_WIDTH][MAP_HEIGHT], size_t x, size_t y,
+                      Tile sub) {
     using Coord = std::pair<size_t, size_t>;
     std::stack<Coord> stack;
     stack.push({x, y});
@@ -79,7 +80,8 @@ inline void addCenterTiles(Tile map[MAP_WIDTH][MAP_HEIGHT]) {
     }
 }
 
-void condense(Tile map[MAP_WIDTH][MAP_HEIGHT], Tile maptemp[MAP_WIDTH][MAP_HEIGHT], int rep) {
+void condense(Tile map[MAP_WIDTH][MAP_HEIGHT],
+              Tile maptemp[MAP_WIDTH][MAP_HEIGHT], int rep) {
     for (int i = 2; i < MAP_WIDTH - 2; i++) {
         for (int j = 2; j < MAP_HEIGHT - 2; j++) {
             uint8_t count = 0;
@@ -160,7 +162,8 @@ int initMapOverlay(Tile map[MAP_WIDTH][MAP_HEIGHT]) {
     return count;
 }
 
-void combine(Tile map[MAP_WIDTH][MAP_HEIGHT], Tile overlay[MAP_WIDTH][MAP_HEIGHT]) {
+void combine(Tile map[MAP_WIDTH][MAP_HEIGHT],
+             Tile overlay[MAP_WIDTH][MAP_HEIGHT]) {
     for (int i = 0; i < MAP_WIDTH; i++) {
         for (int j = 0; j < MAP_HEIGHT; j++) {
             if ((overlay[i][j] == Tile::Plate && map[i][j] != Tile::Empty) &&
@@ -182,9 +185,11 @@ void combine(Tile map[MAP_WIDTH][MAP_HEIGHT], Tile overlay[MAP_WIDTH][MAP_HEIGHT
 void cleanEdgesPostCombine(Tile map[61][61]) {
     for (int i = 1; i < MAP_WIDTH - 1; i++) {
         for (int j = 1; j < MAP_HEIGHT - 1; j++) {
-            if (map[i][j] == Tile::GrassLowerEdge && map[i][j - 1] != Tile::Grass) {
+            if (map[i][j] == Tile::GrassLowerEdge &&
+                map[i][j - 1] != Tile::Grass) {
                 map[i][j] = Tile::PlateLowerEdge;
-            } else if (map[i][j] == Tile::GrassUpperEdge && map[i][j + 1] != Tile::Grass) {
+            } else if (map[i][j] == Tile::GrassUpperEdge &&
+                       map[i][j + 1] != Tile::Grass) {
                 map[i][j] = Tile::PlateUpperEdge;
             }
         }

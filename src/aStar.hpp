@@ -1,8 +1,8 @@
 #pragma once
 
+#include "Tile.hpp"
 #include <stdint.h>
 #include <vector>
-#include "Tile.hpp"
 
 #define MAP_WIDTH 61
 #define MAP_HEIGHT 61

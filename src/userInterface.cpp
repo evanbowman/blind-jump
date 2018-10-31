@@ -148,13 +148,13 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
             if (menuItemSelected == 1) {
                 menuItemTarget = 0;
                 state = State::menuSelectionTransition;
-		timer = 0;
+                timer = 0;
             }
         } else if (down) {
             if (menuItemSelected == 0) {
                 menuItemTarget = 1;
                 state = State::menuSelectionTransition;
-		timer = 0;
+                timer = 0;
             }
         } else if (action) {
             switch (menuItemSelected) {
@@ -173,19 +173,23 @@ void ui::Backend::update(Game * pGame, const sf::Time & elapsedTime) {
         break;
 
     case State::menuSelectionTransition:
-	if ((timer += elapsedTime.asMilliseconds()) < 200) {
-	    const float transition = math::smoothstep(0, 200, timer);
-	    if (menuItemTarget == 0) {
-		uIFrontEnd.setTextAlpha(140 + transition * 115, ui::Frontend::Text::resumeText);
-		uIFrontEnd.setTextAlpha(255 - transition * 115, ui::Frontend::Text::quitText);	    
-	    } else {
-		uIFrontEnd.setTextAlpha(255 - transition * 115, ui::Frontend::Text::resumeText);
-		uIFrontEnd.setTextAlpha(140 + transition * 115, ui::Frontend::Text::quitText);
-	    }
-	} else {
-	    menuItemSelected = menuItemTarget;
-	    state = State::menuScreen;
-	}
+        if ((timer += elapsedTime.asMilliseconds()) < 200) {
+            const float transition = math::smoothstep(0, 200, timer);
+            if (menuItemTarget == 0) {
+                uIFrontEnd.setTextAlpha(140 + transition * 115,
+                                        ui::Frontend::Text::resumeText);
+                uIFrontEnd.setTextAlpha(255 - transition * 115,
+                                        ui::Frontend::Text::quitText);
+            } else {
+                uIFrontEnd.setTextAlpha(255 - transition * 115,
+                                        ui::Frontend::Text::resumeText);
+                uIFrontEnd.setTextAlpha(140 + transition * 115,
+                                        ui::Frontend::Text::quitText);
+            }
+        } else {
+            menuItemSelected = menuItemTarget;
+            state = State::menuScreen;
+        }
         break;
 
     case State::menuScreenExit:

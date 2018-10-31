@@ -33,10 +33,11 @@ inline sf::Vector2f getDrawableArea(const nlohmann::json & configJSON) {
         throw std::runtime_error("JSON error: " + std::string(ex.what()));
     }
     if (drawableAreaSize == sf::Vector2f{}) {
-        throw std::runtime_error("BlindJump cannot find configuration settings"
-                                 " for your display. Please add an entry for "
-                                 " your aspect ratio to config.json in the game\'s"
-                                 " resources folder.");
+        throw std::runtime_error(
+            "BlindJump cannot find configuration settings"
+            " for your display. Please add an entry for "
+            " your aspect ratio to config.json in the game\'s"
+            " resources folder.");
     }
     return drawableAreaSize;
 }

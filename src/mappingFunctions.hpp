@@ -9,9 +9,6 @@
 int generateMap(Tile map[MAP_WIDTH][MAP_HEIGHT]);
 
 inline bool isTileWalkable(Tile t) {
-    return t == Tile::Sand ||
-        t == Tile::SandAndGrass ||
-        t == Tile::Plate ||
-        t == Tile::Grass ||
-        t == Tile::GrassFlowers;
+    return t == Tile::Sand || t == Tile::SandAndGrass || t == Tile::Plate ||
+           t == Tile::Grass || t == Tile::GrassFlowers;
 }

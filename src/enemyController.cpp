@@ -75,8 +75,8 @@ void enemyController::draw(drawableVec & gameObjects, drawableVec & gameShadows,
             element->getPosition().y > viewCenter.y - viewSize.y / 2 - 32 &&
             element->getPosition().y < viewCenter.y + viewSize.y / 2 + 32) {
             auto state = element->getState();
-	    gameShadows.emplace_back(element->getShadow(), 0.f,
-				     Rendertype::shadeDefault, 0.f);
+            gameShadows.emplace_back(element->getShadow(), 0.f,
+                                     Rendertype::shadeDefault, 0.f);
             for (auto & blur : *element->getBlurEffects()) {
                 gameObjects.emplace_back(*blur.getSprite(), blur.yInit + 200,
                                          Rendertype::shadeDefault, 0.f);
@@ -204,25 +204,29 @@ void enemyController::update(Game * pGame, bool enabled,
         }
     }
     if (!dashers.empty()) {
-	for (auto it = dashers.begin(); it != dashers.end();) {
-	    if ((*it)->getKillFlag()) {
-		util::sleep(milliseconds(60));
-		camera.shake(0.17f);
-		it = dashers.erase(it);
-	    } else {
-		if ((*it)->getPosition().x > viewCenter.x - viewSize.x / 2 - 32 &&
-		    (*it)->getPosition().x < viewCenter.x + viewSize.x / 2 + 32 &&
-		    (*it)->getPosition().y > viewCenter.y - viewSize.y / 2 - 32 &&
-		    (*it)->getPosition().y < viewCenter.y + viewSize.y / 2 + 32) {
-		    if (enabled) {
-			(*it)->update(pGame, tileController.walls, elapsedTime);
-			cameraTargets.emplace_back((*it)->getPosition().x,
-						   (*it)->getPosition().y);
-		    }
-		}
-		++it;
-	    }
-	}
+        for (auto it = dashers.begin(); it != dashers.end();) {
+            if ((*it)->getKillFlag()) {
+                util::sleep(milliseconds(60));
+                camera.shake(0.17f);
+                it = dashers.erase(it);
+            } else {
+                if ((*it)->getPosition().x >
+                        viewCenter.x - viewSize.x / 2 - 32 &&
+                    (*it)->getPosition().x <
+                        viewCenter.x + viewSize.x / 2 + 32 &&
+                    (*it)->getPosition().y >
+                        viewCenter.y - viewSize.y / 2 - 32 &&
+                    (*it)->getPosition().y <
+                        viewCenter.y + viewSize.y / 2 + 32) {
+                    if (enabled) {
+                        (*it)->update(pGame, tileController.walls, elapsedTime);
+                        cameraTargets.emplace_back((*it)->getPosition().x,
+                                                   (*it)->getPosition().y);
+                    }
+                }
+                ++it;
+            }
+        }
     }
 }
 

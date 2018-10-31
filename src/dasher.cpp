@@ -40,8 +40,7 @@ const Dasher::HBox & Dasher::getHitBox() const { return hitBox; }
 
 Dasher::Dasher(const sf::Texture & mainTxtr, float _xPos, float _yPos)
     : Enemy(_xPos, _yPos), shotCount(0), state(State::idle),
-      dasherSheet(mainTxtr), hSpeed(0.f), vSpeed(0.f),
-      timer(0) {
+      dasherSheet(mainTxtr), hSpeed(0.f), vSpeed(0.f), timer(0) {
     dasherSheet.setOrigin(14, 8);
     shadow.setTexture(mainTxtr);
     shadow.setTextureRect(sf::IntRect(0, 100, 18, 16));
@@ -49,9 +48,7 @@ Dasher::Dasher(const sf::Texture & mainTxtr, float _xPos, float _yPos)
     hitBox.setPosition(position.x, position.y);
 }
 
-const sf::Sprite & Dasher::getSprite() const {
-    return dasherSheet[frameIndex];
-}
+const sf::Sprite & Dasher::getSprite() const { return dasherSheet[frameIndex]; }
 
 const sf::Sprite & Dasher::getShadow() const { return shadow; }
 
@@ -80,35 +77,45 @@ void Dasher::update(Game * pGame, const std::vector<wall> & walls,
             }
         }
         if (health == 0) {
-	    hSpeed = 0;
-	    vSpeed = 0;
-	    frameIndex = 0;
-	    killFlag = true;
-	    details.add<DetailRef::DasherCorpse>(this->getPosition(),
-						 getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-						 dasherSheet.getScale().x);
-	    unsigned long int temp = rng::random<4>();
-	    if (temp < 1) {
-		effects.add<EffectRef::Heart>(
-					      getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-					      getgResHandlerPtr()->getTexture(ResHandler::Texture::redglow),
-					      position.x, position.y + 4, Item::Type::Heart);
-	    } else if (temp < 3) {
-		effects.add<EffectRef::GoldHeart>(
-						  getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-						  getgResHandlerPtr()->getTexture(ResHandler::Texture::yellowGlow),
-						  position.x, position.y + 4, Item::Type::GoldHeart);
-	    } else {
-		effects.add<EffectRef::Coin>(
-					     getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-					     getgResHandlerPtr()->getTexture(ResHandler::Texture::blueglow),
-					     position.x, position.y + 4, Item::Type::Coin);
-	    }
-	    effects.add<EffectRef::SmallExplosion>(
-						   getgResHandlerPtr()->getTexture(ResHandler::Texture::gameObjects),
-						   getgResHandlerPtr()->getTexture(ResHandler::Texture::fireExplosionGlow),
-						   position.x, position.y - 2);
-	    blurEffects.clear();
+            hSpeed = 0;
+            vSpeed = 0;
+            frameIndex = 0;
+            killFlag = true;
+            details.add<DetailRef::DasherCorpse>(
+                this->getPosition(),
+                getgResHandlerPtr()->getTexture(
+                    ResHandler::Texture::gameObjects),
+                dasherSheet.getScale().x);
+            unsigned long int temp = rng::random<4>();
+            if (temp < 1) {
+                effects.add<EffectRef::Heart>(
+                    getgResHandlerPtr()->getTexture(
+                        ResHandler::Texture::gameObjects),
+                    getgResHandlerPtr()->getTexture(
+                        ResHandler::Texture::redglow),
+                    position.x, position.y + 4, Item::Type::Heart);
+            } else if (temp < 3) {
+                effects.add<EffectRef::GoldHeart>(
+                    getgResHandlerPtr()->getTexture(
+                        ResHandler::Texture::gameObjects),
+                    getgResHandlerPtr()->getTexture(
+                        ResHandler::Texture::yellowGlow),
+                    position.x, position.y + 4, Item::Type::GoldHeart);
+            } else {
+                effects.add<EffectRef::Coin>(
+                    getgResHandlerPtr()->getTexture(
+                        ResHandler::Texture::gameObjects),
+                    getgResHandlerPtr()->getTexture(
+                        ResHandler::Texture::blueglow),
+                    position.x, position.y + 4, Item::Type::Coin);
+            }
+            effects.add<EffectRef::SmallExplosion>(
+                getgResHandlerPtr()->getTexture(
+                    ResHandler::Texture::gameObjects),
+                getgResHandlerPtr()->getTexture(
+                    ResHandler::Texture::fireExplosionGlow),
+                position.x, position.y - 2);
+            blurEffects.clear();
         }
     }
     SoundController & sounds = pGame->getSounds();

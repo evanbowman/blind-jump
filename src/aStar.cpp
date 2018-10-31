@@ -1,10 +1,10 @@
 #include "aStar.hpp"
+#include "mappingFunctions.hpp"
 #include <algorithm>
 #include <cmath>
 #include <queue>
 #include <unordered_map>
 #include <unordered_set>
-#include "mappingFunctions.hpp"
 
 // Calculates a heuristic based on the distance between two nodes
 inline float heuristic(int x1, int x2, int y1, int y2) {
@@ -17,7 +17,7 @@ template <> struct hash<aStrCoordinate> {
         return n.x * 1812433253 + n.y;
     }
 };
-}
+} // namespace std
 
 // Overloaded operator for comparing two nodes
 bool operator!=(const aStrCoordinate & a, const aStrCoordinate & b) {

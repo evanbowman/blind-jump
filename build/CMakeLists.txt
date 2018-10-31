@@ -29,6 +29,8 @@ include_directories("${SFML_DIR}/include/" "${JSON_DIR}")
 if(APPLE)
   add_definitions(-DBLINDJUMP_MAC)
   target_link_libraries(${EXECUTABLE_NAME} "-framework sfml-window -framework sfml-graphics -framework sfml-system -framework sfml-audio -Xlinker -rpath -Xlinker @loader_path/../Frameworks")
+  set_target_properties(${EXECUTABLE_NAME}
+    PROPERTIES LINK_FLAGS "-Wl,-F/Library/Frameworks")
   set(MACOSX_BUNDLE_BUNDLE_NAME ${EXECUTABLE_NAME})
   set(MACOSX_BUNDLE_ICON_FILE icon.icns)
   add_custom_target(pkg ALL mkdir -p ${EXECUTABLE_NAME}.app/Contents/Resources

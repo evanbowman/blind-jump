@@ -1,5 +1,6 @@
 #pragma once
 
+#include "DasherCorpse.hpp"
 #include "GfxContext.hpp"
 #include "IntroDoor.hpp"
 #include "RenderType.hpp"
@@ -14,7 +15,6 @@
 #include "treasureChest.hpp"
 #include "userInterface.hpp"
 #include <SFML/Graphics.hpp>
-#include "DasherCorpse.hpp"
 #include <array>
 
 using TreasureChest = _TreasureChest<RenderPolicy<DrawMain, DrawShadow>>;
@@ -36,7 +36,7 @@ struct DetailRef {
         IntroDoor,
         StaticDrawable,
         Terminal,
-	DasherCorpse,
+        DasherCorpse,
         Count
     };
 };

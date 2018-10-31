@@ -81,8 +81,8 @@ void SoundController::update() {
             break;
         }
     }
-    for (auto
-             iters = std::make_pair(runningSounds.begin(), runningData.begin());
+    for (auto iters =
+             std::make_pair(runningSounds.begin(), runningData.begin());
          iters.first != runningSounds.end(); ++iters.first, ++iters.second) {
         if (iters.second->spatialized) {
             if (auto sp = iters.second->source.lock()) {

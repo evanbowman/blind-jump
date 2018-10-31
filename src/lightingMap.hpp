@@ -33,8 +33,10 @@ void getLightingPositions(Tile gameMap[61][61],
     for (i = 0; i < 61; i++) {
         for (j = 0; j < 61; j++) {
             Circle c;
-            if (gameMap[i][j] == Tile::Sand || gameMap[i][j] == Tile::SandAndGrass ||
-                gameMap[i][j] == Tile::Grass || gameMap[i][j] == Tile::GrassFlowers) {
+            if (gameMap[i][j] == Tile::Sand ||
+                gameMap[i][j] == Tile::SandAndGrass ||
+                gameMap[i][j] == Tile::Grass ||
+                gameMap[i][j] == Tile::GrassFlowers) {
                 c.x = i;
                 c.y = j;
                 c.r = CIRC_RADIUS + rng::random<40>();

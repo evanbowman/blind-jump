@@ -79,12 +79,12 @@ void Game::eventLoop() {
             break;
 
         case sf::Event::GainedFocus:
-	    hasFocus = true;
+            hasFocus = true;
             sounds.unpause(SoundController::Sound | SoundController::Music);
             break;
 
         case sf::Event::LostFocus:
-	    hasFocus = false;
+            hasFocus = false;
             sounds.pause(SoundController::Sound | SoundController::Music);
             break;
 

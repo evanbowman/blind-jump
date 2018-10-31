@@ -12,4 +12,4 @@ inline void sleep(const milliseconds & time) {
     isAsleep = true;
     std::this_thread::sleep_for(time);
 }
-}
+} // namespace util

@@ -3,8 +3,8 @@
 #include "aStar.hpp"
 #include "effectsController.hpp"
 #include "enemy.hpp"
-#include "spriteSheet.hpp"
 #include "mappingFunctions.hpp"
+#include "spriteSheet.hpp"
 
 class tileController;
 
@@ -35,5 +35,5 @@ private:
     bool active;
     int recalc;
     Tile (*map)[61]; //*** I know this is a nasty solution, perhaps there's a
-                        // better way to not store it locally...
+                     // better way to not store it locally...
 };

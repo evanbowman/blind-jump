@@ -14,4 +14,4 @@ template <int_fast16_t dim, typename T> float easeIn(T current, T duration) {
 template <int_fast16_t dim, typename T> float easeOut(T current, T duration) {
     return 1.f - easeIn<dim>(current, duration);
 }
-}
+} // namespace Easing

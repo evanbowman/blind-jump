@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 
-static std::unordered_map<std::string, sf::Keyboard::Key> translator {
+static std::unordered_map<std::string, sf::Keyboard::Key> translator{
     {"esc", sf::Keyboard::Escape},  {"up", sf::Keyboard::Up},
     {"down", sf::Keyboard::Down},   {"left", sf::Keyboard::Left},
     {"right", sf::Keyboard::Right}, {"a", sf::Keyboard::A},
@@ -18,37 +18,35 @@ static std::unordered_map<std::string, sf::Keyboard::Key> translator {
     {"t", sf::Keyboard::T},         {"u", sf::Keyboard::U},
     {"v", sf::Keyboard::V},         {"w", sf::Keyboard::W},
     {"x", sf::Keyboard::X},         {"y", sf::Keyboard::Y},
-    {"z", sf::Keyboard::Z}
-};
+    {"z", sf::Keyboard::Z}};
 
 static std::unordered_map<std::string, sf::Mouse::Button> translatorMouse{
-	{"left", sf::Mouse::Left },	  
-	{"right", sf::Mouse::Right },
-	{"middle", sf::Mouse::Middle}
-};
-	
+    {"left", sf::Mouse::Left},
+    {"right", sf::Mouse::Right},
+    {"middle", sf::Mouse::Middle}};
+
 static sf::Keyboard::Key toSfKey(const std::string & strKey) {
     return ::translator[strKey];
 }
 
 static sf::Mouse::Button toSfButton(const std::string & strKey) {
-	return ::translatorMouse[strKey];
+    return ::translatorMouse[strKey];
 }
 
 InputController::InputController(nlohmann::json & config) {
     try {
         auto it = config.find("Keyboard");
-		auto mouseIt = config.find("Mouse");
+        auto mouseIt = config.find("Mouse");
         const auto mapKey = [this, it](const int keyIndex,
                                        const char * jsonStr) {
             keyboardMappings[keyIndex] =
                 toSfKey(it->find(jsonStr)->get<std::string>());
         };
-		const auto mapMouseKey = [this, ita](const int keyIndex,
-			const char * jsonStr) {
-			mouseMappings[keyIndex] =
-				toSfButton(ita->find(jsonStr)->get<std::string>());
-		};
+        const auto mapMouseKey = [this, mouseIt](const int keyIndex,
+                                                 const char * jsonStr) {
+            mouseMappings[keyIndex] =
+                toSfButton(mouseIt->find(jsonStr)->get<std::string>());
+        };
         mapKey(indexShoot, "Shoot");
         mapKey(indexAction, "Action");
         mapKey(indexPause, "Pause");
@@ -56,9 +54,9 @@ InputController::InputController(nlohmann::json & config) {
         mapKey(indexRight, "Right");
         mapKey(indexUp, "Up");
         mapKey(indexDown, "Down");
-		mapMouseKey(indexShoot, "Shoot");
-		mapMouseKey(indexAction, "Action");
-		mapMouseKey(indexPause, "Pause");
+        mapMouseKey(indexShoot, "Shoot");
+        mapMouseKey(indexAction, "Action");
+        mapMouseKey(indexPause, "Pause");
         for (it = config.find("Joystick")->begin();
              it != config.find("Joystick")->end(); ++it) {
             JoystickInfo info;
@@ -97,8 +95,8 @@ void InputController::mapKeyboardKey(const sf::Keyboard::Key key,
 }
 
 void InputController::mapMouseKey(const sf::Mouse::Button key,
-	const uint8_t indx) {
-	mouseMappings[indx] = key;
+                                  const uint8_t indx) {
+    mouseMappings[indx] = key;
 }
 
 void InputController::mapJoystickButton(const uint32_t button,
@@ -107,15 +105,18 @@ void InputController::mapJoystickButton(const uint32_t button,
 }
 
 bool InputController::pausePressed() const {
-    return keyMask[indexPause] || joystickMask[indexPause] || mouseMask[indexPause];
+    return keyMask[indexPause] || joystickMask[indexPause] ||
+           mouseMask[indexPause];
 }
 
 bool InputController::shootPressed() const {
-    return keyMask[indexShoot] || joystickMask[indexShoot] || mouseMask[indexShoot];
+    return keyMask[indexShoot] || joystickMask[indexShoot] ||
+           mouseMask[indexShoot];
 }
 
 bool InputController::actionPressed() const {
-    return keyMask[indexAction] || joystickMask[indexAction] || mouseMask[indexAction];
+    return keyMask[indexAction] || joystickMask[indexAction] ||
+           mouseMask[indexAction];
 }
 
 bool InputController::leftPressed() const {
@@ -227,21 +228,21 @@ void InputController::recordEvent(const sf::Event & event) {
         if (event.joystickConnect.joystickId == 0) {
             joystickMask.reset();
         }
-	} else if (event.type == sf::Event::MouseButtonPressed) {
-		if (event.key.code == mouseMappings[indexPause]) {
-			mouseMask[indexPause] = true;
-		} else if (event.key.code == mouseMappings[indexShoot]) {
-			mouseMask[indexShoot] = true;
-		} else if (event.key.code == mouseMappings[indexAction]) {
-			mouseMask[indexAction] = true;
-		}
-	} else if (event.type == sf::Event::MouseButtonReleased) {
-		if (event.key.code == mouseMappings[indexPause]) {
-			mouseMask[indexPause] = false;
-		} else if (event.key.code == mouseMappings[indexShoot]) {
-			mouseMask[indexShoot] = false;
-		} else if (event.key.code == mouseMappings[indexAction]) {
-			mouseMask[indexAction] = false;
-		}
-	}
+    } else if (event.type == sf::Event::MouseButtonPressed) {
+        if (event.mouseButton.button == mouseMappings[indexPause]) {
+            mouseMask[indexPause] = true;
+        } else if (event.mouseButton.button == mouseMappings[indexShoot]) {
+            mouseMask[indexShoot] = true;
+        } else if (event.mouseButton.button == mouseMappings[indexAction]) {
+            mouseMask[indexAction] = true;
+        }
+    } else if (event.type == sf::Event::MouseButtonReleased) {
+        if (event.mouseButton.button == mouseMappings[indexPause]) {
+            mouseMask[indexPause] = false;
+        } else if (event.mouseButton.button == mouseMappings[indexShoot]) {
+            mouseMask[indexShoot] = false;
+        } else if (event.mouseButton.button == mouseMappings[indexAction]) {
+            mouseMask[indexAction] = false;
+        }
+    }
 }

@@ -2,8 +2,8 @@
 
 void Game::updateLogic(const sf::Time & elapsedTime) {
     if (!hasFocus) {
-	util::sleep(milliseconds(200));
-	return;
+        util::sleep(milliseconds(200));
+        return;
     }
     // Blurring is graphics intensive, the game caches frames in a RenderTexture
     // when possible

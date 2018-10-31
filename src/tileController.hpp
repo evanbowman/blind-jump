@@ -3,9 +3,9 @@
 #include "camera.hpp"
 #include "coordinate.hpp"
 #include "enemyController.hpp"
+#include "mappingFunctions.hpp"
 #include "resourceHandler.hpp"
 #include "wall.hpp"
-#include "mappingFunctions.hpp"
 #include <SFML/Graphics.hpp>
 #include <queue>
 #include <stack>

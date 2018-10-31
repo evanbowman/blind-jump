@@ -62,9 +62,8 @@ void Camera::update(const sf::Time & elapsedTime,
             aggregate /= divisor;
             trackingTimer += elapsedTime.asMicroseconds();
             float targetWeight =
-                1.f -
-                0.22f * Easing::easeIn<1>(trackingTimer,
-                                          static_cast<int64_t>(900000));
+                1.f - 0.22f * Easing::easeIn<1>(trackingTimer,
+                                                static_cast<int64_t>(900000));
             midpoint =
                 math::lerp(pTarget->getPosition(), aggregate, targetWeight);
             currentPosition = math::lerp(midpoint, currentPosition, lerpSpeed);
@@ -92,7 +91,8 @@ void Camera::update(const sf::Time & elapsedTime,
                 shakeTimer = 0;
             }
         }
-        static const std::array<float, 5> shakeConstants = {{3.f, -5.f, 3.f, -2.f, 1.f}};
+        static const std::array<float, 5> shakeConstants = {
+            {3.f, -5.f, 3.f, -2.f, 1.f}};
         float shakeOffset = shakeConstants[shakeIndex];
         currentPosition.y += shakeOffset * shakeIntensity;
     }

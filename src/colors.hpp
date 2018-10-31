@@ -15,4 +15,4 @@ DEF_COLOR(White, 1.00f, 1.00f, 1.00f);
 DEF_COLOR(Electric, 0.29f, 0.99f, 0.99f);
 DEF_COLOR(Koamaru, 0.16f, 0.26f, 0.43f);
 DEF_COLOR(Yellow, 1.00f, 0.84f, 0.08f);
-}
+} // namespace colors

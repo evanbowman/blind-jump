@@ -54,8 +54,10 @@ void createMapImage(const sf::Image & tileImage, Tile mapArray[61][61],
     // to 1
     for (int i = 0; i < 61; i++) {
         for (int j = 0; j < 61; j++) {
-            if (mapArray[i][j] == Tile::Grass || mapArray[i][j] == Tile::GrassFlowers ||
-                mapArray[i][j] == Tile::GrassUpperEdge || mapArray[i][j] == Tile::GrassLowerEdge ||
+            if (mapArray[i][j] == Tile::Grass ||
+                mapArray[i][j] == Tile::GrassFlowers ||
+                mapArray[i][j] == Tile::GrassUpperEdge ||
+                mapArray[i][j] == Tile::GrassLowerEdge ||
                 mapArray[i][j] == Tile::_UNUSED1_) {
                 mapTemp[i][j] = Tile::Wall;
             }
@@ -67,13 +69,13 @@ void createMapImage(const sf::Image & tileImage, Tile mapArray[61][61],
         for (int j = 0; j < 61; j++) {
             if (mapTemp[i][j] == Tile::Wall) {
                 bitMask[i][j] += 1 * static_cast<int>(mapTemp[i][j - 1]);
-                if (mapArray[i + 1][j] != Tile::GrassLowerEdge
-                    && mapArray[i + 1][j] != Tile::GrassUpperEdge) {
+                if (mapArray[i + 1][j] != Tile::GrassLowerEdge &&
+                    mapArray[i + 1][j] != Tile::GrassUpperEdge) {
                     bitMask[i][j] += 2 * static_cast<int>(mapTemp[i + 1][j]);
                 }
                 bitMask[i][j] += 4 * static_cast<int>(mapTemp[i][j + 1]);
-                if (mapArray[i - 1][j] != Tile::GrassUpperEdge 
-                    && mapArray[i - 1][j] != Tile::GrassLowerEdge)
+                if (mapArray[i - 1][j] != Tile::GrassUpperEdge &&
+                    mapArray[i - 1][j] != Tile::GrassLowerEdge)
                     bitMask[i][j] += 8 * static_cast<int>(mapTemp[i - 1][j]);
             }
         }
@@ -166,8 +168,7 @@ void createMapImage(const sf::Image & tileImage, Tile mapArray[61][61],
     tx[1].loadFromImage(tileMapEdge);
 }
 
-tileController::tileController()
-    : posX(-72), posY(-476) {
+tileController::tileController() : posX(-72), posY(-476) {
     transitionLvSpr.setTexture(
         getgResHandlerPtr()->getTexture(ResHandler::Texture::introLevel));
     shadow.setFillColor(sf::Color(188, 188, 198, 255));

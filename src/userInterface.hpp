@@ -142,4 +142,4 @@ private:
     bool dispPowerupBar;
     float blurAmount, desaturateAmount;
 };
-}
+} // namespace ui

@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Drawable.hpp"
+#include "mappingFunctions.hpp"
 #include "math.hpp"
 #include "rng.hpp"
 #include "spriteSheet.hpp"
-#include "mappingFunctions.hpp"
 
 struct DrawScreen {
     using value_type = int;

@@ -135,8 +135,9 @@ void Game::updateGraphics() {
             window.setView(camera.getWindowView());
             targetSprite.setScale(upscaleVec);
             window.draw(targetSprite, &desaturateShader);
-            if (!stashed && (UI.getState() == ui::Backend::State::statsScreen ||
-                             UI.getState() == ui::Backend::State::menuScreen) &&
+            if (!stashed &&
+                (UI.getState() == ui::Backend::State::statsScreen ||
+                 UI.getState() == ui::Backend::State::menuScreen) &&
                 !camera.moving()) {
                 stash.clear(sf::Color::Black);
                 stash.draw(sf::Sprite(thirdPass.getTexture()),
@@ -172,8 +173,9 @@ void Game::updateGraphics() {
             window.setView(camera.getWindowView());
             targetSprite.setScale(upscaleVec);
             window.draw(targetSprite, &blurShader);
-            if (!stashed && (UI.getState() == ui::Backend::State::statsScreen ||
-                             UI.getState() == ui::Backend::State::menuScreen) &&
+            if (!stashed &&
+                (UI.getState() == ui::Backend::State::statsScreen ||
+                 UI.getState() == ui::Backend::State::menuScreen) &&
                 !camera.moving()) {
                 stash.clear(sf::Color::Black);
                 stash.draw(sf::Sprite(secondPass.getTexture()), &blurShader);
