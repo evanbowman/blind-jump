@@ -195,9 +195,15 @@ public:
                 path.pop_back();
                 position.x = ((position.x - tiles.posX) / 32) * 32 + tiles.posX;
                 position.y = ((position.y - tiles.posY) / 26) * 26 + tiles.posY;
-                currentDir = atan2(
-                    position.y - (((path.back().y * 26) + 4 + tiles.posY)),
-                    position.x - (((path.back().x * 32) + 4 + tiles.posX)));
+				
+				// Same as Critter, this causes a crash when finishing a path, and
+				// calculating the currentDirection...
+				
+                if (!path.empty()) {
+					currentDir = atan2(
+						position.y - (((path.back().y * 26) + 4 + tiles.posY)),
+						position.x - (((path.back().x * 32) + 4 + tiles.posX)));
+				}
             }
         } else {
             position.x -= speed * cos(currentDir) *
@@ -210,9 +216,11 @@ public:
                     8) {
                 recalc--;
                 path.pop_back();
-                currentDir = atan2(
-                    position.y - (((path.back().y * 26) + 4 + tiles.posY)),
-                    position.x - (((path.back().x * 32) + 4 + tiles.posX)));
+                if (!path.empty()) {
+					currentDir = atan2(
+						position.y - (((path.back().y * 26) + 4 + tiles.posY)),
+						position.x - (((path.back().x * 32) + 4 + tiles.posX)));
+				}
             }
         }
     }
