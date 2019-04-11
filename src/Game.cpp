@@ -32,6 +32,9 @@ Game::Game(nlohmann::json & config)
     windowView.zoom(visibleArea);
     camera.setWindowView(windowView);
     gfxContext.targetRef = &target;
+    sf::Image icon;
+    icon.loadFromFile(resourcePath() + "textures/gameIcon.png");
+    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     window.requestFocus();
     init();
 }

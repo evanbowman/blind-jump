@@ -26,6 +26,7 @@ class SoundController {
 public:
     enum { Sound, Music };
     SoundController();
+    void setVolume(float);
     void update();
     void pause(int);
     void unpause(int);
