@@ -383,21 +383,25 @@ void Game::nextLevel() {
             getgResHandlerPtr()->getTexture(
                 ResHandler::Texture::teleporterGlow));
         initEnemies(this);
-        auto optCoord = pickLocation(tiles.emptyMapLocations);
-        if (optCoord) {
-            Powerup chestContents;
-            if (level < 7) {
-                chestContents = static_cast<Powerup>(rng::random<2, 1>());
-            } else {
-                chestContents = static_cast<Powerup>(rng::random<3, 2>());
-            }
-            detailGroup.add<DetailRef::TreasureChest>(
-                optCoord.value().x * 32 + tiles.posX,
-                optCoord.value().y * 26 + tiles.posY,
-                getgResHandlerPtr()->getTexture(
-                    ResHandler::Texture::gameObjects),
-                chestContents);
-        }
+        int a = level / 4;
+        for (int i = 0; a >= i; i++) {
+			auto optCoord = pickLocation(tiles.emptyMapLocations);
+
+			if (optCoord) {
+                Powerup chestContents;
+                if (level <= 7) {
+                    chestContents = static_cast<Powerup>(rng::random<2, 1>());
+                } else {
+                    chestContents = static_cast<Powerup>(rng::random<3, 2>());
+                }
+                detailGroup.add<DetailRef::TreasureChest>(
+                    optCoord.value().x * 32 + tiles.posX,
+                    optCoord.value().y * 26 + tiles.posY,
+                    getgResHandlerPtr()->getTexture(
+						ResHandler::Texture::gameObjects),
+					chestContents);
+			}
+		}
         if (!rng::random<2>()) {
             auto pCoordVec = tiles.getEmptyLocations();
             const size_t vecSize = pCoordVec->size();
