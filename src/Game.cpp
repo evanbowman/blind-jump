@@ -26,6 +26,7 @@ Game::Game(nlohmann::json & config)
     const sf::Vector2f vignetteMaskScale(
         (viewPort.x * (visibleArea + 0.02)) / 450,
         (viewPort.y * (visibleArea + 0.02)) / 450);
+    sounds.setVolume(config.find("Volume").value());
     vignetteSprite.setScale(vignetteMaskScale);
     vignetteShadowSpr.setScale(vignetteMaskScale);
     windowView.setSize(window.getSize().x, window.getSize().y);
