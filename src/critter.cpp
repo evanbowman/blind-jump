@@ -101,9 +101,11 @@ void Critter::update(Game * pGame, const sf::Time & elapsedTime,
                 // Calculate the direction to move in, based on the coordinate
                 // of the previous location and the coordinate of the next
                 // location
-                currentDir =
-                    atan2(yInit - (((path.back().y * 26) + 4 + tilePosY)),
-                          xInit - (((path.back().x * 32) + 4 + tilePosX)));
+                if (!path.empty()) {
+					currentDir =
+						atan2(yInit - (((path.back().y * 26) + 4 + tilePosY)),
+							xInit - (((path.back().x * 32) + 4 + tilePosX)));
+				}
             }
         } else if (!path.empty()) {
             // Add each component of the direction vector to the enemy's
@@ -119,10 +121,22 @@ void Critter::update(Game * pGame, const sf::Time & elapsedTime,
                 recalc--;
                 previous = path.back();
                 path.pop_back();
-                // Calculate the direction to move in
-                currentDir =
-                    atan2(yInit - (((path.back().y * 26) + 4 + tilePosY)),
-                          xInit - (((path.back().x * 32) + 4 + tilePosX)));
+
+				// For some weird reason, on windows, the path somewhere gets GC-d (Garbage Collected) or something like that,
+				// because the var previous ain't clear, but path.back() is COMPLETELY clear...
+				// I tried using 'previous' as the argument to yInit and xInit, but that's completely different, maybe it gets
+				// GC-d beforehand? Although this only happens when the path is finished (Walked to last player position), and
+				// tries to set up a new direction. That might explain, this but what it won't is why it's empty, on the second
+				// #back()...
+				// I know for sure it's on Windows, cause I had 2 pc's test this, and both returned same errors
+				// So I guess it's a temporary fix, that works...
+
+				if (!path.empty()) {
+                    // Calculate the direction to move in
+                    currentDir = atan2(
+				        yInit - (((path.back().y * 26) + 4 + tilePosY)),
+			            xInit - (((path.back().x * 32) + 4 + tilePosX)));
+                }
             }
         }
 
