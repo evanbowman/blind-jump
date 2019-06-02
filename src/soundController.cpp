@@ -10,6 +10,10 @@ SoundController::SoundController() {
     currentSong.play();
 }
 
+void SoundController::setVolume(float volume) {
+    sf::Listener::setGlobalVolume(volume);
+}
+
 void SoundController::pause(int options) {
     std::lock_guard<std::mutex> lk(soundsGuard);
     if (options & Sound) {
