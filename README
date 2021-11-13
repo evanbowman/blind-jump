@@ -14,6 +14,10 @@ This was my first real programming project, some of the  code is good,
 while some  of it is  sloppy. Maybe  you can learn  something from  it
 though :) Have fun!
 
+NOTE: I no longer work on this repository. I ended up developing the 
+game for Gameboy Advance instead, see the finished version here:
+https://github.com/evanbowman/blind-jump-portable
+
 			       BUILDING	  
  1. Clone the repository
  2. Navigate to the sfml dir in deps and run 'cmake . && make'
